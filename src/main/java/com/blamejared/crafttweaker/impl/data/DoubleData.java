@@ -5,6 +5,8 @@ import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.INumberData;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.DoubleNBT;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
@@ -18,31 +20,37 @@ public class DoubleData implements INumberData {
     private final DoubleNBT internal;
     
     public DoubleData(DoubleNBT internal) {
+        
         this.internal = internal;
     }
     
     @ZenCodeType.Constructor
     public DoubleData(double internal) {
+        
         this.internal = DoubleNBT.valueOf(internal);
     }
     
     @Override
     public IData copy() {
+        
         return new DoubleData(getInternal());
     }
     
     @Override
     public IData copyInternal() {
+        
         return new DoubleData(getInternal().copy());
     }
     
     @Override
     public DoubleNBT getInternal() {
+        
         return internal;
     }
     
     @Override
     public boolean contains(IData data) {
+        
         if(data instanceof DoubleData) {
             return getInternal().getDouble() == ((DoubleData) data).getInternal().getDouble();
         }
@@ -51,6 +59,17 @@ public class DoubleData implements INumberData {
     
     @Override
     public String asString() {
+        
         return getInternal().getDouble() + " as double";
     }
+    
+    @Override
+    public ITextComponent asFormattedComponent(String indentation, int indentDepth) {
+        
+        ITextComponent as = new StringTextComponent(" as ").mergeStyle(IData.SYNTAX_HIGHLIGHTING_AS);
+        ITextComponent type = new StringTextComponent("double").mergeStyle(IData.SYNTAX_HIGHLIGHTING_TYPE);
+        return new StringTextComponent(toJsonString()).append(as).append(type)
+                .mergeStyle(IData.SYNTAX_HIGHLIGHTING_NUMBER);
+    }
+    
 }

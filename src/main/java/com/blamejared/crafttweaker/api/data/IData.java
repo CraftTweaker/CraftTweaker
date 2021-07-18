@@ -5,6 +5,9 @@ import com.blamejared.crafttweaker.impl.data.IntData;
 import com.blamejared.crafttweaker.impl.data.ListData;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.INBT;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
@@ -21,6 +24,13 @@ import java.util.Map;
 @ZenRegister
 @Document("vanilla/api/data/IData")
 public interface IData {
+    
+    TextFormatting SYNTAX_HIGHLIGHTING_KEY = TextFormatting.AQUA;
+    TextFormatting SYNTAX_HIGHLIGHTING_STRING = TextFormatting.GREEN;
+    TextFormatting SYNTAX_HIGHLIGHTING_QUOTE = TextFormatting.GRAY;
+    TextFormatting SYNTAX_HIGHLIGHTING_NUMBER = TextFormatting.GOLD;
+    TextFormatting SYNTAX_HIGHLIGHTING_TYPE = TextFormatting.RED;
+    TextFormatting SYNTAX_HIGHLIGHTING_AS = TextFormatting.GRAY;
     
     /**
      * Gets the ID of the internal NBT tag.
@@ -115,6 +125,15 @@ public interface IData {
      */
     @ZenCodeType.Method
     String asString();
+    
+    /**
+     * Gets the Formatted String representation of this IData
+     *
+     * @return String that represents this IData (value and type).
+     */
+    default ITextComponent asFormattedComponent(String indentation, int indentDepth) {
+        return new StringTextComponent(toJsonString());
+    }
     
     String toJsonString();
     

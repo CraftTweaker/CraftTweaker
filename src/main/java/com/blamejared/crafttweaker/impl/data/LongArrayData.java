@@ -8,9 +8,13 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.LongArrayNBT;
 import net.minecraft.nbt.LongNBT;
 import net.minecraft.nbt.NumberNBT;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @docParam this [100000, 800000, 50000]
@@ -23,31 +27,37 @@ public class LongArrayData implements ICollectionData {
     private final LongArrayNBT internal;
     
     public LongArrayData(LongArrayNBT internal) {
+        
         this.internal = internal;
     }
     
     @ZenCodeType.Constructor
     public LongArrayData(long[] internal) {
+        
         this.internal = new LongArrayNBT(internal);
     }
     
     @Override
     public IData copy() {
+        
         return new LongArrayData(getInternal());
     }
     
     @Override
     public IData copyInternal() {
+        
         return new LongArrayData(getInternal().copy());
     }
     
     @Override
     public LongArrayNBT getInternal() {
+        
         return internal;
     }
     
     @Override
     public LongData setAt(int index, IData value) {
+        
         if(value instanceof NumberNBT) {
             return new LongData(getInternal().set(index, LongNBT.valueOf(((INumberData) value).getLong())));
         } else {
@@ -58,6 +68,7 @@ public class LongArrayData implements ICollectionData {
     
     @Override
     public void add(int index, IData value) {
+        
         if(value instanceof INumberData) {
             getInternal().add(index, LongNBT.valueOf(((INumberData) value).getInt()));
         }
@@ -65,6 +76,7 @@ public class LongArrayData implements ICollectionData {
     
     @Override
     public void add(IData value) {
+        
         if(value instanceof INumberData) {
             getInternal().add(LongNBT.valueOf(((INumberData) value).getInt()));
         }
@@ -72,27 +84,38 @@ public class LongArrayData implements ICollectionData {
     
     @Override
     public LongData remove(int index) {
+        
         return new LongData(getInternal().remove(index));
     }
     
     @Override
     public IData getAt(int index) {
+        
         return new LongData(getInternal().get(index));
     }
     
     @Override
     public int size() {
+        
         return getInternal().size();
     }
     
     @Override
+    public boolean isEmpty() {
+        
+        return getInternal().isEmpty();
+    }
+    
+    @Override
     public void clear() {
+        
         getInternal().clear();
     }
     
     
     @Override
     public String asString() {
+        
         StringBuilder result = new StringBuilder();
         result.append('[');
         boolean first = true;
@@ -108,8 +131,30 @@ public class LongArrayData implements ICollectionData {
         return result.toString();
     }
     
+    
+    @Override
+    public ITextComponent asFormattedComponent(String indentation, int indentDepth) {
+        
+        ITextComponent as = new StringTextComponent(" as ").mergeStyle(IData.SYNTAX_HIGHLIGHTING_AS);
+        ITextComponent baseType = new StringTextComponent("long").mergeStyle(IData.SYNTAX_HIGHLIGHTING_TYPE);
+        ITextComponent type = new StringTextComponent("long[]").mergeStyle(IData.SYNTAX_HIGHLIGHTING_TYPE);
+        IFormattableTextComponent component = (new StringTextComponent("["));
+        
+        for(int i = 0; i < size(); ++i) {
+            IFormattableTextComponent child = new StringTextComponent(getAt(i).toJsonString()).mergeStyle(IData.SYNTAX_HIGHLIGHTING_NUMBER);
+            component.appendString(i == 0 ? "" : " ").append(child);
+            if(i != size() - 1) {
+                component.appendString(",");
+            }
+        }
+        
+        component.appendString("]").append(as).append(type);
+        return component;
+    }
+    
     @Override
     public List<IData> asList() {
+        
         final long[] asLongArray = getInternal().getAsLongArray();
         List<IData> list = new ArrayList<>(asLongArray.length);
         for(long l : asLongArray) {
@@ -117,4 +162,5 @@ public class LongArrayData implements ICollectionData {
         }
         return list;
     }
+    
 }

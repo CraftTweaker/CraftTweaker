@@ -5,6 +5,8 @@ import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.INumberData;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.FloatNBT;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
@@ -18,31 +20,37 @@ public class FloatData implements INumberData {
     private final FloatNBT internal;
     
     public FloatData(FloatNBT internal) {
+        
         this.internal = internal;
     }
     
     @ZenCodeType.Constructor
     public FloatData(float internal) {
+        
         this.internal = FloatNBT.valueOf(internal);
     }
     
     @Override
     public IData copy() {
+        
         return new FloatData(getInternal());
     }
     
     @Override
     public IData copyInternal() {
+        
         return new FloatData(getInternal().copy());
     }
     
     @Override
     public FloatNBT getInternal() {
+        
         return internal;
     }
     
     @Override
     public boolean contains(IData data) {
+        
         if(data instanceof FloatData) {
             return getInternal().getFloat() == ((FloatData) data).getInternal().getFloat();
         }
@@ -51,6 +59,17 @@ public class FloatData implements INumberData {
     
     @Override
     public String asString() {
+        
         return getInternal().getFloat() + " as float";
     }
+    
+    @Override
+    public ITextComponent asFormattedComponent(String indentation, int indentDepth) {
+        
+        ITextComponent as = new StringTextComponent(" as ").mergeStyle(IData.SYNTAX_HIGHLIGHTING_AS);
+        ITextComponent type = new StringTextComponent("float").mergeStyle(IData.SYNTAX_HIGHLIGHTING_TYPE);
+        return new StringTextComponent(toJsonString()).append(as).append(type)
+                .mergeStyle(IData.SYNTAX_HIGHLIGHTING_NUMBER);
+    }
+    
 }

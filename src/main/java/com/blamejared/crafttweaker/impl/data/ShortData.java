@@ -5,6 +5,8 @@ import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.INumberData;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.ShortNBT;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
@@ -18,32 +20,38 @@ public class ShortData implements INumberData {
     private final ShortNBT internal;
     
     public ShortData(ShortNBT internal) {
+        
         this.internal = internal;
     }
     
     @ZenCodeType.Constructor
     public ShortData(short internal) {
+        
         this.internal = ShortNBT.valueOf(internal);
     }
     
     
     @Override
     public IData copy() {
+        
         return new ShortData(getInternal());
     }
     
     @Override
     public IData copyInternal() {
+        
         return new ShortData(getInternal().copy());
     }
     
     @Override
     public ShortNBT getInternal() {
+        
         return internal;
     }
     
     @Override
     public boolean contains(IData data) {
+        
         if(data instanceof ShortData) {
             return getInternal().getShort() == ((ShortData) data).getInternal().getShort();
         }
@@ -52,6 +60,17 @@ public class ShortData implements INumberData {
     
     @Override
     public String asString() {
+        
         return getInternal().getShort() + " as short";
     }
+    
+    @Override
+    public ITextComponent asFormattedComponent(String indentation, int indentDepth) {
+        
+        ITextComponent as = new StringTextComponent(" as ").mergeStyle(IData.SYNTAX_HIGHLIGHTING_AS);
+        ITextComponent type = new StringTextComponent("short").mergeStyle(IData.SYNTAX_HIGHLIGHTING_TYPE);
+        return new StringTextComponent(toJsonString()).append(as).append(type)
+                .mergeStyle(IData.SYNTAX_HIGHLIGHTING_NUMBER);
+    }
+    
 }

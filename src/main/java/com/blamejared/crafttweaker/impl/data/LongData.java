@@ -5,6 +5,8 @@ import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.INumberData;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.LongNBT;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
@@ -18,31 +20,37 @@ public class LongData implements INumberData {
     private final LongNBT internal;
     
     public LongData(LongNBT internal) {
+        
         this.internal = internal;
     }
     
     @ZenCodeType.Constructor
     public LongData(long internal) {
+        
         this.internal = LongNBT.valueOf(internal);
     }
     
     @Override
     public IData copy() {
+        
         return new LongData(getInternal());
     }
     
     @Override
     public IData copyInternal() {
+        
         return new LongData(getInternal().copy());
     }
     
     @Override
     public LongNBT getInternal() {
+        
         return internal;
     }
     
     @Override
     public boolean contains(IData data) {
+        
         if(data instanceof LongData) {
             return getInternal().getLong() == ((LongData) data).getInternal().getLong();
         }
@@ -51,6 +59,17 @@ public class LongData implements INumberData {
     
     @Override
     public String asString() {
+        
         return getInternal().getLong() + " as long";
     }
+    
+    @Override
+    public ITextComponent asFormattedComponent(String indentation, int indentDepth) {
+        
+        ITextComponent as = new StringTextComponent(" as ").mergeStyle(IData.SYNTAX_HIGHLIGHTING_AS);
+        ITextComponent type = new StringTextComponent("long").mergeStyle(IData.SYNTAX_HIGHLIGHTING_TYPE);
+        return new StringTextComponent(toJsonString()).append(as).append(type)
+                .mergeStyle(IData.SYNTAX_HIGHLIGHTING_NUMBER);
+    }
+    
 }

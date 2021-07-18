@@ -120,6 +120,10 @@ public interface ICollectionData extends IData {
     @ZenCodeType.Getter("size")
     int size();
     
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("empty")
+    boolean isEmpty();
+    
     /**
      * Removes every element in the list
      */

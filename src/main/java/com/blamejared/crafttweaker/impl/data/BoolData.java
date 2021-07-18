@@ -1,10 +1,14 @@
 package com.blamejared.crafttweaker.impl.data;
 
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.data.*;
-import com.blamejared.crafttweaker_annotations.annotations.*;
-import net.minecraft.nbt.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.INumberData;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.nbt.ByteNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import org.openzen.zencode.java.ZenCodeType;
 
 /**
  * Careful with BoolData: While it works for specifying boolean attributes in JSON syntax,
@@ -22,6 +26,7 @@ public class BoolData implements IData {
     
     @ZenCodeType.Constructor
     public BoolData(boolean internal) {
+        
         this.internal = internal;
     }
     
@@ -32,17 +37,19 @@ public class BoolData implements IData {
     @ZenCodeType.Caster
     @ZenCodeType.Method
     public ByteData getByteData() {
+        
         return new ByteData(ByteNBT.valueOf(getInternalValue()));
     }
     
     @Override
     public IData copy() {
+        
         return new BoolData(getInternalValue());
     }
     
     @Override
     public IData copyInternal() {
-    
+        
         return new BoolData(getInternalValue());
     }
     
@@ -53,7 +60,8 @@ public class BoolData implements IData {
     }
     
     // There is no such thing as a BooleanNBT, it uses the byte nbt, so override this if you need to I guess
-    public boolean getInternalValue(){
+    public boolean getInternalValue() {
+        
         return internal;
     }
     
@@ -61,6 +69,15 @@ public class BoolData implements IData {
     public String asString() {
         
         return getInternalValue() + " as bool";
+    }
+    
+    @Override
+    public ITextComponent asFormattedComponent(String indentation, int indentDepth) {
+        
+        ITextComponent as = new StringTextComponent(" as ").mergeStyle(IData.SYNTAX_HIGHLIGHTING_AS);
+        ITextComponent type = new StringTextComponent("bool").mergeStyle(IData.SYNTAX_HIGHLIGHTING_TYPE);
+        return new StringTextComponent(toJsonString()).append(as).append(type)
+                .mergeStyle(IData.SYNTAX_HIGHLIGHTING_NUMBER);
     }
     
     @Override
