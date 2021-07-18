@@ -1,13 +1,18 @@
 package com.blamejared.crafttweaker.impl.events;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.impl.data.MapData;
+import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
+import com.blamejared.crafttweaker.impl_native.entity.ExpandEntity;
 import com.blamejared.crafttweaker.impl_native.entity.ExpandPlayerEntity;
 import com.blamejared.crafttweaker.impl_native.world.ExpandWorld;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -26,6 +31,8 @@ public class CTEventHandler {
     
     public static final Map<IIngredient, Integer> BURN_TIMES = new HashMap<>();
     public static final Set<PlayerEntity> BLOCK_INFO_PLAYERS = new HashSet<>();
+    public static final Set<PlayerEntity> ENTITY_INFO_PLAYERS = new HashSet<>();
+    
     public static final Map<IIngredient, List<Consumer<ItemAttributeModifierEvent>>> ATTRIBUTE_MODIFIERS = new HashMap<>();
     
     @SubscribeEvent
@@ -57,24 +64,62 @@ public class CTEventHandler {
             
             PlayerEntity player = event.getPlayer();
             World world = event.getWorld();
-            if(BLOCK_INFO_PLAYERS.contains(player) && !world.isRemote) {
+            if(BLOCK_INFO_PLAYERS.contains(player) && !world.isRemote && event.getHand() == Hand.MAIN_HAND) {
                 BlockState state = world.getBlockState(event.getPos());
-                ExpandPlayerEntity.sendMessage(player, MCTextComponent.createStringTextComponent("Block Name: " + state.getBlock()
+                sendAndLog(player, MCTextComponent.createStringTextComponent("Block Name: " + state.getBlock()
                         .getRegistryName()
                         .toString()));
-                ExpandPlayerEntity.sendMessage(player, MCTextComponent.createStringTextComponent("Properties: "));
-                state.getProperties().forEach(property -> {
-                    ExpandPlayerEntity.sendMessage(player, MCTextComponent.createStringTextComponent(property.getName() + ": " + state
-                            .get(property)
-                            .toString()));
-                });
+                if(!state.getProperties().isEmpty()) {
+                    
+                    sendAndLog(player, MCTextComponent.createStringTextComponent("Properties: "));
+                    state.getProperties().forEach(property -> {
+                        sendAndLog(player, MCTextComponent.createStringTextComponent(property.getName() + ": " + state
+                                .get(property)));
+                    });
+                }
                 MapData tileData = (MapData) ExpandWorld.getTileData(world, event.getPos());
                 if(!tileData.isEmpty()) {
-                    ExpandPlayerEntity.sendMessage(player, MCTextComponent.createStringTextComponent("Tile Data: " + tileData
-                            .asString()));
+                    sendAndLog(player, MCTextComponent.createStringTextComponent("Tile Data: ")
+                            .appendSibling(new MCTextComponent(tileData
+                                    .asFormattedComponent("  ", 0))));
                 }
+                event.setCanceled(true);
             }
         }
+    }
+    
+    public enum ListenEntityInfo implements Consumer<PlayerInteractEvent.EntityInteract> {
+        INSTANCE;
+        
+        @Override
+        public void accept(PlayerInteractEvent.EntityInteract event) {
+            
+            PlayerEntity player = event.getPlayer();
+            World world = event.getWorld();
+            if(ENTITY_INFO_PLAYERS.contains(player) && !world.isRemote && event.getHand() == Hand.MAIN_HAND) {
+                Entity target = event.getTarget();
+                
+                BlockState state = world.getBlockState(event.getPos());
+                sendAndLog(player, MCTextComponent.createStringTextComponent("Entity Name: " + ExpandEntity
+                        .getName(target)));
+                sendAndLog(player, MCTextComponent.createStringTextComponent("EntityType Bracket: " + new MCEntityType(target
+                        .getType()).getCommandString()));
+                
+                MapData data = ExpandEntity.getData(target);
+                if(!data.isEmpty()) {
+                    sendAndLog(player, MCTextComponent.createStringTextComponent("Entity Data: ")
+                            .appendSibling(new MCTextComponent(data
+                                    .asFormattedComponent("  ", 0))));
+                }
+                event.setCanceled(true);
+            }
+        }
+    }
+    
+    private static void sendAndLog(PlayerEntity player, MCTextComponent component) {
+        
+        ExpandPlayerEntity.sendMessage(player, component);
+        CraftTweakerAPI.logDump(component.asString());
     }
     
 }

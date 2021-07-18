@@ -84,7 +84,7 @@ public final class MiscCommands {
                 (player, stack) -> {
                     if (CTEventHandler.BLOCK_INFO_PLAYERS.contains(player)) {
                         CTEventHandler.BLOCK_INFO_PLAYERS.remove(player);
-                        CommandUtilities.send("Block info mod deactivated", player);
+                        CommandUtilities.send("Block info mode deactivated", player);
                         
                         if (CTEventHandler.BLOCK_INFO_PLAYERS.isEmpty()) {
                             MinecraftForge.EVENT_BUS.unregister(CTEventHandler.ListenBlockInfo.INSTANCE);
@@ -96,6 +96,29 @@ public final class MiscCommands {
                         
                         CTEventHandler.BLOCK_INFO_PLAYERS.add(player);
                         CommandUtilities.send("Block info mode activated. Right-click a block to see its data.", player);
+                    }
+                    return 0;
+                })
+        );
+    
+        CTCommands.registerCommand(CTCommands.playerCommand(
+                "entity_info",
+                "Activates or deactivates the entity reader. In entity info mode, right-clicking an entity will tell you it's name and data.",
+                (player, stack) -> {
+                    if (CTEventHandler.ENTITY_INFO_PLAYERS.contains(player)) {
+                        CTEventHandler.ENTITY_INFO_PLAYERS.remove(player);
+                        CommandUtilities.send("Entity info mode deactivated", player);
+                    
+                        if (CTEventHandler.ENTITY_INFO_PLAYERS.isEmpty()) {
+                            MinecraftForge.EVENT_BUS.unregister(CTEventHandler.ListenBlockInfo.INSTANCE);
+                        }
+                    } else {
+                        if (CTEventHandler.ENTITY_INFO_PLAYERS.isEmpty()) {
+                            MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, PlayerInteractEvent.EntityInteract.class, CTEventHandler.ListenEntityInfo.INSTANCE);
+                        }
+                    
+                        CTEventHandler.ENTITY_INFO_PLAYERS.add(player);
+                        CommandUtilities.send("Entity info mode activated. Right-click an entity to see its data.", player);
                     }
                     return 0;
                 })
