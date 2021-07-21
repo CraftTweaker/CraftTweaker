@@ -109,6 +109,7 @@ public class MapData implements IData {
      * @docParam value "Goodbye"
      */
     @ZenCodeType.Method
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.MEMBERSETTER)
     public IData put(String key, IData value) {
         
         if(value instanceof BoolData) {
@@ -127,6 +128,7 @@ public class MapData implements IData {
      * @docParam key "Hello"
      */
     @ZenCodeType.Method
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.MEMBERGETTER)
     public IData getAt(String key) {
         
         if(boolDataKeys.contains(key)) {

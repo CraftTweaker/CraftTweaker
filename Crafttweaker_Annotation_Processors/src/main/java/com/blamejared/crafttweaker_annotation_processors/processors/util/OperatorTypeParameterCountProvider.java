@@ -40,6 +40,7 @@ public class OperatorTypeParameterCountProvider {
             case NOT:
                 return 0;
             case MEMBERSETTER:
+                return 2;
             case INDEXSET:
                 return 3;
             default:
