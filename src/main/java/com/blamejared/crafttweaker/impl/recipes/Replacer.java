@@ -293,7 +293,13 @@ public final class Replacer {
      */
     @ZenCodeType.Method
     public Replacer excluding(final ResourceLocation... recipes) {
-        return new Replacer(ExcludingRecipesAndDelegatingTargetingRule.of(this.targetingRule, recipes));
+        return new Replacer(
+                ExcludingRecipesAndDelegatingTargetingRule.of(this.targetingRule, recipes),
+                this.replacementRules,
+                this.userRenames,
+                this.userRenamingFunction,
+                this.suppressWarnings
+        );
     }
     
     /**
@@ -306,7 +312,13 @@ public final class Replacer {
      */
     @ZenCodeType.Method
     public Replacer excluding(final IRecipeManager... managers) {
-        return new Replacer(ExcludingManagersAndDelegatingTargetingRule.of(this.targetingRule, managers));
+        return new Replacer(
+                ExcludingManagersAndDelegatingTargetingRule.of(this.targetingRule, managers),
+                this.replacementRules,
+                this.userRenames,
+                this.userRenamingFunction,
+                this.suppressWarnings
+        );
     }
     
     /**
