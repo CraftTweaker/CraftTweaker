@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.api.ingredient.PartialNBTIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.data.MapData;
+import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -38,6 +39,14 @@ public class MCItemStack implements IItemStack {
         
         ItemStack newStack = getInternal().copy();
         newStack.setDisplayName(new StringTextComponent(name));
+        return new MCItemStack(newStack);
+    }
+    
+    @Override
+    public IItemStack withDisplayName(MCTextComponent text) {
+        
+        ItemStack newStack = getInternal().copy();
+        newStack.setDisplayName(text.getInternal());
         return new MCItemStack(newStack);
     }
     
@@ -87,14 +96,15 @@ public class MCItemStack implements IItemStack {
         copy.setTag(((MapData) tag).getInternal());
         return new MCItemStack(copy);
     }
-
+    
     @Override
     public IItemStack withoutTag() {
+        
         final ItemStack copy = getImmutableInternal();
         copy.setTag(null);
         return new MCItemStack(copy);
     }
-
+    
     @Override
     public String getCommandString() {
         

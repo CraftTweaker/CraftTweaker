@@ -14,6 +14,7 @@ import com.blamejared.crafttweaker.impl.actions.items.ActionSetRarity;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.food.MCFood;
 import com.blamejared.crafttweaker.impl.item.MCWeightedItemStack;
+import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.enchantment.Enchantment;
@@ -155,6 +156,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         return getInternal().getDisplayName().getString();
     }
     
+    //TODO remove / replace with the global name setter.
     /**
      * Sets the display name of the ItemStack
      *
@@ -164,6 +166,18 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Method
     IItemStack setDisplayName(String name);
+    
+    /**
+     * Sets the display name of the ItemStack
+     *
+     * @param text New name of the stack.
+     *
+     * @docParam name "totally not dirt"
+     */
+    @ZenCodeType.Method
+    default IItemStack withDisplayName(MCTextComponent text) {
+        return setDisplayName(text.asString());
+    }
     
     /**
      * Clears any custom name set for this ItemStack
