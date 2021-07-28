@@ -208,7 +208,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
     }
     
     /**
-     * Remove recipe based on regex
+     * Remove recipe based on regex.
      *
      * @param regex regex to match against
      *
@@ -217,6 +217,19 @@ public interface IRecipeManager extends CommandStringDisplayable {
     @ZenCodeType.Method
     default void removeByRegex(String regex) {
         CraftTweakerAPI.apply(new ActionRemoveRecipeByRegex(this, regex));
+    }
+    
+    /**
+     * Remove recipe based on regex with an added exclusion check, so you can remove the whole mod besides a few specified.
+     *
+     * @param regex regex to match against
+     *
+     * @docParam regex "\\d_\\d"
+     * @docParam exclude (name as string) => {return name == "orange_wool";}
+     */
+    @ZenCodeType.Method
+    default void removeByRegex(String regex, RecipeFilter exclude) {
+        CraftTweakerAPI.apply(new ActionRemoveRecipeByRegex(this, regex, exclude));
     }
     
     /**

@@ -7,11 +7,20 @@ import java.util.regex.Pattern;
 public class ActionRemoveRecipeByRegex extends ActionRecipeBase {
     
     private final Pattern compiledPat;
+    private final IRecipeManager.RecipeFilter exclude;
     
     public ActionRemoveRecipeByRegex(IRecipeManager manager, String regex) {
         
         super(manager);
         this.compiledPat = Pattern.compile(regex);
+        this.exclude = name -> false;
+    }
+    
+    public ActionRemoveRecipeByRegex(IRecipeManager manager, String regex, IRecipeManager.RecipeFilter exclude) {
+        
+        super(manager);
+        this.compiledPat = Pattern.compile(regex);
+        this.exclude = exclude;
     }
     
     @Override
@@ -19,7 +28,8 @@ public class ActionRemoveRecipeByRegex extends ActionRecipeBase {
         
         getRecipes()
                 .keySet()
-                .removeIf(resourceLocation -> compiledPat.matcher(resourceLocation.toString()).matches());
+                .removeIf(resourceLocation -> compiledPat.matcher(resourceLocation.toString())
+                        .matches() && !exclude.test(resourceLocation.getPath()));
     }
     
     @Override
