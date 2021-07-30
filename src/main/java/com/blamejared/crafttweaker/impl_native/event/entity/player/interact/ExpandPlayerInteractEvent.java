@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.util.MCDirection;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.openzen.zencode.java.ZenCodeType;
@@ -31,6 +32,7 @@ public class ExpandPlayerInteractEvent {
     @ZenCodeType.Method
     @ZenCodeType.Getter("blockPos")
     public static BlockPos getBlockPos(PlayerInteractEvent internal) {
+        
         return internal.getPos();
     }
     
@@ -41,6 +43,7 @@ public class ExpandPlayerInteractEvent {
     @ZenCodeType.Method
     @ZenCodeType.Getter("itemStack")
     public static IItemStack getItemStack(PlayerInteractEvent internal) {
+        
         return new MCItemStack(internal.getItemStack());
     }
     
@@ -52,6 +55,15 @@ public class ExpandPlayerInteractEvent {
     @ZenCodeType.Nullable
     @ZenCodeType.Getter("face")
     public static MCDirection getFace(PlayerInteractEvent internal) {
+        
         return Optional.ofNullable(internal.getFace()).map(MCDirection::get).orElse(null);
     }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("hand")
+    public static Hand getHand(PlayerInteractEvent internal) {
+        
+        return internal.getHand();
+    }
+    
 }
