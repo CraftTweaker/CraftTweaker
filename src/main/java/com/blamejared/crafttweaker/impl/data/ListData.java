@@ -239,4 +239,23 @@ public class ListData implements ICollectionData {
         return this.asList();
     }
     
+    @Override
+    public boolean equals(Object o) {
+        
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        ListData listData = (ListData) o;
+    
+        return internal.equals(listData.internal);
+    }
+    
+    @Override
+    public int hashCode() {
+        
+        return internal.hashCode();
+    }
+    
 }

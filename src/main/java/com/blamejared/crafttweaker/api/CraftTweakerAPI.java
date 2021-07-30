@@ -1,12 +1,12 @@
 package com.blamejared.crafttweaker.api;
 
 import com.blamejared.crafttweaker.CraftTweaker;
+import com.blamejared.crafttweaker.api.actions.ActionApplier;
 import com.blamejared.crafttweaker.api.actions.IAction;
 import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.logger.ILogger;
 import com.blamejared.crafttweaker.api.logger.LogLevel;
-import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.mods.MCMods;
 import com.blamejared.crafttweaker.api.zencode.expands.IDataRewrites;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
@@ -16,6 +16,7 @@ import com.blamejared.crafttweaker.impl.game.MCGame;
 import com.blamejared.crafttweaker.impl.logger.FileLogger;
 import com.blamejared.crafttweaker.impl.logger.GroupLogger;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeManager;
@@ -60,39 +61,28 @@ public class CraftTweakerAPI {
      */
     private static ScriptRun currentRun;
     
+    
+    private static ActionApplier actionApplier = CraftTweakerAPI::applyActionInternal;
+    
     static {
         ParsedExpressionMap.compileOverrides.add(IDataRewrites::rewriteMap);
         ParsedExpressionArray.compileOverrides.add(IDataRewrites::rewriteArray);
     }
     
+    /**
+     * Applies IActions in {@link #apply(IAction)}
+     * Extracted as interface to be able to override this in tests.
+     */
+    @VisibleForTesting
+    public static void setActionApplier(ActionApplier actionApplier) {
+        
+        CraftTweakerAPI.actionApplier = actionApplier;
+    }
+    
     
     public static void apply(IAction action) {
         
-        final ScriptRun currentRun = getCurrentRun();
-        if(!(action instanceof IRuntimeAction) && !currentRun.isFirstRun()) {
-            return;
-        }
-        
-        final LoaderActions currentLoaderActions = currentRun.getLoaderActions();
-        try {
-            if(!action.shouldApplyOn(EffectiveSide.get())) {
-                return;
-            }
-            
-            if(!action.validate(logger)) {
-                currentLoaderActions.addInvalidAction(action);
-                return;
-            }
-            
-            final String describe = action.describe();
-            if(describe != null && !describe.isEmpty()) {
-                logger.info(describe);
-            }
-            action.apply();
-            currentLoaderActions.addValidAction(action);
-        } catch(Exception e) {
-            logThrowing("Error running action", e);
-        }
+        actionApplier.apply(action);
     }
     
     
@@ -274,6 +264,35 @@ public class CraftTweakerAPI {
     public static String getDefaultLoaderName() {
         
         return "crafttweaker";
+    }
+    
+    private static void applyActionInternal(IAction action) {
+        
+        final ScriptRun currentRun = getCurrentRun();
+        if(!(action instanceof IRuntimeAction) && !currentRun.isFirstRun()) {
+            return;
+        }
+        
+        final LoaderActions currentLoaderActions = currentRun.getLoaderActions();
+        try {
+            if(!action.shouldApplyOn(EffectiveSide.get())) {
+                return;
+            }
+            
+            if(!action.validate(logger)) {
+                currentLoaderActions.addInvalidAction(action);
+                return;
+            }
+            
+            final String describe = action.describe();
+            if(describe != null && !describe.isEmpty()) {
+                logInfo(describe);
+            }
+            action.apply();
+            currentLoaderActions.addValidAction(action);
+        } catch(Exception e) {
+            logThrowing("Error running action", e);
+        }
     }
     
 }

@@ -72,4 +72,24 @@ public class IntData implements INumberData {
                 .mergeStyle(IData.SYNTAX_HIGHLIGHTING_NUMBER);
     }
     
+    
+    @Override
+    public boolean equals(Object o) {
+        
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        IntData intData = (IntData) o;
+    
+        return internal.equals(intData.internal);
+    }
+    
+    @Override
+    public int hashCode() {
+        
+        return internal.hashCode();
+    }
+    
 }
