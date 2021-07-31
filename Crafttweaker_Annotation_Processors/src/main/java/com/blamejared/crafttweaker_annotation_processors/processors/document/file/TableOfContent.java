@@ -14,7 +14,7 @@ public class TableOfContent {
     }
     
     public void add(DocumentationPage page) {
-        final String outputPath = page.pageInfo.getOutputPathWithExtension(PageWriter.extension);
+        final String outputPath = page.pageInfo.getOutputPathWithExtension(PageWriter.MARKDOWN_EXTENSION);
         final List<String> split = new LinkedList<>(Arrays.asList(outputPath.split("/")));
         add(split, page);
     }

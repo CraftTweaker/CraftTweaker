@@ -1,15 +1,22 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.virtual_member;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.MemberMeta;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.base.IFillMeta;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.members.CasterMemberMeta;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.members.MethodMemberMeta;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.members.OperatorMemberMeta;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.members.PropertyMemberMeta;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.PropertyMember;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-public class DocumentedVirtualMembers {
+public class DocumentedVirtualMembers implements IFillMeta<MemberMeta> {
     
     protected final Set<CasterMember> casters = new TreeSet<>();
     protected final Map<String, VirtualMethodGroup> methodGroups = new TreeMap<>();
@@ -17,33 +24,75 @@ public class DocumentedVirtualMembers {
     protected final Map<String, PropertyMember> properties = new TreeMap<>();
     
     public DocumentedVirtualMembers() {
+    
     }
     
     public void addCaster(CasterMember casterMember) {
+        
         casters.add(casterMember);
     }
     
     public void addMethod(VirtualMethodMember methodMember, AbstractTypeInfo ownerType) {
+        
         final VirtualMethodGroup group = methodGroups.computeIfAbsent(methodMember.getName(), name -> new VirtualMethodGroup(name, ownerType));
         group.addMethod(methodMember);
     }
     
     public void addOperator(OperatorMember operatorMember) {
+        
         operators.add(operatorMember);
     }
     
     public void addProperty(PropertyMember propertyMember) {
+        
         properties.merge(propertyMember.getName(), propertyMember, PropertyMember::merge);
     }
     
     public void write(PageOutputWriter writer) {
+        
         writeCasters(writer);
         writeMethods(writer);
         writeOperators(writer);
         writeProperties(writer);
     }
     
+    @Override
+    public void fillMeta(MemberMeta meta) {
+        
+        Set<CasterMemberMeta> castersMeta = new HashSet<>();
+        Set<OperatorMemberMeta> operatorMeta = new HashSet<>();
+        Set<PropertyMemberMeta> propertyMeta = new HashSet<>();
+        Set<MethodMemberMeta> methodMeta = new HashSet<>();
+        
+        for(CasterMember caster : casters) {
+            CasterMemberMeta memberMeta = new CasterMemberMeta();
+            caster.fillMeta(memberMeta);
+            castersMeta.add(memberMeta);
+        }
+        for(OperatorMember operator : operators) {
+            OperatorMemberMeta memberMeta = new OperatorMemberMeta();
+            operator.fillMeta(memberMeta);
+            operatorMeta.add(memberMeta);
+        }
+        for(PropertyMember value : properties.values()) {
+            PropertyMemberMeta memberMeta = new PropertyMemberMeta();
+            value.fillMeta(memberMeta);
+            memberMeta.setStatic(false);
+            propertyMeta.add(memberMeta);
+        }
+        
+        for(VirtualMethodGroup value : methodGroups.values()) {
+            value.fillMeta(methodMeta);
+        }
+        meta.setCasters(castersMeta);
+        meta.setOperators(operatorMeta);
+        meta.setProperties(propertyMeta);
+        meta.setMethods(methodMeta);
+        
+    }
+    
     protected void writeCasters(PageOutputWriter writer) {
+        
         if(casters.isEmpty()) {
             return;
         }
@@ -59,6 +108,7 @@ public class DocumentedVirtualMembers {
     }
     
     protected void writeMethods(PageOutputWriter writer) {
+        
         if(methodGroups.isEmpty()) {
             return;
         }
@@ -71,6 +121,7 @@ public class DocumentedVirtualMembers {
     }
     
     protected void writeOperators(PageOutputWriter writer) {
+        
         if(operators.isEmpty()) {
             return;
         }
@@ -83,6 +134,7 @@ public class DocumentedVirtualMembers {
     }
     
     protected void writeProperties(PageOutputWriter writer) {
+        
         if(properties.isEmpty()) {
             return;
         }

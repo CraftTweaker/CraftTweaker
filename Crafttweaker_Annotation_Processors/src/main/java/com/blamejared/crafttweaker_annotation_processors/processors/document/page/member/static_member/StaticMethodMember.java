@@ -1,14 +1,19 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.static_member;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.base.IFillMeta;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.members.MethodMemberMeta;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.members.MethodParameterMeta;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.DocumentedParameter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.MemberHeader;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashSet;
 
-public class StaticMethodMember implements Comparable<StaticMethodMember> {
+public class StaticMethodMember implements Comparable<StaticMethodMember>, IFillMeta<MethodMemberMeta> {
     
     protected final MemberHeader header;
     private final String name;
@@ -106,4 +111,21 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
     public String getSince() {
         return this.methodComment.getSinceVersion();
     }
+    
+    @Override
+    public void fillMeta(MethodMemberMeta meta) {
+    
+        meta.setName(name);
+        meta.setStatic(true);
+        HashSet<MethodParameterMeta> parameters = new HashSet<>();
+        for(DocumentedParameter parameter : header.parameters) {
+            MethodParameterMeta paramMeta = new MethodParameterMeta();
+            parameter.fillMeta(paramMeta);
+            parameters.add(paramMeta);
+        }
+        if(!parameters.isEmpty()) {
+            meta.setParameters(parameters);
+        }
+    }
+    
 }

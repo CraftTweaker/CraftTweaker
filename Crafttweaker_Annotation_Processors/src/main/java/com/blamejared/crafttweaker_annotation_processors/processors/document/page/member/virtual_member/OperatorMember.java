@@ -1,6 +1,10 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.virtual_member;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.base.IFillMeta;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.base.TypePageMeta;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.members.CasterMemberMeta;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.members.OperatorMemberMeta;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.DocumentedParameter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.MemberHeader;
@@ -13,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class OperatorMember extends AbstractVirtualMember implements Comparable<OperatorMember> {
+public class OperatorMember extends AbstractVirtualMember implements Comparable<OperatorMember>, IFillMeta<OperatorMemberMeta> {
     
     private final ZenCodeType.OperatorType type;
     private final AbstractTypeInfo ownerType;
@@ -120,4 +124,12 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
     private String getHeaderCallee() {
         return "my" + ownerType.getDisplayName();
     }
+    
+    @Override
+    public void fillMeta(OperatorMemberMeta meta) {
+        meta.setOperatorType(type.name());
+        meta.setReturnType(new TypePageMeta(ownerType));
+        //TODO param type
+    }
+    
 }
