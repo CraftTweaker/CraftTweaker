@@ -13,6 +13,7 @@ public class ActionRemoveTrade extends ActionTradeBase {
     private final List<VillagerTrades.ITrade> removed;
     
     public ActionRemoveTrade(VillagerProfession profession, int level, ITradeRemover tradeRemover) {
+        
         super(profession, level);
         this.tradeRemover = tradeRemover;
         this.removed = new ArrayList<>();
@@ -20,7 +21,15 @@ public class ActionRemoveTrade extends ActionTradeBase {
     
     @Override
     public void apply() {
+        
         List<VillagerTrades.ITrade> tradeList = getTradeList();
+        apply(tradeList);
+        setTradeList(tradeList);
+    }
+    
+    @Override
+    public void apply(List<VillagerTrades.ITrade> tradeList) {
+        
         tradeList.forEach(iTrade -> {
             if(tradeRemover.shouldRemove(iTrade)) {
                 removed.add(iTrade);
@@ -28,25 +37,33 @@ public class ActionRemoveTrade extends ActionTradeBase {
         });
         tradeList.removeAll(removed);
         
-        setTradeList(tradeList);
     }
     
     @Override
     public String describe() {
+        
         return String.format("Removing Villager trade for Profession: '%s' and Level: '%s'", profession.toString(), level);
         
     }
     
     @Override
     public void undo() {
+        
         List<VillagerTrades.ITrade> tradeList = getTradeList();
-        tradeList.addAll(removed);
+        undo(tradeList);
         setTradeList(tradeList);
     }
     
     @Override
+    public void undo(List<VillagerTrades.ITrade> tradeList) {
+        tradeList.addAll(removed);
+    }
+    
+    @Override
     public String describeUndo() {
+        
         return String.format("Undoing removal of Villager trade for Profession: '%s' and Level: '%s'", profession.toString(), level);
         
     }
+    
 }

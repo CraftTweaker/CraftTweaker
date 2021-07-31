@@ -31,6 +31,8 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.IntFunction;
 
 /**
  * @docParam this villagerTrades
@@ -51,7 +53,21 @@ public class CTVillagerTrades {
         
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, (Consumer<WandererTradesEvent>) event -> {
             wanderingTradeActions.forEach(ActionTradeBase::undo);
-            wanderingTradeActions.forEach(ActionTradeBase::apply);
+            wanderingTradeActions.forEach(actionTradeBase -> {
+                
+                List<VillagerTrades.ITrade> trades;
+                switch(actionTradeBase.getLevel()) {
+                    case 1:
+                        trades = event.getGenericTrades();
+                        break;
+                    case 2:
+                        trades = event.getRareTrades();
+                        break;
+                    default:
+                        return;
+                }
+                actionTradeBase.apply(trades);
+            });
             wanderingTradeActions.clear();
         });
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, (Consumer<VillagerTradesEvent>) event -> {
@@ -60,7 +76,10 @@ public class CTVillagerTrades {
                 return;
             }
             villagerTradeActions.forEach(ActionTradeBase::undo);
-            villagerTradeActions.forEach(ActionTradeBase::apply);
+            villagerTradeActions.forEach(actionTradeBase -> {
+                actionTradeBase.apply(event.getTrades()
+                        .computeIfAbsent(actionTradeBase.getLevel(), value -> new ArrayList<>()));
+            });
             villagerTradeActions.clear();
             ranEvents = true;
         });
@@ -465,11 +484,13 @@ public class CTVillagerTrades {
     
     private void apply(ActionTradeBase action, boolean wandering) {
         
-        if(!ranEvents) {
-            if(wandering) {
-                wanderingTradeActions.add(action);
-            } else {
-                villagerTradeActions.add(action);
+        if(CraftTweakerAPI.isServer()) {
+            if(!ranEvents) {
+                if(wandering) {
+                    wanderingTradeActions.add(action);
+                } else {
+                    villagerTradeActions.add(action);
+                }
             }
         }
         CraftTweakerAPI.apply(action);

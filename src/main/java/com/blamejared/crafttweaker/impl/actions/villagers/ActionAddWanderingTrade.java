@@ -23,8 +23,13 @@ public class ActionAddWanderingTrade extends ActionTradeBase {
     @Override
     public void apply() {
         List<VillagerTrades.ITrade> tradeList = getTradeList();
-        tradeList.add(trade);
+        apply(tradeList);
         setTradeList(tradeList);
+    }
+    
+    @Override
+    public void apply(List<VillagerTrades.ITrade> tradeList) {
+        tradeList.add(trade);
     }
     
     @Override
@@ -35,8 +40,13 @@ public class ActionAddWanderingTrade extends ActionTradeBase {
     @Override
     public void undo() {
         List<VillagerTrades.ITrade> tradeList = getTradeList();
-        tradeList.remove(trade);
+        undo(tradeList);
         setTradeList(tradeList);
+    }
+    
+    @Override
+    public void undo(List<VillagerTrades.ITrade> tradeList) {
+        tradeList.remove(trade);
     }
     
     @Override

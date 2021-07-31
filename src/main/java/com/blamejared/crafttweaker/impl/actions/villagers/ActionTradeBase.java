@@ -24,6 +24,10 @@ public abstract class ActionTradeBase implements IUndoableAction {
         this.level = level;
     }
     
+    public abstract void apply(List<VillagerTrades.ITrade> tradeList);
+    
+    public abstract void undo(List<VillagerTrades.ITrade> tradeList);
+    
     protected Int2ObjectMap<VillagerTrades.ITrade[]> getTrades() {
         return VillagerTrades.VILLAGER_DEFAULT_TRADES.computeIfAbsent(profession, villagerProfession -> new Int2ObjectArrayMap<>());
     }
@@ -36,4 +40,10 @@ public abstract class ActionTradeBase implements IUndoableAction {
     protected void setTradeList(List<VillagerTrades.ITrade> tradeList) {
         getTrades().put(level, tradeList.toArray(new VillagerTrades.ITrade[0]));
     }
+    
+    public int getLevel() {
+        
+        return level;
+    }
+    
 }
