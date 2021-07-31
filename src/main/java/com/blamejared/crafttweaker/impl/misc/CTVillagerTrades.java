@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.misc;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.actions.IAction;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.villagers.BasicTradeExposer;
@@ -9,15 +10,27 @@ import com.blamejared.crafttweaker.impl.actions.villagers.ActionAddTrade;
 import com.blamejared.crafttweaker.impl.actions.villagers.ActionAddWanderingTrade;
 import com.blamejared.crafttweaker.impl.actions.villagers.ActionRemoveTrade;
 import com.blamejared.crafttweaker.impl.actions.villagers.ActionRemoveWanderingTrade;
+import com.blamejared.crafttweaker.impl.actions.villagers.ActionTradeBase;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.google.common.collect.Iterables;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.BasicTrade;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.village.VillagerTradesEvent;
+import net.minecraftforge.event.village.WandererTradesEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @docParam this villagerTrades
@@ -29,6 +42,30 @@ public class CTVillagerTrades {
     
     @ZenCodeGlobals.Global("villagerTrades")
     public static final CTVillagerTrades INSTANCE = new CTVillagerTrades();
+    private final List<ActionTradeBase> villagerTradeActions = new ArrayList<>();
+    private final List<ActionTradeBase> wanderingTradeActions = new ArrayList<>();
+    // The event only fires once, so we use this to make sure we don't constantly add to the above lists
+    private boolean ranEvents = false;
+    
+    public CTVillagerTrades() {
+        
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, (Consumer<WandererTradesEvent>) event -> {
+            wanderingTradeActions.forEach(ActionTradeBase::undo);
+            wanderingTradeActions.forEach(ActionTradeBase::apply);
+            wanderingTradeActions.clear();
+        });
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, (Consumer<VillagerTradesEvent>) event -> {
+            if(event.getType() != Iterables.getLast(ForgeRegistries.PROFESSIONS.getValues())) {
+                // hopefully run after all of them??
+                return;
+            }
+            villagerTradeActions.forEach(ActionTradeBase::undo);
+            villagerTradeActions.forEach(ActionTradeBase::apply);
+            villagerTradeActions.clear();
+            ranEvents = true;
+        });
+    }
+    
     
     /**
      * Adds a Villager Trade for emeralds for an Item. An example being, giving a villager 2 emeralds for an arrow.
@@ -50,6 +87,7 @@ public class CTVillagerTrades {
      * @docParam priceMult 0.05
      */
     @ZenCodeType.Method
+    
     public void addTrade(VillagerProfession profession, int villagerLevel, int emeralds, ItemStack forSale, int maxTrades, int xp, @ZenCodeType.OptionalFloat(1.0f) float priceMult) {
         
         BasicTrade trade = new BasicTrade(emeralds, forSale, maxTrades, xp, priceMult);
@@ -129,11 +167,11 @@ public class CTVillagerTrades {
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof BasicTrade) {
                 boolean saleMatches = forSale.matches(new MCItemStackMutable(BasicTradeExposer.getForSale(trade)));
-                if(price.isEmpty() && price2.isEmpty()){
+                if(price.isEmpty() && price2.isEmpty()) {
                     return saleMatches;
                 }
                 boolean priceMatches = price.matches(new MCItemStackMutable(BasicTradeExposer.getPrice(trade)));
-                if(!price.isEmpty() && price2.isEmpty()){
+                if(!price.isEmpty() && price2.isEmpty()) {
                     return saleMatches && priceMatches;
                 }
                 boolean price2Matches = price2.matches(new MCItemStackMutable(BasicTradeExposer.getPrice2(trade)));
@@ -364,7 +402,7 @@ public class CTVillagerTrades {
      * Adds a Wandering Trader Trade for emeralds for an Item. An example being, giving a Wandering Trader 2 emeralds for an arrow.
      *
      * @param rarity    The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
-     * @param price  The ItemStack being given to the Wandering Trader.
+     * @param price     The ItemStack being given to the Wandering Trader.
      * @param forSale   What ItemStack is being sold (by the Wandering Trader).
      * @param maxTrades How many times can this trade be done.
      * @param xp        How much Experience is given by trading.
@@ -407,22 +445,35 @@ public class CTVillagerTrades {
     
     private void addTradeInternal(VillagerProfession profession, int villagerLevel, BasicTrade trade) {
         
-        CraftTweakerAPI.apply(new ActionAddTrade(profession, villagerLevel, trade));
+        apply(new ActionAddTrade(profession, villagerLevel, trade), false);
     }
     
     private void addWanderingTradeInternal(int villagerLevel, BasicTrade trade) {
         
-        CraftTweakerAPI.apply(new ActionAddWanderingTrade(villagerLevel, trade));
+        apply(new ActionAddWanderingTrade(villagerLevel, trade), true);
     }
     
     private void removeTradeInternal(VillagerProfession profession, int villagerLevel, ITradeRemover remover) {
         
-        CraftTweakerAPI.apply(new ActionRemoveTrade(profession, villagerLevel, remover));
+        apply(new ActionRemoveTrade(profession, villagerLevel, remover), false);
     }
     
     private void removeWanderingTradeInternal(int villagerLevel, ITradeRemover remover) {
         
-        CraftTweakerAPI.apply(new ActionRemoveWanderingTrade(villagerLevel, remover));
+        apply(new ActionRemoveWanderingTrade(villagerLevel, remover), true);
     }
+    
+    private void apply(ActionTradeBase action, boolean wandering) {
+        
+        if(!ranEvents) {
+            if(wandering) {
+                wanderingTradeActions.add(action);
+            } else {
+                villagerTradeActions.add(action);
+            }
+        }
+        CraftTweakerAPI.apply(action);
+    }
+    
     
 }
