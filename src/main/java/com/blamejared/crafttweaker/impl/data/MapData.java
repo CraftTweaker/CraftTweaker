@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.data;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
+import com.blamejared.crafttweaker.api.zencode.impl.util.ZenKeywordUtil;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.common.base.Strings;
 import net.minecraft.nbt.CompoundNBT;
@@ -10,6 +11,7 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import org.openzen.zencode.java.ZenCodeType;
+import org.openzen.zenscript.lexer.ZSTokenType;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -257,9 +259,9 @@ public class MapData implements IData {
             }
             
             if(isValidIdentifier(key)) {
-                result.append(key);
+                result.append(ZenKeywordUtil.sanitize(key));
             } else {
-                result.append("\"").append(key).append("\"");
+                result.append("\"").append(ZenKeywordUtil.sanitize(key)).append("\"");
             }
             
             result.append(": ");
