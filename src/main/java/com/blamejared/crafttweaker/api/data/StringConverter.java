@@ -5,6 +5,7 @@ import org.openzen.zencode.shared.LiteralSourceFile;
 import org.openzen.zenscript.lexer.ParseException;
 import org.openzen.zenscript.lexer.ZSToken;
 import org.openzen.zenscript.lexer.ZSTokenParser;
+import org.openzen.zenscript.lexer.ZSTokenType;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -106,7 +107,17 @@ public class StringConverter {
         
         final Map<String, IData> result = new HashMap<>();
         while(parser.optional(T_ACLOSE) == null) {
-            final String key = parser.required(T_IDENTIFIER, "Identifier expected").getContent();
+            ZSTokenType tokenType = parser.peek().getType();
+            final String key;
+            switch (tokenType) {
+                case T_STRING_DQ:
+                case T_STRING_DQ_WYSIWYG:
+                    String content = parser.required(tokenType, "String expected").getContent();
+                    key = content.substring(1, content.length() - 1); // remove quotation mark wraps fast
+                    break;
+                default:
+                    key = parser.required(T_IDENTIFIER, "Identifier expected").getContent();
+            }
             parser.required(T_COLON, ": expected");
             result.put(key, parse(parser));
             
