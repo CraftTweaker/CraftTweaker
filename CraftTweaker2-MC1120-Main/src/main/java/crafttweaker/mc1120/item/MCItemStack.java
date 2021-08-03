@@ -290,8 +290,8 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public IItemStack removeTag(String tag) {
-        ItemStack result = new ItemStack(stack.getItem(), stack.getCount(), stack.getItemDamage());
-        
+        ItemStack result = stack.copy();
+
         if(tag == null) {
             result.setTagCompound(null);
         } else {
