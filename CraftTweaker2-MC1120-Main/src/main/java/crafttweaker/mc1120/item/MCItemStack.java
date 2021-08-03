@@ -290,13 +290,15 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public IItemStack removeTag(String tag) {
+        ItemStack result = stack.copy();
+
         if(tag == null) {
-            stack.setTagCompound(null);
+            result.setTagCompound(null);
         } else {
-            stack.getTagCompound().removeTag(tag);
+            result.getTagCompound().removeTag(tag);
         }
-        IData dataTag = NBTConverter.from(stack.getTagCompound(), false);
-        return new MCItemStack(stack, dataTag);
+        IData dataTag = NBTConverter.from(result.getTagCompound(), false);
+        return new MCItemStack(result, dataTag);
     }
     
     @Override
