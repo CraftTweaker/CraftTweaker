@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.zencode.impl.preprocessors;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.annotations.Preprocessor;
+import com.blamejared.crafttweaker.api.util.StringUtils;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.PreprocessorMatch;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
@@ -40,10 +41,10 @@ public class PriorityPreprocessor implements IPreprocessor {
         }
         
         try {
-            Integer.parseInt(preprocessorMatches.get(0).getContent());
+            Integer.parseInt(preprocessorMatches.get(0).getContent().trim());
         } catch(NumberFormatException ex) {
-            CraftTweakerAPI.logWarning("Incorrect Priority value: " + preprocessorMatches.get(0).getContent());
-            preprocessorMatches.set(0, new PreprocessorMatch(this, -1, "10"));
+            CraftTweakerAPI.logWarning("Incorrect Priority value: " + StringUtils.wrap(preprocessorMatches.get(0).getContent().trim(), "`", false));
+            preprocessorMatches.set(0, new PreprocessorMatch(this, -1, getDefaultValue()));
         }
         
         return true;
@@ -53,8 +54,8 @@ public class PriorityPreprocessor implements IPreprocessor {
     public int compare(FileAccessSingle o1, FileAccessSingle o2) {
         //We know PriorityPreprocessor has a default value, so it will always have a "match"
         //Otherwise we'd need to check if the file has a match
-        final int i1 = Integer.parseInt(o1.getMatchesFor(this).get(0).getContent());
-        final int i2 = Integer.parseInt(o2.getMatchesFor(this).get(0).getContent());
+        final int i1 = Integer.parseInt(o1.getMatchesFor(this).get(0).getContent().trim());
+        final int i2 = Integer.parseInt(o2.getMatchesFor(this).get(0).getContent().trim());
         
         return Integer.compare(i2, i1);
     }
