@@ -14,6 +14,7 @@ public class ExpandPlayerEvent {
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("player")
+    @ZenCodeType.Nullable
     public static PlayerEntity getPlayer(PlayerEvent internal) {
         return internal.getPlayer();
     }
