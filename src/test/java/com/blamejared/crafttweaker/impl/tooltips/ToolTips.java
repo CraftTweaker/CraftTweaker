@@ -7,7 +7,6 @@ import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionAddTooltip;
 import com.blamejared.crafttweaker.impl.events.CTClientEventHandler;
 import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
 import net.minecraft.util.text.ITextComponent;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
@@ -19,12 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ToolTips extends CraftTweakerTest {
     
-    
-    @AfterEach
-    public void afterEach() {
-        
-        CTClientEventHandler.TOOLTIPS.clear();
-    }
     
     @Test
     public void addTooltipCreatesAction() {

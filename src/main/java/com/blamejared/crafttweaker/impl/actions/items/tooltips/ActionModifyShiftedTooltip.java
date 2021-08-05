@@ -1,48 +1,49 @@
 package com.blamejared.crafttweaker.impl.actions.items.tooltips;
 
-import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
 import com.blamejared.crafttweaker.api.util.ClientHelper;
-import com.blamejared.crafttweaker.impl.events.CTClientEventHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.fml.LogicalSide;
 
-import java.util.LinkedList;
-
-public class ActionModifyShiftedTooltip implements IRuntimeAction {
+public class ActionModifyShiftedTooltip extends ActionTooltipBase {
     
-    private final IIngredient stack;
     private final ITooltipFunction shiftedFunction;
     private final ITooltipFunction unshiftedFunction;
     
+    private final ITooltipFunction function;
     
     public ActionModifyShiftedTooltip(IIngredient stack, ITooltipFunction shiftedFunction, ITooltipFunction unshiftedFunction) {
         
-        this.stack = stack;
+        super(stack);
         this.shiftedFunction = shiftedFunction;
         this.unshiftedFunction = unshiftedFunction;
+        this.function = (stack1, tooltip, isAdvanced) -> {
+            
+            final KeyBinding keyBindSneak = Minecraft.getInstance().gameSettings.keyBindSneak;
+            
+            if(ClientHelper.getIsKeyPressed(keyBindSneak.getKeyBinding())) {
+                shiftedFunction.apply(stack1, tooltip, isAdvanced);
+            } else {
+                if(unshiftedFunction != null) {
+                    unshiftedFunction.apply(stack1, tooltip, isAdvanced);
+                }
+            }
+            
+            
+        };
     }
     
     @Override
     public void apply() {
         
-        CTClientEventHandler.TOOLTIPS.computeIfAbsent(stack, iItemStack -> new LinkedList<>())
-                .add((stack1, tooltip, isAdvanced) -> {
-                    
-                    final KeyBinding keyBindSneak = Minecraft.getInstance().gameSettings.keyBindSneak;
-                    
-                    if(ClientHelper.getIsKeyPressed(keyBindSneak.getKeyBinding())) {
-                        shiftedFunction.apply(stack1, tooltip, isAdvanced);
-                    } else {
-                        if(unshiftedFunction != null) {
-                            unshiftedFunction.apply(stack1, tooltip, isAdvanced);
-                        }
-                    }
-                    
-                    
-                });
+        getTooltip().add(function);
+    }
+    
+    @Override
+    public void undo() {
+        
+        getTooltip().remove(function);
     }
     
     @Override
@@ -52,9 +53,9 @@ public class ActionModifyShiftedTooltip implements IRuntimeAction {
     }
     
     @Override
-    public boolean shouldApplyOn(LogicalSide side) {
-        
-        return side.isClient();
+    public String describeUndo() {
+    
+        return "Undoing addition of advanced shifted tooltip to: " + stack.getCommandString();
     }
     
 }

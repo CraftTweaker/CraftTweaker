@@ -200,7 +200,6 @@ public class CraftTweaker {
         recipeManager.recipes = new HashMap<>(recipeManager.recipes);
         recipeManager.recipes.replaceAll((t, v) -> new HashMap<>(recipeManager.recipes.get(t)));
         
-        CTClientEventHandler.TOOLTIPS.clear();
         serverOverride = false;
         CTCraftingTableManager.recipeManager = event.getRecipeManager();
         final ScriptLoadingOptions scriptLoadingOptions = new ScriptLoadingOptions().execute();
@@ -233,7 +232,7 @@ public class CraftTweaker {
             @Nonnull
             @ParametersAreNonnullByDefault
             protected Void prepare(IResourceManager resourceManagerIn, IProfiler profilerIn) {
-                
+    
                 MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
                 serverOverride = server == null;
                 return null;

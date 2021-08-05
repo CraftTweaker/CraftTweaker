@@ -1,48 +1,45 @@
 package com.blamejared.crafttweaker.impl.actions.items.tooltips;
 
-import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
 import com.blamejared.crafttweaker.api.item.IIngredient;
+import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
 import com.blamejared.crafttweaker.api.util.ClientHelper;
-import com.blamejared.crafttweaker.impl.events.CTClientEventHandler;
 import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.fml.LogicalSide;
 
-import java.util.LinkedList;
-
-public class ActionAddShiftedTooltip implements IRuntimeAction {
+public class ActionAddShiftedTooltip extends ActionTooltipBase {
     
-    private final IIngredient stack;
     private final MCTextComponent content;
-    private final MCTextComponent showMessage;
-    
+    private final ITooltipFunction function;
     
     public ActionAddShiftedTooltip(IIngredient stack, MCTextComponent content, MCTextComponent showMessage) {
         
-        this.stack = stack;
+        super(stack);
         this.content = content;
-        this.showMessage = showMessage;
+        this.function = (stack1, tooltip, isAdvanced) -> {
+            
+            final KeyBinding keyBindSneak = Minecraft.getInstance().gameSettings.keyBindSneak;
+            
+            if(ClientHelper.getIsKeyPressed(keyBindSneak.getKeyBinding())) {
+                tooltip.add(content);
+            } else {
+                if(showMessage != null && !showMessage.getString().isEmpty()) {
+                    tooltip.add(showMessage);
+                }
+            }
+        };
     }
     
     @Override
     public void apply() {
         
-        CTClientEventHandler.TOOLTIPS.computeIfAbsent(stack, iItemStack -> new LinkedList<>())
-                .add((stack1, tooltip, isAdvanced) -> {
-                    
-                    final KeyBinding keyBindSneak = Minecraft.getInstance().gameSettings.keyBindSneak;
-                    
-                    if(ClientHelper.getIsKeyPressed(keyBindSneak.getKeyBinding())) {
-                        tooltip.add(content);
-                    } else {
-                        if(showMessage != null && !showMessage.getString().isEmpty()) {
-                            tooltip.add(showMessage);
-                        }
-                    }
-                    
-                    
-                });
+        getTooltip().add(function);
+    }
+    
+    @Override
+    public void undo() {
+        
+        getTooltip().remove(function);
     }
     
     @Override
@@ -52,9 +49,9 @@ public class ActionAddShiftedTooltip implements IRuntimeAction {
     }
     
     @Override
-    public boolean shouldApplyOn(LogicalSide side) {
+    public String describeUndo() {
         
-        return side.isClient();
+        return "Undoing addition of \"" + content.asString() + "\" to the shift tooltip for: " + stack.getCommandString();
     }
     
 }

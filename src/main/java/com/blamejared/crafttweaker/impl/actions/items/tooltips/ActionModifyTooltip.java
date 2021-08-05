@@ -1,37 +1,41 @@
 package com.blamejared.crafttweaker.impl.actions.items.tooltips;
 
-import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
 import com.blamejared.crafttweaker.api.item.IIngredient;
-import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
-import com.blamejared.crafttweaker.impl.events.CTClientEventHandler;
-import net.minecraftforge.fml.LogicalSide;
 
-import java.util.LinkedList;
-
-public class ActionModifyTooltip implements IRuntimeAction {
+public class ActionModifyTooltip extends ActionTooltipBase {
     
-    private final IIngredient stack;
     private final ITooltipFunction function;
     
     public ActionModifyTooltip(IIngredient stack, ITooltipFunction function) {
-        this.stack = stack;
+        
+        super(stack);
         this.function = function;
     }
     
     @Override
     public void apply() {
         
-        CTClientEventHandler.TOOLTIPS.computeIfAbsent(stack, iItemStack -> new LinkedList<>()).add(function);
+        getTooltip().add(function);
+    }
+    
+    @Override
+    public void undo() {
+        
+        getTooltip().remove(function);
     }
     
     @Override
     public String describe() {
+        
         return "Adding advanced tooltip to: " + stack.getCommandString();
     }
     
+    
     @Override
-    public boolean shouldApplyOn(LogicalSide side) {
-        return side.isClient();
+    public String describeUndo() {
+    
+        return "Undoing addition of advanced tooltip to: " + stack.getCommandString();
     }
+    
 }
