@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.impl.ingredients.conditions.serializer.Condit
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 public class ConditionCustom<T extends IIngredient> implements IIngredientCondition<T> {
@@ -67,5 +68,25 @@ public class ConditionCustom<T extends IIngredient> implements IIngredientCondit
         return ConditionCustomSerializer.INSTANCE;
     }
     
+    @Override
+    public boolean equals(Object o) {
+        
+        if(this == o) {
+            return true;
+        }
+        if(o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        
+        ConditionCustom<?> that = (ConditionCustom<?>) o;
+    
+        return Objects.equals(uid, that.uid);
+    }
+    
+    @Override
+    public int hashCode() {
+        
+        return uid != null ? uid.hashCode() : 0;
+    }
     
 }

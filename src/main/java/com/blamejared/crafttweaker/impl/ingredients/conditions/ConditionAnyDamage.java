@@ -28,5 +28,14 @@ public class ConditionAnyDamage<T extends IIngredient> implements IIngredientCon
         return ConditionAnyDamagedSerializer.INSTANCE;
     }
     
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof ConditionAnyDamage;
+    }
+    
+    @Override
+    public int hashCode() {
+        return ConditionAnyDamage.class.hashCode();
+    }
     
 }
