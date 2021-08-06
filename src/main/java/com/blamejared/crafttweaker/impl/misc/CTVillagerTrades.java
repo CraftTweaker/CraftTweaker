@@ -12,7 +12,6 @@ import com.blamejared.crafttweaker.impl.actions.villagers.ActionRemoveWanderingT
 import com.blamejared.crafttweaker.impl.actions.villagers.ActionTradeBase;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.google.common.collect.Iterables;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.item.Item;
@@ -22,13 +21,13 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * @docParam this villagerTrades
@@ -67,16 +66,15 @@ public class CTVillagerTrades {
             wanderingTradeActions.clear();
         });
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, (Consumer<VillagerTradesEvent>) event -> {
-            if(event.getType() != Iterables.getLast(ForgeRegistries.PROFESSIONS.getValues())) {
-                // hopefully run after all of them??
-                return;
-            }
-            villagerTradeActions.forEach(ActionTradeBase::undo);
-            villagerTradeActions.forEach(actionTradeBase -> {
+            List<ActionTradeBase> collect = villagerTradeActions.stream()
+                    .filter(actionTradeBase -> actionTradeBase.getProfession() == event.getType())
+                    .collect(Collectors.toList());
+            collect.forEach(ActionTradeBase::undo);
+            collect.forEach(actionTradeBase -> {
                 actionTradeBase.apply(event.getTrades()
                         .computeIfAbsent(actionTradeBase.getLevel(), value -> new ArrayList<>()));
             });
-            villagerTradeActions.clear();
+            villagerTradeActions.removeAll(collect);
             ranEvents = true;
         });
     }

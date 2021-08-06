@@ -46,4 +46,9 @@ public abstract class ActionTradeBase implements IUndoableAction {
         return level;
     }
     
+    public VillagerProfession getProfession() {
+        
+        return profession;
+    }
+    
 }
