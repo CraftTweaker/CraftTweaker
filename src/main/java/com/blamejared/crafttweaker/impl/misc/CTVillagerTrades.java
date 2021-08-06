@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.impl.misc;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.actions.IAction;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.villagers.BasicTradeExposer;
@@ -14,7 +13,6 @@ import com.blamejared.crafttweaker.impl.actions.villagers.ActionTradeBase;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.common.collect.Iterables;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.item.Item;
@@ -31,8 +29,6 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.IntFunction;
 
 /**
  * @docParam this villagerTrades
@@ -168,7 +164,7 @@ public class CTVillagerTrades {
     }
     
     /**
-     * Removes a `BasicTrade` Villager trade. `BasicTrades` are trades that allow any item, to any other item. It it only really used for mod recipes and it not used for any vanilla villager trade.
+     * Removes a `BasicTrade` Villager trade. `BasicTrades` are trades that allow any item, to any other item. It is only really used for mod recipes and is not used for any vanilla villager trade.
      *
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
@@ -209,7 +205,7 @@ public class CTVillagerTrades {
      *
      * @docParam profession <profession:minecraft:farmer>
      * @docParam villagerLevel 1
-     * @docParam tradeFor <item:minecraft:arrow>.definition
+     * @docParam tradeFor <item:minecraft:potato>.definition
      */
     @ZenCodeType.Method
     public void removeEmeraldForItemsTrade(VillagerProfession profession, int villagerLevel, Item tradeFor) {
@@ -233,7 +229,7 @@ public class CTVillagerTrades {
      *
      * @docParam profession <profession:minecraft:farmer>
      * @docParam villagerLevel 1
-     * @docParam sellingItem <item:minecraft:arrow>
+     * @docParam sellingItem <item:minecraft:apple>
      */
     @ZenCodeType.Method
     public void removeItemsForEmeraldsTrade(VillagerProfession profession, int villagerLevel, IItemStack sellingItem) {
@@ -256,10 +252,10 @@ public class CTVillagerTrades {
      * @param sellingItem   What ItemStack is being given to the Villager.
      * @param buyingItem    The item that the Villager is selling.
      *
-     * @docParam profession <profession:minecraft:farmer>
+     * @docParam profession <profession:minecraft:fisherman>
      * @docParam villagerLevel 1
-     * @docParam sellingItem <item:minecraft:gravel>
-     * @docParam buyingItem <item:minecraft:flint>
+     * @docParam sellingItem <item:minecraft:cooked_cod>
+     * @docParam buyingItem <item:minecraft:cod>
      */
     @ZenCodeType.Method
     public void removeItemsForEmeraldsAndItemsTrade(VillagerProfession profession, int villagerLevel, IItemStack sellingItem, IItemStack buyingItem) {
@@ -286,7 +282,7 @@ public class CTVillagerTrades {
      * @param potionStack   The base ItemStack that a random potion effect will be applied to. E.G. A tipped Arrow with no effect applied.
      * @param sellingItem   What ItemStack is being given to the Villager.
      *
-     * @docParam profession <profession:minecraft:farmer>
+     * @docParam profession <profession:minecraft:fletcher>
      * @docParam villagerLevel 1
      * @docParam potionStack <item:minecraft:tipped_arrow>
      * @docParam sellingItem <item:minecraft:arrow>
@@ -311,7 +307,7 @@ public class CTVillagerTrades {
      * @param villagerLevel The level the Villager needs to be.
      * @param buyingItem    The base ItemStack that a random Dye colour will be applied to. E.G. A leather chestplate with no effect applied.
      *
-     * @docParam profession <profession:minecraft:farmer>
+     * @docParam profession <profession:minecraft:leatherworker>
      * @docParam villagerLevel 1
      * @docParam buyingItem <item:minecraft:leather_chestplate>
      */
@@ -332,7 +328,7 @@ public class CTVillagerTrades {
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
      *
-     * @docParam profession <profession:minecraft:farmer>
+     * @docParam profession <profession:minecraft:cartographer>
      * @docParam villagerLevel 1
      */
     @ZenCodeType.Method
@@ -347,7 +343,7 @@ public class CTVillagerTrades {
      * @param profession    What profession this trade should be for.
      * @param villagerLevel The level the Villager needs to be.
      *
-     * @docParam profession <profession:minecraft:farmer>
+     * @docParam profession <profession:minecraft:librarian>
      * @docParam villagerLevel 1
      */
     @ZenCodeType.Method
@@ -363,9 +359,9 @@ public class CTVillagerTrades {
      * @param villagerLevel The level the Villager needs to be.
      * @param buyingItem    The ItemStack that the Villager is selling (including any NBT).
      *
-     * @docParam profession <profession:minecraft:farmer>
+     * @docParam profession <profession:minecraft:armorer>
      * @docParam villagerLevel 1
-     * @docParam buyingItem <item:minecraft:diamond_sword>.withTag({Enchantments: [{lvl: 1 as short, id: "minecraft:smite" as string}]})
+     * @docParam buyingItem <item:minecraft:diamond_boots>
      */
     @ZenCodeType.Method
     public void removeEnchantedItemForEmeraldsTrade(VillagerProfession profession, int villagerLevel, IItemStack buyingItem) {
