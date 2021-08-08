@@ -11,6 +11,7 @@ import crafttweaker.api.container.IContainer;
 import crafttweaker.api.creativetabs.ICreativeTab;
 import crafttweaker.api.damage.IDamageSource;
 import crafttweaker.api.data.IData;
+import crafttweaker.api.dispenser.IBlockSource;
 import crafttweaker.api.entity.*;
 import crafttweaker.api.entity.attribute.IEntityAttribute;
 import crafttweaker.api.entity.attribute.IEntityAttributeInstance;
@@ -36,6 +37,7 @@ import crafttweaker.mc1120.container.MCContainer;
 import crafttweaker.mc1120.creativetabs.MCCreativeTab;
 import crafttweaker.mc1120.damage.MCDamageSource;
 import crafttweaker.mc1120.data.NBTConverter;
+import crafttweaker.mc1120.dispenser.MCBlockSource;
 import crafttweaker.mc1120.entity.*;
 import crafttweaker.mc1120.entity.attribute.MCEntityAttribute;
 import crafttweaker.mc1120.entity.attribute.MCEntityAttributeInstance;
@@ -1142,5 +1144,13 @@ public class CraftTweakerMC {
 
     public static net.minecraft.util.text.ITextComponent getITextComponent(ITextComponent textComponent) {
         return textComponent == null ? null : (net.minecraft.util.text.ITextComponent) textComponent.getInternal();
+    }
+
+    public static IBlockSource getBlockSource(net.minecraft.dispenser.IBlockSource blockSource) {
+        return blockSource == null ? null : new MCBlockSource(blockSource);
+    }
+
+    public static net.minecraft.dispenser.IBlockSource getBlockSource(IBlockSource blockSource) {
+        return blockSource == null ? null : ((net.minecraft.dispenser.IBlockSource) blockSource.getInternal());
     }
 }

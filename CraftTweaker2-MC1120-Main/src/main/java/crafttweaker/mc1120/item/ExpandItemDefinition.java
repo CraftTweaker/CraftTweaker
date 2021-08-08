@@ -1,8 +1,12 @@
 package crafttweaker.mc1120.item;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.dispenser.IDispenserBehavior;
 import crafttweaker.api.item.IItemDefinition;
 import crafttweaker.api.minecraft.CraftTweakerMC;
+import crafttweaker.mc1120.actions.ActionAddDispenserBehavior;
+import crafttweaker.mc1120.actions.ActionRemoveDispenserBehavior;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemFood;
@@ -28,5 +32,15 @@ public class ExpandItemDefinition {
         Item food = getInternal(item);
         if (food instanceof ItemFood)
             ((ItemFood)food).setAlwaysEdible();
+    }
+
+    @ZenMethod
+    public static void removeDispenserBehavior(IItemDefinition item) {
+        CraftTweakerAPI.apply(new ActionRemoveDispenserBehavior(item));
+    }
+
+    @ZenMethod
+    public static void addDispenserBehavior(IItemDefinition item, IDispenserBehavior behavior) {
+        CraftTweakerAPI.apply(new ActionAddDispenserBehavior(item, behavior));
     }
 }
