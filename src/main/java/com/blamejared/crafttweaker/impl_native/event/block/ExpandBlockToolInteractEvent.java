@@ -15,7 +15,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * Fired when when this block is right clicked by a tool to change its state.
  * For example: Used to determine if an axe can strip a log, a shovel can turn grass into a path, or a hoe can till dirt into farmland.
  *
- * @docEvent cancelled this will prevent the tool from changing the block's state.
+ * @docEvent canceled this will prevent the tool from changing the block's state.
  */
 @ZenRegister
 @Document("vanilla/api/event/block/MCBlockToolInteractEvent")
