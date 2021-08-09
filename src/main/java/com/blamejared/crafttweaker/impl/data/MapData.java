@@ -11,15 +11,8 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import org.openzen.zencode.java.ZenCodeType;
-import org.openzen.zenscript.lexer.ZSTokenType;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringJoiner;
+import java.util.*;
 
 
 /**
@@ -111,6 +104,7 @@ public class MapData implements IData {
      * @docParam value "Goodbye"
      */
     @ZenCodeType.Method
+    @ZenCodeType.Nullable
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MEMBERSETTER)
     public IData put(String key, IData value) {
         
@@ -130,6 +124,7 @@ public class MapData implements IData {
      * @docParam key "Hello"
      */
     @ZenCodeType.Method
+    @ZenCodeType.Nullable
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MEMBERGETTER)
     public IData getAt(String key) {
         
