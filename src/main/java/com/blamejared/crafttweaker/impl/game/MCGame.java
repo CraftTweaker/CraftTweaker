@@ -11,6 +11,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Effect;
@@ -42,17 +43,20 @@ public class MCGame {
     
     @ZenCodeType.Getter("directionAxises")
     public Collection<Direction.Axis> getMCDirectionAxis() {
+        
         return Arrays.stream(Direction.Axis.values())
                 .collect(Collectors.toList());
     }
     
     @ZenCodeType.Getter("effects")
     public Collection<Effect> getMCEffects() {
+        
         return ForgeRegistries.POTIONS.getValues();
     }
     
     @ZenCodeType.Getter("entityTypes")
     public Collection<MCEntityType> getMCEntityTypes() {
+        
         return ForgeRegistries.ENTITIES.getValues()
                 .stream()
                 .map(MCEntityType::new)
@@ -61,16 +65,19 @@ public class MCGame {
     
     @ZenCodeType.Getter("fluids")
     public Collection<Fluid> getMCFluids() {
+        
         return ForgeRegistries.FLUIDS.getValues();
     }
     
     @ZenCodeType.Getter("entityClassifications")
     public Collection<EntityClassification> getMCEntityClassification() {
+        
         return Arrays.asList(EntityClassification.values());
     }
     
     @ZenCodeType.Getter("formattings")
     public Collection<MCTextFormatting> getMCTextFormatting() {
+        
         return Arrays.stream(TextFormatting.values())
                 .map(MCTextFormatting::new)
                 .collect(Collectors.toList());
@@ -78,6 +85,7 @@ public class MCGame {
     
     @ZenCodeType.Getter("items")
     public Collection<IItemStack> getMCItemStacks() {
+        
         return ForgeRegistries.ITEMS.getValues()
                 .stream()
                 .map(Item::getDefaultInstance)
@@ -88,6 +96,7 @@ public class MCGame {
     
     @ZenCodeType.Getter("potions")
     public Collection<Potion> getMCPotions() {
+        
         return ForgeRegistries.POTION_TYPES.getValues();
     }
     
@@ -117,6 +126,12 @@ public class MCGame {
                 .collect(Collectors.toList());
     }
     
+    @ZenCodeType.Getter("villagerProfessions")
+    public Collection<VillagerProfession> getProfessions() {
+        
+        return ForgeRegistries.PROFESSIONS.getValues();
+    }
+    
     /**
      * @return a localized String
      *
@@ -127,4 +142,5 @@ public class MCGame {
         
         return LanguageMap.getInstance().func_230503_a_(translationKey);
     }
+    
 }
