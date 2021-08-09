@@ -388,6 +388,18 @@ public class CTVillagerTrades {
         removeTradeInternal(profession, villagerLevel, trade -> trade instanceof VillagerTrades.SuspiciousStewForEmeraldTrade);
     }
     
+    /**
+     * Removes all the trades for the given profession and villagerLevel
+     *
+     * @param profession    hat profession to remove from.
+     * @param villagerLevel The level the Villager needs to be.
+     */
+    @ZenCodeType.Method
+    public void removeAllTrades(VillagerProfession profession, int villagerLevel) {
+        
+        removeTradeInternal(profession, villagerLevel, trade -> true);
+    }
+    
     
     /**
      * Adds a Wandering Trader Trade for emeralds for an Item. An example being, giving a Wandering Trader 2 emeralds for an arrow.
@@ -453,6 +465,17 @@ public class CTVillagerTrades {
             }
             return false;
         });
+    }
+    
+    /**
+     * Removes all wandering trades of the given rarity
+     *
+     * @param rarity The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
+     */
+    @ZenCodeType.Method
+    public void removeAllWanderinTrades(int rarity) {
+        
+        removeWanderingTradeInternal(rarity, trade -> true);
     }
     
     
