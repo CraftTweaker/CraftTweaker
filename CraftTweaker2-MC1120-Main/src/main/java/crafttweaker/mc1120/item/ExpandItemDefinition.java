@@ -1,10 +1,10 @@
 package crafttweaker.mc1120.item;
 
-import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.dispenser.IDispenserBehavior;
 import crafttweaker.api.item.IItemDefinition;
 import crafttweaker.api.minecraft.CraftTweakerMC;
+import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.actions.ActionAddDispenserBehavior;
 import crafttweaker.mc1120.actions.ActionRemoveDispenserBehavior;
 import net.minecraft.item.Item;
@@ -36,11 +36,11 @@ public class ExpandItemDefinition {
 
     @ZenMethod
     public static void removeDispenserBehavior(IItemDefinition item) {
-        CraftTweakerAPI.apply(new ActionRemoveDispenserBehavior(item));
+        CraftTweaker.LATE_ACTIONS.add(new ActionRemoveDispenserBehavior(item));
     }
 
     @ZenMethod
     public static void addDispenserBehavior(IItemDefinition item, IDispenserBehavior behavior) {
-        CraftTweakerAPI.apply(new ActionAddDispenserBehavior(item, behavior));
+        CraftTweaker.LATE_ACTIONS.add(new ActionAddDispenserBehavior(item, behavior));
     }
 }
