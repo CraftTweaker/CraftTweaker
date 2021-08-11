@@ -669,7 +669,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     @ZenCodeType.Method
     default int getEnchantmentLevel(Enchantment enchantment) {
         
-        return EnchantmentHelper.getEnchantmentLevel(enchantment, getInternal());
+        return getEnchantments().getOrDefault(enchantment, 0);
     }
     
     /**
