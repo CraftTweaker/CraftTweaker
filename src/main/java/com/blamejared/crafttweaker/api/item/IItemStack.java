@@ -267,6 +267,30 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     IItemStack setAmount(int amount);
     
     /**
+     * Grows this IItemStack's stack size by the given amount, or 1 if no amount is given.
+     *
+     * @param amount The amount to grow by.
+     *
+     * @return This IItemStack if mutable, a new one with the new amount otherwise.
+     *
+     * @docParam amount 2
+     */
+    @ZenCodeType.Method
+    IItemStack grow(@ZenCodeType.OptionalInt(1) int amount);
+    
+    /**
+     * Shrinks this IItemStack's stack size by the given amount, or 1 if no amount is given.
+     *
+     * @param amount The amount to shrink by.
+     *
+     * @return This IItemStack if mutable, a new one with the new amount otherwise.
+     *
+     * @docParam amount 2
+     */
+    @ZenCodeType.Method
+    IItemStack shrink(@ZenCodeType.OptionalInt(1) int amount);
+    
+    /**
      * Returns if the ItemStack can have an amount greater than 1
      * I.E Swords and tools are not stackable, sticks are.
      *

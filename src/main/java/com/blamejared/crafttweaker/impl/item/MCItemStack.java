@@ -62,6 +62,22 @@ public class MCItemStack implements IItemStack {
     }
     
     @Override
+    public IItemStack grow(int amount) {
+        
+        ItemStack newStack = getInternal().copy();
+        newStack.grow(amount);
+        return new MCItemStack(newStack);
+    }
+    
+    @Override
+    public IItemStack shrink(int amount) {
+        
+        ItemStack newStack = getInternal().copy();
+        newStack.shrink(amount);
+        return new MCItemStack(newStack);
+    }
+    
+    @Override
     public IItemStack withDamage(int damage) {
         
         final ItemStack copy = getInternal().copy();
@@ -162,6 +178,7 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public IItemStack setEnchantments(Map<Enchantment, Integer> enchantments) {
+        
         ItemStack newStack = getInternal().copy();
         EnchantmentHelper.setEnchantments(enchantments, newStack);
         return new MCItemStack(newStack);
@@ -169,6 +186,7 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public IItemStack withEnchantment(Enchantment enchantment, int level) {
+        
         ItemStack newStack = getInternal().copy();
         Map<Enchantment, Integer> enchantments = getEnchantments();
         enchantments.put(enchantment, level);
@@ -178,6 +196,7 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public IItemStack removeEnchantment(Enchantment enchantment) {
+        
         ItemStack newStack = getInternal().copy();
         Map<Enchantment, Integer> enchantments = getEnchantments();
         enchantments.remove(enchantment);

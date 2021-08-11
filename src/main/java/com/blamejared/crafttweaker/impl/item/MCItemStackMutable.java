@@ -71,6 +71,20 @@ public class MCItemStackMutable implements IItemStack {
     }
     
     @Override
+    public IItemStack grow(int amount) {
+        
+        getInternal().grow(amount);
+        return this;
+    }
+    
+    @Override
+    public IItemStack shrink(int amount) {
+        
+        getInternal().shrink(amount);
+        return this;
+    }
+    
+    @Override
     public IItemStack withDamage(int damage) {
         
         getInternal().setDamage(damage);
