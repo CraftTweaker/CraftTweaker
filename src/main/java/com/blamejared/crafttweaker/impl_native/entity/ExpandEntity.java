@@ -23,6 +23,14 @@ import java.util.Set;
 @NativeTypeRegistration(value = Entity.class, zenCodeName = "crafttweaker.api.entity.MCEntity")
 public class ExpandEntity {
     
+    /**
+     * Removes the entity from the world.
+     */
+    @ZenCodeType.Method
+    public static void remove(Entity internal) {
+        
+        internal.remove();
+    }
     
     /**
      * Checks if this Entity is sneaking or not.
