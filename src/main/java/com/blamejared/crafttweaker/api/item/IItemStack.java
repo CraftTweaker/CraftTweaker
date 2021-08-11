@@ -157,6 +157,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     }
     
     //TODO remove / replace with the global name setter.
+    
     /**
      * Sets the display name of the ItemStack
      *
@@ -176,6 +177,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Method
     default IItemStack withDisplayName(MCTextComponent text) {
+        
         return setDisplayName(text.asString());
     }
     
@@ -428,9 +430,10 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Method
     IItemStack withTag(IData tag);
-
+    
     /**
      * Removes the tag from this ItemStack.
+     *
      * @return This itemStack if it is mutable, a new one with the changed property otherwise
      */
     @ZenCodeType.Method
@@ -653,19 +656,33 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         
         return getInternal().getToolTypes().toArray(new ToolType[0]);
     }
-
+    
     @ZenCodeType.Getter("enchantments")
     default Map<Enchantment, Integer> getEnchantments() {
+        
         return EnchantmentHelper.getEnchantments(getInternal());
     }
-
+    
     /**
      * Gets the level of the given enchantment on the item. Returns 0 if the item doesn't have the given enchantment.
      */
     @ZenCodeType.Method
     default int getEnchantmentLevel(Enchantment enchantment) {
+        
         return EnchantmentHelper.getEnchantmentLevel(enchantment, getInternal());
     }
+    
+    /**
+     * Enchants this IItemStack with the given Enchantment.
+     *
+     * @param enchantment The enchantment to add.
+     * @param level       The level of the enchantment
+     *
+     * @docParam enchantment <enchantment:minecraft:riptide>
+     * @docParam level 2
+     */
+    @ZenCodeType.Method
+    IItemStack withEnchantment(Enchantment enchantment, @ZenCodeType.OptionalInt(1) int level);
     
     /**
      * Gets the internal {@link ItemStack} for this IItemStack.

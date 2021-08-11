@@ -6,6 +6,8 @@ import com.blamejared.crafttweaker.api.ingredient.PartialNBTIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -14,6 +16,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.StringTextComponent;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -154,6 +157,15 @@ public class MCItemStack implements IItemStack {
     public int getDamage() {
         
         return getInternal().getDamage();
+    }
+    
+    @Override
+    public IItemStack withEnchantment(Enchantment enchantment, int level) {
+        ItemStack newStack = getInternal().copy();
+        Map<Enchantment, Integer> enchantments = getEnchantments();
+        enchantments.put(enchantment, level);
+        EnchantmentHelper.setEnchantments(enchantments, newStack);
+        return new MCItemStack(newStack);
     }
     
     @Override
