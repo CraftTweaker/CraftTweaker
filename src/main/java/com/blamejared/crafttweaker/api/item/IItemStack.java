@@ -657,11 +657,24 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         return getInternal().getToolTypes().toArray(new ToolType[0]);
     }
     
+    @ZenCodeType.Method
     @ZenCodeType.Getter("enchantments")
     default Map<Enchantment, Integer> getEnchantments() {
         
         return EnchantmentHelper.getEnchantments(getInternal());
     }
+    
+    /**
+     * Sets the enchantments on this IItemStack.
+     *
+     * @param enchantments The new enchantments
+     *
+     * @return This itemStack if it is mutable, a new one with the enchantments otherwise
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("enchantments")
+    IItemStack setEnchantments(Map<Enchantment, Integer> enchantments);
+    
     
     /**
      * Gets the level of the given enchantment on the item. Returns 0 if the item doesn't have the given enchantment.
@@ -678,11 +691,25 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      * @param enchantment The enchantment to add.
      * @param level       The level of the enchantment
      *
+     * @return This itemStack if it is mutable, a new one with the enchantment added otherwise
+     *
      * @docParam enchantment <enchantment:minecraft:riptide>
      * @docParam level 2
      */
     @ZenCodeType.Method
     IItemStack withEnchantment(Enchantment enchantment, @ZenCodeType.OptionalInt(1) int level);
+    
+    /**
+     * Removes the given enchantment from this IItemStack.
+     *
+     * @param enchantment The enchantment to remove.
+     *
+     * @return This itemStack if it is mutable, a new one with the enchantment removed otherwise
+     *
+     * @docParam enchantment <enchantment:minecraft:riptide>
+     */
+    @ZenCodeType.Method
+    IItemStack removeEnchantment(Enchantment enchantment);
     
     /**
      * Gets the internal {@link ItemStack} for this IItemStack.

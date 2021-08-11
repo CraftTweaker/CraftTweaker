@@ -159,11 +159,28 @@ public class MCItemStack implements IItemStack {
         return getInternal().getDamage();
     }
     
+    
+    @Override
+    public IItemStack setEnchantments(Map<Enchantment, Integer> enchantments) {
+        ItemStack newStack = getInternal().copy();
+        EnchantmentHelper.setEnchantments(enchantments, newStack);
+        return new MCItemStack(newStack);
+    }
+    
     @Override
     public IItemStack withEnchantment(Enchantment enchantment, int level) {
         ItemStack newStack = getInternal().copy();
         Map<Enchantment, Integer> enchantments = getEnchantments();
         enchantments.put(enchantment, level);
+        EnchantmentHelper.setEnchantments(enchantments, newStack);
+        return new MCItemStack(newStack);
+    }
+    
+    @Override
+    public IItemStack removeEnchantment(Enchantment enchantment) {
+        ItemStack newStack = getInternal().copy();
+        Map<Enchantment, Integer> enchantments = getEnchantments();
+        enchantments.remove(enchantment);
         EnchantmentHelper.setEnchantments(enchantments, newStack);
         return new MCItemStack(newStack);
     }
