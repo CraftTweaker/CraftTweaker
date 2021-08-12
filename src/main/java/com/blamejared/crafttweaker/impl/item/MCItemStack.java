@@ -5,9 +5,9 @@ import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.api.ingredient.PartialNBTIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.data.MapData;
+import com.blamejared.crafttweaker.impl.util.EnchantmentUtil;
 import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -180,7 +180,7 @@ public class MCItemStack implements IItemStack {
     public IItemStack setEnchantments(Map<Enchantment, Integer> enchantments) {
         
         ItemStack newStack = getInternal().copy();
-        EnchantmentHelper.setEnchantments(enchantments, newStack);
+        EnchantmentUtil.setEnchantments(enchantments, newStack);
         return new MCItemStack(newStack);
     }
     
@@ -190,7 +190,7 @@ public class MCItemStack implements IItemStack {
         ItemStack newStack = getInternal().copy();
         Map<Enchantment, Integer> enchantments = getEnchantments();
         enchantments.put(enchantment, level);
-        EnchantmentHelper.setEnchantments(enchantments, newStack);
+        EnchantmentUtil.setEnchantments(enchantments, newStack);
         return new MCItemStack(newStack);
     }
     
@@ -200,7 +200,7 @@ public class MCItemStack implements IItemStack {
         ItemStack newStack = getInternal().copy();
         Map<Enchantment, Integer> enchantments = getEnchantments();
         enchantments.remove(enchantment);
-        EnchantmentHelper.setEnchantments(enchantments, newStack);
+        EnchantmentUtil.setEnchantments(enchantments, newStack);
         return new MCItemStack(newStack);
     }
     

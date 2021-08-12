@@ -6,10 +6,10 @@ import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.api.ingredient.PartialNBTIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.data.MapData;
+import com.blamejared.crafttweaker.impl.util.EnchantmentUtil;
 import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -178,8 +178,8 @@ public class MCItemStackMutable implements IItemStack {
     
     @Override
     public IItemStack setEnchantments(Map<Enchantment, Integer> enchantments) {
-        
-        EnchantmentHelper.setEnchantments(enchantments, getInternal());
+    
+        EnchantmentUtil.setEnchantments(enchantments, getInternal());
         return this;
     }
     
@@ -188,7 +188,7 @@ public class MCItemStackMutable implements IItemStack {
         
         Map<Enchantment, Integer> enchantments = getEnchantments();
         enchantments.put(enchantment, level);
-        EnchantmentHelper.setEnchantments(enchantments, getInternal());
+        EnchantmentUtil.setEnchantments(enchantments, getInternal());
         return this;
     }
     
@@ -197,7 +197,7 @@ public class MCItemStackMutable implements IItemStack {
         
         Map<Enchantment, Integer> enchantments = getEnchantments();
         enchantments.remove(enchantment);
-        EnchantmentHelper.setEnchantments(enchantments, getInternal());
+        EnchantmentUtil.setEnchantments(enchantments, getInternal());
         return this;
     }
     
