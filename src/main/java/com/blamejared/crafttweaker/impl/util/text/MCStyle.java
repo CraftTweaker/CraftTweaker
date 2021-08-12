@@ -131,6 +131,14 @@ public class MCStyle {
     }
     
     @ZenCodeType.Method
+    public int getColor(){
+        if(getInternal().getColor() == null){
+            return 0;
+        }
+        return getInternal().getColor().getColor();
+    }
+    
+    @ZenCodeType.Method
     public boolean getUnderlined() {
         
         return getInternal().getUnderlined();
