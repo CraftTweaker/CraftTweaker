@@ -33,6 +33,26 @@ public class ExpandEntity {
     }
     
     /**
+     * Sets the location and looking angles of the entity.
+     * @param x The new x position.
+     * @param y The new y position.
+     * @param z The new z position.
+     * @param yaw The new yaw value.
+     * @param pitch The new pitch value.
+     *
+     * @docParam x 5
+     * @docParam y 1
+     * @docParam z 9
+     * @docParam yaw 90
+     * @docParam pitch 120
+     */
+    @ZenCodeType.Method
+    public static void setLocationAndAngles(Entity internal, double x, double y, double z, float yaw, float pitch) {
+        
+        internal.setLocationAndAngles(x, y, z, yaw, pitch);
+    }
+    
+    /**
      * Checks if this Entity is sneaking or not.
      *
      * @return True if sneaking. False otherwise.
