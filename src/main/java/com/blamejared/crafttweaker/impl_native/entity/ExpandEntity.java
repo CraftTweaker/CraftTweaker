@@ -34,10 +34,11 @@ public class ExpandEntity {
     
     /**
      * Sets the location and looking angles of the entity.
-     * @param x The new x position.
-     * @param y The new y position.
-     * @param z The new z position.
-     * @param yaw The new yaw value.
+     *
+     * @param x     The new x position.
+     * @param y     The new y position.
+     * @param z     The new z position.
+     * @param yaw   The new yaw value.
      * @param pitch The new pitch value.
      *
      * @docParam x 5
@@ -51,6 +52,31 @@ public class ExpandEntity {
         
         internal.setLocationAndAngles(x, y, z, yaw, pitch);
     }
+    
+    @ZenCodeType.Method
+    public static void setPositionAndUpdate(Entity internal, double x, double y, double z) {
+        
+        internal.setPositionAndUpdate(x, y, z);
+    }
+    
+    @ZenCodeType.Method
+    public static boolean startRiding(Entity internal, Entity other, @ZenCodeType.OptionalBoolean(false) boolean forced) {
+        
+        return internal.startRiding(other, forced);
+    }
+    
+    @ZenCodeType.Method
+    public static void removePassengers(Entity internal) {
+        
+        internal.removePassengers();
+    }
+    
+    @ZenCodeType.Method
+    public static void dismount(Entity internal) {
+        
+        internal.dismount();
+    }
+    
     
     /**
      * Checks if this Entity is sneaking or not.
