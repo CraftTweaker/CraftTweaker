@@ -9,7 +9,12 @@ import com.blamejared.crafttweaker.api.item.conditions.IIngredientCondition;
 import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
 import com.blamejared.crafttweaker.impl.actions.items.ActionModifyAttribute;
 import com.blamejared.crafttweaker.impl.actions.items.ActionSetBurnTime;
-import com.blamejared.crafttweaker.impl.actions.items.tooltips.*;
+import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionAddShiftedTooltip;
+import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionAddTooltip;
+import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionClearTooltip;
+import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionModifyShiftedTooltip;
+import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionModifyTooltip;
+import com.blamejared.crafttweaker.impl.actions.items.tooltips.ActionRemoveRegexTooltip;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.ingredients.conditions.ConditionAnyDamage;
 import com.blamejared.crafttweaker.impl.ingredients.conditions.ConditionCustom;
@@ -23,12 +28,13 @@ import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.common.ForgeHooks;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -200,11 +206,11 @@ public interface IIngredient extends CommandStringDisplayable {
     default void addGlobalAttributeModifier(Attribute attribute, String name, double value, AttributeModifier.Operation operation, EquipmentSlotType[] slotTypes) {
     
         AttributeModifier modifier = new AttributeModifier( name, value, operation);
+        final Set<EquipmentSlotType> validSlots = new HashSet<>(Arrays.asList(slotTypes));
         CraftTweakerAPI.apply(new ActionModifyAttribute(this, event -> {
-            if(Arrays.stream(slotTypes).noneMatch(equipmentSlotType -> equipmentSlotType == event.getSlotType())) {
-                return;
+            if(validSlots.contains(event.getSlotType())) {
+                event.addModifier(attribute, modifier);
             }
-            event.addModifier(attribute, modifier);
         }));
     }
     
@@ -237,11 +243,11 @@ public interface IIngredient extends CommandStringDisplayable {
     default void addGlobalAttributeModifier(Attribute attribute, String uuid, String name, double value, AttributeModifier.Operation operation, EquipmentSlotType[] slotTypes) {
         
         AttributeModifier modifier = new AttributeModifier( UUID.fromString(uuid),name, value, operation);
+        final Set<EquipmentSlotType> validSlots = new HashSet<>(Arrays.asList(slotTypes));
         CraftTweakerAPI.apply(new ActionModifyAttribute(this, event -> {
-            if(Arrays.stream(slotTypes).noneMatch(equipmentSlotType -> equipmentSlotType == event.getSlotType())) {
-                return;
+            if(validSlots.contains(event.getSlotType())) {
+                event.addModifier(attribute, modifier);
             }
-            event.addModifier(attribute, modifier);
         }));
     }
     
@@ -264,12 +270,13 @@ public interface IIngredient extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     default void removeGlobalAttribute(Attribute attribute, EquipmentSlotType[] slotTypes) {
+    
+        final Set<EquipmentSlotType> validSlots = new HashSet<>(Arrays.asList(slotTypes));
         
         CraftTweakerAPI.apply(new ActionModifyAttribute(this, event -> {
-            if(Arrays.stream(slotTypes).noneMatch(equipmentSlotType -> equipmentSlotType == event.getSlotType())) {
-                return;
+            if(validSlots.contains(event.getSlotType())) {
+                event.removeAttribute(attribute);
             }
-            event.removeAttribute(attribute);
         }));
     }
     
@@ -284,18 +291,18 @@ public interface IIngredient extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     default void removeGlobalAttributeModifier(String uuid, EquipmentSlotType[] slotTypes) {
-        
+    
+        final Set<EquipmentSlotType> validSlots = new HashSet<>(Arrays.asList(slotTypes));
         CraftTweakerAPI.apply(new ActionModifyAttribute(this, event -> {
-            if(Arrays.stream(slotTypes).noneMatch(equipmentSlotType -> equipmentSlotType == event.getSlotType())) {
-                return;
+            if(validSlots.contains(event.getSlotType())) {
+                event.getModifiers()
+                        .entries()
+                        .stream()
+                        .filter(entry -> entry.getValue().getID().equals(UUID.fromString(uuid)))
+                        .forEach(entry -> {
+                            event.removeModifier(entry.getKey(), entry.getValue());
+                        });
             }
-            event.getModifiers()
-                    .entries()
-                    .stream()
-                    .filter(entry -> entry.getValue().getID().equals(UUID.fromString(uuid)))
-                    .forEach(entry -> {
-                        event.removeModifier(entry.getKey(), entry.getValue());
-                    });
         }));
     }
     
