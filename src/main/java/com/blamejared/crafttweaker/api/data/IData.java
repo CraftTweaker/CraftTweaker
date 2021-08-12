@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.data;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.data.IntData;
 import com.blamejared.crafttweaker.impl.data.ListData;
+import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.text.ITextComponent;
@@ -132,7 +133,15 @@ public interface IData {
      * @return String that represents this IData (value and type).
      */
     default ITextComponent asFormattedComponent(String indentation, int indentDepth) {
+        
         return new StringTextComponent(toJsonString());
+    }
+    
+    //TODO remove when ITextComponent is native.
+    @ZenCodeType.Method
+    default MCTextComponent asFormattedText(String indentation, int indentDepth) {
+        
+        return new MCTextComponent(asFormattedComponent(indentation, indentDepth));
     }
     
     String toJsonString();
