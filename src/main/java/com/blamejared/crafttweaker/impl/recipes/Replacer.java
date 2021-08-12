@@ -70,7 +70,7 @@ import java.util.stream.Collectors;
  * {@link #explicitlyRename(ResourceLocation, String)}.</p>
  *
  * <p>An example usage of a {@code Replacer} could be
- * {@code Replacer.forTypes(crafingTable).replace(<item:minecraft:string>, <item:minecraft:diamond>).execute();}</p>
+ * {@code Replacer.forTypes(craftingTable).replace(<item:minecraft:string>, <item:minecraft:diamond>).execute();}</p>
  *
  * @docParam this Replacer.forEverything()
  */
