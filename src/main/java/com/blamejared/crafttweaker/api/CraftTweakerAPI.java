@@ -221,6 +221,7 @@ public class CraftTweakerAPI {
     
     public static void logThrowing(String message, Throwable e, Object... formats) {
         
+        e.printStackTrace();
         logger.throwingErr(String.format(message, formats), e);
     }
     
