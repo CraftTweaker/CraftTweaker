@@ -3,12 +3,12 @@ package com.blamejared.crafttweaker.impl.entity;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.entity.CTEntityIngredient;
-import com.blamejared.crafttweaker.api.fluid.CTFluidIngredient;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -29,6 +29,19 @@ public class MCEntityType implements CommandStringDisplayable {
     public MCEntityType(@Nonnull EntityType<?> internal) {
         
         this.internal = Objects.requireNonNull(internal);
+    }
+    
+    
+    /**
+     * Gets the registry name of this EntityType
+     *
+     * @return The registry name of this EntityType as a ResourceLocation
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("registryName")
+    public ResourceLocation getRegistryName() {
+        
+        return getInternal().getRegistryName();
     }
     
     /**
@@ -112,7 +125,7 @@ public class MCEntityType implements CommandStringDisplayable {
     
     @Override
     public boolean equals(Object o) {
-    
+        
         if(this == o) {
             return true;
         }
@@ -132,12 +145,14 @@ public class MCEntityType implements CommandStringDisplayable {
     }
     
     @ZenCodeType.Caster(implicit = true)
-    public CTEntityIngredient asEntityIngredient(){
+    public CTEntityIngredient asEntityIngredient() {
+        
         return new CTEntityIngredient.EntityTypeIngredient(this);
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)
     public CTEntityIngredient asList(CTEntityIngredient other) {
+        
         List<CTEntityIngredient> elements = new ArrayList<>();
         elements.add(asEntityIngredient());
         elements.add(other);
