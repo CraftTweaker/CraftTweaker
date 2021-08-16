@@ -81,4 +81,17 @@ public class MCEnchantment implements IEnchantment {
     public String displayName() {
         return definition.getTranslatedName(level);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCEnchantment that = (MCEnchantment) o;
+        return level == that.level && Objects.equals(definition, that.definition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(definition, level);
+    }
 }

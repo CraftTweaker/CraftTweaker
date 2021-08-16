@@ -4,6 +4,8 @@ import crafttweaker.api.entity.IEntityEquipmentSlot;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.inventory.EntityEquipmentSlot;
 
+import java.util.Objects;
+
 public class MCEntityEquipmentSlot implements IEntityEquipmentSlot {
     private final EntityEquipmentSlot slot;
     
@@ -34,5 +36,18 @@ public class MCEntityEquipmentSlot implements IEntityEquipmentSlot {
     @Override
     public Object getInternal() {
         return slot;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCEntityEquipmentSlot that = (MCEntityEquipmentSlot) o;
+        return slot == that.slot;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(slot);
     }
 }

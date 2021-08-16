@@ -6,6 +6,8 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 
+import java.util.Objects;
+
 public class MCDamageSource implements IDamageSource {
 
     private final DamageSource source;
@@ -121,5 +123,18 @@ public class MCDamageSource implements IDamageSource {
     @Override
     public Object getInternal() {
         return source;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCDamageSource that = (MCDamageSource) o;
+        return Objects.equals(source, that.source);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(source);
     }
 }

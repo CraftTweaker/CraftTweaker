@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 import stanhebben.zenscript.annotations.Optional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -206,4 +207,18 @@ public class MCWorld extends MCBlockAccess implements IWorld {
         explosion.doExplosionB(true);
         return explosion;
     }
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+		MCWorld mcWorld = (MCWorld) o;
+		return Objects.equals(world, mcWorld.world);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), world);
+	}
 }

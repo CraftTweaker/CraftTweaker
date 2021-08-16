@@ -6,6 +6,8 @@ import crafttweaker.api.text.IStyle;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 
+import java.util.Objects;
+
 /**
  * @author youyihj
  */
@@ -114,5 +116,18 @@ public class MCStyle implements IStyle {
     @Override
     public Object getInternal() {
         return style;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCStyle mcStyle = (MCStyle) o;
+        return Objects.equals(style, mcStyle.style);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(style);
     }
 }

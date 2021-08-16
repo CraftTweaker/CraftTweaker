@@ -195,4 +195,18 @@ public class MCBlockState extends MCBlockProperties implements crafttweaker.api.
     public String toCommandString() {
         return toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        MCBlockState that = (MCBlockState) o;
+        return Objects.equals(blockState, that.blockState) && Objects.equals(block, that.block);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), blockState, block);
+    }
 }

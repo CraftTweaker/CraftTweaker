@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class MCPotionEffect implements IPotionEffect {
@@ -90,5 +91,18 @@ public class MCPotionEffect implements IPotionEffect {
     @Override
     public Object getInternal() {
         return potionEffect;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCPotionEffect that = (MCPotionEffect) o;
+        return Objects.equals(potionEffect, that.potionEffect);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(potionEffect);
     }
 }

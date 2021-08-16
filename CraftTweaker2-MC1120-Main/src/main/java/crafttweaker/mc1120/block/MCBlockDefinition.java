@@ -12,6 +12,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -177,5 +178,18 @@ public class MCBlockDefinition implements IBlockDefinition {
     @Override
     public boolean isToolEffective(String type, IBlockState state) {
         return block.isToolEffective(type, CraftTweakerMC.getBlockState(state));   
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCBlockDefinition that = (MCBlockDefinition) o;
+        return Objects.equals(block, that.block);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(block);
     }
 }

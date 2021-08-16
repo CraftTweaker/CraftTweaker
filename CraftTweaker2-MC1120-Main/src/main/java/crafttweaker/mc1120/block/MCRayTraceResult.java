@@ -5,6 +5,8 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.*;
 import net.minecraft.util.math.RayTraceResult;
 
+import java.util.Objects;
+
 public class MCRayTraceResult implements IRayTraceResult {
     
     private final RayTraceResult traceResult;
@@ -46,5 +48,18 @@ public class MCRayTraceResult implements IRayTraceResult {
     @Override
     public RayTraceResult getInternal() {
         return traceResult;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCRayTraceResult that = (MCRayTraceResult) o;
+        return Objects.equals(traceResult, that.traceResult);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(traceResult);
     }
 }

@@ -14,6 +14,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
+import java.util.Objects;
+
 public class MCMobSpawnerBaseLogic implements IMobSpawnerBaseLogic {
     
     private final MobSpawnerBaseLogic mobSpawnerBaseLogic;
@@ -67,5 +69,18 @@ public class MCMobSpawnerBaseLogic implements IMobSpawnerBaseLogic {
     @Override
     public IBlockPos getBlockPos() {
         return CraftTweakerMC.getIBlockPos(mobSpawnerBaseLogic.getSpawnerPosition());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCMobSpawnerBaseLogic that = (MCMobSpawnerBaseLogic) o;
+        return Objects.equals(mobSpawnerBaseLogic, that.mobSpawnerBaseLogic);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mobSpawnerBaseLogic);
     }
 }

@@ -23,6 +23,7 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Stan
@@ -259,5 +260,18 @@ public class MCLiquidStack implements ILiquidStack {
     @Override
     public String toCommandString() {
         return toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCLiquidStack that = (MCLiquidStack) o;
+        return Objects.equals(stack, that.stack) && Objects.equals(tag, that.tag);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(stack, tag);
     }
 }

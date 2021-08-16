@@ -7,6 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.FoodStats;
 
+import java.util.Objects;
+
 public class MCFoodStats implements IFoodStats {
     
     private final FoodStats foodStats;
@@ -61,5 +63,18 @@ public class MCFoodStats implements IFoodStats {
     @Override
     public void setSaturationLevel(float saturationLevel) {
         foodStats.addExhaustion(saturationLevel - getSaturationLevel());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCFoodStats that = (MCFoodStats) o;
+        return Objects.equals(foodStats, that.foodStats);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(foodStats);
     }
 }

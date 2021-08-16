@@ -4,6 +4,7 @@ import crafttweaker.api.block.*;
 import crafttweaker.api.data.IData;
 import crafttweaker.api.liquid.ILiquidDefinition;
 import crafttweaker.api.minecraft.CraftTweakerMC;
+import crafttweaker.mc1120.item.MCItemStack;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -67,5 +68,17 @@ public class MCItemBlock implements IBlock {
     public IBlockPattern or(IBlockPattern pattern) {
         return new BlockPatternOr(this, pattern);
     }
-    
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCItemBlock that = (MCItemBlock) o;
+        return new MCItemStack(item).matches(new MCItemStack(that.item));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(item.getItem(), item.getItemDamage(), item.getCount(), item.getTagCompound());
+    }
 }

@@ -7,6 +7,8 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.Objects;
+
 public class MCEnchantmentDefinition implements IEnchantmentDefinition {
     
     public final Enchantment enchantment;
@@ -108,5 +110,18 @@ public class MCEnchantmentDefinition implements IEnchantmentDefinition {
     @Override
     public Object getInternal() {
         return enchantment;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCEnchantmentDefinition that = (MCEnchantmentDefinition) o;
+        return Objects.equals(enchantment, that.enchantment);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(enchantment);
     }
 }

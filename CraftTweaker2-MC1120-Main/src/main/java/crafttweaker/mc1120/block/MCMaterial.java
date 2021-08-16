@@ -3,6 +3,8 @@ package crafttweaker.mc1120.block;
 import crafttweaker.api.block.*;
 import net.minecraft.block.material.Material;
 
+import java.util.Objects;
+
 public class MCMaterial implements IMaterial {
     
     private final Material material;
@@ -70,5 +72,17 @@ public class MCMaterial implements IMaterial {
     public Object getInternal() {
         return material;
     }
-    
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCMaterial that = (MCMaterial) o;
+        return Objects.equals(material, that.material);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(material);
+    }
 }
