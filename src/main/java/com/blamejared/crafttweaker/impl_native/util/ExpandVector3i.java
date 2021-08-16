@@ -6,7 +6,6 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeConstructor;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.dispenser.IPosition;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
 import org.openzen.zencode.java.ZenCodeType;
@@ -128,9 +127,9 @@ public class ExpandVector3i {
      * @docParam direction <direction:east>
      */
     @ZenCodeType.Method
-    public static Vector3i offset(final Vector3i internal, Direction facing, int n) {
+    public static Vector3i offset(final Vector3i internal, MCDirection facing, int n) {
         
-        return internal.offset(facing, n);
+        return internal.offset(facing.getInternal(), n);
     }
     
     /**
