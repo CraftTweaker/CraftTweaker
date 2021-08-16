@@ -76,4 +76,17 @@ public class MCWorldBlock implements IBlock {
     public IBlockPattern or(IBlockPattern pattern) {
         return new BlockPatternOr(this, pattern);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCWorldBlock that = (MCWorldBlock) o;
+        return Objects.equals(blocks, that.blocks) && Objects.equals(pos, that.pos);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(blocks, pos);
+    }
 }

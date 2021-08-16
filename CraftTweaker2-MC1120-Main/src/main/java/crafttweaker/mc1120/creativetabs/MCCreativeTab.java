@@ -4,6 +4,8 @@ import crafttweaker.api.creativetabs.ICreativeTab;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.creativetab.CreativeTabs;
 
+import java.util.Objects;
+
 public class MCCreativeTab implements ICreativeTab {
     
     public final CreativeTabs tab;
@@ -50,6 +52,17 @@ public class MCCreativeTab implements ICreativeTab {
     public CreativeTabs getInternal() {
         return tab;
     }
-    
-    
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCCreativeTab that = (MCCreativeTab) o;
+        return Objects.equals(tab, that.tab) && Objects.equals(label, that.label);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tab, label);
+    }
 }

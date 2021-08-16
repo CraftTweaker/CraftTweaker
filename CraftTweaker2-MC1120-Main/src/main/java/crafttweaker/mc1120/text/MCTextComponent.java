@@ -5,6 +5,7 @@ import crafttweaker.api.text.IStyle;
 import crafttweaker.api.text.ITextComponent;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -62,5 +63,18 @@ public class MCTextComponent implements ITextComponent {
     @Override
     public Object getInternal() {
         return text;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCTextComponent that = (MCTextComponent) o;
+        return Objects.equals(text, that.text);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(text);
     }
 }

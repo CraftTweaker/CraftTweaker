@@ -92,4 +92,17 @@ public class MCBiome implements IBiome {
     public Biome getInternal() {
         return biome;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCBiome mcBiome = (MCBiome) o;
+        return Objects.equals(biome, mcBiome.biome);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(biome);
+    }
 }

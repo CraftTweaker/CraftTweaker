@@ -4,6 +4,8 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.IVector3d;
 import net.minecraft.util.math.Vec3d;
 
+import java.util.Objects;
+
 public class MCVector3d implements IVector3d {
     
     private final Vec3d vec;
@@ -71,5 +73,18 @@ public class MCVector3d implements IVector3d {
     @Override
     public Vec3d getInternal() {
         return vec;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCVector3d that = (MCVector3d) o;
+        return Objects.equals(vec, that.vec);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(vec);
     }
 }

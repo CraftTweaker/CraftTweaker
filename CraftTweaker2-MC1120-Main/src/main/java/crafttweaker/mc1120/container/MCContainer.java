@@ -6,6 +6,7 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.inventory.Container;
 
 import java.util.Iterator;
+import java.util.Objects;
 
 public class MCContainer implements IContainer {
     
@@ -49,5 +50,18 @@ public class MCContainer implements IContainer {
     @Override
     public String toString() {
         return "MCContainer: " + asString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCContainer that = (MCContainer) o;
+        return Objects.equals(container, that.container);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(container);
     }
 }

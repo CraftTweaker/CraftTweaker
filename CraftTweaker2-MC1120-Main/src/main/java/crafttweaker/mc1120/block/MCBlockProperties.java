@@ -10,6 +10,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.Objects;
+
 public class MCBlockProperties implements IBlockProperties {
     private final net.minecraft.block.state.IBlockProperties properties;
     
@@ -133,5 +135,18 @@ public class MCBlockProperties implements IBlockProperties {
     @Override
     public boolean useNeighborBrightness() {
         return properties.useNeighborBrightness();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCBlockProperties that = (MCBlockProperties) o;
+        return Objects.equals(properties, that.properties);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(properties);
     }
 }

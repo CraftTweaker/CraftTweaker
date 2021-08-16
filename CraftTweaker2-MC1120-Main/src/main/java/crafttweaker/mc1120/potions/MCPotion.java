@@ -6,6 +6,7 @@ import crafttweaker.mc1120.item.MCItemStack;
 import net.minecraft.potion.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class MCPotion implements IPotion {
@@ -74,5 +75,18 @@ public class MCPotion implements IPotion {
     @Override
     public Potion getInternal() {
         return potion;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCPotion mcPotion = (MCPotion) o;
+        return Objects.equals(potion, mcPotion.potion);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(potion);
     }
 }

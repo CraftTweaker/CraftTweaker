@@ -31,6 +31,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class MCEntity extends MCCommandSender implements IEntity {
@@ -678,5 +679,10 @@ public class MCEntity extends MCCommandSender implements IEntity {
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof MCEntity && entity.isEntityEqual(((MCEntity) obj).entity)) || super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(entity);
     }
 }

@@ -73,4 +73,17 @@ public class MCSpecificBlock implements IBlock {
     public String toString() {
         return "<block:" + getBlockId(block) + ":" + (meta == OreDictionary.WILDCARD_VALUE ? '*' : meta) + ">";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCSpecificBlock that = (MCSpecificBlock) o;
+        return meta == that.meta && Objects.equals(block, that.block);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(block, meta);
+    }
 }

@@ -18,6 +18,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class MCExplosion implements IExplosion {
@@ -94,5 +95,18 @@ public class MCExplosion implements IExplosion {
     @Override
     public Object getInternal() {
         return explosion;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCExplosion that = (MCExplosion) o;
+        return Objects.equals(explosion, that.explosion);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(explosion);
     }
 }

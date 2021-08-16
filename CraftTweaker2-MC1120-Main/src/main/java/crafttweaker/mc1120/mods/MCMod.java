@@ -58,4 +58,17 @@ public class MCMod implements IMod {
         }
         return stacks.toArray(new IItemStack[0]);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MCMod mcMod = (MCMod) o;
+        return Objects.equals(mod, mcMod.mod);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mod);
+    }
 }
