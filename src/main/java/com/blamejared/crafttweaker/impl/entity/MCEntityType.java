@@ -1,8 +1,11 @@
 package com.blamejared.crafttweaker.impl.entity;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.entity.CTEntityIngredient;
+import com.blamejared.crafttweaker.api.entity.INameplateFunction;
+import com.blamejared.crafttweaker.impl.actions.entities.ActionSetNameplate;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.entity.Entity;
@@ -31,6 +34,37 @@ public class MCEntityType implements CommandStringDisplayable {
         this.internal = Objects.requireNonNull(internal);
     }
     
+    /**
+     * Sets the nameplate handler for this EntityType.
+     *
+     * @param function The function that controls how this EntityType's nameplate is rendered.
+     *
+     * @docParam function (entity, result) => {
+     * result.setAllow();
+     * result.content = "Custom name! Position: " + entity.position;
+     * })
+     */
+    @ZenCodeType.Method
+    public void setNameplate(INameplateFunction function) {
+        
+        CraftTweakerAPI.apply(new ActionSetNameplate(entity -> entity.getType().equals(getInternal()), function));
+    }
+    
+    /**
+     * Sets the global nameplate handler for all EntityTypes.
+     *
+     * @param function The function that controls how all EntityType's nameplate are rendered.
+     *
+     * @docParam function (entity, result) => {
+     * result.setAllow();
+     * result.content = "Custom name! Position: " + entity.position;
+     * })
+     */
+    @ZenCodeType.Method
+    public static void setNameplateHandler(INameplateFunction function) {
+        
+        CraftTweakerAPI.apply(new ActionSetNameplate(entity -> true, function));
+    }
     
     /**
      * Gets the registry name of this EntityType
