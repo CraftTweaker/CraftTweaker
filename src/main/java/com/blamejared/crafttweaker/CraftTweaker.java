@@ -131,7 +131,7 @@ public class CraftTweaker {
         if(server != null) {
             server.getPlayerList().func_232641_a_(msg, ChatType.SYSTEM, CRAFTTWEAKER_UUID);
         } else {
-            System.out.println(msg.getString());
+            LOG.info(msg.getString());
         }
     }
     
