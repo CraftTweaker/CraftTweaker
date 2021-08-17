@@ -8,11 +8,20 @@ import org.openzen.zencode.shared.SourceFile;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 
 public class FileAccessSingle {
@@ -38,7 +47,7 @@ public class FileAccessSingle {
         this.fileName = file.getName();
         this.fileContents = new ArrayList<>();
         try {
-            readFile(new FileReader(file));
+            readFile(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
         } catch(FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -67,7 +76,7 @@ public class FileAccessSingle {
         this.fileName = file.getAbsolutePath().substring(baseDirectory.getAbsolutePath().length() + 1);
         this.fileContents = new ArrayList<>();
         try {
-            readFile(new FileReader(file));
+            readFile(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
         } catch(FileNotFoundException e) {
             e.printStackTrace();
         }

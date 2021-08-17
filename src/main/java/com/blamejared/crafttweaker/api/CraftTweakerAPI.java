@@ -29,8 +29,10 @@ import org.openzen.zencode.shared.SourceFile;
 import org.openzen.zenscript.parser.expression.ParsedExpressionArray;
 import org.openzen.zenscript.parser.expression.ParsedExpressionMap;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.StringReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -156,7 +158,8 @@ public class CraftTweakerAPI {
         final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
         final SourceFile[] sourceFiles = recipes.stream()
                 .map(iRecipe -> (ScriptRecipe) iRecipe)
-                .map(recipe -> new FileAccessSingle(recipe.getFileName(), new StringReader(recipe.getContent()), scriptLoadingOptions, CraftTweakerRegistry
+                .map(recipe -> new FileAccessSingle(recipe.getFileName(), new InputStreamReader(new ByteArrayInputStream(recipe.getContent()
+                        .getBytes(StandardCharsets.UTF_8))), scriptLoadingOptions, CraftTweakerRegistry
                         .getPreprocessors()))
                 .filter(FileAccessSingle::shouldBeLoaded)
                 .sorted(comparator)
