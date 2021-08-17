@@ -1,5 +1,6 @@
 package crafttweaker.mc1120.dispenser;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.dispenser.IBlockSource;
 import crafttweaker.api.dispenser.IDispenserBehavior;
 import crafttweaker.api.entity.IEntity;
@@ -34,7 +35,9 @@ public class ShootingProjectileBehavior implements IDispenserBehavior {
         IEntity entity = projectile.createEntity(source.getWorld());
         entity.setPosition3f(new MCPosition3f(x, y, z));
         if (entity instanceof IProjectile) {
-            ((IProjectile) projectile).shoot(facing.getFrontOffsetX(), facing.getFrontOffsetY() + 0.1, facing.getFrontOffsetZ(), velocity, inaccuracy);
+            ((IProjectile) entity).shoot(facing.getFrontOffsetX(), facing.getFrontOffsetY() + 0.1, facing.getFrontOffsetZ(), velocity, inaccuracy);
+        } else {
+            CraftTweakerAPI.logError(projectile.getId() + " is not a projectile.");
         }
         source.getWorld().spawnEntity(entity);
         return stack;
