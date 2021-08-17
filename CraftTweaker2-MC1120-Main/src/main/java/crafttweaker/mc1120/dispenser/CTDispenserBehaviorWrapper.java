@@ -22,7 +22,7 @@ public class CTDispenserBehaviorWrapper extends BehaviorDefaultDispenseItem {
 
     @Override
     protected ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
-        return CraftTweakerMC.getItemStack(dispenserBehavior.apply(CraftTweakerMC.getBlockSource(source), CraftTweakerMC.getIItemStack(stack)));
+        return CraftTweakerMC.getItemStack(dispenserBehavior.apply(CraftTweakerMC.getBlockSource(source), CraftTweakerMC.getIItemStack(stack)).mutable());
     }
 
     @Override
