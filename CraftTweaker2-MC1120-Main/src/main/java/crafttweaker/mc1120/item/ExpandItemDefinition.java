@@ -4,7 +4,7 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.dispenser.DispenserSound;
 import crafttweaker.api.dispenser.IDispenserBehavior;
 import crafttweaker.api.dispenser.IDispenserSoundFunction;
-import crafttweaker.api.entity.IProjectile;
+import crafttweaker.api.entity.IEntityDefinition;
 import crafttweaker.api.item.IItemDefinition;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.mc1120.CraftTweaker;
@@ -50,7 +50,7 @@ public class ExpandItemDefinition {
     }
 
     @ZenMethod
-    public static void addShootingProjectileDispenserBehavior(IItemDefinition item, IProjectile projectile, @Optional(valueDouble = 6.0) float inaccuracy, @Optional(valueDouble = 1.1) float velocity) {
+    public static void addShootingProjectileDispenserBehavior(IItemDefinition item, IEntityDefinition projectile, @Optional(valueDouble = 6.0) float inaccuracy, @Optional(valueDouble = 1.1) float velocity) {
         addDispenserBehavior(item, new ShootingProjectileBehavior(projectile, inaccuracy, velocity), (source) -> DispenserSound.LAUNCH);
     }
 }
