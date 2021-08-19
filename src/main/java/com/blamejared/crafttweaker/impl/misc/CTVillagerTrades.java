@@ -471,9 +471,24 @@ public class CTVillagerTrades {
      * Removes all wandering trades of the given rarity
      *
      * @param rarity The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
+     *
+     * @deprecated Scheduled for removal next breaking change: use {@link #removeAllWanderingTrades(int)} instead.
      */
+    @Deprecated
     @ZenCodeType.Method
     public void removeAllWanderinTrades(int rarity) {
+        
+        removeWanderingTradeInternal(rarity, trade -> true);
+    }
+    
+    /**
+     * Removes all wandering trades of the given rarity
+     *
+     * @param rarity The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
+     */
+    @Deprecated
+    @ZenCodeType.Method
+    public void removeAllWanderingTrades(int rarity) {
         
         removeWanderingTradeInternal(rarity, trade -> true);
     }
