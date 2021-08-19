@@ -19,8 +19,8 @@ import org.openzen.zencode.java.ZenCodeType;
  * enchanted is also available.
  */
 @ZenRegister
-@Document("vanilla/api/event/enchantming/MCEnchantmentLevelSetEvent")
-@NativeTypeRegistration(value = EnchantmentLevelSetEvent.class, zenCodeName = "crafttweaker.api.event.enchantming.MCEnchantmentLevelSetEvent")
+@Document("vanilla/api/event/enchanting/MCEnchantmentLevelSetEvent")
+@NativeTypeRegistration(value = EnchantmentLevelSetEvent.class, zenCodeName = "crafttweaker.api.event.enchanting.MCEnchantmentLevelSetEvent")
 public class ExpandEnchantmentLevelSetEvent {
     
     /**
