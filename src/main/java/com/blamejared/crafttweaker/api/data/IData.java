@@ -1,6 +1,8 @@
 package com.blamejared.crafttweaker.api.data;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.impl.data.BoolData;
+import com.blamejared.crafttweaker.impl.data.ByteData;
 import com.blamejared.crafttweaker.impl.data.IntData;
 import com.blamejared.crafttweaker.impl.data.ListData;
 import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
@@ -166,6 +168,19 @@ public interface IData {
         }
         
         return new ListData();
+    }
+    
+    
+    @ZenCodeType.Caster
+    @ZenCodeType.Method
+    default boolean asBoolean() {
+        
+        if(this instanceof BoolData) {
+            return ((BoolData) this).getInternalValue();
+        } else if(this instanceof ByteData) {
+            return ((ByteData) this).getByte() == 1;
+        }
+        return false;
     }
     
     
