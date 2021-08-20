@@ -68,6 +68,9 @@ repositories {
     maven {
         url 'https://repo.spongepowered.org/repository/maven-public'
     }
+    maven {
+        url "https://www.cursemaven.com"
+    }
 }
 
 minecraft {
