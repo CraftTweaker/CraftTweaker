@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl_native.blocks;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.util.MethodHandleHelper;
 import com.blamejared.crafttweaker.impl.actions.blocks.ActionSetBlockProperty;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManagerBlock;
@@ -14,8 +15,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ToolType;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.lang.invoke.MethodHandle;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +31,9 @@ import java.util.stream.Collectors;
 @Document("vanilla/api/block/MCBlock")
 @NativeTypeRegistration(value = Block.class, zenCodeName = "crafttweaker.api.blocks.MCBlock")
 public class ExpandBlock {
+    
+    private static final MethodHandle HARVEST_TOOL_SETTER = MethodHandleHelper.linkSetter(Block.class, "harvestTool");
+    private static final MethodHandle HARVEST_LEVEL_SETTER = MethodHandleHelper.linkSetter(Block.class, "harvestLevel");
     
     
     /**
@@ -52,6 +58,81 @@ public class ExpandBlock {
     public static BlockState getDefaultState(Block internal) {
         
         return internal.getDefaultState();
+    }
+    
+    /**
+     * Gets the harvest tool for this Block.
+     *
+     * NOTE:
+     * This will get the tool for the default blockstate, you should use the BlockState specific method for a more accurate result!
+     *
+     * @return The harvest tool for this Block.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("harvestTool")
+    @ZenCodeType.Nullable
+    public static ToolType getHarvestTool(Block internal) {
+        
+        return internal.getHarvestTool(internal.getDefaultState());
+    }
+    
+    /**
+     * Sets the harvest tool for this Block.
+     *
+     * @param type The new tooltype.
+     *
+     * @docParam type <tooltype:axe>
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("harvestTool")
+    public static void setHarvestTool(Block internal, @ZenCodeType.Nullable ToolType type) {
+        
+        CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Harvest Tool",
+                type, internal.getHarvestTool(internal.getDefaultState()), value -> {
+            try {
+                HARVEST_TOOL_SETTER.invokeExact(internal, value);
+            } catch(Throwable e) {
+                e.printStackTrace();
+            }
+        }));
+    }
+    
+    /**
+     * Gets the harvest level for this Block.
+     *
+     * NOTE:
+     * This will get the level for the default blockstate, you should use the BlockState specific method for a more accurate result!
+     *
+     * @return The harvest tool for this Block.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("harvestLevel")
+    public static int getHarvestLevel(Block internal) {
+        
+        return internal.getHarvestLevel(internal.getDefaultState());
+    }
+    
+    /**
+     * Sets the harvest level for this Block.
+     *
+     * @param level the new harvest level.
+     *
+     * @docParam level 2
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("harvestLevel")
+    public static void setHarvestLevel(Block internal, int level) {
+        
+        CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Harvest Level",
+                level, internal.getHarvestLevel(internal.getDefaultState()), value -> {
+            try {
+                // Required for invokeExact
+                //noinspection UnnecessaryUnboxing
+                HARVEST_LEVEL_SETTER.invokeExact(internal, value.intValue());
+            } catch(Throwable e) {
+                e.printStackTrace();
+            }
+        }));
     }
     
     /**

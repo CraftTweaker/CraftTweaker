@@ -275,6 +275,7 @@ public class ExpandBlockState {
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("harvestTool")
+    @ZenCodeType.Nullable
     public static ToolType getHarvestTool(BlockState internal) {
         
         return internal.getHarvestTool();

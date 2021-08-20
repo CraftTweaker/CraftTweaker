@@ -7,7 +7,6 @@ import net.minecraftforge.fml.LogicalSide;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class ActionSetBlockProperty<T> implements IUndoableAction {
     
@@ -47,8 +46,7 @@ public class ActionSetBlockProperty<T> implements IUndoableAction {
     @Override
     public String describe() {
         
-        return "Set the value of " + propertyName + " on " + ExpandBlock.getCommandString(block) + " to: '" + this.valueNameGetter
-                .apply(newValue) + "'";
+        return "Set the value of " + propertyName + " on " + ExpandBlock.getCommandString(block) + " to: '" + (newValue == null ? "null" : this.valueNameGetter.apply(newValue)) + "'";
     }
     
     @Override
@@ -60,8 +58,7 @@ public class ActionSetBlockProperty<T> implements IUndoableAction {
     @Override
     public String describeUndo() {
         
-        return "Reset the value of " + propertyName + " on " + ExpandBlock.getCommandString(block) + " to: '" + this.valueNameGetter
-                .apply(oldValue) + "'";
+        return "Reset the value of " + propertyName + " on " + ExpandBlock.getCommandString(block) + " to: '" + (newValue == null ? "null" : this.valueNameGetter.apply(oldValue)) + "'";
     }
     
     @Override
