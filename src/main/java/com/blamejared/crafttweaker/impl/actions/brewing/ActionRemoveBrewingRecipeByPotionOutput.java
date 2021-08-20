@@ -15,7 +15,7 @@ import java.util.List;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class ActionRemoveBrewingRecipeByPotionOutput extends ActionBrewingBase {
     
-    private final List removed = new ArrayList();
+    private final List<PotionBrewing.MixPredicate<Potion>> removed = new ArrayList();
     private final Potion output;
     
     
@@ -29,15 +29,14 @@ public class ActionRemoveBrewingRecipeByPotionOutput extends ActionBrewingBase {
     @Override
     public void apply() {
         
-        Iterator iterator = PotionBrewing.POTION_TYPE_CONVERSIONS.iterator();
+        Iterator<PotionBrewing.MixPredicate<Potion>> iterator = PotionBrewing.POTION_TYPE_CONVERSIONS.iterator();
         while(iterator.hasNext()) {
-            Object mix = iterator.next();
+            PotionBrewing.MixPredicate<Potion> mix = iterator.next();
             
-            IRegistryDelegate<Potion> potionOutput = getPotionOutput(mix);
-            if(potionOutput == null) {
+            if(mix.output == null) {
                 throw new RuntimeException("Error getting potion from mix: " + mix + "! Please make an issue on the issue tracker!");
             }
-            if(potionOutput.get().equals(output)) {
+            if(mix.output.get().equals(output)) {
                 removed.add(mix);
                 iterator.remove();
             }
@@ -47,10 +46,10 @@ public class ActionRemoveBrewingRecipeByPotionOutput extends ActionBrewingBase {
     @Override
     public void undo() {
         
-        for(Object o : removed) {
-            IRegistryDelegate<Potion> potionInput = getPotionInput(o);
-            Ingredient itemReagent = getItemReagent(o);
-            IRegistryDelegate<Potion> potionOutput = getPotionOutput(o);
+        for(PotionBrewing.MixPredicate<Potion> potion : removed) {
+            IRegistryDelegate<Potion> potionInput = potion.input;
+            Ingredient itemReagent = getItemReagent(potion);
+            IRegistryDelegate<Potion> potionOutput = potion.output;
             if(potionInput == null || itemReagent == null || potionOutput == null) {
                 CraftTweakerAPI.logError("Error getting mix entries! potionInput: %s, itemReagent: %s, potionOutput: %s", potionInput, itemReagent, potionOutput);
                 continue;

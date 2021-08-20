@@ -12,3 +12,9 @@ logoFile="logo.png"
 authors="Jaredlll08, Kindlich and StanH"
 description="Customize your minecraft experience!"
 itemIcon="minecraft:crafting_table"
+[[dependencies.crafttweaker]]
+modId="forge"
+mandatory=true
+versionRange="[36.1.52,)"
+ordering="NONE"
+side="BOTH"

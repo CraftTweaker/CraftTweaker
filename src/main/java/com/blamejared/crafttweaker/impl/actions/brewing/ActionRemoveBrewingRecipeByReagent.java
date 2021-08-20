@@ -1,10 +1,7 @@
 package com.blamejared.crafttweaker.impl.actions.brewing;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.actions.IUndoableAction;
-import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.impl_native.potion.ExpandPotion;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionBrewing;
@@ -12,7 +9,6 @@ import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.brewing.IBrewingRecipe;
 import net.minecraftforge.registries.IRegistryDelegate;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -21,7 +17,7 @@ import java.util.List;
 public class ActionRemoveBrewingRecipeByReagent extends ActionBrewingBase {
     
     private final IItemStack reagent;
-    private final List removed = new ArrayList();
+    private final List<PotionBrewing.MixPredicate<Potion>> removed = new ArrayList();
     private final List<IBrewingRecipe> removedRecipes = new ArrayList<>();
     
     public ActionRemoveBrewingRecipeByReagent(List<IBrewingRecipe> recipes, IItemStack reagent) {
@@ -34,9 +30,9 @@ public class ActionRemoveBrewingRecipeByReagent extends ActionBrewingBase {
     @Override
     public void apply() {
         
-        Iterator vanillaIterator = PotionBrewing.POTION_TYPE_CONVERSIONS.iterator();
+        Iterator<PotionBrewing.MixPredicate<Potion>> vanillaIterator = PotionBrewing.POTION_TYPE_CONVERSIONS.iterator();
         while(vanillaIterator.hasNext()) {
-            Object mix = vanillaIterator.next();
+            PotionBrewing.MixPredicate<Potion> mix = vanillaIterator.next();
             
             Ingredient reagentInput = getItemReagent(mix);
             if(reagentInput == null) {
@@ -61,10 +57,10 @@ public class ActionRemoveBrewingRecipeByReagent extends ActionBrewingBase {
     @Override
     public void undo() {
         
-        for(Object o : removed) {
-            IRegistryDelegate<Potion> potionInput = getPotionInput(o);
-            Ingredient itemReagent = getItemReagent(o);
-            IRegistryDelegate<Potion> potionOutput = getPotionOutput(o);
+        for(PotionBrewing.MixPredicate<Potion> potion : removed) {
+            IRegistryDelegate<Potion> potionInput = potion.input;
+            Ingredient itemReagent = getItemReagent(potion);
+            IRegistryDelegate<Potion> potionOutput = potion.output;
             if(potionInput == null || itemReagent == null || potionOutput == null) {
                 CraftTweakerAPI.logError("Error getting mix entries! potionInput: %s, itemReagent: %s, potionOutput: %s", potionInput, itemReagent, potionOutput);
                 continue;
