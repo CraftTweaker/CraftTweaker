@@ -99,6 +99,11 @@ public class MCRecipeWrapper extends MCRecipeBase {
     @Override
     public IIngredient[][] getIngredients2D() {
         IIngredient[] ingredients = getIngredients1D();
+        if(ingredients.length == 0) {
+            // Fixes IC2 hidden recipes that have a width / height but an empty ingredients list...
+            // May also be worth checking if the length is not width * height, but this is already a niche issue to begin with.
+            return new IIngredient[0][0];
+        }
         if (!isShaped) {
             return new IIngredient[][]{ingredients};
         }
