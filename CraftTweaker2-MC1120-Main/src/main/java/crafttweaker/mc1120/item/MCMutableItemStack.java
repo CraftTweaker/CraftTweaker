@@ -23,9 +23,7 @@ import java.util.Random;
  */
 public class MCMutableItemStack extends MCItemStack implements IMutableItemStack {
     public MCMutableItemStack(ItemStack itemStack) {
-        super(itemStack);
-        NBTTagCompound nbt = itemStack.getTagCompound();
-        tag = nbt == null ? null : NBTConverter.from(nbt, false);
+        super(itemStack, NBTConverter.from(itemStack.getTagCompound(), false));
     }
 
     @Override
@@ -160,6 +158,11 @@ public class MCMutableItemStack extends MCItemStack implements IMutableItemStack
     @Override
     public IItemStack copy() {
         return new MCItemStack(origin.copy());
+    }
+
+    @Override
+    public IMutableItemStack mutable() {
+        return origin.isEmpty() ? null : this;
     }
 
     @Override
