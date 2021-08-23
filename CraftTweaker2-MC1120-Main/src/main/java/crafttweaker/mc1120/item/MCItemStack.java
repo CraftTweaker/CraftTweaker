@@ -30,7 +30,6 @@ import crafttweaker.mc1120.liquid.MCLiquidStack;
 import crafttweaker.util.ArrayUtil;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -90,7 +89,7 @@ public class MCItemStack implements IItemStack {
         this.wildcardSize = wildcardSize;
     }
     
-    private MCItemStack(ItemStack itemStack, IData tag) {
+    protected MCItemStack(ItemStack itemStack, IData tag) {
         if(itemStack.isEmpty())
             throw new IllegalArgumentException("stack cannot be null");
         
@@ -731,7 +730,7 @@ public class MCItemStack implements IItemStack {
 
     @Override
     public IMutableItemStack mutable() {
-        return new MCMutableItemStack(origin);
+        return origin.isEmpty() ? null : new MCMutableItemStack(origin);
     }
 
     // #############################
