@@ -4,10 +4,14 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
+import com.blamejared.crafttweaker.impl.tag.manager.TagManagerItem;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.item.Item;
 import org.openzen.zencode.java.ZenCodeType;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @ZenRegister
 @Document("vanilla/api/item/MCItemDefinition")
@@ -41,6 +45,15 @@ public class ExpandItem {
     public static boolean isIn(Item internal, MCTag<Item> tag) {
         
         return internal.isIn(tag.getInternalRaw());
+    }
+    
+    @ZenCodeType.Method
+    public static List<MCTag<Item>> getTags(Item internal) {
+        
+        return internal.getTags()
+                .stream()
+                .map(resourceLocation -> new MCTag<>(resourceLocation, TagManagerItem.INSTANCE))
+                .collect(Collectors.toList());
     }
     
 }
