@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl_native.item;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.item.Item;
@@ -25,6 +26,21 @@ public class ExpandItem {
     public static String getCommandString(Item internal) {
         
         return "<item:" + internal.getRegistryName() + ">.definition";
+    }
+    
+    /**
+     * Checks if this item is in the Given tag.
+     *
+     * @param tag The tag to check against.
+     *
+     * @return True if the tag contains this item.
+     *
+     * @docParam tag <tag:items:minecraft:wool>
+     */
+    @ZenCodeType.Method
+    public static boolean isIn(Item internal, MCTag<Item> tag) {
+        
+        return internal.isIn(tag.getInternalRaw());
     }
     
 }
