@@ -8,10 +8,13 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.function.Predicate;
 
 @ZenRegister
 @Document("vanilla/api/inventory/IInventory")
@@ -205,6 +208,52 @@ public class ExpandIInventory {
     public static int count(IInventory internal, Item item) {
         
         return internal.count(item);
+    }
+    
+    /**
+     * Counts how many ItemStacks in this inventory match the given predicate.
+     *
+     * @param predicate The predicate to test against
+     *
+     * @return The amount of ItemStacks in this inventory that match the predicate.
+     *
+     * @docParam predicate (stack) => stack.amount == 2
+     */
+    @ZenCodeType.Method
+    public static int count(IInventory internal, Predicate<IItemStack> predicate) {
+        
+        int count = 0;
+        for(int i = 0; i < internal.getSizeInventory(); ++i) {
+            ItemStack itemstack = internal.getStackInSlot(i);
+            if(predicate.test(new MCItemStack(itemstack))) {
+                count += itemstack.getCount();
+            }
+        }
+        
+        return count;
+    }
+    
+    /**
+     * Gets the ItemStacks in this inventory that match the given predicate.
+     *
+     * @param predicate The predicate to test against.
+     *
+     * @return A list of IItemStacks that match the given predicate.
+     *
+     * @docParam predicate (stack) => stack.amount == 2;
+     */
+    @ZenCodeType.Method
+    public static List<IItemStack> getStacks(IInventory internal, Predicate<IItemStack> predicate) {
+        
+        List<IItemStack> stacks = new ArrayList<>();
+        for(int i = 0; i < internal.getSizeInventory(); ++i) {
+            MCItemStack stack = new MCItemStack(internal.getStackInSlot(i));
+            if(predicate.test(stack)) {
+                stacks.add(stack);
+            }
+        }
+        
+        return stacks;
     }
     
     /**
