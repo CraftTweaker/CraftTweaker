@@ -1,14 +1,16 @@
 package com.blamejared.crafttweaker.impl.script;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
+import java.util.LinkedList;
+
 public class SerializerScript extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ScriptRecipe> {
-    
-    static int MAX_SERIALIZED_SCRIPT_SIZE = Short.MAX_VALUE * Short.MAX_VALUE;
     
     public static final SerializerScript INSTANCE = new SerializerScript();
     
@@ -25,7 +27,7 @@ public class SerializerScript extends ForgeRegistryEntry<IRecipeSerializer<?>> i
     public ScriptRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
         
         String fileName = buffer.readString();
-        int parts = buffer.readShort();
+        int parts = buffer.readVarInt();
         StringBuilder script = new StringBuilder();
         while(parts-- > 0) {
             script.append(buffer.readString());
@@ -36,17 +38,10 @@ public class SerializerScript extends ForgeRegistryEntry<IRecipeSerializer<?>> i
     public void write(PacketBuffer buffer, ScriptRecipe recipe) {
         
         String contents = recipe.getContent();
-        if(contents.length() > MAX_SERIALIZED_SCRIPT_SIZE) {
-            throw new IllegalArgumentException("Can't serialize scripts larger than " + MAX_SERIALIZED_SCRIPT_SIZE + " bytes. please split your script in smaller parts");
-        }
-        
+        LinkedList<String> split = Lists.newLinkedList(Splitter.fixedLength(Short.MAX_VALUE / Byte.SIZE).split(contents));
         buffer.writeString(recipe.getFileName());
-        
-        int parts = (int) Math.ceil((double) contents.length() / (double) Short.MAX_VALUE);
-        buffer.writeShort(parts);
-        for(int i = 0; i < parts; i++) {
-            buffer.writeString(contents.substring(i * Short.MAX_VALUE, Math.min((i + 1) * Short.MAX_VALUE, contents.length())));
-        }
+        buffer.writeVarInt(split.size());
+        split.forEach(buffer::writeString);
     }
     
 }
