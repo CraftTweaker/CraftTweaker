@@ -37,7 +37,7 @@ subprojects {
     apply from: rootProject.file('common.gradle')
 }
 
-version = '7.1.1'
+version = '7.1.2'
 
 group = 'com.blamejared.crafttweaker'
 archivesBaseName = 'CraftTweaker-1.16.5'
