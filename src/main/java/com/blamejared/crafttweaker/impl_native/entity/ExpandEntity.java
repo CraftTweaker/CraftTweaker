@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
@@ -803,6 +804,25 @@ public class ExpandEntity {
         internal.deserializeNBT(internal.serializeNBT().merge(data.getInternal()));
     }
     
+    /**
+     * Gets the persisted NBT tag.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("persistedData")
+    public static MapData getPersistentData(Entity internal) {
+        
+        return new MapData(internal.getPersistentData());
+    }
+    
+    /**
+     * Updates the persisted data.
+     */
+    @ZenCodeType.Method
+    public static void updatePersistentData(Entity internal, MapData data) {
+        
+        CompoundNBT persistentData = internal.getPersistentData();
+        internal.getPersistentData().merge(data.getInternal());
+    }
     
     //TODO: Add the other methods
     // Tip: Use IDE's "delegate" method and go from there
