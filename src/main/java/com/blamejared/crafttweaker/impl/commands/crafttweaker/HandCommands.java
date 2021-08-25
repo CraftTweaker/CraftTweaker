@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.text.FormattedTextComponent;
 import com.blamejared.crafttweaker.impl.commands.CTCommands;
 import com.blamejared.crafttweaker.impl.commands.CommandCallerPlayer;
 import com.blamejared.crafttweaker.impl.commands.CommandUtilities;
+import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.fluid.MCFluidStackMutable;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
@@ -30,7 +31,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITagCollection;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
@@ -131,6 +131,7 @@ public final class HandCommands {
                         sendAttributePropertyInformation(player, "ID", attributeModifier.getID().toString());
                         sendAttributePropertyInformation(player, "Operation", attributeModifier.getOperation().name());
                         sendAttributePropertyInformation(player, "Amount", attributeModifier.getAmount() +"");
+                        sendAttributePropertyInformation(player, "IData", new MapData(attributeModifier.write()).asString());
     
                     });
                     
