@@ -209,6 +209,9 @@ public interface IIngredient extends CommandStringDisplayable {
         final Set<EquipmentSlotType> validSlots = new HashSet<>(Arrays.asList(slotTypes));
         CraftTweakerAPI.apply(new ActionModifyAttribute(this, event -> {
             if(validSlots.contains(event.getSlotType())) {
+                if(event.getModifiers().containsEntry(attribute, modifier)) {
+                    event.removeModifier(attribute, modifier);
+                }
                 event.addModifier(attribute, modifier);
             }
         }));
@@ -246,6 +249,9 @@ public interface IIngredient extends CommandStringDisplayable {
         final Set<EquipmentSlotType> validSlots = new HashSet<>(Arrays.asList(slotTypes));
         CraftTweakerAPI.apply(new ActionModifyAttribute(this, event -> {
             if(validSlots.contains(event.getSlotType())) {
+                if(event.getModifiers().containsEntry(attribute, modifier)) {
+                    event.removeModifier(attribute, modifier);
+                }
                 event.addModifier(attribute, modifier);
             }
         }));

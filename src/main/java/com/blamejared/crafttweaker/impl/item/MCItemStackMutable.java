@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.api.ingredient.PartialNBTIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.util.AttributeUtil;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.util.EnchantmentUtil;
 import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
@@ -92,19 +93,27 @@ public class MCItemStackMutable implements IItemStack {
     }
     
     @Override
-    public IItemStack withAttributeModifier(Attribute attribute, String uuid, String name, double value, AttributeModifier.Operation operation, EquipmentSlotType[] slotTypes) {
+    public IItemStack withAttributeModifier(Attribute attribute, String uuid, String name, double value, AttributeModifier.Operation operation, EquipmentSlotType[] slotTypes, boolean preserveDefaults) {
         
         for(EquipmentSlotType slotType : slotTypes) {
-            getInternal().addAttributeModifier(attribute, new AttributeModifier(UUID.fromString(uuid), name, value, operation), slotType);
+            if(preserveDefaults) {
+                AttributeUtil.addAttributeModifier(getInternal(), attribute, new AttributeModifier(UUID.fromString(uuid), name, value, operation), slotType);
+            } else {
+                getInternal().addAttributeModifier(attribute, new AttributeModifier(UUID.fromString(uuid), name, value, operation), slotType);
+            }
         }
         return this;
     }
     
     @Override
-    public IItemStack withAttributeModifier(Attribute attribute, String name, double value, AttributeModifier.Operation operation, EquipmentSlotType[] slotTypes) {
+    public IItemStack withAttributeModifier(Attribute attribute, String name, double value, AttributeModifier.Operation operation, EquipmentSlotType[] slotTypes, boolean preserveDefaults) {
         
         for(EquipmentSlotType slotType : slotTypes) {
-            getInternal().addAttributeModifier(attribute, new AttributeModifier(name, value, operation), slotType);
+            if(preserveDefaults) {
+                AttributeUtil.addAttributeModifier(getInternal(), attribute, new AttributeModifier(name, value, operation), slotType);
+            } else {
+                getInternal().addAttributeModifier(attribute, new AttributeModifier(name, value, operation), slotType);
+            }
         }
         return this;
     }
@@ -178,7 +187,7 @@ public class MCItemStackMutable implements IItemStack {
     
     @Override
     public IItemStack setEnchantments(Map<Enchantment, Integer> enchantments) {
-    
+        
         EnchantmentUtil.setEnchantments(enchantments, getInternal());
         return this;
     }

@@ -2,6 +2,8 @@ package com.blamejared.crafttweaker.impl.events;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.item.IIngredient;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.util.AttributeUtil;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
@@ -12,6 +14,8 @@ import com.blamejared.crafttweaker.impl_native.world.ExpandWorld;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
@@ -38,9 +42,29 @@ public class CTEventHandler {
     @SubscribeEvent
     public void attribute(ItemAttributeModifierEvent e) {
         
+        ItemStack stack = e.getItemStack();
+        if(stack.hasTag()) {
+            CompoundNBT crtData = stack.getChildTag(IItemStack.CRAFTTWEAKER_DATA_KEY);
+            if(crtData != null) {
+                AttributeUtil.getAttributeModifiers(stack, e.getSlotType())
+                        .forEach((attribute, modifiers) -> {
+                            modifiers.forEach(modifier -> {
+                                // Multimaps are possibly one of the dumbest things I've come across.
+                                // So we have to remove the value before we add the value.
+                                // Override existing attributes
+                                if(e.getModifiers().containsEntry(attribute, modifier)) {
+                                    e.removeModifier(attribute, modifier);
+                                }
+                                e.addModifier(attribute, modifier);
+                            });
+                        });
+                
+            }
+        }
+        
         ATTRIBUTE_MODIFIERS.keySet()
                 .stream()
-                .filter(ingredient -> ingredient.matches(new MCItemStackMutable(e.getItemStack())))
+                .filter(ingredient -> ingredient.matches(new MCItemStackMutable(stack)))
                 .map(ATTRIBUTE_MODIFIERS::get)
                 .flatMap(Collection::stream)
                 .forEach(consumer -> consumer.accept(e));

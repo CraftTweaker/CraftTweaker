@@ -50,6 +50,8 @@ import java.util.stream.Collectors;
 @ZenWrapper(wrappedClass = "net.minecraft.item.ItemStack", displayStringFormat = "%s.getCommandString()", creationMethodFormat = "new MCItemStack(%s)", implementingClass = "com.blamejared.crafttweaker.impl.item.MCItemStack")
 public interface IItemStack extends IIngredient, IIngredientWithAmount {
     
+    @ZenCodeType.Field
+    String CRAFTTWEAKER_DATA_KEY = "CraftTweakerData";
     
     /**
      * Creates a copy
@@ -320,12 +322,17 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      *
      * Attributes added with this method will only appear on this specific IItemStack.
      *
-     * @param uuid      The unique identifier of the modifier to replace.
-     * @param attribute The Attribute of the modifier.
-     * @param name      The name of the modifier.
-     * @param value     The value of the modifier.
-     * @param operation The operation of the modifier.
-     * @param slotTypes What slots the modifier is valid for.
+     * By defaults, adding a modifier will remove the default Attribute Modifiers on the Item, like the Diamond Chestplate's Armor and Toughness values.
+     * When `preserveDefaults` is set to true (by default it is false.), the default Attribute Modifiers will be preserved when adding this modifier.
+     * This means that if you were adding the `forge:nametag_distance` attribute to an Item, it would keep its default attributes (like Armor and Toughness values).
+     *
+     * @param uuid             The unique identifier of the modifier to replace.
+     * @param attribute        The Attribute of the modifier.
+     * @param name             The name of the modifier.
+     * @param value            The value of the modifier.
+     * @param operation        The operation of the modifier.
+     * @param slotTypes        What slots the modifier is valid for.
+     * @param preserveDefaults Should the default Item Attribute Modifiers be preserved when adding this modifier.
      *
      * @docParam attribute <attribute:minecraft:generic.attack_damage>
      * @docParam uuid "8c1b5535-9f79-448b-87ae-52d81480aaa3"
@@ -333,9 +340,10 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      * @docParam value 10
      * @docParam operation AttributeOperation.ADDITION
      * @docParam slotTypes [<equipmentslottype:chest>]
+     * @docParam preserveDefaults true
      */
     @ZenCodeType.Method
-    IItemStack withAttributeModifier(Attribute attribute, String uuid, String name, double value, AttributeModifier.Operation operation, EquipmentSlotType[] slotTypes);
+    IItemStack withAttributeModifier(Attribute attribute, String uuid, String name, double value, AttributeModifier.Operation operation, EquipmentSlotType[] slotTypes, @ZenCodeType.OptionalBoolean boolean preserveDefaults);
     
     /**
      * Adds an AttributeModifier to this IItemStack.
@@ -345,20 +353,26 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      *
      * Attributes added with this method will only appear on this specific IItemStack.
      *
-     * @param attribute The Attribute of the modifier.
-     * @param name      The name of the modifier.
-     * @param value     The value of the modifier.
-     * @param operation The operation of the modifier.
-     * @param slotTypes What slots the modifier is valid for.
+     * By defaults, adding a modifier will remove the default Attribute Modifiers on the Item, like the Diamond Chestplate's Armor and Toughness values.
+     * When `preserveDefaults` is set to true (by default it is false.), the default Attribute Modifiers will be preserved when adding this modifier.
+     * This means that if you were adding the `forge:nametag_distance` attribute to an Item, it would keep its default attributes (like Armor and Toughness values).
+     *
+     * @param attribute        The Attribute of the modifier.
+     * @param name             The name of the modifier.
+     * @param value            The value of the modifier.
+     * @param operation        The operation of the modifier.
+     * @param slotTypes        What slots the modifier is valid for.
+     * @param preserveDefaults Should the default Item Attribute Modifiers be preserved when adding this modifier.
      *
      * @docParam attribute <attribute:minecraft:generic.attack_damage>
      * @docParam name "Extra Power"
      * @docParam value 10
      * @docParam operation AttributeOperation.ADDITION
      * @docParam slotTypes [<equipmentslottype:chest>]
+     * @docParam preserveDefaults true
      */
     @ZenCodeType.Method
-    IItemStack withAttributeModifier(Attribute attribute, String name, double value, AttributeModifier.Operation operation, EquipmentSlotType[] slotTypes);
+    IItemStack withAttributeModifier(Attribute attribute, String name, double value, AttributeModifier.Operation operation, EquipmentSlotType[] slotTypes, @ZenCodeType.OptionalBoolean boolean preserveDefaults);
     
     /**
      * Gets the Attributes and the AttributeModifiers on this IItemStack for the given EquipmentSlotType
