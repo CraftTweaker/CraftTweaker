@@ -79,6 +79,16 @@ public final class HandCommands {
             sendCopyingHand(player, "Item", Objects.requireNonNull(stack.getItem().getRegistryName()).toString());
             return 0;
         });
+    
+        subCommand("data", "Outputs the formatted data of the held item", (player, stack) -> {
+            //It cannot be null because we can't get unregistered items here
+            if(!stack.hasTag()){
+                CommandUtilities.send("Item does not have any data", player);
+                return 0;
+            }
+            sendCopyingHand(player, "Data", new MapData(stack.getTag()).asFormattedComponent(" ", 0).getString());
+            return 0;
+        });
         
         subCommand("tags", "Outputs the tags of the item in your hand", (player, stack) -> {
             final Collection<String> tags = sendTagsInformation(player, stack.getItem());
