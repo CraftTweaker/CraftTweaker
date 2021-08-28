@@ -48,6 +48,8 @@ public class ExpandFluidPlaceBlockEvent {
      * Sets the new BlockState that will be placed.
      *
      * @param state The new BlockState.
+     *
+     * @docParam state <blockstate:minecraft:dirt>
      */
     @ZenCodeType.Method
     @ZenCodeType.Setter("newState")
