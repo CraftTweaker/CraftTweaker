@@ -7,7 +7,6 @@ import net.minecraft.entity.merchant.villager.VillagerProfession;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
- *
  * @docParam this <profession:minecraft:fletcher>
  */
 @ZenRegister
@@ -18,7 +17,14 @@ public class ExpandVillagerProfession {
     @ZenCodeType.Getter("name")
     @ZenCodeType.Method
     public static String getName(VillagerProfession internal) {
+        
         return internal.toString();
+    }
+    
+    @ZenCodeType.Getter("commandString")
+    public static String getCommandString(VillagerProfession internal) {
+        
+        return "<profession:" + internal.getRegistryName() + ">";
     }
     
 }
