@@ -2,20 +2,25 @@ package com.blamejared.crafttweaker.impl.misc;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.villagers.BasicTradeExposer;
+import com.blamejared.crafttweaker.api.villagers.CTTradeObject;
 import com.blamejared.crafttweaker.api.villagers.ITradeRemover;
 import com.blamejared.crafttweaker.impl.actions.villagers.ActionAddTrade;
 import com.blamejared.crafttweaker.impl.actions.villagers.ActionAddWanderingTrade;
 import com.blamejared.crafttweaker.impl.actions.villagers.ActionRemoveTrade;
 import com.blamejared.crafttweaker.impl.actions.villagers.ActionRemoveWanderingTrade;
 import com.blamejared.crafttweaker.impl.actions.villagers.ActionTradeBase;
+import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.util.Util;
 import net.minecraftforge.common.BasicTrade;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.village.VillagerTradesEvent;
@@ -25,8 +30,11 @@ import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -43,6 +51,100 @@ public class CTVillagerTrades {
     private final List<ActionTradeBase> wanderingTradeActions = new ArrayList<>();
     // The event only fires once, so we use this to make sure we don't constantly add to the above lists
     private boolean ranEvents = false;
+    
+    // If you are a modder looking at this map and wondering how you can add your own trade type here,
+    // make a GitHub issue! We are super open to making a whole system to register
+    // your custom trade types but don't want to waste time if there is no interest.
+    // The system we add would be similar to IRecipeHandler, with an annotation based loading system.
+    public static Map<Class<? extends VillagerTrades.ITrade>, Function<VillagerTrades.ITrade, CTTradeObject>> TRADE_CONVERTER = Util.make(new HashMap<>(), classFunctionMap -> {
+        final IItemStack emerald = new MCItemStackMutable(new ItemStack(Items.EMERALD));
+        final IItemStack compass = new MCItemStackMutable(new ItemStack(Items.COMPASS));
+        final IItemStack book = new MCItemStackMutable(new ItemStack(Items.BOOK));
+        final IItemStack enchantedBook = new MCItemStackMutable(new ItemStack(Items.ENCHANTED_BOOK));
+        final IItemStack filledMap = new MCItemStackMutable(new ItemStack(Items.FILLED_MAP));
+        final IItemStack suspiciousStew = new MCItemStackMutable(new ItemStack(Items.SUSPICIOUS_STEW));
+        
+        classFunctionMap.put(VillagerTrades.DyedArmorForEmeraldsTrade.class, iTrade -> {
+            if(iTrade instanceof VillagerTrades.DyedArmorForEmeraldsTrade) {
+                return new CTTradeObject(
+                        emerald,
+                        MCItemStack.EMPTY.get(),
+                        new MCItemStackMutable(((VillagerTrades.DyedArmorForEmeraldsTrade) iTrade).tradeItem.getDefaultInstance()));
+            }
+            throw new IllegalArgumentException("Invalid trade passed to trade function! Given: " + iTrade.getClass());
+        });
+        classFunctionMap.put(VillagerTrades.EmeraldForItemsTrade.class, iTrade -> {
+            if(iTrade instanceof VillagerTrades.EmeraldForItemsTrade) {
+                return new CTTradeObject(
+                        new MCItemStackMutable(((VillagerTrades.EmeraldForItemsTrade) iTrade).tradeItem.getDefaultInstance()),
+                        MCItemStack.EMPTY.get(),
+                        emerald);
+            }
+            throw new IllegalArgumentException("Invalid trade passed to trade function! Given: " + iTrade.getClass());
+        });
+        classFunctionMap.put(VillagerTrades.EmeraldForMapTrade.class, iTrade -> new CTTradeObject(
+                emerald,
+                compass,
+                filledMap));
+        classFunctionMap.put(VillagerTrades.EmeraldForVillageTypeItemTrade.class, iTrade -> new CTTradeObject(
+                // This trade has random inputs, there isn't a good way to get them, so just going to use air.
+                MCItemStack.EMPTY.get(),
+                MCItemStack.EMPTY.get(),
+                emerald));
+        classFunctionMap.put(VillagerTrades.EnchantedBookForEmeraldsTrade.class, iTrade -> new CTTradeObject(
+                emerald,
+                book,
+                enchantedBook));
+        classFunctionMap.put(VillagerTrades.EnchantedItemForEmeraldsTrade.class, iTrade -> {
+            if(iTrade instanceof VillagerTrades.EnchantedItemForEmeraldsTrade) {
+                return new CTTradeObject(
+                        emerald,
+                        MCItemStack.EMPTY.get(),
+                        new MCItemStackMutable(((VillagerTrades.EnchantedItemForEmeraldsTrade) iTrade).sellingStack));
+            }
+            throw new IllegalArgumentException("Invalid trade passed to trade function! Given: " + iTrade.getClass());
+        });
+        classFunctionMap.put(VillagerTrades.ItemWithPotionForEmeraldsAndItemsTrade.class, iTrade -> {
+            if(iTrade instanceof VillagerTrades.ItemWithPotionForEmeraldsAndItemsTrade) {
+                return new CTTradeObject(
+                        emerald,
+                        new MCItemStackMutable(((VillagerTrades.ItemWithPotionForEmeraldsAndItemsTrade) iTrade).buyingItem.getDefaultInstance()),
+                        new MCItemStackMutable(((VillagerTrades.ItemWithPotionForEmeraldsAndItemsTrade) iTrade).potionStack));
+            }
+            throw new IllegalArgumentException("Invalid trade passed to trade function! Given: " + iTrade.getClass());
+        });
+        classFunctionMap.put(VillagerTrades.ItemsForEmeraldsAndItemsTrade.class, iTrade -> {
+            if(iTrade instanceof VillagerTrades.ItemsForEmeraldsAndItemsTrade) {
+                return new CTTradeObject(
+                        emerald,
+                        new MCItemStackMutable(((VillagerTrades.ItemsForEmeraldsAndItemsTrade) iTrade).buyingItem),
+                        new MCItemStackMutable(((VillagerTrades.ItemsForEmeraldsAndItemsTrade) iTrade).sellingItem));
+            }
+            throw new IllegalArgumentException("Invalid trade passed to trade function! Given: " + iTrade.getClass());
+        });
+        classFunctionMap.put(VillagerTrades.ItemsForEmeraldsTrade.class, iTrade -> {
+            if(iTrade instanceof VillagerTrades.ItemsForEmeraldsTrade) {
+                return new CTTradeObject(
+                        emerald,
+                        MCItemStack.EMPTY.get(),
+                        new MCItemStackMutable(((VillagerTrades.ItemsForEmeraldsTrade) iTrade).sellingItem));
+            }
+            throw new IllegalArgumentException("Invalid trade passed to trade function! Given: " + iTrade.getClass());
+        });
+        classFunctionMap.put(VillagerTrades.SuspiciousStewForEmeraldTrade.class, iTrade -> new CTTradeObject(
+                emerald,
+                MCItemStack.EMPTY.get(),
+                suspiciousStew));
+        classFunctionMap.put(BasicTrade.class, iTrade -> {
+            if(iTrade instanceof BasicTrade) {
+                return new CTTradeObject(
+                        new MCItemStackMutable(BasicTradeExposer.getPrice(iTrade)),
+                        new MCItemStackMutable(BasicTradeExposer.getPrice2(iTrade)),
+                        new MCItemStackMutable(BasicTradeExposer.getForSale(iTrade)));
+            }
+            throw new IllegalArgumentException("Invalid trade passed to trade function! Given: " + iTrade.getClass());
+        });
+    });
     
     public CTVillagerTrades() {
         
@@ -70,10 +172,8 @@ public class CTVillagerTrades {
                     .filter(actionTradeBase -> actionTradeBase.getProfession() == event.getType())
                     .collect(Collectors.toList());
             collect.forEach(ActionTradeBase::undo);
-            collect.forEach(actionTradeBase -> {
-                actionTradeBase.apply(event.getTrades()
-                        .computeIfAbsent(actionTradeBase.getLevel(), value -> new ArrayList<>()));
-            });
+            collect.forEach(actionTradeBase -> actionTradeBase.apply(event.getTrades()
+                    .computeIfAbsent(actionTradeBase.getLevel(), value -> new ArrayList<>())));
             villagerTradeActions.removeAll(collect);
             ranEvents = true;
         });
@@ -100,7 +200,6 @@ public class CTVillagerTrades {
      * @docParam priceMult 0.05
      */
     @ZenCodeType.Method
-    
     public void addTrade(VillagerProfession profession, int villagerLevel, int emeralds, ItemStack forSale, int maxTrades, int xp, @ZenCodeType.OptionalFloat(1.0f) float priceMult) {
         
         BasicTrade trade = new BasicTrade(emeralds, forSale, maxTrades, xp, priceMult);
@@ -393,11 +492,125 @@ public class CTVillagerTrades {
      *
      * @param profession    hat profession to remove from.
      * @param villagerLevel The level the Villager needs to be.
+     *
+     * @docParam profession <profession:minecraft:farmer>
+     * @docParam villagerLevel 1
      */
     @ZenCodeType.Method
     public void removeAllTrades(VillagerProfession profession, int villagerLevel) {
         
         removeTradeInternal(profession, villagerLevel, trade -> true);
+    }
+    
+    /**
+     * Removes the specified trade for the given profession and villagerLevel.
+     *
+     * @param profession    That profession to remove from.
+     * @param villagerLevel The level the Villager needs to be.
+     * @param buying        The first item that you are giving to the villager.
+     * @param selling       The item that the villager is selling to you.
+     * @param secondBuying  The second item that you are giving to the villager. Will default to air if not provided.
+     *
+     * @docParam profession <profession:minecraft:farmer>
+     * @docParam villagerLevel 1
+     * @docParam buying <item:minecraft:potato>
+     * @docParam selling <item:minecraft:emerald>
+     * @docParam secondBuying <item:minecraft:air>
+     */
+    @ZenCodeType.Method
+    public void removeTrade(VillagerProfession profession, int villagerLevel, IIngredient buying, IIngredient selling, @ZenCodeType.Optional("<item:minecraft:air>") IIngredient secondBuying) {
+        
+        removeTradeInternal(profession, villagerLevel, trade -> {
+            Function<VillagerTrades.ITrade, CTTradeObject> tradeFunc = TRADE_CONVERTER.get(trade.getClass());
+            if(tradeFunc == null) {
+                return false;
+            }
+            CTTradeObject tradeObject = tradeFunc.apply(trade);
+            if(!buying.matches(tradeObject.getBuyingStack())) {
+                return false;
+            }
+            if(!selling.matches(tradeObject.getSellingStack())) {
+                return false;
+            }
+            return secondBuying.matches(tradeObject.getBuyingStackSecond());
+        });
+    }
+    
+    /**
+     * Removes all trades that sell the specified item for the given profession and villagerLevel.
+     *
+     * @param profession    That profession to remove from.
+     * @param villagerLevel The level the Villager needs to be.
+     * @param selling       The item that the villager is selling to you.
+     *
+     * @docParam profession <profession:minecraft:farmer>
+     * @docParam villagerLevel 1
+     * @docParam selling <item:minecraft:emerald>
+     */
+    @ZenCodeType.Method
+    public void removeTradesSelling(VillagerProfession profession, int villagerLevel, IIngredient selling) {
+        
+        removeTradeInternal(profession, villagerLevel, trade -> {
+            Function<VillagerTrades.ITrade, CTTradeObject> tradeFunc = TRADE_CONVERTER.get(trade.getClass());
+            if(tradeFunc == null) {
+                return false;
+            }
+            CTTradeObject tradeObject = tradeFunc.apply(trade);
+            return selling.matches(tradeObject.getSellingStack());
+        });
+    }
+    
+    /**
+     * Removes all trades that have the specified item as the buying item for the given profession and villagerLevel.
+     *
+     * @param profession    That profession to remove from.
+     * @param villagerLevel The level the Villager needs to be.
+     * @param buying        The first item that you are giving to the villager.
+     *
+     * @docParam profession <profession:minecraft:farmer>
+     * @docParam villagerLevel 1
+     * @docParam buying <item:minecraft:potato>
+     */
+    @ZenCodeType.Method
+    public void removeTradesBuying(VillagerProfession profession, int villagerLevel, IIngredient buying) {
+        
+        removeTradeInternal(profession, villagerLevel, trade -> {
+            Function<VillagerTrades.ITrade, CTTradeObject> tradeFunc = TRADE_CONVERTER.get(trade.getClass());
+            if(tradeFunc == null) {
+                return false;
+            }
+            CTTradeObject tradeObject = tradeFunc.apply(trade);
+            return buying.matches(tradeObject.getBuyingStack());
+        });
+    }
+    
+    /**
+     * Removes all trades that have the specified items as the buying items for the given profession and villagerLevel.
+     *
+     * @param profession    That profession to remove from.
+     * @param villagerLevel The level the Villager needs to be.
+     * @param buying        The first item that you are giving to the villager.
+     * @param secondBuying  The second item that you are giving to the villager. Will default to air if not provided.
+     *
+     * @docParam profession <profession:minecraft:farmer>
+     * @docParam villagerLevel 1
+     * @docParam buying <item:minecraft:potato>
+     * @docParam secondBuying <item:minecraft:air>
+     */
+    @ZenCodeType.Method
+    public void removeTradesBuying(VillagerProfession profession, int villagerLevel, IIngredient buying, IIngredient secondBuying) {
+        
+        removeTradeInternal(profession, villagerLevel, trade -> {
+            Function<VillagerTrades.ITrade, CTTradeObject> tradeFunc = TRADE_CONVERTER.get(trade.getClass());
+            if(tradeFunc == null) {
+                return false;
+            }
+            CTTradeObject tradeObject = tradeFunc.apply(trade);
+            if(!buying.matches(tradeObject.getBuyingStack())) {
+                return false;
+            }
+            return secondBuying.matches(tradeObject.getBuyingStackSecond());
+        });
     }
     
     
@@ -468,6 +681,28 @@ public class CTVillagerTrades {
     }
     
     /**
+     * Removes a Wandering Trader trade for Emeralds for Items. An example being, giving a Wandering Trader 2 Emeralds for an Arrow.
+     *
+     * @param rarity   The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
+     * @param tradeFor What ItemStack is being sold (by the Villager).
+     *
+     * @docParam rarity 2
+     * @docParam tradeFor <item:minecraft:arrow>
+     */
+    @ZenCodeType.Method
+    public void removeWanderingTrade(int rarity, IIngredient tradeFor) {
+        
+        removeWanderingTradeInternal(rarity, trade -> {
+            if(trade instanceof VillagerTrades.ItemsForEmeraldsTrade) {
+                return tradeFor.matches(new MCItemStackMutable(((VillagerTrades.ItemsForEmeraldsTrade) trade).sellingItem));
+            } else if(trade instanceof BasicTrade) {
+                return tradeFor.matches(new MCItemStackMutable(BasicTradeExposer.getForSale(trade)));
+            }
+            return false;
+        });
+    }
+    
+    /**
      * Removes all wandering trades of the given rarity
      *
      * @param rarity The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
@@ -492,7 +727,6 @@ public class CTVillagerTrades {
         
         removeWanderingTradeInternal(rarity, trade -> true);
     }
-    
     
     private void addTradeInternal(VillagerProfession profession, int villagerLevel, BasicTrade trade) {
         
