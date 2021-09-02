@@ -9,9 +9,11 @@ import net.minecraftforge.fluids.FluidStack;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public class MCFluidStack implements IFluidStack {
     
+    public static Supplier<MCFluidStack> EMPTY = () -> new MCFluidStack(FluidStack.EMPTY);
     private final FluidStack stack;
     
     public MCFluidStack(FluidStack fluidStack) {
