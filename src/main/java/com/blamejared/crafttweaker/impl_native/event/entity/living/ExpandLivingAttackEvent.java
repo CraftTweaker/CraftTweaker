@@ -18,6 +18,7 @@ import org.openzen.zencode.java.ZenCodeType;
 public class ExpandLivingAttackEvent {
     
     @ZenCodeType.Getter("source")
+    @ZenCodeType.Nullable
     public static DamageSource getSource(LivingAttackEvent internal) {
         
         return internal.getSource();
