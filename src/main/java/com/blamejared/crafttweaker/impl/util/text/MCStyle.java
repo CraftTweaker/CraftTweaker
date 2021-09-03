@@ -112,10 +112,33 @@ public class MCStyle {
         return new MCStyle(getInternal().setFontId(location));
     }
     
+    /**
+     * Sets the formatting of the style.
+     *
+     * This will only take the colour of the text formatting, so using `<formatting:obfuscated>` would not do anything as it does not have a colour.
+     * If you want to take the actual characteristics of the MCTextFormatting, use {@link MCStyle#applyFormatting(MCTextFormatting)}
+     *
+     * @param formatting The formatting to set.
+     *
+     * @return A new MCStyle with the given Formatting.
+     */
     @ZenCodeType.Method
     public MCStyle setFormatting(MCTextFormatting formatting) {
         
         return new MCStyle(getInternal().setFormatting(formatting.getInternal()));
+    }
+    
+    /**
+     * Applies the formatting characteristics (Bold, Italic, Obfucated, etc) of the given MCTExtFormatting as well as the colour of the formatting.
+     *
+     * @param formatting The formatting to set.
+     *
+     * @return A new MCStyle with the given Formatting.
+     */
+    @ZenCodeType.Method
+    public MCStyle applyFormatting(MCTextFormatting formatting) {
+        
+        return new MCStyle(getInternal().applyFormatting(formatting.getInternal()));
     }
     
     @ZenCodeType.Method
@@ -131,8 +154,9 @@ public class MCStyle {
     }
     
     @ZenCodeType.Method
-    public int getColor(){
-        if(getInternal().getColor() == null){
+    public int getColor() {
+        
+        if(getInternal().getColor() == null) {
             return 0;
         }
         return getInternal().getColor().getColor();
