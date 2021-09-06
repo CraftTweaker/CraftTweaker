@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.impl.tag.manager.TagManagerItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.crafting.CompoundIngredient;
 
 import java.util.Arrays;
 
@@ -21,6 +22,11 @@ public class IngredientConverter {
         
         if(ingredient == Ingredient.EMPTY) {
             return empty();
+        }
+        
+        // CompoundIngredient does not follow the contract of Ingredient and never sets acceptedItems
+        if (ingredient instanceof CompoundIngredient) {
+            return mergeIngredients(((CompoundIngredient) ingredient).getChildren().stream().map(IngredientConverter::fromIngredient).toArray(IIngredient[]::new));
         }
         
         return fromIItemLists(ingredient.acceptedItems);
