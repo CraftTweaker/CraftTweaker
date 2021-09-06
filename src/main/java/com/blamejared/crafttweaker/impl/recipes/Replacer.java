@@ -13,6 +13,7 @@ import com.blamejared.crafttweaker.api.zencode.impl.util.PositionUtil;
 import com.blamejared.crafttweaker.impl.managers.GenericRecipesManager;
 import com.blamejared.crafttweaker.impl.recipes.replacement.EverythingTargetingRule;
 import com.blamejared.crafttweaker.impl.recipes.replacement.ExcludingManagersAndDelegatingTargetingRule;
+import com.blamejared.crafttweaker.impl.recipes.replacement.ExcludingModsAndDelegatingTargetingRule;
 import com.blamejared.crafttweaker.impl.recipes.replacement.ExcludingRecipesAndDelegatingTargetingRule;
 import com.blamejared.crafttweaker.impl.recipes.replacement.FullIngredientReplacementRule;
 import com.blamejared.crafttweaker.impl.recipes.replacement.IngredientReplacementRule;
@@ -314,6 +315,25 @@ public final class Replacer {
     public Replacer excluding(final IRecipeManager... managers) {
         return new Replacer(
                 ExcludingManagersAndDelegatingTargetingRule.of(this.targetingRule, managers),
+                this.replacementRules,
+                this.userRenames,
+                this.userRenamingFunction,
+                this.suppressWarnings
+        );
+    }
+    
+    /**
+     * Excludes all recipes that are under the given modids from undergoing replacement.
+     *
+     * @param modids The list of modids that should be excluded.
+     * @return A Replacer that excludes the given set of modids.
+     *
+     * @docParam modids "mekanism"
+     */
+    @ZenCodeType.Method
+    public Replacer excludingMods(final String... modids) {
+        return new Replacer(
+                ExcludingModsAndDelegatingTargetingRule.of(this.targetingRule, modids),
                 this.replacementRules,
                 this.userRenames,
                 this.userRenamingFunction,
