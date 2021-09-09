@@ -20,49 +20,67 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/event/MCAnvilUpdateEvent")
 @NativeTypeRegistration(value = AnvilUpdateEvent.class, zenCodeName = "crafttweaker.api.event.MCAnvilUpdateEvent")
 public class ExpandAnvilUpdateEvent {
+    
     @ZenCodeType.Getter("left")
     public static IItemStack getLeft(AnvilUpdateEvent internal) {
+        
         return new MCItemStack(internal.getLeft());
     }
     
     @ZenCodeType.Getter("right")
     public static IItemStack getRight(AnvilUpdateEvent internal) {
+        
         return new MCItemStack(internal.getRight());
     }
     
     @ZenCodeType.Getter("output")
     public static IItemStack getOutput(AnvilUpdateEvent internal) {
+        
         return new MCItemStack(internal.getOutput());
     }
     
     @ZenCodeType.Setter("output")
     public static void setOutput(AnvilUpdateEvent internal, IItemStack stack) {
+        
         internal.setOutput(stack.getInternal());
     }
     
     @ZenCodeType.Getter("levelCost")
     public static int getLevelCost(AnvilUpdateEvent internal) {
+        
         return internal.getCost();
     }
     
     @ZenCodeType.Setter("levelCost")
     public static void setLevelCost(AnvilUpdateEvent internal, int levelCost) {
+        
         internal.setCost(levelCost);
     }
     
     @ZenCodeType.Getter("materialCost")
     public static int getMaterialCost(AnvilUpdateEvent internal) {
+        
         return internal.getMaterialCost();
     }
     
     @ZenCodeType.Setter("materialCost")
     public static void setMaterialCost(AnvilUpdateEvent internal, int materialCost) {
+        
         internal.setMaterialCost(materialCost);
     }
     
     @ZenCodeType.Getter("player")
     @ZenCodeType.Nullable
     public static PlayerEntity getPlayer(AnvilUpdateEvent internal) {
+        
         return internal.getPlayer();
     }
+    
+    @ZenCodeType.Getter("name")
+    @ZenCodeType.Nullable
+    public static String getName(AnvilUpdateEvent internal) {
+        
+        return internal.getName();
+    }
+    
 }
