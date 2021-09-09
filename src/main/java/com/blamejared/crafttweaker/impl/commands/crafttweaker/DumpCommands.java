@@ -152,6 +152,30 @@ public final class DumpCommands {
             CommandUtilities.send(CommandUtilities.color("Trade list generated! Check the crafttweaker.log file!", TextFormatting.GREEN), player);
             return 0;
         });
+    
+        CTCommands.registerPlayerDump("wandering_trades", "Outputs information on all Wandering Trader Trades", (player, stack) -> {
+    
+            CraftTweakerAPI.logDump("\nWandering Trader Trades");
+            VillagerTrades.field_221240_b.keySet()
+                    .stream()
+                    .sorted()
+                    .filter(level -> VillagerTrades.field_221240_b.getOrDefault(level, new VillagerTrades.ITrade[0]).length > 0)
+                    .peek(level -> CraftTweakerAPI.logDump("Level " + level + " trades"))
+                    .map(level -> VillagerTrades.field_221240_b.getOrDefault(level, new VillagerTrades.ITrade[0]))
+                    .flatMap(Arrays::stream)
+                    .forEach(iTrade -> {
+                        String tradeStr = "Unable to display trade.";
+                        if(CTVillagerTrades.TRADE_CONVERTER.containsKey(iTrade.getClass())) {
+                            tradeStr = CTVillagerTrades.TRADE_CONVERTER.get(iTrade.getClass())
+                                    .apply(iTrade)
+                                    .toString();
+                        }
+                        CraftTweakerAPI.logDump(iTrade.getClass().getSimpleName() + tradeStr);
+                    });
+            
+            CommandUtilities.send(CommandUtilities.color("Wandering Trade list generated! Check the crafttweaker.log file!", TextFormatting.GREEN), player);
+            return 0;
+        });
     }
     
 }
