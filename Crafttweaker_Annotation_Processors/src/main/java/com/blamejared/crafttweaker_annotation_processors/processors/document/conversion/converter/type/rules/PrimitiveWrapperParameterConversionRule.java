@@ -4,8 +4,8 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.con
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.PrimitiveTypeInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies.IHasPostCreationCall;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.lang.model.type.TypeMirror;
 import java.util.HashMap;
 import java.util.Map;
