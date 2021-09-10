@@ -10,6 +10,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A reference to a Tag object.
@@ -67,6 +68,17 @@ public final class MCTag<T> implements CommandStringDisplayable {
     @ZenCodeType.Method
     public void add(MCTag<T> tag) {
         add(tag.getElements());
+    }
+    
+    /**
+     * Adds the given tags to this tag. Creates the tag if it does not exist.
+     *
+     * @param tags The tags to add.
+     * @docParam tags <tag:items:forge:rods>
+     */
+    @ZenCodeType.Method
+    public void addTags(List<MCTag<T>> tags) {
+        add(tags.stream().flatMap(tag -> tag.getElements().stream()).collect(Collectors.toList()));
     }
     
     @SafeVarargs
