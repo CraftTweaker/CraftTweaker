@@ -105,6 +105,7 @@ public class TypeConverter implements IHasPostCreationCall {
     }
     
     private void addConversionRules() {
+        addConversionRule(PrimitiveWrapperParameterConversionRule.class);
         addConversionRule(NullableAnnotatedParameterConversionRule.class);
         addConversionRule(TypeParameterConversionRule.class);
         addConversionRule(VoidConversionRule.class);
