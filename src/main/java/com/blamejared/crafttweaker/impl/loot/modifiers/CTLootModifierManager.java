@@ -11,7 +11,6 @@ import com.blamejared.crafttweaker.impl.actions.loot.ActionRemoveLootModifier;
 import com.blamejared.crafttweaker.impl.loot.conditions.CTLootConditionBuilder;
 import com.blamejared.crafttweaker.impl.util.NameUtils;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.google.common.collect.ImmutableMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeInternalHandler;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
@@ -20,7 +19,6 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import java.lang.invoke.MethodHandle;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -195,9 +193,10 @@ public final class CTLootModifierManager {
         try {
             final LootModifierManager lmm = MethodHandleHelper.invoke(() -> (LootModifierManager) LMM_GETTER.invokeExact());
             Map<ResourceLocation, IGlobalLootModifier> map = MethodHandleHelper.invoke(() -> (Map<ResourceLocation, IGlobalLootModifier>) LMM_MAP_GETTER.invokeExact(lmm));
-            if (map instanceof ImmutableMap) {
-                map = new HashMap<>(map);
-                final Map<ResourceLocation, IGlobalLootModifier> finalMap = map;
+            // Someone else may make the map mutable, but I explicitly want CT stuff to go last
+            if (!(map instanceof CraftTweakerPrivilegedLootModifierMap)) {
+                final Map<ResourceLocation, IGlobalLootModifier> finalMap = new CraftTweakerPrivilegedLootModifierMap(map);
+                map = finalMap;
                 MethodHandleHelper.invokeVoid(() -> this.setLmmMap(lmm, finalMap)); // Let's "mutabilize" the map
             }
             return map;
