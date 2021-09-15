@@ -25,9 +25,9 @@ import java.util.Random;
 import java.util.function.Predicate;
 
 /**
- * Worlds represent a dimension within the game. They are used to interact with 
+ * Worlds represent a dimension within the game. They are used to interact with
  * the blocks, mobs, and other variables within that dimension.
- * 
+ *
  * @docParam this world
  */
 @ZenRegister
@@ -44,7 +44,7 @@ public class ExpandWorld {
     /**
      * Checks if the world is remote. This is always true on the rendering
      * thread.
-     * 
+     *
      * @return Whether or not the world is remote.
      */
     @ZenCodeType.Getter("remote")
@@ -56,7 +56,7 @@ public class ExpandWorld {
     /**
      * Checks if it is day time in the world. Different dimensions will have
      * different logic for how this is determined.
-     * 
+     *
      * @return Whether or not it is day time in the world.
      */
     @ZenCodeType.Getter("dayTime")
@@ -67,7 +67,7 @@ public class ExpandWorld {
     /**
      * Checks if it is night time in the world. Different dimensions will have
      * different logic for how this is determined.
-     * 
+     *
      * @return Whether or not it is night time in the world.
      */
     @ZenCodeType.Getter("nightTime")
@@ -77,7 +77,7 @@ public class ExpandWorld {
     
     /**
      * Gets the current game time in ticks.
-     * 
+     *
      * @return The current game time in ticks.
      */
     @ZenCodeType.Getter("gameTime")
@@ -87,17 +87,17 @@ public class ExpandWorld {
     
     /**
      * Gets the current time of the day in ticks.
-     * 
+     *
      * @return The current time of the Minecraft day in ticks.
      */
     @ZenCodeType.Getter("timeOfDay")
     public static long getDayTime(World internal) {
-        return internal.getGameTime();
+        return internal.getDayTime();
     }
     
     /**
      * Gets the height of the sea level.
-     * 
+     *
      * @return The height of the sea level.
      */
     @ZenCodeType.Getter("seaLevel")
@@ -107,7 +107,7 @@ public class ExpandWorld {
     
     /**
      * Checks if it is raining.
-     * 
+     *
      * @return Whether or not it is raining.
      */
     @ZenCodeType.Getter("raining")
@@ -117,7 +117,7 @@ public class ExpandWorld {
     
     /**
      * Checks if there is a thunder storm.
-     * 
+     *
      * @return Whether or not there is a thunder storm.
      */
     @ZenCodeType.Getter("thundering")
@@ -127,7 +127,7 @@ public class ExpandWorld {
     
     /**
      * Checks if hardcore mode is enabled.
-     * 
+     *
      * @return Whether or not hardcore mode is enabled.
      */
     @ZenCodeType.Getter("hardcore")
@@ -137,7 +137,7 @@ public class ExpandWorld {
     
     /**
      * Gets the difficulty setting for the world.
-     * 
+     *
      * @return The difficulty setting for the world.
      */
     @ZenCodeType.Getter("difficulty")
@@ -147,7 +147,7 @@ public class ExpandWorld {
     
     /**
      * Checks if the difficulty of the world has been locked.
-     * 
+     *
      * @return Whether or not the world difficulty has been locked.
      */
     @ZenCodeType.Getter("difficultyLocked")
@@ -157,7 +157,7 @@ public class ExpandWorld {
     
     /**
      * Gets the registry name of the dimension this world represents.
-     * 
+     *
      * @return The registry name of the dimension the world represents.
      */
     @ZenCodeType.Getter("dimension")
@@ -167,11 +167,11 @@ public class ExpandWorld {
     
     /**
      * Checks if it is raining at a specific position. This can never be true
-     * if the position does not have direct line of sight to the sky. 
-     * 
+     * if the position does not have direct line of sight to the sky.
+     *
      * @param pos The position to check.
      * @return Whether or not it is raining at the current position.
-     * 
+     *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
@@ -181,10 +181,10 @@ public class ExpandWorld {
     
     /**
      * Gets the highest strong (direct) redstone signal of any neighboring block.
-     * 
+     *
      * @param pos The position to check.
      * @return The highest strong (direct) redstone signal of all directly neighboring blocks.
-     * 
+     *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
@@ -194,11 +194,11 @@ public class ExpandWorld {
     
     /**
      * Gets the redstone signal strength available to a position from a given direction.
-     * 
+     *
      * @param pos The position to check.
      * @param direction The direction to query.
      * @return The redstone signal strength available from that direction.
-     * 
+     *
      * @docParam pos new BlockPos(0, 1, 2)
      * @docParam direction <direction:north>
      */
@@ -211,7 +211,7 @@ public class ExpandWorld {
      * Gets the highest redstone signal available to a position from any of it's neighbors.
      * @param pos The position to check.
      * @return The highest redstone signal available to the position.
-     * 
+     *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
@@ -221,10 +221,10 @@ public class ExpandWorld {
     
     /**
      * Gets the tile entity data for a tile entity at a given position.
-     * 
+     *
      * @param pos The position of the tile entity.
      * @return The data of the tile entity.
-     * 
+     *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
@@ -236,11 +236,11 @@ public class ExpandWorld {
     
     /**
      * Sets the block and it's state at a given position.
-     * 
+     *
      * @param pos The position to set the block at.
      * @param state The new state of the block.
      * @return Whether or not the block was changed.
-     * 
+     *
      * @docParam pos new BlockPos(0, 1, 2)
      * @docParam state <blockstate:minecraft:iron_block>
      */
@@ -251,10 +251,10 @@ public class ExpandWorld {
     
     /**
      * Gets the block state at a given position.
-     * 
+     *
      * @param pos The position to look up.
      * @return The block state at the position.
-     * 
+     *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
@@ -264,10 +264,10 @@ public class ExpandWorld {
     
     /**
      * Checks if a given position is receiving a redstone signal.
-     * 
+     *
      * @param pos The position to check.
      * @return Whether or not the position is receiving a redstone signal.
-     * 
+     *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
@@ -277,10 +277,10 @@ public class ExpandWorld {
     
     /**
      * Gets the biome at a given position.
-     * 
+     *
      * @param pos The position to look up.
      * @return The biome at the given position.
-     * 
+     *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
@@ -290,45 +290,45 @@ public class ExpandWorld {
     
     /**
      * Destroys a block within the world.
-     * 
+     *
      * @param pos The position of the block.
      * @param doDrops Whether or not the block drops itself and it's loot.
      * @return Whether or not the block was changed.
-     * 
+     *
      * @docParam pos new BlockPos(0, 1, 2)
      * @docParam doDrops true
      */
     @ZenCodeType.Method
-    public static boolean destroyBlock(World internal, BlockPos pos, boolean doDrops) { 
+    public static boolean destroyBlock(World internal, BlockPos pos, boolean doDrops) {
     	return internal.destroyBlock(pos, doDrops);
     }
     
     /**
      * Destroys a block within the world.
-     * 
+     *
      * @param pos The position of the block.
      * @param doDrops Whether or not the block drops itself and it's loot.
      * @param breaker The entity to break the block.
      * @return Whether or not the block was changed.
-     * 
+     *
      * @docParam pos new BlockPos(0, 1, 2)
      * @docParam doDrops true
      * @docParam breaker player
      */
     @ZenCodeType.Method
-    public static boolean destroyBlock(World internal, BlockPos pos, boolean doDrops, @Nullable Entity breaker) { 
+    public static boolean destroyBlock(World internal, BlockPos pos, boolean doDrops, @Nullable Entity breaker) {
     	return internal.destroyBlock(pos, doDrops, breaker);
     }
 
     /**
      * Triggers a predetermined event on the client. Using this on a server
      * or integrated server will send the event to all nearby players.
-     * 
+     *
      * @param eventId The ID of the event to play.
      * @param pos The position of the event.
      * @param data Four bytes of additional data encoded as an integer. This
      *        is generally unused.
-     *        
+     *
      * @docParam eventId 2005
      * @docParam pos new BlockPos(0, 1, 2)
      * @docParam data 0
@@ -341,13 +341,13 @@ public class ExpandWorld {
     /**
      * Triggers a predetermined event on the client. Using this on a server
      * or integrated server will send the event to all nearby players.
-     * 
+     *
      * @param excluded An excluded player who will not receive the event.
      * @param eventId The ID of the event to play.
      * @param pos The position of the event.
      * @param data Four bytes of additional data encoded as an integer. This
      *        is generally unused.
-     *        
+     *
      * @docParam excluded player
      * @docParam eventId 2005
      * @docParam pos new BlockPos(0, 1, 2)
@@ -360,10 +360,10 @@ public class ExpandWorld {
     
     /**
      * Checks if the block at a given position is air.
-     * 
+     *
      * @param pos The position to look up.
      * @return Whether or not the block is air.
-     * 
+     *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
@@ -373,10 +373,10 @@ public class ExpandWorld {
     
     /**
      * Checks if the block at a given position is in a loaded chunk.
-     * 
+     *
      * @param pos The position to look up.
      * @return Whether or not the position is in a loaded chunk.
-     * 
+     *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
