@@ -8,6 +8,8 @@ import com.blamejared.crafttweaker.impl.commands.CommandImpl;
 import com.blamejared.crafttweaker.impl.commands.CommandUtilities;
 import com.blamejared.crafttweaker.impl.loot.CTLootManager;
 import com.blamejared.crafttweaker.impl.misc.CTVillagerTrades;
+import com.blamejared.crafttweaker.impl.tag.manager.TagManager;
+import com.blamejared.crafttweaker.impl.tag.registry.CrTTagRegistry;
 import com.blamejared.crafttweaker.impl_native.villager.ExpandVillagerProfession;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
@@ -17,6 +19,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -26,6 +29,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -152,9 +156,9 @@ public final class DumpCommands {
             CommandUtilities.send(CommandUtilities.color("Trade list generated! Check the crafttweaker.log file!", TextFormatting.GREEN), player);
             return 0;
         });
-    
+        
         CTCommands.registerPlayerDump("wandering_trades", "Outputs information on all Wandering Trader Trades", (player, stack) -> {
-    
+            
             CraftTweakerAPI.logDump("\nWandering Trader Trades");
             VillagerTrades.field_221240_b.keySet()
                     .stream()
@@ -174,6 +178,28 @@ public final class DumpCommands {
                     });
             
             CommandUtilities.send(CommandUtilities.color("Wandering Trade list generated! Check the crafttweaker.log file!", TextFormatting.GREEN), player);
+            return 0;
+        });
+        
+        CTCommands.registerPlayerDump("tag_contents", "Outputs the contents of all tags", (player, stack) -> {
+            
+            CraftTweakerAPI.logDump("\nAll Tag Contents");
+            CrTTagRegistry.instance.getAllManagers()
+                    .stream()
+                    .sorted(Comparator.comparing(TagManager::getTagFolder))
+                    .peek(manager -> CraftTweakerAPI.logDump("Contents of `" + manager.getTagFolder() + "` tags:"))
+                    .flatMap(tagManager -> tagManager.getAllTags().stream())
+                    .flatMap(mcTag -> mcTag.getElements().stream())
+                    .forEach(o -> {
+                        if(o instanceof IForgeRegistryEntry) {
+                            CraftTweakerAPI.logDump("\t" + ((IForgeRegistryEntry<?>) o).getRegistryName().toString());
+                        } else {
+                            CraftTweakerAPI.logDump("\t" + o);
+                        }
+                    });
+            
+            
+            CommandUtilities.send(CommandUtilities.color("Tag Contents list generated! Check the crafttweaker.log file!", TextFormatting.GREEN), player);
             return 0;
         });
     }
