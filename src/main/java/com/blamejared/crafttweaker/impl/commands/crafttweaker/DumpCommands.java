@@ -189,12 +189,13 @@ public final class DumpCommands {
                     .sorted(Comparator.comparing(TagManager::getTagFolder))
                     .peek(manager -> CraftTweakerAPI.logDump("Contents of `" + manager.getTagFolder() + "` tags:"))
                     .flatMap(tagManager -> tagManager.getAllTags().stream())
+                    .peek(mcTag -> CraftTweakerAPI.logDump( mcTag.getCommandString()))
                     .flatMap(mcTag -> mcTag.getElements().stream())
                     .forEach(o -> {
                         if(o instanceof IForgeRegistryEntry) {
-                            CraftTweakerAPI.logDump("\t" + ((IForgeRegistryEntry<?>) o).getRegistryName().toString());
+                            CraftTweakerAPI.logDump("\t- " + ((IForgeRegistryEntry<?>) o).getRegistryName().toString());
                         } else {
-                            CraftTweakerAPI.logDump("\t" + o);
+                            CraftTweakerAPI.logDump("\t- " + o);
                         }
                     });
             
