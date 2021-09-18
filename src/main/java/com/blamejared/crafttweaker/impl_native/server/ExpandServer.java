@@ -64,6 +64,7 @@ public class ExpandServer {
      * Note: Some commands' success value is 0
      *
      * @docParam command "time set day"
+     * @docParam player player
      */
     @ZenCodeType.Method
     public static int executeCommand(MinecraftServer internal, String command, PlayerEntity player) {
