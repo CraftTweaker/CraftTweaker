@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl_native.blocks;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.impl.actions.blocks.ActionSetBlockProperty;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.util.MCDirection;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -782,6 +783,31 @@ public class ExpandBlockState {
     public static String asString(BlockState internal) {
         
         return internal.toString();
+    }
+
+    /**
+     * Gets the hardness of this BlockState.
+     *
+     * @return The hardness of this BlockState.
+     */
+    @ZenCodeType.Getter("hardness")
+    @ZenCodeType.Method
+    public static float getHardness(BlockState internal) {
+
+        return internal.hardness;
+    }
+
+    /**
+     * Sets the hardness of this BlockState.
+     *
+     * @param hardness the new hardness of this BlockState
+     *
+     * @docParam hardness 2.4f
+     */
+    @ZenCodeType.Setter("hardness")
+    @ZenCodeType.Method
+    public static void setHardness(BlockState internal, float hardness) {
+        CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Hardness", hardness, internal.hardness, value -> internal.hardness = value ));
     }
     
     /**

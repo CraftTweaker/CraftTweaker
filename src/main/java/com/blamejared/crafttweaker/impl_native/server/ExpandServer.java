@@ -14,6 +14,9 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.Collection;
 import java.util.Objects;
 
+/**
+ * @docParam this world.asServerWorld().server
+ */
 @ZenRegister
 @Document("vanilla/api/game/MCServer")
 @NativeTypeRegistration(value = MinecraftServer.class, zenCodeName = "crafttweaker.api.server.MCServer")
@@ -44,6 +47,8 @@ public class ExpandServer {
      * Returns The success value of the command, or 0 if an exception occurred.
      * <p>
      * Note: Some commands' success value is 0
+     *
+     * @docParam command "time set day"
      */
     @ZenCodeType.Method
     public static int executeCommand(MinecraftServer internal, String command) {
@@ -57,6 +62,9 @@ public class ExpandServer {
      * Returns The success value of the command, or 0 if an exception occurred.
      * <p>
      * Note: Some commands' success value is 0
+     *
+     * @docParam command "time set day"
+     * @docParam player player
      */
     @ZenCodeType.Method
     public static int executeCommand(MinecraftServer internal, String command, PlayerEntity player) {

@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.util.MCDirection;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -65,5 +66,26 @@ public class ExpandPlayerInteractEvent {
         
         return internal.getHand();
     }
-    
+
+    /**
+     * @return The EnumActionResult that will be returned to vanilla if the event is cancelled, instead of calling the relevant
+     * method of the event. By default, this is PASS, meaning cancelled events will cause
+     * the client to keep trying more interactions until something works.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("cancellationResult")
+    public static ActionResultType getCancellationResult(PlayerInteractEvent internal) {
+        return internal.getCancellationResult();
+    }
+
+    /**
+     * Set the EnumActionResult that will be returned to vanilla if the event is cancelled, instead of calling the relevant method of the event.
+     *
+     * Note that this only has an effect on RightClickBlockEvent, RightClickItemEvent, EntityInteractEvent.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("cancellationResult")
+    public static void setCancellationResult(PlayerInteractEvent internal, ActionResultType result) {
+        internal.setCancellationResult(result);
+    }
 }
