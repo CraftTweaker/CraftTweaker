@@ -11,7 +11,7 @@ public class TransformReuse<T extends IIngredient> implements IIngredientTransfo
     @Override
     public IItemStack transform(IItemStack stack) {
         
-        return stack.copy();
+        return stack.copy().setAmount(1);
     }
     
     @Override
