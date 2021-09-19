@@ -23,6 +23,7 @@ public final class SnippingPreprocessor implements IPreprocessor {
         addSnippingParameter(new SnippingParameterStart());
         addSnippingParameter(new SnippingParameterModLoaded());
         addSnippingParameter(new SnippingParameterModNotLoaded());
+        addSnippingParameter(new SnippingParameterSide());
     }
     
     public void addSnippingParameter(SnippingParameter parameter) {
