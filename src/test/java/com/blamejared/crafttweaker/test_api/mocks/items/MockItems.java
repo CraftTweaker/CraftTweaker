@@ -17,6 +17,7 @@ public class MockItems {
     
     public IItemStack bedrock = new MCItemStack(new ItemStack(bedrock_item));
     public IItemStack redstone = new MCItemStack(new ItemStack(Items.REDSTONE));
+    public IItemStack diamond = new MCItemStack(new ItemStack(Items.DIAMOND));
     public IItemStack ironIngot = new MCItemStack(new ItemStack(Items.IRON_INGOT));
     public IItemStack ironSword = new MCItemStack(new ItemStack(Items.IRON_SWORD));
     public IItemStack ironNugget = new MCItemStack(new ItemStack(Items.IRON_NUGGET));

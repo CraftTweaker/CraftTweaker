@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.recipes;
 
 import com.blamejared.crafttweaker.api.item.IIngredient;
+import com.blamejared.crafttweaker.api.recipes.MirrorAxis;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.google.gson.JsonObject;
 import net.minecraft.item.ItemStack;
@@ -22,7 +23,7 @@ public class SerializerShaped extends ForgeRegistryEntry<IRecipeSerializer<?>> i
     
     public CTRecipeShaped read(ResourceLocation recipeId, JsonObject json) {
         // People shouldn't be making our recipes from json :eyes:
-        return new CTRecipeShaped("", new MCItemStack(ItemStack.EMPTY), new IIngredient[][] {{new MCItemStack(new ItemStack(Items.ACACIA_BOAT))}}, false, null);
+        return new CTRecipeShaped("", new MCItemStack(ItemStack.EMPTY), new IIngredient[][] {{new MCItemStack(new ItemStack(Items.ACACIA_BOAT))}}, MirrorAxis.NONE, null);
     }
     
     public CTRecipeShaped read(ResourceLocation recipeId, PacketBuffer buffer) {
@@ -37,9 +38,9 @@ public class SerializerShaped extends ForgeRegistryEntry<IRecipeSerializer<?>> i
             }
         }
         
-        boolean mirrored = buffer.readBoolean();
+        MirrorAxis mirrorAxis = buffer.readEnumValue(MirrorAxis.class);
         ItemStack output = buffer.readItemStack();
-        return new CTRecipeShaped(recipeId.getPath(), new MCItemStack(output), inputs, mirrored, null);
+        return new CTRecipeShaped(recipeId.getPath(), new MCItemStack(output), inputs, mirrorAxis, null);
     }
     
     public void write(PacketBuffer buffer, CTRecipeShaped recipe) {
@@ -51,7 +52,7 @@ public class SerializerShaped extends ForgeRegistryEntry<IRecipeSerializer<?>> i
             ingredient.write(buffer);
         }
         
-        buffer.writeBoolean(recipe.isMirrored());
+        buffer.writeEnumValue(recipe.getMirrorAxis());
         
         buffer.writeItemStack(recipe.getRecipeOutput());
     }

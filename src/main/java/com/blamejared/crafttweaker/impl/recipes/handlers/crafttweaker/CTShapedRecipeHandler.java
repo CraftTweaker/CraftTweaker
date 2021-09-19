@@ -46,7 +46,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTRecipeShape
                         id.getPath(),
                         recipe.getCtOutput(),
                         this.inflate(newIngredients, recipe.getRecipeWidth(), recipe.getRecipeHeight()),
-                        recipe.isMirrored(),
+                        recipe.getMirrorAxis(),
                         recipe.getFunction()
                 )
         );
