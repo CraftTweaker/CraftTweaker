@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.con
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.documentation_parameter.ParameterInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.documentation_parameter.ParameterInformationList;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.documentation_parameter.ParameterReader;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.MetaData;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.examples.ExampleData;
 
@@ -41,7 +42,8 @@ public class EventDataConverter {
                     NOT_CANCELED_INFO + "\n\n" + NO_RESULT_INFO,
                     null,
                     null,
-                    ExampleData.empty()
+                    ExampleData.empty(),
+                   MetaData.empty()
             );
         }
         StringBuilder sb = new StringBuilder();
@@ -94,7 +96,8 @@ public class EventDataConverter {
                 sb.toString(),
                 this.deprecationFinder.findInCommentString(docComment, element),
                 this.sinceInformationIdentifier.findInCommentString(docComment, element),
-                ExampleData.empty()
+                ExampleData.empty(),
+                MetaData.empty()
         );
     }
 

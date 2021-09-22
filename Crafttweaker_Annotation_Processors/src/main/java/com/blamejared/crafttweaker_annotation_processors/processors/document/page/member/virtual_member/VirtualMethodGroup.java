@@ -1,13 +1,14 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.virtual_member;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.DocumentMeta;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.IFillMeta;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 
-import java.io.PrintWriter;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class VirtualMethodGroup {
+public class VirtualMethodGroup implements IFillMeta {
     
     private final String name;
     private final AbstractTypeInfo ownerType;
@@ -30,6 +31,13 @@ public class VirtualMethodGroup {
             writer.group(name, method.getSince(), () -> method.write(writer, ownerType));
         }
         
+    }
+    
+    @Override
+    public void fillMeta(DocumentMeta meta) {
+        for(VirtualMethodMember virtualMethod : virtualMethods) {
+            virtualMethod.fillMeta(meta);
+        }
     }
     
 }

@@ -1,6 +1,8 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.static_member;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.DocumentMeta;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.IFillMeta;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.MemberHeader;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
@@ -8,7 +10,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.pag
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class StaticMethodMember implements Comparable<StaticMethodMember> {
+public class StaticMethodMember implements Comparable<StaticMethodMember>, IFillMeta {
     
     protected final MemberHeader header;
     private final String name;
@@ -106,4 +108,11 @@ public class StaticMethodMember implements Comparable<StaticMethodMember> {
     public String getSince() {
         return this.methodComment.getSinceVersion();
     }
+    
+    @Override
+    public void fillMeta(DocumentMeta meta) {
+    
+        meta.addSearchTerms(name);
+    }
+    
 }

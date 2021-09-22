@@ -1,6 +1,8 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.virtual_member;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.DocumentMeta;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.IFillMeta;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.PropertyMember;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 
@@ -9,7 +11,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-public class DocumentedVirtualMembers {
+public class DocumentedVirtualMembers implements IFillMeta {
     
     protected final Set<CasterMember> casters = new TreeSet<>();
     protected final Map<String, VirtualMethodGroup> methodGroups = new TreeMap<>();
@@ -17,33 +19,53 @@ public class DocumentedVirtualMembers {
     protected final Map<String, PropertyMember> properties = new TreeMap<>();
     
     public DocumentedVirtualMembers() {
+    
     }
     
     public void addCaster(CasterMember casterMember) {
+        
         casters.add(casterMember);
     }
     
     public void addMethod(VirtualMethodMember methodMember, AbstractTypeInfo ownerType) {
+        
         final VirtualMethodGroup group = methodGroups.computeIfAbsent(methodMember.getName(), name -> new VirtualMethodGroup(name, ownerType));
         group.addMethod(methodMember);
     }
     
     public void addOperator(OperatorMember operatorMember) {
+        
         operators.add(operatorMember);
     }
     
     public void addProperty(PropertyMember propertyMember) {
+        
         properties.merge(propertyMember.getName(), propertyMember, PropertyMember::merge);
     }
     
     public void write(PageOutputWriter writer) {
+        
         writeCasters(writer);
         writeMethods(writer);
         writeOperators(writer);
         writeProperties(writer);
     }
     
+    @Override
+    public void fillMeta(DocumentMeta meta) {
+        
+        for(PropertyMember value : properties.values()) {
+            value.fillMeta(meta);
+        }
+        
+        for(VirtualMethodGroup value : methodGroups.values()) {
+            value.fillMeta(meta);
+        }
+        
+    }
+    
     protected void writeCasters(PageOutputWriter writer) {
+        
         if(casters.isEmpty()) {
             return;
         }
@@ -59,6 +81,7 @@ public class DocumentedVirtualMembers {
     }
     
     protected void writeMethods(PageOutputWriter writer) {
+        
         if(methodGroups.isEmpty()) {
             return;
         }
@@ -71,6 +94,7 @@ public class DocumentedVirtualMembers {
     }
     
     protected void writeOperators(PageOutputWriter writer) {
+        
         if(operators.isEmpty()) {
             return;
         }
@@ -83,6 +107,7 @@ public class DocumentedVirtualMembers {
     }
     
     protected void writeProperties(PageOutputWriter writer) {
+        
         if(properties.isEmpty()) {
             return;
         }

@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.MetaData;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.examples.Example;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.examples.ExampleData;
 
@@ -11,21 +12,28 @@ public class DocumentationComment {
     private final String deprecationMessage;
     private final String sinceVersion;
     private final ExampleData exampleData;
+    private final MetaData metaData;
     
     public DocumentationComment(final String description, final String deprecationMessage, final String sinceVersion,
-                                final ExampleData data) {
+                                final ExampleData data, final MetaData metaData) {
         this.description = description;
         this.deprecationMessage = deprecationMessage == null? null : deprecationMessage.replaceAll("(\r)?\n", "");
         this.sinceVersion = sinceVersion;
         this.exampleData = data;
+        this.metaData = metaData;
     }
     
     public static DocumentationComment empty() {
-        return new DocumentationComment(null, null, null, ExampleData.empty());
+        return new DocumentationComment(null, null, null, ExampleData.empty(), MetaData.empty());
     }
     
     public ExampleData getExamples() {
         return exampleData;
+    }
+    
+    public MetaData getMetaData() {
+        
+        return metaData;
     }
     
     public String getDescription() {

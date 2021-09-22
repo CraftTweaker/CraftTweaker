@@ -41,7 +41,7 @@ public class TableOfContentTypeAdapter extends TypeAdapter<TableOfContent> {
     
     private void writePage(JsonWriter out, DocumentationPage documentationPage) throws IOException {
         final String name = documentationPage.pageInfo.getSimpleName();
-        final String path = documentationPage.pageInfo.getOutputPathWithExtension(PageWriter.extension);
+        final String path = documentationPage.pageInfo.getOutputPathWithExtension(PageWriter.MARKDOWN_EXTENSION);
         
         out.name(name);
         out.value(path);

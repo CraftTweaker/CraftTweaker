@@ -120,4 +120,5 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
     private String getHeaderCallee() {
         return "my" + ownerType.getDisplayName();
     }
+    
 }
