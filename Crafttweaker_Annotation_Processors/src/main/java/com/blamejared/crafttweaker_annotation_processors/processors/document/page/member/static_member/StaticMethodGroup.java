@@ -1,12 +1,14 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.static_member;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.DocumentMeta;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.IFillMeta;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 
 import java.util.Set;
 import java.util.TreeSet;
 
-public class StaticMethodGroup {
+public class StaticMethodGroup implements IFillMeta{
     
     private final String name;
     private final AbstractTypeInfo ownerType;
@@ -27,6 +29,13 @@ public class StaticMethodGroup {
         
         for(StaticMethodMember method : staticMethods) {
             writer.group(name, method.getSince(), () -> method.write(writer, ownerType));
+        }
+    }
+    
+    @Override
+    public void fillMeta(DocumentMeta meta) {
+        for(StaticMethodMember virtualMethod : staticMethods) {
+            virtualMethod.fillMeta(meta);
         }
     }
     

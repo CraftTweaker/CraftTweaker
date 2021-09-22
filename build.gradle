@@ -52,6 +52,7 @@ if (JavaVersion.current().isJava8Compatible()) {
         tasks.withType(Javadoc) {
             options.tags += "docParam"
             options.tags += "docEvent"
+            options.tags += "docShortDescription"
             options.addStringOption('Xdoclint:none', '-quiet')
         }
     }

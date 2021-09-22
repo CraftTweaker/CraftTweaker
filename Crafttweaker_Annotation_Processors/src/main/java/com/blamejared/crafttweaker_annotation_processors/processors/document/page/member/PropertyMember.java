@@ -2,10 +2,12 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.pa
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.CommentMerger;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.DocumentMeta;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.IFillMeta;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 
-public class PropertyMember {
+public class PropertyMember implements IFillMeta {
     
     private final AbstractTypeInfo type;
     private final String name;
@@ -14,6 +16,7 @@ public class PropertyMember {
     private final DocumentationComment comment;
     
     public PropertyMember(String name, AbstractTypeInfo type, boolean hasGetter, boolean hasSetter, DocumentationComment comment) {
+        
         this.hasGetter = hasGetter;
         this.hasSetter = hasSetter;
         this.type = type;
@@ -22,6 +25,7 @@ public class PropertyMember {
     }
     
     public static PropertyMember merge(PropertyMember left, PropertyMember right) {
+        
         if(!left.name.equals(right.name)) {
             throw new IllegalArgumentException("Trying to merge different names!");
         }
@@ -36,10 +40,19 @@ public class PropertyMember {
     }
     
     public void writeTableRow(PageOutputWriter writer) {
+        
         writer.printf("| %s | %s | %s | %s | %s |%n", name, type.getClickableMarkdown(), hasGetter, hasSetter, comment.getMarkdownDescription());
     }
     
     public String getName() {
+        
         return name;
     }
+    
+    @Override
+    public void fillMeta(DocumentMeta meta) {
+        
+        meta.addSearchTerms(name);
+    }
+    
 }

@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.co
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.expansion.member.ExpansionVirtualMemberConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.type.TypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.element.ClassTypeConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.MetaData;
 import com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies.DependencyContainer;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.DocumentationPageInfo;
@@ -72,7 +73,9 @@ public class NativeTypeVirtualMemberConverter extends ExpansionVirtualMemberConv
         final String deprecation = this.nullIfEmpty(constructor.deprecationMessage());
         final String since = this.nullIfEmpty(constructor.getSinceVersion());
         final ExampleData exampleData = ExampleData.empty();
-        return new DocumentationComment(description, deprecation, since, exampleData);
+        final MetaData metaData = MetaData.empty();
+        
+        return new DocumentationComment(description, deprecation, since, exampleData, metaData);
     }
     
     private String nullIfEmpty(final String string) {
@@ -113,7 +116,7 @@ public class NativeTypeVirtualMemberConverter extends ExpansionVirtualMemberConv
         final String description = constructorParameter.description();
         final ExampleData exampleData = extractExampleDataForParameter(constructorParameter);
         
-        return new DocumentationComment(description, null, null, exampleData);
+        return new DocumentationComment(description, null, null, exampleData, MetaData.empty());
     }
     
     private ExampleData extractExampleDataForParameter(NativeConstructor.ConstructorParameter constructorParameter) {

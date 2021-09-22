@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment;
 
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.MetaData;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.examples.Example;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.examples.ExampleData;
@@ -14,7 +15,10 @@ public class CommentMerger {
         final String deprecation = mergeDeprecation(childComment, parentComment);
         final String sinceVersion = mergeSince(childComment, parentComment);
         final ExampleData exampleData = mergeCommentExamples(childComment, parentComment);
-        return new DocumentationComment(description, deprecation, sinceVersion, exampleData);
+        // We don't care about the parent description.
+        final MetaData metaData = childComment.getMetaData();
+        
+        return new DocumentationComment(description, deprecation, sinceVersion, exampleData, metaData);
     }
     
     private String mergeDescription(DocumentationComment childComment) {

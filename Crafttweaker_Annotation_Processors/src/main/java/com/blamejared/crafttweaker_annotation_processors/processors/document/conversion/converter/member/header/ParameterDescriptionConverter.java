@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.header;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.documentation_parameter.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.MetaData;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.*;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.examples.*;
 
@@ -38,7 +39,7 @@ public class ParameterDescriptionConverter {
     
     private DocumentationComment getCommentForName(Element element, ParameterInfo param) {
         final String description = getDescriptionForParameterInfo(element, param);
-        return new DocumentationComment(description, null, null, ExampleData.empty());
+        return new DocumentationComment(description, null, null, ExampleData.empty(), MetaData.empty());
     }
     
     @Nullable
