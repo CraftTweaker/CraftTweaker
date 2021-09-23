@@ -20,17 +20,20 @@ public class NamedTypeVirtualGetterSetterConverter extends AbstractEnclosedEleme
     private final CommentConverter commentConverter;
     
     public NamedTypeVirtualGetterSetterConverter(TypeConverter typeConverter, CommentConverter commentConverter) {
+        
         this.typeConverter = typeConverter;
         this.commentConverter = commentConverter;
     }
     
     @Override
     public boolean canConvert(Element enclosedElement) {
+        
         return isAnnotationPresentOn(ZenCodeType.Setter.class, enclosedElement) || isAnnotationPresentOn(ZenCodeType.Getter.class, enclosedElement);
     }
     
     @Override
     public void convertAndAddTo(Element enclosedElement, DocumentedTypeVirtualMembers result, DocumentationPageInfo pageInfo) {
+        
         final ExecutableElement method = (ExecutableElement) enclosedElement;
         final PropertyMember propertyMember = convertMember(method);
         
@@ -38,6 +41,7 @@ public class NamedTypeVirtualGetterSetterConverter extends AbstractEnclosedEleme
     }
     
     private PropertyMember convertMember(ExecutableElement method) {
+        
         final String name = convertName(method);
         final AbstractTypeInfo typeInfo = convertType(method);
         final boolean hasGetter = convertHasGetter(method);
@@ -48,6 +52,7 @@ public class NamedTypeVirtualGetterSetterConverter extends AbstractEnclosedEleme
     }
     
     private String convertName(ExecutableElement enclosedElement) {
+        
         if(isAnnotationPresentOn(ZenCodeType.Getter.class, enclosedElement)) {
             return enclosedElement.getAnnotation(ZenCodeType.Getter.class).value();
         } else {
@@ -56,15 +61,19 @@ public class NamedTypeVirtualGetterSetterConverter extends AbstractEnclosedEleme
     }
     
     private AbstractTypeInfo convertType(ExecutableElement enclosedElement) {
+        
         final TypeMirror returnType = enclosedElement.getReturnType();
         return typeConverter.convertType(returnType);
     }
     
     private boolean convertHasGetter(ExecutableElement enclosedElement) {
+        
         return isAnnotationPresentOn(ZenCodeType.Getter.class, enclosedElement);
     }
     
     private boolean convertHasSetter(ExecutableElement enclosedElement) {
+        
         return isAnnotationPresentOn(ZenCodeType.Setter.class, enclosedElement);
     }
+    
 }

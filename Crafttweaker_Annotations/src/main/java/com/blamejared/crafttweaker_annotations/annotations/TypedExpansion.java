@@ -17,4 +17,5 @@ public @interface TypedExpansion {
      * Can be either a CraftTweaker wrapper or a (registered) vanilla type
      */
     Class<?> value();
+    
 }

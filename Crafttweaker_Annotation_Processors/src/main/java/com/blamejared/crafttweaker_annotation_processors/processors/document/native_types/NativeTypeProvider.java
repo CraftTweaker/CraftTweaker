@@ -8,4 +8,5 @@ import java.util.Map;
 public interface NativeTypeProvider {
     
     Map<TypeElement, AbstractTypeInfo> getTypeInfos();
+    
 }

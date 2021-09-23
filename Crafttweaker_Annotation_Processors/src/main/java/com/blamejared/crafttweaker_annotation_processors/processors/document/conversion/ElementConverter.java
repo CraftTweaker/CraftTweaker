@@ -11,15 +11,18 @@ public class ElementConverter {
     private final DocumentConversionRegistry conversionRegistry;
     
     public ElementConverter(DocumentConversionRegistry conversionRegistry) {
+        
         this.conversionRegistry = conversionRegistry;
     }
     
     public void handleElements(KnownElementList knownElementList) {
+        
         prepareElements(knownElementList);
         convertElements(knownElementList);
     }
     
     private void prepareElements(KnownElementList knownElementList) {
+        
         final Collection<TypeElement> elementsForTypeDocumentation = knownElementList.getElementsForTypeDocumentation();
         final Collection<TypeElement> elementsForExpansionDocumentation = knownElementList.getElementsForExpansionDocumentation();
         
@@ -28,6 +31,7 @@ public class ElementConverter {
     }
     
     private void convertElements(KnownElementList knownElementList) {
+        
         final Collection<TypeElement> elementsForTypeDocumentation = knownElementList.getElementsForTypeDocumentation();
         final Collection<TypeElement> elementsForExpansionDocumentation = knownElementList.getElementsForExpansionDocumentation();
         
@@ -36,6 +40,7 @@ public class ElementConverter {
     }
     
     private void prepareDocumentation(Collection<TypeElement> elementsToPrepare) {
+        
         for(TypeElement typeElement : elementsToPrepare) {
             conversionRegistry.prepareTypePageFor(typeElement);
         }
@@ -45,6 +50,7 @@ public class ElementConverter {
     }
     
     private void handleDocumentation(Collection<TypeElement> elementsForExpansionDocumentation) {
+        
         for(TypeElement typeElement : elementsForExpansionDocumentation) {
             conversionRegistry.convert(typeElement);
         }

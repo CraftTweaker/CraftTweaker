@@ -31,28 +31,32 @@ import java.util.function.Consumer;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.LocationCheck")
 @Document("vanilla/api/loot/conditions/vanilla/LocationCheck")
 public final class LocationCheckLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     private BlockPos offset;
     private LocationPredicate predicate;
-
+    
     LocationCheckLootConditionTypeBuilder() {
+        
         this.offset = new BlockPos(0, 0, 0);
         this.predicate = new LocationPredicate();
     }
-
+    
     /**
      * Sets the offset which should be used to offset the location prior to the predicate check.
      *
      * This parameter is <strong>optional</strong>.
      *
      * @param pos The offset that should be applied.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public LocationCheckLootConditionTypeBuilder withOffset(final BlockPos pos) {
+        
         this.offset = pos;
         return this;
     }
-
+    
     /**
      * Sets the offset along the X axis that should be used to offset the location prior to the predicate check.
      *
@@ -62,13 +66,15 @@ public final class LocationCheckLootConditionTypeBuilder implements ILootConditi
      * This parameter is <strong>optional</strong>.
      *
      * @param x The offset that should be applied to the X axis.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public LocationCheckLootConditionTypeBuilder withXOffset(final int x) {
+        
         return this.withOffset(new BlockPos(x, this.offset.getY(), this.offset.getZ()));
     }
-
+    
     /**
      * Sets the offset along the Y axis that should be used to offset the location prior to the predicate check.
      *
@@ -78,13 +84,15 @@ public final class LocationCheckLootConditionTypeBuilder implements ILootConditi
      * This parameter is <strong>optional</strong>.
      *
      * @param y The offset that should be applied to the Y axis.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public LocationCheckLootConditionTypeBuilder withYOffset(final int y) {
+        
         return this.withOffset(new BlockPos(this.offset.getX(), y, this.offset.getZ()));
     }
-
+    
     /**
      * Sets the offset along the Z axis that should be used to offset the location prior to the predicate check.
      *
@@ -94,13 +102,15 @@ public final class LocationCheckLootConditionTypeBuilder implements ILootConditi
      * This parameter is <strong>optional</strong>.
      *
      * @param z The offset that should be applied to the Z axis.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public LocationCheckLootConditionTypeBuilder withZOffset(final int z) {
+        
         return this.withOffset(new BlockPos(this.offset.getX(), this.offset.getY(), z));
     }
-
+    
     /**
      * Creates and sets the {@link LocationPredicate} that will be matched against the offset location.
      *
@@ -110,24 +120,28 @@ public final class LocationCheckLootConditionTypeBuilder implements ILootConditi
      * This parameter is <strong>optional</strong>.
      *
      * @param builder A consumer that will be used to configure the {@link LocationPredicate}.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public LocationCheckLootConditionTypeBuilder withLocationPredicate(final Consumer<LocationPredicate> builder) {
+        
         final LocationPredicate predicate = new LocationPredicate();
         builder.accept(predicate);
         this.predicate = predicate;
         return this;
     }
-
+    
     @Override
     public ILootCondition finish() {
+        
         final net.minecraft.advancements.criterion.LocationPredicate predicate = this.predicate.toVanillaPredicate();
         return context -> {
             final Vector3d origin = ExpandLootContext.getOrigin(context);
             final World world = ExpandLootContext.getWorld(context);
-            final Vector3d offset = origin == null? null : origin.add(this.offset.getX(), this.offset.getY(), this.offset.getZ());
+            final Vector3d offset = origin == null ? null : origin.add(this.offset.getX(), this.offset.getY(), this.offset.getZ());
             return offset != null && world instanceof ServerWorld && predicate.test((ServerWorld) world, offset.getX(), offset.getY(), offset.getZ());
         };
     }
+    
 }

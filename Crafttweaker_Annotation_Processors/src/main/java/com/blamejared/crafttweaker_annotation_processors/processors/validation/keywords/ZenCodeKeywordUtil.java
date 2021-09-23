@@ -85,14 +85,17 @@ public class ZenCodeKeywordUtil {
     }
     
     public boolean isKeyword(String name) {
+        
         return knownKeywords.contains(name);
     }
     
     public void checkName(Element element, Messager messager) {
+        
         final String name = element.getSimpleName().toString();
         if(isKeyword(name)) {
             final String message = String.format("Name '%s' is a ZenCode keyword!", name);
             messager.printMessage(Diagnostic.Kind.ERROR, message, element);
         }
     }
+    
 }

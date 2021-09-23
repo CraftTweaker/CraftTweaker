@@ -18,8 +18,9 @@ public interface ITargetingRule {
      * <p>Rules are allowed to check any aspect of the provided objects to validate the recipe, as long as the result
      * remains consistent across multiple calls with the same objects.</p>
      *
-     * @param recipe The recipe to check for targeting.
+     * @param recipe  The recipe to check for targeting.
      * @param manager The recipe manager that is responsible for the given recipe.
+     *
      * @return Whether the given recipe should undergo ingredient replacement or not.
      */
     boolean shouldBeReplaced(final IRecipe<?> recipe, final IRecipeManager manager);
@@ -27,10 +28,11 @@ public interface ITargetingRule {
     /**
      * Describes in a short and simple sentence the behavior of this rule.
      *
+     * @return The description of this rule.
+     *
      * @apiNote This string will be used in user interactions and log output. For this reason, it should be descriptive
      * yet concise at the same time.
-     *
-     * @return The description of this rule.
      */
     String describe();
+    
 }

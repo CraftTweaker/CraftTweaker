@@ -5,6 +5,7 @@ import org.openzen.zencode.java.ZenCodeType;
 public class OperatorFormatProvider {
     
     public static String getOperatorFormat(ZenCodeType.OperatorType operator) {
+        
         switch(operator) {
             case ADD:
                 return "%s + %s";

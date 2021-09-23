@@ -17,17 +17,21 @@ public class VirtualTypeValidationProcessor extends AbstractCraftTweakerProcesso
     
     @Override
     public Collection<Class<? extends Annotation>> getSupportedAnnotationClasses() {
+        
         return Collections.singleton(ZenCodeType.Name.class);
     }
     
     @Override
     public synchronized void performInitialization() {
+        
         virtualTypeValidator = dependencyContainer.getInstanceOfClass(VirtualTypeValidator.class);
     }
     
     @Override
     public boolean performProcessing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        
         virtualTypeValidator.validateAll(roundEnv.getElementsAnnotatedWith(ZenCodeType.Name.class));
         return false;
     }
+    
 }

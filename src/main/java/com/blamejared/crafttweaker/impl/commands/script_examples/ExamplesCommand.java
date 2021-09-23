@@ -29,11 +29,12 @@ public class ExamplesCommand extends CommandImpl {
     public static final String description = "Creates example scripts based on the mods installed, and opens the example folder";
     
     public ExamplesCommand() {
+        
         super(name, description, (CommandCallerPlayer) ExamplesCommand::execute);
     }
     
     public static void register() {
-    
+        
         CTCommands.registerCommand(new ExamplesCommand());
     }
     
@@ -46,7 +47,7 @@ public class ExamplesCommand extends CommandImpl {
         //final ExampleCollectionEvent event = new ExampleCollectionEvent(resourceManager);
         //MinecraftForge.EVENT_BUS.post(event);
         //Collect all scripts that are in the scripts data pack folder and write them to the example scripts folder
-        for (ResourceLocation file : resourceManager.getAllResourceLocations("scripts", n -> n.endsWith(".zs"))) {
+        for(ResourceLocation file : resourceManager.getAllResourceLocations("scripts", n -> n.endsWith(".zs"))) {
             writeScriptFile(new ResourceManagerSourceFile(file, resourceManager));
         }
         
@@ -60,6 +61,7 @@ public class ExamplesCommand extends CommandImpl {
     
     @Deprecated
     public static void writeScriptFile(SourceFile sourceFile) {
+        
         final File file = new File(getExamplesDir(), sourceFile.getFilename());
         if(file.exists()) {
             CraftTweakerAPI.logInfo("Skip writing example file '%s' since it already exists", file);
@@ -79,6 +81,8 @@ public class ExamplesCommand extends CommandImpl {
     }
     
     private static File getExamplesDir() {
+        
         return new File(CraftTweakerAPI.SCRIPT_DIR, "examples");
     }
+    
 }

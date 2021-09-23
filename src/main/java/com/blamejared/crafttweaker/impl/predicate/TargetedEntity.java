@@ -45,14 +45,16 @@ public enum TargetedEntity {
      * player.
      */
     @ZenCodeType.Field PLAYER_KILLER(ExpandLootContext::getLastDamagePlayer);
-
+    
     private final Function<LootContext, ? extends Entity> lootContextDiscriminator;
-
+    
     TargetedEntity(final Function<LootContext, ? extends Entity> lootContextDiscriminator) {
+        
         this.lootContextDiscriminator = lootContextDiscriminator;
     }
-
+    
     public Function<LootContext, ? extends Entity> getLootContextDiscriminator() {
+        
         return this.lootContextDiscriminator;
     }
 }

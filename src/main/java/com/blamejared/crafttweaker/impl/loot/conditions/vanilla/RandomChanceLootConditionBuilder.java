@@ -23,10 +23,11 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.RandomChance")
 @Document("vanilla/api/loot/conditions/vanilla/RandomChance")
 public final class RandomChanceLootConditionBuilder implements ILootConditionTypeBuilder {
+    
     private float chance;
-
+    
     RandomChanceLootConditionBuilder() {}
-
+    
     /**
      * Sets the chance of the loot condition successfully passing the check.
      *
@@ -36,22 +37,25 @@ public final class RandomChanceLootConditionBuilder implements ILootConditionTyp
      * This parameter is <strong>required</strong>.
      *
      * @param chance The success rate of the condition.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public RandomChanceLootConditionBuilder withChance(final float chance) {
+        
         this.chance = chance;
         return this;
     }
-
+    
     @Override
     public ILootCondition finish() {
-        if (this.chance >= 1.0) {
+        
+        if(this.chance >= 1.0) {
             CraftTweakerAPI.logWarning(
                     "Chance in a 'RandomChance' condition is a number that is equal to or higher than 1.0 (currently: %f): this condition will always match!",
                     this.chance
             );
-        } else if (this.chance <= 0.0) {
+        } else if(this.chance <= 0.0) {
             CraftTweakerAPI.logWarning(
                     "Chance in a 'RandomChance' condition is a number that is equal to or lower than 0.0 (currently: %f): this condition will never match!",
                     this.chance
@@ -59,4 +63,5 @@ public final class RandomChanceLootConditionBuilder implements ILootConditionTyp
         }
         return context -> context.getRandom().nextFloat() < this.chance;
     }
+    
 }

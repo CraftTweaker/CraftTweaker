@@ -23,11 +23,13 @@ public class ParameterReader {
     private final CodeTagReplacer codeTagReplacer;
     
     public ParameterReader(LinkTagReplacer linkTagReplacer, CodeTagReplacer codeTagReplacer) {
+        
         this.linkTagReplacer = linkTagReplacer;
         this.codeTagReplacer = codeTagReplacer;
     }
     
     public ParameterInformationList readParametersFrom(String from, Element element) {
+        
         if(from == null) {
             return emptyInformationList();
         }
@@ -37,16 +39,19 @@ public class ParameterReader {
     
     @Nonnull
     private ParameterInformationList emptyInformationList() {
+        
         return new ParameterInformationList(new HashMap<>());
     }
     
     @Nonnull
     private ParameterInformationList readParametersFromNonNull(String from, Element element) {
+        
         final Map<String, ParameterInfo> parameterInformation = readParameterInformation(from, element);
         return new ParameterInformationList(parameterInformation);
     }
     
     private Map<String, ParameterInfo> readParameterInformation(String from, Element element) {
+        
         from = prepareDocComment(from, element);
         final Matcher matcher = parameterPattern.matcher(from);
         return readParameterInformationFromMatcher(matcher);
@@ -54,15 +59,18 @@ public class ParameterReader {
     
     
     private String prepareDocComment(String from, Element element) {
+        
         return this.codeTagReplacer.replaceCodeTags(linkTagReplacer.replaceLinkTagsFrom(from, element));
     }
     
     private Map<String, ParameterInfo> readParameterInformationFromMatcher(Matcher matcher) {
+        
         return getMatchResultsFrom(matcher).map(this::readParameterInfoFromMatchResult)
                 .collect(asMapWithMergedParameterInformation());
     }
     
     private Collector<ParameterInfo, ?, Map<String, ParameterInfo>> asMapWithMergedParameterInformation() {
+        
         final Function<ParameterInfo, String> keyMapper = ParameterInfo::getName;
         final Function<ParameterInfo, ParameterInfo> valueMapper = Function.identity();
         final BinaryOperator<ParameterInfo> mergerFunction = ParameterInfo::merge;
@@ -71,6 +79,7 @@ public class ParameterReader {
     }
     
     private Stream<MatchResult> getMatchResultsFrom(Matcher matcher) {
+        
         final Stream.Builder<MatchResult> builder = Stream.builder();
         while(matcher.find()) {
             builder.add(matcher.toMatchResult());
@@ -79,6 +88,7 @@ public class ParameterReader {
     }
     
     private ParameterInfo readParameterInfoFromMatchResult(MatchResult toMatchResult) {
+        
         final String name = getParameterNameFromMatchResult(toMatchResult);
         final String text = getParameterTextFromMatchResult(toMatchResult);
         
@@ -86,10 +96,13 @@ public class ParameterReader {
     }
     
     private String getParameterNameFromMatchResult(MatchResult toMatchResult) {
+        
         return toMatchResult.group(1).trim();
     }
     
     private String getParameterTextFromMatchResult(MatchResult toMatchResult) {
+        
         return toMatchResult.group(2).trim();
     }
+    
 }

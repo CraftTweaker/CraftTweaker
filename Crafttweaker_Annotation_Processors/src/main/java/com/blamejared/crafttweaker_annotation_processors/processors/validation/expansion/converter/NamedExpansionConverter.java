@@ -12,15 +12,18 @@ public class NamedExpansionConverter {
     private final NameConverter nameConverter;
     
     public NamedExpansionConverter(NameConverter nameConverter) {
+        
         this.nameConverter = nameConverter;
     }
     
     public ExpansionInfo convertNamedExpansion(TypeElement expansionType) {
+        
         final TypeMirror expandedType = getExpandedType(expansionType);
         return new ExpansionInfo(expandedType, expansionType);
     }
     
     private TypeMirror getExpandedType(TypeElement expansionType) {
+        
         final ZenCodeType.Expansion annotation = expansionType.getAnnotation(ZenCodeType.Expansion.class);
         final String expandedTypeName = annotation.value();
         

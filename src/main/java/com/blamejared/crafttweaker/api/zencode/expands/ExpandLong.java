@@ -11,6 +11,7 @@ public class ExpandLong {
     
     @ZenCodeType.Caster(implicit = true)
     public static IData asData(long value) {
+        
         return new LongData(value);
     }
     

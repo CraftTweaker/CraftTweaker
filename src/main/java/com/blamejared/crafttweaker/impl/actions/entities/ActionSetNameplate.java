@@ -22,12 +22,13 @@ public class ActionSetNameplate implements IUndoableAction {
     
     @Override
     public void apply() {
+        
         CTClientEventHandler.NAMEPLATES.put(predicate, function);
     }
     
     @Override
     public void undo() {
-    
+        
         CTClientEventHandler.NAMEPLATES.remove(predicate);
     }
     

@@ -25,29 +25,34 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.LootTableId")
 @Document("vanilla/api/loot/conditions/vanilla/LootTableId")
 public final class LootTableIdLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     private ResourceLocation tableId;
-
+    
     LootTableIdLootConditionTypeBuilder() {}
-
+    
     /**
      * Sets the ID of the loot table that should be targeted.
      *
      * This parameter is <strong>required</strong>.
      *
      * @param location The ID of the loot table to match, in {@link ResourceLocation} form.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public LootTableIdLootConditionTypeBuilder withTableId(final ResourceLocation location) {
+        
         this.tableId = location;
         return this;
     }
-
+    
     @Override
     public ILootCondition finish() {
-        if (this.tableId == null) {
+        
+        if(this.tableId == null) {
             throw new IllegalStateException("Unable to have a 'LootTableId' condition without an ID");
         }
         return context -> this.tableId.equals(ExpandLootContext.getLootTableId(context));
     }
+    
 }

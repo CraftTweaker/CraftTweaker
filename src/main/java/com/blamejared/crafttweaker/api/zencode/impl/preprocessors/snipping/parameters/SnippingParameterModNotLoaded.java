@@ -1,18 +1,21 @@
 package com.blamejared.crafttweaker.api.zencode.impl.preprocessors.snipping.parameters;
 
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.snipping.*;
-import net.minecraftforge.fml.*;
+import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.snipping.SnippingParameter;
+import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.snipping.SnippingParameterHit;
+import net.minecraftforge.fml.ModList;
 
-import java.util.*;
+import java.util.Arrays;
 
 public class SnippingParameterModNotLoaded extends SnippingParameter {
     
     public SnippingParameterModNotLoaded() {
+        
         super("modnotloaded");
     }
     
     @Override
     public SnippingParameterHit isHit(String[] additionalArguments) {
+        
         if(additionalArguments.length == 0) {
             return SnippingParameterHit.invalid();
         }
@@ -24,4 +27,5 @@ public class SnippingParameterModNotLoaded extends SnippingParameter {
             return SnippingParameterHit.noSnip(additionalArguments.length);
         }
     }
+    
 }

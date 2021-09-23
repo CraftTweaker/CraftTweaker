@@ -5,6 +5,7 @@ import org.openzen.zencode.java.ZenCodeType;
 public class OperatorTypeParameterCountProvider {
     
     public static int getParameterCountFor(ZenCodeType.OperatorType operatorType) {
+        
         switch(operatorType) {
             case ADD:
             case SUB:
@@ -47,4 +48,5 @@ public class OperatorTypeParameterCountProvider {
                 throw new IllegalArgumentException("Invalid operatorType: " + operatorType);
         }
     }
+    
 }

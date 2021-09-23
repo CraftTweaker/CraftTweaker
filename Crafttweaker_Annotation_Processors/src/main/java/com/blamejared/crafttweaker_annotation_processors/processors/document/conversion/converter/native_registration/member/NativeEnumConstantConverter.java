@@ -13,27 +13,33 @@ import javax.lang.model.element.ElementKind;
  * @author youyihj
  */
 public class NativeEnumConstantConverter {
-
+    
     private final CommentConverter commentConverter;
-
+    
     public NativeEnumConstantConverter(CommentConverter commentConverter) {
+        
         this.commentConverter = commentConverter;
     }
-
+    
     public void convertAndAddTo(Element enumElement, DocumentedStaticMembers result, AbstractTypeInfo thisTypeInfo) {
-        if (isEnumType(enumElement)) {
+        
+        if(isEnumType(enumElement)) {
             enumElement.getEnclosedElements().stream()
                     .filter(it -> it.getKind() == ElementKind.ENUM_CONSTANT)
                     .forEach(enumConstantElement -> this.addEnumConstantInfo(enumConstantElement, result, thisTypeInfo));
         }
     }
-
+    
     private boolean isEnumType(Element element) {
+        
         return element.getKind() == ElementKind.ENUM;
     }
-
+    
     private void addEnumConstantInfo(Element enumConstantElement, DocumentedStaticMembers result, AbstractTypeInfo thisTypeInfo) {
+        
         final DocumentationComment description = commentConverter.convertElement(enumConstantElement, DocumentationComment.empty());
-        result.addProperty(new PropertyMember(enumConstantElement.getSimpleName().toString(), thisTypeInfo, true, false, description));
+        result.addProperty(new PropertyMember(enumConstantElement.getSimpleName()
+                .toString(), thisTypeInfo, true, false, description));
     }
+    
 }

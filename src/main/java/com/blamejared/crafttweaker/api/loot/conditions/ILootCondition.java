@@ -15,13 +15,15 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.ILootCondition")
 @Document("vanilla/api/loot/conditions/ILootCondition")
 public interface ILootCondition {
-
+    
     /**
      * Tests the context for a set of conditions.
      *
      * @param context The context to test
+     *
      * @return Whether the context passes the condition set.
      */
     @ZenCodeType.Method
     boolean test(final LootContext context);
+    
 }

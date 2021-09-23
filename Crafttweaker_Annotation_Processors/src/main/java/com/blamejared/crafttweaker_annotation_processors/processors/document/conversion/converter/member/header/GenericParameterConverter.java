@@ -16,29 +16,35 @@ public class GenericParameterConverter {
     private final CommentConverter commentConverter;
     
     public GenericParameterConverter(TypeConverter typeConverter, CommentConverter commentConverter) {
+        
         this.typeConverter = typeConverter;
         this.commentConverter = commentConverter;
     }
     
     public DocumentedGenericParameter convertGenericParameter(TypeParameterElement typeParameterElement) {
+        
         final String name = convertName(typeParameterElement);
         final List<AbstractTypeInfo> bounds = convertBounds(typeParameterElement);
         final DocumentationComment comment = convertComment(typeParameterElement);
-    
+        
         return new DocumentedGenericParameter(bounds, name, comment);
     }
     
     private String convertName(TypeParameterElement typeParameterElement) {
+        
         return typeParameterElement.getSimpleName().toString();
     }
     
     private DocumentationComment convertComment(TypeParameterElement typeParameterElement) {
+        
         return commentConverter.convertForTypeParameter(typeParameterElement);
     }
     
     private List<AbstractTypeInfo> convertBounds(TypeParameterElement typeParameterElement) {
+        
         return typeParameterElement.getBounds().stream()
                 .map(typeConverter::convertType)
                 .collect(Collectors.toList());
     }
+    
 }

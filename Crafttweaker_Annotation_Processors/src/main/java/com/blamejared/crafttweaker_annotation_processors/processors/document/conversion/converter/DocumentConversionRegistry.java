@@ -19,6 +19,7 @@ public class DocumentConversionRegistry {
     private final DocumentRegistry documentRegistry;
     
     public DocumentConversionRegistry(DocumentRegistry documentRegistry, DependencyContainer dependencyContainer) {
+        
         this.documentRegistry = documentRegistry;
         //
         // TODO: Add converters
@@ -28,18 +29,22 @@ public class DocumentConversionRegistry {
     }
     
     public void prepareTypePageFor(TypeElement typeElement) {
+        
         setPageInfo(typeElement);
     }
     
     public void setCommentInfoFor(TypeElement typeElement) {
+        
         setCommentData(typeElement);
     }
     
     public void convert(TypeElement typeElement) {
+        
         convertAndAddToRegistry(typeElement);
     }
     
     private void convertAndAddToRegistry(TypeElement typeElement) {
+        
         converters.stream()
                 .filter(converter -> documentRegistry.hasPageInfoFor(typeElement))
                 .filter(converter -> converter.canConvert(typeElement))
@@ -50,6 +55,7 @@ public class DocumentConversionRegistry {
     }
     
     private void setCommentData(TypeElement typeElement) {
+        
         converters.stream()
                 .filter(converter -> documentRegistry.hasPageInfoFor(typeElement))
                 .filter(converter -> converter.canConvert(typeElement))
@@ -59,10 +65,12 @@ public class DocumentConversionRegistry {
     
     @Nonnull
     private Consumer<DocumentConverter> setCommentInfo(TypeElement typeElement) {
+        
         return converter -> converter.setDocumentationCommentTo(typeElement, documentRegistry.getPageInfoFor(typeElement));
     }
     
     private void setPageInfo(TypeElement typeElement) {
+        
         converters.stream()
                 .filter(converter -> converter.canConvert(typeElement))
                 .map(converter -> converter.prepareConversion(typeElement))
@@ -70,4 +78,5 @@ public class DocumentConversionRegistry {
                 .findFirst()
                 .ifPresent(pageInfo -> documentRegistry.addInfo(typeElement, pageInfo));
     }
+    
 }

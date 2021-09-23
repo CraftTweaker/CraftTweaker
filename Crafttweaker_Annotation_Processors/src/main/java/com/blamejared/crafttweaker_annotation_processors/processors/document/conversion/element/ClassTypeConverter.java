@@ -12,10 +12,12 @@ public class ClassTypeConverter {
     private final Elements elementUtils;
     
     public ClassTypeConverter(Elements elementUtils) {
+        
         this.elementUtils = elementUtils;
     }
     
     public <T extends Annotation> TypeMirror getTypeMirror(T annotation, Function<T, Class<?>> classGetter) {
+        
         try {
             return getNativeTypeFromClass(classGetter.apply(annotation));
         } catch(MirroredTypeException exception) {
@@ -26,16 +28,20 @@ public class ClassTypeConverter {
     }
     
     private TypeMirror getFromTypeNotPresentException(TypeNotPresentException exception) {
+        
         final String typeName = exception.typeName().replace('$', '.');
         final TypeElement typeElement = elementUtils.getTypeElement(typeName);
         return typeElement.asType();
     }
     
     private TypeMirror getFromMirroredTypeException(MirroredTypeException exception) {
+        
         return exception.getTypeMirror();
     }
     
     private TypeMirror getNativeTypeFromClass(Class<?> cls) {
+        
         return elementUtils.getTypeElement(cls.getCanonicalName()).asType();
     }
+    
 }

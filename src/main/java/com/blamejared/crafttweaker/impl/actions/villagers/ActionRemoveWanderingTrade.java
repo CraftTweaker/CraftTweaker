@@ -1,16 +1,11 @@
 package com.blamejared.crafttweaker.impl.actions.villagers;
 
 import com.blamejared.crafttweaker.api.villagers.ITradeRemover;
-import com.blamejared.crafttweaker.impl_native.event.ExpandEvent;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.village.WandererTradesEvent;
-import net.minecraftforge.eventbus.api.Event;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class ActionRemoveWanderingTrade extends ActionTradeBase {
     

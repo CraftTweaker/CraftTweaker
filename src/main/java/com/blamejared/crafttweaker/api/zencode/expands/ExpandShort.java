@@ -11,6 +11,7 @@ public class ExpandShort {
     
     @ZenCodeType.Caster(implicit = true)
     public static IData asData(short value) {
+        
         return new ShortData(value);
     }
     

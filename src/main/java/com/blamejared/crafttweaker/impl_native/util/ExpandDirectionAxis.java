@@ -18,11 +18,13 @@ public class ExpandDirectionAxis {
     
     @ZenCodeType.Getter("vertical")
     public static boolean isVertical(Direction.Axis internal) {
+        
         return internal.isVertical();
     }
     
     @ZenCodeType.Getter("horizontal")
     public static boolean isHorizontal(Direction.Axis internal) {
+        
         return internal.isHorizontal();
     }
     
@@ -32,13 +34,16 @@ public class ExpandDirectionAxis {
      * @param x x value of the coordinate
      * @param y y value of the coordinate
      * @param z z value of the coordinate
+     *
      * @return value of the coordinate
+     *
      * @docParam x 1
      * @docParam y 2
      * @docParam z 3
      */
     @ZenCodeType.Method
     public static int getCoordinate(Direction.Axis internal, int x, int y, int z) {
+        
         return internal.getCoordinate(x, y, z);
     }
     
@@ -48,13 +53,16 @@ public class ExpandDirectionAxis {
      * @param x x value of the coordinate
      * @param y y value of the coordinate
      * @param z z value of the coordinate
+     *
      * @return value of the coordinate
+     *
      * @docParam x 1.2
      * @docParam y 2.5
      * @docParam z 3.87
      */
     @ZenCodeType.Method
     public static double getCoordinate(Direction.Axis internal, double x, double y, double z) {
+        
         return internal.getCoordinate(x, y, z);
     }
     
@@ -65,6 +73,7 @@ public class ExpandDirectionAxis {
      */
     @ZenCodeType.Getter("name")
     public static String name(Direction.Axis internal) {
+        
         return internal.name();
     }
     
@@ -75,18 +84,21 @@ public class ExpandDirectionAxis {
      */
     @ZenCodeType.Getter("ordinal")
     public static int ordinal(Direction.Axis internal) {
+        
         return internal.ordinal();
     }
     
     
     @ZenCodeType.Getter("commandString")
     public static String getCommandString(Direction.Axis internal) {
+        
         return "<directionAxis:" + internal.getName2() + ">";
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
     public static boolean equals(Direction.Axis internal, Object o) {
+        
         return internal.equals(o);
     }
     
@@ -94,6 +106,8 @@ public class ExpandDirectionAxis {
     @ZenCodeType.Method
     @ZenCodeType.Getter("hashCode")
     public static int hashCode(Direction.Axis internal) {
+        
         return internal.hashCode();
     }
+    
 }

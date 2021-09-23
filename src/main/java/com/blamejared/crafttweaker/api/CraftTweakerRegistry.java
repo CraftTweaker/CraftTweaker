@@ -45,7 +45,7 @@ public class CraftTweakerRegistry {
      * Find all classes that have a {@link ZenRegister} annotation and registers them to the class list for loading.
      */
     public static void findClasses() {
-    
+        
         final CraftTweakerModList craftTweakerModList = new CraftTweakerModList();
         final List<Class<?>> collect = getAllClassesWith(ZenRegister.class, craftTweakerModList::add, annotationData -> ((ArrayList<String>) annotationData
                 .getAnnotationData()
@@ -73,6 +73,7 @@ public class CraftTweakerRegistry {
     }
     
     private static Class<?> getClassFromType(Type type) {
+        
         try {
             return Class.forName(type.getClassName(), false, CraftTweaker.class.getClassLoader());
         } catch(ClassNotFoundException e) {
@@ -83,15 +84,18 @@ public class CraftTweakerRegistry {
     
     @SuppressWarnings("SameParameterValue")
     private static Stream<? extends Class<?>> getAllClassesWith(Class<? extends Annotation> annotationCls) {
+        
         return getAllClassesWith(annotationCls, ignored -> {
         });
     }
     
     private static Stream<? extends Class<?>> getAllClassesWith(Class<? extends Annotation> annotationCls, Consumer<ModFileScanData> consumer) {
+        
         return getAllClassesWith(annotationCls, consumer, annotationData -> true);
     }
     
     private static Stream<? extends Class<?>> getAllClassesWith(Class<? extends Annotation> annotationCls, Consumer<ModFileScanData> consumer, Predicate<ModFileScanData.AnnotationData> annotationFilter) {
+        
         final Type annotationType = Type.getType(annotationCls);
         return ModList.get()
                 .getAllScanData()
@@ -112,6 +116,7 @@ public class CraftTweakerRegistry {
     // ##################################
     
     public static ZenClassRegistry getZenClassRegistry() {
+        
         return ZEN_CLASS_REGISTRY;
     }
     
@@ -123,6 +128,7 @@ public class CraftTweakerRegistry {
      * @return Map of String -> Class for ZenName -> Java class
      */
     public static BiMap<String, Class<?>> getZenClassMap() {
+        
         return ZEN_CLASS_REGISTRY.getZenClasses();
     }
     
@@ -136,9 +142,11 @@ public class CraftTweakerRegistry {
      * {@code "crafttweaker.sub.other.package.Class}
      *
      * @param name Name of the Zen Package.
+     *
      * @return list of classes in the Zen Package.
      */
     public static List<Class<?>> getClassesInPackage(String name) {
+        
         return ZEN_CLASS_REGISTRY.getClassesInPackage(name);
     }
     
@@ -148,6 +156,7 @@ public class CraftTweakerRegistry {
      * @return Set of top level packages
      */
     public static Set<String> getRootPackages() {
+        
         return ZEN_CLASS_REGISTRY.getRootPackages();
     }
     
@@ -157,6 +166,7 @@ public class CraftTweakerRegistry {
      * @return BiMap of the ZenGlobals
      */
     public static BiMap<String, Class<?>> getZenGlobals() {
+        
         return ZEN_CLASS_REGISTRY.getZenGlobals();
     }
     
@@ -170,9 +180,11 @@ public class CraftTweakerRegistry {
      * {@code "crafttweaker.sub.other.package.Class}
      *
      * @param name Name of the Zen Package.
+     *
      * @return list of classes with at least one globa in the Zen Package.
      */
     public static List<Class<?>> getGlobalsInPackage(String name) {
+        
         return ZEN_CLASS_REGISTRY.getGlobalsInPackage(name);
     }
     
@@ -182,6 +194,7 @@ public class CraftTweakerRegistry {
      * @return The Map
      */
     public static Map<String, List<Class<?>>> getExpansions() {
+        
         return ZEN_CLASS_REGISTRY.getExpansionsByExpandedName();
     }
     
@@ -190,9 +203,11 @@ public class CraftTweakerRegistry {
      * Contains registered native types (e.g. ItemStack)
      *
      * @param cls The class to check for
+     *
      * @return An optional that contains the class, if found
      */
     public static Optional<String> tryGetZenClassNameFor(Class<?> cls) {
+        
         return ZEN_CLASS_REGISTRY.tryGetNameFor(cls);
     }
     
@@ -202,6 +217,7 @@ public class CraftTweakerRegistry {
      * @return ImmutableList of the recipe managers.
      */
     public static List<Class<? extends IRecipeManager>> getRecipeManagers() {
+        
         return ZEN_CLASS_REGISTRY.getRecipeManagers();
     }
     //</editor-fold>
@@ -218,6 +234,7 @@ public class CraftTweakerRegistry {
      * @return ImmutableMap of the Bracket dumpers
      */
     public static Map<String, BracketDumperInfo> getBracketDumpers() {
+        
         return BRACKET_RESOLVER_REGISTRY.getBracketDumpers();
     }
     
@@ -228,10 +245,12 @@ public class CraftTweakerRegistry {
      * @param name The name to add
      */
     public static void addAdvancedBEPName(String name) {
+        
         BRACKET_RESOLVER_REGISTRY.addAdvancedBEPName(name);
     }
     
     public static List<ValidatedEscapableBracketParser> getBracketResolvers(String name, ScriptingEngine scriptingEngine, JavaNativeModule crafttweakerModule) {
+        
         return BRACKET_RESOLVER_REGISTRY.getBracketResolvers(name, scriptingEngine, crafttweakerModule);
     }
     //</editor-fold>
@@ -242,6 +261,7 @@ public class CraftTweakerRegistry {
     // ### Preprocessor Delegates ###
     // ##############################
     public static List<IPreprocessor> getPreprocessors() {
+        
         return PREPROCESSOR_REGISTRY.getPreprocessors();
     }
     //</editor-fold>
@@ -251,6 +271,7 @@ public class CraftTweakerRegistry {
     // ### Recipe Handler Delegates ###
     // ################################
     public static <T extends IRecipe<?>> IRecipeHandler<T> getHandlerFor(final T recipe) {
+        
         return RECIPE_HANDLER_REGISTRY.getHandlerFor(recipe);
     }
     //</editor-fold>

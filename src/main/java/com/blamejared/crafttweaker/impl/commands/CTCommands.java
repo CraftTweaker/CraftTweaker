@@ -6,8 +6,8 @@ import com.blamejared.crafttweaker.impl.commands.crafttweaker.DumpCommands;
 import com.blamejared.crafttweaker.impl.commands.crafttweaker.HandCommands;
 import com.blamejared.crafttweaker.impl.commands.crafttweaker.HelpCommand;
 import com.blamejared.crafttweaker.impl.commands.crafttweaker.InventoryCommands;
-import com.blamejared.crafttweaker.impl.commands.crafttweaker.RecipeCommands;
 import com.blamejared.crafttweaker.impl.commands.crafttweaker.MiscCommands;
+import com.blamejared.crafttweaker.impl.commands.crafttweaker.RecipeCommands;
 import com.blamejared.crafttweaker.impl.commands.crafttweaker.ScriptCommands;
 import com.blamejared.crafttweaker.impl.commands.script_examples.ExamplesCommand;
 import com.mojang.brigadier.CommandDispatcher;
@@ -34,12 +34,13 @@ public class CTCommands {
     public static LiteralArgumentBuilder<CommandSource> root = Commands.literal("ct");
     public static LiteralArgumentBuilder<CommandSource> rootAlternative = Commands.literal("crafttweaker");
     
-    public static void initArgumentTypes(){
+    public static void initArgumentTypes() {
+        
         ArgumentTypes.register("crafttweaker:item_argument", CTItemArgument.class, new ArgumentSerializer<>(() -> CTItemArgument.INSTANCE));
     }
     
     public static void init(CommandDispatcher<CommandSource> dispatcher) {
-    
+        
         DumpCommands.registerDumpCommands(() -> COMMANDS);
         ExamplesCommand.register();
         HandCommands.registerHandCommands();
@@ -47,7 +48,7 @@ public class CTCommands {
         MiscCommands.registerMiscCommands(CTCommands::registerCustomCommand);
         RecipeCommands.registerRecipeCommands();
         ScriptCommands.registerScriptCommands();
-
+        
         DumpCommands.registerDumpers();
         
         // Send an event to let others know that we are ready for SubCommands to be registered.
@@ -68,7 +69,7 @@ public class CTCommands {
                 registerDump(subCommandName, dumperInfo.getDescription(), dumperInfo);
             }
         }
-    
+        
         HelpCommand.registerHelpCommand(() -> COMMANDS, CTCommands::registerCustomCommand);
         
         COMMANDS.forEach((s, command) -> registerCommandInternal(root, command));
@@ -95,7 +96,7 @@ public class CTCommands {
         
         return command(name, desc, playerCaller);
     }
-
+    
     public static void registerPlayerDump(String name, String desc, com.blamejared.crafttweaker.impl.commands.CommandCallerPlayer playerCaller) {
         
         registerDump(name, desc, playerCaller);
@@ -140,7 +141,7 @@ public class CTCommands {
     private static void registerCustomCommand(LiteralArgumentBuilder<CommandSource> literal, String name, String description) {
         
         registerCustomCommand(literal);
-        if (name != null && description != null) {
+        if(name != null && description != null) {
             COMMANDS.put(name, new CommandImpl(name, description, (context -> 0)));
         }
     }
@@ -202,7 +203,7 @@ public class CTCommands {
     
     @Deprecated
     public static void registerCommand(CommandImpl command) {
-    
+        
         registerCommand((com.blamejared.crafttweaker.impl.commands.CommandImpl) command);
     }
     
@@ -237,7 +238,7 @@ public class CTCommands {
         public CommandCaller getCaller() {
             
             final com.blamejared.crafttweaker.impl.commands.CommandCaller caller = super.getCaller();
-            return caller instanceof CommandCaller? (CommandCaller) caller : caller::executeCommand;
+            return caller instanceof CommandCaller ? (CommandCaller) caller : caller::executeCommand;
         }
         
         @Deprecated
@@ -255,8 +256,9 @@ public class CTCommands {
         
         private CommandImpl safeCast(final com.blamejared.crafttweaker.impl.commands.CommandImpl other) {
             
-            return other instanceof CommandImpl? (CommandImpl) other : new CommandImpl(other.getName(), other.getDescription(), other.getCaller()::executeCommand);
+            return other instanceof CommandImpl ? (CommandImpl) other : new CommandImpl(other.getName(), other.getDescription(), other.getCaller()::executeCommand);
         }
+        
     }
     // </editor-fold>
 }

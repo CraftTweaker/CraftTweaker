@@ -26,4 +26,5 @@ public interface IIngredientWithAmount extends CommandStringDisplayable {
      */
     @ZenCodeType.Getter("amount")
     int getAmount();
+    
 }

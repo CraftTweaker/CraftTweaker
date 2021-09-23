@@ -4,7 +4,12 @@ import com.blamejared.crafttweaker_annotation_processors.processors.util.depende
 import com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies.IHasPostCreationCall;
 import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.converter.ExpansionInfoConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.info.ExpansionInfo;
-import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.validator.rules.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.validator.rules.ExpansionInfoValidationRule;
+import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.validator.rules.FirstParameterValidationRule;
+import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.validator.rules.ModifierValidationRule;
+import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.validator.rules.OperatorParameterCountValidationRule;
+import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.validator.rules.ParameterCountValidationRule;
+import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.validator.rules.UnsupportedAnnotationValidationRule;
 
 import javax.lang.model.element.Element;
 import java.util.ArrayList;
@@ -18,21 +23,25 @@ public class ExpansionInfoValidator implements IHasPostCreationCall {
     private final DependencyContainer dependencyContainer;
     
     public ExpansionInfoValidator(ExpansionInfoConverter converter, DependencyContainer dependencyContainer) {
+        
         this.converter = converter;
         this.dependencyContainer = dependencyContainer;
     }
     
     public void validateAll() {
+        
         converter.convertToExpansionInfos().forEach(this::validate);
     }
     
     private void validate(ExpansionInfo expansionInfo) {
+        
         for(Element enclosedElement : expansionInfo.expansionType.getEnclosedElements()) {
             validateEnclosedElement(enclosedElement, expansionInfo);
         }
     }
     
     private void validateEnclosedElement(Element enclosedElement, ExpansionInfo expansionInfo) {
+        
         rules.stream()
                 .filter(rule -> rule.canValidate(enclosedElement))
                 .forEach(rule -> rule.validate(enclosedElement, expansionInfo));
@@ -40,6 +49,7 @@ public class ExpansionInfoValidator implements IHasPostCreationCall {
     
     @Override
     public void afterCreation() {
+        
         addRule(ModifierValidationRule.class);
         addRule(FirstParameterValidationRule.class);
         addRule(ParameterCountValidationRule.class);
@@ -48,7 +58,9 @@ public class ExpansionInfoValidator implements IHasPostCreationCall {
     }
     
     private void addRule(Class<? extends ExpansionInfoValidationRule> validationRuleClass) {
+        
         final ExpansionInfoValidationRule rule = dependencyContainer.getInstanceOfClass(validationRuleClass);
         this.rules.add(rule);
     }
+    
 }

@@ -4,11 +4,17 @@ import org.openzen.zencode.shared.CodePosition;
 import org.openzen.zencode.shared.CompileException;
 import org.openzen.zenscript.codemodel.GenericName;
 import org.openzen.zenscript.codemodel.OperatorType;
-import org.openzen.zenscript.codemodel.expression.*;
+import org.openzen.zenscript.codemodel.expression.ArrayExpression;
+import org.openzen.zenscript.codemodel.expression.CallArguments;
+import org.openzen.zenscript.codemodel.expression.Expression;
+import org.openzen.zenscript.codemodel.expression.MapExpression;
+import org.openzen.zenscript.codemodel.expression.NewExpression;
 import org.openzen.zenscript.codemodel.member.ref.FunctionalMemberRef;
 import org.openzen.zenscript.codemodel.partial.IPartialExpression;
 import org.openzen.zenscript.codemodel.scope.ExpressionScope;
-import org.openzen.zenscript.codemodel.type.*;
+import org.openzen.zenscript.codemodel.type.BasicTypeID;
+import org.openzen.zenscript.codemodel.type.DefinitionTypeID;
+import org.openzen.zenscript.codemodel.type.TypeID;
 import org.openzen.zenscript.parser.expression.ParsedExpression;
 import org.openzen.zenscript.parser.expression.ParsedExpressionArray;
 import org.openzen.zenscript.parser.expression.ParsedExpressionMap;
@@ -40,7 +46,7 @@ public class IDataRewrites {
         if(!(typeID instanceof DefinitionTypeID)) {
             return null;
         }
-    
+        
         DefinitionTypeID definitionTypeID = (DefinitionTypeID) typeID;
         final String name = definitionTypeID.definition.name;
         final boolean isListData = name.equals("ListData");

@@ -43,6 +43,7 @@ public interface ICookingRecipeManager extends IRecipeManager {
      */
     @ZenCodeType.Method
     default void addRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime) {
+        
         name = validateRecipeName(name);
         CraftTweakerAPI.apply(new ActionAddRecipe(this, makeRecipe(name, output, input, xp, cookTime), ""));
     }
@@ -58,9 +59,11 @@ public interface ICookingRecipeManager extends IRecipeManager {
      */
     @ZenCodeType.Method
     default void removeRecipe(IItemStack output, IIngredient input) {
+        
         CraftTweakerAPI.apply(new ActionRemoveRecipeByOutputInput(this, output, input));
     }
     
     
     AbstractCookingRecipe makeRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime);
+    
 }

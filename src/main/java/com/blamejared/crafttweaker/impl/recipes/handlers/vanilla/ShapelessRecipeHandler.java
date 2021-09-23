@@ -35,6 +35,7 @@ public final class ShapelessRecipeHandler implements IRecipeHandler<ShapelessRec
     
     @Override
     public Optional<Function<ResourceLocation, ShapelessRecipe>> replaceIngredients(final IRecipeManager manager, final ShapelessRecipe recipe, final List<IReplacementRule> rules) {
+        
         return ReplacementHandlerHelper.replaceNonNullIngredientList(
                 recipe.getIngredients(),
                 Ingredient.class,

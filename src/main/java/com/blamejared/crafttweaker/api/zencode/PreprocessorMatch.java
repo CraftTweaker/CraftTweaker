@@ -7,6 +7,7 @@ public class PreprocessorMatch {
     private final String content;
     
     public PreprocessorMatch(IPreprocessor preprocessor, int line, String content) {
+        
         this.preprocessor = preprocessor;
         this.line = line;
         this.content = content;
@@ -21,6 +22,7 @@ public class PreprocessorMatch {
      * The line numbers are 1-Based, i.e. the first line has getLine() == 1
      */
     public int getLine() {
+        
         return line;
     }
     
@@ -31,6 +33,7 @@ public class PreprocessorMatch {
      * So {@code "bb#name cc dd"} would have {@code "cc dd"} as content
      */
     public String getContent() {
+        
         return content;
     }
     
@@ -39,6 +42,8 @@ public class PreprocessorMatch {
      * Usually not required, but you never know...
      */
     public IPreprocessor getPreprocessor() {
+        
         return preprocessor;
     }
+    
 }

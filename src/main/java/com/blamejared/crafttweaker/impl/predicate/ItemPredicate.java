@@ -31,17 +31,19 @@ import java.util.function.Consumer;
 @ZenCodeType.Name("crafttweaker.api.predicate.ItemPredicate")
 @Document("vanilla/api/predicate/ItemPredicate")
 public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting<net.minecraft.advancements.criterion.ItemPredicate> {
+    
     private final List<EnchantmentPredicate> enchantments;
     private final List<EnchantmentPredicate> storedEnchantments;
-
+    
     private IntRangePredicate amount;
     private IntRangePredicate damage;
     private NBTPredicate data;
     private Item item;
     private MCTag<Item> tag;
     private Potion potion;
-
+    
     public ItemPredicate() {
+        
         super(net.minecraft.advancements.criterion.ItemPredicate.ANY);
         this.amount = IntRangePredicate.unbounded();
         this.damage = IntRangePredicate.unbounded();
@@ -49,7 +51,7 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
         this.enchantments = new ArrayList<>();
         this.storedEnchantments = new ArrayList<>();
     }
-
+    
     /**
      * Sets the minimum amount of items to <code>min</code>.
      *
@@ -60,14 +62,16 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
      * The minimum value is inclusive, meaning that a value that is equal to <code>min</code> will pass the check.
      *
      * @param min The minimum value the amount should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate withMinimumAmount(final int min) {
+        
         this.amount = IntRangePredicate.mergeLowerBound(this.amount, min);
         return this;
     }
-
+    
     /**
      * Sets the maximum amount of items to <code>max</code>.
      *
@@ -78,14 +82,16 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
      * The maximum value is inclusive, meaning that a value that is equal to <code>max</code> will pass the check.
      *
      * @param max The maximum value the amount should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate withMaximumAmount(final int max) {
+        
         this.amount = IntRangePredicate.mergeUpperBound(this.amount, max);
         return this;
     }
-
+    
     /**
      * Sets both the minimum and maximum amount of items to <code>min</code> and <code>max</code> respectively.
      *
@@ -96,27 +102,31 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
      *
      * @param min The minimum value the amount should be.
      * @param max The maximum value the amount should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate withRangedAmount(final int min, final int max) {
+        
         this.amount = IntRangePredicate.bounded(min, max);
         return this;
     }
-
+    
     /**
      * Sets the amount to exactly match the given <code>value</code>.
      *
      * If the amount had already some bounds specified, then they will be overwritten with the new value.
      *
      * @param value The exact value the amount should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate withExactAmount(final int value) {
+        
         return this.withRangedAmount(value, value);
     }
-
+    
     /**
      * Sets the minimum damage of the item to <code>min</code>.
      *
@@ -127,14 +137,16 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
      * The minimum value is inclusive, meaning that a value that is equal to <code>min</code> will pass the check.
      *
      * @param min The minimum value the damage should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate withMinimumDamage(final int min) {
+        
         this.damage = IntRangePredicate.mergeLowerBound(this.damage, min);
         return this;
     }
-
+    
     /**
      * Sets the maximum damage of the item to <code>max</code>.
      *
@@ -145,14 +157,16 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
      * The maximum value is inclusive, meaning that a value that is equal to <code>max</code> will pass the check.
      *
      * @param max The maximum value the damage should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate withMaximumDamage(final int max) {
+        
         this.damage = IntRangePredicate.mergeUpperBound(this.damage, max);
         return this;
     }
-
+    
     /**
      * Sets both the minimum and maximum damage of the item to <code>min</code> and <code>max</code> respectively.
      *
@@ -163,27 +177,31 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
      *
      * @param min The minimum value the damage should be.
      * @param max The maximum value the damage should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate withRangedDamage(final int min, final int max) {
+        
         this.damage = IntRangePredicate.bounded(min, max);
         return this;
     }
-
+    
     /**
      * Sets the damage to exactly match the given <code>value</code>.
      *
      * If the damage had already some bounds specified, then they will be overwritten with the new value.
      *
      * @param value The exact value the damage should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate withExactDamage(final int value) {
+        
         return this.withRangedDamage(value, value);
     }
-
+    
     /**
      * Creates and sets the {@link NBTPredicate} that will be matched against the item's NBT data.
      *
@@ -191,43 +209,49 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
      * previous one, if any.
      *
      * @param builder A consumer that will be used to configure the {@link NBTPredicate}.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate withDataPredicate(final Consumer<NBTPredicate> builder) {
+        
         final NBTPredicate predicate = new NBTPredicate();
         builder.accept(predicate);
         this.data = predicate;
         return this;
     }
-
+    
     /**
      * Sets the {@link Item} that this predicate should match.
      *
      * If a tag to match against has already been set, then the tag check will take precedence over this check.
      *
      * @param definition The item the predicate should match.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate withItem(final Item definition) {
+        
         this.item = definition;
         return this;
     }
-
+    
     /**
      * Sets the {@link Item} that this predicate should match to the one contained in the given {@link IItemStack}.
      *
      * If a tag to match against has already been set, then the tag check will take precedence over this check.
      *
      * @param itemStack The stack containing the item that the predicate should match.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate withItem(final IItemStack itemStack) {
+        
         return this.withItem(itemStack.getDefinition());
     }
-
+    
     /**
      * Sets the {@link MCTag} that this predicate should use for matching.
      *
@@ -236,26 +260,30 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
      * Specifying both a tag and an item to match against will make the tag take precedence over the item.
      *
      * @param tag The tag the predicate should use for matching.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate withTag(final MCTag<Item> tag) {
+        
         this.tag = tag;
         return this;
     }
-
+    
     /**
      * Sets the potion effect that should be present on the target item.
      *
      * @param potion The potion effect.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate withPotion(final Potion potion) {
+        
         this.potion = potion;
         return this;
     }
-
+    
     /**
      * Creates and adds a new {@link EnchantmentPredicate} to the list of predicates to match against the item's
      * enchantments.
@@ -265,16 +293,18 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
      * have compatible bounds.
      *
      * @param builder A consumer that will be used to configure the {@link EnchantmentPredicate}.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate withEnchantmentPredicate(final Consumer<EnchantmentPredicate> builder) {
+        
         final EnchantmentPredicate predicate = new EnchantmentPredicate();
         builder.accept(predicate);
         this.enchantments.add(predicate);
         return this;
     }
-
+    
     /**
      * Creates and adds a new {@link EnchantmentPredicate} for the given {@link Enchantment} to the list of predicates
      * to match against the item's enchantments.
@@ -286,17 +316,19 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
      * have compatible bounds.
      *
      * @param enchantment The enchantment that should be checked.
-     * @param builder A consumer that will be used to configure the {@link EnchantmentPredicate}.
+     * @param builder     A consumer that will be used to configure the {@link EnchantmentPredicate}.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate withEnchantmentPredicate(final Enchantment enchantment, final Consumer<EnchantmentPredicate> builder) {
+        
         return this.withEnchantmentPredicate(predicate -> {
             predicate.withEnchantment(enchantment);
             builder.accept(predicate);
         });
     }
-
+    
     /**
      * Creates and adds a new {@link EnchantmentPredicate} to the list of predicates to match against the item's
      * stored enchantments.
@@ -306,16 +338,18 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
      * have compatible bounds.
      *
      * @param builder A consumer that will be used to configure the {@link EnchantmentPredicate}.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate withStoredEnchantmentPredicate(final Consumer<EnchantmentPredicate> builder) {
+        
         final EnchantmentPredicate predicate = new EnchantmentPredicate();
         builder.accept(predicate);
         this.storedEnchantments.add(predicate);
         return this;
     }
-
+    
     /**
      * Creates and adds a new {@link EnchantmentPredicate} for the given {@link Enchantment} to the list of predicates
      * to match against the item's stored enchantments.
@@ -327,28 +361,33 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
      * have compatible bounds.
      *
      * @param enchantment The enchantment that should be checked.
-     * @param builder A consumer that will be used to configure the {@link EnchantmentPredicate}.
+     * @param builder     A consumer that will be used to configure the {@link EnchantmentPredicate}.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate withStoredEnchantmentPredicate(final Enchantment enchantment, final Consumer<EnchantmentPredicate> builder) {
+        
         return this.withStoredEnchantmentPredicate(predicate -> {
             predicate.withEnchantment(enchantment);
             builder.accept(predicate);
         });
     }
-
+    
     // Quick CraftTweaker helpers
+    
     /**
      * Sets this predicate to match the given {@link IItemStack} as closely as possible.
      *
      * Additional properties such as damage, count, or NBT data are ignored.
      *
      * @param stack The stack that should be matched.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate matching(final IItemStack stack) {
+        
         return this.matching(stack, false);
     }
     
@@ -357,12 +396,14 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
      *
      * Additional properties such as count or NBT data are ignored.
      *
-     * @param stack The stack that should be matched.
+     * @param stack       The stack that should be matched.
      * @param matchDamage Whether to consider damage or not when matching the stack.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate matching(final IItemStack stack, final boolean matchDamage) {
+        
         return this.matching(stack, matchDamage, false);
     }
     
@@ -372,13 +413,15 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
      *
      * Additional properties such as NBT data are ignored.
      *
-     * @param stack The stack that should be matched.
+     * @param stack       The stack that should be matched.
      * @param matchDamage Whether to consider damage or not when matching the stack.
-     * @param matchCount Whether to consider the amount or not when matching the stack.
+     * @param matchCount  Whether to consider the amount or not when matching the stack.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate matching(final IItemStack stack, final boolean matchDamage, final boolean matchCount) {
+        
         return this.matching(stack, matchDamage, matchCount, false);
     }
     
@@ -386,41 +429,47 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
      * Sets this predicate to match the given {@link IItemStack} as closely as possible, optionally considering damage,
      * count, and NBT data.
      *
-     * @param stack The stack that should be matched.
+     * @param stack       The stack that should be matched.
      * @param matchDamage Whether to consider damage or not when matching the stack.
-     * @param matchCount Whether to consider the amount or not when matching the stack.
-     * @param matchNbt Whether to consider the NBT data or not when matching the stack.
+     * @param matchCount  Whether to consider the amount or not when matching the stack.
+     * @param matchNbt    Whether to consider the NBT data or not when matching the stack.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public ItemPredicate matching(final IItemStack stack, final boolean matchDamage, final boolean matchCount, final boolean matchNbt) {
+        
         this.withItem(stack);
-        if (matchDamage) {
+        if(matchDamage) {
             this.withExactDamage(stack.getDamage());
         }
-        if (matchCount) {
+        if(matchCount) {
             this.withExactAmount(stack.getAmount());
         }
-        if (matchNbt) {
+        if(matchNbt) {
             final IData tag = stack.getTag();
-            if (tag != null) this.withDataPredicate(predicate -> predicate.withData(tag));
+            if(tag != null) {
+                this.withDataPredicate(predicate -> predicate.withData(tag));
+            }
         }
         return this;
     }
-
+    
     @Override
     public boolean isAny() {
+        
         return this.enchantments.isEmpty() && this.storedEnchantments.isEmpty() && this.amount.isAny() && this.damage.isAny()
                 && this.data.isAny() && this.item == null && this.tag == null && this.potion == null;
     }
-
+    
     @Override
     public net.minecraft.advancements.criterion.ItemPredicate toVanilla() {
-        if (this.tag != null && this.item != null) {
+        
+        if(this.tag != null && this.item != null) {
             CraftTweakerAPI.logWarning("'ItemPredicate' specifies both an item and a tag: the second will take precedence");
         }
         return new net.minecraft.advancements.criterion.ItemPredicate(
-                this.tag != null? CraftTweakerHelper.getITag(this.tag) : null,
+                this.tag != null ? CraftTweakerHelper.getITag(this.tag) : null,
                 this.item,
                 this.amount.toVanillaPredicate(),
                 this.damage.toVanillaPredicate(),
@@ -430,8 +479,12 @@ public final class ItemPredicate extends IVanillaWrappingPredicate.AnyDefaulting
                 this.data.toVanillaPredicate()
         );
     }
-
+    
     private net.minecraft.advancements.criterion.EnchantmentPredicate[] toVanilla(final List<EnchantmentPredicate> list) {
-        return list.stream().map(AnyDefaulting::toVanillaPredicate).toArray(net.minecraft.advancements.criterion.EnchantmentPredicate[]::new);
+        
+        return list.stream()
+                .map(AnyDefaulting::toVanillaPredicate)
+                .toArray(net.minecraft.advancements.criterion.EnchantmentPredicate[]::new);
     }
+    
 }

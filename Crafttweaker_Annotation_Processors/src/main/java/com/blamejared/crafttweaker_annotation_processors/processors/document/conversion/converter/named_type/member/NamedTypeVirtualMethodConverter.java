@@ -32,6 +32,7 @@ public class NamedTypeVirtualMethodConverter extends AbstractEnclosedElementConv
     
     public NamedTypeVirtualMethodConverter(TypeConverter typeConverter, HeaderConverter headerConverter, CommentConverter commentConverter,
                                            ReturnTypeInfoReader returnTypeInfoReader, Types typeUtils) {
+        
         this.typeConverter = typeConverter;
         this.headerConverter = headerConverter;
         this.commentConverter = commentConverter;
@@ -41,11 +42,13 @@ public class NamedTypeVirtualMethodConverter extends AbstractEnclosedElementConv
     
     @Override
     public boolean canConvert(Element enclosedElement) {
+        
         return isAnnotationPresentOn(ZenCodeType.Method.class, enclosedElement);
     }
     
     @Override
     public void convertAndAddTo(Element enclosedElement, DocumentedTypeVirtualMembers result, DocumentationPageInfo pageInfo) {
+        
         ExecutableElement methodElement = (ExecutableElement) enclosedElement;
         final AbstractTypeInfo ownerType = getOwnerType(pageInfo);
         final VirtualMethodMember methodMember = convertMethod(methodElement, pageInfo);
@@ -53,6 +56,7 @@ public class NamedTypeVirtualMethodConverter extends AbstractEnclosedElementConv
     }
     
     private VirtualMethodMember convertMethod(ExecutableElement enclosedElement, DocumentationPageInfo pageInfo) {
+        
         final String name = convertName(enclosedElement);
         final MemberHeader header = convertHeader(enclosedElement);
         final DocumentationComment comment = convertComment(enclosedElement, pageInfo);
@@ -62,14 +66,17 @@ public class NamedTypeVirtualMethodConverter extends AbstractEnclosedElementConv
     }
     
     private DocumentationComment convertComment(ExecutableElement enclosedElement, DocumentationPageInfo pageInfo) {
+        
         return commentConverter.convertForMethod(enclosedElement, pageInfo);
     }
     
     private String getReturnTypeInfo(final ExecutableElement executableElement) {
+        
         return this.returnTypeInfoReader.readForMethod(executableElement).orElse(null);
     }
     
     private MemberHeader convertHeader(ExecutableElement enclosedElement) {
+        
         final List<? extends VariableElement> parameters = getParameters(enclosedElement);
         final List<? extends TypeParameterElement> typeParameters = enclosedElement.getTypeParameters();
         final TypeMirror returnType = enclosedElement.getReturnType();
@@ -78,14 +85,17 @@ public class NamedTypeVirtualMethodConverter extends AbstractEnclosedElementConv
     }
     
     private List<? extends VariableElement> getParameters(ExecutableElement enclosedElement) {
+        
         return enclosedElement.getParameters();
     }
     
     private String convertName(ExecutableElement enclosedElement) {
+        
         return enclosedElement.getSimpleName().toString();
     }
     
     private AbstractTypeInfo getOwnerType(DocumentationPageInfo pageInfo) {
+        
         if(pageInfo instanceof TypePageInfo) {
             return getOwnerType((TypePageInfo) pageInfo);
         }
@@ -94,6 +104,8 @@ public class NamedTypeVirtualMethodConverter extends AbstractEnclosedElementConv
     }
     
     private AbstractTypeInfo getOwnerType(TypePageInfo pageInfo) {
+        
         return typeConverter.convertByName(pageInfo.zenCodeName);
     }
+    
 }

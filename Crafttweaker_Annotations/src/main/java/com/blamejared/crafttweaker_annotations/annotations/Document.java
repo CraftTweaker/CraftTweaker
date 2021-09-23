@@ -8,7 +8,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface Document {
-	String value();
-
-	String scriptFile() default "";
+    
+    String value();
+    
+    String scriptFile() default "";
+    
 }

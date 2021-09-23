@@ -13,27 +13,31 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.item.IIngredientTransformer")
 @Document("vanilla/api/items/IIngredientTransformer")
 public interface IIngredientTransformer<T extends IIngredient> {
-
+    
     @ZenCodeType.Method
     IItemStack transform(IItemStack stack);
-
+    
     @ZenCodeType.Method
     String getCommandString(T transformedIngredient);
-
+    
     @SuppressWarnings("rawtypes")
     IIngredientTransformerSerializer getSerializer();
-
+    
     @SuppressWarnings("unchecked")
     default void write(PacketBuffer buffer) {
+        
         getSerializer().write(buffer, this);
     }
-
+    
     @SuppressWarnings("unchecked")
     default JsonObject toJson() {
+        
         return getSerializer().toJson(this);
     }
-
+    
     default ResourceLocation getType() {
+        
         return getSerializer().getType();
     }
+    
 }

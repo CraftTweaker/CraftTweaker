@@ -25,15 +25,18 @@ public class CTCampfireManager implements ICookingRecipeManager {
     public static final CTCampfireManager INSTANCE = new CTCampfireManager();
     
     private CTCampfireManager() {
+    
     }
     
     @Override
     public AbstractCookingRecipe makeRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime) {
+        
         return new CampfireCookingRecipe(new ResourceLocation(CraftTweaker.MODID, name), "", input.asVanillaIngredient(), output.getInternal(), xp, cookTime);
     }
     
     @Override
     public IRecipeType<CampfireCookingRecipe> getRecipeType() {
+        
         return IRecipeType.CAMPFIRE_COOKING;
     }
     

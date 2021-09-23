@@ -22,6 +22,7 @@ public class MapConversionRule implements NameConversionRule {
     private final NameConverter nameConverter;
     
     public MapConversionRule(Elements elementUtils, Types typeUtils, NameConverter nameConverter) {
+        
         this.elementUtils = elementUtils;
         this.typeUtils = typeUtils;
         this.nameConverter = nameConverter;
@@ -30,6 +31,7 @@ public class MapConversionRule implements NameConversionRule {
     @Nullable
     @Override
     public TypeMirror convertZenCodeName(String zenCodeName) {
+        
         if(isMapType(zenCodeName)) {
             return getMapType(zenCodeName);
         }
@@ -37,10 +39,12 @@ public class MapConversionRule implements NameConversionRule {
     }
     
     private boolean isMapType(String zenCodeName) {
+        
         return pattern.matcher(zenCodeName).matches();
     }
     
     private TypeMirror getMapType(String zenCodeName) {
+        
         final Matcher matcher = pattern.matcher(zenCodeName);
         if(!matcher.matches()) {
             throw new IllegalStateException("It matched before but not now? " + zenCodeName);
@@ -49,6 +53,7 @@ public class MapConversionRule implements NameConversionRule {
     }
     
     private TypeMirror getMapTypeFromMatchResult(MatchResult matchResult) {
+        
         final TypeElement baseType = getMapBaseType();
         final TypeMirror keyType = getMapKeyType(matchResult);
         final TypeMirror valueType = getMapValueType(matchResult);
@@ -57,16 +62,19 @@ public class MapConversionRule implements NameConversionRule {
     }
     
     private TypeMirror getMapKeyType(MatchResult matchResult) {
+        
         final String keyTypeName = matchResult.group(2).trim();
         return nameConverter.getTypeMirrorByZenCodeName(keyTypeName);
     }
     
     private TypeMirror getMapValueType(MatchResult matchResult) {
+        
         final String valueTypeName = matchResult.group(1).trim();
         return nameConverter.getTypeMirrorByZenCodeName(valueTypeName);
     }
     
     private TypeElement getMapBaseType() {
+        
         return elementUtils.getTypeElement(Map.class.getCanonicalName());
     }
     

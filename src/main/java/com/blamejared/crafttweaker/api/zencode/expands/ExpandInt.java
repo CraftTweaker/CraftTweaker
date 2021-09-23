@@ -11,6 +11,7 @@ public class ExpandInt {
     
     @ZenCodeType.Caster(implicit = true)
     public static IData asData(int value) {
+        
         return new IntData(value);
     }
     

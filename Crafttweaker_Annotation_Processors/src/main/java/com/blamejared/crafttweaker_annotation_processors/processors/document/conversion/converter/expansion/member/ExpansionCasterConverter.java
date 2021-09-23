@@ -23,23 +23,27 @@ public class ExpansionCasterConverter extends AbstractEnclosedElementConverter<D
     private final CommentConverter commentConverter;
     
     public ExpansionCasterConverter(HeaderConverter headerConverter, CommentConverter commentConverter) {
+        
         this.headerConverter = headerConverter;
         this.commentConverter = commentConverter;
     }
     
     @Override
     public boolean canConvert(Element enclosedElement) {
+        
         return isAnnotationPresentOn(ZenCodeType.Caster.class, enclosedElement);
     }
     
     @Override
     public void convertAndAddTo(Element enclosedElement, DocumentedVirtualMembers result, DocumentationPageInfo pageInfo) {
+        
         final ExecutableElement method = (ExecutableElement) enclosedElement;
         final CasterMember caster = convertCaster(method, pageInfo);
         result.addCaster(caster);
     }
     
     private CasterMember convertCaster(ExecutableElement method, DocumentationPageInfo pageInfo) {
+        
         final MemberHeader header = convertHeader(method);
         final DocumentationComment comment = convertComment(method, pageInfo);
         final boolean implicit = isImplicit(method);
@@ -48,6 +52,7 @@ public class ExpansionCasterConverter extends AbstractEnclosedElementConverter<D
     }
     
     private MemberHeader convertHeader(ExecutableElement method) {
+        
         final List<? extends VariableElement> parameters = method.getParameters();
         final List<? extends TypeParameterElement> typeParameters = method.getTypeParameters();
         final TypeMirror returnType = method.getReturnType();
@@ -55,10 +60,13 @@ public class ExpansionCasterConverter extends AbstractEnclosedElementConverter<D
     }
     
     private DocumentationComment convertComment(ExecutableElement method, DocumentationPageInfo pageInfo) {
+        
         return commentConverter.convertForMethod(method, pageInfo);
     }
     
     private boolean isImplicit(ExecutableElement method) {
+        
         return method.getAnnotation(ZenCodeType.Caster.class).implicit();
     }
+    
 }

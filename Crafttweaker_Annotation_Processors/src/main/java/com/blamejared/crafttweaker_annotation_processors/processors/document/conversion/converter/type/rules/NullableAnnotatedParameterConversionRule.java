@@ -14,18 +14,22 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
 public class NullableAnnotatedParameterConversionRule implements TypeConversionRule {
+    
     private final TypeConverter converter;
     
     public NullableAnnotatedParameterConversionRule(final TypeConverter converter) {
+        
         this.converter = converter;
     }
     
     @Override
     public boolean canConvert(final TypeMirror mirror) {
+        
         return mirror.getAnnotationMirrors().stream().anyMatch(this::isNullableAnnotation);
     }
     
     private boolean isNullableAnnotation(final AnnotationMirror mirror) {
+        
         final DeclaredType type = mirror.getAnnotationType();
         final Element element = type.asElement();
         final Element enclosingElement = element.getEnclosingElement();
@@ -37,9 +41,13 @@ public class NullableAnnotatedParameterConversionRule implements TypeConversionR
     @Nullable
     @Override
     public AbstractTypeInfo convert(final TypeMirror mirror) {
-        if (!(mirror instanceof Type.AnnotatedType)) return null;
+    
+        if(!(mirror instanceof Type.AnnotatedType)) {
+            return null;
+        }
         final Element underlyingType = ((Type.AnnotatedType) mirror).asElement();
         final AbstractTypeInfo typeInfo = this.converter.convertType(underlyingType.asType());
         return new NullableTypeInfo(typeInfo);
     }
+    
 }

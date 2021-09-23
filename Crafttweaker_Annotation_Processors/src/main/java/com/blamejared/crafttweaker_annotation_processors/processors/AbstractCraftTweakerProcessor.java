@@ -25,11 +25,13 @@ public abstract class AbstractCraftTweakerProcessor extends AbstractProcessor {
     
     @Override
     public SourceVersion getSupportedSourceVersion() {
+        
         return SourceVersion.RELEASE_8;
     }
     
     @Override
     public final synchronized void init(ProcessingEnvironment processingEnv) {
+        
         try {
             super.init(processingEnv);
             setupDependencyContainer();
@@ -42,6 +44,7 @@ public abstract class AbstractCraftTweakerProcessor extends AbstractProcessor {
     }
     
     private void handleExceptionInInitializer(ProcessingEnvironment processingEnv, Exception exception) {
+        
         final String className = this.getClass().getCanonicalName();
         final String exceptionMessage = exception.toString();
         final String format = String.format("Could not initialize, ignoring Annotation processor %s: %s", className, exceptionMessage);
@@ -52,6 +55,7 @@ public abstract class AbstractCraftTweakerProcessor extends AbstractProcessor {
     
     @Override
     public final boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        
         if(!initializedCorrectly) {
             return false;
         }
@@ -61,6 +65,7 @@ public abstract class AbstractCraftTweakerProcessor extends AbstractProcessor {
     
     @Override
     public Set<String> getSupportedAnnotationTypes() {
+        
         return getSupportedAnnotationClasses().stream()
                 .map(Class::getCanonicalName)
                 .collect(Collectors.toSet());
@@ -68,6 +73,7 @@ public abstract class AbstractCraftTweakerProcessor extends AbstractProcessor {
     
     @OverridingMethodsMustInvokeSuper
     protected void setupDependencyContainer() {
+        
         dependencyContainer.addInstanceAs(dependencyContainer, DependencyContainer.class);
         dependencyContainer.addInstanceAs(processingEnv, ProcessingEnvironment.class);
         dependencyContainer.addInstanceAs(processingEnv.getMessager(), Messager.class);
@@ -80,4 +86,5 @@ public abstract class AbstractCraftTweakerProcessor extends AbstractProcessor {
     protected abstract void performInitialization();
     
     protected abstract boolean performProcessing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv);
+    
 }

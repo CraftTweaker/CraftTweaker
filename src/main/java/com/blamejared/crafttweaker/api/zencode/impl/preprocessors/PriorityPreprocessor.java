@@ -43,7 +43,9 @@ public class PriorityPreprocessor implements IPreprocessor {
         try {
             Integer.parseInt(preprocessorMatches.get(0).getContent().trim());
         } catch(NumberFormatException ex) {
-            CraftTweakerAPI.logWarning("Incorrect Priority value: " + StringUtils.wrap(preprocessorMatches.get(0).getContent().trim(), "`", false));
+            CraftTweakerAPI.logWarning("Incorrect Priority value: " + StringUtils.wrap(preprocessorMatches.get(0)
+                    .getContent()
+                    .trim(), "`", false));
             preprocessorMatches.set(0, new PreprocessorMatch(this, -1, getDefaultValue()));
         }
         

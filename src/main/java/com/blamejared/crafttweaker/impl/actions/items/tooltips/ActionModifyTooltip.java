@@ -34,7 +34,7 @@ public class ActionModifyTooltip extends ActionTooltipBase {
     
     @Override
     public String describeUndo() {
-    
+        
         return "Undoing addition of advanced tooltip to: " + stack.getCommandString();
     }
     

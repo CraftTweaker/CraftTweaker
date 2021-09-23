@@ -17,22 +17,33 @@ public class ActionRemoveOutputRecipe extends ActionRecipeBase {
     private final IIngredient output;
     
     public ActionRemoveOutputRecipe(IRecipeManager manager, IIngredient output) {
+        
         super(manager);
         this.output = output;
     }
+    
     // Left over so mods don't need to recompile against the new version
     public ActionRemoveOutputRecipe(IRecipeManager manager, IItemStack output) {
+        
         this(manager, (IIngredient) output);
     }
     
     @Override
     public void apply() {
-        List<ResourceLocation> list = getManager().getRecipes().values().stream().filter(iRecipe -> output.matches(new MCItemStackMutable(iRecipe.getRecipeOutput()))).map(IRecipe::getId).collect(Collectors.toList());
+        
+        List<ResourceLocation> list = getManager().getRecipes()
+                .values()
+                .stream()
+                .filter(iRecipe -> output.matches(new MCItemStackMutable(iRecipe.getRecipeOutput())))
+                .map(IRecipe::getId)
+                .collect(Collectors.toList());
         list.forEach(getManager().getRecipes()::remove);
     }
     
     @Override
     public String describe() {
+        
         return "Removing all \"" + getRecipeTypeName() + "\" recipes, that output: " + output;
     }
+    
 }

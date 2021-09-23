@@ -1,6 +1,9 @@
 package com.blamejared.crafttweaker.api.annotations;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Used to mark a Method as a bracket handler resolver, the method NEEDS to be {@code public static <type> <methodName>(String bracket)}.
@@ -20,4 +23,5 @@ public @interface BracketResolver {
      * @return BracketHandler name
      */
     String value();
+    
 }

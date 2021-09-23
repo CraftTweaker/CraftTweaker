@@ -25,12 +25,14 @@ import java.util.function.Consumer;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.MatchTool")
 @Document("vanilla/api/loot/conditions/vanilla/MatchTool")
 public final class MatchToolLootConditionBuilder implements ILootConditionTypeBuilder {
+    
     private ItemPredicate predicate;
-
+    
     MatchToolLootConditionBuilder() {
+        
         this.predicate = new ItemPredicate();
     }
-
+    
     /**
      * Creates and sets the {@link ItemPredicate} that will be matched against the tool.
      *
@@ -40,17 +42,20 @@ public final class MatchToolLootConditionBuilder implements ILootConditionTypeBu
      * This parameter is <strong>optional</strong>.
      *
      * @param builder A consumer that will be used to configure the {@link ItemPredicate}.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public MatchToolLootConditionBuilder withPredicate(final Consumer<ItemPredicate> builder) {
+        
         final ItemPredicate predicate = new ItemPredicate();
         builder.accept(predicate);
         this.predicate = predicate;
         return this;
     }
-
+    
     // Quick CraftTweaker helpers
+    
     /**
      * Sets the tool that should be matched by this loot condition.
      *
@@ -64,10 +69,12 @@ public final class MatchToolLootConditionBuilder implements ILootConditionTypeBu
      * This parameter is <strong>optional</strong>.
      *
      * @param tool The tool that should be matched.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public MatchToolLootConditionBuilder matching(final IItemStack tool) {
+        
         return this.matching(tool, false);
     }
     
@@ -83,12 +90,14 @@ public final class MatchToolLootConditionBuilder implements ILootConditionTypeBu
      *
      * This parameter is <strong>optional</strong>.
      *
-     * @param tool The tool that should be matched.
+     * @param tool        The tool that should be matched.
      * @param matchDamage Whether damage should be taken into account when matching.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public MatchToolLootConditionBuilder matching(final IItemStack tool, final boolean matchDamage) {
+        
         return this.matching(tool, matchDamage, false);
     }
     
@@ -104,13 +113,15 @@ public final class MatchToolLootConditionBuilder implements ILootConditionTypeBu
      *
      * This parameter is <strong>optional</strong>.
      *
-     * @param tool The tool that should be matched
+     * @param tool        The tool that should be matched
      * @param matchDamage Whether damage should be taken into account when matching.
-     * @param matchCount Whether the amount should be taken into account when matching.
+     * @param matchCount  Whether the amount should be taken into account when matching.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public MatchToolLootConditionBuilder matching(final IItemStack tool, final boolean matchDamage, final boolean matchCount) {
+        
         return this.matching(tool, matchDamage, matchCount, false);
     }
     
@@ -124,23 +135,27 @@ public final class MatchToolLootConditionBuilder implements ILootConditionTypeBu
      *
      * This parameter is <strong>optional</strong>.
      *
-     * @param tool The tool that should be matched
+     * @param tool        The tool that should be matched
      * @param matchDamage Whether damage should be taken into account when matching.
-     * @param matchCount Whether the amount should be taken into account when matching.
-     * @param matchNbt Whether the NBT data should be taken into account when matching.
+     * @param matchCount  Whether the amount should be taken into account when matching.
+     * @param matchNbt    Whether the NBT data should be taken into account when matching.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public MatchToolLootConditionBuilder matching(final IItemStack tool, final boolean matchDamage, final boolean matchCount, final boolean matchNbt) {
+        
         return this.withPredicate(predicate -> predicate.matching(tool, matchDamage, matchCount, matchNbt));
     }
-
+    
     @Override
     public ILootCondition finish() {
+        
         final net.minecraft.advancements.criterion.ItemPredicate vanilla = this.predicate.toVanillaPredicate();
         return context -> {
             final IItemStack stack = ExpandLootContext.getTool(context);
             return stack != null && stack.getInternal() != null && vanilla.test(stack.getInternal());
         };
     }
+    
 }

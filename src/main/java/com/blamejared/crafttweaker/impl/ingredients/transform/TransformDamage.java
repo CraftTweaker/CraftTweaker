@@ -51,7 +51,4 @@ public class TransformDamage<T extends IIngredient> implements IIngredientTransf
     }
     
     
-    
-    
-    
 }

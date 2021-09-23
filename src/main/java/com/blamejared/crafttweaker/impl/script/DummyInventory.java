@@ -8,26 +8,31 @@ public class DummyInventory implements IInventory {
     
     @Override
     public int getSizeInventory() {
+        
         return 0;
     }
     
     @Override
     public boolean isEmpty() {
+        
         return false;
     }
     
     @Override
     public ItemStack getStackInSlot(int i) {
+        
         return ItemStack.EMPTY;
     }
     
     @Override
     public ItemStack decrStackSize(int i, int i1) {
+        
         return ItemStack.EMPTY;
     }
     
     @Override
     public ItemStack removeStackFromSlot(int i) {
+        
         return ItemStack.EMPTY;
     }
     
@@ -43,6 +48,7 @@ public class DummyInventory implements IInventory {
     
     @Override
     public boolean isUsableByPlayer(PlayerEntity playerEntity) {
+        
         return false;
     }
     
@@ -50,4 +56,5 @@ public class DummyInventory implements IInventory {
     public void clear() {
     
     }
+    
 }

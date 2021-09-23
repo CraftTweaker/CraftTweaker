@@ -9,12 +9,14 @@ public class GenericTypeInfo extends AbstractTypeInfo {
     private final List<AbstractTypeInfo> typeArguments;
     
     public GenericTypeInfo(AbstractTypeInfo baseClass, List<AbstractTypeInfo> typeArguments) {
+        
         this.baseClass = baseClass;
         this.typeArguments = typeArguments;
     }
     
     @Override
     public String getSimpleMarkdown() {
+        
         final String arguments = typeArguments.stream()
                 .map(AbstractTypeInfo::getDisplayName)
                 .collect(Collectors.joining(",", "&lt;", "&gt;"));
@@ -23,6 +25,7 @@ public class GenericTypeInfo extends AbstractTypeInfo {
     
     @Override
     public String getDisplayName() {
+        
         final String arguments = typeArguments.stream()
                 .map(AbstractTypeInfo::getDisplayName)
                 .collect(Collectors.joining(",", "<", ">"));
@@ -31,6 +34,7 @@ public class GenericTypeInfo extends AbstractTypeInfo {
     
     @Override
     public String getClickableMarkdown() {
+        
         final String arguments = typeArguments.stream()
                 .map(AbstractTypeInfo::getClickableMarkdown)
                 .collect(Collectors.joining(",", "&lt;", "&gt;"));
@@ -38,10 +42,13 @@ public class GenericTypeInfo extends AbstractTypeInfo {
     }
     
     public AbstractTypeInfo getBaseClass() {
+        
         return baseClass;
     }
     
     public List<AbstractTypeInfo> getTypeArguments() {
+        
         return typeArguments;
     }
+    
 }

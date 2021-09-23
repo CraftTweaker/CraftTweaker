@@ -18,8 +18,10 @@ public class ActionRemoveRecipeByOutput extends ActionRemoveRecipe {
         this.output = output;
         describeDefaultRemoval(output);
     }
+    
     // Left over so mods don't need to recompile against the new version
     public ActionRemoveRecipeByOutput(IRecipeManager manager, IItemStack output) {
+        
         this(manager, (IIngredient) output);
     }
     

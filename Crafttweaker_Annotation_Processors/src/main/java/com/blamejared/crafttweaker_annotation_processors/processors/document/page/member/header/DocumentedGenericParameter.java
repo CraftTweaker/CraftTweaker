@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.pa
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -18,12 +18,14 @@ public class DocumentedGenericParameter implements Comparable<DocumentedGenericP
     private final List<AbstractTypeInfo> bounds;
     
     public DocumentedGenericParameter(List<AbstractTypeInfo> bounds, String name, DocumentationComment comment) {
+        
         this.bounds = bounds;
         this.name = name;
         this.comment = comment;
     }
     
     public String formatForSignatureExample() {
+        
         if(bounds.isEmpty()) {
             return name;
         }
@@ -34,6 +36,7 @@ public class DocumentedGenericParameter implements Comparable<DocumentedGenericP
     
     @NotNull
     private String getDisplayNameBounds() {
+        
         return bounds.stream()
                 .map(AbstractTypeInfo::getDisplayName)
                 .collect(Collectors.joining(", "));
@@ -41,37 +44,45 @@ public class DocumentedGenericParameter implements Comparable<DocumentedGenericP
     
     @NotNull
     private String getClickableMarkdownBounds() {
+        
         return bounds.stream()
                 .map(AbstractTypeInfo::getClickableMarkdown)
                 .collect(Collectors.joining(", "));
     }
     
     private String getExampleName() {
+        
         return "<" + name + ">";
     }
     
     public int numberOfExamples() {
+        
         return comment.numberOfExamplesFor(getExampleName());
     }
     
     public String getDescription() {
+        
         return comment.getMarkdownDescription();
     }
     
     public String getExample(int exampleIndex) {
+        
         return comment.getExamples().getExampleFor(getExampleName()).getTextValue(exampleIndex);
     }
     
     public void writeParameterInfoIncludeOptionality(PageOutputWriter writer) {
+        
         writer.printf("| %s | %s | %s | N/A | N/A |%n", name, getClickableMarkdownBounds(), getDescription());
     }
     
     public void writeParameterInfoExcludeOptionality(PageOutputWriter writer) {
+        
         writer.printf("| %s | %s | %s |%n", name, getClickableMarkdownBounds(), getDescription());
     }
     
     @Override
     public int compareTo(@Nonnull DocumentedGenericParameter other) {
+        
         int temp = this.name.compareTo(other.name);
         if(temp != 0) {
             return temp;
@@ -91,4 +102,5 @@ public class DocumentedGenericParameter implements Comparable<DocumentedGenericP
         
         return 0;
     }
+    
 }

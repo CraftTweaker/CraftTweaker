@@ -26,7 +26,7 @@ public class ActionRemoveBrewingRecipeByPotionInput extends ActionBrewingBase {
     
     @Override
     public void apply() {
-    
+        
         Iterator<PotionBrewing.MixPredicate<Potion>> iterator = PotionBrewing.POTION_TYPE_CONVERSIONS.iterator();
         while(iterator.hasNext()) {
             PotionBrewing.MixPredicate<Potion> mix = iterator.next();

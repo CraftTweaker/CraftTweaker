@@ -22,4 +22,5 @@ public interface TestMinecraftContext {
      * It's not guaranteed that this will be the same for every invocation.
      */
     PlayerEntity getPlayer();
+    
 }

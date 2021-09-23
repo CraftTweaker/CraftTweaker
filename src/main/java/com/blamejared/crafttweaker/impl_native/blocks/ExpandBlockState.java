@@ -784,7 +784,7 @@ public class ExpandBlockState {
         
         return internal.toString();
     }
-
+    
     /**
      * Gets the hardness of this BlockState.
      *
@@ -793,10 +793,10 @@ public class ExpandBlockState {
     @ZenCodeType.Getter("hardness")
     @ZenCodeType.Method
     public static float getHardness(BlockState internal) {
-
+        
         return internal.hardness;
     }
-
+    
     /**
      * Sets the hardness of this BlockState.
      *
@@ -807,7 +807,8 @@ public class ExpandBlockState {
     @ZenCodeType.Setter("hardness")
     @ZenCodeType.Method
     public static void setHardness(BlockState internal, float hardness) {
-        CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Hardness", hardness, internal.hardness, value -> internal.hardness = value ));
+        
+        CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Hardness", hardness, internal.hardness, value -> internal.hardness = value));
     }
     
     /**

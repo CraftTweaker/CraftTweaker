@@ -15,69 +15,81 @@ public class MCImmutableStringReader {
     private final ImmutableStringReader internal;
     
     public MCImmutableStringReader(ImmutableStringReader internal) {
+        
         this.internal = internal;
     }
     
     public ImmutableStringReader getInternal() {
+        
         return this.internal;
     }
     
     @ZenCodeType.Method
     public String getRemaining() {
+        
         return getInternal().getRemaining();
     }
     
     
     @ZenCodeType.Method
     public boolean canRead(int arg0) {
+        
         return getInternal().canRead(arg0);
     }
     
     
     @ZenCodeType.Method
     public int getCursor() {
+        
         return getInternal().getCursor();
     }
     
     
     @ZenCodeType.Method
     public String getRead() {
+        
         return getInternal().getRead();
     }
     
     
     @ZenCodeType.Method
     public boolean canRead() {
+        
         return getInternal().canRead();
     }
     
     
     @ZenCodeType.Method
     public char peek() {
+        
         return getInternal().peek();
     }
     
     
     @ZenCodeType.Method
     public String getString() {
+        
         return getInternal().getString();
     }
     
     
     @ZenCodeType.Method
     public int getRemainingLength() {
+        
         return getInternal().getRemainingLength();
     }
     
     
     @ZenCodeType.Method
     public char peek(int arg0) {
+        
         return getInternal().peek(arg0);
     }
     
     
     @ZenCodeType.Method
     public int getTotalLength() {
+        
         return getInternal().getTotalLength();
     }
     

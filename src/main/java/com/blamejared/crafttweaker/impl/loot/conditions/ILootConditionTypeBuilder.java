@@ -14,6 +14,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.ILootConditionTypeBuilder")
 @Document("vanilla/api/loot/conditions/ILootConditionTypeBuilder")
 public interface ILootConditionTypeBuilder {
+    
     /**
      * Terminates the configuration of the loot condition and uses the current status to create a specific instance of
      * {@link ILootCondition} that matches the parameters.
@@ -29,4 +30,5 @@ public interface ILootConditionTypeBuilder {
      */
     @ZenCodeType.Method
     ILootCondition finish();
+    
 }

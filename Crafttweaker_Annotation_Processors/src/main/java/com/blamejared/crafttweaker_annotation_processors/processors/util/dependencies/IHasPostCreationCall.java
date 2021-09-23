@@ -11,4 +11,5 @@ public interface IHasPostCreationCall {
      * At this time the instance will already be in the DI registry, so anything created by this can request an instance of this type.
      */
     void afterCreation();
+    
 }

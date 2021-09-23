@@ -1,9 +1,12 @@
 package com.blamejared.crafttweaker.impl.native_types;
 
-import org.openzen.zencode.java.*;
+import org.openzen.zencode.java.ZenCodeType;
 
-import java.lang.annotation.*;
-import java.util.*;
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * A ref to a constructor or a method,

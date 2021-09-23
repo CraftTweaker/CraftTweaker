@@ -1,14 +1,19 @@
 package com.blamejared.crafttweaker.api.zencode.impl.native_types;
 
-import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker.api.zencode.impl.registry.*;
-import com.blamejared.crafttweaker.impl.native_types.*;
-import org.openzen.zencode.java.*;
-import org.openzen.zencode.java.module.*;
-import org.openzen.zencode.java.module.converters.*;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.zencode.impl.registry.ZenClassRegistry;
+import com.blamejared.crafttweaker.impl.native_types.NativeTypeRegistry;
+import org.openzen.zencode.java.ZenCodeType;
+import org.openzen.zencode.java.module.JavaNativeTypeConversionContext;
+import org.openzen.zencode.java.module.converters.JavaNativeClassConverter;
+import org.openzen.zencode.java.module.converters.JavaNativeHeaderConverter;
+import org.openzen.zencode.java.module.converters.JavaNativeMemberConverter;
+import org.openzen.zencode.java.module.converters.JavaNativePackageInfo;
+import org.openzen.zencode.java.module.converters.JavaNativeTypeConverter;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 
 class CrTJavaNativeClassConverter extends JavaNativeClassConverter {
     

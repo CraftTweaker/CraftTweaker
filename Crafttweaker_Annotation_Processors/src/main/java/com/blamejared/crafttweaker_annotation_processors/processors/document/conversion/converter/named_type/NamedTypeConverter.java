@@ -32,6 +32,7 @@ public class NamedTypeConverter extends DocumentConverter {
     private final StaticMemberConverter staticMemberConverter;
     
     public NamedTypeConverter(KnownModList knownModList, CommentConverter commentConverter, GenericParameterConverter genericParameterConverter, SuperTypeConverter superTypeConverter, NamedTypeVirtualMemberConverter namedTypeVirtualMemberConverter, ImplementationConverter implementationConverter, StaticMemberConverter staticMemberConverter) {
+        
         super(knownModList, commentConverter);
         
         this.genericParameterConverter = genericParameterConverter;
@@ -43,11 +44,13 @@ public class NamedTypeConverter extends DocumentConverter {
     
     @Override
     public boolean canConvert(TypeElement typeElement) {
+        
         return typeElement.getAnnotation(ZenCodeType.Name.class) != null;
     }
     
     @Override
     protected DocumentationPageInfo prepareConversion(TypeElement element) {
+        
         final DocumentationPageInfo documentationPageInfo = super.prepareConversion(element);
         
         final TypeName name = getName(element);
@@ -58,17 +61,20 @@ public class NamedTypeConverter extends DocumentConverter {
     
     @Nonnull
     private TypeName getName(TypeElement element) {
+        
         return new TypeName(element.getAnnotation(ZenCodeType.Name.class).value());
     }
     
     @Override
     protected Example getFallbackThisInformationFor(TypeElement typeElement) {
+        
         final String text = "my" + getName(typeElement).getSimpleName();
         return new Example("this", text);
     }
     
     @Override
     public DocumentationPage convert(TypeElement typeElement, DocumentationPageInfo pageInfo) {
+        
         final TypePageInfo typePageInfo = (TypePageInfo) pageInfo;
         final DocumentedVirtualMembers virtualMembers = convertVirtualMembers(typeElement, typePageInfo);
         final DocumentedStaticMembers staticMembers = convertStaticMembers(typeElement, typePageInfo);
@@ -80,25 +86,31 @@ public class NamedTypeConverter extends DocumentConverter {
     }
     
     private DocumentedVirtualMembers convertVirtualMembers(TypeElement typeElement, TypePageInfo typePageInfo) {
+        
         return namedTypeVirtualMemberConverter.convertFor(typeElement, typePageInfo);
     }
     
     private DocumentedStaticMembers convertStaticMembers(TypeElement typeElement, TypePageInfo typePageInfo) {
+        
         return staticMemberConverter.convertFor(typeElement, typePageInfo);
     }
     
     private AbstractTypeInfo convertSuperType(TypeElement typeElement) {
+        
         return superTypeConverter.convertSuperTypeFor(typeElement).orElse(null);
     }
     
     private List<AbstractTypeInfo> convertImplementations(TypeElement typeElement) {
+        
         return implementationConverter.convertInterfacesFor(typeElement);
     }
     
     private List<DocumentedGenericParameter> convertGenericParameters(TypeElement typeElement) {
+        
         return typeElement.getTypeParameters()
                 .stream()
                 .map(genericParameterConverter::convertGenericParameter)
                 .collect(Collectors.toList());
     }
+    
 }

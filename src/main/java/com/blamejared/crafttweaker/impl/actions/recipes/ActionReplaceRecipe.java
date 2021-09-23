@@ -9,6 +9,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ActionReplaceRecipe extends ActionRecipeBase {
+    
     private final Supplier<ActionAddRecipe> addRecipe;
     private final ActionRemoveRecipeByName removeRecipe;
     private final ResourceLocation oldName;
@@ -16,6 +17,7 @@ public class ActionReplaceRecipe extends ActionRecipeBase {
     
     public ActionReplaceRecipe(final IRecipeManager manager, final Function<ResourceLocation, ResourceLocation> nameGenerator,
                                final IRecipe<?> oldRecipe, final Function<ResourceLocation, IRecipe<?>> recipeCreator) {
+        
         super(manager);
         this.oldName = oldRecipe.getId();
         this.newName = Lazy.concurrentOf(() -> nameGenerator.apply(this.oldName));
@@ -25,17 +27,19 @@ public class ActionReplaceRecipe extends ActionRecipeBase {
     
     @Override
     public void apply() {
+        
         this.removeRecipe.apply();
         this.addRecipe.get().apply();
     }
     
     @Override
     public String describe() {
+        
         return String.format(
                 "- Replacing \"%s\" recipe with name \"%s\"%s",
                 this.getManager().getBracketResourceLocation(),
                 this.oldName,
-                this.oldName.equals(this.newName.get())? "" : String.format(", renaming it to \"%s\"", this.newName.get())
+                this.oldName.equals(this.newName.get()) ? "" : String.format(", renaming it to \"%s\"", this.newName.get())
         );
     }
     

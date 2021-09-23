@@ -13,10 +13,12 @@ public class LinkTagReplacer {
     private final LinkConverter linkConverter;
     
     public LinkTagReplacer(LinkConverter linkConverter) {
+        
         this.linkConverter = linkConverter;
     }
     
     public String replaceLinkTagsFrom(String docComment, Element element) {
+        
         if(docComment == null) {
             return null;
         }
@@ -26,11 +28,13 @@ public class LinkTagReplacer {
     
     @Nonnull
     private String replaceLinkTagsFromNonNullComment(String docComment, Element element) {
+        
         final Matcher matcher = linkPattern.matcher(docComment);
         return replaceLinksWithMatcher(matcher, element);
     }
     
     private String replaceLinksWithMatcher(Matcher matcher, Element element) {
+        
         final StringBuffer result = new StringBuffer();
         
         while(matcher.find()) {
@@ -44,15 +48,18 @@ public class LinkTagReplacer {
     }
     
     private String getReplacementForMatchResult(MatchResult result, Element element) {
+        
         final String linkTagContent = getLinkTagContent(result);
         return getReplacementFor(linkTagContent, element);
     }
     
     private String getLinkTagContent(MatchResult result) {
+        
         return result.group(1);
     }
     
     private String getReplacementFor(String linkTagContent, Element element) {
+        
         return linkConverter.convertLinkToClickableMarkdown(linkTagContent, element);
     }
     

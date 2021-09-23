@@ -6,7 +6,6 @@ import com.blamejared.crafttweaker.impl.entity.MCEntityType;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.block.Block;
-import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
@@ -30,6 +29,7 @@ public class MCModInfo {
     private final ModInfo modInfo;
     
     public MCModInfo(ModInfo modInfo) {
+        
         this.modInfo = modInfo;
     }
     
@@ -40,6 +40,7 @@ public class MCModInfo {
      */
     @ZenCodeType.Getter("modid")
     public String getModId() {
+        
         return getModInfo().getModId();
     }
     
@@ -50,6 +51,7 @@ public class MCModInfo {
      */
     @ZenCodeType.Getter("displayName")
     public String getDisplayName() {
+        
         return getModInfo().getDisplayName();
     }
     
@@ -60,6 +62,7 @@ public class MCModInfo {
      */
     @ZenCodeType.Getter("version")
     public String getVersion() {
+        
         return getModInfo().getVersion().toString();
     }
     
@@ -73,6 +76,7 @@ public class MCModInfo {
      */
     @ZenCodeType.Getter("items")
     public List<IItemStack> getItems() {
+        
         return ForgeRegistries.ITEMS.getEntries()
                 .stream()
                 .filter(resourceLocationItemEntry -> resourceLocationItemEntry.getKey()
@@ -92,6 +96,7 @@ public class MCModInfo {
      */
     @ZenCodeType.Getter("blocks")
     public List<Block> getBlocks() {
+        
         return ForgeRegistries.BLOCKS.getEntries()
                 .stream()
                 .filter(resourceLocationItemEntry -> resourceLocationItemEntry.getKey()
@@ -109,6 +114,7 @@ public class MCModInfo {
      */
     @ZenCodeType.Getter("entitytypes")
     public List<MCEntityType> getEntityTypes() {
+        
         return ForgeRegistries.ENTITIES.getEntries()
                 .stream()
                 .filter(resourceLocationItemEntry -> resourceLocationItemEntry.getKey()
@@ -127,6 +133,7 @@ public class MCModInfo {
      */
     @ZenCodeType.Getter("fluids")
     public List<Fluid> getFluids() {
+        
         return ForgeRegistries.FLUIDS.getEntries()
                 .stream()
                 .filter(registryKeyFluidEntry -> registryKeyFluidEntry.getKey()
@@ -146,10 +153,13 @@ public class MCModInfo {
      */
     @ZenCodeType.Getter("namespace")
     public String getNamespace() {
+        
         return getModInfo().getModId();
     }
     
     public ModInfo getModInfo() {
+        
         return modInfo;
     }
+    
 }

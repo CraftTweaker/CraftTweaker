@@ -1,8 +1,5 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.converter;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.converter.NamedExpansionConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.converter.NativeTypeConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.converter.TypedExpansionConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.info.ExpansionInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.info.KnownTypeRegistry;
 
@@ -16,6 +13,7 @@ public class ExpansionInfoConverter {
     private final NamedExpansionConverter namedExpansionConverter;
     
     public ExpansionInfoConverter(KnownTypeRegistry knownTypeRegistry, NativeTypeConverter nativeTypeConverter, TypedExpansionConverter typedExpansionConverter, NamedExpansionConverter namedExpansionConverter) {
+        
         this.knownTypeRegistry = knownTypeRegistry;
         this.nativeTypeConverter = nativeTypeConverter;
         this.typedExpansionConverter = typedExpansionConverter;
@@ -23,20 +21,24 @@ public class ExpansionInfoConverter {
     }
     
     public Stream<ExpansionInfo> convertToExpansionInfos() {
+        
         return Stream.concat(expansionInfosWithType(), namedExpansionInfos());
     }
     
     private Stream<ExpansionInfo> namedExpansionInfos() {
+        
         return knownTypeRegistry.getExpansionTypes()
                 .stream()
                 .map(namedExpansionConverter::convertNamedExpansion);
     }
     
     private Stream<ExpansionInfo> expansionInfosWithType() {
+        
         return Stream.concat(nativeRegistrations(), typedExpansion());
     }
     
     private Stream<ExpansionInfo> nativeRegistrations() {
+        
         return knownTypeRegistry.getNativeTypes()
                 .stream()
                 .map(nativeTypeConverter::convertNativeType);
@@ -44,8 +46,10 @@ public class ExpansionInfoConverter {
     
     
     private Stream<ExpansionInfo> typedExpansion() {
+        
         return knownTypeRegistry.getTypedExpansionTypes()
                 .stream()
                 .map(typedExpansionConverter::convertTypedExpansion);
     }
+    
 }

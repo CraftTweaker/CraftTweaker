@@ -13,9 +13,11 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.brackets.CommandStringDisplayable")
 @Document("vanilla/api/brackets/CommandStringDisplayable")
 public interface CommandStringDisplayable {
+    
     /**
      * Returns the BEP to get this thingy
      */
     @ZenCodeType.Getter("commandString")
     String getCommandString();
+    
 }

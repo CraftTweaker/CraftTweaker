@@ -7,4 +7,5 @@ public interface VirtualTypeValidationRule {
     boolean canValidate(Element enclosedElement);
     
     void validate(Element enclosedElement);
+    
 }

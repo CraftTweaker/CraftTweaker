@@ -11,4 +11,5 @@ public interface TypeConversionRule {
     
     @Nullable
     AbstractTypeInfo convert(TypeMirror mirror);
+    
 }

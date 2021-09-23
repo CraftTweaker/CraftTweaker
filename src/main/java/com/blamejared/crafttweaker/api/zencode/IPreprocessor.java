@@ -1,11 +1,13 @@
 package com.blamejared.crafttweaker.api.zencode;
 
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
-import com.blamejared.crafttweaker.api.zencode.impl.*;
+import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 
-import javax.annotation.*;
-import java.util.*;
-import java.util.regex.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Comparator;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public interface IPreprocessor extends Comparator<FileAccessSingle> {
     
@@ -22,6 +24,7 @@ public interface IPreprocessor extends Comparator<FileAccessSingle> {
      * The Preprocessor's priority, the higher the earlier it will be checked
      */
     default int getPriority() {
+        
         return 10;
     }
     
@@ -49,6 +52,8 @@ public interface IPreprocessor extends Comparator<FileAccessSingle> {
      */
     @Override
     default int compare(FileAccessSingle o1, FileAccessSingle o2) {
+        
         return 0;
     }
+    
 }

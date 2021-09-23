@@ -1,18 +1,29 @@
 package com.blamejared.crafttweaker.api.zencode.brackets;
 
-import org.openzen.zencode.shared.*;
-import org.openzen.zenscript.codemodel.*;
-import org.openzen.zenscript.codemodel.expression.*;
-import org.openzen.zenscript.codemodel.member.ref.*;
-import org.openzen.zenscript.codemodel.partial.*;
-import org.openzen.zenscript.codemodel.scope.*;
-import org.openzen.zenscript.codemodel.type.*;
-import org.openzen.zenscript.lexer.*;
-import org.openzen.zenscript.parser.*;
-import org.openzen.zenscript.parser.expression.*;
+import org.openzen.zencode.shared.CodePosition;
+import org.openzen.zencode.shared.CompileException;
+import org.openzen.zenscript.codemodel.OperatorType;
+import org.openzen.zenscript.codemodel.expression.CallArguments;
+import org.openzen.zenscript.codemodel.expression.CallStaticExpression;
+import org.openzen.zenscript.codemodel.expression.Expression;
+import org.openzen.zenscript.codemodel.member.ref.FunctionalMemberRef;
+import org.openzen.zenscript.codemodel.partial.IPartialExpression;
+import org.openzen.zenscript.codemodel.scope.ExpressionScope;
+import org.openzen.zenscript.codemodel.type.BasicTypeID;
+import org.openzen.zenscript.codemodel.type.DefinitionTypeID;
+import org.openzen.zenscript.codemodel.type.GlobalTypeRegistry;
+import org.openzen.zenscript.lexer.ParseException;
+import org.openzen.zenscript.lexer.ZSToken;
+import org.openzen.zenscript.lexer.ZSTokenParser;
+import org.openzen.zenscript.lexer.ZSTokenType;
+import org.openzen.zenscript.parser.BracketExpressionParser;
+import org.openzen.zenscript.parser.expression.ParsedExpression;
+import org.openzen.zenscript.parser.expression.ParsedExpressionBinary;
+import org.openzen.zenscript.parser.expression.ParsedExpressionString;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ValidatedEscapableBracketParser implements BracketExpressionParser {
     
@@ -22,6 +33,7 @@ public class ValidatedEscapableBracketParser implements BracketExpressionParser 
     private final DefinitionTypeID targetType;
     
     public ValidatedEscapableBracketParser(String name, FunctionalMemberRef parserMethod, Method validationMethod, GlobalTypeRegistry registry) {
+        
         this.method = parserMethod;
         this.validationMethod = validationMethod;
         this.name = name;
@@ -29,11 +41,13 @@ public class ValidatedEscapableBracketParser implements BracketExpressionParser 
     }
     
     public String getName() {
+        
         return name;
     }
     
     @Override
     public ParsedExpression parse(CodePosition position, ZSTokenParser tokens) throws ParseException {
+        
         StringBuilder string = new StringBuilder();
         
         //This list will contain the BEP calls
@@ -111,9 +125,10 @@ public class ValidatedEscapableBracketParser implements BracketExpressionParser 
         private final ParsedExpression call;
         
         public StaticMethodCallExpression(CodePosition position, List<ParsedExpression> expressions) {
+            
             super(position);
             ParsedExpression p = null;
-            for (ParsedExpression expression : expressions) {
+            for(ParsedExpression expression : expressions) {
                 p = p == null ? expression : new ParsedExpressionBinary(expression.position, p, expression, OperatorType.ADD);
             }
             
@@ -122,6 +137,7 @@ public class ValidatedEscapableBracketParser implements BracketExpressionParser 
         
         @Override
         public IPartialExpression compile(ExpressionScope scope) throws CompileException {
+            
             final Expression methodCall = call.compile(scope.withHint(BasicTypeID.STRING)).eval();
             final CallArguments arguments = new CallArguments(methodCall);
             return new CallStaticExpression(position, targetType, method, method.getHeader(), arguments);
@@ -129,8 +145,10 @@ public class ValidatedEscapableBracketParser implements BracketExpressionParser 
         
         @Override
         public boolean hasStrongType() {
+            
             return true;
         }
+        
     }
     
 }

@@ -25,27 +25,31 @@ import java.util.function.Consumer;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.crafttweaker.Not")
 @Document("vanilla/api/loot/conditions/crafttweaker/Not")
 public final class NotLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     private final CTLootConditionBuilder parent;
     private ILootCondition sub;
-
+    
     NotLootConditionTypeBuilder(final CTLootConditionBuilder parent) {
+        
         this.parent = parent;
     }
-
+    
     /**
      * Sets the loot condition to negate.
      *
      * This parameter is <strong>required</strong>.
      *
      * @param condition The condition to negate.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public NotLootConditionTypeBuilder withCondition(final ILootCondition condition) {
+        
         this.sub = Objects.requireNonNull(condition);
         return this;
     }
-
+    
     /**
      * Sets the negated condition to the one created with the given {@link CTLootConditionBuilder}.
      *
@@ -55,31 +59,41 @@ public final class NotLootConditionTypeBuilder implements ILootConditionTypeBuil
      * This parameter is <strong>required</strong>.
      *
      * @param builder The builder to create a single {@link ILootCondition}.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public NotLootConditionTypeBuilder withCondition(final CTLootConditionBuilder builder) {
+        
         final ILootCondition condition = builder.single();
-        if (condition == null) throw new IllegalArgumentException("Loot condition builder must have a single condition");
+        if(condition == null) {
+            throw new IllegalArgumentException("Loot condition builder must have a single condition");
+        }
         return this.withCondition(condition);
     }
-
+    
     /**
      * Creates and builds the sub-condition that will then be negated.
      *
      * @param reifiedType The type of condition to negate. It must extend {@link ILootConditionTypeBuilder}.
-     * @param lender A consumer that allows configuration of the created condition.
-     * @param <T> The known type of the condition itself.
+     * @param lender      A consumer that allows configuration of the created condition.
+     * @param <T>         The known type of the condition itself.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public <T extends ILootConditionTypeBuilder> NotLootConditionTypeBuilder withCondition(final Class<T> reifiedType, final Consumer<T> lender) {
+        
         return this.withCondition(this.parent.make(reifiedType, "Not", lender));
     }
-
+    
     @Override
     public ILootCondition finish() {
-        if (this.sub == null) throw new IllegalStateException("Missing condition to negate");
+    
+        if(this.sub == null) {
+            throw new IllegalStateException("Missing condition to negate");
+        }
         return context -> !this.sub.test(context);
     }
+    
 }

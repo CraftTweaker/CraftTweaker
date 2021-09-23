@@ -24,6 +24,7 @@ public class HeaderConverter {
     private final Types typeUtils;
     
     public HeaderConverter(TypeConverter typeConverter, ParameterConverter parameterConverter, GenericParameterConverter genericParameterConverter, Types typeUtils) {
+        
         this.typeConverter = typeConverter;
         this.parameterConverter = parameterConverter;
         this.genericParameterConverter = genericParameterConverter;
@@ -31,6 +32,7 @@ public class HeaderConverter {
     }
     
     public MemberHeader convertHeaderFor(List<? extends VariableElement> parameters, List<? extends TypeParameterElement> typeParameters, TypeMirror returnType) {
+        
         final AbstractTypeInfo returnTypeInfo = convertReturnType(returnType);
         final List<DocumentedParameter> documentedParameters = convertParameters(parameters, typeParameters);
         final List<DocumentedGenericParameter> genericParameters = convertGenericParameters(typeParameters);
@@ -39,10 +41,12 @@ public class HeaderConverter {
     }
     
     private AbstractTypeInfo convertReturnType(TypeMirror returnType) {
+        
         return typeConverter.convertType(returnType);
     }
     
     private List<DocumentedParameter> convertParameters(List<? extends VariableElement> parameters, List<? extends TypeParameterElement> typeParameters) {
+        
         parameters = new ArrayList<>(parameters);
         removeClassParametersIfPresent(parameters, typeParameters.size());
         
@@ -52,6 +56,7 @@ public class HeaderConverter {
     }
     
     private void removeClassParametersIfPresent(List<? extends VariableElement> parameters, int maximumNumberOfParameters) {
+        
         for(int i = 0; i < maximumNumberOfParameters; i++) {
             final VariableElement variableElement = parameters.get(0);
             final Element element = typeUtils.asElement(variableElement.asType());
@@ -64,14 +69,17 @@ public class HeaderConverter {
     }
     
     private boolean isNoClassParameter(Element element) {
+        
         return !(element instanceof TypeElement) || !isClassType((TypeElement) element);
     }
     
     private boolean isClassType(TypeElement element) {
+        
         return element.getQualifiedName().toString().equals(Class.class.getCanonicalName());
     }
     
     private List<DocumentedGenericParameter> convertGenericParameters(List<? extends TypeParameterElement> typeParameters) {
+        
         return typeParameters.stream()
                 .map(genericParameterConverter::convertGenericParameter)
                 .collect(Collectors.toList());

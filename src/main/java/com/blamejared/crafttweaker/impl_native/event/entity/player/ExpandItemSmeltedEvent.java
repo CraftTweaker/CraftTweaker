@@ -21,6 +21,8 @@ public class ExpandItemSmeltedEvent {
     @ZenCodeType.Method
     @ZenCodeType.Getter("smelted")
     public static IItemStack getSmelted(PlayerEvent.ItemSmeltedEvent internal) {
+        
         return new MCItemStack(internal.getSmelting());
     }
+    
 }

@@ -15,21 +15,25 @@ import java.util.Optional;
  * @author youyihj
  */
 public class PrimitiveWrapperParameterConversionRule implements TypeConversionRule, IHasPostCreationCall {
+    
     private final Map<String, String> primitiveWrappers = new HashMap<>();
-
+    
     @Override
     public boolean canConvert(TypeMirror mirror) {
+        
         return getPrimitiveType(mirror).isPresent();
     }
-
+    
     @Nullable
     @Override
     public AbstractTypeInfo convert(TypeMirror mirror) {
+        
         return new PrimitiveTypeInfo(getPrimitiveType(mirror).orElse("") + "?");
     }
-
+    
     @Override
     public void afterCreation() {
+        
         addPrimitiveWrapper(Integer.class, "int");
         addPrimitiveWrapper(Short.class, "short");
         addPrimitiveWrapper(Byte.class, "byte");
@@ -39,12 +43,15 @@ public class PrimitiveWrapperParameterConversionRule implements TypeConversionRu
         addPrimitiveWrapper(Double.class, "double");
         addPrimitiveWrapper(Character.class, "char");
     }
-
+    
     private void addPrimitiveWrapper(Class<?> clazz, String primitiveTypeName) {
+        
         primitiveWrappers.put(clazz.getCanonicalName(), primitiveTypeName);
     }
-
+    
     private Optional<String> getPrimitiveType(TypeMirror mirror) {
+        
         return Optional.ofNullable(primitiveWrappers.get(mirror.toString()));
     }
+    
 }

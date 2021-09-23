@@ -25,24 +25,27 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.Reference")
 @Document("vanilla/api/loot/conditions/vanilla/Reference")
 public final class ReferenceLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     private ResourceLocation predicateName;
-
+    
     ReferenceLootConditionTypeBuilder() {}
-
+    
     /**
      * Sets the name of the data-pack loot condition to query.
      *
      * This parameter is <strong>required</strong>.
      *
      * @param name The name of the predicate to query.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public ReferenceLootConditionTypeBuilder withName(final ResourceLocation name) {
+        
         this.predicateName = name;
         return this;
     }
-
+    
     /**
      * Sets the name of the data-pack loot condition to query.
      *
@@ -52,21 +55,24 @@ public final class ReferenceLootConditionTypeBuilder implements ILootConditionTy
      * This parameter is <strong>required</strong>.
      *
      * @param name The name of the predicate to query, in {@link ResourceLocation} form.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public ReferenceLootConditionTypeBuilder withName(final String name) {
+        
         return this.withName(new ResourceLocation(name));
     }
-
+    
     @Override
     public ILootCondition finish() {
-        if (this.predicateName == null) {
+        
+        if(this.predicateName == null) {
             throw new IllegalStateException("You must specify the predicate name that you want to be able to query in a 'Reference' loot condition");
         }
         return context -> {
             final net.minecraft.loot.conditions.ILootCondition vanillaCondition = context.getLootCondition(this.predicateName);
-            if (context.addCondition(vanillaCondition)) {
+            if(context.addCondition(vanillaCondition)) {
                 try {
                     return vanillaCondition.test(context);
                 } finally {
@@ -78,4 +84,5 @@ public final class ReferenceLootConditionTypeBuilder implements ILootConditionTy
             }
         };
     }
+    
 }

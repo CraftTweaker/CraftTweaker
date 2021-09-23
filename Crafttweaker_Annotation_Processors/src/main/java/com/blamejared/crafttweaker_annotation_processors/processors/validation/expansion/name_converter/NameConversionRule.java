@@ -4,6 +4,8 @@ import javax.annotation.Nullable;
 import javax.lang.model.type.TypeMirror;
 
 public interface NameConversionRule {
+    
     @Nullable
     TypeMirror convertZenCodeName(String zenCodeName);
+    
 }

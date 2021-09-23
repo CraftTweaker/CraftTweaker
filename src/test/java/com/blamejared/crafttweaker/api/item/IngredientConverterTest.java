@@ -1,14 +1,15 @@
 package com.blamejared.crafttweaker.api.item;
 
-import com.blamejared.crafttweaker.*;
-import com.blamejared.crafttweaker.impl.item.*;
-import net.minecraft.item.*;
-import net.minecraft.item.crafting.*;
-import org.junit.jupiter.api.*;
+import com.blamejared.crafttweaker.CraftTweakerTest;
+import com.blamejared.crafttweaker.impl.item.MCIngredientList;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
+import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class IngredientConverterTest extends CraftTweakerTest {
     

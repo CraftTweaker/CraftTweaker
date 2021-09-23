@@ -17,6 +17,7 @@ public abstract class DocumentConverter {
     protected final CommentConverter commentConverter;
     
     protected DocumentConverter(KnownModList knownModList, CommentConverter commentConverter) {
+        
         this.knownModList = knownModList;
         this.commentConverter = commentConverter;
     }
@@ -26,6 +27,7 @@ public abstract class DocumentConverter {
     public abstract DocumentationPage convert(TypeElement typeElement, DocumentationPageInfo pageInfo);
     
     protected DocumentationPageInfo prepareConversion(TypeElement element) {
+        
         final Document annotation = element.getAnnotation(Document.class);
         if(annotation == null) {
             throw new IllegalStateException("No Document annotation present!");
@@ -38,12 +40,14 @@ public abstract class DocumentConverter {
     
     
     public void setDocumentationCommentTo(TypeElement typeElement, DocumentationPageInfo pageInfo) {
+        
         final DocumentationComment typeComment = commentConverter.convertForType(typeElement);
         addThisInformationIfNotPresent(typeComment, typeElement);
         pageInfo.setTypeComment(typeComment);
     }
     
     private void addThisInformationIfNotPresent(DocumentationComment commentFor, TypeElement typeElement) {
+        
         final ExampleData examples = commentFor.getExamples();
         if(!examples.hasExampleFor("this")) {
             final Example expandedTypeThisExample = getFallbackThisInformationFor(typeElement);
@@ -52,4 +56,5 @@ public abstract class DocumentConverter {
     }
     
     protected abstract Example getFallbackThisInformationFor(TypeElement typeElement);
+    
 }

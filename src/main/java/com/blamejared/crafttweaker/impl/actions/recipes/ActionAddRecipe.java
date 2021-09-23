@@ -31,7 +31,7 @@ public class ActionAddRecipe extends ActionRecipeBase {
     public void apply() {
         
         final Map<ResourceLocation, IRecipe<?>> recipes = getManager().getRecipes();
-        if (recipes.containsKey(recipe.getId())) {
+        if(recipes.containsKey(recipe.getId())) {
             CraftTweakerAPI.logWarning(
                     "A recipe with the name '%s' already exists and will be overwritten: this is most likely an error in your scripts",
                     recipe.getId().getPath()

@@ -31,21 +31,25 @@ public class TagManagerEntityType implements TagManager<MCEntityType> {
     public static final TagManagerEntityType INSTANCE = new TagManagerEntityType();
     
     private TagManagerEntityType() {
+    
     }
     
     @Override
     public @Nonnull
     Class<MCEntityType> getElementClass() {
+        
         return MCEntityType.class;
     }
     
     @Override
     public String getTagFolder() {
+        
         return "entity_types";
     }
     
     @Override
     public List<MCTag<MCEntityType>> getAllTagsFor(MCEntityType element) {
+        
         return getTagCollection().getOwningTags(element.getInternal())
                 .stream()
                 .map(location -> new MCTag<>(location, this))
@@ -54,6 +58,7 @@ public class TagManagerEntityType implements TagManager<MCEntityType> {
     
     @Override
     public void addElements(MCTag<MCEntityType> to, List<MCEntityType> toAdd) {
+        
         final ITag<EntityType<?>> internal = getInternal(to);
         final List<EntityType<?>> entityTypes = CraftTweakerHelper.getEntityTypes(toAdd);
         if(internal == null) {
@@ -67,6 +72,7 @@ public class TagManagerEntityType implements TagManager<MCEntityType> {
     
     @Override
     public void removeElements(MCTag<MCEntityType> from, List<MCEntityType> toRemove) {
+        
         final ITag<EntityType<?>> internal = getInternal(from);
         final List<EntityType<?>> entityTypes = CraftTweakerHelper.getEntityTypes(toRemove);
         CraftTweakerAPI.apply(new ActionTagRemove<>(internal, entityTypes, from));
@@ -74,6 +80,7 @@ public class TagManagerEntityType implements TagManager<MCEntityType> {
     
     @Override
     public List<MCEntityType> getElementsInTag(MCTag<MCEntityType> theTag) {
+        
         final ITag<EntityType<?>> internal = getInternal(theTag);
         if(internal == null) {
             return Collections.emptyList();
@@ -88,11 +95,14 @@ public class TagManagerEntityType implements TagManager<MCEntityType> {
     @Nullable
     @Override
     public ITag<EntityType<?>> getInternal(MCTag<MCEntityType> theTag) {
+        
         return getTagCollection().getIDTagMap().get(theTag.getIdInternal());
     }
     
     @Override
     public ITagCollection<EntityType<?>> getTagCollection() {
+        
         return TagCollectionManager.getManager().getEntityTypeTags();
     }
+    
 }

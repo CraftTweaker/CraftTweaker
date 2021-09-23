@@ -23,6 +23,7 @@ public final class TypePage extends DocumentationPage {
     private final List<DocumentedGenericParameter> genericParameters;
     
     public TypePage(TypePageInfo typePageInfo, DocumentedVirtualMembers members, @Nullable AbstractTypeInfo superType, List<AbstractTypeInfo> implementedTypes, DocumentedStaticMembers staticMembers, List<DocumentedGenericParameter> genericParameters) {
+        
         super(typePageInfo, members, staticMembers);
         this.typePageInfo = typePageInfo;
         this.superType = superType;
@@ -32,6 +33,7 @@ public final class TypePage extends DocumentationPage {
     
     @Override
     protected void writeTitle(PageOutputWriter writer) {
+        
         if(genericParameters.isEmpty()) {
             writer.printf("# %s%n%n", getSimpleName());
         } else {
@@ -44,11 +46,13 @@ public final class TypePage extends DocumentationPage {
     
     @Override
     protected void writeOwnerModId(PageOutputWriter writer) {
+        
         writer.printf("This class was added by a mod with mod-id `%s`. So you need to have this mod installed if you want to use this feature.%n%n", typePageInfo.declaringModId);
     }
     
     @Override
     protected void beforeWritingMembers(PageOutputWriter writer) {
+        
         super.beforeWritingMembers(writer);
         writeImport(writer);
         writeSuperClass(writer);
@@ -56,6 +60,7 @@ public final class TypePage extends DocumentationPage {
     }
     
     private void writeImport(PageOutputWriter writer) {
+        
         writer.printf("## Importing the class%n%n");
         writer.println("It might be required for you to import the package if you encounter any issues (like casting an Array), so better be safe than sorry and add the import at the very top of the file.");
         writer.zenBlock(() -> writer.printf("import %s;%n", typePageInfo.zenCodeName.getZenCodeName()));
@@ -64,6 +69,7 @@ public final class TypePage extends DocumentationPage {
     }
     
     private void writeSuperClass(PageOutputWriter writer) {
+        
         if(superType == null) {
             return;
         }
@@ -77,6 +83,7 @@ public final class TypePage extends DocumentationPage {
     }
     
     private void writeImplementedInterfaces(PageOutputWriter writer) {
+        
         if(implementedTypes.isEmpty()) {
             return;
         }
@@ -84,7 +91,7 @@ public final class TypePage extends DocumentationPage {
         writer.println("## Implemented Interfaces");
         final String format = "%1$s implements the following interfaces. That means all methods defined in these interfaces are also available in %1$s%n%n";
         writer.printf(format, getSimpleName());
-    
+        
         for(AbstractTypeInfo implementedType : implementedTypes) {
             writer.printf("- %s%n", implementedType.getClickableMarkdown());
         }
@@ -94,16 +101,17 @@ public final class TypePage extends DocumentationPage {
     
     @Override
     public void fillMeta(DocumentMeta meta) {
+        
         meta.setZenCodeName(typePageInfo.zenCodeName.getZenCodeName());
         meta.setOwnerModId(typePageInfo.declaringModId);
-        if(superType instanceof TypePageTypeInfo){
+        if(superType instanceof TypePageTypeInfo) {
             String zenCodeName = ((TypePageTypeInfo) superType).getZenCodeName().getZenCodeName();
             meta.addSearchTerms(zenCodeName);
             meta.setZenCodeName(zenCodeName);
         }
-        if(!implementedTypes.isEmpty()){
+        if(!implementedTypes.isEmpty()) {
             for(AbstractTypeInfo implementedType : implementedTypes) {
-                if(implementedType instanceof TypePageTypeInfo){
+                if(implementedType instanceof TypePageTypeInfo) {
                     // Determine if we should include parents in the search terms.
                     meta.addSearchTerms(((TypePageTypeInfo) implementedType).getZenCodeName().getZenCodeName());
                 }
@@ -112,6 +120,8 @@ public final class TypePage extends DocumentationPage {
     }
     
     private String getSimpleName() {
+        
         return typePageInfo.getSimpleName();
     }
+    
 }

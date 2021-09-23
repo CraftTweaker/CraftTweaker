@@ -9,7 +9,6 @@ import net.minecraft.fluid.Fluid;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @ZenRegister

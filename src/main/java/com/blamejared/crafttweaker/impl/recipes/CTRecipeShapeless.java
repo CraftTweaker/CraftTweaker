@@ -34,6 +34,7 @@ public class CTRecipeShapeless implements ICraftingRecipe {
     private final ResourceLocation resourceLocation;
     
     public CTRecipeShapeless(String name, IItemStack output, IIngredient[] ingredients, @Nullable IRecipeManager.RecipeFunctionArray function) {
+        
         this.resourceLocation = new ResourceLocation("crafttweaker", name);
         this.output = output;
         this.function = function;
@@ -52,28 +53,31 @@ public class CTRecipeShapeless implements ICraftingRecipe {
                     .toArray(IIngredient[]::new);
         }
         this.ingredients = ingredients;
-    
+        
     }
     
     @Override
     public boolean matches(CraftingInventory inv, World worldIn) {
         //Don't do anything here, just make sure all slots have been visited
-        final boolean[] visited = forAllUniqueMatches(inv, (ingredientIndex, matchingSlot, stack) -> { });
+        final boolean[] visited = forAllUniqueMatches(inv, (ingredientIndex, matchingSlot, stack) -> {});
         
         int visitedCount = 0;
         for(int slot = 0; slot < visited.length; slot++) {
-            if(visited[slot])
+            if(visited[slot]) {
                 visitedCount++;
-            else if(!inv.getStackInSlot(slot).isEmpty())
+            } else if(!inv.getStackInSlot(slot).isEmpty()) {
                 return false;
+            }
         }
         return visitedCount == this.ingredients.length;
     }
     
     @Override
     public ItemStack getCraftingResult(CraftingInventory inv) {
-        if(this.function == null)
+    
+        if(this.function == null) {
             return this.output.getInternal().copy();
+        }
         
         final IItemStack[] stacks = new IItemStack[this.ingredients.length];
         
@@ -85,21 +89,25 @@ public class CTRecipeShapeless implements ICraftingRecipe {
     
     @Nullable
     public IRecipeManager.RecipeFunctionArray getFunction() {
+        
         return function;
     }
     
     @Override
     public boolean canFit(int width, int height) {
+        
         return width * height >= this.ingredients.length;
     }
     
     @Override
     public ItemStack getRecipeOutput() {
+        
         return output.getInternal().copy();
     }
     
     @Override
     public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv) {
+        
         final NonNullList<ItemStack> remainingItems = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
         forAllUniqueMatches(inv, (ingredientIndex, matchingSlot, stack) -> remainingItems.set(matchingSlot, this.ingredients[ingredientIndex]
                 .getRemainingItem(stack)
@@ -117,18 +125,21 @@ public class CTRecipeShapeless implements ICraftingRecipe {
      * Both cases need to be checked in the matches function!
      */
     private boolean[] forAllUniqueMatches(IInventory inv, ForAllUniqueAction action) {
+        
         final boolean[] visited = new boolean[inv.getSizeInventory()];
         
         outer:
         for(int ingredientIndex = 0; ingredientIndex < this.ingredients.length; ingredientIndex++) {
             IIngredient ingredient = this.ingredients[ingredientIndex];
             for(int i = 0; i < inv.getSizeInventory(); i++) {
-                if(visited[i])
+                if(visited[i]) {
                     continue;
+                }
                 
                 final ItemStack stackInSlot = inv.getStackInSlot(i);
-                if(stackInSlot.isEmpty())
+                if(stackInSlot.isEmpty()) {
                     continue;
+                }
                 
                 final MCItemStack stack = new MCItemStack(stackInSlot);
                 if(ingredient.matches(stack)) {
@@ -143,6 +154,7 @@ public class CTRecipeShapeless implements ICraftingRecipe {
     
     @Override
     public NonNullList<Ingredient> getIngredients() {
+        
         NonNullList<Ingredient> ingredients = NonNullList.create();
         for(IIngredient ingredient : this.ingredients) {
             ingredients.add(ingredient.asVanillaIngredient());
@@ -152,35 +164,42 @@ public class CTRecipeShapeless implements ICraftingRecipe {
     
     @Override
     public boolean isDynamic() {
+        
         return false;
     }
     
     @Override
     public String getGroup() {
+        
         return ICraftingRecipe.super.getGroup();
     }
     
     @Override
     public ResourceLocation getId() {
+        
         return resourceLocation;
     }
     
     @Override
     public IRecipeSerializer<CTRecipeShapeless> getSerializer() {
+        
         return SerializerShapeless.INSTANCE;
     }
     
     
     @Override
     public IRecipeType<?> getType() {
+        
         return IRecipeType.CRAFTING;
     }
     
     public IIngredient[] getCtIngredients() {
+        
         return this.ingredients;
     }
     
     public IItemStack getCtOutput() {
+        
         return this.output;
     }
     
@@ -189,4 +208,5 @@ public class CTRecipeShapeless implements ICraftingRecipe {
         void accept(int ingredientIndex, int matchingSlot, IItemStack stack);
         
     }
+    
 }

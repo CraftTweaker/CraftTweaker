@@ -38,6 +38,7 @@ public class ExpandWorld {
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = false)
     public static ServerWorld asServerWorld(World internal) {
+        
         return (ServerWorld) internal;
     }
     
@@ -50,6 +51,7 @@ public class ExpandWorld {
     @ZenCodeType.Getter("remote")
     @ZenCodeType.Method
     public static boolean isRemote(World internal) {
+        
         return internal.isRemote;
     }
     
@@ -61,6 +63,7 @@ public class ExpandWorld {
      */
     @ZenCodeType.Getter("dayTime")
     public static boolean isDayTime(World internal) {
+        
         return internal.isDaytime();
     }
     
@@ -72,6 +75,7 @@ public class ExpandWorld {
      */
     @ZenCodeType.Getter("nightTime")
     public static boolean isNightTime(World internal) {
+        
         return internal.isNightTime();
     }
     
@@ -82,6 +86,7 @@ public class ExpandWorld {
      */
     @ZenCodeType.Getter("gameTime")
     public static long getTime(World internal) {
+        
         return internal.getGameTime();
     }
     
@@ -92,6 +97,7 @@ public class ExpandWorld {
      */
     @ZenCodeType.Getter("timeOfDay")
     public static long getDayTime(World internal) {
+        
         return internal.getDayTime();
     }
     
@@ -102,6 +108,7 @@ public class ExpandWorld {
      */
     @ZenCodeType.Getter("seaLevel")
     public static int getSeaLevel(World internal) {
+        
         return internal.getSeaLevel();
     }
     
@@ -112,6 +119,7 @@ public class ExpandWorld {
      */
     @ZenCodeType.Getter("raining")
     public static boolean isRaining(World internal) {
+        
         return internal.isRaining();
     }
     
@@ -122,6 +130,7 @@ public class ExpandWorld {
      */
     @ZenCodeType.Getter("thundering")
     public static boolean isThundering(World internal) {
+        
         return internal.isThundering();
     }
     
@@ -132,6 +141,7 @@ public class ExpandWorld {
      */
     @ZenCodeType.Getter("hardcore")
     public static boolean isHardcore(World internal) {
+        
         return internal.getWorldInfo().isHardcore();
     }
     
@@ -142,6 +152,7 @@ public class ExpandWorld {
      */
     @ZenCodeType.Getter("difficulty")
     public static String getDifficulty(World internal) {
+        
         return internal.getWorldInfo().getDifficulty().getTranslationKey();
     }
     
@@ -152,6 +163,7 @@ public class ExpandWorld {
      */
     @ZenCodeType.Getter("difficultyLocked")
     public static boolean isDifficultyLocked(World internal) {
+        
         return internal.getWorldInfo().isDifficultyLocked();
     }
     
@@ -162,6 +174,7 @@ public class ExpandWorld {
      */
     @ZenCodeType.Getter("dimension")
     public static String getDimension(World internal) {
+        
         return internal.getDimensionKey().getLocation().toString();
     }
     
@@ -170,12 +183,14 @@ public class ExpandWorld {
      * if the position does not have direct line of sight to the sky.
      *
      * @param pos The position to check.
+     *
      * @return Whether or not it is raining at the current position.
      *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
     public static boolean isRainingAt(World internal, BlockPos pos) {
+        
         return internal.isRainingAt(pos);
     }
     
@@ -183,20 +198,23 @@ public class ExpandWorld {
      * Gets the highest strong (direct) redstone signal of any neighboring block.
      *
      * @param pos The position to check.
+     *
      * @return The highest strong (direct) redstone signal of all directly neighboring blocks.
      *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
     public static int getStrongPower(World internal, BlockPos pos) {
+        
         return internal.getStrongPower(pos);
     }
     
     /**
      * Gets the redstone signal strength available to a position from a given direction.
      *
-     * @param pos The position to check.
+     * @param pos       The position to check.
      * @param direction The direction to query.
+     *
      * @return The redstone signal strength available from that direction.
      *
      * @docParam pos new BlockPos(0, 1, 2)
@@ -204,18 +222,22 @@ public class ExpandWorld {
      */
     @ZenCodeType.Method
     public static int getRedstonePower(World internal, BlockPos pos, MCDirection direction) {
+        
         return internal.getRedstonePower(pos, direction.getInternal());
     }
     
     /**
      * Gets the highest redstone signal available to a position from any of it's neighbors.
+     *
      * @param pos The position to check.
+     *
      * @return The highest redstone signal available to the position.
      *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
     public static int getRedstonePowerFromNeighbors(World internal, BlockPos pos) {
+        
         return internal.getRedstonePowerFromNeighbors(pos);
     }
     
@@ -223,12 +245,14 @@ public class ExpandWorld {
      * Gets the tile entity data for a tile entity at a given position.
      *
      * @param pos The position of the tile entity.
+     *
      * @return The data of the tile entity.
      *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
     public static IData getTileData(World internal, BlockPos pos) {
+        
         CompoundNBT nbt = new CompoundNBT();
         TileEntity te = internal.getTileEntity(pos);
         return te == null ? new MapData() : NBTConverter.convert(te.write(nbt));
@@ -237,8 +261,9 @@ public class ExpandWorld {
     /**
      * Sets the block and it's state at a given position.
      *
-     * @param pos The position to set the block at.
+     * @param pos   The position to set the block at.
      * @param state The new state of the block.
+     *
      * @return Whether or not the block was changed.
      *
      * @docParam pos new BlockPos(0, 1, 2)
@@ -246,6 +271,7 @@ public class ExpandWorld {
      */
     @ZenCodeType.Method
     public static boolean setBlockState(World internal, BlockPos pos, BlockState state) {
+        
         return internal.setBlockState(pos, state);
     }
     
@@ -253,12 +279,14 @@ public class ExpandWorld {
      * Gets the block state at a given position.
      *
      * @param pos The position to look up.
+     *
      * @return The block state at the position.
      *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
     public static BlockState getBlockState(World internal, BlockPos pos) {
+        
         return internal.getBlockState(pos);
     }
     
@@ -266,12 +294,14 @@ public class ExpandWorld {
      * Checks if a given position is receiving a redstone signal.
      *
      * @param pos The position to check.
+     *
      * @return Whether or not the position is receiving a redstone signal.
      *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
     public static boolean isBlockPowered(World internal, BlockPos pos) {
+        
         return internal.isBlockPowered(pos);
     }
     
@@ -279,20 +309,23 @@ public class ExpandWorld {
      * Gets the biome at a given position.
      *
      * @param pos The position to look up.
+     *
      * @return The biome at the given position.
      *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
     public static Biome getBiome(World internal, BlockPos pos) {
+        
         return internal.getBiome(pos);
     }
     
     /**
      * Destroys a block within the world.
      *
-     * @param pos The position of the block.
+     * @param pos     The position of the block.
      * @param doDrops Whether or not the block drops itself and it's loot.
+     *
      * @return Whether or not the block was changed.
      *
      * @docParam pos new BlockPos(0, 1, 2)
@@ -300,15 +333,17 @@ public class ExpandWorld {
      */
     @ZenCodeType.Method
     public static boolean destroyBlock(World internal, BlockPos pos, boolean doDrops) {
-    	return internal.destroyBlock(pos, doDrops);
+        
+        return internal.destroyBlock(pos, doDrops);
     }
     
     /**
      * Destroys a block within the world.
      *
-     * @param pos The position of the block.
+     * @param pos     The position of the block.
      * @param doDrops Whether or not the block drops itself and it's loot.
      * @param breaker The entity to break the block.
+     *
      * @return Whether or not the block was changed.
      *
      * @docParam pos new BlockPos(0, 1, 2)
@@ -317,17 +352,18 @@ public class ExpandWorld {
      */
     @ZenCodeType.Method
     public static boolean destroyBlock(World internal, BlockPos pos, boolean doDrops, @Nullable Entity breaker) {
-    	return internal.destroyBlock(pos, doDrops, breaker);
+        
+        return internal.destroyBlock(pos, doDrops, breaker);
     }
-
+    
     /**
      * Triggers a predetermined event on the client. Using this on a server
      * or integrated server will send the event to all nearby players.
      *
      * @param eventId The ID of the event to play.
-     * @param pos The position of the event.
-     * @param data Four bytes of additional data encoded as an integer. This
-     *        is generally unused.
+     * @param pos     The position of the event.
+     * @param data    Four bytes of additional data encoded as an integer. This
+     *                is generally unused.
      *
      * @docParam eventId 2005
      * @docParam pos new BlockPos(0, 1, 2)
@@ -335,7 +371,8 @@ public class ExpandWorld {
      */
     @ZenCodeType.Method
     public static void playEvent(World internal, int eventId, BlockPos pos, int data) {
-    	internal.playEvent(eventId, pos, data);
+        
+        internal.playEvent(eventId, pos, data);
     }
     
     /**
@@ -343,10 +380,10 @@ public class ExpandWorld {
      * or integrated server will send the event to all nearby players.
      *
      * @param excluded An excluded player who will not receive the event.
-     * @param eventId The ID of the event to play.
-     * @param pos The position of the event.
-     * @param data Four bytes of additional data encoded as an integer. This
-     *        is generally unused.
+     * @param eventId  The ID of the event to play.
+     * @param pos      The position of the event.
+     * @param data     Four bytes of additional data encoded as an integer. This
+     *                 is generally unused.
      *
      * @docParam excluded player
      * @docParam eventId 2005
@@ -355,37 +392,43 @@ public class ExpandWorld {
      */
     @ZenCodeType.Method
     public static void playEvent(World internal, @Nullable PlayerEntity excluded, int eventId, BlockPos pos, int data) {
-    	internal.playEvent(excluded, eventId, pos, data);
+        
+        internal.playEvent(excluded, eventId, pos, data);
     }
     
     /**
      * Checks if the block at a given position is air.
      *
      * @param pos The position to look up.
+     *
      * @return Whether or not the block is air.
      *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
     public static boolean isAir(World internal, BlockPos pos) {
-    	return internal.isAirBlock(pos);
+        
+        return internal.isAirBlock(pos);
     }
     
     /**
      * Checks if the block at a given position is in a loaded chunk.
      *
      * @param pos The position to look up.
+     *
      * @return Whether or not the position is in a loaded chunk.
      *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
     public static boolean isLoaded(World internal, BlockPos pos) {
-    	return internal.isBlockLoaded(pos);
+        
+        return internal.isBlockLoaded(pos);
     }
     
     /**
      * Gets all entities in given area.
+     *
      * @return all entities in given area.
      *
      * @docParam x1 1.0
@@ -397,12 +440,14 @@ public class ExpandWorld {
      */
     @ZenCodeType.Method
     public static List<Entity> getEntitiesInArea(World internal, double x1, double y1, double z1, double x2, double y2, double z2) {
+        
         return internal.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(x1, y1, z1, x2, y2, z2));
     }
     
     /**
      * Gets all entities in given area, but the arguments are block poses.
      * If `pos2` is omitted, it will use `pos1.add(1, 1, 1)`
+     *
      * @return all entities in given area
      *
      * @docParam pos1 new BlockPos(0, 1, 2)
@@ -410,7 +455,7 @@ public class ExpandWorld {
      */
     @ZenCodeType.Method
     public static List<Entity> getEntitiesInArea(World internal, BlockPos pos1, @ZenCodeType.Optional BlockPos pos2) {
-    
+        
         if(pos2 == null) {
             return internal.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos1));
         } else {
@@ -453,10 +498,11 @@ public class ExpandWorld {
             return internal.getEntitiesInAABBexcluding(excludingEntity, new AxisAlignedBB(pos1, pos2), predicate);
         }
     }
-
+    
     @ZenCodeType.Method
     @ZenCodeType.Nullable
     public static TileEntity getTileEntity(World internal, BlockPos pos) {
+        
         return internal.getTileEntity(pos);
     }
     
@@ -468,9 +514,10 @@ public class ExpandWorld {
         
         return internal.addEntity(entity);
     }
-
+    
     @ZenCodeType.Getter("random")
     public static Random getRandom(World internal) {
+        
         return internal.rand;
     }
     

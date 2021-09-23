@@ -35,13 +35,15 @@ import java.util.stream.Collectors;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.EntityScores")
 @Document("vanilla/api/loot/conditions/vanilla/EntityScores")
 public final class EntityScoresLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     private final Map<String, IntRangePredicate> ranges;
     private TargetedEntity targetedEntity;
-
+    
     EntityScoresLootConditionTypeBuilder() {
+        
         this.ranges = new LinkedHashMap<>();
     }
-
+    
     /**
      * Sets the entity that should be targeted by the loot condition.
      *
@@ -50,14 +52,16 @@ public final class EntityScoresLootConditionTypeBuilder implements ILootConditio
      * This parameter is <strong>required</strong>.
      *
      * @param entity The entity that should be targeted.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public EntityScoresLootConditionTypeBuilder withTargetedEntity(final TargetedEntity entity) {
+        
         this.targetedEntity = entity;
         return this;
     }
-
+    
     /**
      * Adds the scoreboard property <code>name</code> to the ones that should be checked, setting its minimum accepted
      * value to <code>min</code>.
@@ -71,15 +75,17 @@ public final class EntityScoresLootConditionTypeBuilder implements ILootConditio
      * This parameter is <strong>optional</strong>.
      *
      * @param name The name of the scoreboard property to check.
-     * @param min The minimum value the scoreboard property can have.
+     * @param min  The minimum value the scoreboard property can have.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public EntityScoresLootConditionTypeBuilder withMinimumScore(final String name, final int min) {
+        
         this.ranges.put(name, IntRangePredicate.mergeLowerBound(this.ranges.get(name), min));
         return this;
     }
-
+    
     /**
      * Adds the scoreboard property <code>name</code> to the ones that should be checked, setting its maximum accepted
      * value to <code>max</code>.
@@ -93,15 +99,17 @@ public final class EntityScoresLootConditionTypeBuilder implements ILootConditio
      * This parameter is <strong>optional</strong>.
      *
      * @param name The name of the scoreboard property to check.
-     * @param max The maximum value the scoreboard property can have.
+     * @param max  The maximum value the scoreboard property can have.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public EntityScoresLootConditionTypeBuilder withMaximumScore(final String name, final int max) {
+        
         this.ranges.put(name, IntRangePredicate.mergeUpperBound(this.ranges.get(name), max));
         return this;
     }
-
+    
     /**
      * Adds the scoreboard property <code>name</code> to the ones that should be checked, setting both its minimum and
      * maximum accepted values respectively to <code>min</code> and <code>max</code>.
@@ -115,16 +123,18 @@ public final class EntityScoresLootConditionTypeBuilder implements ILootConditio
      * This parameter is <strong>optional</strong>.
      *
      * @param name The name of the scoreboard property to check.
-     * @param min The minimum value the scoreboard property can have.
-     * @param max The maximum value the scoreboard property can have.
+     * @param min  The minimum value the scoreboard property can have.
+     * @param max  The maximum value the scoreboard property can have.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public EntityScoresLootConditionTypeBuilder withRangedScore(final String name, final int min, final int max) {
+        
         this.ranges.put(name, IntRangePredicate.bounded(min, max));
         return this;
     }
-
+    
     /**
      * Adds the scoreboard property <code>name</code> to the ones that should be checked, making sure that the values
      * matches exactly the given one.
@@ -133,50 +143,61 @@ public final class EntityScoresLootConditionTypeBuilder implements ILootConditio
      *
      * This parameter is <strong>optional</strong>.
      *
-     * @param name The name of the scoreboard property to check.
+     * @param name  The name of the scoreboard property to check.
      * @param value The exact value the scoreboard property must have.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public EntityScoresLootConditionTypeBuilder withExactScore(final String name, final int value) {
+        
         return this.withRangedScore(name, value, value);
     }
-
+    
     @Override
     public ILootCondition finish() {
-        if (this.targetedEntity == null) {
+        
+        if(this.targetedEntity == null) {
             throw new IllegalStateException("Targeted entity not defined for an 'EntityScores' condition");
         }
-        if (this.ranges.isEmpty()) {
+        if(this.ranges.isEmpty()) {
             CraftTweakerAPI.logWarning("An 'EntityScores' condition has an empty set of scores to check: this will always match!");
         }
-
+        
         final List<BiPredicate<Entity, Scoreboard>> matchers = this.ranges
                 .entrySet()
                 .stream()
                 .map(this::convertToMatcher)
                 .collect(Collectors.toList());
-
+        
         return context -> {
             final Entity entity = this.targetedEntity.getLootContextDiscriminator().apply(context);
-            if (entity == null) return false;
-
+            if(entity == null) {
+                return false;
+            }
+            
             final Scoreboard scoreboard = entity.getEntityWorld().getScoreboard();
             return matchers.stream().allMatch(it -> it.test(entity, scoreboard));
         };
     }
-
+    
     private BiPredicate<Entity, Scoreboard> convertToMatcher(final Map.Entry<String, IntRangePredicate> entry) {
+        
         return this.makeMatcher(entry.getKey(), entry.getValue());
     }
-
+    
     private BiPredicate<Entity, Scoreboard> makeMatcher(final String name, final IntRangePredicate range) {
+        
         return (entity, scoreboard) -> {
             final ScoreObjective objective = scoreboard.getObjective(name);
-            if (objective == null) return false;
-
+            if(objective == null) {
+                return false;
+            }
+            
             final String scoreboardName = entity.getScoreboardName();
-            return scoreboard.entityHasObjective(scoreboardName, objective) && range.match(scoreboard.getOrCreateScore(scoreboardName, objective).getScorePoints());
+            return scoreboard.entityHasObjective(scoreboardName, objective) && range.match(scoreboard.getOrCreateScore(scoreboardName, objective)
+                    .getScorePoints());
         };
     }
+    
 }

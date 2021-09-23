@@ -18,11 +18,13 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public final class HelpCommand {
+    
     private static final int COMMANDS_PER_PAGE = 4;
     
     private HelpCommand() {}
     
     public static void registerHelpCommand(final Supplier<Map<String, CommandImpl>> commandsGetter, final Consumer<LiteralArgumentBuilder<CommandSource>> registerCustomCommand) {
+        
         final Map<String, CommandImpl> commands = commandsGetter.get();
         registerCustomCommand.accept(Commands.literal("help")
                 .executes(context -> executeHelp(commands, context, 1))

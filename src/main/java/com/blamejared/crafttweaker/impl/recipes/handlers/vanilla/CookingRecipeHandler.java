@@ -28,13 +28,16 @@ import java.util.function.Function;
 @IRecipeHandler.For(FurnaceRecipe.class)
 @IRecipeHandler.For(SmokingRecipe.class)
 public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookingRecipe> {
+    
     @FunctionalInterface
     private interface CookingRecipeFactory<T extends AbstractCookingRecipe> {
+        
         T create(final ResourceLocation id, final String group, final Ingredient ingredient, final ItemStack result, final float experience, final int cookTime);
+        
     }
     
     private static final Map<IRecipeType<?>, Pair<String, CookingRecipeFactory<?>>> LOOKUP = ImmutableMap
-            .<IRecipeType<?>, Pair<String, CookingRecipeFactory<?>>>builder()
+            .<IRecipeType<?>, Pair<String, CookingRecipeFactory<?>>> builder()
             .put(IRecipeType.BLASTING, Pair.of("blastFurnace", BlastingRecipe::new))
             .put(IRecipeType.CAMPFIRE_COOKING, Pair.of("campfire", CampfireCookingRecipe::new))
             .put(IRecipeType.SMELTING, Pair.of("furnace", FurnaceRecipe::new))

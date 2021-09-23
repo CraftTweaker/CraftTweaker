@@ -18,12 +18,14 @@ public class ClassPathSourceFile implements SourceFile {
     private final IResourceManager resourceManager;
     
     private ClassPathSourceFile(ResourceLocation location, IResourceManager resourceManager) {
+        
         this.location = location;
         this.resourceManager = resourceManager;
     }
     
     @Nullable
     public static ClassPathSourceFile fromLocation(ResourceLocation location, IResourceManager resourceManager) {
+        
         if(!resourceManager.hasResource(addPrefixAndSuffix(location))) {
             CraftTweakerAPI.logError("Unknown script name: " + location);
             return null;
@@ -33,23 +35,28 @@ public class ClassPathSourceFile implements SourceFile {
     }
     
     private static ResourceLocation addPrefixAndSuffix(ResourceLocation location) {
+        
         return new ResourceLocation(location.getNamespace(), "scripts/" + location.getPath() + ".zs");
     }
     
     
     @Override
     public String getFilename() {
+        
         return location.getPath() + ".zs";
     }
     
     @Override
     public Reader open() throws IOException {
+        
         final IResource resource = resourceManager.getResource(addPrefixAndSuffix(location));
         return new InputStreamReader(resource.getInputStream());
     }
     
     @Override
     public void update(String content) throws IOException {
+        
         throw new UnknownServiceException("Cannot write to a ClassPathSourceFile");
     }
+    
 }

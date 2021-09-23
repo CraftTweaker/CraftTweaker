@@ -45,6 +45,7 @@ public class NativeRegistrationConverter extends DocumentConverter {
     private final NativeEnumConstantConverter nativeEnumConstantConverter;
     
     public NativeRegistrationConverter(KnownModList knownModList, CommentConverter commentConverter, StaticMemberConverter staticMemberConverter, NativeTypeVirtualMemberConverter virtualMemberConverter, SuperTypeConverter superTypeConverter, ImplementationConverter implementationConverter, GenericParameterConverter genericParameterConverter, NativeConversionRegistry nativeConversionRegistry, Types typeUtils, ClassTypeConverter classTypeConverter, NativeEnumConstantConverter nativeEnumConstantConverter) {
+        
         super(knownModList, commentConverter);
         this.staticMemberConverter = staticMemberConverter;
         this.virtualMemberConverter = virtualMemberConverter;
@@ -59,15 +60,18 @@ public class NativeRegistrationConverter extends DocumentConverter {
     
     @Override
     public boolean canConvert(TypeElement typeElement) {
+        
         return getNativeAnnotation(typeElement) != null;
     }
     
     private NativeTypeRegistration getNativeAnnotation(TypeElement typeElement) {
+        
         return typeElement.getAnnotation(NativeTypeRegistration.class);
     }
     
     @Override
     protected TypePageInfo prepareConversion(TypeElement element) {
+        
         final TypePageInfo typePageInfo = createTypePageInfo(element);
         registerNativeType(element, typePageInfo);
         return typePageInfo;
@@ -75,11 +79,13 @@ public class NativeRegistrationConverter extends DocumentConverter {
     
     @Override
     protected Example getFallbackThisInformationFor(TypeElement typeElement) {
+        
         final String text = "my" + getName(typeElement).getSimpleName();
         return new Example("this", text);
     }
     
     private void registerNativeType(TypeElement element, TypePageInfo typePageInfo) {
+        
         final AbstractTypeInfo typeInfo = new TypePageTypeInfo(typePageInfo);
         final TypeElement nativeType = getNativeType(element);
         
@@ -87,12 +93,14 @@ public class NativeRegistrationConverter extends DocumentConverter {
     }
     
     private TypeElement getNativeType(TypeElement element) {
+        
         final NativeTypeRegistration annotation = getNativeAnnotation(element);
         final TypeMirror nativeType = classTypeConverter.getTypeMirror(annotation, NativeTypeRegistration::value);
         return getTypeElementFromMirror(nativeType);
     }
     
     private TypeElement getTypeElementFromMirror(TypeMirror nativeType) {
+        
         final Element element = typeUtils.asElement(nativeType);
         if(element instanceof TypeElement) {
             return (TypeElement) element;
@@ -103,6 +111,7 @@ public class NativeRegistrationConverter extends DocumentConverter {
     
     @Nonnull
     private TypePageInfo createTypePageInfo(TypeElement element) {
+        
         final DocumentationPageInfo documentationPageInfo = super.prepareConversion(element);
         
         final TypeName name = getName(element);
@@ -113,11 +122,13 @@ public class NativeRegistrationConverter extends DocumentConverter {
     
     @Nonnull
     private TypeName getName(TypeElement element) {
+        
         return new TypeName(getNativeAnnotation(element).zenCodeName());
     }
     
     @Override
     public DocumentationPage convert(TypeElement typeElement, DocumentationPageInfo pageInfo) {
+        
         final DocumentedVirtualMembers virtualMembers = convertVirtualMembers(typeElement, pageInfo);
         final AbstractTypeInfo superType = convertSuperType(typeElement);
         final List<AbstractTypeInfo> implementedInterfaces = convertImplementedInterfaces(typeElement);
@@ -130,35 +141,43 @@ public class NativeRegistrationConverter extends DocumentConverter {
     }
     
     private DocumentedVirtualMembers convertVirtualMembers(TypeElement typeElement, DocumentationPageInfo pageInfo) {
+        
         return virtualMemberConverter.convertFor(typeElement, pageInfo);
     }
     
     private AbstractTypeInfo convertSuperType(TypeElement typeElement) {
+        
         final TypeElement nativeType = getNativeType(typeElement);
         return superTypeConverter.convertSuperTypeFor(nativeType).orElse(null);
     }
     
     private List<AbstractTypeInfo> convertImplementedInterfaces(TypeElement typeElement) {
+        
         final TypeElement nativeType = getNativeType(typeElement);
         return implementationConverter.convertInterfacesFor(nativeType);
     }
-
+    
     private AbstractTypeInfo convertThisType(TypeElement typeElement) {
+        
         return superTypeConverter.getTypeConverter().convertByName(getName(typeElement));
     }
     
     private DocumentedStaticMembers convertStaticMembers(TypeElement typeElement, DocumentationPageInfo pageInfo) {
+        
         return staticMemberConverter.convertFor(typeElement, pageInfo);
     }
-
+    
     private void convertNativeEnumMembers(TypeElement typeElement, DocumentedStaticMembers documentedStaticMembers, AbstractTypeInfo thisType) {
+        
         nativeEnumConstantConverter.convertAndAddTo(getNativeType(typeElement), documentedStaticMembers, thisType);
     }
     
     private List<DocumentedGenericParameter> convertGenericParameters(TypeElement typeElement) {
+        
         return typeElement.getTypeParameters()
                 .stream()
                 .map(genericParameterConverter::convertGenericParameter)
                 .collect(Collectors.toList());
     }
+    
 }

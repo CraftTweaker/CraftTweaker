@@ -25,15 +25,18 @@ public class CTFurnaceManager implements ICookingRecipeManager {
     public static final CTFurnaceManager INSTANCE = new CTFurnaceManager();
     
     private CTFurnaceManager() {
+    
     }
     
     @Override
     public AbstractCookingRecipe makeRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime) {
+        
         return new FurnaceRecipe(new ResourceLocation(CraftTweaker.MODID, name), "", input.asVanillaIngredient(), output.getInternal(), xp, cookTime);
     }
     
     @Override
     public IRecipeType<FurnaceRecipe> getRecipeType() {
+        
         return IRecipeType.SMELTING;
     }
     

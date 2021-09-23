@@ -19,31 +19,41 @@ import java.util.List;
 @ZenCodeType.Name("crafttweaker.api.loot.modifiers.MCLootModifier")
 @Document("vanilla/api/loot/modifiers/MCLootModifier")
 public final class MCLootModifier implements ILootModifier {
+    
     private static final class DummyGlobalLootModifier implements IGlobalLootModifier {
+        
         private static final DummyGlobalLootModifier INSTANCE = new DummyGlobalLootModifier();
-
+        
         private DummyGlobalLootModifier() {}
-
+        
         @Override
         public List<ItemStack> apply(List<ItemStack> generatedLoot, LootContext context) {
+            
             return generatedLoot;
         }
+        
     }
-
+    
     private final IGlobalLootModifier internal;
-
+    
     public MCLootModifier(final IGlobalLootModifier internal) {
-        this.internal = internal == null? DummyGlobalLootModifier.INSTANCE : internal;
+        
+        this.internal = internal == null ? DummyGlobalLootModifier.INSTANCE : internal;
     }
-
+    
     public IGlobalLootModifier getInternal() {
+        
         return this.internal;
     }
-
+    
     @Override
     public List<IItemStack> applyModifier(List<IItemStack> loot, LootContext currentContext) {
-        if (this.internal == DummyGlobalLootModifier.INSTANCE) return loot; // No point in wrapping and unwrapping everything to do nothing
+    
+        if(this.internal == DummyGlobalLootModifier.INSTANCE) {
+            return loot; // No point in wrapping and unwrapping everything to do nothing
+        }
         final List<ItemStack> unwrappedLoot = CraftTweakerHelper.getItemStacks(loot);
         return CraftTweakerHelper.getIItemStacks(this.internal.apply(unwrappedLoot, currentContext));
     }
+    
 }

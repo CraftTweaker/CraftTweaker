@@ -1,6 +1,11 @@
 package com.blamejared.crafttweaker.api.data;
 
-import com.blamejared.crafttweaker.impl.data.*;
+import com.blamejared.crafttweaker.impl.data.ByteData;
+import com.blamejared.crafttweaker.impl.data.DoubleData;
+import com.blamejared.crafttweaker.impl.data.FloatData;
+import com.blamejared.crafttweaker.impl.data.IntData;
+import com.blamejared.crafttweaker.impl.data.LongData;
+import com.blamejared.crafttweaker.impl.data.ShortData;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

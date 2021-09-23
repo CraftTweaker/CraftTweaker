@@ -79,10 +79,10 @@ public final class HandCommands {
             sendCopyingHand(player, "Item", Objects.requireNonNull(stack.getItem().getRegistryName()).toString());
             return 0;
         });
-    
+        
         subCommand("data", "Outputs the formatted data of the held item", (player, stack) -> {
             //It cannot be null because we can't get unregistered items here
-            if(!stack.hasTag()){
+            if(!stack.hasTag()) {
                 CommandUtilities.send("Item does not have any data", player);
                 return 0;
             }
@@ -136,13 +136,13 @@ public final class HandCommands {
                     CommandUtilities.sendCopying(new FormattedTextComponent(TextFormatting.YELLOW + "- " + TextFormatting.GREEN + attributeCS), attributeCS, player);
                     
                     attributeModifiers.forEach(attributeModifier -> {
-    
+                        
                         sendAttributePropertyInformation(player, "Name", attributeModifier.getName());
                         sendAttributePropertyInformation(player, "ID", attributeModifier.getID().toString());
                         sendAttributePropertyInformation(player, "Operation", attributeModifier.getOperation().name());
-                        sendAttributePropertyInformation(player, "Amount", attributeModifier.getAmount() +"");
+                        sendAttributePropertyInformation(player, "Amount", attributeModifier.getAmount() + "");
                         sendAttributePropertyInformation(player, "IData", new MapData(attributeModifier.write()).asString());
-    
+                        
                     });
                     
                 });

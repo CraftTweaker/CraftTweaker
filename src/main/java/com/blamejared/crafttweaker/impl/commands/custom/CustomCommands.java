@@ -4,7 +4,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.*;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -22,9 +22,11 @@ public class CustomCommands {
     private static boolean SERVER_STARTED = false;
     
     private CustomCommands() {
+    
     }
     
     public static void init(CommandDispatcher<CommandSource> dispatcher) {
+        
         SERVER_STARTED = true;
         BUILDERS.forEach(dispatcher::register);
     }
@@ -41,11 +43,14 @@ public class CustomCommands {
     
     @ZenCodeType.Method
     public static MCLiteralArgumentBuilder literal(String name) {
+        
         return new MCLiteralArgumentBuilder(Commands.literal(name));
     }
     
     @ZenCodeType.Method
     public static MCRequiredArgumentBuilder argument(String name) {
+        
         return new MCRequiredArgumentBuilder(Commands.argument(name, StringArgumentType.string()));
     }
+    
 }

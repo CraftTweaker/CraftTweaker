@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.co
 public class ParameterRemover {
     
     public String removeDocumentationParametersFrom(String docComment) {
+        
         if(!hasDocumentationParameters(docComment)) {
             return docComment;
         }
@@ -12,11 +13,14 @@ public class ParameterRemover {
     }
     
     private boolean hasDocumentationParameters(String docComment) {
+        
         final int index = getIndexOfFirstDocumentationParameter(docComment);
         return index > 0;
     }
     
     private int getIndexOfFirstDocumentationParameter(String docComment) {
+        
         return docComment.indexOf('@');
     }
+    
 }

@@ -32,6 +32,7 @@ public class ExpansionConverter extends DocumentConverter {
     private final DocumentRegistry documentRegistry;
     
     public ExpansionConverter(KnownModList knownModList, CommentConverter commentConverter, DocumentRegistry documentRegistry, TypeConverter typeConverter, StaticMemberConverter staticMemberConverter, ExpansionVirtualMemberConverter virtualMemberConverter, DocumentRegistry documentRegistry1) {
+        
         super(knownModList, commentConverter);
         this.staticMemberConverter = staticMemberConverter;
         this.virtualMemberConverter = virtualMemberConverter;
@@ -41,11 +42,13 @@ public class ExpansionConverter extends DocumentConverter {
     
     @Override
     public boolean canConvert(TypeElement typeElement) {
+        
         return typeElement.getAnnotation(ZenCodeType.Expansion.class) != null;
     }
     
     @Override
     public DocumentationPage convert(TypeElement typeElement, DocumentationPageInfo pageInfo) {
+        
         final AbstractTypeInfo expandedType = getExpandedType(typeElement);
         
         final DocumentedVirtualMembers virtualMembers = getVirtualMembers(typeElement, expandedType);
@@ -55,6 +58,7 @@ public class ExpansionConverter extends DocumentConverter {
     }
     
     private AbstractTypeInfo getExpandedType(TypeElement typeElement) {
+        
         final ZenCodeType.Expansion expansion = typeElement.getAnnotation(ZenCodeType.Expansion.class);
         
         final TypeName expandedName = new TypeName(expansion.value());
@@ -62,11 +66,13 @@ public class ExpansionConverter extends DocumentConverter {
     }
     
     private DocumentedVirtualMembers getVirtualMembers(TypeElement typeElement, AbstractTypeInfo expandedType) {
+        
         final DocumentationPageInfo pageInfo = getPageInfoForType(expandedType);
         return virtualMemberConverter.convertFor(typeElement, pageInfo);
     }
     
     private TypePageInfo getPageInfoForType(AbstractTypeInfo expandedType) {
+        
         if(expandedType instanceof TypePageTypeInfo) {
             return getPageInfo((TypePageTypeInfo) expandedType);
         }
@@ -77,28 +83,34 @@ public class ExpansionConverter extends DocumentConverter {
     }
     
     private TypePageInfo getPageInfo(TypePageTypeInfo expandedType) {
+        
         final TypeName zenCodeName = expandedType.getZenCodeName();
         final Optional<TypePageInfo> pageInfoByName = documentRegistry.getPageInfoByName(zenCodeName);
         return pageInfoByName.orElseThrow(() -> new IllegalArgumentException("Invalid Expanded Type! " + zenCodeName));
     }
     
     private DocumentedStaticMembers getStaticMembers(TypeElement typeElement, DocumentationPageInfo pageInfo) {
+        
         return staticMemberConverter.convertFor(typeElement, pageInfo);
     }
     
     @Override
     public void setDocumentationCommentTo(TypeElement typeElement, DocumentationPageInfo pageInfo) {
+        
         super.setDocumentationCommentTo(typeElement, pageInfo);
     }
     
     @Override
     protected Example getFallbackThisInformationFor(TypeElement typeElement) {
+        
         return getExpandedTypeThisExample(typeElement);
     }
     
     private Example getExpandedTypeThisExample(TypeElement typeElement) {
+        
         final TypePageInfo pageInfoForType = getPageInfoForType(getExpandedType(typeElement));
         final DocumentationComment classComment = pageInfoForType.getClassComment();
         return classComment.getExamples().getExampleFor("this");
     }
+    
 }

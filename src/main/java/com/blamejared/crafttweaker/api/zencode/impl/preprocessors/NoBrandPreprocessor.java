@@ -16,18 +16,22 @@ public class NoBrandPreprocessor implements IPreprocessor {
     
     @Override
     public String getName() {
+        
         return "nobrand";
     }
     
     @Nullable
     @Override
     public String getDefaultValue() {
+        
         return null;
     }
     
     @Override
     public boolean apply(@Nonnull FileAccessSingle file, ScriptLoadingOptions scriptLoadingOptions, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
+        
         CraftTweakerAPI.NO_BRAND = true;
         return true;
     }
+    
 }

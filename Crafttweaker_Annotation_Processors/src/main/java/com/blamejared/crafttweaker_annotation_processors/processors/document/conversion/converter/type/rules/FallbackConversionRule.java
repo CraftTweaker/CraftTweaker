@@ -18,18 +18,22 @@ public class FallbackConversionRule implements TypeConversionRule {
     private final Messager messager;
     
     public FallbackConversionRule(Messager messager) {
+        
         this.messager = messager;
     }
     
     @Override
     public boolean canConvert(TypeMirror mirror) {
+        
         return true;
     }
     
     @Nullable
     @Override
     public AbstractTypeInfo convert(TypeMirror mirror) {
+        
         messager.printMessage(Diagnostic.Kind.WARNING, "Unsupported type found: " + mirror);
         return new ExistingTypeInfo(mirror.toString());
     }
+    
 }

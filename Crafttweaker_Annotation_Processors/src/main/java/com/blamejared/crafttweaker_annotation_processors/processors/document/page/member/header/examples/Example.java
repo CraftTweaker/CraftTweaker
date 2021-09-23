@@ -9,17 +9,20 @@ public class Example {
     private final String name;
     
     public Example(String name) {
+        
         this.name = name;
         this.textValues = new ArrayList<>();
     }
     
     public Example(String name, String text) {
+        
         this.textValues = new ArrayList<>();
         this.textValues.add(text);
         this.name = name;
     }
     
     public static Example merge(Example left, Example right) {
+        
         if(!left.name.equals(right.name)) {
             throw new IllegalArgumentException("Names do not match! " + left.name + " != " + right.name);
         }
@@ -32,22 +35,28 @@ public class Example {
     }
     
     public void addTextValue(String textValue) {
+        
         this.textValues.add(textValue);
     }
     
     public int numberOfExamples() {
+        
         return textValues.size();
     }
     
     public String getName() {
+        
         return name;
     }
     
     public String getAnyTextValue() {
+        
         return getTextValue(0);
     }
     
     public String getTextValue(int index) {
+        
         return textValues.get(index);
     }
+    
 }

@@ -15,17 +15,21 @@ public class NoLoadPreprocessor implements IPreprocessor {
     
     @Override
     public String getName() {
+        
         return "noload";
     }
     
     @Nullable
     @Override
     public String getDefaultValue() {
+        
         return null;
     }
     
     @Override
     public boolean apply(@Nonnull FileAccessSingle file, ScriptLoadingOptions scriptLoadingOptions, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
+        
         return false;
     }
+    
 }

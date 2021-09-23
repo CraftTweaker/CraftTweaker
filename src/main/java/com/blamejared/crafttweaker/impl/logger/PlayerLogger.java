@@ -1,11 +1,16 @@
 package com.blamejared.crafttweaker.impl.logger;
 
 import com.blamejared.crafttweaker.CraftTweaker;
-import com.blamejared.crafttweaker.api.logger.*;
+import com.blamejared.crafttweaker.api.logger.ILogger;
+import com.blamejared.crafttweaker.api.logger.LogLevel;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.entity.player.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Util;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.Color;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -26,29 +31,35 @@ public class PlayerLogger implements ILogger {
     private LogLevel logLevel = LogLevel.WARNING;
     
     public PlayerLogger(PlayerEntity player) {
+        
         this.player = player;
     }
     
     private static Pair<Style, Style> make(final Integer header, final Integer content) {
+        
         return Pair.of(
-                header == null? Style.EMPTY : Style.EMPTY.setColor(Color.fromInt(header)),
-                content == null? Style.EMPTY : Style.EMPTY.setColor(Color.fromInt(content))
+                header == null ? Style.EMPTY : Style.EMPTY.setColor(Color.fromInt(header)),
+                content == null ? Style.EMPTY : Style.EMPTY.setColor(Color.fromInt(content))
         );
     }
     
     @Override
     public void setLogLevel(LogLevel logLevel) {
-        if(logLevel.canLog(LogLevel.WARNING))
+    
+        if(logLevel.canLog(LogLevel.WARNING)) {
             this.logLevel = logLevel;
+        }
     }
     
     @Override
     public LogLevel getLogLevel() {
+        
         return logLevel;
     }
     
     @Override
     public void log(LogLevel level, String message, boolean prefix) {
+        
         if(this.logLevel.canLog(level)) {
             final Pair<Style, Style> styling = STYLING.get(level);
             final IFormattableTextComponent header = new StringTextComponent("[" + level + "] ").setStyle(styling.getFirst());
@@ -59,11 +70,14 @@ public class PlayerLogger implements ILogger {
     
     @Override
     public void throwingErr(String message, Throwable throwable) {
+        
         error(String.format("%s: %s", message, throwable.getMessage()));
     }
     
     @Override
     public void throwingWarn(String message, Throwable throwable) {
+        
         warning(String.format("%s: %s", message, throwable.getMessage()));
     }
+    
 }

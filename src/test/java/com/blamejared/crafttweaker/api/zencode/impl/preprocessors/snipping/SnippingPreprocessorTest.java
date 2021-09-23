@@ -1,11 +1,17 @@
 package com.blamejared.crafttweaker.api.zencode.impl.preprocessors.snipping;
 
-import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker.api.zencode.impl.*;
-import org.junit.jupiter.api.*;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
+import com.blamejared.crafttweaker.api.TestLogger;
+import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.io.*;
-import java.util.*;
+import java.io.StringReader;
+import java.util.Collections;
+import java.util.List;
+import java.util.StringJoiner;
 
 class SnippingPreprocessorTest {
     
@@ -13,17 +19,20 @@ class SnippingPreprocessorTest {
     
     @BeforeEach
     void setUp() {
+        
         CraftTweakerAPI.logger = new TestLogger();
         preprocessorUnderTest.addSnippingParameter(new SnippingParameterNoStart());
     }
     
     @Test
     void nameIsSnip() {
+        
         Assertions.assertEquals("snip", preprocessorUnderTest.getName());
     }
     
     @Test
     void snippedContentIsNoLongerInFileSingleLine() {
+        
         final FileAccessSingle file = getFile("#snip start HelloWorld #snip end");
         final List<String> fileContents = file.getFileContents();
         Assertions.assertEquals(1, fileContents.size(), "File content should remain one line");
@@ -32,6 +41,7 @@ class SnippingPreprocessorTest {
     
     @Test
     void snippedContentIsNoLongerInFileMultiLineEndingsExclusive() {
+        
         final StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
         stringJoiner.add("#snip start");
         stringJoiner.add("Hello World");
@@ -48,6 +58,7 @@ class SnippingPreprocessorTest {
     
     @Test
     void onlySnipIfItShouldBeSnippedSingleLine() {
+        
         final FileAccessSingle file = getFile("#snip nostart HelloWorld #snip end");
         final List<String> fileContents = file.getFileContents();
         Assertions.assertEquals(1, fileContents.size(), "File content should remain one line");
@@ -56,6 +67,7 @@ class SnippingPreprocessorTest {
     
     @Test
     void onlySnipIfItShouldBeSnippedMultiLineEndingsExclusive() {
+        
         final StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
         stringJoiner.add("#snip nostart");
         stringJoiner.add("Hello World");
@@ -72,6 +84,7 @@ class SnippingPreprocessorTest {
     
     @Test
     void snipChildrenIfNotCompleteSnip() {
+        
         final StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
         stringJoiner.add("#snip nostart");
         stringJoiner.add("Hello World");
@@ -79,10 +92,10 @@ class SnippingPreprocessorTest {
         stringJoiner.add("Hello World");
         stringJoiner.add("#snip end");
         stringJoiner.add("#snip end");
-    
+        
         final FileAccessSingle file = getFile(stringJoiner.toString());
         final List<String> fileContents = file.getFileContents();
-    
+        
         Assertions.assertEquals(6, fileContents.size(), "File must remain the same structure");
         Assertions.assertEquals("             ", fileContents.get(0));
         Assertions.assertEquals("Hello World", fileContents.get(1));
@@ -94,6 +107,7 @@ class SnippingPreprocessorTest {
     
     @Test
     void snipChildrenIfNotCompleteSnip_2() {
+        
         final StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
         stringJoiner.add("#snip nostart");
         stringJoiner.add("#snip nostart");
@@ -119,8 +133,10 @@ class SnippingPreprocessorTest {
     }
     
     private FileAccessSingle getFile(String content) {
+        
         return new FileAccessSingle("test.zs", new StringReader(content), new ScriptLoadingOptions()
                 .execute()
                 .setLoaderName("crafttweaker"), Collections.singletonList(preprocessorUnderTest));
     }
+    
 }

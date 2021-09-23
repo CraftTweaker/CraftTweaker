@@ -2,15 +2,12 @@ package com.blamejared.crafttweaker.impl.tag.expansions;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.fluid.CTFluidIngredient;
-import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.blamejared.crafttweaker.impl.tag.MCTagWithAmount;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.fluid.Fluid;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @ZenRegister

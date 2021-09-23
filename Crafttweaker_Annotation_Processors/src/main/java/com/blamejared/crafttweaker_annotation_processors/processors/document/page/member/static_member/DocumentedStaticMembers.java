@@ -15,12 +15,14 @@ public class DocumentedStaticMembers implements IFillMeta {
     protected final Map<String, StaticMethodGroup> methodGroups = new TreeMap<>();
     
     public void write(PageOutputWriter writer) {
+        
         writeStaticMethods(writer);
         writeProperties(writer);
     }
     
     
     private void writeStaticMethods(PageOutputWriter writer) {
+        
         if(methodGroups.isEmpty()) {
             return;
         }
@@ -33,6 +35,7 @@ public class DocumentedStaticMembers implements IFillMeta {
     }
     
     protected void writeProperties(PageOutputWriter writer) {
+        
         if(properties.isEmpty()) {
             return;
         }
@@ -48,26 +51,28 @@ public class DocumentedStaticMembers implements IFillMeta {
     }
     
     public void addProperty(PropertyMember propertyMember) {
+        
         properties.put(propertyMember.getName(), propertyMember);
     }
     
     public void addMethod(StaticMethodMember staticMethodMember, AbstractTypeInfo ownerType) {
+        
         final StaticMethodGroup group = methodGroups.computeIfAbsent(staticMethodMember.getName(), name -> new StaticMethodGroup(name, ownerType));
         group.addMethod(staticMethodMember);
     }
     
     @Override
     public void fillMeta(DocumentMeta meta) {
-    
-    
+        
+        
         for(PropertyMember value : properties.values()) {
             value.fillMeta(meta);
         }
-    
+        
         for(StaticMethodGroup value : methodGroups.values()) {
             value.fillMeta(meta);
         }
-    
+        
     }
     
 }

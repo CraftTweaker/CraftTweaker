@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.api.zencode.impl.util;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.openzen.zencode.shared.CodePosition;
 import org.openzen.zencode.shared.VirtualSourceFile;
 
@@ -18,6 +17,7 @@ public class PositionUtil {
      * @return The position, or {@link CodePosition#UNKNOWN}
      */
     public static CodePosition getZCScriptPositionFromStackTrace() {
+        
         final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         return getZCScriptPositionFromStackTrace(stackTrace);
     }

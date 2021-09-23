@@ -28,27 +28,31 @@ import java.util.function.Consumer;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.BlockStateProperty")
 @Document("vanilla/api/loot/conditions/vanilla/BlockStateProperty")
 public final class BlockStatePropertyLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     private Block block;
     private StatePropertiesPredicate predicate;
-
+    
     BlockStatePropertyLootConditionTypeBuilder() {
+        
         this.predicate = new StatePropertiesPredicate();
     }
-
+    
     /**
      * Sets the block that should be matched by the loot condition.
      *
      * This parameter is <strong>required</strong>.
      *
      * @param block The block to be matched.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public BlockStatePropertyLootConditionTypeBuilder withBlock(final Block block) {
+        
         this.block = block;
         return this;
     }
-
+    
     /**
      * Creates and sets the {@link StatePropertiesPredicate} that will be matched against the state's properties.
      *
@@ -58,24 +62,29 @@ public final class BlockStatePropertyLootConditionTypeBuilder implements ILootCo
      * This parameter is <strong>optional</strong>.
      *
      * @param builder A consumer that will be used to configure the {@link StatePropertiesPredicate}.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public BlockStatePropertyLootConditionTypeBuilder withStatePropertiesPredicate(final Consumer<StatePropertiesPredicate> builder) {
+        
         final StatePropertiesPredicate predicate = new StatePropertiesPredicate();
         builder.accept(predicate);
         this.predicate = predicate;
         return this;
     }
-
+    
     @Override
     public ILootCondition finish() {
-        if (this.block == null) {
+        
+        if(this.block == null) {
             throw new IllegalStateException("'BlockStateProperty' condition requires a block to be specified");
         }
         return context -> {
             final BlockState state = ExpandLootContext.getBlockState(context);
-            return state != null && state.getBlock() == this.block && this.predicate.matchProperties(state.getBlock().getStateContainer(), state);
+            return state != null && state.getBlock() == this.block && this.predicate.matchProperties(state.getBlock()
+                    .getStateContainer(), state);
         };
     }
+    
 }

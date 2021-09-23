@@ -35,25 +35,28 @@ import java.util.Arrays;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.TableBonus")
 @Document("vanilla/api/loot/conditions/vanilla/TableBonus")
 public final class TableBonusLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     private Enchantment enchantment;
     private float[] chances;
-
+    
     TableBonusLootConditionTypeBuilder() {}
-
+    
     /**
      * Sets the enchantment that should be checked on the tool.
      *
      * This parameter is <p>required</p>.
      *
      * @param enchantment The enchantment to check.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public TableBonusLootConditionTypeBuilder withEnchantment(final Enchantment enchantment) {
+        
         this.enchantment = enchantment;
         return this;
     }
-
+    
     /**
      * Sets the array of chances, which will be queried according to the level.
      *
@@ -66,49 +69,57 @@ public final class TableBonusLootConditionTypeBuilder implements ILootConditionT
      * This parameter is <p>required</p>.
      *
      * @param chances The chances to use depending on level.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public TableBonusLootConditionTypeBuilder withChances(final float[] chances) {
+        
         this.chances = chances;
         return this;
     }
-
+    
     @Override
     public ILootCondition finish() {
-        if (this.enchantment == null) {
+        
+        if(this.enchantment == null) {
             throw new IllegalStateException("Enchantment not set");
         }
-        if (this.chances.length == 0) {
+        if(this.chances.length == 0) {
             throw new IllegalStateException("Unable to have an empty set of chances for a table bonus");
         }
-
+        
         boolean foundHigherThanZero = false;
         boolean foundSmallerThanOne = false;
-
-        for (float chance : this.chances) {
-            if (chance < 1.0F) foundSmallerThanOne = true;
-            if (chance > 0.0F) foundHigherThanZero = true;
+        
+        for(float chance : this.chances) {
+            if(chance < 1.0F) {
+                foundSmallerThanOne = true;
+            }
+            if(chance > 0.0F) {
+                foundHigherThanZero = true;
+            }
         }
         
-        if (!foundHigherThanZero) {
+        if(!foundHigherThanZero) {
             CraftTweakerAPI.logWarning(
                     "The chance values in a 'TableBonus' condition are all less than or equal to 0.0: this will never match! Conditions: %s",
                     Arrays.toString(this.chances)
             );
         }
-        if (!foundSmallerThanOne) {
+        if(!foundSmallerThanOne) {
             CraftTweakerAPI.logWarning(
                     "The chance values in a 'TableBonus' condition are all more than or equal to 1.0: this will always match! Conditions: %s",
                     Arrays.toString(this.chances)
             );
         }
-
+        
         return context -> {
             final ItemStack stack = ExpandLootContext.getTool(context).getInternal();
-            final int chancesIndex = stack.isEmpty()? 0 : EnchantmentHelper.getEnchantmentLevel(this.enchantment, stack);
+            final int chancesIndex = stack.isEmpty() ? 0 : EnchantmentHelper.getEnchantmentLevel(this.enchantment, stack);
             final float chance = this.chances[Math.min(chancesIndex, this.chances.length - 1)];
             return context.getRandom().nextFloat() < chance;
         };
     }
+    
 }

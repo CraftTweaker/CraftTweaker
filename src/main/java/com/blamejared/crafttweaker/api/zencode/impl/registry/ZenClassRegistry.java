@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.api.zencode.impl.registry;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.native_types.CrTNativeTypeInfo;
@@ -60,18 +59,22 @@ public class ZenClassRegistry {
     
     
     public List<Class<? extends IRecipeManager>> getRecipeManagers() {
+        
         return getImplementationsOf(IRecipeManager.class);
     }
     
     public boolean isRegistered(Class<?> cls) {
+        
         return zenClasses.inverse().containsKey(cls);
     }
     
     public String getNameFor(Class<?> cls) {
+        
         return zenClasses.inverse().get(cls);
     }
     
     public Optional<String> tryGetNameFor(Class<?> cls) {
+        
         if(isRegistered(cls)) {
             return Optional.ofNullable(getNameFor(cls));
         }
@@ -89,22 +92,27 @@ public class ZenClassRegistry {
     }
     
     public List<Class<?>> getAllRegisteredClasses() {
+        
         return allRegisteredClasses;
     }
     
     public BiMap<String, Class<?>> getZenGlobals() {
+        
         return zenGlobals;
     }
     
     public BiMap<String, Class<?>> getZenClasses() {
+        
         return zenClasses;
     }
     
     public Map<String, List<Class<?>>> getExpansionsByExpandedName() {
+        
         return expansionsByExpandedName;
     }
     
     public void addClass(Class<?> cls) {
+        
         if(areModsMissing(cls.getAnnotation(ZenRegister.class))) {
             final String canonicalName = cls.getCanonicalName();
             CraftTweakerAPI.logDebug("Skipping class '%s' since its Mod dependencies are not fulfilled", canonicalName);
@@ -134,7 +142,7 @@ public class ZenClassRegistry {
         if(hasGlobals(cls)) {
             if(cls.isAnnotationPresent(ZenCodeType.Name.class)) {
                 addGlobal(cls);
-            }else {
+            } else {
                 CraftTweakerAPI.logWarning("Class: '%s' has a Global value, but is missing the '%s' annotation! Please report this to the mod author!", cls, ZenCodeType.Name.class.getName());
             }
         }
@@ -146,6 +154,7 @@ public class ZenClassRegistry {
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private boolean isIncompatible(Class<?> cls) {
+        
         try {
             cls.getDeclaredFields();
             cls.getFields();
@@ -162,6 +171,7 @@ public class ZenClassRegistry {
     }
     
     private void addTypedExpansion(Class<?> cls) {
+        
         final TypedExpansion annotation = cls.getAnnotation(TypedExpansion.class);
         final Class<?> expandedType = annotation.value();
         
@@ -179,6 +189,7 @@ public class ZenClassRegistry {
     }
     
     private void addNativeAnnotation(Class<?> cls) {
+        
         final NativeTypeRegistration annotation = cls.getAnnotation(NativeTypeRegistration.class);
         final String zenCodeName = annotation.zenCodeName();
         nativeTypeRegistry.addNativeType(annotation, cls.getAnnotationsByType(NativeMethod.class));
@@ -186,12 +197,14 @@ public class ZenClassRegistry {
     }
     
     private boolean areModsMissing(ZenRegister register) {
+        
         return register == null || !Arrays.stream(register.modDeps())
                 .filter(modId -> modId != null && !modId.isEmpty())
                 .allMatch(ModList.get()::isLoaded);
     }
     
     private void addZenClass(Class<?> cls) {
+        
         final ZenCodeType.Name annotation = cls.getAnnotation(ZenCodeType.Name.class);
         final String name = annotation.value();
         if(zenClasses.containsKey(name)) {
@@ -204,11 +217,13 @@ public class ZenClassRegistry {
     }
     
     private void addGlobal(Class<?> cls) {
+        
         final ZenCodeType.Name annotation = cls.getAnnotation(ZenCodeType.Name.class);
         zenGlobals.put(annotation.value(), cls);
     }
     
     private void addExpansion(Class<?> cls, String expandedClassName) {
+        
         if(!expansionsByExpandedName.containsKey(expandedClassName)) {
             expansionsByExpandedName.put(expandedClassName, new ArrayList<>());
         }
@@ -216,6 +231,7 @@ public class ZenClassRegistry {
     }
     
     private boolean hasGlobals(Class<?> cls) {
+        
         return Stream.concat(Arrays.stream(cls.getFields()), Arrays.stream(cls.getMethods()))
                 .filter(member -> member.isAnnotationPresent(ZenCodeGlobals.Global.class))
                 .filter(member -> Modifier.isPublic(member.getModifiers()))
@@ -223,6 +239,7 @@ public class ZenClassRegistry {
     }
     
     public List<Class<?>> getClassesInPackage(String name) {
+        
         return zenClasses.entrySet()
                 .stream()
                 .filter(entry -> entry.getKey().startsWith(name))
@@ -231,6 +248,7 @@ public class ZenClassRegistry {
     }
     
     public List<Class<?>> getGlobalsInPackage(String name) {
+        
         return zenGlobals.entrySet()
                 .stream()
                 .filter(entry -> entry.getKey().startsWith(name))
@@ -239,6 +257,7 @@ public class ZenClassRegistry {
     }
     
     public Set<String> getRootPackages() {
+        
         return zenClasses.keySet()
                 .stream()
                 .map(key -> key.split("\\.", 2)[0])
@@ -246,6 +265,7 @@ public class ZenClassRegistry {
     }
     
     public void addNativeType(Class<?> cls) {
+        
         if(areModsMissing(cls.getAnnotation(ZenRegister.class))) {
             return;
         }
@@ -256,6 +276,7 @@ public class ZenClassRegistry {
     }
     
     public void initNativeTypes() {
+        
         for(CrTNativeTypeInfo nativeTypeInfo : nativeTypeRegistry.getNativeTypeInfos()) {
             final String craftTweakerName = nativeTypeInfo.getCraftTweakerName();
             final String vanillaClass = nativeTypeInfo.getVanillaClass().getCanonicalName();
@@ -266,10 +287,13 @@ public class ZenClassRegistry {
     }
     
     public NativeTypeRegistry getNativeTypeRegistry() {
+        
         return nativeTypeRegistry;
     }
     
     public boolean isBlacklisted(Class<?> cls) {
+        
         return blacklistedClasses.contains(cls);
     }
+    
 }

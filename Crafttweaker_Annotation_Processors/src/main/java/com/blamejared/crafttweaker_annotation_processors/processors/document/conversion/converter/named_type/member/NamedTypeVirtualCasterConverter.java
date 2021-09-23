@@ -23,23 +23,27 @@ public class NamedTypeVirtualCasterConverter extends AbstractEnclosedElementConv
     private final CommentConverter commentConverter;
     
     public NamedTypeVirtualCasterConverter(HeaderConverter headerConverter, CommentConverter commentConverter) {
+        
         this.headerConverter = headerConverter;
         this.commentConverter = commentConverter;
     }
     
     @Override
     public boolean canConvert(Element enclosedElement) {
+        
         return isAnnotationPresentOn(ZenCodeType.Caster.class, enclosedElement);
     }
     
     @Override
     public void convertAndAddTo(Element enclosedElement, DocumentedTypeVirtualMembers result, DocumentationPageInfo pageInfo) {
+        
         ExecutableElement method = (ExecutableElement) enclosedElement;
         final CasterMember casterMember = convertCaster(method, pageInfo);
         result.addCaster(casterMember);
     }
     
     private CasterMember convertCaster(ExecutableElement method, DocumentationPageInfo pageInfo) {
+        
         final MemberHeader header = convertHeader(method);
         final DocumentationComment comment = convertComment(method, pageInfo);
         final boolean isImplicit = checkIfImplicit(method);
@@ -48,6 +52,7 @@ public class NamedTypeVirtualCasterConverter extends AbstractEnclosedElementConv
     }
     
     private MemberHeader convertHeader(ExecutableElement method) {
+        
         final List<? extends VariableElement> parameters = convertParameters(method);
         final List<? extends TypeParameterElement> typeParameters = convertTypeParameters(method);
         final TypeMirror returnType = convertReturnType(method);
@@ -56,22 +61,28 @@ public class NamedTypeVirtualCasterConverter extends AbstractEnclosedElementConv
     }
     
     private List<? extends VariableElement> convertParameters(ExecutableElement method) {
+        
         return method.getParameters();
     }
     
     private List<? extends TypeParameterElement> convertTypeParameters(ExecutableElement method) {
+        
         return method.getTypeParameters();
     }
     
     private TypeMirror convertReturnType(ExecutableElement method) {
+        
         return method.getReturnType();
     }
     
     private DocumentationComment convertComment(ExecutableElement method, DocumentationPageInfo pageInfo) {
+        
         return commentConverter.convertForMethod(method, pageInfo);
     }
     
     private boolean checkIfImplicit(ExecutableElement method) {
+        
         return method.getAnnotation(ZenCodeType.Caster.class).implicit();
     }
+    
 }

@@ -28,12 +28,14 @@ import java.util.function.Consumer;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.DamageSourceProperties")
 @Document("vanilla/api/loot/conditions/vanilla/DamageSourceProperties")
 public final class DamageSourcePropertiesLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     private DamageSourcePredicate predicate;
-
+    
     DamageSourcePropertiesLootConditionTypeBuilder() {
+        
         this.predicate = new DamageSourcePredicate();
     }
-
+    
     /**
      * Creates and sets the {@link DamageSourcePredicate} that will be matched against the damage source.
      *
@@ -43,18 +45,21 @@ public final class DamageSourcePropertiesLootConditionTypeBuilder implements ILo
      * This parameter is <strong>optional</strong>.
      *
      * @param builder A consumer that will be used to configure the {@link DamageSourcePredicate}.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public DamageSourcePropertiesLootConditionTypeBuilder withPredicate(final Consumer<DamageSourcePredicate> builder) {
+        
         final DamageSourcePredicate predicate = new DamageSourcePredicate();
         builder.accept(predicate);
         this.predicate = predicate;
         return this;
     }
-
+    
     @Override
     public ILootCondition finish() {
+        
         final net.minecraft.advancements.criterion.DamageSourcePredicate vanilla = this.predicate.toVanillaPredicate();
         return context -> {
             final DamageSource source = ExpandLootContext.getDamageSource(context);
@@ -63,4 +68,5 @@ public final class DamageSourcePropertiesLootConditionTypeBuilder implements ILo
             return source != null && origin != null && world instanceof ServerWorld && vanilla.test((ServerWorld) world, origin, source);
         };
     }
+    
 }

@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 @ZenCodeType.Name("crafttweaker.api.predicate.DamageSourcePredicate")
 @Document("vanilla/api/predicate/DamageSourcePredicate")
 public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDefaulting<net.minecraft.advancements.criterion.DamageSourcePredicate> {
+    
     private TriState bypassesArmor;
     private TriState bypassesInvulnerability;
     private TriState bypassesMagic;
@@ -31,8 +32,9 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
     private TriState isLightning;
     private EntityPredicate directEntity;
     private EntityPredicate sourceEntity;
-
+    
     public DamageSourcePredicate() {
+        
         super(net.minecraft.advancements.criterion.DamageSourcePredicate.ANY);
         this.bypassesArmor = TriState.UNSET;
         this.bypassesInvulnerability = TriState.UNSET;
@@ -45,7 +47,7 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
         this.directEntity = new EntityPredicate();
         this.sourceEntity = new EntityPredicate();
     }
-
+    
     /**
      * Indicates that the damage source must be able to bypass armor protection (for example, suffocation)
      *
@@ -55,10 +57,11 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
      */
     @ZenCodeType.Method
     public DamageSourcePredicate withArmorBypass() {
+        
         this.bypassesArmor = TriState.TRUE;
         return this;
     }
-
+    
     /**
      * Indicates that the damage source must not be able to bypass armor protection.
      *
@@ -68,10 +71,11 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
      */
     @ZenCodeType.Method
     public DamageSourcePredicate withoutArmorBypass() {
+        
         this.bypassesArmor = TriState.FALSE;
         return this;
     }
-
+    
     /**
      * Indicates that the damage source must be able to bypass invulnerability (for example, void damage).
      *
@@ -81,10 +85,11 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
      */
     @ZenCodeType.Method
     public DamageSourcePredicate withInvulnerabilityBypass() {
+        
         this.bypassesInvulnerability = TriState.TRUE;
         return this;
     }
-
+    
     /**
      * Indicates that the damage source must not be able to bypass invulnerability.
      *
@@ -94,10 +99,11 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
      */
     @ZenCodeType.Method
     public DamageSourcePredicate withoutInvulnerabilityBypass() {
+        
         this.bypassesInvulnerability = TriState.FALSE;
         return this;
     }
-
+    
     /**
      * Indicates that the damage source must be able to bypass magic protection (for example, starvation).
      *
@@ -107,10 +113,11 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
      */
     @ZenCodeType.Method
     public DamageSourcePredicate withMagicBypass() {
+        
         this.bypassesMagic = TriState.TRUE;
         return this;
     }
-
+    
     /**
      * Indicates that the damage source must not be able to bypass magic protection.
      *
@@ -120,10 +127,11 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
      */
     @ZenCodeType.Method
     public DamageSourcePredicate withoutMagicBypass() {
+        
         this.bypassesMagic = TriState.FALSE;
         return this;
     }
-
+    
     /**
      * Indicates that the damage must have been caused by an explosion.
      *
@@ -133,10 +141,11 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
      */
     @ZenCodeType.Method
     public DamageSourcePredicate withExplosionSource() {
+        
         this.isExplosion = TriState.TRUE;
         return this;
     }
-
+    
     /**
      * Indicates that the damage must not have been caused by an explosion.
      *
@@ -146,10 +155,11 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
      */
     @ZenCodeType.Method
     public DamageSourcePredicate withoutExplosionSource() {
+        
         this.isExplosion = TriState.FALSE;
         return this;
     }
-
+    
     /**
      * Indicates that the damage must have been caused by fire.
      *
@@ -159,10 +169,11 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
      */
     @ZenCodeType.Method
     public DamageSourcePredicate withFireSource() {
+        
         this.isFire = TriState.TRUE;
         return this;
     }
-
+    
     /**
      * Indicates that the damage must not have been caused by fire.
      *
@@ -172,10 +183,11 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
      */
     @ZenCodeType.Method
     public DamageSourcePredicate withoutFireSource() {
+        
         this.isFire = TriState.FALSE;
         return this;
     }
-
+    
     /**
      * Indicates that the damage must have been caused by magic sources.
      *
@@ -185,10 +197,11 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
      */
     @ZenCodeType.Method
     public DamageSourcePredicate withMagicSource() {
+        
         this.isMagic = TriState.TRUE;
         return this;
     }
-
+    
     /**
      * Indicates that the damage must not have been caused by magic sources.
      *
@@ -198,10 +211,11 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
      */
     @ZenCodeType.Method
     public DamageSourcePredicate withoutMagicSource() {
+        
         this.isMagic = TriState.FALSE;
         return this;
     }
-
+    
     /**
      * Indicates that the damage must have been caused by a projectile.
      *
@@ -211,10 +225,11 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
      */
     @ZenCodeType.Method
     public DamageSourcePredicate withProjectileSource() {
+        
         this.isProjectile = TriState.TRUE;
         return this;
     }
-
+    
     /**
      * Indicates that the damage must not have been caused by a projectile.
      *
@@ -224,10 +239,11 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
      */
     @ZenCodeType.Method
     public DamageSourcePredicate withoutProjectileSource() {
+        
         this.isProjectile = TriState.FALSE;
         return this;
     }
-
+    
     /**
      * Indicates that the damage must have been caused by a lightning strike.
      *
@@ -237,10 +253,11 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
      */
     @ZenCodeType.Method
     public DamageSourcePredicate withLightningSource() {
+        
         this.isLightning = TriState.TRUE;
         return this;
     }
-
+    
     /**
      * Indicates that the damage must not have been caused by a lightning strike.
      *
@@ -250,10 +267,11 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
      */
     @ZenCodeType.Method
     public DamageSourcePredicate withoutLightningSource() {
+        
         this.isLightning = TriState.FALSE;
         return this;
     }
-
+    
     /**
      * Creates and sets the {@link EntityPredicate} that will be used to check the entity that directly caused damage.
      *
@@ -262,16 +280,18 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
      * Any changes that have been made to the entity predicate previously, if any, will be discarded.
      *
      * @param builder A consumer used to configure the {@link EntityPredicate}.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public DamageSourcePredicate withDirectEntityPredicate(final Consumer<EntityPredicate> builder) {
+        
         final EntityPredicate directEntity = new EntityPredicate();
         builder.accept(directEntity);
         this.directEntity = directEntity;
         return this;
     }
-
+    
     /**
      * Creates and sets the {@link EntityPredicate} that will be used to check the entity that caused damage.
      *
@@ -280,24 +300,28 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
      * Any changes that have been made to the entity predicate previously, if any, will be discarded.
      *
      * @param builder A consumer used to configure the {@link EntityPredicate}.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public DamageSourcePredicate withSourceEntityPredicate(final Consumer<EntityPredicate> builder) {
+        
         final EntityPredicate sourceEntity = new EntityPredicate();
         builder.accept(sourceEntity);
         this.sourceEntity = sourceEntity;
         return this;
     }
-
+    
     @Override
     public boolean isAny() {
+        
         return Stream.of(this.bypassesArmor, this.bypassesInvulnerability, this.bypassesMagic, this.isExplosion, this.isFire, this.isMagic, this.isProjectile, this.isLightning)
                 .allMatch(TriState::isUnset) && this.directEntity.isAny() && this.sourceEntity.isAny();
     }
-
+    
     @Override
     public net.minecraft.advancements.criterion.DamageSourcePredicate toVanilla() {
+        
         return new net.minecraft.advancements.criterion.DamageSourcePredicate(
                 this.isProjectile.toBoolean(),
                 this.isExplosion.toBoolean(),
@@ -311,4 +335,5 @@ public final class DamageSourcePredicate extends IVanillaWrappingPredicate.AnyDe
                 this.sourceEntity.toVanillaPredicate()
         );
     }
+    
 }

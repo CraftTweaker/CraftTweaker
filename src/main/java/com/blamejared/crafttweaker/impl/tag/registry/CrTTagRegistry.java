@@ -23,22 +23,26 @@ public final class CrTTagRegistry {
     private final CrTTagRegistryData data;
     
     public CrTTagRegistry(CrTTagRegistryData data) {
+        
         this.data = data;
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("allManagers")
     public List<TagManager<?>> getAllManagers() {
+        
         return new ArrayList<>(data.getAll());
     }
     
     @ZenCodeType.Method
     public <T extends CommandStringDisplayable> TagManager<T> getForElementType(Class<T> cls) {
+        
         return data.getForElementType(cls);
     }
     
     @ZenCodeType.Method
     public <T extends TagManager<?>> T getByImplementation(Class<T> cls) {
+        
         return data.getByImplementation(cls);
     }
     
@@ -48,11 +52,14 @@ public final class CrTTagRegistry {
     
     @ZenCodeType.Method
     public <T> TagManager<T> getForRegistry(ResourceLocation location) {
+        
         return data.getForRegistry(location);
     }
     
     @ZenCodeType.Method
     public <T> TagManager<T> getByTagFolder(String tagFolder) {
+        
         return data.getByTagFolder(tagFolder);
     }
+    
 }

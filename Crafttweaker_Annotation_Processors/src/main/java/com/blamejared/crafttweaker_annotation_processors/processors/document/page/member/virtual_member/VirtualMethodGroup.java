@@ -35,6 +35,7 @@ public class VirtualMethodGroup implements IFillMeta {
     
     @Override
     public void fillMeta(DocumentMeta meta) {
+        
         for(VirtualMethodMember virtualMethod : virtualMethods) {
             virtualMethod.fillMeta(meta);
         }

@@ -15,12 +15,14 @@ public class NamedTypeConversionRule implements NameConversionRule {
     private final KnownTypeRegistry knownTypeRegistry;
     
     public NamedTypeConversionRule(KnownTypeRegistry knownTypeRegistry) {
+        
         this.knownTypeRegistry = knownTypeRegistry;
     }
     
     @Nullable
     @Override
     public TypeMirror convertZenCodeName(String zenCodeName) {
+        
         return knownTypeRegistry.getAllNamedTypes()
                 .filter(nameMatches(zenCodeName))
                 .map(Element::asType)
@@ -29,8 +31,10 @@ public class NamedTypeConversionRule implements NameConversionRule {
     }
     
     private Predicate<TypeElement> nameMatches(String zenCodeName) {
+        
         return typeElement -> typeElement.getAnnotation(ZenCodeType.Name.class)
                 .value()
                 .equals(zenCodeName);
     }
+    
 }

@@ -15,27 +15,33 @@ public class LoadLastPreprocessor implements IPreprocessor {
     
     @Override
     public String getName() {
+        
         return "loadlast";
     }
     
     @Nullable
     @Override
     public String getDefaultValue() {
+        
         return null;
     }
     
     @Override
     public boolean apply(@Nonnull FileAccessSingle file, ScriptLoadingOptions scriptLoadingOptions, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
+        
         return true;
     }
     
     @Override
     public int getPriority() {
+        
         return 11;
     }
     
     @Override
     public int compare(FileAccessSingle o1, FileAccessSingle o2) {
+        
         return Boolean.compare(o1.hasMatchFor(this), o2.hasMatchFor(this));
     }
+    
 }

@@ -1,13 +1,16 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.header;
 
-import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.documentation_parameter.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.documentation_parameter.ParameterInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.documentation_parameter.ParameterInformationList;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.documentation_parameter.ParameterReader;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.MetaData;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.examples.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.comment.DocumentationComment;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.examples.ExampleData;
 
-import javax.annotation.*;
-import javax.lang.model.element.*;
-import javax.lang.model.util.*;
+import javax.annotation.Nullable;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.util.Elements;
 
 public class ParameterDescriptionConverter {
     
@@ -16,11 +19,13 @@ public class ParameterDescriptionConverter {
     
     
     public ParameterDescriptionConverter(ParameterReader parameterReader, Elements elementUtils) {
+        
         this.parameterReader = parameterReader;
         this.elementUtils = elementUtils;
     }
     
     public DocumentationComment convertDescriptionOf(Element parameter) {
+        
         final Element method = parameter.getEnclosingElement();
         final String methodDocComment = elementUtils.getDocComment(method);
         final ParameterInformationList parameterInformationList = parameterReader.readParametersFrom(methodDocComment, method);
@@ -29,6 +34,7 @@ public class ParameterDescriptionConverter {
     }
     
     private DocumentationComment readDescriptionOf(Element parameter, ParameterInformationList parameterInformationList) {
+        
         if(!parameterInformationList.hasParameterInfoWithName("param")) {
             return DocumentationComment.empty();
         }
@@ -38,12 +44,14 @@ public class ParameterDescriptionConverter {
     }
     
     private DocumentationComment getCommentForName(Element element, ParameterInfo param) {
+        
         final String description = getDescriptionForParameterInfo(element, param);
         return new DocumentationComment(description, null, null, ExampleData.empty(), MetaData.empty());
     }
     
     @Nullable
     private String getDescriptionForParameterInfo(Element element, ParameterInfo param) {
+        
         final String name = getName(element);
         
         for(String occurrence : param.getOccurrences()) {
@@ -55,6 +63,7 @@ public class ParameterDescriptionConverter {
     }
     
     private String getName(Element element) {
+        
         final String simpleName = element.getSimpleName().toString();
         if(isTypeParameter(element)) {
             return "<" + simpleName + ">";
@@ -64,6 +73,8 @@ public class ParameterDescriptionConverter {
     }
     
     private boolean isTypeParameter(Element element) {
+        
         return element.getKind() == ElementKind.TYPE_PARAMETER;
     }
+    
 }

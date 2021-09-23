@@ -17,7 +17,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public final class RecipeHandlerRegistry {
+    
     private static final class DefaultRecipeHandler implements IRecipeHandler<IRecipe<?>> {
+        
         private static final DefaultRecipeHandler INSTANCE = new DefaultRecipeHandler();
         
         @Override
@@ -27,23 +29,29 @@ public final class RecipeHandlerRegistry {
                     "~~ Recipe name: %s, Outputs: %s, Inputs: [%s], Recipe Class: %s, Recipe Serializer: %s ~~",
                     recipe.getId(),
                     new MCItemStackMutable(recipe.getRecipeOutput()).getCommandString(),
-                    recipe.getIngredients().stream().map(IIngredient::fromIngredient).map(IIngredient::getCommandString).collect(Collectors.joining(", ")),
+                    recipe.getIngredients()
+                            .stream()
+                            .map(IIngredient::fromIngredient)
+                            .map(IIngredient::getCommandString)
+                            .collect(Collectors.joining(", ")),
                     recipe.getClass().getName(),
                     recipe.getSerializer().getRegistryName()
             );
         }
+        
     }
     
     private final Map<Class<? extends IRecipe<?>>, IRecipeHandler<?>> recipeHandlers = new HashMap<>();
     
     public void addClass(final Class<?> clazz) {
-        if (!IRecipeHandler.class.isAssignableFrom(clazz)) {
+        
+        if(!IRecipeHandler.class.isAssignableFrom(clazz)) {
             throw new IllegalArgumentException("Class " + clazz.getName() + " does not implement IRecipeHandler");
         }
-        if (clazz.isInterface()) {
+        if(clazz.isInterface()) {
             throw new IllegalArgumentException("Class " + clazz.getName() + " is an interface and cannot be annotated with @IRecipeHandler.For");
         }
-        if (Modifiers.isAbstract(clazz.getModifiers())) {
+        if(Modifiers.isAbstract(clazz.getModifiers())) {
             throw new IllegalArgumentException("Class " + clazz.getName() + " is an abstract class and cannot be annotated with @IRecipeHandler.For");
         }
         //noinspection RedundantCast
@@ -51,7 +59,7 @@ public final class RecipeHandlerRegistry {
                 .map(IRecipeHandler.For::value)
                 .filter(it -> (Class<?>) it != IRecipe.class)
                 .forEach(it -> {
-                    if (this.recipeHandlers.containsKey(it)) {
+                    if(this.recipeHandlers.containsKey(it)) {
                         CraftTweakerAPI.logWarning(
                                 "Multiple recipe handlers found for the same recipe class %s: attempted registration of %s, using %s",
                                 it.getName(),
@@ -66,28 +74,35 @@ public final class RecipeHandlerRegistry {
     
     @SuppressWarnings("unchecked")
     public <T extends IRecipe<?>> IRecipeHandler<T> getHandlerFor(final T recipe) {
+        
         return (IRecipeHandler<T>) this.getHandlerFor(recipe.getClass()).orElse(DefaultRecipeHandler.INSTANCE);
     }
     
     private Optional<IRecipeHandler<?>> getHandlerFor(final Class<?> recipeClass) {
+        
         final Deque<Class<?>> classes = new ArrayDeque<>();
         classes.offer(recipeClass);
         
-        while (!classes.isEmpty()) {
+        while(!classes.isEmpty()) {
             final Class<?> target = classes.poll();
             
             // Don't check for IRecipe: we don't allow any handlers with that superclass
-            if (target == IRecipe.class) continue;
-            
-            final IRecipeHandler<?> attempt = this.recipeHandlers.get(target);
-            if (attempt != null) {
-                return Optional.of(attempt);
+            if(target == IRecipe.class) {
+                continue;
             }
             
-            if (target.getSuperclass() != null) classes.offer(target.getSuperclass());
+            final IRecipeHandler<?> attempt = this.recipeHandlers.get(target);
+            if(attempt != null) {
+                return Optional.of(attempt);
+            }
+    
+            if(target.getSuperclass() != null) {
+                classes.offer(target.getSuperclass());
+            }
             Arrays.stream(target.getInterfaces()).forEach(classes::offer);
         }
         
         return Optional.empty();
     }
+    
 }

@@ -21,11 +21,13 @@ public class KnownElementList {
     private Collection<TypeElement> knownElements;
     
     public KnownElementList(ProcessingEnvironment processingEnv) {
+        
         this.processingEnv = processingEnv;
         this.knownElements = new HashSet<>();
     }
     
     private void updateElements() {
+        
         knownElements = knownElements.stream()
                 .map(Object::toString)
                 .map(processingEnv.getElementUtils()::getTypeElement)
@@ -33,6 +35,7 @@ public class KnownElementList {
     }
     
     public void addAllForIntermediateRound(RoundEnvironment roundEnvironment) {
+        
         final Set<TypeElement> elementsOfThisRound = roundEnvironment.getElementsAnnotatedWith(Document.class)
                 .stream()
                 .map(element -> (TypeElement) element)
@@ -41,6 +44,7 @@ public class KnownElementList {
     }
     
     public Collection<TypeElement> getElementsForTypeDocumentation() {
+        
         updateElements();
         
         return knownElements.stream()
@@ -49,6 +53,7 @@ public class KnownElementList {
     }
     
     public Collection<TypeElement> getElementsForExpansionDocumentation() {
+        
         updateElements();
         
         return knownElements.stream()
@@ -57,14 +62,18 @@ public class KnownElementList {
     }
     
     private boolean isElementForTypeDocumentation(TypeElement element) {
+        
         return isAnnotationPresent(element, ZenCodeType.Name.class) || isAnnotationPresent(element, NativeTypeRegistration.class);
     }
     
     private boolean isElementForExpansionDocumentation(TypeElement element) {
+        
         return isAnnotationPresent(element, ZenCodeType.Expansion.class) || isAnnotationPresent(element, TypedExpansion.class);
     }
     
     private boolean isAnnotationPresent(Element element, Class<? extends Annotation> annotation) {
+        
         return element.getAnnotation(annotation) != null;
     }
+    
 }

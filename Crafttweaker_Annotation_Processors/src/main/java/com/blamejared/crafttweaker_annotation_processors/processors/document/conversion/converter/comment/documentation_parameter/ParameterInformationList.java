@@ -9,18 +9,22 @@ public class ParameterInformationList {
     private final Map<String, ParameterInfo> parameterInformation = new HashMap<>();
     
     public ParameterInformationList(Map<String, ParameterInfo> parameterInformation) {
+        
         this.parameterInformation.putAll(parameterInformation);
     }
     
     public void addParameterInfo(ParameterInfo parameterInfo) {
+        
         this.parameterInformation.put(parameterInfo.getName(), parameterInfo);
     }
     
     public boolean hasParameterInfoWithName(String name) {
+        
         return this.parameterInformation.containsKey(name);
     }
     
     public Optional<ParameterInfo> tryGetParameterInfoWithName(String name) {
+        
         if(hasParameterInfoWithName(name)) {
             return Optional.of(this.parameterInformation.get(name));
         } else {
@@ -29,6 +33,8 @@ public class ParameterInformationList {
     }
     
     public ParameterInfo getParameterInfoWithName(String name) {
+        
         return tryGetParameterInfoWithName(name).orElseThrow(() -> new IllegalArgumentException("No such parameter registered: " + name));
     }
+    
 }

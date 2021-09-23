@@ -150,7 +150,7 @@ public class CraftTweaker {
         
         final ScriptLoadingOptions setupCommon = new ScriptLoadingOptions().setLoaderName("setupCommon").execute();
         CraftTweakerAPI.loadScripts(setupCommon);
-    
+        
         CTCommands.initArgumentTypes();
         LOG.info("{} has loaded successfully!", NAME);
     }
@@ -232,7 +232,7 @@ public class CraftTweaker {
             @Nonnull
             @ParametersAreNonnullByDefault
             protected Void prepare(IResourceManager resourceManagerIn, IProfiler profilerIn) {
-    
+                
                 MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
                 serverOverride = server == null;
                 return null;

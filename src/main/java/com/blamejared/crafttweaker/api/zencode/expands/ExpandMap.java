@@ -14,6 +14,7 @@ public class ExpandMap {
     
     @ZenCodeType.Caster(implicit = true)
     public static IData asData(Map<String, IData> map) {
+        
         return new MapData(map);
     }
     
@@ -23,12 +24,14 @@ public class ExpandMap {
         
         @ZenCodeType.Caster(implicit = true)
         public static IData asData(Map<String, String> map) {
+            
             final Map<String, IData> stringIDataMap = new HashMap<>();
             map.forEach((s, s2) -> stringIDataMap.put(s, ExpandString.asData(s2)));
             return ExpandMap.asData(stringIDataMap);
         }
         
     }
+    
 }
 
 

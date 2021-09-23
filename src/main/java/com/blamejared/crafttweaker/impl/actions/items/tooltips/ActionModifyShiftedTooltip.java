@@ -54,7 +54,7 @@ public class ActionModifyShiftedTooltip extends ActionTooltipBase {
     
     @Override
     public String describeUndo() {
-    
+        
         return "Undoing addition of advanced shifted tooltip to: " + stack.getCommandString();
     }
     

@@ -1,6 +1,15 @@
 package com.blamejared.crafttweaker.api.data;
 
-import com.blamejared.crafttweaker.impl.data.*;
+import com.blamejared.crafttweaker.impl.data.BoolData;
+import com.blamejared.crafttweaker.impl.data.ByteData;
+import com.blamejared.crafttweaker.impl.data.DoubleData;
+import com.blamejared.crafttweaker.impl.data.FloatData;
+import com.blamejared.crafttweaker.impl.data.IntData;
+import com.blamejared.crafttweaker.impl.data.ListData;
+import com.blamejared.crafttweaker.impl.data.LongData;
+import com.blamejared.crafttweaker.impl.data.MapData;
+import com.blamejared.crafttweaker.impl.data.ShortData;
+import com.blamejared.crafttweaker.impl.data.StringData;
 import org.openzen.zencode.shared.LiteralSourceFile;
 import org.openzen.zenscript.lexer.ParseException;
 import org.openzen.zenscript.lexer.ZSToken;
@@ -13,7 +22,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.openzen.zenscript.lexer.ZSTokenType.*;
+import static org.openzen.zenscript.lexer.ZSTokenType.K_AS;
+import static org.openzen.zenscript.lexer.ZSTokenType.T_ACLOSE;
+import static org.openzen.zenscript.lexer.ZSTokenType.T_COLON;
+import static org.openzen.zenscript.lexer.ZSTokenType.T_COMMA;
+import static org.openzen.zenscript.lexer.ZSTokenType.T_IDENTIFIER;
+import static org.openzen.zenscript.lexer.ZSTokenType.T_SQCLOSE;
 
 public class StringConverter {
     
@@ -109,7 +123,7 @@ public class StringConverter {
         while(parser.optional(T_ACLOSE) == null) {
             ZSTokenType tokenType = parser.peek().getType();
             final String key;
-            switch (tokenType) {
+            switch(tokenType) {
                 case T_STRING_DQ:
                 case T_STRING_DQ_WYSIWYG:
                     String content = parser.required(tokenType, "String expected").getContent();

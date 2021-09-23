@@ -42,14 +42,15 @@ import java.util.stream.Collectors;
 @Document("vanilla/api/loot/modifiers/LootModifierManager")
 @SuppressWarnings("unused")
 public final class CTLootModifierManager {
+    
     public static final CTLootModifierManager LOOT_MODIFIER_MANAGER = new CTLootModifierManager();
-
+    
     private static final MethodHandle LMM_GETTER = MethodHandleHelper.linkMethod(ForgeInternalHandler.class, "getLootModifierManager");
     private static final MethodHandle LMM_MAP_GETTER = MethodHandleHelper.linkGetter(LootModifierManager.class, "registeredLootModifiers");
     private static final MethodHandle LMM_MAP_SETTER = MethodHandleHelper.linkSetter(LootModifierManager.class, "registeredLootModifiers");
-
+    
     private CTLootModifierManager() {}
-
+    
     /**
      * Registers a new global loot modifier with the given name.
      *
@@ -61,18 +62,19 @@ public final class CTLootModifierManager {
      * conditions rather than checking them manually in the modifier itself, since the game may perform additional
      * optimizations.
      *
-     * @param name The unique identifier for the loot modifier. It must be all lowercase and devoid of both spaces and
-     *             colons.
+     * @param name       The unique identifier for the loot modifier. It must be all lowercase and devoid of both spaces and
+     *                   colons.
      * @param conditions A set of conditions that restrict the context in which the loot modifier applies. It can be
      *                   empty or <code>null</code>, which indicates a lack of conditions. The conditions are all merged
      *                   together with an 'AND' connector.
-     * @param modifier The loot modifier itself. It may be created via {@link CommonLootModifiers}.
+     * @param modifier   The loot modifier itself. It may be created via {@link CommonLootModifiers}.
      */
     @ZenCodeType.Method
     public void register(final String name, @ZenCodeType.Nullable final ILootCondition[] conditions, final ILootModifier modifier) {
-        CraftTweakerAPI.apply(new ActionRegisterLootModifier(this.fromName(name), conditions == null? new ILootCondition[0] : conditions, modifier, this::getLmmMap));
+        
+        CraftTweakerAPI.apply(new ActionRegisterLootModifier(this.fromName(name), conditions == null ? new ILootCondition[0] : conditions, modifier, this::getLmmMap));
     }
-
+    
     /**
      * Registers a new global loot modifier with the given name.
      *
@@ -84,45 +86,49 @@ public final class CTLootModifierManager {
      * It is suggested to provide a list of conditions that match as closely as possible the desired conditions rather
      * than checking them manually in the modifier itself, since the game may perform additional optimizations.
      *
-     * @param name The unique identifier for the loot modifier. It must be all lowercase and devoid of both spaces and
-     *             colons.
-     * @param builder A {@link CTLootConditionBuilder} representing a list of conditions that should be merged together
-     *                via 'AND'.
+     * @param name     The unique identifier for the loot modifier. It must be all lowercase and devoid of both spaces and
+     *                 colons.
+     * @param builder  A {@link CTLootConditionBuilder} representing a list of conditions that should be merged together
+     *                 via 'AND'.
      * @param modifier The loot modifier itself. It may be created via {@link CommonLootModifiers}.
      */
     @ZenCodeType.Method
     public void register(final String name, final CTLootConditionBuilder builder, final ILootModifier modifier) {
+        
         this.register(name, builder.build(), modifier);
     }
-
+    
     /**
      * Registers a new global loot modifier with the given name without providing any conditions.
      *
      * The loot modifier will be run for every loot table rolled in the entire game. It is thus suggested to use this
      * method sparingly and to implement a very fast loot modifier.
      *
-     * @param name The unique identifier for the loot modifier. It must be all lowercase and devoid of both spaces and
-     *             colons.
+     * @param name     The unique identifier for the loot modifier. It must be all lowercase and devoid of both spaces and
+     *                 colons.
      * @param modifier The loot modifier itself. It may be created via {@link CommonLootModifiers}.
      */
     @ZenCodeType.Method
     public void registerUnconditional(final String name, final ILootModifier modifier) {
+        
         this.register(name, new ILootCondition[0], modifier);
     }
-
+    
     /**
      * Gets the loot modifier with the given name, if it exists.
      *
      * If no loot modifier with that name exists, a default no-op instance is returned.
      *
      * @param name The name of the loot modifier.
+     *
      * @return The {@link ILootModifier} with the given name, or a default one if no such instance exists.
      */
     @ZenCodeType.Method
     public ILootModifier getByName(final String name) {
+        
         return new MCLootModifier(this.getLmmMap().get(new ResourceLocation(name)));
     }
-
+    
     /**
      * Gets a list of all the names of the currently registered loot modifiers.
      *
@@ -130,9 +136,10 @@ public final class CTLootModifierManager {
      */
     @ZenCodeType.Method
     public List<String> getAllNames() {
+        
         return this.getLmmMap().keySet().stream().map(ResourceLocation::toString).collect(Collectors.toList());
     }
-
+    
     /**
      * Gets a list containing all currently registered loot modifiers.
      *
@@ -140,9 +147,10 @@ public final class CTLootModifierManager {
      */
     @ZenCodeType.Method
     public List<ILootModifier> getAll() {
+        
         return this.getAllNames().stream().map(this::getByName).collect(Collectors.toList());
     }
-
+    
     /**
      * Removes the loot modifier with the given name.
      *
@@ -153,10 +161,11 @@ public final class CTLootModifierManager {
      */
     @ZenCodeType.Method
     public void removeByName(final String name) {
-        final ResourceLocation id = name.contains(":")? new ResourceLocation(name) : new ResourceLocation(CraftTweaker.MODID, name);
+        
+        final ResourceLocation id = name.contains(":") ? new ResourceLocation(name) : new ResourceLocation(CraftTweaker.MODID, name);
         CraftTweakerAPI.apply(ActionRemoveLootModifier.of(id::equals, "with name '" + id + "'", this::getLmmMap));
     }
-
+    
     /**
      * Removes all loot modifiers that have been registered by the mod with the given ID.
      *
@@ -164,9 +173,10 @@ public final class CTLootModifierManager {
      */
     @ZenCodeType.Method
     public void removeByModId(final String modId) {
+        
         CraftTweakerAPI.apply(ActionRemoveLootModifier.of(name -> modId.equals(name.getNamespace()), "registered by the mod '" + modId + "'", this::getLmmMap));
     }
-
+    
     /**
      * Removes all loot modifiers whose name matches the given regular expression.
      *
@@ -177,30 +187,34 @@ public final class CTLootModifierManager {
      */
     @ZenCodeType.Method
     public void removeByRegex(final String regex) {
-        CraftTweakerAPI.apply(ActionRemoveLootModifier.of(name -> name.toString().matches(regex), "matching the regular expression '" + regex + "'", this::getLmmMap));
+        
+        CraftTweakerAPI.apply(ActionRemoveLootModifier.of(name -> name.toString()
+                .matches(regex), "matching the regular expression '" + regex + "'", this::getLmmMap));
     }
-
+    
     /**
      * Removes all loot modifiers that have been registered up to this point.
      */
     @ZenCodeType.Method
     public void removeAll() {
+        
         CraftTweakerAPI.apply(new ActionRemoveLootModifier(ignored -> true, null, this::getLmmMap));
     }
-
+    
     @SuppressWarnings("unchecked")
     private Map<ResourceLocation, IGlobalLootModifier> getLmmMap() {
+        
         try {
             final LootModifierManager lmm = MethodHandleHelper.invoke(() -> (LootModifierManager) LMM_GETTER.invokeExact());
             Map<ResourceLocation, IGlobalLootModifier> map = MethodHandleHelper.invoke(() -> (Map<ResourceLocation, IGlobalLootModifier>) LMM_MAP_GETTER.invokeExact(lmm));
             // Someone else may make the map mutable, but I explicitly want CT stuff to go last
-            if (!(map instanceof CraftTweakerPrivilegedLootModifierMap)) {
+            if(!(map instanceof CraftTweakerPrivilegedLootModifierMap)) {
                 final Map<ResourceLocation, IGlobalLootModifier> finalMap = new CraftTweakerPrivilegedLootModifierMap(map);
                 map = finalMap;
                 MethodHandleHelper.invokeVoid(() -> this.setLmmMap(lmm, finalMap)); // Let's "mutabilize" the map
             }
             return map;
-        } catch (final IllegalStateException e) {
+        } catch(final IllegalStateException e) {
             // LMM_GETTER.invokeExact() throws ISE if we're on the client and playing multiplayer
             return Collections.emptyMap();
         }
@@ -211,10 +225,12 @@ public final class CTLootModifierManager {
     // type of the lambda is void. The return value is simply popped. The presence of another method works around the
     // issue.
     private void setLmmMap(final LootModifierManager lmm, final Map<ResourceLocation, IGlobalLootModifier> map) throws Throwable {
+        
         LMM_MAP_SETTER.invokeExact(lmm, map);
     }
-
+    
     private ResourceLocation fromName(final String name) {
+        
         return NameUtils.fromFixedName(
                 name,
                 (fixed, mistakes) -> CraftTweakerAPI.logWarning(
@@ -225,4 +241,5 @@ public final class CTLootModifierManager {
                 )
         );
     }
+    
 }

@@ -16,6 +16,7 @@ import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = CraftTweaker.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class DefaultExclusionReplacements {
+    
     // Note: we are using a lazy here to avoid initializing the recipe type list statically and out of order
     private static final Supplier<Set<IRecipeType<?>>> VANILLA_RECIPE_TYPES = Lazy.concurrentOf(
             () -> ImmutableSet.of(
@@ -30,13 +31,12 @@ public final class DefaultExclusionReplacements {
     );
     
     
-    
     @SubscribeEvent
     public static void onGatherReplacementExclusionEvent(final GatherReplacementExclusionEvent event) {
-    
+        
         final IRecipeManager manager = event.getTargetedManager();
         
-        if (VANILLA_RECIPE_TYPES.get().contains(manager.getRecipeType())) {
+        if(VANILLA_RECIPE_TYPES.get().contains(manager.getRecipeType())) {
             manager.getAllRecipes()
                     .stream()
                     .map(WrapperRecipe::getRecipe)
@@ -44,11 +44,12 @@ public final class DefaultExclusionReplacements {
                     .forEach(event::addExclusion);
         }
         
-        if (manager.getRecipeType() == CraftTweaker.RECIPE_TYPE_SCRIPTS) {
+        if(manager.getRecipeType() == CraftTweaker.RECIPE_TYPE_SCRIPTS) {
             manager.getAllRecipes()
                     .stream()
                     .map(WrapperRecipe::getRecipe)
                     .forEach(event::addExclusion);
         }
     }
+    
 }

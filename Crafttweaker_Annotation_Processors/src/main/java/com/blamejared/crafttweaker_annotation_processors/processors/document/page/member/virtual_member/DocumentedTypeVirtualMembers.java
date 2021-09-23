@@ -10,19 +10,23 @@ public class DocumentedTypeVirtualMembers extends DocumentedVirtualMembers {
     public final Set<ConstructorMember> constructors = new TreeSet<>();
     
     public DocumentedTypeVirtualMembers() {
+    
     }
     
     public void addConstructor(ConstructorMember constructorMember) {
+        
         this.constructors.add(constructorMember);
     }
     
     @Override
     public void write(PageOutputWriter writer) {
+        
         writeConstructors(writer);
         super.write(writer);
     }
     
     private void writeConstructors(PageOutputWriter writer) {
+        
         if(constructors.isEmpty()) {
             return;
         }
@@ -33,4 +37,5 @@ public class DocumentedTypeVirtualMembers extends DocumentedVirtualMembers {
         
         writer.println();
     }
+    
 }

@@ -19,6 +19,7 @@ public class StaticMethodMember implements Comparable<StaticMethodMember>, IFill
     private final String returnTypeInfo;
     
     public StaticMethodMember(String name, MemberHeader header, DocumentationComment methodComment, @Nullable String returnTypeInfo) {
+        
         this.name = name;
         this.header = header;
         this.methodComment = methodComment;
@@ -27,6 +28,7 @@ public class StaticMethodMember implements Comparable<StaticMethodMember>, IFill
     
     @Override
     public int compareTo(@Nonnull StaticMethodMember other) {
+        
         final int compareName = this.name.compareToIgnoreCase(other.name);
         if(compareName != 0) {
             return compareName;
@@ -36,6 +38,7 @@ public class StaticMethodMember implements Comparable<StaticMethodMember>, IFill
     }
     
     public void write(PageOutputWriter writer, AbstractTypeInfo ownerType) {
+        
         writeDeprecation(writer);
         writeComment(writer);
         writeReturnType(writer);
@@ -44,24 +47,29 @@ public class StaticMethodMember implements Comparable<StaticMethodMember>, IFill
     }
     
     private void writeParameterDescriptionTable(PageOutputWriter writer) {
+        
         header.writeParameterDescriptionTable(writer);
     }
     
     private void writeReturnType(PageOutputWriter writer) {
+        
         writer.printf("Return Type: %s%n%n", header.returnType.getClickableMarkdown());
     }
     
     private void writeCodeBlockWithExamples(PageOutputWriter writer, AbstractTypeInfo ownerType) {
+        
         writer.zenBlock(() -> writeExampleBlockContent(writer, ownerType));
         writer.println();
     }
     
     protected void writeExampleBlockContent(PageOutputWriter writer, AbstractTypeInfo ownerType) {
+        
         writeSignatureExample(writer, ownerType, header.getNumberOfUsableExamples() > 0);
         writeExamples(writer, ownerType);
     }
     
     private void writeSignatureExample(PageOutputWriter writer, AbstractTypeInfo ownerType, boolean onlySignature) {
+        
         final String ownerName = ownerType.getDisplayName();
         final String signature = header.formatForSignatureExample();
         String template = "%s%s.%s%s%n";
@@ -72,29 +80,35 @@ public class StaticMethodMember implements Comparable<StaticMethodMember>, IFill
     }
     
     private void writeExamples(PageOutputWriter writer, AbstractTypeInfo ownerType) {
+        
         header.writeStaticExamples(writer, ownerType, name);
     }
     
     private void writeDeprecation(final PageOutputWriter writer) {
+        
         writer.deprecationMessage(this.methodComment.getDeprecationMessage());
     }
     
     private void writeComment(PageOutputWriter writer) {
+        
         writeDescription(writer);
         writeReturnTypeInfo(writer);
     }
     
     private void writeReturnTypeInfo(PageOutputWriter writer) {
+        
         if(returnTypeInfoPresent()) {
             writer.printf("Returns: %s  %n", returnTypeInfo);
         }
     }
     
     private boolean returnTypeInfoPresent() {
+        
         return returnTypeInfo != null;
     }
     
     private void writeDescription(PageOutputWriter writer) {
+        
         if(methodComment.hasDescription()) {
             writer.println(methodComment.getMarkdownDescription());
             writer.println();
@@ -102,16 +116,18 @@ public class StaticMethodMember implements Comparable<StaticMethodMember>, IFill
     }
     
     public String getName() {
+        
         return name;
     }
     
     public String getSince() {
+        
         return this.methodComment.getSinceVersion();
     }
     
     @Override
     public void fillMeta(DocumentMeta meta) {
-    
+        
         meta.addSearchTerms(name);
     }
     

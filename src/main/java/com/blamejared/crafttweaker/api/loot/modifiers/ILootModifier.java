@@ -19,18 +19,20 @@ import java.util.List;
 @ZenCodeType.Name("crafttweaker.api.loot.modifiers.ILootModifier")
 @Document("vanilla/api/loot/modifiers/ILootModifier")
 public interface ILootModifier {
+    
     /**
      * Applies the modifier to the drops of a loot table.
      *
-     * @implSpec Implementations should not modify the contents of the <code>loot</code> list itself, and should rather
-     * return a new list instead.
-     *
-     * @param loot The loot dropped by a loot table.
+     * @param loot           The loot dropped by a loot table.
      * @param currentContext The context that caused the loot table to drop the loot.
+     *
      * @return A new list containing the modified loot, or the old list if the loot shouldn't be modified.
      *
+     * @implSpec Implementations should not modify the contents of the <code>loot</code> list itself, and should rather
+     * return a new list instead.
      * @see LootContext
      */
     @ZenCodeType.Method
     List<IItemStack> applyModifier(final List<IItemStack> loot, final LootContext currentContext);
+    
 }

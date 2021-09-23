@@ -17,6 +17,7 @@ public class SourceFilePreprocessed implements SourceFile {
     private final Map<IPreprocessor, List<PreprocessorMatch>> matches;
     
     public SourceFilePreprocessed(String fileName, List<String> fileContent, Map<IPreprocessor, List<PreprocessorMatch>> matches) {
+        
         this.fileName = fileName;
         this.fileContent = fileContent;
         this.matches = matches;
@@ -24,21 +25,24 @@ public class SourceFilePreprocessed implements SourceFile {
     
     @Override
     public String getFilename() {
+        
         return fileName;
     }
     
     @Override
     public Reader open() {
+        
         return new StringReader(String.join(System.lineSeparator(), fileContent) + System.lineSeparator());
     }
     
     @Override
     public void update(String content) {
+        
         fileContent = Arrays.asList(content.split(System.lineSeparator()));
     }
     
     public Map<IPreprocessor, List<PreprocessorMatch>> getMatches() {
-    
+        
         return matches;
     }
     

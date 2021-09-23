@@ -34,6 +34,7 @@ public class ExpandItemTag {
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = true)
     public static IIngredient asIIngredient(MCTag<Item> _this) {
+        
         final ITag<Item> internal = TagManagerItem.INSTANCE.getInternal(_this);
         if(internal == null) {
             CraftTweakerAPI.logWarning("Tag %s does not exist, replacing with empty IItemStack", _this
@@ -47,18 +48,22 @@ public class ExpandItemTag {
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = true)
     public static IData asIData(MCTag<Item> _this) {
+        
         return asIIngredient(_this).asIData();
     }
     
     @ZenCodeType.Method
     public static void add(MCTag<Item> _this, List<IItemStack> items) {
+        
         _this.add(items.stream().map(IItemStack::getDefinition).collect(Collectors.toList()));
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = true)
     public static IIngredientWithAmount asIIngredientWithAmount(MCTag<Item> _this) {
+        
         final IIngredient iIngredient = asIIngredient(_this);
         return ExpandIIngredient.asIIngredientWithAmount(iIngredient);
     }
+    
 }

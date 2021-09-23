@@ -3,7 +3,6 @@ package com.blamejared.crafttweaker.api.fluid;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.brackets.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.data.IData;
-import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
 import net.minecraft.fluid.Fluid;
@@ -12,7 +11,6 @@ import net.minecraftforge.fluids.FluidStack;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @ZenRegister
@@ -138,7 +136,9 @@ public interface IFluidStack extends CommandStringDisplayable {
      * Sets the tag for the FluidStack.
      *
      * @param tag The tag to set.
+     *
      * @return This FluidStack if it is mutable, a new one with the changed property otherwise
+     *
      * @docParam tag {Display: {lore: ["Hello"]}}
      */
     @ZenCodeType.Method
@@ -151,6 +151,7 @@ public interface IFluidStack extends CommandStringDisplayable {
      */
     @ZenCodeType.Getter("hasTag")
     default boolean hasTag() {
+        
         return getInternal().hasTag();
     }
     
@@ -163,12 +164,14 @@ public interface IFluidStack extends CommandStringDisplayable {
     
     
     @ZenCodeType.Caster(implicit = true)
-    default CTFluidIngredient asFluidIngredient(){
+    default CTFluidIngredient asFluidIngredient() {
+        
         return new CTFluidIngredient.FluidStackIngredient(this);
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)
     default CTFluidIngredient asList(CTFluidIngredient other) {
+        
         List<CTFluidIngredient> elements = new ArrayList<>();
         elements.add(asFluidIngredient());
         elements.add(other);

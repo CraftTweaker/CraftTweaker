@@ -159,7 +159,8 @@ public class ExpandEntity {
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("positionVec")
-    public static Vector3d getPositionVec(Entity internal){
+    public static Vector3d getPositionVec(Entity internal) {
+        
         return internal.getPositionVec();
     }
     

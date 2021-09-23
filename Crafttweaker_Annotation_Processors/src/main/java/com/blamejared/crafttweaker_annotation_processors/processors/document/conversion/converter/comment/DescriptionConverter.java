@@ -17,6 +17,7 @@ public class DescriptionConverter {
     
     public DescriptionConverter(LinkTagReplacer linkTagReplacer, CodeTagReplacer codeTagReplacer,
                                 ParagraphMarkdownConverter paragraphMarkdownConverter, ParameterRemover parameterRemover) {
+        
         this.linkTagReplacer = linkTagReplacer;
         this.codeTagReplacer = codeTagReplacer;
         this.paragraphMarkdownConverter = paragraphMarkdownConverter;
@@ -25,6 +26,7 @@ public class DescriptionConverter {
     
     @Nullable
     public String convertFromCommentString(@Nullable String docComment, Element element) {
+        
         if(docComment == null) {
             return null;
         }
@@ -34,6 +36,7 @@ public class DescriptionConverter {
     
     @Nonnull
     private String convertNonNullCommentString(String docComment, Element element) {
+        
         docComment = replaceLinkTagsWithClickableMarkdown(docComment, element);
         docComment = replaceCodeTagsWithCodeSections(docComment);
         docComment = convertParagraphsToMarkdownFormatFromHtml(docComment);
@@ -43,18 +46,22 @@ public class DescriptionConverter {
     }
     
     private String replaceLinkTagsWithClickableMarkdown(String docComment, Element element) {
+        
         return linkTagReplacer.replaceLinkTagsFrom(docComment, element);
     }
     
     private String replaceCodeTagsWithCodeSections(String docComment) {
+        
         return this.codeTagReplacer.replaceCodeTags(docComment);
     }
     
     private String convertParagraphsToMarkdownFormatFromHtml(String docComment) {
+        
         return this.paragraphMarkdownConverter.convertParagraphToMarkdown(docComment);
     }
     
     private String removeDocumentationParameters(String docComment) {
+        
         return parameterRemover.removeDocumentationParametersFrom(docComment);
     }
     

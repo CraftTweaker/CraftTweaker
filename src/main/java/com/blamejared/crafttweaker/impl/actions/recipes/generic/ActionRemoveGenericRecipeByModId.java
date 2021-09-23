@@ -10,18 +10,21 @@ public class ActionRemoveGenericRecipeByModId extends ActionRemoveGenericRecipeB
     private final IRecipeManager.RecipeFilter exclude;
     
     public ActionRemoveGenericRecipeByModId(String modId, IRecipeManager.RecipeFilter exclude) {
+        
         this.modId = modId;
         this.exclude = exclude;
     }
     
     @Override
     public String describe() {
+        
         final String message = String.format("Removing all recipes from modId \"%s\"", modId);
         return exclude == null ? message : (message + ", while retaining recipes matching a filter");
     }
     
     @Override
     protected boolean shouldRemove(IRecipe<?> recipe) {
+        
         final ResourceLocation id = recipe.getId();
         if(!id.getNamespace().equals(modId)) {
             return false;
@@ -29,4 +32,5 @@ public class ActionRemoveGenericRecipeByModId extends ActionRemoveGenericRecipeB
         
         return exclude == null || !exclude.test(id.getPath());
     }
+    
 }

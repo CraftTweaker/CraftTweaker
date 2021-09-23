@@ -23,14 +23,16 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.WeatherCheck")
 @Document("vanilla/api/loot/conditions/vanilla/WeatherCheck")
 public final class WeatherCheckLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     private TriState raining;
     private TriState thundering;
-
+    
     WeatherCheckLootConditionTypeBuilder() {
+        
         this.raining = TriState.UNSET;
         this.thundering = TriState.UNSET;
     }
-
+    
     /**
      * Sets the condition to require a rainy weather.
      *
@@ -42,10 +44,11 @@ public final class WeatherCheckLootConditionTypeBuilder implements ILootConditio
      */
     @ZenCodeType.Method
     public WeatherCheckLootConditionTypeBuilder withRain() {
+        
         this.raining = TriState.TRUE;
         return this;
     }
-
+    
     /**
      * Sets the condition to require a non-rainy weather.
      *
@@ -57,10 +60,11 @@ public final class WeatherCheckLootConditionTypeBuilder implements ILootConditio
      */
     @ZenCodeType.Method
     public WeatherCheckLootConditionTypeBuilder withoutRain() {
+        
         this.raining = TriState.FALSE;
         return this;
     }
-
+    
     /**
      * Sets the condition to require a thundering weather.
      *
@@ -72,10 +76,11 @@ public final class WeatherCheckLootConditionTypeBuilder implements ILootConditio
      */
     @ZenCodeType.Method
     public WeatherCheckLootConditionTypeBuilder withThunders() {
+        
         this.thundering = TriState.TRUE;
         return this;
     }
-
+    
     /**
      * Sets the condition to require a non-thundering weather.
      *
@@ -87,20 +92,27 @@ public final class WeatherCheckLootConditionTypeBuilder implements ILootConditio
      */
     @ZenCodeType.Method
     public WeatherCheckLootConditionTypeBuilder withoutThunders() {
+        
         this.thundering = TriState.FALSE;
         return this;
     }
-
+    
     @Override
     public ILootCondition finish() {
-        if (this.raining.isUnset() && this.thundering.isUnset()) {
+        
+        if(this.raining.isUnset() && this.thundering.isUnset()) {
             CraftTweakerAPI.logWarning("'WeatherCheck' loot condition has both raining and thundering unset: this is useless");
         }
         return context -> {
             final World world = ExpandLootContext.getWorld(context);
-            if (!this.raining.isUnset() && !this.raining.match(world.isRaining())) return false;
-            if (!this.thundering.isUnset()) return this.thundering.match(world.isThundering());
+            if(!this.raining.isUnset() && !this.raining.match(world.isRaining())) {
+                return false;
+            }
+            if(!this.thundering.isUnset()) {
+                return this.thundering.match(world.isThundering());
+            }
             return true;
         };
     }
+    
 }

@@ -28,21 +28,25 @@ public class TagManagerItem implements TagManager<Item> {
     public static final TagManagerItem INSTANCE = new TagManagerItem();
     
     private TagManagerItem() {
+    
     }
     
     @Override
     public @Nonnull
     Class<Item> getElementClass() {
+        
         return Item.class;
     }
     
     @Override
     public String getTagFolder() {
+        
         return "items";
     }
     
     @Override
     public List<MCTag<Item>> getAllTagsFor(Item element) {
+        
         return getTagCollection().getOwningTags(element)
                 .stream()
                 .map(location -> new MCTag<>(location, this))
@@ -51,6 +55,7 @@ public class TagManagerItem implements TagManager<Item> {
     
     @Override
     public void addElements(MCTag<Item> to, List<Item> toAdd) {
+        
         final ITag<Item> internal = getInternal(to);
         if(internal == null) {
             final Tag<Item> tagFromContents = new Tag<>(Sets.newHashSet(toAdd), Item.class);
@@ -62,12 +67,14 @@ public class TagManagerItem implements TagManager<Item> {
     
     @Override
     public void removeElements(MCTag<Item> from, List<Item> toRemove) {
+        
         final ITag<Item> internal = getInternal(from);
         CraftTweakerAPI.apply(new ActionTagRemove<>(internal, toRemove, from));
     }
     
     @Override
     public List<Item> getElementsInTag(MCTag<Item> theTag) {
+        
         final ITag<Item> internal = getInternal(theTag);
         if(internal == null) {
             return Collections.emptyList();
@@ -78,11 +85,14 @@ public class TagManagerItem implements TagManager<Item> {
     
     @Override
     public ITag<Item> getInternal(MCTag<Item> theTag) {
+        
         return getTagCollection().get(theTag.getIdInternal());
     }
     
     @Override
     public ITagCollection<Item> getTagCollection() {
+        
         return TagCollectionManager.getManager().getItemTags();
     }
+    
 }

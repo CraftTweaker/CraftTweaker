@@ -1,7 +1,9 @@
 package com.blamejared.crafttweaker.api.util;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.Optional;
 
 public class InstantiationUtil {
     
@@ -13,9 +15,11 @@ public class InstantiationUtil {
      * Does absolutely no caching, so don't call this when not necessary
      *
      * @param cls The class to instantiate
+     *
      * @return The instance, or 'null'
      */
     public static <T> T getOrCreateInstance(Class<T> cls) {
+        
         try {
             final Optional<Field> any = Arrays.stream(cls.getDeclaredFields())
                     .filter(f -> Modifier.isPublic(f.getModifiers()))
@@ -36,4 +40,5 @@ public class InstantiationUtil {
         
         return null;
     }
+    
 }

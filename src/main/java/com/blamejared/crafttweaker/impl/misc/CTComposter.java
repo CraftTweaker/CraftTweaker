@@ -26,6 +26,7 @@ public class CTComposter {
      *
      * @param stack  The stack to be compostable
      * @param amount The amount of Compost that should be added when the item is put in a Composter.
+     *
      * @docParam stack <item:minecraft:diamond>
      * @docParam amount 0.85
      */

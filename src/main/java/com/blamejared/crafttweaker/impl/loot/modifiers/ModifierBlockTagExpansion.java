@@ -27,11 +27,12 @@ public class ModifierBlockTagExpansion {
      * Adds an {@link ILootModifier} to all the blocks contained in this tag, with the given name.
      *
      * @param internal The block tag to add the loot modifier to.
-     * @param name The name of the loot modifier to add.
+     * @param name     The name of the loot modifier to add.
      * @param modifier The loot modifier to add.
      */
     @ZenCodeType.Method
     public static void addLootModifier(final MCTag<Block> internal, final String name, final ILootModifier modifier) {
+        
         CTLootManager.LOOT_MANAGER.getModifierManager().register(
                 name,
                 CTLootConditionBuilder.create()
@@ -46,12 +47,13 @@ public class ModifierBlockTagExpansion {
      * <p>Parameters that may be attached to the tool such as count, damage, or NBT data are ignored.</p>
      *
      * @param internal The block tag to add the loot modifier to.
-     * @param name The name of the loot modifier.
-     * @param tool The tool one of the blocks contained in the tag was broken with.
+     * @param name     The name of the loot modifier.
+     * @param tool     The tool one of the blocks contained in the tag was broken with.
      * @param modifier The loot modifier to add to the block tag.
      */
     @ZenCodeType.Method
     public static void addToolLootModifier(final MCTag<Block> internal, final String name, final IItemStack tool, final ILootModifier modifier) {
+        
         addToolLootModifier(internal, name, tool, false, modifier);
     }
     
@@ -61,14 +63,15 @@ public class ModifierBlockTagExpansion {
      *
      * <p>Additional parameters that may be attached to the tool, such as NBT or count, are ignored.</p>
      *
-     * @param internal The block tag to add the loot modifier to.
-     * @param name The name of the loot modifier.
-     * @param tool The tool one of the blocks contained in the tag was broken with.
+     * @param internal    The block tag to add the loot modifier to.
+     * @param name        The name of the loot modifier.
+     * @param tool        The tool one of the blocks contained in the tag was broken with.
      * @param matchDamage Whether to consider damage or not when trying to match the tool.
-     * @param modifier The loot modifier to add to the block tag.
+     * @param modifier    The loot modifier to add to the block tag.
      */
     @ZenCodeType.Method
     public static void addToolLootModifier(final MCTag<Block> internal, final String name, final IItemStack tool, final boolean matchDamage, final ILootModifier modifier) {
+        
         addToolLootModifier(internal, name, tool, matchDamage, false, modifier);
     }
     
@@ -78,16 +81,17 @@ public class ModifierBlockTagExpansion {
      *
      * <p>Additional parameters that may be attached to the tool, such as count, are ignored.</p>
      *
-     * @param internal The block tag to add the loot modifier to.
-     * @param name The name of the loot modifier.
-     * @param tool The tool one of the blocks contained in the tag was broken with.
+     * @param internal    The block tag to add the loot modifier to.
+     * @param name        The name of the loot modifier.
+     * @param tool        The tool one of the blocks contained in the tag was broken with.
      * @param matchDamage Whether to consider damage or not when trying to match the tool.
-     * @param matchNbt Whether to consider NBT data or not when trying to match the tool.
-     * @param modifier The loot modifier to add to the block tag.
+     * @param matchNbt    Whether to consider NBT data or not when trying to match the tool.
+     * @param modifier    The loot modifier to add to the block tag.
      */
     @ZenCodeType.Method
     public static void addToolLootModifier(final MCTag<Block> internal, final String name, final IItemStack tool,
                                            final boolean matchDamage, final boolean matchNbt, final ILootModifier modifier) {
+        
         CTLootManager.LOOT_MANAGER.getModifierManager().register(
                 name,
                 CTLootConditionBuilder.create()
@@ -104,12 +108,13 @@ public class ModifierBlockTagExpansion {
      * <p>Damage or NBT is ignored when attempting to match the tool.</p>
      *
      * @param internal The block tag to add the loot modifier to.
-     * @param name The name of the loot modifier.
+     * @param name     The name of the loot modifier.
      * @param toolType The type of the tool one of the blocks contained in this tag must be broken with.
      * @param modifier The loot modifier to add to the block tag.
      */
     @ZenCodeType.Method
     public static void addToolTypeLootModifier(final MCTag<Block> internal, final String name, final ToolType toolType, final ILootModifier modifier) {
+        
         CTLootManager.LOOT_MANAGER.getModifierManager().register(
                 name,
                 CTLootConditionBuilder.create()
@@ -118,4 +123,5 @@ public class ModifierBlockTagExpansion {
                 modifier
         );
     }
+    
 }

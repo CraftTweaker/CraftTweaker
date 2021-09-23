@@ -21,13 +21,15 @@ import java.util.stream.Stream;
 @ZenCodeType.Name("crafttweaker.api.predicate.DistancePredicate")
 @Document("vanilla/api/predicate/DistancePredicate")
 public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaulting<net.minecraft.advancements.criterion.DistancePredicate> {
+    
     private FloatRangePredicate absoluteDistance;
     private FloatRangePredicate horizontalDistance;
     private FloatRangePredicate xDistance;
     private FloatRangePredicate yDistance;
     private FloatRangePredicate zDistance;
-
+    
     public DistancePredicate() {
+        
         super(net.minecraft.advancements.criterion.DistancePredicate.ANY);
         this.absoluteDistance = FloatRangePredicate.unbounded();
         this.horizontalDistance = FloatRangePredicate.unbounded();
@@ -35,7 +37,7 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
         this.yDistance = FloatRangePredicate.unbounded();
         this.zDistance = FloatRangePredicate.unbounded();
     }
-
+    
     /**
      * Sets the minimum value the absolute distance should be to <code>min</code>.
      *
@@ -46,14 +48,16 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
      * The minimum value is inclusive, meaning that a value that is equal to <code>min</code> will pass the check.
      *
      * @param min The minimum value the absolute distance should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public DistancePredicate withMinimumAbsoluteDistance(final float min) {
+        
         this.absoluteDistance = FloatRangePredicate.mergeLowerBound(this.absoluteDistance, min);
         return this;
     }
-
+    
     /**
      * Sets the maximum value the absolute distance should be to <code>max</code>.
      *
@@ -64,14 +68,16 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
      * The maximum value is inclusive, meaning that a value that is equal to <code>max</code> will pass the check.
      *
      * @param max The maximum value the absolute distance should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public DistancePredicate withMaximumAbsoluteDistance(final float max) {
+        
         this.absoluteDistance = FloatRangePredicate.mergeUpperBound(this.absoluteDistance, max);
         return this;
     }
-
+    
     /**
      * Sets both the minimum and maximum value the absolute distance should be to <code>min</code> and <code>max</code>
      * respectively.
@@ -83,14 +89,16 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
      *
      * @param min The minimum value the absolute distance should be.
      * @param max The maximum value the absolute distance should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public DistancePredicate withRangedAbsoluteDistance(final float min, final float max) {
+        
         this.absoluteDistance = FloatRangePredicate.bounded(min, max);
         return this;
     }
-
+    
     /**
      * Sets the minimum value the horizontal distance should be to <code>min</code>.
      *
@@ -101,14 +109,16 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
      * The minimum value is inclusive, meaning that a value that is equal to <code>min</code> will pass the check.
      *
      * @param min The minimum value the horizontal distance should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public DistancePredicate withMinimumHorizontalDistance(final float min) {
+        
         this.horizontalDistance = FloatRangePredicate.mergeLowerBound(this.horizontalDistance, min);
         return this;
     }
-
+    
     /**
      * Sets the maximum value the horizontal distance should be to <code>max</code>.
      *
@@ -119,14 +129,16 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
      * The maximum value is inclusive, meaning that a value that is equal to <code>max</code> will pass the check.
      *
      * @param max The maximum value the horizontal distance should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public DistancePredicate withMaximumHorizontalDistance(final float max) {
+        
         this.horizontalDistance = FloatRangePredicate.mergeUpperBound(this.horizontalDistance, max);
         return this;
     }
-
+    
     /**
      * Sets both the minimum and maximum value the horizontal distance should be to <code>min</code> and
      * <code>max</code> respectively.
@@ -138,14 +150,16 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
      *
      * @param min The minimum value the horizontal distance should be.
      * @param max The maximum value the horizontal distance should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public DistancePredicate withRangedHorizontalDistance(final float min, final float max) {
+        
         this.horizontalDistance = FloatRangePredicate.bounded(min, max);
         return this;
     }
-
+    
     /**
      * Sets the minimum value the distance along the X axis should be to <code>min</code>.
      *
@@ -156,14 +170,16 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
      * The minimum value is inclusive, meaning that a value that is equal to <code>min</code> will pass the check.
      *
      * @param min The minimum value the distance along the X axis should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public DistancePredicate withMinimumX(final float min) {
+        
         this.xDistance = FloatRangePredicate.mergeLowerBound(this.xDistance, min);
         return this;
     }
-
+    
     /**
      * Sets the maximum value the distance along the X axis should be to <code>max</code>.
      *
@@ -174,14 +190,16 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
      * The maximum value is inclusive, meaning that a value that is equal to <code>max</code> will pass the check.
      *
      * @param max The maximum value the distance along the X axis should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public DistancePredicate withMaximumX(final float max) {
+        
         this.xDistance = FloatRangePredicate.mergeUpperBound(this.xDistance, max);
         return this;
     }
-
+    
     /**
      * Sets both the minimum and maximum value the distance along the X axis should be to <code>min</code> and
      * <code>max</code> respectively.
@@ -193,14 +211,16 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
      *
      * @param min The minimum value the distance along the X axis should be.
      * @param max The maximum value the distance along the X axis should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public DistancePredicate withRangedX(final float min, final float max) {
+        
         this.xDistance = FloatRangePredicate.bounded(min, max);
         return this;
     }
-
+    
     /**
      * Sets the minimum value the distance along the Y axis should be to <code>min</code>.
      *
@@ -211,14 +231,16 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
      * The minimum value is inclusive, meaning that a value that is equal to <code>min</code> will pass the check.
      *
      * @param min The minimum value the distance along the Y axis should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public DistancePredicate withMinimumY(final float min) {
+        
         this.yDistance = FloatRangePredicate.mergeLowerBound(this.yDistance, min);
         return this;
     }
-
+    
     /**
      * Sets the maximum value the distance along the Y axis should be to <code>max</code>.
      *
@@ -229,14 +251,16 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
      * The maximum value is inclusive, meaning that a value that is equal to <code>max</code> will pass the check.
      *
      * @param max The maximum value the distance along the Y axis should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public DistancePredicate withMaximumY(final float max) {
+        
         this.yDistance = FloatRangePredicate.mergeUpperBound(this.yDistance, max);
         return this;
     }
-
+    
     /**
      * Sets both the minimum and maximum value the distance along the Y axis should be to <code>min</code> and
      * <code>max</code> respectively.
@@ -248,14 +272,16 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
      *
      * @param min The minimum value the distance along the Y axis should be.
      * @param max The maximum value the distance along the Y axis should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public DistancePredicate withRangedY(final float min, final float max) {
+        
         this.yDistance = FloatRangePredicate.bounded(min, max);
         return this;
     }
-
+    
     /**
      * Sets the minimum value the distance along the Z axis should be to <code>min</code>.
      *
@@ -266,14 +292,16 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
      * The minimum value is inclusive, meaning that a value that is equal to <code>min</code> will pass the check.
      *
      * @param min The minimum value the distance along the Z axis should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public DistancePredicate withMinimumZ(final float min) {
+        
         this.zDistance = FloatRangePredicate.mergeLowerBound(this.zDistance, min);
         return this;
     }
-
+    
     /**
      * Sets the maximum value the distance along the Z axis should be to <code>max</code>.
      *
@@ -284,14 +312,16 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
      * The maximum value is inclusive, meaning that a value that is equal to <code>max</code> will pass the check.
      *
      * @param max The maximum value the distance along the Z axis should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public DistancePredicate withMaximumZ(final float max) {
+        
         this.zDistance = FloatRangePredicate.mergeUpperBound(this.zDistance, max);
         return this;
     }
-
+    
     /**
      * Sets both the minimum and maximum value the distance along the Z axis should be to <code>min</code> and
      * <code>max</code> respectively.
@@ -303,22 +333,26 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
      *
      * @param min The minimum value the distance along the Z axis should be.
      * @param max The maximum value the distance along the Z axis should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public DistancePredicate withRangedZ(final float min, final float max) {
+        
         this.zDistance = FloatRangePredicate.bounded(min, max);
         return this;
     }
-
+    
     @Override
     public boolean isAny() {
+        
         return Stream.of(this.absoluteDistance, this.horizontalDistance, this.xDistance, this.yDistance, this.zDistance)
                 .allMatch(FloatRangePredicate::isAny);
     }
-
+    
     @Override
     public net.minecraft.advancements.criterion.DistancePredicate toVanilla() {
+        
         return new net.minecraft.advancements.criterion.DistancePredicate(
                 this.xDistance.toVanillaPredicate(),
                 this.yDistance.toVanillaPredicate(),
@@ -327,4 +361,5 @@ public final class DistancePredicate extends IVanillaWrappingPredicate.AnyDefaul
                 this.absoluteDistance.toVanillaPredicate()
         );
     }
+    
 }

@@ -56,6 +56,7 @@ public class ActionRemoveTrade extends ActionTradeBase {
     
     @Override
     public void undo(List<VillagerTrades.ITrade> tradeList) {
+        
         tradeList.addAll(removed);
     }
     

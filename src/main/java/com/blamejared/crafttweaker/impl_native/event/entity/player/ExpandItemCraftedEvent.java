@@ -17,12 +17,15 @@ public class ExpandItemCraftedEvent {
     @ZenCodeType.Method
     @ZenCodeType.Getter("crafting")
     public static IItemStack getCrafting(PlayerEvent.ItemCraftedEvent internal) {
+        
         return new MCItemStack(internal.getCrafting());
     }
-
+    
     @ZenCodeType.Method
     @ZenCodeType.Getter("craftingMatrix")
     public static IInventory getCraftingMatrix(PlayerEvent.ItemCraftedEvent internal) {
+        
         return internal.getInventory();
     }
+    
 }

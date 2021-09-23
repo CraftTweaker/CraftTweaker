@@ -26,18 +26,22 @@ public class ExpandNativeItemStack {
      */
     @ZenCodeType.Method
     public static void print(ItemStack _this) {
+        
         CraftTweakerAPI.logInfo("%s", _this);
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = true)
     public static IItemStack asIItemStack(ItemStack _this) {
+        
         return new MCItemStack(_this);
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = true)
     public static IIngredient asIIngredient(ItemStack _this) {
+        
         return asIItemStack(_this);
     }
+    
 }

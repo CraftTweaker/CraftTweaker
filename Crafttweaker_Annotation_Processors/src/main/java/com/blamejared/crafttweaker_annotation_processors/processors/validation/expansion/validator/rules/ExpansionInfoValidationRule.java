@@ -9,4 +9,5 @@ public interface ExpansionInfoValidationRule {
     boolean canValidate(Element enclosedElement);
     
     void validate(Element enclosedElement, ExpansionInfo expansionInfo);
+    
 }

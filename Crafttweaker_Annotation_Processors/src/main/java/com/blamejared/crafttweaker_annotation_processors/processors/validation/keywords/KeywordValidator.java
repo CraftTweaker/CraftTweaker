@@ -17,16 +17,19 @@ public class KeywordValidator extends AbstractCraftTweakerProcessor {
     
     @Override
     protected void performInitialization() {
+        
         this.keywordUtil = dependencyContainer.getInstanceOfClass(ZenCodeKeywordUtil.class);
     }
     
     @Override
     public Collection<Class<? extends Annotation>> getSupportedAnnotationClasses() {
+        
         return Arrays.asList(ZenCodeType.Method.class, ZenCodeType.Getter.class, ZenCodeType.Setter.class, ZenCodeType.Field.class);
     }
     
     @Override
     public boolean performProcessing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        
         for(TypeElement annotation : annotations) {
             for(Element element : roundEnv.getElementsAnnotatedWith(annotation)) {
                 verifyElementNameUseNoKeywordAsName(element);
@@ -37,6 +40,8 @@ public class KeywordValidator extends AbstractCraftTweakerProcessor {
     }
     
     private void verifyElementNameUseNoKeywordAsName(Element element) {
+        
         keywordUtil.checkName(element, processingEnv.getMessager());
     }
+    
 }

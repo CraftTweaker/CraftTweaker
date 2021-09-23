@@ -16,29 +16,35 @@ public class NativeTypeConversionRule implements TypeConversionRule {
     private final Types typeUtils;
     
     public NativeTypeConversionRule(NativeConversionRegistry nativeConversionRegistry, Types typeUtils) {
+        
         this.nativeConversionRegistry = nativeConversionRegistry;
         this.typeUtils = typeUtils;
     }
     
     @Override
     public boolean canConvert(TypeMirror mirror) {
+        
         return isNativeType(mirror);
     }
     
     private boolean isNativeType(TypeMirror mirror) {
+        
         return isTypeElement(mirror) && isTypeElementNative(mirror);
     }
     
     private boolean isTypeElementNative(TypeMirror mirror) {
+        
         final TypeElement element = getTypeElement(mirror);
         return nativeConversionRegistry.hasNativeTypeInfo(element);
     }
     
     private TypeElement getTypeElement(TypeMirror mirror) {
+        
         return (TypeElement) typeUtils.asElement(mirror);
     }
     
     private boolean isTypeElement(TypeMirror mirror) {
+        
         final Element element = typeUtils.asElement(mirror);
         return element instanceof TypeElement;
     }
@@ -46,7 +52,9 @@ public class NativeTypeConversionRule implements TypeConversionRule {
     @Nullable
     @Override
     public AbstractTypeInfo convert(TypeMirror mirror) {
+        
         final TypeElement nativeType = getTypeElement(mirror);
         return nativeConversionRegistry.getNativeTypeInfo(nativeType);
     }
+    
 }

@@ -25,6 +25,7 @@ import java.util.Set;
  * all <strong>vanilla</strong> recipe types. You don't need to add these to the exclusion list yourself.
  */
 public final class GatherReplacementExclusionEvent extends Event {
+    
     private final IRecipeManager targetedManager;
     private final Set<ResourceLocation> excludedRecipes;
     
@@ -34,6 +35,7 @@ public final class GatherReplacementExclusionEvent extends Event {
      * @param manager The manager this event is being fired for.
      */
     public GatherReplacementExclusionEvent(final IRecipeManager manager) {
+        
         this.targetedManager = manager;
         this.excludedRecipes = new HashSet<>();
     }
@@ -44,6 +46,7 @@ public final class GatherReplacementExclusionEvent extends Event {
      * @return The targeted manager this event is being fired for.
      */
     public IRecipeManager getTargetedManager() {
+        
         return this.targetedManager;
     }
     
@@ -53,6 +56,7 @@ public final class GatherReplacementExclusionEvent extends Event {
      * @return An immutable view of the recipe names that have currently been excluded.
      */
     public Collection<ResourceLocation> getExcludedRecipes() {
+        
         return Collections.unmodifiableCollection(this.excludedRecipes);
     }
     
@@ -62,18 +66,21 @@ public final class GatherReplacementExclusionEvent extends Event {
      * @param id The ID of the recipe to exclude.
      */
     public void addExclusion(final ResourceLocation id) {
+        
         this.excludedRecipes.add(id);
     }
     
     /**
      * Adds the name of the given {@link IRecipe} to the list of recipe names that will be excluded.
      *
+     * @param recipe The recipe that will be excluded.
+     *
      * @implNote The effect of this method is the same as if a call like {@code event.addExclusion(recipe.getId())}
      * would have been made.
-     *
-     * @param recipe The recipe that will be excluded.
      */
     public void addExclusion(final IRecipe<?> recipe) {
+        
         this.addExclusion(recipe.getId());
     }
+    
 }

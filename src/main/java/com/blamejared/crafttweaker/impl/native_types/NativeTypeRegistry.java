@@ -1,10 +1,17 @@
 package com.blamejared.crafttweaker.impl.native_types;
 
-import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker_annotations.annotations.*;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker_annotations.annotations.NativeConstructor;
+import com.blamejared.crafttweaker_annotations.annotations.NativeMethod;
+import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Holds a listing of all registered vanilla types.

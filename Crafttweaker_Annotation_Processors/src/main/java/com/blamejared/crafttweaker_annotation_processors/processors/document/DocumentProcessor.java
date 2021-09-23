@@ -8,15 +8,18 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.fil
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageWriter;
 import com.sun.source.util.Trees;
 import org.reflections.Reflections;
-import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
-import javax.annotation.processing.*;
-import javax.lang.model.element.*;
-import java.io.*;
-import java.lang.annotation.*;
-import java.util.*;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.element.TypeElement;
+import java.io.File;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DocumentProcessor extends AbstractCraftTweakerProcessor {
     
@@ -83,7 +86,7 @@ public class DocumentProcessor extends AbstractCraftTweakerProcessor {
     private void setupReflections() {
         
         final ConfigurationBuilder configuration = new ConfigurationBuilder().addUrls(ClasspathHelper
-                .forJavaClassPath())
+                        .forJavaClassPath())
                 .addClassLoaders(ClasspathHelper.contextClassLoader(), ClasspathHelper.staticClassLoader(), getClass()
                         .getClassLoader())
                 .addUrls(ClasspathHelper.forClassLoader());

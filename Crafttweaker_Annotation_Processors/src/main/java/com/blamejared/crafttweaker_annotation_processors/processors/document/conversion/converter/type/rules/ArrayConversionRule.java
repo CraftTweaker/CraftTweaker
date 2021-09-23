@@ -15,17 +15,20 @@ public class ArrayConversionRule implements TypeConversionRule {
     private final TypeConverter typeConverter;
     
     public ArrayConversionRule(TypeConverter typeConverter) {
+        
         this.typeConverter = typeConverter;
     }
     
     @Override
     public boolean canConvert(TypeMirror mirror) {
+        
         return mirror.getKind() == TypeKind.ARRAY;
     }
     
     @Nullable
     @Override
     public AbstractTypeInfo convert(TypeMirror mirror) {
+        
         final ArrayType arrayType = (ArrayType) mirror;
         final AbstractTypeInfo baseType = convertBaseType(arrayType);
         
@@ -33,6 +36,8 @@ public class ArrayConversionRule implements TypeConversionRule {
     }
     
     private AbstractTypeInfo convertBaseType(ArrayType arrayType) {
+        
         return typeConverter.convertType(arrayType.getComponentType());
     }
+    
 }

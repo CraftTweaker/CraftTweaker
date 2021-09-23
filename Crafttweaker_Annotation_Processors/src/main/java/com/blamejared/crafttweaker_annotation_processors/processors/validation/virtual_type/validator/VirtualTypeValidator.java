@@ -19,10 +19,12 @@ public class VirtualTypeValidator implements IHasPostCreationCall {
     private final DependencyContainer dependencyContainer;
     
     public VirtualTypeValidator(DependencyContainer dependencyContainer) {
+        
         this.dependencyContainer = dependencyContainer;
     }
     
     public void validateAll(Collection<? extends Element> elements) {
+        
         for(Element element : elements) {
             if(!isTypeElement(element)) {
                 throw new IllegalArgumentException("Invalid typeElement annotated: " + element);
@@ -32,16 +34,19 @@ public class VirtualTypeValidator implements IHasPostCreationCall {
     }
     
     private boolean isTypeElement(Element element) {
+        
         return element.getKind().isClass() || element.getKind().isInterface();
     }
     
     private void validate(TypeElement element) {
+        
         for(Element enclosedElement : element.getEnclosedElements()) {
             validateEnclosed(enclosedElement);
         }
     }
     
     private void validateEnclosed(Element enclosedElement) {
+        
         for(VirtualTypeValidationRule rule : rules) {
             if(rule.canValidate(enclosedElement)) {
                 rule.validate(enclosedElement);
@@ -51,13 +56,16 @@ public class VirtualTypeValidator implements IHasPostCreationCall {
     
     @Override
     public void afterCreation() {
+        
         addRule(ModifierValidationRule.class);
         addRule(OperatorParameterCountValidationRule.class);
         addRule(ParameterCountValidationRule.class);
     }
     
     public void addRule(Class<? extends VirtualTypeValidationRule> ruleClass) {
+        
         final VirtualTypeValidationRule rule = dependencyContainer.getInstanceOfClass(ruleClass);
         rules.add(rule);
     }
+    
 }

@@ -20,6 +20,7 @@ public class GenericConversionRule implements NameConversionRule {
     private final NameConverter nameConverter;
     
     public GenericConversionRule(Types typeUtils, NameConverter nameConverter) {
+        
         this.typeUtils = typeUtils;
         this.nameConverter = nameConverter;
     }
@@ -27,6 +28,7 @@ public class GenericConversionRule implements NameConversionRule {
     @Nullable
     @Override
     public TypeMirror convertZenCodeName(String zenCodeName) {
+        
         if(isGeneric(zenCodeName)) {
             return getGeneric(zenCodeName);
         }
@@ -34,10 +36,12 @@ public class GenericConversionRule implements NameConversionRule {
     }
     
     private boolean isGeneric(String zenCodeName) {
+        
         return pattern.matcher(zenCodeName).matches();
     }
     
     private TypeMirror getGeneric(String zenCodeName) {
+        
         final Matcher matcher = pattern.matcher(zenCodeName);
         if(!matcher.matches()) {
             throw new IllegalStateException("It matched before but not now? " + zenCodeName);
@@ -48,6 +52,7 @@ public class GenericConversionRule implements NameConversionRule {
     }
     
     private TypeMirror getFromMatchResult(MatchResult matchResult) {
+        
         final TypeElement baseType = getBaseType(matchResult);
         final TypeMirror[] arguments = getTypeArguments(matchResult);
         
@@ -55,15 +60,18 @@ public class GenericConversionRule implements NameConversionRule {
     }
     
     private TypeElement getBaseType(MatchResult matchResult) {
+        
         final String baseTypeZenCodeName = matchResult.group(1).trim();
         final TypeMirror typeMirrorByZenCodeName = nameConverter.getTypeMirrorByZenCodeName(baseTypeZenCodeName);
         return (TypeElement) typeUtils.asElement(typeMirrorByZenCodeName);
     }
     
     private TypeMirror[] getTypeArguments(MatchResult matchResult) {
+        
         final String[] split = matchResult.group(2).split(",\\s*");
         return Arrays.stream(split)
                 .map(nameConverter::getTypeMirrorByZenCodeName)
                 .toArray(TypeMirror[]::new);
     }
+    
 }

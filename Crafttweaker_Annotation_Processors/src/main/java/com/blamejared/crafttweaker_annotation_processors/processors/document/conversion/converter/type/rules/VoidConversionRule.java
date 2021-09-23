@@ -12,12 +12,15 @@ public class VoidConversionRule implements TypeConversionRule {
     
     @Override
     public boolean canConvert(TypeMirror mirror) {
+        
         return mirror.getKind() == TypeKind.VOID;
     }
     
     @Nullable
     @Override
     public AbstractTypeInfo convert(TypeMirror mirror) {
+        
         return new PrimitiveTypeInfo("void");
     }
+    
 }

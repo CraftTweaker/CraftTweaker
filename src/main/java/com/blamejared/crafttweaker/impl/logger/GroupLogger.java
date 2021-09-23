@@ -1,9 +1,13 @@
 package com.blamejared.crafttweaker.impl.logger;
 
-import com.blamejared.crafttweaker.api.logger.*;
+import com.blamejared.crafttweaker.api.logger.ILogger;
+import com.blamejared.crafttweaker.api.logger.LogLevel;
 import net.minecraft.entity.player.PlayerEntity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GroupLogger implements ILogger {
     

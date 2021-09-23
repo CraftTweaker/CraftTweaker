@@ -17,7 +17,9 @@ public class ExpandItemTagWithAmount {
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = true)
     public static IIngredientWithAmount asIngredient(MCTagWithAmount<Item> _this) {
+        
         final IIngredient iIngredient = ExpandItemTag.asIIngredient(_this.getTag());
         return ExpandIIngredient.mul(iIngredient, _this.getAmount());
     }
+    
 }

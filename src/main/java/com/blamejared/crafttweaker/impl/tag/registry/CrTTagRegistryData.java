@@ -6,7 +6,6 @@ import com.blamejared.crafttweaker.api.util.InstantiationUtil;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManager;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManagerItem;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManagerWrapper;
-import com.google.common.collect.BiMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeTagHandler;
 import net.minecraftforge.registries.ForgeRegistry;
@@ -40,10 +39,12 @@ public final class CrTTagRegistryData {
     private final Map<Class<?>, TagManager<?>> tagFolderByCrTElementType = new HashMap<>();
     
     private CrTTagRegistryData() {
+    
     }
     
     @SuppressWarnings("rawtypes")
     public void addTagImplementationClass(Class<? extends TagManager> cls) {
+        
         final TagManager manager = InstantiationUtil.getOrCreateInstance(cls);
         if(manager == null) {
             throw new IllegalArgumentException("TagManagers need to have a public static final instance field or a no-arg constructor");
@@ -55,6 +56,7 @@ public final class CrTTagRegistryData {
     }
     
     private void register(TagManager<?> tagManager) {
+        
         final String tagFolder = tagManager.getTagFolder();
         if(getAllInstances().containsKey(tagFolder)) {
             handleDuplicateTagManager(tagManager, tagFolder);
@@ -70,6 +72,7 @@ public final class CrTTagRegistryData {
     }
     
     private void handleDuplicateTagManager(TagManager<?> tagManager, String tagFolder) {
+        
         final String message = "There are two tagManagers registered for tagfolder %s! Classes are '%s' and '%s'.";
         final String nameA = tagManager.getClass().getCanonicalName();
         final String nameB = getAllInstances().get(tagFolder).getClass().getCanonicalName();
@@ -77,6 +80,7 @@ public final class CrTTagRegistryData {
     }
     
     public void registerForgeTags() {
+        
         final RegistryManager registryManager = RegistryManager.ACTIVE;
         for(final ResourceLocation key : ForgeTagHandler.getCustomTagTypeNames()) {
             if(registryManager.getRegistry(key) == null) {
@@ -107,6 +111,7 @@ public final class CrTTagRegistryData {
     
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void registerTagManagerFromRegistry(ResourceLocation name, ForgeRegistry<?> registry, String tagFolder) {
+        
         final Class<?> registrySuperType = registry.getRegistrySuperType();
         final Optional<String> s = CraftTweakerRegistry.tryGetZenClassNameFor(registrySuperType);
         if(!s.isPresent()) {
@@ -120,10 +125,12 @@ public final class CrTTagRegistryData {
     
     
     public boolean hasTagManager(String location) {
+        
         return getAllInstances().containsKey(location);
     }
     
     private Map<String, TagManager<?>> getAllInstances() {
+        
         final HashMap<String, TagManager<?>> result = new HashMap<>(registeredInstances);
         result.putAll(syntheticInstances);
         
@@ -135,6 +142,7 @@ public final class CrTTagRegistryData {
      */
     @SuppressWarnings({"unchecked"})
     <T> TagManager<T> getForElementType(Class<T> cls) {
+        
         return (TagManager<T>) tagFolderByCrTElementType.get(cls);
     }
     
@@ -143,6 +151,7 @@ public final class CrTTagRegistryData {
      */
     @SuppressWarnings("rawtypes")
     <T> TagManager<T> getForRegistry(ResourceLocation location) {
+        
         final ForgeRegistry registry = RegistryManager.ACTIVE.getRegistry(location);
         if(registry == null) {
             throw new IllegalArgumentException("Unknown registry name: " + location);
@@ -162,6 +171,7 @@ public final class CrTTagRegistryData {
     }
     
     public boolean isSynthetic(String tagFolder) {
+        
         return syntheticInstances.containsKey(tagFolder);
     }
     
@@ -186,6 +196,7 @@ public final class CrTTagRegistryData {
     
     @SuppressWarnings("unchecked")
     public <T> TagManager<T> getByTagFolder(String location) {
+        
         for(TagManager<?> value : getAllInstances().values()) {
             if(value.getTagFolder().equals(location)) {
                 return (TagManager<T>) value;
@@ -195,6 +206,8 @@ public final class CrTTagRegistryData {
     }
     
     public Collection<TagManager<?>> getAll() {
+        
         return getAllInstances().values();
     }
+    
 }

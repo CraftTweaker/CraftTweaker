@@ -20,4 +20,5 @@ public @interface ZenRegister {
      * @return array of modids.
      */
     String[] modDeps() default "";
+    
 }

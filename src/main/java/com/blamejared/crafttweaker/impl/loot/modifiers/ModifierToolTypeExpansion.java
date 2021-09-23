@@ -21,16 +21,17 @@ public class ModifierToolTypeExpansion {
      * Adds an {@link ILootModifier} for everything that gets broken by a tool with this tool type.
      *
      * @param internal The tool type that is used to break blocks.
-     * @param name The name of the loot modifier.
+     * @param name     The name of the loot modifier.
      * @param modifier The loot modifier to add.
      */
     @ZenCodeType.Method
     public static void addToolModifier(final ToolType internal, final String name, final ILootModifier modifier) {
-    
+        
         CTLootManager.LOOT_MANAGER.getModifierManager().register(
                 name,
                 CTLootConditionBuilder.createForSingle(ToolTypeLootConditionTypeBuilder.class, tt -> tt.withToolType(internal)),
                 modifier
         );
     }
+    
 }

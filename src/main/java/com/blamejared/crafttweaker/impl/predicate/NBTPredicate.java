@@ -19,12 +19,14 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.predicate.NBTPredicate")
 @Document("vanilla/api/predicate/NBTPredicate")
 public final class NBTPredicate extends IVanillaWrappingPredicate.AnyDefaulting<net.minecraft.advancements.criterion.NBTPredicate> {
+    
     private IData data;
-
+    
     public NBTPredicate() {
+        
         super(net.minecraft.advancements.criterion.NBTPredicate.ANY);
     }
-
+    
     /**
      * Sets the NBT data that should be matched by this predicate.
      *
@@ -34,23 +36,30 @@ public final class NBTPredicate extends IVanillaWrappingPredicate.AnyDefaulting<
      * If the NBT data had already been set, then the data is replaced with the new instance.
      *
      * @param data A {@link MapData} representing the NBT to match.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public NBTPredicate withData(final IData data) {
-        if (!(data instanceof MapData)) throw new IllegalArgumentException("Data inside a 'NBTPredicate' must be an instance of MapData");
+    
+        if(!(data instanceof MapData)) {
+            throw new IllegalArgumentException("Data inside a 'NBTPredicate' must be an instance of MapData");
+        }
         this.data = data;
         return this;
     }
-
+    
     @Override
     public boolean isAny() {
+        
         return this.data == null || this.data.getInternal() == null;
     }
-
+    
     @Override
     public net.minecraft.advancements.criterion.NBTPredicate toVanilla() {
+        
         assert this.data instanceof MapData;
         return new net.minecraft.advancements.criterion.NBTPredicate(((MapData) this.data).getInternal());
     }
+    
 }

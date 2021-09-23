@@ -62,6 +62,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     default void addJSONRecipe(String name, IData data) {
+        
         name = validateRecipeName(name);
         if(!(data instanceof MapData)) {
             throw new IllegalArgumentException("Json recipe's IData should be a MapData!");
@@ -100,6 +101,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
     
     @ZenCodeType.Method
     default WrapperRecipe getRecipeByName(String name) {
+        
         IRecipe<?> recipe = getRecipes().get(new ResourceLocation(name));
         if(recipe == null) {
             throw new IllegalArgumentException("No recipe found with name: \"" + name + "\" in type: \"" + getRecipeType().toString() + "\"");
@@ -109,12 +111,18 @@ public interface IRecipeManager extends CommandStringDisplayable {
     
     @ZenCodeType.Method
     default List<WrapperRecipe> getRecipesByOutput(IIngredient output) {
-        return getRecipes().values().stream().filter(iRecipe -> output.matches(new MCItemStackMutable(iRecipe.getRecipeOutput()))).map(WrapperRecipe::new).collect(Collectors.toList());
+        
+        return getRecipes().values()
+                .stream()
+                .filter(iRecipe -> output.matches(new MCItemStackMutable(iRecipe.getRecipeOutput())))
+                .map(WrapperRecipe::new)
+                .collect(Collectors.toList());
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("allRecipes")
     default List<WrapperRecipe> getAllRecipes() {
+        
         return getRecipes().values().stream().map(WrapperRecipe::new).collect(Collectors.toList());
     }
     
@@ -126,7 +134,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
     @ZenCodeType.Method
     @ZenCodeType.Getter("recipeMap")
     default Map<ResourceLocation, WrapperRecipe> getRecipeMap() {
-    
+        
         return getRecipes().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> new WrapperRecipe(entry
                         .getValue())));
@@ -141,10 +149,12 @@ public interface IRecipeManager extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     default void removeRecipe(IIngredient output) {
+        
         CraftTweakerAPI.apply(new ActionRemoveRecipeByOutput(this, output));
     }
     
     // This is only here for backwards compat, should be removed next breaking change
+    
     /**
      * Removes a recipe based on it's output.
      *
@@ -153,7 +163,8 @@ public interface IRecipeManager extends CommandStringDisplayable {
      * @docParam output <item:minecraft:glass>
      */
     @ZenCodeType.Method
-    default void removeRecipe(IItemStack output){
+    default void removeRecipe(IItemStack output) {
+        
         removeRecipe((IIngredient) output);
     }
     
@@ -166,7 +177,10 @@ public interface IRecipeManager extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     default void removeRecipeByInput(IItemStack input) {
-        CraftTweakerAPI.apply(new ActionRemoveRecipe(this, iRecipe -> iRecipe.getIngredients().stream().anyMatch(ingredient -> ingredient.test(input.getInternal()))));
+        
+        CraftTweakerAPI.apply(new ActionRemoveRecipe(this, iRecipe -> iRecipe.getIngredients()
+                .stream()
+                .anyMatch(ingredient -> ingredient.test(input.getInternal()))));
     }
     
     /**
@@ -178,6 +192,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     default void removeByName(String name) {
+        
         CraftTweakerAPI.apply(new ActionRemoveRecipeByName(this, new ResourceLocation(name)));
     }
     
@@ -190,6 +205,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     default void removeByModid(String modid) {
+        
         CraftTweakerAPI.apply(new ActionRemoveRecipeByModid(this, modid));
     }
     
@@ -204,6 +220,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     default void removeByModid(String modid, RecipeFilter exclude) {
+        
         CraftTweakerAPI.apply(new ActionRemoveRecipeByModid(this, modid, exclude));
     }
     
@@ -216,6 +233,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     default void removeByRegex(String regex) {
+        
         CraftTweakerAPI.apply(new ActionRemoveRecipeByRegex(this, regex));
     }
     
@@ -229,6 +247,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     default void removeByRegex(String regex, RecipeFilter exclude) {
+        
         CraftTweakerAPI.apply(new ActionRemoveRecipeByRegex(this, regex, exclude));
     }
     
@@ -237,6 +256,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     default void removeAll() {
+        
         CraftTweakerAPI.apply(new ActionRemoveAll(this));
     }
     
@@ -253,6 +273,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      * @return Map of ResourceLocation to IRecipe for this recipe type.
      */
     default Map<ResourceLocation, IRecipe<?>> getRecipes() {
+        
         return CTCraftingTableManager.recipeManager.recipes.computeIfAbsent(getRecipeType(), iRecipeType -> new HashMap<>());
     }
     
@@ -262,6 +283,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      * @param name name to check
      */
     default String validateRecipeName(String name) {
+        
         return fixRecipeName(name);
     }
     
@@ -273,6 +295,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      * @return fixed name
      */
     default String fixRecipeName(String name) {
+        
         CodePosition position = PositionUtil.getZCScriptPositionFromStackTrace();
         return NameUtils.fixing(
                 name,
@@ -291,6 +314,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
      * Default just looks up the Recipe Type key from the registry
      */
     default ResourceLocation getBracketResourceLocation() {
+        
         return Registry.RECIPE_TYPE.getKey(getRecipeType());
     }
     
@@ -302,6 +326,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
         
         @ZenCodeType.Method
         boolean test(String name);
+        
     }
     
     @FunctionalInterface
@@ -312,6 +337,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
         
         @ZenCodeType.Method
         IItemStack process(IItemStack usualOut, IItemStack inputs);
+        
     }
     
     @FunctionalInterface
@@ -322,6 +348,7 @@ public interface IRecipeManager extends CommandStringDisplayable {
         
         @ZenCodeType.Method
         IItemStack process(IItemStack usualOut, IItemStack[] inputs);
+        
     }
     
     @FunctionalInterface
@@ -332,10 +359,12 @@ public interface IRecipeManager extends CommandStringDisplayable {
         
         @ZenCodeType.Method
         IItemStack process(IItemStack usualOut, IItemStack[][] inputs);
+        
     }
     
     @Override
     default String getCommandString() {
+        
         return "<recipetype:" + getBracketResourceLocation() + ">";
     }
     

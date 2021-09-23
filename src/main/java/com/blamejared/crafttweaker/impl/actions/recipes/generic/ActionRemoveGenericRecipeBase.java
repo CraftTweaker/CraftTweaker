@@ -6,15 +6,14 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 public abstract class ActionRemoveGenericRecipeBase extends ActionWholeRegistryBase {
     
     @Override
     public void apply() {
+        
         final Map<String, Integer> numberOfRemovedRecipesByType = new TreeMap<>();
         int numberOfRemovedRecipes = 0;
         
@@ -33,11 +32,12 @@ public abstract class ActionRemoveGenericRecipeBase extends ActionWholeRegistryB
     }
     
     private int applyToRegistry(Map<ResourceLocation, IRecipe<?>> registry) {
-    
+        
         final int initialSize = registry.size();
         registry.values().removeIf(this::shouldRemove);
         return initialSize - registry.size();
     }
     
     protected abstract boolean shouldRemove(IRecipe<?> recipe);
+    
 }

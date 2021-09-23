@@ -25,6 +25,7 @@ public class UnsupportedAnnotationValidationRule implements ExpansionInfoValidat
     private final Messager messager;
     
     public UnsupportedAnnotationValidationRule(AnnotationMirrorUtil annotationMirrorUtil, Messager messager) {
+        
         this.annotationMirrorUtil = annotationMirrorUtil;
         this.messager = messager;
         
@@ -34,25 +35,30 @@ public class UnsupportedAnnotationValidationRule implements ExpansionInfoValidat
     
     @Override
     public boolean canValidate(Element enclosedElement) {
+        
         return true;
     }
     
     @Override
     public void validate(Element enclosedElement, ExpansionInfo expansionInfo) {
+        
         getInvalidAnnotationMirrors(enclosedElement).forEach(writeMessage(enclosedElement));
     }
     
     private Stream<AnnotationMirror> getInvalidAnnotationMirrors(Element enclosedElement) {
+        
         return unsupportedTypes.stream()
                 .filter(annotationPresentOn(enclosedElement))
                 .map(getAnnotationMirrorAt(enclosedElement));
     }
     
     private Function<Class<? extends Annotation>, AnnotationMirror> getAnnotationMirrorAt(Element enclosedElement) {
+        
         return annotationClass -> annotationMirrorUtil.getMirror(enclosedElement, annotationClass);
     }
     
     private Consumer<AnnotationMirror> writeMessage(Element enclosedElement) {
+        
         return annotationMirror -> {
             final String message = "Annotation not allowed in expansions";
             messager.printMessage(Diagnostic.Kind.ERROR, message, enclosedElement, annotationMirror);
@@ -60,11 +66,13 @@ public class UnsupportedAnnotationValidationRule implements ExpansionInfoValidat
     }
     
     private Predicate<Class<? extends Annotation>> annotationPresentOn(Element enclosedElement) {
+        
         return annotationClass -> enclosedElement.getAnnotation(annotationClass) != null;
     }
     
     
     private void fillUnsupportedAnnotations() {
+        
         unsupportedTypes.add(ZenCodeType.Constructor.class);
         unsupportedTypes.add(ZenCodeType.Field.class);
     }

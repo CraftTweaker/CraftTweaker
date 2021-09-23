@@ -1,12 +1,14 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.examples.*;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.examples.ExampleData;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 
-import javax.annotation.*;
-import java.util.*;
-import java.util.stream.*;
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class MemberHeader implements Comparable<MemberHeader> {
     
@@ -15,16 +17,19 @@ public class MemberHeader implements Comparable<MemberHeader> {
     public final List<DocumentedGenericParameter> genericParameters;
     
     public MemberHeader(AbstractTypeInfo returnType, List<DocumentedParameter> parameters, List<DocumentedGenericParameter> genericParameters) {
+        
         this.returnType = returnType;
         this.parameters = parameters;
         this.genericParameters = genericParameters;
     }
     
     public String formatForSignatureExample() {
+        
         return formatGenericParametersForSignatureExample() + formatParametersForSignatureExample();
     }
     
     private String formatGenericParametersForSignatureExample() {
+        
         if(genericParameters.isEmpty()) {
             return "";
         }
@@ -37,6 +42,7 @@ public class MemberHeader implements Comparable<MemberHeader> {
     }
     
     private String formatParametersForSignatureExample() {
+        
         final String displayName = returnType.getDisplayName();
         final StringJoiner stringJoiner = new StringJoiner(", ", "(", ") as " + displayName);
         for(DocumentedParameter parameter : parameters) {
@@ -46,20 +52,24 @@ public class MemberHeader implements Comparable<MemberHeader> {
     }
     
     public void writeStaticExamples(PageOutputWriter writer, AbstractTypeInfo ownerType, String name) {
+        
         final String callee = ownerType.getDisplayName();
         writeCallTo(writer, String.format("%s.%s", callee, name));
     }
     
     public void writeVirtualExamples(PageOutputWriter writer, ExampleData aThis, String name) {
+        
         final String example = aThis.getExampleFor("this").getAnyTextValue();
         writeCallTo(writer, String.format("%s.%s", example, name));
     }
     
     public void writeConstructorExamples(PageOutputWriter writer, AbstractTypeInfo constructedType) {
+        
         writeCallTo(writer, String.format("new %s", constructedType.getDisplayName()));
     }
     
     private void writeCallTo(PageOutputWriter writer, String callee) {
+        
         int numberOfUsableExamples = getNumberOfUsableExamples();
         if(numberOfUsableExamples == 0) {
             return;
@@ -70,11 +80,13 @@ public class MemberHeader implements Comparable<MemberHeader> {
     }
     
     private void writeExample(PageOutputWriter writer, String callee, int i) {
+        
         final String arguments = getExample(i);
         writer.printf("%s%s;%n", callee, arguments);
     }
     
     private String getExample(int exampleIndex) {
+        
         final String exampleTypeArgument = getExampleTypeArgument(exampleIndex);
         final String exampleArgument = getExampleArgument(exampleIndex);
         return String.format("%s(%s)", exampleTypeArgument, exampleArgument);
@@ -82,26 +94,35 @@ public class MemberHeader implements Comparable<MemberHeader> {
     
     @Nonnull
     public String getExampleArgument(int exampleIndex) {
-        return parameters.stream().map(parameters -> parameters.getExample(exampleIndex)).collect(Collectors.joining(", "));
+        
+        return parameters.stream()
+                .map(parameters -> parameters.getExample(exampleIndex))
+                .collect(Collectors.joining(", "));
     }
     
     @Nonnull
     private String getExampleTypeArgument(int exampleIndex) {
+        
         if(genericParameters.isEmpty()) {
             return "";
         }
         
-        return genericParameters.stream().map(parameters -> parameters.getExample(exampleIndex)).collect(Collectors.joining(", ", "<", ">"));
+        return genericParameters.stream()
+                .map(parameters -> parameters.getExample(exampleIndex))
+                .collect(Collectors.joining(", ", "<", ">"));
     }
     
     public int getNumberOfUsableExamples() {
+        
         final IntStream parameterExampleCount = parameters.stream().mapToInt(DocumentedParameter::numberOfExamples);
-        final IntStream genericParameterExampleCount = genericParameters.stream().mapToInt(DocumentedGenericParameter::numberOfExamples);
+        final IntStream genericParameterExampleCount = genericParameters.stream()
+                .mapToInt(DocumentedGenericParameter::numberOfExamples);
         
         return IntStream.concat(parameterExampleCount, genericParameterExampleCount).min().orElse(1);
     }
     
     public void writeParameterDescriptionTable(PageOutputWriter writer) {
+        
         if(parameters.isEmpty() && genericParameters.isEmpty()) {
             return;
         }
@@ -114,6 +135,7 @@ public class MemberHeader implements Comparable<MemberHeader> {
     }
     
     private void writeParameterDescriptionTableWithoutOptionals(PageOutputWriter writer) {
+        
         writer.println("| Parameter | Type | Description |");
         writer.println("|-----------|------|-------------|");
         for(DocumentedParameter parameter : parameters) {
@@ -127,6 +149,7 @@ public class MemberHeader implements Comparable<MemberHeader> {
     }
     
     private void writeParameterDescriptionTableWithOptionals(PageOutputWriter writer) {
+        
         writer.println("| Parameter | Type | Description | Optional | DefaultValue |");
         writer.println("|-----------|------|-------------|----------|--------------|");
         for(DocumentedParameter parameter : parameters) {
@@ -140,11 +163,13 @@ public class MemberHeader implements Comparable<MemberHeader> {
     }
     
     private boolean hasOptionalTypes() {
+        
         return parameters.stream().anyMatch(DocumentedParameter::isOptional);
     }
     
     @Override
     public int compareTo(@Nonnull MemberHeader other) {
+        
         int temp = this.parameters.size() - other.parameters.size();
         if(temp != 0) {
             return temp;
@@ -153,14 +178,14 @@ public class MemberHeader implements Comparable<MemberHeader> {
         if(temp != 0) {
             return temp;
         }
-    
+        
         for(int i = 0; i < this.parameters.size(); i++) {
             temp = this.parameters.get(i).compareTo(other.parameters.get(i));
             if(temp != 0) {
                 return temp;
             }
         }
-    
+        
         for(int i = 0; i < this.genericParameters.size(); i++) {
             temp = this.genericParameters.get(i).compareTo(other.genericParameters.get(i));
             if(temp != 0) {
@@ -169,4 +194,5 @@ public class MemberHeader implements Comparable<MemberHeader> {
         }
         return 0;
     }
+    
 }

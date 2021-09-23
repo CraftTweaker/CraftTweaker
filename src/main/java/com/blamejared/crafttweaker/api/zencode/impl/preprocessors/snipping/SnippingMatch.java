@@ -1,9 +1,10 @@
 package com.blamejared.crafttweaker.api.zencode.impl.preprocessors.snipping;
 
-import com.blamejared.crafttweaker.api.zencode.impl.*;
-import org.openzen.zencode.shared.*;
+import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
+import org.openzen.zencode.shared.CodePosition;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 final class SnippingMatch {
     
@@ -15,6 +16,7 @@ final class SnippingMatch {
     private CodePosition end;
     
     SnippingMatch(CodePosition start, String name, SnippingMatch parent, SnippingParameterHit parameterHit) {
+        
         this.start = start;
         this.name = name;
         this.parameterHit = parameterHit;
@@ -27,6 +29,7 @@ final class SnippingMatch {
     }
     
     private static String snipInLine(String lineContent, int startColumn, int endColumn) {
+        
         final char[] chars = lineContent.toCharArray();
         for(int i = startColumn; i < endColumn; i++) {
             chars[i] = ' ';
@@ -35,30 +38,37 @@ final class SnippingMatch {
     }
     
     public CodePosition getStart() {
+        
         return start;
     }
     
     public CodePosition getEnd() {
+        
         return end;
     }
     
     public void setEnd(CodePosition end) {
+        
         this.end = end;
     }
     
     public SnippingMatch getParent() {
+        
         return parent;
     }
     
     private void addChild(SnippingMatch child) {
+        
         children.add(child);
     }
     
     public String getName() {
+        
         return name;
     }
     
     public void snip(FileAccessSingle file) {
+        
         if(parameterHit.shouldSnip) {
             snipComplete(file);
         } else {
@@ -68,6 +78,7 @@ final class SnippingMatch {
     }
     
     private void snipPreprocessorCallsOnly(FileAccessSingle file) {
+        
         final List<String> fileContents = file.getFileContents();
         {
             final int position = start.fromLine - 1;
@@ -91,12 +102,14 @@ final class SnippingMatch {
     }
     
     private void snipComplete(FileAccessSingle file) {
+        
         for(int i = start.fromLine; i <= end.toLine; i++) {
             snipLine(i, file);
         }
     }
     
     private void snipLine(int lineNumber, FileAccessSingle file) {
+        
         final List<String> fileContents = file.getFileContents();
         final int position = lineNumber - 1;
         final String toSnip = fileContents.get(position);
@@ -108,8 +121,10 @@ final class SnippingMatch {
     }
     
     private void snipChildren(FileAccessSingle file) {
+        
         for(SnippingMatch child : children) {
             child.snip(file);
         }
     }
+    
 }

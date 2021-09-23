@@ -11,6 +11,7 @@ public class ExpandByte {
     
     @ZenCodeType.Caster(implicit = true)
     public static IData asData(byte value) {
+        
         return new ByteData(value);
     }
     

@@ -12,12 +12,15 @@ public class TypeParameterConversionRule implements TypeConversionRule {
     
     @Override
     public boolean canConvert(TypeMirror mirror) {
+        
         return mirror.getKind() == TypeKind.TYPEVAR;
     }
     
     @Nullable
     @Override
     public AbstractTypeInfo convert(TypeMirror mirror) {
+        
         return new TypeParameterTypeInfo(mirror.toString());
     }
+    
 }

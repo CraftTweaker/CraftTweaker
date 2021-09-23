@@ -10,31 +10,37 @@ public class ConditionAnyDamage<T extends IIngredient> implements IIngredientCon
     
     @Override
     public boolean matches(IItemStack stack) {
+        
         return true;
     }
     
     @Override
     public boolean ignoresDamage() {
+        
         return true;
     }
     
     @Override
     public String getCommandString(IIngredient ingredient) {
+        
         return ingredient.getCommandString() + ".anyDamage()";
     }
     
     @Override
     public IIngredientConditionSerializer getSerializer() {
+        
         return ConditionAnyDamagedSerializer.INSTANCE;
     }
     
     @Override
     public boolean equals(Object o) {
+        
         return o instanceof ConditionAnyDamage;
     }
     
     @Override
     public int hashCode() {
+        
         return ConditionAnyDamage.class.hashCode();
     }
     

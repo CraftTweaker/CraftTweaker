@@ -36,10 +36,12 @@ public interface TagManager<T> extends CommandStringDisplayable {
      * Adding something to the object created by this tag will create it for the game.
      *
      * @param name The Resource location of the tag
+     *
      * @return A Tag object.
      */
     @ZenCodeType.Method
     default MCTag<T> getTag(String name) {
+        
         return getTag(new ResourceLocation(name));
     }
     
@@ -51,10 +53,12 @@ public interface TagManager<T> extends CommandStringDisplayable {
      * Adding something to the object created by this tag will create it for the game.
      *
      * @param location The Resource location of the tag
+     *
      * @return A Tag object.
      */
     @ZenCodeType.Method
     default MCTag<T> getTag(ResourceLocation location) {
+        
         return new MCTag<>(location, this);
     }
     
@@ -62,11 +66,13 @@ public interface TagManager<T> extends CommandStringDisplayable {
      * Checks if a tag already exists. Does the same as calling `.exists` on a tag directly
      *
      * @param name The resource location to check for
+     *
      * @return Whether or not this tag already exists
      */
     @ZenCodeType.Method
     @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
     default boolean exists(String name) {
+        
         return exists(new ResourceLocation(name));
     }
     
@@ -74,11 +80,13 @@ public interface TagManager<T> extends CommandStringDisplayable {
      * Checks if a tag already exists. Does the same as calling `.exists` on a tag directly
      *
      * @param location The resource location to check for
+     *
      * @return Whether or not this tag already exists
      */
     @ZenCodeType.Method
     @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
     default boolean exists(ResourceLocation location) {
+        
         return getTagCollection().getIDTagMap().containsKey(location);
     }
     
@@ -88,6 +96,7 @@ public interface TagManager<T> extends CommandStringDisplayable {
     @ZenCodeType.Method
     @ZenCodeType.Getter("all")
     default List<MCTag<T>> getAllTags() {
+        
         return getTagCollection().getIDTagMap()
                 .keySet()
                 .stream()
@@ -124,6 +133,7 @@ public interface TagManager<T> extends CommandStringDisplayable {
      */
     @Override
     default String getCommandString() {
+        
         return "<tagManager:" + getTagFolder() + ">";
     }
     
@@ -152,6 +162,7 @@ public interface TagManager<T> extends CommandStringDisplayable {
      * Will log a warning and return an empty list, if the tag does not exist.
      *
      * @param theTag The tag whose elements should be retrieved
+     *
      * @return The Elements in this tag, or an empty list
      */
     List<T> getElementsInTag(MCTag<T> theTag);
@@ -164,6 +175,7 @@ public interface TagManager<T> extends CommandStringDisplayable {
      */
     @Nullable
     default ITag<?> getInternal(MCTag<T> theTag) {
+        
         return getTagCollection().get(theTag.getIdInternal());
     }
     
@@ -172,4 +184,5 @@ public interface TagManager<T> extends CommandStringDisplayable {
      * It is also recommended to replace the ? with the actual type in implementations ^^
      */
     ITagCollection<?> getTagCollection();
+    
 }

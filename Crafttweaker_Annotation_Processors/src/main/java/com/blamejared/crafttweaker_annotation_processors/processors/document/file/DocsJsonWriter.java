@@ -17,16 +17,19 @@ public class DocsJsonWriter {
     private final Navigation navigation = new Navigation();
     
     public DocsJsonWriter(File outputFile, DocumentRegistry registry) {
+        
         this.outputFile = outputFile;
         this.registry = registry;
     }
     
     public void write() throws IOException {
+        
         fillTableOfContent();
         writeTableOfContent();
     }
     
     private void writeTableOfContent() throws IOException {
+        
         final File outputFile = new File(this.outputFile, "docs.json");
         try(final BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
             final Gson gson = getGson();
@@ -35,14 +38,17 @@ public class DocsJsonWriter {
     }
     
     private Gson getGson() {
+        
         return new GsonBuilder().setPrettyPrinting()
                 .registerTypeAdapter(TableOfContent.class, new TableOfContentTypeAdapter())
                 .create();
     }
     
     private void fillTableOfContent() {
+        
         for(DocumentationPage page : registry.getAllPages()) {
             navigation.add(page);
         }
     }
+    
 }

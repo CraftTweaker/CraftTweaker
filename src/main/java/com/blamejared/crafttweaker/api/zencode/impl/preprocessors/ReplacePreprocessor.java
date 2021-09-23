@@ -19,17 +19,20 @@ public class ReplacePreprocessor implements IPreprocessor {
     
     @Override
     public String getName() {
+        
         return "replace";
     }
     
     @Nullable
     @Override
     public String getDefaultValue() {
+        
         return null;
     }
     
     @Override
     public boolean apply(@Nonnull FileAccessSingle file, ScriptLoadingOptions scriptLoadingOptions, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
+        
         for(PreprocessorMatch preprocessorMatch : preprocessorMatches) {
             final String[] split = preprocessorMatch.getContent().split(" ", 2);
             if(split.length != 2) {
@@ -41,4 +44,5 @@ public class ReplacePreprocessor implements IPreprocessor {
         
         return true;
     }
+    
 }

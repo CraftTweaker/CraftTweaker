@@ -24,4 +24,5 @@ public @interface NativeTypeRegistration {
      * The constructors that should be registered
      */
     NativeConstructor[] constructors() default {};
+    
 }

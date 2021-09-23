@@ -14,12 +14,14 @@ public class MCTagWithAmount<T> implements CommandStringDisplayable {
     private int amount;
     
     public MCTagWithAmount(MCTag<T> tag, int amount) {
+        
         this.tag = tag;
         this.amount = amount;
     }
     
     @Override
     public String getCommandString() {
+        
         if(amount <= 1) {
             return tag.getCommandString();
         }
@@ -30,18 +32,21 @@ public class MCTagWithAmount<T> implements CommandStringDisplayable {
     @ZenCodeType.Method
     @ZenCodeType.Getter("tag")
     public MCTag<T> getTag() {
+        
         return tag;
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("amount")
     public int getAmount() {
+        
         return amount;
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Setter("amount")
     public MCTagWithAmount<T> setAmount(int amount) {
+        
         this.amount = amount;
         return this;
     }

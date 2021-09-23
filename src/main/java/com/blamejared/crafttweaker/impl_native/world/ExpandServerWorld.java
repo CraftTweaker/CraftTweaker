@@ -25,25 +25,27 @@ import java.util.function.Predicate;
 @Document("vanilla/api/world/MCServerWorld")
 @NativeTypeRegistration(value = ServerWorld.class, zenCodeName = "crafttweaker.api.world.MCServerWorld")
 public class ExpandServerWorld {
-	
-	/**
-	 * Sets the time of the Minecraft day.
-	 *
-	 * @param time The new time of day. Should be between 0 and 24000.
-	 *
-	 * @docParam time 6000
-	 */
+    
+    /**
+     * Sets the time of the Minecraft day.
+     *
+     * @param time The new time of day. Should be between 0 and 24000.
+     *
+     * @docParam time 6000
+     */
     @ZenCodeType.Setter("timeOfDay")
     public static void setDayTime(ServerWorld internal, long time) {
+        
         internal.setDayTime(time);
     }
-
+    
     /**
      * Sets the time of the Minecraft day to day. This is like using the
      * "time set day" command or setting the time to 1000.
      */
     @ZenCodeType.Method
     public static void setTimeToDay(ServerWorld internal) {
+        
         internal.setDayTime(1000);
     }
     
@@ -53,6 +55,7 @@ public class ExpandServerWorld {
      */
     @ZenCodeType.Method
     public static void setTimeToNoon(ServerWorld internal) {
+        
         internal.setDayTime(6000);
     }
     
@@ -62,6 +65,7 @@ public class ExpandServerWorld {
      */
     @ZenCodeType.Method
     public static void setTimeToNight(ServerWorld internal) {
+        
         internal.setDayTime(13000);
     }
     
@@ -71,6 +75,7 @@ public class ExpandServerWorld {
      */
     @ZenCodeType.Method
     public static void setTimeToMidnight(ServerWorld internal) {
+        
         internal.setDayTime(18000);
     }
     
@@ -81,7 +86,8 @@ public class ExpandServerWorld {
      */
     @ZenCodeType.Getter("seed")
     public static long getSeed(ServerWorld internal) {
-    	return internal.getSeed();
+        
+        return internal.getSeed();
     }
     
     /**
@@ -95,33 +101,37 @@ public class ExpandServerWorld {
      */
     @ZenCodeType.Method
     public static boolean isVillage(ServerWorld internal, BlockPos pos) {
-    	return internal.isVillage(pos);
+        
+        return internal.isVillage(pos);
     }
     
     /**
      * Checks if a position is within an active raid.
      *
      * @param pos The position to look up.
+     *
      * @return Whether or not the position was inside an active raid.
      *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
     public static boolean isRaid(ServerWorld internal, BlockPos pos) {
-    	return internal.hasRaid(pos);
+        
+        return internal.hasRaid(pos);
     }
     
     /**
      * Checks if a position is within a chunk that is considered a slime chunk.
      *
      * @param pos The position to look up.
+     *
      * @return Whether or not the position was inside a slime chunk.
      *
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
     public static boolean isSlimeChunk(ServerWorld internal, BlockPos pos) {
-    
+        
         return SharedSeedRandom.seedSlimeChunk(pos.getX() >> 4, pos.getZ() >> 4, internal.getSeed(), 987234911L)
                 .nextInt(10) == 0;
     }
@@ -148,4 +158,5 @@ public class ExpandServerWorld {
         
         return internal.getEntities(type == null ? null : type.getInternal(), predicate);
     }
+    
 }

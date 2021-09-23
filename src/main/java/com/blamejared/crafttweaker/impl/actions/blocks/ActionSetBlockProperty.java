@@ -40,9 +40,9 @@ public class ActionSetBlockProperty<T> implements IUndoableAction {
         this.valueSetter = valueSetter;
         this.valueNameGetter = valueNameGetter;
     }
-
+    
     public ActionSetBlockProperty(BlockState blockState, String propertyName, T newValue, T oldValue, Consumer<T> valueSetter, Function<T, String> valueNameGetter) {
-
+        
         this.block = null;
         this.propertyName = propertyName;
         this.newValue = newValue;
@@ -51,9 +51,9 @@ public class ActionSetBlockProperty<T> implements IUndoableAction {
         this.valueNameGetter = valueNameGetter;
         this.blockState = blockState;
     }
-
+    
     public ActionSetBlockProperty(BlockState blockState, String propertyName, T newValue, T oldValue, Consumer<T> valueSetter) {
-
+        
         this(blockState, propertyName, newValue, oldValue, valueSetter, Objects::toString);
     }
     
@@ -86,10 +86,11 @@ public class ActionSetBlockProperty<T> implements IUndoableAction {
         
         return shouldApplySingletons();
     }
-
+    
     public String getTargetCommandString() {
-        if (block == null) {
-            if (blockState != null) {
+        
+        if(block == null) {
+            if(blockState != null) {
                 return ExpandBlockState.getCommandString(blockState);
             } else {
                 throw new IllegalArgumentException("Both block and blockState are null!");
@@ -98,4 +99,5 @@ public class ActionSetBlockProperty<T> implements IUndoableAction {
             return ExpandBlock.getCommandString(block);
         }
     }
+    
 }

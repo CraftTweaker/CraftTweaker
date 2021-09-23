@@ -16,10 +16,12 @@ public abstract class ActionTradeBase implements IUndoableAction {
     protected final int level;
     
     public ActionTradeBase(int level) {
+        
         this.level = level;
     }
     
     public ActionTradeBase(VillagerProfession profession, int level) {
+        
         this.profession = profession;
         this.level = level;
     }
@@ -29,15 +31,18 @@ public abstract class ActionTradeBase implements IUndoableAction {
     public abstract void undo(List<VillagerTrades.ITrade> tradeList);
     
     protected Int2ObjectMap<VillagerTrades.ITrade[]> getTrades() {
+        
         return VillagerTrades.VILLAGER_DEFAULT_TRADES.computeIfAbsent(profession, villagerProfession -> new Int2ObjectArrayMap<>());
     }
     
     protected List<VillagerTrades.ITrade> getTradeList() {
+        
         VillagerTrades.ITrade[] iTrades = getTrades().computeIfAbsent(level, integer -> new VillagerTrades.ITrade[0]);
         return new ArrayList<>(Arrays.asList(iTrades));
     }
     
     protected void setTradeList(List<VillagerTrades.ITrade> tradeList) {
+        
         getTrades().put(level, tradeList.toArray(new VillagerTrades.ITrade[0]));
     }
     

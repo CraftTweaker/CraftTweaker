@@ -11,6 +11,7 @@ import java.util.Map;
 public class CommentMerger {
     
     public DocumentationComment merge(DocumentationComment childComment, DocumentationComment parentComment) {
+        
         final String description = mergeDescription(childComment);
         final String deprecation = mergeDeprecation(childComment, parentComment);
         final String sinceVersion = mergeSince(childComment, parentComment);
@@ -22,6 +23,7 @@ public class CommentMerger {
     }
     
     private String mergeDescription(DocumentationComment childComment) {
+        
         return childComment.getOptionalDescription().orElse(null);
     }
     
@@ -31,10 +33,12 @@ public class CommentMerger {
     }
     
     private String mergeSince(final DocumentationComment child, final DocumentationComment parent) {
+        
         return child.getOptionalSince().orElseGet(parent::getSinceVersion);
     }
     
     private ExampleData mergeCommentExamples(DocumentationComment childComment, DocumentationComment parentComment) {
+        
         final ExampleData childExamples = childComment.getExamples();
         final ExampleData parentExamples = parentComment.getExamples();
         
@@ -42,6 +46,7 @@ public class CommentMerger {
     }
     
     private ExampleData mergeExampleData(ExampleData childExamples, ExampleData parentExamples) {
+        
         final Map<String, Example> childExampleMap = childExamples.getExampleMap();
         final Map<String, Example> parentExampleMap = parentExamples.getExampleMap();
         final HashMap<String, Example> resultExampleMap = mergeExampleDataMap(childExampleMap, parentExampleMap);
@@ -49,9 +54,11 @@ public class CommentMerger {
     }
     
     private HashMap<String, Example> mergeExampleDataMap(Map<String, Example> childExampleMap, Map<String, Example> parentExampleMap) {
+        
         final HashMap<String, Example> result = new HashMap<>(parentExampleMap);
         result.putAll(childExampleMap);
         
         return result;
     }
+    
 }

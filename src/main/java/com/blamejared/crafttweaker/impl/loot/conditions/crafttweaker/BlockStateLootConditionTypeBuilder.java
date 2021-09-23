@@ -8,8 +8,6 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.block.BlockState;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.Objects;
-
 /**
  * Builder to create a 'BlockState' loot condition.
  *
@@ -22,10 +20,11 @@ import java.util.Objects;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.crafttweaker.BlockState")
 @Document("vanilla/api/loot/conditions/crafttweaker/BlockState")
 public final class BlockStateLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     private BlockState state;
-
+    
     BlockStateLootConditionTypeBuilder() {}
-
+    
     /**
      * Sets the state that the condition must check.
      *
@@ -34,25 +33,29 @@ public final class BlockStateLootConditionTypeBuilder implements ILootConditionT
      * This parameter is <strong>required</strong>.
      *
      * @param state The state to check.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public BlockStateLootConditionTypeBuilder withState(final BlockState state) {
+        
         this.state = state;
         return this;
     }
-
+    
     @Override
     public ILootCondition finish() {
-        if (this.state == null) {
+        
+        if(this.state == null) {
             throw new IllegalStateException("A block state for a 'BlockState' condition must be specified");
         }
         return context -> {
             final BlockState state = ExpandLootContext.getBlockState(context);
-            if (state == null){
+            if(state == null) {
                 return false;
             }
             return state.equals(this.state);
         };
     }
+    
 }

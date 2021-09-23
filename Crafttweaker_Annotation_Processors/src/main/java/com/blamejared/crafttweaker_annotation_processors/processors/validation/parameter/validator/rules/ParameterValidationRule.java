@@ -7,4 +7,5 @@ public interface ParameterValidationRule {
     boolean canValidate(VariableElement parameter);
     
     void validate(VariableElement parameter);
+    
 }

@@ -25,14 +25,18 @@ public interface IIngredientCondition<T extends IIngredient> {
     IIngredientConditionSerializer getSerializer();
     
     default void write(PacketBuffer buffer) {
+        
         getSerializer().write(buffer, this);
     }
     
     default JsonObject toJson() {
+        
         return getSerializer().toJson(this);
     }
     
     default ResourceLocation getType() {
+        
         return getSerializer().getType();
     }
+    
 }

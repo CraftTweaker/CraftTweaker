@@ -22,9 +22,11 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import org.apache.logging.log4j.util.TriConsumer;
 
 public final class MiscCommands {
+    
     private MiscCommands() {}
     
     public static void registerMiscCommands(final TriConsumer<LiteralArgumentBuilder<CommandSource>, String, String> registerCustomCommand) {
+        
         registerCustomCommand.accept(
                 Commands.literal("copy")
                         .then(Commands.argument("toCopy", StringArgumentType.string())
@@ -38,12 +40,13 @@ public final class MiscCommands {
                 null,
                 null
         );
-    
+        
         registerCustomCommand.accept(
                 Commands.literal("give").requires((source) -> source.hasPermissionLevel(2))
                         .then(Commands.argument("item", CTItemArgument.INSTANCE)
                                 .executes(context -> {
-                                    ExpandPlayerEntity.give(context.getSource().asPlayer(), context.getArgument("item", IItemStack.class));
+                                    ExpandPlayerEntity.give(context.getSource()
+                                            .asPlayer(), context.getArgument("item", IItemStack.class));
                                     return 0;
                                 })
                         ),
@@ -62,35 +65,35 @@ public final class MiscCommands {
             );
             return 0;
         }));
-    
+        
         CTCommands.registerCommand(CTCommands.playerCommand("discord", "Opens a link to discord", (player, stack) -> {
             PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://discord.blamejared.com"));
             return 0;
         }));
-    
+        
         CTCommands.registerCommand(CTCommands.playerCommand("issues", "Opens a link to the issue tracker", (player, stack) -> {
             PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://github.com/CraftTweaker/CraftTweaker/issues"));
             return 0;
         }));
-    
+        
         CTCommands.registerCommand(CTCommands.playerCommand("patreon", "Opens a link to patreon", (player, stack) -> {
             PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://patreon.com/jaredlll08"));
             return 0;
         }));
-    
+        
         CTCommands.registerCommand(CTCommands.playerCommand(
                 "block_info",
                 "Activates or deactivates the block reader. In block info mode, right-clicking a block will tell you it's name, metadata and Tile Entity data if applicable.",
                 (player, stack) -> {
-                    if (CTEventHandler.BLOCK_INFO_PLAYERS.contains(player)) {
+                    if(CTEventHandler.BLOCK_INFO_PLAYERS.contains(player)) {
                         CTEventHandler.BLOCK_INFO_PLAYERS.remove(player);
                         CommandUtilities.send("Block info mode deactivated", player);
                         
-                        if (CTEventHandler.BLOCK_INFO_PLAYERS.isEmpty()) {
+                        if(CTEventHandler.BLOCK_INFO_PLAYERS.isEmpty()) {
                             MinecraftForge.EVENT_BUS.unregister(CTEventHandler.ListenBlockInfo.INSTANCE);
                         }
                     } else {
-                        if (CTEventHandler.BLOCK_INFO_PLAYERS.isEmpty()) {
+                        if(CTEventHandler.BLOCK_INFO_PLAYERS.isEmpty()) {
                             MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, PlayerInteractEvent.RightClickBlock.class, CTEventHandler.ListenBlockInfo.INSTANCE);
                         }
                         
@@ -100,23 +103,23 @@ public final class MiscCommands {
                     return 0;
                 })
         );
-    
+        
         CTCommands.registerCommand(CTCommands.playerCommand(
                 "entity_info",
                 "Activates or deactivates the entity reader. In entity info mode, right-clicking an entity will tell you it's name and data.",
                 (player, stack) -> {
-                    if (CTEventHandler.ENTITY_INFO_PLAYERS.contains(player)) {
+                    if(CTEventHandler.ENTITY_INFO_PLAYERS.contains(player)) {
                         CTEventHandler.ENTITY_INFO_PLAYERS.remove(player);
                         CommandUtilities.send("Entity info mode deactivated", player);
-                    
-                        if (CTEventHandler.ENTITY_INFO_PLAYERS.isEmpty()) {
+                        
+                        if(CTEventHandler.ENTITY_INFO_PLAYERS.isEmpty()) {
                             MinecraftForge.EVENT_BUS.unregister(CTEventHandler.ListenBlockInfo.INSTANCE);
                         }
                     } else {
-                        if (CTEventHandler.ENTITY_INFO_PLAYERS.isEmpty()) {
+                        if(CTEventHandler.ENTITY_INFO_PLAYERS.isEmpty()) {
                             MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, PlayerInteractEvent.EntityInteract.class, CTEventHandler.ListenEntityInfo.INSTANCE);
                         }
-                    
+                        
                         CTEventHandler.ENTITY_INFO_PLAYERS.add(player);
                         CommandUtilities.send("Entity info mode activated. Right-click an entity to see its data.", player);
                     }
@@ -124,4 +127,5 @@ public final class MiscCommands {
                 })
         );
     }
+    
 }

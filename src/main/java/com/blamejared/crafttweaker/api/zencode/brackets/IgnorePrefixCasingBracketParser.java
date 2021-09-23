@@ -1,12 +1,18 @@
 package com.blamejared.crafttweaker.api.zencode.brackets;
 
-import com.blamejared.crafttweaker.api.*;
-import org.openzen.zencode.shared.*;
-import org.openzen.zenscript.lexer.*;
-import org.openzen.zenscript.parser.*;
-import org.openzen.zenscript.parser.expression.*;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import org.openzen.zencode.shared.CodePosition;
+import org.openzen.zenscript.lexer.ParseException;
+import org.openzen.zenscript.lexer.ZSToken;
+import org.openzen.zenscript.lexer.ZSTokenParser;
+import org.openzen.zenscript.lexer.ZSTokenType;
+import org.openzen.zenscript.parser.BracketExpressionParser;
+import org.openzen.zenscript.parser.PrefixedBracketParser;
+import org.openzen.zenscript.parser.expression.ParsedExpression;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Like the normal {@link PrefixedBracketParser} but ignores case considerations.
@@ -30,6 +36,7 @@ public class IgnorePrefixCasingBracketParser implements BracketExpressionParser 
      * @param parser The BEP
      */
     public void register(String name, BracketExpressionParser parser) {
+        
         if(subParsers.containsKey(name)) {
             final BracketExpressionParser existing = subParsers.get(name);
             final String existingClassname = existing.getClass().getCanonicalName();
@@ -44,9 +51,11 @@ public class IgnorePrefixCasingBracketParser implements BracketExpressionParser 
      * Use this method instead of accessing the map directly because it also lower-cases the prefix
      *
      * @param prefix The prefix of the BEP
+     *
      * @return The found BEP or {@code null} if not found
      */
     private BracketExpressionParser getSubParser(String prefix) {
+        
         return subParsers.get(prefix.toLowerCase());
     }
     
@@ -57,21 +66,27 @@ public class IgnorePrefixCasingBracketParser implements BracketExpressionParser 
      *
      * @param position start of the expression (which is the location of the &gt; token)
      * @param tokens   tokens to be parsed
+     *
      * @return The parsed Expression, based on the parse method of the subParser
+     *
      * @throws ParseException If no BEP matched the prefix
      */
     @Override
     public ParsedExpression parse(CodePosition position, ZSTokenParser tokens) throws ParseException {
+        
         ZSToken prefix = tokens.required(ZSTokenType.T_IDENTIFIER, "identifier expected");
         tokens.required(ZSTokenType.T_COLON, ": expected");
         BracketExpressionParser subParser = getSubParser(prefix.content);
-        if(subParser == null)
+        if(subParser == null) {
             throw new ParseException(position, "Invalid bracket expression: no prefix " + prefix.content);
+        }
         
         return subParser.parse(position, tokens);
     }
     
     public Set<String> getSubParsersName() {
+        
         return subParsers.keySet();
     }
+    
 }

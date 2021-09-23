@@ -19,72 +19,87 @@ public class MCIngredientConditioned<T extends IIngredient> implements IIngredie
     private final IIngredientCondition<T> condition;
     
     public MCIngredientConditioned(T base, IIngredientCondition<T> condition) {
+        
         this.base = base;
         this.condition = condition;
     }
     
     @Override
     public Ingredient asVanillaIngredient() {
+        
         return new IngredientConditioned<>(this);
     }
     
     @ZenCodeType.Getter("condition")
     public IIngredientCondition<T> getCondition() {
+        
         return condition;
     }
     
     @Override
     public String getCommandString() {
+        
         return condition.getCommandString(base);
     }
     
     @ZenCodeType.Getter("baseIngredient")
     public T getBaseIngredient() {
+        
         return base;
     }
     
     @Override
     @ZenCodeType.Method
     public boolean matches(IItemStack stack, boolean ignoreDamage) {
+        
         return base.matches(stack, condition.ignoresDamage()) && condition.matches(stack);
     }
     
     @Override
     @ZenCodeType.Getter("items")
     public IItemStack[] getItems() {
+        
         return base.getItems();
     }
     
     @Override
     @ZenCodeType.Caster(implicit = true)
     public MapData asMapData() {
+        
         return base.asMapData();
     }
     
     @Override
     @ZenCodeType.Caster(implicit = true)
     public IData asIData() {
+        
         return base.asIData();
     }
     
     @Override
     public boolean equals(Object o) {
-        if(this == o)
+    
+        if(this == o) {
             return true;
-        if(o == null || getClass() != o.getClass())
+        }
+        if(o == null || getClass() != o.getClass()) {
             return false;
+        }
         
         MCIngredientConditioned<?> that = (MCIngredientConditioned<?>) o;
-        
-        if(!base.equals(that.base))
+    
+        if(!base.equals(that.base)) {
             return false;
+        }
         return condition.equals(that.condition);
     }
     
     @Override
     public int hashCode() {
+        
         int result = base.hashCode();
         result = 31 * result + condition.hashCode();
         return result;
     }
+    
 }

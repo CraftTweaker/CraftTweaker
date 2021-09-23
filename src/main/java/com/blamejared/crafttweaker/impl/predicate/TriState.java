@@ -29,26 +29,31 @@ public enum TriState {
      * It represents the lack of a state or a decision that hasn't been made yet.
      */
     @ZenCodeType.Field UNSET(null);
-
+    
     private final Boolean bool;
-
+    
     TriState(final Boolean bool) {
+        
         this.bool = bool;
     }
-
+    
     public Boolean toBoolean() {
+        
         return this.bool;
     }
     
     public boolean matchOrUnset(final boolean toMatch) {
+        
         return this.isUnset() || this.match(toMatch);
     }
     
     public boolean match(final boolean toMatch) {
+        
         return (toMatch && this == TRUE) || (!toMatch && this == FALSE);
     }
     
     public boolean isUnset() {
+        
         return this == UNSET;
     }
 }

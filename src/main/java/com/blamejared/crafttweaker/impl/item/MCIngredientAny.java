@@ -19,33 +19,41 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.item.IngredientAny")
 @Document("vanilla/api/items/IngredientAny")
 public class MCIngredientAny implements IIngredient {
+    
     private static final MCIngredientAny INSTANCE = new MCIngredientAny();
-    private static final Lazy<IItemStack[]> ALL_ITEMS = Lazy.concurrentOf(() -> CraftTweakerAPI.game.getMCItemStacks().toArray(new IItemStack[0]));
-
+    private static final Lazy<IItemStack[]> ALL_ITEMS = Lazy.concurrentOf(() -> CraftTweakerAPI.game.getMCItemStacks()
+            .toArray(new IItemStack[0]));
+    
     private MCIngredientAny() {}
-
+    
     @ZenCodeType.Method
     public static MCIngredientAny getInstance() {
+        
         return INSTANCE;
     }
-
+    
     @Override
     public boolean matches(IItemStack stack, boolean ignoreDamage) {
+        
         return stack != null && !stack.isEmpty();
     }
-
+    
     @Override
     public Ingredient asVanillaIngredient() {
+        
         return IngredientAny.INSTANCE;
     }
-
+    
     @Override
     public String getCommandString() {
+        
         return "IngredientAny.getInstance()";
     }
-
+    
     @Override
     public IItemStack[] getItems() {
+        
         return ALL_ITEMS.get();
     }
+    
 }

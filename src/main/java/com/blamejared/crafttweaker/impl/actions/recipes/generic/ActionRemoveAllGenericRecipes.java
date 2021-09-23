@@ -13,6 +13,7 @@ public class ActionRemoveAllGenericRecipes extends ActionWholeRegistryBase {
     
     @Override
     public void apply() {
+        
         final Map<IRecipeType<?>, Map<ResourceLocation, IRecipe<?>>> recipesByType = getRecipesByType();
         final Map<String, Integer> numberOfRemovedRecipesByType = new TreeMap<>();
         int totalRemoved = 0;
@@ -32,6 +33,7 @@ public class ActionRemoveAllGenericRecipes extends ActionWholeRegistryBase {
     }
     
     private int remove(Map<ResourceLocation, IRecipe<?>> map) {
+        
         final int size = map.size();
         map.clear();
         return size;
@@ -39,6 +41,8 @@ public class ActionRemoveAllGenericRecipes extends ActionWholeRegistryBase {
     
     @Override
     public String describe() {
+        
         return "Removing all recipes";
     }
+    
 }

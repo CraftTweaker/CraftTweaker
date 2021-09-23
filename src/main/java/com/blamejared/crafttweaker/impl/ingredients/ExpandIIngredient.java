@@ -22,21 +22,25 @@ public class ExpandIIngredient {
     
     @ZenCodeType.Method
     public static MCIngredientTransformed<IIngredient> transformReplace(IIngredient _this, IItemStack replaceWith) {
+        
         return new MCIngredientTransformed<>(_this, new TransformReplace<>(replaceWith));
     }
     
     @ZenCodeType.Method
     public static MCIngredientTransformed<IIngredient> transformDamage(IIngredient _this, @ZenCodeType.OptionalInt(1) int amount) {
+        
         return new MCIngredientTransformed<>(_this, new TransformDamage<>(amount));
     }
     
     @ZenCodeType.Method
     public static MCIngredientTransformed<IIngredient> transformCustom(IIngredient _this, String uid, @ZenCodeType.Optional Function<IItemStack, IItemStack> function) {
+        
         return new MCIngredientTransformed<>(_this, new TransformCustom<>(uid, function));
     }
     
     @ZenCodeType.Method
     public static MCIngredientTransformed<IIngredient> reuse(IIngredient _this) {
+        
         return new MCIngredientTransformed<>(_this, new TransformReuse<>());
     }
     
@@ -45,6 +49,7 @@ public class ExpandIIngredient {
      */
     @ZenCodeType.Method
     public static MCIngredientTransformed<IIngredient> transform(IIngredient _this, IIngredientTransformer<IIngredient> transformer) {
+        
         return new MCIngredientTransformed<>(_this, transformer);
     }
     
@@ -54,6 +59,7 @@ public class ExpandIIngredient {
     @ZenCodeType.Method
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
     public static IIngredientWithAmount mul(IIngredient _this, int amount) {
+        
         return new IngredientWithAmount(_this, amount);
     }
     
@@ -63,9 +69,11 @@ public class ExpandIIngredient {
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = true)
     public static IIngredientWithAmount asIIngredientWithAmount(IIngredient _this) {
-        if(_this instanceof IIngredientWithAmount){
+        
+        if(_this instanceof IIngredientWithAmount) {
             return (IIngredientWithAmount) _this;
         }
         return mul(_this, 1);
     }
+    
 }

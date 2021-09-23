@@ -52,6 +52,9 @@ import java.util.function.Function;
  *     </tbody>
  * </table>
  *
+ * @param <T> The generic type the recipe handler can receive. Refer to the implementation specifications for more
+ *            information.
+ *
  * @implSpec Implementations of this interface will be discovered via classpath scanning for the {@link For} annotation.
  * The generic specialization of the implementation should match the one specified in {@link For#value()} for classes
  * annotated with a single annotation (e.g., a class annotated with {@code @For(MyRecipe.class)} should implement
@@ -60,12 +63,9 @@ import java.util.function.Function;
  * two classes {@code Foo} and {@code Bar}, both extending {@code Baz}; a class annotated with both
  * {@code @For(Foo.class)} and {@code @For(Bar.class)} should implement {@code IRecipeHandler<Baz>}). Classes annotated
  * with {@code @For(IRecipe.class)} will be ignored.
- *
- * @param <T> The generic type the recipe handler can receive. Refer to the implementation specifications for more
- *            information.
  */
 public interface IRecipeHandler<T extends IRecipe<?>> {
-
+    
     /**
      * Annotates a {@link IRecipeHandler} indicating which recipe classes it is able to handle.
      *
@@ -78,7 +78,7 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.TYPE)
     @interface For {
-    
+        
         /**
          * Container for the {@link For} annotation.
          *
@@ -96,8 +96,9 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
              * @return An array containing all {@link For} instances.
              */
             For[] value();
+            
         }
-    
+        
         /**
          * Indicates the recipe class the annotated {@link IRecipeHandler} is able to recognize and subsequently handle.
          *
@@ -106,6 +107,7 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
          * @see IRecipeHandler
          */
         Class<? extends IRecipe<?>> value();
+        
     }
     
     /**
@@ -116,6 +118,7 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
      * regarding the exact semantics of this exception.</p>
      */
     class ReplacementNotSupportedException extends Exception {
+        
         /**
          * Constructs a new exception with the specified detail message.
          *
@@ -124,9 +127,10 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
          * @param message The detail message, which is saved for later retrieval by the {@link #getMessage()} method.
          */
         public ReplacementNotSupportedException(final String message) {
+            
             super(message);
         }
-    
+        
         /**
          * Constructs a new exception with the specified detail message and cause.
          *
@@ -134,12 +138,14 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
          * this exception's detail message.</p>
          *
          * @param message The detail message, which is saved for later retrieval by the {@link #getMessage()} method.
-         * @param cause The cause, which is saved for later retrieval by the {@link #getCause()} method. {@code null}
-         *              is allowed and indicates that the cause is not available or not known.
+         * @param cause   The cause, which is saved for later retrieval by the {@link #getCause()} method. {@code null}
+         *                is allowed and indicates that the cause is not available or not known.
          */
         public ReplacementNotSupportedException(final String message, final Throwable cause) {
+            
             super(message, cause);
         }
+        
     }
     
     /**
@@ -157,21 +163,23 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
      * specify either {@code IIngredient} or {@code Ingredient} as the value for {@code type}).</p>
      *
      * @param ingredient The ingredient that should undergo replacement.
-     * @param type The actual class type of the ingredient, or one of its superclasses, as determined by the client.
-     * @param recipe The recipe whose ingredients are currently undergoing replacement; or {@code null} if no valid
-     *               recipe can be provided.
-     * @param rules A series of {@link IReplacementRule}s in the order they should be applied.
-     * @param <S> The type of the recipe whose ingredients are currently undergoing replacement. The given type must be
-     *            a subtype of {@link IRecipe}. If no valid type exists, then {@link IRecipe} is assumed.
-     * @param <U> The type of the ingredient that should undergo replacement. No restrictions are placed on the type of
-     *            the ingredient.
+     * @param type       The actual class type of the ingredient, or one of its superclasses, as determined by the client.
+     * @param recipe     The recipe whose ingredients are currently undergoing replacement; or {@code null} if no valid
+     *                   recipe can be provided.
+     * @param rules      A series of {@link IReplacementRule}s in the order they should be applied.
+     * @param <S>        The type of the recipe whose ingredients are currently undergoing replacement. The given type must be
+     *                   a subtype of {@link IRecipe}. If no valid type exists, then {@link IRecipe} is assumed.
+     * @param <U>        The type of the ingredient that should undergo replacement. No restrictions are placed on the type of
+     *                   the ingredient.
+     *
      * @return An {@link Optional} holding the replaced ingredient, if any replacements have been carried out. If no
      * replacement rule affected the current ingredient, the return value should be {@link Optional#empty()}. It is
      * customary, though not required, that the value wrapped by the optional is a completely different object from
      * {@code ingredient} (i.e. {@code ingredient != result.get()}).
      */
     static <S extends IRecipe<?>, U> Optional<U> attemptReplacing(final U ingredient, final Class<U> type, final S recipe, final List<IReplacementRule> rules) {
-        final BinaryOperator<Optional<U>> combiner = (oldOpt, newOpt) -> newOpt.isPresent()? newOpt : oldOpt;
+        
+        final BinaryOperator<Optional<U>> combiner = (oldOpt, newOpt) -> newOpt.isPresent() ? newOpt : oldOpt;
         return rules.stream()
                 .reduce(
                         Optional.empty(),
@@ -189,7 +197,8 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
      * <p>All newlines added to either the start or the end of the string will be automatically trimmed.</p>
      *
      * @param manager The recipe manager responsible for this kind of recipes.
-     * @param recipe The recipe that is currently being dumped.
+     * @param recipe  The recipe that is currently being dumped.
+     *
      * @return A String representing a {@code addRecipe} (or similar) call.
      */
     String dumpToCommandString(final IRecipeManager manager, final T recipe);
@@ -209,20 +218,12 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
      * given the same recipe class, the behavior should be consistent: either an exception gets thrown or the
      * replacement gets carried out.</p>
      *
-     * @implSpec The {@code rules} list not only indicates the {@link IReplacementRule}s that should be applied, but also
-     * the order in which these should be applied. In other words, the rule at position {@code 0} should be applied to
-     * the {@code recipe} before the rule in position {@code 1}. <strong>However</strong>, implementations are free to
-     * ignore this detail and reorder the rule application to optimize certain applications if needed. This reordering
-     * <strong>must</strong> guarantee that the resulting recipe behaves exactly as if the replacements were carried out
-     * in order.
-     *
-     * @implNote By default, this method throws a {@link ReplacementNotSupportedException}.
-     *
      * @param manager The recipe manager responsible for this kind of recipes.
-     * @param recipe The recipe whose ingredients should be replaced.
-     * @param rules A series of {@link IReplacementRule}s in the order they should be applied. Implementations are
-     *              nevertheless allowed to reorder these rules as they see fit. Refer to the implementation
-     *              specifications for more details.
+     * @param recipe  The recipe whose ingredients should be replaced.
+     * @param rules   A series of {@link IReplacementRule}s in the order they should be applied. Implementations are
+     *                nevertheless allowed to reorder these rules as they see fit. Refer to the implementation
+     *                specifications for more details.
+     *
      * @return An {@link Optional} containing a function that creates the replaced recipe, if any replacements have been
      * carried out. If no replacement rule affected the current recipe, the return value should be
      * {@link Optional#empty()}. The parameter of the function will be the new ID of the recipe that should be used, as
@@ -230,11 +231,22 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
      * implementations are not allowed to make any assumptions on the value of this parameter. It is customary, though
      * not required, that the value returned by the wrapped function is a completely different object from
      * {@code recipe} (i.e. {@code recipe != result.get().apply(recipe.getId())}).
+     *
      * @throws ReplacementNotSupportedException If the current handler does not support replacing for the given recipe
-     * class.
+     *                                          class.
+     * @implSpec The {@code rules} list not only indicates the {@link IReplacementRule}s that should be applied, but also
+     * the order in which these should be applied. In other words, the rule at position {@code 0} should be applied to
+     * the {@code recipe} before the rule in position {@code 1}. <strong>However</strong>, implementations are free to
+     * ignore this detail and reorder the rule application to optimize certain applications if needed. This reordering
+     * <strong>must</strong> guarantee that the resulting recipe behaves exactly as if the replacements were carried out
+     * in order.
+     * @implNote By default, this method throws a {@link ReplacementNotSupportedException}.
      */
     default Optional<Function<ResourceLocation, T>> replaceIngredients(final IRecipeManager manager, final T recipe, final List<IReplacementRule> rules)
             throws ReplacementNotSupportedException {
-        throw new ReplacementNotSupportedException("Replacement is not supported for the recipe class '" + recipe.getClass().getName() + "' with manager " + manager.getCommandString());
+        
+        throw new ReplacementNotSupportedException("Replacement is not supported for the recipe class '" + recipe.getClass()
+                .getName() + "' with manager " + manager.getCommandString());
     }
+    
 }

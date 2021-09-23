@@ -29,6 +29,7 @@ import net.minecraft.nbt.StringNBT;
 public class NBTConverter {
     
     public static IData convert(INBT nbt) {
+        
         if(nbt == null) {
             return null;
         }

@@ -46,6 +46,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     private static final Map<Class<? extends IRecipeManager>, IRecipeManager> managerInstances = new HashMap<>();
     
     public RecipeTypeBracketHandler(List<Class<? extends IRecipeManager>> recipeManagers) {
+        
         registeredTypes.clear();
         for(Class<? extends IRecipeManager> recipeManager : recipeManagers) {
             registerRecipeManager(recipeManager);
@@ -54,24 +55,31 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     
     @Deprecated
     public static boolean containsCustomManager(ResourceLocation location) {
+        
         return registeredTypes.containsKey(lookup(location));
     }
     
     @Deprecated
     public static IRecipeManager getCustomManager(ResourceLocation location) {
+        
         return registeredTypes.get(lookup(location));
     }
     
     public static Collection<IRecipeManager> getManagerInstances() {
+        
         return managerInstances.values();
     }
     
     public static IRecipeManager getOrDefault(final ResourceLocation location) {
+        
         return getOrDefault(lookup(location));
     }
     
     public static IRecipeManager getOrDefault(final IRecipeType<?> type) {
-        if (FILTERED_TYPES.stream().anyMatch(it -> type == it.get())) return null;
+    
+        if(FILTERED_TYPES.stream().anyMatch(it -> type == it.get())) {
+            return null;
+        }
         
         return registeredTypes.computeIfAbsent(type, RecipeManagerWrapper::makeOrNull);
     }
@@ -83,6 +91,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     }
     
     private void registerRecipeManager(Class<? extends IRecipeManager> managerClass) {
+        
         if(managerInstances.containsKey(managerClass)) {
             final IRecipeManager manager = managerInstances.get(managerClass);
             registerInstance(manager);
@@ -100,6 +109,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     }
     
     private void registerInstance(IRecipeManager manager) {
+        
         final ResourceLocation bracketResourceLocation = manager.getBracketResourceLocation();
         final Class<? extends IRecipeManager> managerClass = manager.getClass();
         
@@ -114,6 +124,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     
     @Override
     public ParsedExpression parse(CodePosition position, ZSTokenParser tokens) throws ParseException {
+        
         final String name = ParseUtil.readContent(tokens);
         final ResourceLocation resourceLocation = ResourceLocation.tryCreate(name);
         if(resourceLocation == null) {
@@ -162,6 +173,8 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     }
     
     private static IRecipeType<?> lookup(final ResourceLocation location) {
+        
         return Registry.RECIPE_TYPE.getOrDefault(location);
     }
+    
 }

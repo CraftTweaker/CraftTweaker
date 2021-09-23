@@ -33,6 +33,7 @@ public class TagManagerWrapper<T> implements TagManager<T> {
     private final String tagFolder;
     
     public TagManagerWrapper(Class<T> elementClass, ResourceLocation tagTypeName, String tagFolder) {
+        
         this.elementClass = elementClass;
         this.tagTypeName = tagTypeName;
         this.tagFolder = tagFolder;
@@ -41,6 +42,7 @@ public class TagManagerWrapper<T> implements TagManager<T> {
     @Nonnull
     @Override
     public Class<T> getElementClass() {
+        
         return elementClass;
     }
     
@@ -63,12 +65,14 @@ public class TagManagerWrapper<T> implements TagManager<T> {
     @Nonnull
     @Override
     public String getTagFolder() {
+        
         return tagFolder;
     }
     
     @Override
     @SuppressWarnings({"rawtypes", "unchecked"})
     public List<MCTag<T>> getAllTagsFor(T element) {
+        
         final ITagCollection tagCollection = getTagCollection();
         
         final Collection<ResourceLocation> owningTags = tagCollection.getOwningTags(element);
@@ -80,6 +84,7 @@ public class TagManagerWrapper<T> implements TagManager<T> {
     @Override
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void addElements(MCTag<T> to, List<T> toAdd) {
+        
         final ITag<?> internal = getInternal(to);
         if(internal == null) {
             final Tag<?> tagFromContents = new Tag<>(Sets.newHashSet(toAdd), getElementClass());
@@ -92,6 +97,7 @@ public class TagManagerWrapper<T> implements TagManager<T> {
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void removeElements(MCTag<T> from, List<T> toRemove) {
+        
         final ITag<?> internal = getInternal(from);
         if(internal == null) {
             throw new IllegalArgumentException("Cannot remove elements from empty tag: " + from);
@@ -103,6 +109,7 @@ public class TagManagerWrapper<T> implements TagManager<T> {
     @SuppressWarnings("unchecked")
     @Override
     public List<T> getElementsInTag(MCTag<T> theTag) {
+        
         final ITag<?> internal = getInternal(theTag);
         if(internal == null) {
             return Collections.emptyList();
@@ -112,4 +119,5 @@ public class TagManagerWrapper<T> implements TagManager<T> {
         
         
     }
+    
 }

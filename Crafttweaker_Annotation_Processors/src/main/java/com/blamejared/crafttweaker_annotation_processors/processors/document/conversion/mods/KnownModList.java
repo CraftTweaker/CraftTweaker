@@ -21,11 +21,13 @@ public class KnownModList {
     private final AnnotationMirrorUtil annotationMirrorUtil;
     
     public KnownModList(ProcessingEnvironment environment, AnnotationMirrorUtil annotationMirrorUtil) {
+        
         this.environment = environment;
         this.annotationMirrorUtil = annotationMirrorUtil;
     }
     
     public String getModIdForPackage(Element element) {
+        
         final PackageElement elementPackage = environment.getElementUtils().getPackageOf(element);
         final String packageName = elementPackage.getQualifiedName().toString();
         
@@ -38,6 +40,7 @@ public class KnownModList {
     }
     
     public void fillModIdInfo(RoundEnvironment roundEnv) {
+        
         final Elements elementUtils = environment.getElementUtils();
         final TypeElement typeElement = elementUtils.getTypeElement("net.minecraftforge.fml.common.Mod");
         
@@ -49,4 +52,5 @@ public class KnownModList {
             modIdByPackage.put(modPackage.getQualifiedName().toString(), modId);
         }
     }
+    
 }

@@ -38,8 +38,8 @@ public class ActionModifyAttribute implements IUndoableAction {
         CTEventHandler.ATTRIBUTE_MODIFIERS.keySet()
                 .stream()
                 .filter(entry -> ingredient.contains(entry)).forEach(key -> {
-            CTEventHandler.ATTRIBUTE_MODIFIERS.get(key).removeIf(value -> consumer.equals(value));
-        });
+                    CTEventHandler.ATTRIBUTE_MODIFIERS.get(key).removeIf(value -> consumer.equals(value));
+                });
         
     }
     

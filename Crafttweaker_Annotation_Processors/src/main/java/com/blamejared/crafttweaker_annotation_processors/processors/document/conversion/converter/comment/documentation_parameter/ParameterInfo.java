@@ -9,15 +9,18 @@ public class ParameterInfo {
     private final List<String> occurrences = new ArrayList<>();
     
     private ParameterInfo(String name) {
+        
         this.name = name;
     }
     
     public ParameterInfo(String name, String text) {
+        
         this.name = name;
         addOccurrence(text);
     }
     
     public static ParameterInfo merge(ParameterInfo left, ParameterInfo right) {
+        
         if(!left.name.equals(right.name)) {
             throw new IllegalArgumentException("Parameter names do not match! " + left.name + " != " + right.name);
         }
@@ -30,18 +33,23 @@ public class ParameterInfo {
     }
     
     public void addOccurrence(String text) {
+        
         this.occurrences.add(text);
     }
     
     public String getAnyOccurrence() {
+        
         return this.occurrences.get(0);
     }
     
     public String getName() {
+        
         return name;
     }
     
     public List<String> getOccurrences() {
+        
         return occurrences;
     }
+    
 }

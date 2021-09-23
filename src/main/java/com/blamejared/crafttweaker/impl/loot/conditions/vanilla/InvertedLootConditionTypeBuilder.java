@@ -26,10 +26,12 @@ import java.util.function.Consumer;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.Inverted")
 @Document("vanilla/api/loot/conditions/vanilla/Inverted")
 public final class InvertedLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     private final CTLootConditionBuilder parent;
     private ILootCondition sub;
-
+    
     InvertedLootConditionTypeBuilder(final CTLootConditionBuilder parent) {
+        
         this.parent = parent;
     }
     
@@ -39,14 +41,16 @@ public final class InvertedLootConditionTypeBuilder implements ILootConditionTyp
      * This parameter is <strong>required</strong>.
      *
      * @param condition The condition to invert.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public InvertedLootConditionTypeBuilder withCondition(final ILootCondition condition) {
+        
         this.sub = Objects.requireNonNull(condition);
         return this;
     }
-
+    
     /**
      * Sets the inverted condition to the one created with the given {@link CTLootConditionBuilder}.
      *
@@ -56,31 +60,41 @@ public final class InvertedLootConditionTypeBuilder implements ILootConditionTyp
      * This parameter is <strong>required</strong>.
      *
      * @param builder The builder to create a single {@link ILootCondition}.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public InvertedLootConditionTypeBuilder withCondition(final CTLootConditionBuilder builder) {
+        
         final ILootCondition condition = builder.single();
-        if (condition == null) throw new IllegalArgumentException("Loot condition builder must have a single condition");
+        if(condition == null) {
+            throw new IllegalArgumentException("Loot condition builder must have a single condition");
+        }
         return this.withCondition(condition);
     }
-
+    
     /**
      * Creates and builds the sub-condition that will then be inverted.
      *
      * @param reifiedType The type of condition to invert. It must extend {@link ILootConditionTypeBuilder}.
-     * @param lender A consumer that allows configuration of the created condition.
-     * @param <T> The known type of the condition itself.
+     * @param lender      A consumer that allows configuration of the created condition.
+     * @param <T>         The known type of the condition itself.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public <T extends ILootConditionTypeBuilder> InvertedLootConditionTypeBuilder withCondition(final Class<T> reifiedType, final Consumer<T> lender) {
+        
         return this.withCondition(this.parent.make(reifiedType, "Inverted", lender));
     }
-
+    
     @Override
     public ILootCondition finish() {
-        if (this.sub == null) throw new IllegalStateException("Missing condition to invert");
+    
+        if(this.sub == null) {
+            throw new IllegalStateException("Missing condition to invert");
+        }
         return context -> !this.sub.test(context);
     }
+    
 }

@@ -15,23 +15,28 @@ public class ModifierValidationRule extends AbstractGeneralValidationRule {
     private final Messager messager;
     
     public ModifierValidationRule(Messager messager) {
+        
         this.messager = messager;
         fillRequiredModifiers();
     }
     
     @Override
     public void validate(Element enclosedElement, ExpansionInfo expansionInfo) {
+        
         if(hasIncorrectModifiers(enclosedElement)) {
             messager.printMessage(Diagnostic.Kind.ERROR, "Expansion members need to be public and static", enclosedElement);
         }
     }
     
     private boolean hasIncorrectModifiers(Element enclosedElement) {
+        
         return !enclosedElement.getModifiers().containsAll(requiredModifiers);
     }
     
     private void fillRequiredModifiers() {
+        
         this.requiredModifiers.add(Modifier.PUBLIC);
         this.requiredModifiers.add(Modifier.STATIC);
     }
+    
 }

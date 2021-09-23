@@ -18,6 +18,8 @@ public class ExpandItemPickupEvent {
     @ZenCodeType.Method
     @ZenCodeType.Getter("stack")
     public static IItemStack getStack(PlayerEvent.ItemPickupEvent internal) {
+        
         return new MCItemStack(internal.getStack());
     }
+    
 }

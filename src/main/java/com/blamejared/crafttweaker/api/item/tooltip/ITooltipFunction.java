@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker.api.item.tooltip;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
-import com.blamejared.crafttweaker_annotations.annotations.*;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
@@ -16,4 +16,5 @@ public interface ITooltipFunction {
     
     @ZenCodeType.Method
     void apply(IItemStack stack, List<MCTextComponent> tooltip, boolean isAdvanced);
+    
 }

@@ -40,6 +40,7 @@ public class ScriptRun {
     private IgnorePrefixCasingBracketParser bep;
     
     public ScriptRun(ScriptLoadingOptions scriptLoadingOptions, SourceFile[] sourceFiles) {
+        
         this.scriptLoadingOptions = scriptLoadingOptions;
         this.sourceFiles = sourceFiles;
         
@@ -49,18 +50,22 @@ public class ScriptRun {
     }
     
     public LoaderActions getLoaderActions() {
+        
         return LoaderActions.getActionForLoader(scriptLoadingOptions.getLoaderName());
     }
     
     public boolean isFirstRun() {
+        
         return getLoaderActions().isFirstRun();
     }
     
     public ScriptingEngine getEngine() {
+        
         return scriptingEngine;
     }
     
     public void reload() {
+        
         if(scriptLoadingOptions.isExecute()) {
             getLoaderActions().reload();
         }
@@ -81,6 +86,7 @@ public class ScriptRun {
      * @throws Exception Any exception that occurs while running the script file.
      */
     public void run() throws Exception {
+        
         if(!scriptLoadingOptions.isExecute()) {
             CraftTweakerAPI.logInfo("This is only a syntax check. Script changes will not be applied.");
         }
@@ -96,11 +102,13 @@ public class ScriptRun {
     }
     
     private void initializeBep() {
+        
         this.bep = new IgnorePrefixCasingBracketParser();
         MinecraftForge.EVENT_BUS.post(new CTRegisterBEPEvent(bep));
     }
     
     private void readAndExecuteScripts() throws ParseException {
+        
         SemanticModule scripts = scriptingEngine.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE);
         
         if(!scripts.isValid()) {
@@ -130,9 +138,10 @@ public class ScriptRun {
     }
     
     private void registerModules() throws CompileException {
+        
         final List<JavaNativeModule> modules = new LinkedList<>();
         final CrTJavaNativeConverterBuilder nativeConverterBuilder = new CrTJavaNativeConverterBuilder();
-    
+        
         //Register crafttweaker module first to assign deps
         final JavaNativeModule crafttweakerModule = createModule(bep, CraftTweaker.MODID, CraftTweaker.MODID, nativeConverterBuilder);
         
@@ -154,13 +163,14 @@ public class ScriptRun {
                 expModule.addClass(expansionClass);
             }
         }
-    
+        
         scriptingEngine.registerNativeProvided(expModule);
         
         nativeConverterBuilder.headerConverter.reinitializeAllLazyValues();
     }
     
     private JavaNativeModule createModule(IgnorePrefixCasingBracketParser bep, String moduleName, String basePackage, JavaNativeConverterBuilder nativeConverterBuilder, JavaNativeModule... dependencies) {
+        
         JavaNativeModule module = scriptingEngine.createNativeModule(moduleName, basePackage, dependencies, nativeConverterBuilder);
         
         
@@ -179,6 +189,7 @@ public class ScriptRun {
     }
     
     private void writeFormattedFiles(SemanticModule scripts) {
+        
         List<HighLevelDefinition> all = scripts.definitions.getAll();
         ScriptFormattingSettings.Builder builder = new ScriptFormattingSettings.Builder();
         FileFormatter formatter = new FileFormatter(builder.build());
@@ -199,4 +210,5 @@ public class ScriptRun {
             }
         }
     }
+    
 }

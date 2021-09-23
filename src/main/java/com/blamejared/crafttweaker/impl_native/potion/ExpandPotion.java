@@ -17,21 +17,26 @@ public class ExpandPotion {
     
     @ZenCodeType.Method
     public static String getNamePrefixed(Potion internal, String name) {
+        
         return internal.getNamePrefixed(name);
     }
     
     @ZenCodeType.Getter("effects")
     public static List<EffectInstance> getEffects(Potion internal) {
+        
         return internal.getEffects();
     }
     
     @ZenCodeType.Getter("hasInstantEffect")
     public static boolean hasInstantEffect(Potion internal) {
+        
         return internal.hasInstantEffect();
     }
     
     @ZenCodeType.Getter("commandString")
     public static String getCommandString(Potion internal) {
+        
         return "<potion:" + internal.getRegistryName() + ">";
     }
+    
 }

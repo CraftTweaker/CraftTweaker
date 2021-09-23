@@ -1,7 +1,9 @@
 package com.blamejared.crafttweaker.impl.native_types;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.Optional;
 
 public class CrTNativeTypeInfo {
     
@@ -48,6 +50,7 @@ public class CrTNativeTypeInfo {
     }
     
     public Optional<CrTNativeExecutableRef> getMethod(Constructor<?> method) {
+        
         return getMethod("<init>", method.getParameterTypes());
     }
     
@@ -64,4 +67,5 @@ public class CrTNativeTypeInfo {
         
         return methods.get(name).getForSignature(parameterTypes);
     }
+    
 }

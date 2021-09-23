@@ -16,6 +16,7 @@ public class NativeTypeConversionRule implements NameConversionRule {
     private final ClassTypeConverter classTypeConverter;
     
     public NativeTypeConversionRule(KnownTypeRegistry knownTypeRegistry, ClassTypeConverter classTypeConverter) {
+        
         this.knownTypeRegistry = knownTypeRegistry;
         this.classTypeConverter = classTypeConverter;
     }
@@ -23,6 +24,7 @@ public class NativeTypeConversionRule implements NameConversionRule {
     @Nullable
     @Override
     public TypeMirror convertZenCodeName(String zenCodeName) {
+        
         return knownTypeRegistry.getAllNativeTypes()
                 .filter(nameMatches(zenCodeName))
                 .map(this::getExpandedType)
@@ -31,14 +33,17 @@ public class NativeTypeConversionRule implements NameConversionRule {
     }
     
     private TypeMirror getExpandedType(TypeElement typeElement) {
+        
         final NativeTypeRegistration annotation = typeElement.getAnnotation(NativeTypeRegistration.class);
         return classTypeConverter.getTypeMirror(annotation, NativeTypeRegistration::value);
     }
     
     
     private Predicate<TypeElement> nameMatches(String zenCodeName) {
+        
         return typeElement -> typeElement.getAnnotation(NativeTypeRegistration.class)
                 .zenCodeName()
                 .equals(zenCodeName);
     }
+    
 }

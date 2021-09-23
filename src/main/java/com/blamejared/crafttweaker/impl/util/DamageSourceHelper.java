@@ -15,23 +15,29 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/util/DamageSourceHelper")
 @ZenCodeType.Name("crafttweaker.api.util.DamageSourceHelper")
 public class DamageSourceHelper {
+    
     @ZenCodeType.Method
     public static DamageSource causeBeeStingDamage(LivingEntity bee) {
+        
         return DamageSource.causeBeeStingDamage(bee);
     }
     
     @ZenCodeType.Method
     public static DamageSource causeMobDamage(LivingEntity mob) {
+        
         return DamageSource.causeMobDamage(mob);
     }
     
     @ZenCodeType.Method
     public static DamageSource causeIndirectDamage(Entity source, LivingEntity indirectEntityIn) {
+        
         return DamageSource.causeIndirectDamage(source, indirectEntityIn);
     }
     
     @ZenCodeType.Method
     public static DamageSource causePlayerDamage(PlayerEntity player) {
+        
         return DamageSource.causePlayerDamage(player);
     }
+    
 }

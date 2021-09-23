@@ -12,12 +12,15 @@ public class PrimitiveConversionRule implements TypeConversionRule {
     
     @Override
     public boolean canConvert(TypeMirror mirror) {
+        
         return mirror.getKind().isPrimitive();
     }
     
     @Nullable
     @Override
     public AbstractTypeInfo convert(TypeMirror mirror) {
+        
         return new PrimitiveTypeInfo(mirror.getKind().name().toLowerCase(Locale.ROOT));
     }
+    
 }

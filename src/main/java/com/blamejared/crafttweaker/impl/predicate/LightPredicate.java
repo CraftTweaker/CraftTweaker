@@ -17,13 +17,15 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.predicate.LightPredicate")
 @Document("vanilla/api/predicate/LightPredicate")
 public final class LightPredicate extends IVanillaWrappingPredicate.AnyDefaulting<net.minecraft.advancements.criterion.LightPredicate> {
+    
     private IntRangePredicate range;
-
+    
     public LightPredicate() {
+        
         super(net.minecraft.advancements.criterion.LightPredicate.ANY);
         this.range = IntRangePredicate.unbounded();
     }
-
+    
     /**
      * Sets the minimum value the light level should be to <code>min</code>.
      *
@@ -34,14 +36,16 @@ public final class LightPredicate extends IVanillaWrappingPredicate.AnyDefaultin
      * The minimum value is inclusive, meaning that a value that is equal to <code>min</code> will pass the check.
      *
      * @param min The minimum value the light level should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public LightPredicate withMinimumLightLevel(final int min) {
+        
         this.range = IntRangePredicate.mergeLowerBound(this.range, min);
         return this;
     }
-
+    
     /**
      * Sets the maximum value the light level should be to <code>max</code>.
      *
@@ -52,14 +56,16 @@ public final class LightPredicate extends IVanillaWrappingPredicate.AnyDefaultin
      * The maximum value is inclusive, meaning that a value that is equal to <code>max</code> will pass the check.
      *
      * @param max The maximum value the light level should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public LightPredicate withMaximumLightLevel(final int max) {
+        
         this.range = IntRangePredicate.mergeUpperBound(this.range, max);
         return this;
     }
-
+    
     /**
      * Sets both the minimum and maximum value the light level should be to <code>min</code> and <code>max</code>
      * respectively.
@@ -71,21 +77,26 @@ public final class LightPredicate extends IVanillaWrappingPredicate.AnyDefaultin
      *
      * @param min The minimum value the light level should be.
      * @param max The maximum value the light level should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public LightPredicate withBoundedLightLevel(final int min, final int max) {
+        
         this.range = IntRangePredicate.bounded(min, max);
         return this;
     }
-
+    
     @Override
     public boolean isAny() {
+        
         return this.range.isAny();
     }
-
+    
     @Override
     public net.minecraft.advancements.criterion.LightPredicate toVanilla() {
+        
         return new net.minecraft.advancements.criterion.LightPredicate(this.range.toVanillaPredicate());
     }
+    
 }

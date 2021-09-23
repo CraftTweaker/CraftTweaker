@@ -23,5 +23,7 @@ public @interface NativeConstructor {
         String description() default "No description provided";
         
         String[] examples() default {};
+        
     }
+    
 }

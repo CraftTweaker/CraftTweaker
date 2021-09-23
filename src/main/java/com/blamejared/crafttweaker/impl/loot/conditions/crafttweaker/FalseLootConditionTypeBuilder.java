@@ -15,6 +15,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.crafttweaker.False")
 @Document("vanilla/api/loot/conditions/crafttweaker/False")
 public final class FalseLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     static final FalseLootConditionTypeBuilder INSTANCE = new FalseLootConditionTypeBuilder();
     private static final ILootCondition FALSE = context -> false;
     
@@ -22,6 +23,8 @@ public final class FalseLootConditionTypeBuilder implements ILootConditionTypeBu
     
     @Override
     public ILootCondition finish() {
+        
         return FALSE;
     }
+    
 }

@@ -9,6 +9,7 @@ public class ExpandByteArray {
     
     @ZenCodeType.Caster(implicit = true)
     public static IData asData(byte[] value) {
+        
         return new ByteArrayData(value);
     }
     

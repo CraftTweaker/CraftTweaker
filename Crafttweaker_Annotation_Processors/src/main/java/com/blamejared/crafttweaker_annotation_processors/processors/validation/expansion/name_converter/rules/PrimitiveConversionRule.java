@@ -17,17 +17,20 @@ public class PrimitiveConversionRule implements NameConversionRule {
     private final Elements elementUtils;
     
     public PrimitiveConversionRule(Types typeUtils, Elements elementUtils) {
+        
         this.typeUtils = typeUtils;
         this.elementUtils = elementUtils;
         fillPrimitiveTypeMap();
     }
     
     private void fillPrimitiveTypeMap() {
+        
         fillSigned();
         fillUnsigned();
     }
     
     private void fillSigned() {
+        
         primitiveTypes.put("bool", TypeKind.BOOLEAN);
         primitiveTypes.put("byte", TypeKind.BYTE);
         primitiveTypes.put("char", TypeKind.CHAR);
@@ -39,6 +42,7 @@ public class PrimitiveConversionRule implements NameConversionRule {
     }
     
     private void fillUnsigned() {
+        
         primitiveTypes.put("ushort", TypeKind.SHORT);
         primitiveTypes.put("uint", TypeKind.INT);
         primitiveTypes.put("ulong", TypeKind.LONG);
@@ -47,6 +51,7 @@ public class PrimitiveConversionRule implements NameConversionRule {
     @Nullable
     @Override
     public TypeMirror convertZenCodeName(String zenCodeName) {
+        
         if(primitiveTypes.containsKey(zenCodeName)) {
             return getMirrorFromClass(primitiveTypes.get(zenCodeName));
         } else if(zenCodeName.equals("string")) {
@@ -56,11 +61,14 @@ public class PrimitiveConversionRule implements NameConversionRule {
     }
     
     private TypeMirror getString() {
+        
         final String canonicalName = String.class.getCanonicalName();
         return elementUtils.getTypeElement(canonicalName).asType();
     }
     
     private TypeMirror getMirrorFromClass(TypeKind kind) {
+        
         return typeUtils.getPrimitiveType(kind);
     }
+    
 }

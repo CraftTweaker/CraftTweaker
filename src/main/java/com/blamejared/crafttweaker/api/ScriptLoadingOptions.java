@@ -9,6 +9,7 @@ public class ScriptLoadingOptions {
     private String loaderName = CraftTweakerAPI.getDefaultLoaderName();
     
     public ScriptLoadingOptions() {
+    
     }
     
     /**
@@ -16,6 +17,7 @@ public class ScriptLoadingOptions {
      * Used e.g by {@code /ct format}
      */
     public ScriptLoadingOptions format() {
+        
         this.format = true;
         return this;
     }
@@ -25,6 +27,7 @@ public class ScriptLoadingOptions {
      * If not set, then this will stop after checking the syntax
      */
     public ScriptLoadingOptions execute() {
+        
         return setExecute(true);
     }
     
@@ -32,6 +35,7 @@ public class ScriptLoadingOptions {
      * @see #format()
      */
     public boolean isFormat() {
+        
         return format;
     }
     
@@ -39,6 +43,7 @@ public class ScriptLoadingOptions {
      * @see #format()
      */
     public ScriptLoadingOptions setFormat(boolean format) {
+        
         this.format = format;
         return this;
     }
@@ -47,6 +52,7 @@ public class ScriptLoadingOptions {
      * @see #execute()
      */
     public boolean isExecute() {
+        
         return execute;
     }
     
@@ -54,6 +60,7 @@ public class ScriptLoadingOptions {
      * @see #execute()
      */
     public ScriptLoadingOptions setExecute(boolean execute) {
+        
         this.execute = execute;
         return this;
     }
@@ -62,6 +69,7 @@ public class ScriptLoadingOptions {
      * The current loader name
      */
     public String getLoaderName() {
+        
         return loaderName;
     }
     
@@ -70,7 +78,9 @@ public class ScriptLoadingOptions {
      * Loader names are case insensitive, but are <strong>not</strong> Regular Expressions
      */
     public ScriptLoadingOptions setLoaderName(@Nonnull String loaderName) {
+        
         this.loaderName = loaderName;
         return this;
     }
+    
 }

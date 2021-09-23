@@ -17,16 +17,19 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.SurvivesExplosion")
 @Document("vanilla/api/loot/conditions/vanilla/SurvivesExplosion")
 public final class SurvivesExplosionLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     static final SurvivesExplosionLootConditionTypeBuilder INSTANCE = new SurvivesExplosionLootConditionTypeBuilder();
     private static final ILootCondition SURVIVES_EXPLOSION = context -> {
         final float radius = ExpandLootContext.getExplosionRadius(context);
         return radius > 0.0F && context.getRandom().nextFloat() <= (1.0F / radius);
     };
-
+    
     private SurvivesExplosionLootConditionTypeBuilder() {}
-
+    
     @Override
     public ILootCondition finish() {
+        
         return SURVIVES_EXPLOSION;
     }
+    
 }

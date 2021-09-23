@@ -17,11 +17,13 @@ public class ExpandBiome {
     
     @ZenCodeType.Getter("waterColor")
     public static int getWaterFloat(Biome internal) {
+        
         return internal.getWaterColor();
     }
     
     @ZenCodeType.Getter("waterFogColor")
     public static int getWaterFogColor(Biome internal) {
+        
         return internal.getWaterFogColor();
     }
     
@@ -37,16 +39,19 @@ public class ExpandBiome {
     //
     @ZenCodeType.Getter("scale")
     public static float getScale(Biome internal) {
+        
         return internal.getScale();
     }
     
     @ZenCodeType.Getter("downfall")
     public static float getDownFall(Biome internal) {
+        
         return internal.getDownfall();
     }
     
     @ZenCodeType.Getter("depth")
     public static float getDepth(Biome internal) {
+        
         return internal.getDepth();
     }
     
@@ -57,6 +62,7 @@ public class ExpandBiome {
     
     @ZenCodeType.Getter("isHighHumidity")
     public static boolean isHighHumidity(Biome internal) {
+        
         return internal.isHighHumidity();
     }
     
@@ -67,6 +73,7 @@ public class ExpandBiome {
     
     @ZenCodeType.Getter("category")
     public static String getCategory(Biome internal) {
+        
         return internal.getCategory().getName().toLowerCase();
     }
     
@@ -92,16 +99,19 @@ public class ExpandBiome {
     
     @ZenCodeType.Getter("doesRain")
     public static boolean doesRain(Biome internal) {
+        
         return internal.getPrecipitation() == Biome.RainType.RAIN;
     }
     
     @ZenCodeType.Getter("doesSnow")
     public static boolean doesSnow(Biome internal) {
+        
         return internal.getPrecipitation() == Biome.RainType.SNOW;
     }
     
     @ZenCodeType.Getter("rainType")
     public static String getRainType(Biome internal) {
+        
         return internal.getPrecipitation().getName();
     }
     
@@ -117,6 +127,7 @@ public class ExpandBiome {
     
     @ZenCodeType.Method
     public static float getTemperature(Biome internal, BlockPos pos) {
+        
         return internal.getTemperature(pos);
     }
     
@@ -127,6 +138,7 @@ public class ExpandBiome {
     
     @ZenCodeType.Method
     public static boolean doesWaterFreeze(Biome internal, World world, BlockPos pos) {
+        
         return internal.doesWaterFreeze(world, pos);
     }
     

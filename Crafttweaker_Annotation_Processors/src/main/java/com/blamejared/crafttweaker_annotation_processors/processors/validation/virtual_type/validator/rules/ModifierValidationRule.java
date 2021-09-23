@@ -22,6 +22,7 @@ public class ModifierValidationRule implements VirtualTypeValidationRule {
     private final Set<Class<? extends Annotation>> virtualOnlyAnnotations = new HashSet<>();
     
     public ModifierValidationRule(Messager messager, AnnotationMirrorUtil annotationMirrorUtil) {
+        
         this.messager = messager;
         this.annotationMirrorUtil = annotationMirrorUtil;
         
@@ -30,6 +31,7 @@ public class ModifierValidationRule implements VirtualTypeValidationRule {
     }
     
     private void fillVirtualOnlyAnnotations() {
+        
         virtualOnlyAnnotations.add(ZenCodeType.Operator.class);
         virtualOnlyAnnotations.add(ZenCodeType.Getter.class);
         virtualOnlyAnnotations.add(ZenCodeType.Setter.class);
@@ -38,6 +40,7 @@ public class ModifierValidationRule implements VirtualTypeValidationRule {
     }
     
     private void fillCheckedAnnotations() {
+        
         checkedAnnotations.add(ZenCodeType.Method.class);
         checkedAnnotations.add(ZenCodeType.Constructor.class);
         checkedAnnotations.add(ZenCodeType.Field.class);
@@ -45,27 +48,33 @@ public class ModifierValidationRule implements VirtualTypeValidationRule {
     
     @Override
     public boolean canValidate(Element enclosedElement) {
+        
         return hasZenAnnotation(enclosedElement);
     }
     
     private boolean hasZenAnnotation(Element typeElement) {
+        
         return hasVirtualOnlyAnnotation(typeElement) || hasCheckedAnnotation(typeElement);
     }
     
     private boolean hasVirtualOnlyAnnotation(Element typeElement) {
+        
         return virtualOnlyAnnotations.stream().anyMatch(annotationPresentOn(typeElement));
     }
     
     private boolean hasCheckedAnnotation(Element typeElement) {
+        
         return checkedAnnotations.stream().anyMatch(annotationPresentOn(typeElement));
     }
     
     private Predicate<Class<? extends Annotation>> annotationPresentOn(Element typeElement) {
+        
         return annotationClass -> typeElement.getAnnotation(annotationClass) != null;
     }
     
     @Override
     public void validate(Element enclosedElement) {
+        
         if(notPublic(enclosedElement)) {
             messager.printMessage(Diagnostic.Kind.ERROR, "All zenMembers must be public", enclosedElement);
         }
@@ -78,20 +87,25 @@ public class ModifierValidationRule implements VirtualTypeValidationRule {
     }
     
     private boolean notPublic(Element typeElement) {
+        
         return !typeElement.getModifiers().contains(Modifier.PUBLIC);
     }
     
     private boolean notVirtual(Element typeElement) {
+        
         return hasVirtualOnlyAnnotation(typeElement) && isStatic(typeElement);
     }
     
     private boolean isStatic(Element typeElement) {
+        
         return typeElement.getModifiers().contains(Modifier.STATIC);
     }
     
     private Stream<AnnotationMirror> getVirtualOnlyMirror(Element typeElement) {
+        
         return virtualOnlyAnnotations.stream()
                 .filter(annotationPresentOn(typeElement))
                 .map(annotation -> annotationMirrorUtil.getMirror(typeElement, annotation));
     }
+    
 }

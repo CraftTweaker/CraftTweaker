@@ -9,8 +9,9 @@ public class CommandImpl implements Comparable<CommandImpl> {
     private final String description;
     private final com.blamejared.crafttweaker.impl.commands.CommandCaller caller;
     private final Map<String, CommandImpl> subCommands;
-
+    
     public CommandImpl(String name, String description, CommandCaller caller) {
+        
         this.name = name;
         this.description = description;
         this.caller = caller;

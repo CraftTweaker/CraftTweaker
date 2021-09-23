@@ -48,14 +48,16 @@ public enum GameMode {
      * assume the point of view (i.e. spectate) other entities, including other players.
      */
     @ZenCodeType.Field SPECTATOR(GameType.SPECTATOR);
-
+    
     private final GameType vanillaType;
-
+    
     GameMode(final GameType vanillaType) {
+        
         this.vanillaType = vanillaType;
     }
-
+    
     public GameType toGameType() {
+        
         return this.vanillaType;
     }
 }

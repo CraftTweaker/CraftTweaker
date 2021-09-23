@@ -31,13 +31,15 @@ import java.util.function.Consumer;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.EntityProperties")
 @Document("vanilla/api/loot/conditions/vanilla/EntityProperties")
 public final class EntityPropertiesLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     private TargetedEntity targetedEntity;
     private EntityPredicate predicate;
-
+    
     EntityPropertiesLootConditionTypeBuilder() {
+        
         this.predicate = new EntityPredicate();
     }
-
+    
     /**
      * Sets the entity that should be targeted by the loot condition.
      *
@@ -46,10 +48,12 @@ public final class EntityPropertiesLootConditionTypeBuilder implements ILootCond
      * This parameter is <strong>required</strong>.
      *
      * @param entity The entity that should be targeted.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public EntityPropertiesLootConditionTypeBuilder withTargetedEntity(final TargetedEntity entity) {
+        
         this.targetedEntity = entity;
         return this;
     }
@@ -63,19 +67,22 @@ public final class EntityPropertiesLootConditionTypeBuilder implements ILootCond
      * This parameter is <strong>optional</strong>.
      *
      * @param builder A consumer that will be used to configure the {@link EntityPredicate}.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public EntityPropertiesLootConditionTypeBuilder withPredicate(final Consumer<EntityPredicate> builder) {
+        
         final EntityPredicate predicate = new EntityPredicate();
         builder.accept(predicate);
         this.predicate = predicate;
         return this;
     }
-
+    
     @Override
     public ILootCondition finish() {
-        if (this.targetedEntity == null) {
+        
+        if(this.targetedEntity == null) {
             throw new IllegalStateException("Targeted entity not defined for an 'EntityProperties' condition");
         }
         final net.minecraft.advancements.criterion.EntityPredicate vanilla = this.predicate.toVanillaPredicate();
@@ -86,4 +93,5 @@ public final class EntityPropertiesLootConditionTypeBuilder implements ILootCond
             return world instanceof ServerWorld && vanilla.test((ServerWorld) world, origin, entity);
         };
     }
+    
 }

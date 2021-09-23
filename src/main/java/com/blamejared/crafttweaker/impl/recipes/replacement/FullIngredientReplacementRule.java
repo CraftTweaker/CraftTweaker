@@ -9,16 +9,19 @@ import java.util.Objects;
 import java.util.Optional;
 
 public final class FullIngredientReplacementRule implements IReplacementRule {
+    
     private final IIngredient from;
     private final IIngredient to;
     
     private FullIngredientReplacementRule(final IIngredient from, final IIngredient to) {
+        
         this.from = from;
         this.to = to;
     }
     
     public static IReplacementRule create(final IIngredient from, final IIngredient to) {
-        return areTheSame(from, to)? IReplacementRule.EMPTY : new FullIngredientReplacementRule(from, to);
+        
+        return areTheSame(from, to) ? IReplacementRule.EMPTY : new FullIngredientReplacementRule(from, to);
     }
     
     private static boolean areTheSame(final IIngredient a, final IIngredient b) {
@@ -28,6 +31,7 @@ public final class FullIngredientReplacementRule implements IReplacementRule {
     
     @Override
     public <T, U extends IRecipe<?>> Optional<T> getReplacement(final T ingredient, final Class<T> type, final U recipe) {
+        
         return IReplacementRule.chain(
                 IReplacementRule.withType(ingredient, type, recipe, IIngredient.class, this::getIIngredientReplacement),
                 IReplacementRule.withType(ingredient, type, recipe, Ingredient.class, this::getIngredientReplacement)
@@ -35,15 +39,20 @@ public final class FullIngredientReplacementRule implements IReplacementRule {
     }
     
     private <U extends IRecipe<?>> Optional<IIngredient> getIIngredientReplacement(final IIngredient ingredient, final U recipe) {
-        return areTheSame(this.from, ingredient)? Optional.of(this.to) : Optional.empty();
+        
+        return areTheSame(this.from, ingredient) ? Optional.of(this.to) : Optional.empty();
     }
     
     private <U extends IRecipe<?>> Optional<Ingredient> getIngredientReplacement(final Ingredient ingredient, final U recipe) {
-        return this.getIIngredientReplacement(IIngredient.fromIngredient(ingredient), recipe).map(IIngredient::asVanillaIngredient);
+        
+        return this.getIIngredientReplacement(IIngredient.fromIngredient(ingredient), recipe)
+                .map(IIngredient::asVanillaIngredient);
     }
     
     @Override
     public String describe() {
+        
         return String.format("Replacing fully %s --> %s", this.from.getCommandString(), this.to.getCommandString());
     }
+    
 }

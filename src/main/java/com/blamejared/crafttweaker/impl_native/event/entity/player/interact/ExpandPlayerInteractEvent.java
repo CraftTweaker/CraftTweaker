@@ -66,7 +66,7 @@ public class ExpandPlayerInteractEvent {
         
         return internal.getHand();
     }
-
+    
     /**
      * @return The EnumActionResult that will be returned to vanilla if the event is cancelled, instead of calling the relevant
      * method of the event. By default, this is PASS, meaning cancelled events will cause
@@ -75,9 +75,10 @@ public class ExpandPlayerInteractEvent {
     @ZenCodeType.Method
     @ZenCodeType.Getter("cancellationResult")
     public static ActionResultType getCancellationResult(PlayerInteractEvent internal) {
+        
         return internal.getCancellationResult();
     }
-
+    
     /**
      * Set the EnumActionResult that will be returned to vanilla if the event is cancelled, instead of calling the relevant method of the event.
      *
@@ -86,6 +87,8 @@ public class ExpandPlayerInteractEvent {
     @ZenCodeType.Method
     @ZenCodeType.Setter("cancellationResult")
     public static void setCancellationResult(PlayerInteractEvent internal, ActionResultType result) {
+        
         internal.setCancellationResult(result);
     }
+    
 }

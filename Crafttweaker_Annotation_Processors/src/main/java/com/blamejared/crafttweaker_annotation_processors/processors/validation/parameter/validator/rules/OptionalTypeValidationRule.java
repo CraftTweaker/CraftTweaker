@@ -25,6 +25,7 @@ public class OptionalTypeValidationRule implements ParameterValidationRule {
     private final Map<TypeMirror, Class<? extends Annotation>> optionalAnnotations = new HashMap<>();
     
     public OptionalTypeValidationRule(Messager messager, Elements elementUtils, Types typeUtils) {
+        
         this.messager = messager;
         this.elementUtils = elementUtils;
         this.typeUtils = typeUtils;
@@ -34,24 +35,27 @@ public class OptionalTypeValidationRule implements ParameterValidationRule {
     }
     
     private void fillAnnotationMap() {
+        
         putAnnotation(TypeKind.INT, ZenCodeType.OptionalInt.class);
         putAnnotation(TypeKind.LONG, ZenCodeType.OptionalLong.class);
         putAnnotation(TypeKind.FLOAT, ZenCodeType.OptionalFloat.class);
         putAnnotation(TypeKind.DOUBLE, ZenCodeType.OptionalDouble.class);
         putAnnotation(TypeKind.BOOLEAN, ZenCodeType.OptionalBoolean.class);
         putAnnotation(TypeKind.CHAR, ZenCodeType.OptionalChar.class);
-    
+        
         putAnnotation(Object.class, ZenCodeType.Optional.class);
         putAnnotation(String.class, ZenCodeType.OptionalString.class);
         
     }
     
     private void putAnnotation(Class<?> cls, Class<? extends Annotation> annotationClass) {
+        
         final TypeElement typeElement = elementUtils.getTypeElement(cls.getCanonicalName());
         optionalAnnotations.put(typeElement.asType(), annotationClass);
     }
     
     private void putAnnotation(TypeKind typeKind, Class<? extends Annotation> annotationClass) {
+        
         final PrimitiveType primitiveType = typeUtils.getPrimitiveType(typeKind);
         optionalAnnotations.put(primitiveType, annotationClass);
     }
@@ -59,33 +63,40 @@ public class OptionalTypeValidationRule implements ParameterValidationRule {
     
     @Override
     public boolean canValidate(VariableElement parameter) {
+        
         return isOptional(parameter);
     }
     
     private boolean isOptional(VariableElement parameter) {
+        
         return optionalAnnotations.values().stream().anyMatch(annotationPresentOn(parameter));
     }
     
     private Predicate<Class<? extends Annotation>> annotationPresentOn(VariableElement parameter) {
+        
         return annotationClass -> parameter.getAnnotation(annotationClass) != null;
     }
     
     @Override
     public void validate(VariableElement parameter) {
+        
         if(shouldParameterUseSpecialAnnotation(parameter)) {
             checkIfParameterUsesProperAnnotation(parameter);
         }
     }
     
     private boolean shouldParameterUseSpecialAnnotation(VariableElement parameter) {
+        
         return optionalAnnotations.containsKey(parameter.asType());
     }
     
     private void checkIfParameterUsesProperAnnotation(VariableElement parameter) {
+        
         final Class<? extends Annotation> annotationClass = optionalAnnotations.get(parameter.asType());
         if(parameter.getAnnotation(annotationClass) == null) {
             final String message = "Optional type should use " + annotationClass.getSimpleName() + " annotation";
             messager.printMessage(Diagnostic.Kind.ERROR, message, parameter);
         }
     }
+    
 }

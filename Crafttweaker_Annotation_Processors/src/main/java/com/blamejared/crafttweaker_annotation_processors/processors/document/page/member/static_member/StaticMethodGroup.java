@@ -8,7 +8,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.pag
 import java.util.Set;
 import java.util.TreeSet;
 
-public class StaticMethodGroup implements IFillMeta{
+public class StaticMethodGroup implements IFillMeta {
     
     private final String name;
     private final AbstractTypeInfo ownerType;
@@ -34,6 +34,7 @@ public class StaticMethodGroup implements IFillMeta{
     
     @Override
     public void fillMeta(DocumentMeta meta) {
+        
         for(StaticMethodMember virtualMethod : staticMethods) {
             virtualMethod.fillMeta(meta);
         }

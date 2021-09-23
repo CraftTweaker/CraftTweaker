@@ -14,81 +14,98 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.item.MCIngredientTransformed")
 @Document("vanilla/api/items/MCIngredientTransformed")
 public class MCIngredientTransformed<T extends IIngredient> implements IIngredient {
+    
     private final T base;
     private final IIngredientTransformer<T> transformer;
-
+    
     public MCIngredientTransformed(T base, IIngredientTransformer<T> transformer) {
+        
         this.base = base;
         this.transformer = transformer;
     }
-
+    
     @Override
     public Ingredient asVanillaIngredient() {
+        
         return new IngredientTransformed<>(this);
     }
-
+    
     @ZenCodeType.Getter("transformer")
     public IIngredientTransformer<T> getTransformer() {
+        
         return transformer;
     }
-
+    
     @Override
     public IItemStack getRemainingItem(IItemStack stack) {
+        
         return transformer.transform(stack);
     }
-
+    
     @Override
     public String getCommandString() {
+        
         return transformer.getCommandString(base);
     }
-
+    
     @ZenCodeType.Getter("baseIngredient")
     public T getBaseIngredient() {
+        
         return base;
     }
-
+    
     @Override
     @ZenCodeType.Method
     public boolean matches(IItemStack stack, boolean ignoreDamage) {
+        
         return base.matches(stack, ignoreDamage);
     }
-
+    
     @Override
     @ZenCodeType.Getter("items")
     public IItemStack[] getItems() {
+        
         return base.getItems();
     }
-
+    
     @Override
     @ZenCodeType.Caster(implicit = true)
     public MapData asMapData() {
+        
         return base.asMapData();
     }
-
+    
     @Override
     @ZenCodeType.Caster(implicit = true)
     public IData asIData() {
+        
         return base.asIData();
     }
     
     @Override
     public boolean equals(Object o) {
-        if(this == o)
+    
+        if(this == o) {
             return true;
-        if(o == null || getClass() != o.getClass())
+        }
+        if(o == null || getClass() != o.getClass()) {
             return false;
+        }
         
         MCIngredientTransformed<?> that = (MCIngredientTransformed<?>) o;
-        
-        if(!base.equals(that.base))
+    
+        if(!base.equals(that.base)) {
             return false;
+        }
         return transformer.equals(that.transformer);
     }
     
     @Override
     public int hashCode() {
+        
         int result = base.hashCode();
         result = 31 * result + transformer.hashCode();
         return result;
     }
+    
 }

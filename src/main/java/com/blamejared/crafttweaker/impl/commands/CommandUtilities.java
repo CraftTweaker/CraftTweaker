@@ -22,6 +22,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import java.io.File;
 
 public final class CommandUtilities {
+    
     private CommandUtilities() {}
     
     public static void sendCopyingAndCopy(final TextComponent component, final String toCopy, final PlayerEntity player) {
@@ -55,15 +56,16 @@ public final class CommandUtilities {
     
     public static void copy(final PlayerEntity player, final String toCopy) {
         
-        if (player instanceof ServerPlayerEntity) {
+        if(player instanceof ServerPlayerEntity) {
             PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageCopy(toCopy));
         }
     }
     
     public static void open(final PlayerEntity player, final File file) {
         
-        if (player instanceof ServerPlayerEntity) {
-            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen(file.toURI().toString()));
+        if(player instanceof ServerPlayerEntity) {
+            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen(file.toURI()
+                    .toString()));
         }
     }
     
@@ -108,4 +110,5 @@ public final class CommandUtilities {
         
         return base;
     }
+    
 }

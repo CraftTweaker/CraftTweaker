@@ -25,15 +25,18 @@ public class CTBlastFurnaceManager implements ICookingRecipeManager {
     public static final CTBlastFurnaceManager INSTANCE = new CTBlastFurnaceManager();
     
     private CTBlastFurnaceManager() {
+    
     }
     
     @Override
     public AbstractCookingRecipe makeRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime) {
+        
         return new BlastingRecipe(new ResourceLocation(CraftTweaker.MODID, name), "", input.asVanillaIngredient(), output.getInternal(), xp, cookTime);
     }
     
     @Override
     public IRecipeType<BlastingRecipe> getRecipeType() {
+        
         return IRecipeType.BLASTING;
     }
     

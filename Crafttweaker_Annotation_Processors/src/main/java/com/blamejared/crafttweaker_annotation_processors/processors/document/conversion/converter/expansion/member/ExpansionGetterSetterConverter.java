@@ -20,31 +20,37 @@ public class ExpansionGetterSetterConverter extends AbstractEnclosedElementConve
     private final CommentConverter commentConverter;
     
     public ExpansionGetterSetterConverter(TypeConverter typeConverter, CommentConverter commentConverter) {
+        
         this.typeConverter = typeConverter;
         this.commentConverter = commentConverter;
     }
     
     @Override
     public boolean canConvert(Element enclosedElement) {
+        
         return isGetter(enclosedElement) || isSetter(enclosedElement);
     }
     
     private boolean isGetter(Element enclosedElement) {
+        
         return isAnnotationPresentOn(ZenCodeType.Getter.class, enclosedElement);
     }
     
     private boolean isSetter(Element enclosedElement) {
+        
         return isAnnotationPresentOn(ZenCodeType.Setter.class, enclosedElement);
     }
     
     @Override
     public void convertAndAddTo(Element enclosedElement, DocumentedVirtualMembers result, DocumentationPageInfo pageInfo) {
+        
         final PropertyMember propertyMember = convertProperty(enclosedElement);
         
         result.addProperty(propertyMember);
     }
     
     private PropertyMember convertProperty(Element enclosedElement) {
+        
         final ExecutableElement method = (ExecutableElement) enclosedElement;
         final String name = getName(method);
         final AbstractTypeInfo type = getTypeInfo(method);
@@ -56,6 +62,7 @@ public class ExpansionGetterSetterConverter extends AbstractEnclosedElementConve
     }
     
     private String getName(Element enclosedElement) {
+        
         if(isGetter(enclosedElement)) {
             return getGetterName(enclosedElement);
         } else {
@@ -64,14 +71,17 @@ public class ExpansionGetterSetterConverter extends AbstractEnclosedElementConve
     }
     
     private String getGetterName(Element enclosedElement) {
+        
         return enclosedElement.getAnnotation(ZenCodeType.Getter.class).value();
     }
     
     private String getSetterName(Element enclosedElement) {
+        
         return enclosedElement.getAnnotation(ZenCodeType.Setter.class).value();
     }
     
     private AbstractTypeInfo getTypeInfo(ExecutableElement enclosedElement) {
+        
         if(isGetter(enclosedElement)) {
             return getGetterTypeInfo(enclosedElement);
         } else {
@@ -80,12 +90,15 @@ public class ExpansionGetterSetterConverter extends AbstractEnclosedElementConve
     }
     
     private AbstractTypeInfo getGetterTypeInfo(ExecutableElement enclosedElement) {
+        
         final TypeMirror returnType = enclosedElement.getReturnType();
         return typeConverter.convertType(returnType);
     }
     
     private AbstractTypeInfo getSetterTypeInfo(ExecutableElement enclosedElement) {
+        
         final TypeMirror typeMirror = enclosedElement.getParameters().get(0).asType();
         return typeConverter.convertType(typeMirror);
     }
+    
 }

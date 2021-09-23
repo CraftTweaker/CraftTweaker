@@ -17,13 +17,16 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.KilledByPlayer")
 @Document("vanilla/api/loot/conditions/vanilla/KilledByPlayer")
 public final class KilledByPlayerLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     static final KilledByPlayerLootConditionTypeBuilder INSTANCE = new KilledByPlayerLootConditionTypeBuilder();
     private static final ILootCondition KILLED_BY_PLAYER = context -> context.has(LootParameters.LAST_DAMAGE_PLAYER);
-
+    
     private KilledByPlayerLootConditionTypeBuilder() {}
-
+    
     @Override
     public ILootCondition finish() {
+        
         return KILLED_BY_PLAYER;
     }
+    
 }

@@ -13,6 +13,7 @@ public class ArrayConversionRule implements NameConversionRule {
     private final NameConverter nameConverter;
     
     public ArrayConversionRule(Types typeUtils, NameConverter nameConverter) {
+        
         this.typeUtils = typeUtils;
         this.nameConverter = nameConverter;
     }
@@ -20,6 +21,7 @@ public class ArrayConversionRule implements NameConversionRule {
     @Nullable
     @Override
     public TypeMirror convertZenCodeName(String zenCodeName) {
+        
         if(isArrayType(zenCodeName)) {
             return getArrayType(zenCodeName);
         }
@@ -27,15 +29,18 @@ public class ArrayConversionRule implements NameConversionRule {
     }
     
     private boolean isArrayType(String zenCodeName) {
+        
         return zenCodeName.endsWith("[]");
     }
     
     private TypeMirror getArrayType(String zenCodeName) {
+        
         final TypeMirror componentType = getComponentType(zenCodeName);
         return typeUtils.getArrayType(componentType);
     }
     
     private TypeMirror getComponentType(String zenCodeName) {
+        
         final String componentString = zenCodeName.substring(0, zenCodeName.length() - 2);
         return nameConverter.getTypeMirrorByZenCodeName(componentString);
     }

@@ -12,7 +12,13 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringJoiner;
 
 
 /**
@@ -339,14 +345,16 @@ public class MapData implements IData {
     
     @Override
     public boolean equals(Object o) {
-        
-        if(this == o)
+    
+        if(this == o) {
             return true;
-        if(o == null || getClass() != o.getClass())
+        }
+        if(o == null || getClass() != o.getClass()) {
             return false;
+        }
         
         MapData mapData = (MapData) o;
-    
+        
         return internal.equals(mapData.internal);
     }
     

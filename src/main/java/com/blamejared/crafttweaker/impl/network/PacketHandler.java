@@ -19,12 +19,16 @@ public class PacketHandler {
     private static int ID = 0;
     
     public static void init() {
+        
         CHANNEL.registerMessage(ID++, MessageCopy.class, (messageCopy, packetBuffer) -> packetBuffer.writeString(messageCopy.toCopy), packetBuffer -> new MessageCopy(packetBuffer.readString()), (messageCopy, contextSupplier) -> andHandling(contextSupplier, () -> Minecraft.getInstance().keyboardListener.setClipboardString(messageCopy.toCopy)));
-        CHANNEL.registerMessage(ID++, MessageOpen.class, (messageOpen, packetBuffer) -> packetBuffer.writeString(messageOpen.path), packetBuffer -> new MessageOpen(packetBuffer.readString()), (messageOpen, contextSupplier) -> andHandling(contextSupplier, () -> Util.getOSType().openURI(messageOpen.path)));
+        CHANNEL.registerMessage(ID++, MessageOpen.class, (messageOpen, packetBuffer) -> packetBuffer.writeString(messageOpen.path), packetBuffer -> new MessageOpen(packetBuffer.readString()), (messageOpen, contextSupplier) -> andHandling(contextSupplier, () -> Util.getOSType()
+                .openURI(messageOpen.path)));
     }
     
     private static void andHandling(final Supplier<NetworkEvent.Context> contextSupplier, final Runnable enqueuedWork) {
+        
         contextSupplier.get().enqueueWork(enqueuedWork);
         contextSupplier.get().setPacketHandled(true);
     }
+    
 }

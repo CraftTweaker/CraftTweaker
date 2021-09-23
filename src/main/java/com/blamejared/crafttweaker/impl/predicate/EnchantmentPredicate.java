@@ -17,28 +17,32 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.predicate.EnchantmentPredicate")
 @Document("vanilla/api/predicate/EnchantmentPredicate")
 public final class EnchantmentPredicate extends IVanillaWrappingPredicate.AnyDefaulting<net.minecraft.advancements.criterion.EnchantmentPredicate> {
+    
     private Enchantment enchantment;
     private IntRangePredicate levels;
-
+    
     public EnchantmentPredicate() {
+        
         super(net.minecraft.advancements.criterion.EnchantmentPredicate.ANY);
         this.levels = IntRangePredicate.unbounded();
     }
-
+    
     /**
      * Sets the enchantment that needs to be present, and whose data needs to be checked.
      *
      * This parameter is <strong>required</strong>.
      *
      * @param enchantment The enchantment that needs to be present.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public EnchantmentPredicate withEnchantment(final Enchantment enchantment) {
+        
         this.enchantment = enchantment;
         return this;
     }
-
+    
     /**
      * Sets the minimum value the level should be to <code>min</code>.
      *
@@ -49,14 +53,16 @@ public final class EnchantmentPredicate extends IVanillaWrappingPredicate.AnyDef
      * The minimum value is inclusive, meaning that a value that is equal to <code>min</code> will pass the check.
      *
      * @param min The minimum value the level should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public EnchantmentPredicate withMinimumLevel(final int min) {
+        
         this.levels = IntRangePredicate.mergeLowerBound(this.levels, min);
         return this;
     }
-
+    
     /**
      * Sets the maximum value the level should be to <code>max</code>.
      *
@@ -67,14 +73,16 @@ public final class EnchantmentPredicate extends IVanillaWrappingPredicate.AnyDef
      * The maximum value is inclusive, meaning that a value that is equal to <code>max</code> will pass the check.
      *
      * @param max The maximum value the level should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public EnchantmentPredicate withMaximumLevel(final int max) {
+        
         this.levels = IntRangePredicate.mergeUpperBound(this.levels, max);
         return this;
     }
-
+    
     /**
      * Sets both the minimum and maximum value the level should be to <code>min</code> and <code>max</code>
      * respectively.
@@ -86,37 +94,44 @@ public final class EnchantmentPredicate extends IVanillaWrappingPredicate.AnyDef
      *
      * @param min The minimum value the level should be.
      * @param max The maximum value the level should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public EnchantmentPredicate withRangedLevel(final int min, final int max) {
+        
         this.levels = IntRangePredicate.bounded(min, max);
         return this;
     }
-
+    
     /**
      * Sets the level to exactly match the given <code>value</code>.
      *
      * If the level had already some bounds specified, then they will be overwritten with the new value.
      *
      * @param value The exact value the level should be.
+     *
      * @return This predicate for chaining.
      */
     @ZenCodeType.Method
     public EnchantmentPredicate withExactLevel(final int value) {
+        
         return this.withRangedLevel(value, value);
     }
-
+    
     @Override
     public boolean isAny() {
+        
         return this.enchantment == null && this.levels.isAny();
     }
-
+    
     @Override
     public net.minecraft.advancements.criterion.EnchantmentPredicate toVanilla() {
-        if (this.enchantment == null) {
+        
+        if(this.enchantment == null) {
             throw new IllegalStateException("Unable to build an enchantment predicate without an enchantment");
         }
         return new net.minecraft.advancements.criterion.EnchantmentPredicate(this.enchantment, this.levels.toVanillaPredicate());
     }
+    
 }

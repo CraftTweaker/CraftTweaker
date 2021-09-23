@@ -11,6 +11,7 @@ public class ExpandFloat {
     
     @ZenCodeType.Caster(implicit = true)
     public static IData asData(float value) {
+        
         return new FloatData(value);
     }
     

@@ -14,28 +14,30 @@ import java.util.List;
 import java.util.Map;
 
 public class JSONConverter {
+    
     public static IData convert(JsonElement json) {
+        
         if(json == null) {
             return null;
         }
-
-        if (json.isJsonPrimitive()) {
+        
+        if(json.isJsonPrimitive()) {
             final JsonPrimitive primitive = json.getAsJsonPrimitive();
-            if (primitive.isString() || primitive.isBoolean()) {
+            if(primitive.isString() || primitive.isBoolean()) {
                 return new StringData(primitive.getAsString());
             } else {
                 //Must be number
                 return NumberConverter.convertNumber(primitive.getAsNumber());
             }
-
-        } else if (json.isJsonArray()) {
+            
+        } else if(json.isJsonArray()) {
             final JsonArray asJsonArray = json.getAsJsonArray();
             final List<IData> dataList = new ArrayList<>(asJsonArray.size());
-            for (JsonElement jsonElement : asJsonArray) {
+            for(JsonElement jsonElement : asJsonArray) {
                 dataList.add(JSONConverter.convert(jsonElement));
             }
             return new ListData(dataList);
-        } else if (json.isJsonObject()) {
+        } else if(json.isJsonObject()) {
             return convert(json.getAsJsonObject());
         } else {
             //Must be jsonNull
@@ -45,14 +47,16 @@ public class JSONConverter {
     }
     
     public static MapData convert(JsonObject jsonObject) {
+        
         if(jsonObject == null) {
             return null;
         }
         
         final Map<String, IData> dataMap = new HashMap<>();
-        for (Map.Entry<String, JsonElement> e : jsonObject.entrySet()) {
+        for(Map.Entry<String, JsonElement> e : jsonObject.entrySet()) {
             dataMap.put(e.getKey(), JSONConverter.convert(e.getValue()));
         }
         return new MapData(dataMap);
     }
+    
 }

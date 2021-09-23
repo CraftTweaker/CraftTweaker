@@ -1,9 +1,9 @@
 package com.blamejared.crafttweaker.api.zencode.brackets;
 
-import net.minecraftforge.eventbus.api.*;
-import org.openzen.zenscript.parser.*;
+import net.minecraftforge.eventbus.api.Event;
+import org.openzen.zenscript.parser.BracketExpressionParser;
 
-import java.util.*;
+import java.util.Set;
 
 /**
  * Allows users to register custom implementations of {@link BracketExpressionParser}.
@@ -16,6 +16,7 @@ public class CTRegisterBEPEvent extends Event {
     private final IgnorePrefixCasingBracketParser bep;
     
     public CTRegisterBEPEvent(IgnorePrefixCasingBracketParser bep) {
+        
         this.bep = bep;
     }
     
@@ -23,6 +24,7 @@ public class CTRegisterBEPEvent extends Event {
      * Gets all currently registered BEPs.
      */
     public Set<String> getKnownBEPNames() {
+        
         return bep.getSubParsersName();
     }
     
@@ -32,6 +34,8 @@ public class CTRegisterBEPEvent extends Event {
      * In that case this parser will override the present parser.
      */
     public void registerBEP(String name, BracketExpressionParser parser) {
+        
         bep.register(name, parser);
     }
+    
 }

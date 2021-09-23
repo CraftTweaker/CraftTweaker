@@ -13,12 +13,14 @@ public class ExpandString {
     
     @ZenCodeType.Caster(implicit = true)
     public static IData asData(String value) {
+        
         return new StringData(value);
     }
     
     
     @ZenCodeType.Caster()
     public static int asInt(String value) {
+        
         try {
             return Integer.parseInt(value);
         } catch(NumberFormatException e) {
@@ -28,6 +30,7 @@ public class ExpandString {
     
     @ZenCodeType.Caster()
     public static double asDouble(String value) {
+        
         try {
             return Double.parseDouble(value);
         } catch(NumberFormatException e) {
@@ -37,6 +40,8 @@ public class ExpandString {
     
     @ZenCodeType.Caster(implicit = true)
     public static MCTextComponent asTextComponent(String value) {
+        
         return new MCTextComponent(new StringTextComponent(value));
     }
+    
 }

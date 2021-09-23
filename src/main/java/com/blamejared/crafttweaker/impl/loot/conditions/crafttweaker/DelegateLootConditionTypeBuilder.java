@@ -20,24 +20,27 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.crafttweaker.Delegate")
 @Document("vanilla/api/loot/conditions/crafttweaker/Delegate")
 public final class DelegateLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     private ILootCondition delegate;
-
+    
     DelegateLootConditionTypeBuilder() {}
-
+    
     /**
      * Sets the delegate loot condition.
      *
      * This parameter is <strong>required</strong>.
      *
      * @param other The delegate loot condition.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public DelegateLootConditionTypeBuilder withDelegate(final ILootCondition other) {
+        
         this.delegate = other;
         return this;
     }
-
+    
     /**
      * Sets the delegate to the loot condition created with the given {@link CTLootConditionBuilder}.
      *
@@ -47,20 +50,26 @@ public final class DelegateLootConditionTypeBuilder implements ILootConditionTyp
      * This parameter is <strong>required</strong>.
      *
      * @param builder The builder to create a single {@link ILootCondition}.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public DelegateLootConditionTypeBuilder withDelegate(final CTLootConditionBuilder builder) {
+        
         final ILootCondition delegate = builder.single();
-        if (delegate == null) throw new IllegalArgumentException("Loot condition builder must have a single condition");
+        if(delegate == null) {
+            throw new IllegalArgumentException("Loot condition builder must have a single condition");
+        }
         return this.withDelegate(delegate);
     }
-
+    
     @Override
     public ILootCondition finish() {
-        if (this.delegate == null) {
+        
+        if(this.delegate == null) {
             throw new IllegalStateException("You must specify a delegate function for a 'Delegate' loot condition");
         }
         return this.delegate;
     }
+    
 }

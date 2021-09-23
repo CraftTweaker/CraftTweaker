@@ -7,7 +7,6 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import com.blamejared.crafttweaker_annotations.annotations.TypedExpansion;
 import org.openzen.zencode.java.ZenCodeType;
 import org.reflections.Reflections;
-import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
@@ -24,18 +23,21 @@ public class ExpansionCheckValidationProcessor extends AbstractCraftTweakerProce
     
     @Override
     public synchronized void performInitialization() {
+        
         knownTypeRegistry = dependencyContainer.getInstanceOfClass(KnownTypeRegistry.class);
     }
     
     @Override
     protected void setupDependencyContainer() {
+        
         super.setupDependencyContainer();
         setupReflections();
     }
     
     private void setupReflections() {
+        
         final ConfigurationBuilder configuration = new ConfigurationBuilder().addUrls(ClasspathHelper
-                .forJavaClassPath())
+                        .forJavaClassPath())
                 .addClassLoaders(ClasspathHelper.contextClassLoader(), ClasspathHelper.staticClassLoader(), getClass()
                         .getClassLoader())
                 .addUrls(ClasspathHelper.forClassLoader());
@@ -46,11 +48,13 @@ public class ExpansionCheckValidationProcessor extends AbstractCraftTweakerProce
     
     @Override
     public Collection<Class<? extends Annotation>> getSupportedAnnotationClasses() {
+        
         return Arrays.asList(ZenCodeType.Name.class, NativeTypeRegistration.class, ZenCodeType.Expansion.class, TypedExpansion.class);
     }
     
     @Override
     public boolean performProcessing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        
         if(roundEnv.processingOver()) {
             handleLastRound();
         } else {
@@ -61,6 +65,7 @@ public class ExpansionCheckValidationProcessor extends AbstractCraftTweakerProce
     }
     
     private void handleIntermediateRound(RoundEnvironment roundEnv) {
+        
         knownTypeRegistry.addNamedTypes(roundEnv.getElementsAnnotatedWith(ZenCodeType.Name.class));
         knownTypeRegistry.addNativeTypes(roundEnv.getElementsAnnotatedWith(NativeTypeRegistration.class));
         knownTypeRegistry.addExpansionTypes(roundEnv.getElementsAnnotatedWith(ZenCodeType.Expansion.class));
@@ -68,7 +73,9 @@ public class ExpansionCheckValidationProcessor extends AbstractCraftTweakerProce
     }
     
     private void handleLastRound() {
+        
         final ExpansionInfoValidator validator = dependencyContainer.getInstanceOfClass(ExpansionInfoValidator.class);
         validator.validateAll();
     }
+    
 }

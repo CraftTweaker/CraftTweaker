@@ -27,6 +27,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public final class ReplacerAction implements IRuntimeAction {
+    
     private final ITargetingRule targetingRule;
     private final boolean isSimple;
     private final List<IReplacementRule> replacementRules;
@@ -37,6 +38,7 @@ public final class ReplacerAction implements IRuntimeAction {
     public ReplacerAction(final ITargetingRule targetingRule, final boolean isSimple, final List<IReplacementRule> replacementRules,
                           final Collection<ResourceLocation> defaultExclusions, final Function<ResourceLocation, ResourceLocation> generatorFunction,
                           final boolean suppressWarnings) {
+        
         this.targetingRule = targetingRule;
         this.isSimple = isSimple;
         this.replacementRules = replacementRules;
@@ -46,6 +48,7 @@ public final class ReplacerAction implements IRuntimeAction {
     }
     
     private static Collection<ResourceLocation> filter(final ITargetingRule rule, final Collection<ResourceLocation> fullExclusions) {
+        
         final Map<ResourceLocation, WrapperRecipe> map = GenericRecipesManager.RECIPES.getRecipeMap(); // Holy hell if it's inefficient otherwise
         
         return Util.make(new HashSet<>(fullExclusions), set -> set.removeIf(it -> {
@@ -56,6 +59,7 @@ public final class ReplacerAction implements IRuntimeAction {
     
     @Override
     public void apply() {
+        
         this.specificRecipesOrElse(GenericRecipesManager.RECIPES::getAllRecipes)
                 .stream()
                 .filter(it -> !this.defaultExclusions.contains(it.getId()))
@@ -70,6 +74,7 @@ public final class ReplacerAction implements IRuntimeAction {
     
     @Override
     public String describe() {
+        
         return String.format(
                 "Batching%s replacement for %s according to replacement rules %s%s%s",
                 this.stringifySimplicity(),
@@ -82,7 +87,8 @@ public final class ReplacerAction implements IRuntimeAction {
     
     @Override
     public boolean validate(final ILogger logger) {
-        if (this.replacementRules.isEmpty()) {
+        
+        if(this.replacementRules.isEmpty()) {
             logger.error("Invalid replacer action: no rules available");
             return false;
         }
@@ -90,25 +96,32 @@ public final class ReplacerAction implements IRuntimeAction {
     }
     
     private Collection<WrapperRecipe> specificRecipesOrElse(final Supplier<Collection<WrapperRecipe>> ifComplex) {
-        return this.isSimple? ((SpecificRecipesTargetingRule) this.targetingRule).recipes() : ifComplex.get();
+        
+        return this.isSimple ? ((SpecificRecipesTargetingRule) this.targetingRule).recipes() : ifComplex.get();
     }
     
     private String stringifySimplicity() {
-        return this.isSimple? " simple" : "";
+        
+        return this.isSimple ? " simple" : "";
     }
     
     private String stringifyTargets() {
+        
         return this.targetingRule.describe();
     }
     
     private String stringifyReplacementRules() {
+        
         return this.replacementRules.stream()
                 .map(IReplacementRule::describe)
                 .collect(Collectors.joining(", ", "{", "}"));
     }
     
     private String stringifyExclusionsIfPresent() {
-        if (this.defaultExclusions.isEmpty()) return "";
+        
+        if(this.defaultExclusions.isEmpty()) {
+            return "";
+        }
         
         return ", while also automatically excluding {"
                 + this.stringifyDefaultExclusionsIfPresent()
@@ -116,30 +129,35 @@ public final class ReplacerAction implements IRuntimeAction {
     }
     
     private String stringifyDefaultExclusionsIfPresent() {
+        
         return this.defaultExclusions.stream()
                 .map(ResourceLocation::toString)
                 .collect(Collectors.joining(", "));
     }
     
     private String stringifySuppressWarnings() {
-        return this.suppressWarnings? " (Warnings are suppressed for this batch replacement)" : "";
+        
+        return this.suppressWarnings ? " (Warnings are suppressed for this batch replacement)" : "";
     }
     
     private <T extends IInventory, U extends IRecipe<T>> Optional<ActionReplaceRecipe> execute(final IRecipeManager manager, final U recipe, final List<IReplacementRule> rules) {
+        
         try {
             final IRecipeHandler<U> handler = CraftTweakerRegistry.getHandlerFor(recipe);
             final Optional<Function<ResourceLocation, U>> newRecipeMaybe = handler.replaceIngredients(manager, recipe, rules);
             
-            if (newRecipeMaybe.isPresent()) {
-                return Optional.of(new ActionReplaceRecipe(manager, this.generatorFunction, recipe, name -> newRecipeMaybe.get().apply(name)));
+            if(newRecipeMaybe.isPresent()) {
+                return Optional.of(new ActionReplaceRecipe(manager, this.generatorFunction, recipe, name -> newRecipeMaybe.get()
+                        .apply(name)));
             }
-        } catch (final IRecipeHandler.ReplacementNotSupportedException e) {
-            if (!this.suppressWarnings) {
+        } catch(final IRecipeHandler.ReplacementNotSupportedException e) {
+            if(!this.suppressWarnings) {
                 CraftTweakerAPI.logWarning("Unable to replace ingredients in recipe %s: %s", recipe.getId(), e.getMessage());
             }
-        } catch (final Throwable t) {
+        } catch(final Throwable t) {
             CraftTweakerAPI.logThrowing("An error has occurred while trying to replace ingredients in recipe %s", t, recipe.getId());
         }
         return Optional.empty();
     }
+    
 }

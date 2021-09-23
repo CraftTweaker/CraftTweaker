@@ -11,14 +11,17 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/util/MCHand")
 @NativeTypeRegistration(value = Hand.class, zenCodeName = "crafttweaker.api.util.MCHand")
 public class ExpandHand {
+    
     @ZenCodeType.Caster(implicit = true)
     public static String getName(Hand internal) {
+        
         return internal.name();
     }
-
+    
     @ZenCodeType.Caster(implicit = true)
     public static EquipmentSlotType asEquipmentSlotType(Hand internal) {
-        switch (internal) {
+        
+        switch(internal) {
             case MAIN_HAND:
                 return EquipmentSlotType.MAINHAND;
             case OFF_HAND:
@@ -27,4 +30,5 @@ public class ExpandHand {
                 throw new IllegalArgumentException("Invalid hand: " + internal.name());
         }
     }
+    
 }

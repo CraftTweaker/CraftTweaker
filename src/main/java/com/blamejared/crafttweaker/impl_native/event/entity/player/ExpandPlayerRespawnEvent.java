@@ -22,6 +22,8 @@ public class ExpandPlayerRespawnEvent {
     @ZenCodeType.Method
     @ZenCodeType.Getter("endConquered")
     public static boolean isEndConquered(PlayerEvent.PlayerRespawnEvent internal) {
+        
         return internal.isEndConquered();
     }
+    
 }

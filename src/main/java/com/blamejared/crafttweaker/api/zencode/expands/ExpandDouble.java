@@ -11,6 +11,7 @@ public class ExpandDouble {
     
     @ZenCodeType.Caster(implicit = true)
     public static IData asData(double value) {
+        
         return new DoubleData(value);
     }
     

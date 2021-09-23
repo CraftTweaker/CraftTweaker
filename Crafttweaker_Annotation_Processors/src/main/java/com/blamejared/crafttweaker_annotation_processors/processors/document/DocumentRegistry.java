@@ -17,14 +17,17 @@ public class DocumentRegistry {
     private final Map<TypeElement, DocumentationPageInfo> elementsToInfo = new HashMap<>();
     
     public void addDocumentationPage(DocumentationPage page) {
+        
         this.documentationPages.put(page.pageInfo, page);
     }
     
     public void addInfo(TypeElement typeElement, DocumentationPageInfo pageInfo) {
+        
         elementsToInfo.put(typeElement, pageInfo);
     }
     
     public DocumentationPageInfo getPageInfoFor(TypeElement typeElement) {
+        
         if(hasPageInfoFor(typeElement)) {
             return elementsToInfo.get(typeElement);
         }
@@ -33,6 +36,7 @@ public class DocumentRegistry {
     }
     
     public Optional<TypePageInfo> getPageInfoByName(TypeName name) {
+        
         return elementsToInfo.values()
                 .stream()
                 .filter(pageInfo -> pageInfo instanceof TypePageInfo)
@@ -42,6 +46,7 @@ public class DocumentRegistry {
     }
     
     public DocumentationPage getPage(DocumentationPageInfo info) {
+        
         if(hasPageFor(info)) {
             return documentationPages.get(info);
         }
@@ -50,14 +55,18 @@ public class DocumentRegistry {
     }
     
     public Collection<DocumentationPage> getAllPages() {
+        
         return documentationPages.values();
     }
     
     public boolean hasPageFor(DocumentationPageInfo info) {
+        
         return documentationPages.containsKey(info);
     }
     
     public boolean hasPageInfoFor(TypeElement typeElement) {
+        
         return elementsToInfo.containsKey(typeElement);
     }
+    
 }

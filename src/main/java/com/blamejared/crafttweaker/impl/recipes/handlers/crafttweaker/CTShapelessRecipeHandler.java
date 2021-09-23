@@ -21,7 +21,7 @@ public final class CTShapelessRecipeHandler implements IRecipeHandler<CTRecipeSh
     
     @Override
     public String dumpToCommandString(final IRecipeManager manager, final CTRecipeShapeless recipe) {
-    
+        
         return String.format(
                 "craftingTable.addShapeless(%s, %s, %s%s);",
                 StringUtils.quoteAndEscape(recipe.getId()),
@@ -29,12 +29,13 @@ public final class CTShapelessRecipeHandler implements IRecipeHandler<CTRecipeSh
                 Arrays.stream(recipe.getCtIngredients())
                         .map(IIngredient::getCommandString)
                         .collect(Collectors.joining(", ", "[", "]")),
-                recipe.getFunction() == null? "" : ", (usualOut, inputs) => { ... }"
+                recipe.getFunction() == null ? "" : ", (usualOut, inputs) => { ... }"
         );
     }
     
     @Override
     public Optional<Function<ResourceLocation, CTRecipeShapeless>> replaceIngredients(final IRecipeManager manager, final CTRecipeShapeless recipe, final List<IReplacementRule> rules) {
+        
         return ReplacementHandlerHelper.replaceIngredientArray(
                 recipe.getCtIngredients(),
                 IIngredient.class,

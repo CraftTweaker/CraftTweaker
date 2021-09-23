@@ -25,6 +25,8 @@ public class ExpandRightClickBlockEvent {
     @ZenCodeType.Method
     @ZenCodeType.Getter("face")
     public static MCDirection getFace(PlayerInteractEvent internal) {
+        
         return MCDirection.get(internal.getFace());
     }
+    
 }

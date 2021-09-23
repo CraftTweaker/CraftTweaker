@@ -9,11 +9,14 @@ public class ThisTypeConversionRule implements LinkConversionRule {
     
     @Override
     public boolean canConvert(String link) {
+        
         return link.isEmpty();
     }
     
     @Override
     public Optional<String> tryConvertToClickableMarkdown(String link, Element element) {
+        
         return Optional.of("[this](.)");
     }
+    
 }

@@ -19,12 +19,14 @@ public class ExpandResourceLocation {
     @ZenCodeType.Method
     @ZenCodeType.Operator(ZenCodeType.OperatorType.COMPARE)
     public static int compareTo(ResourceLocation internal, ResourceLocation other) {
+        
         return internal.compareTo(other);
     }
     
     
     @ZenCodeType.Method
     public static int hashCode(ResourceLocation internal) {
+        
         return internal.hashCode();
     }
     
@@ -32,6 +34,7 @@ public class ExpandResourceLocation {
     @ZenCodeType.Method
     @ZenCodeType.Getter("path")
     public static String getPath(ResourceLocation internal) {
+        
         return (internal.getPath());
     }
     
@@ -39,12 +42,14 @@ public class ExpandResourceLocation {
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = true)
     public static String toString(ResourceLocation internal) {
+        
         return (internal.toString());
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = true)
     public static IData asData(ResourceLocation internal) {
+        
         return new StringData(toString(internal));
     }
     
@@ -52,6 +57,7 @@ public class ExpandResourceLocation {
     @ZenCodeType.Method
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
     public static boolean equals(ResourceLocation internal, Object other) {
+        
         return internal.equals(other);
     }
     
@@ -59,11 +65,14 @@ public class ExpandResourceLocation {
     @ZenCodeType.Method
     @ZenCodeType.Getter("namespace")
     public static String getNamespace(ResourceLocation internal) {
+        
         return (internal.getNamespace());
     }
     
     @ZenCodeType.Getter("commandString")
     public static String getCommandString(ResourceLocation internal) {
+        
         return "<resource:" + internal + ">";
     }
+    
 }

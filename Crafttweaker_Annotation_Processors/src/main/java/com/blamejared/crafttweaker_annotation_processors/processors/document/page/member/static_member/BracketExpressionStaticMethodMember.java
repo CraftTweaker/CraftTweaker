@@ -13,21 +13,25 @@ public class BracketExpressionStaticMethodMember extends StaticMethodMember {
     private final String bepName;
     
     public BracketExpressionStaticMethodMember(String name, MemberHeader header, @Nullable DocumentationComment methodComment, String returntypeInfo, String bepName) {
+        
         super(name, header, methodComment, returntypeInfo);
         this.bepName = bepName;
     }
     
     public String getBepName() {
+        
         return bepName;
     }
     
     @Override
     protected void writeExampleBlockContent(PageOutputWriter writer, AbstractTypeInfo ownerType) {
+        
         writeBepExamples(writer);
         super.writeExampleBlockContent(writer, ownerType);
     }
     
     private void writeBepExamples(PageOutputWriter writer) {
+        
         final int numberOfUsableExamples = header.getNumberOfUsableExamples();
         if(numberOfUsableExamples < 1) {
             return;
@@ -40,17 +44,20 @@ public class BracketExpressionStaticMethodMember extends StaticMethodMember {
     }
     
     private void writeBepExample(PageOutputWriter writer, int exampleIndex) {
+        
         final String example = getExampleArgument(exampleIndex);
         writer.printf("<%s:%s>%n", bepName, example);
     }
     
     @Nonnull
     private String getExampleArgument(int exampleIndex) {
+        
         final String exampleArgument = header.getExampleArgument(exampleIndex);
         return removeQuotesFrom(exampleArgument);
     }
     
     private String removeQuotesFrom(String exampleArgument) {
+        
         exampleArgument = removeQuoteAtFront(exampleArgument);
         exampleArgument = removeQuoteAtBack(exampleArgument);
         return exampleArgument;
@@ -58,6 +65,7 @@ public class BracketExpressionStaticMethodMember extends StaticMethodMember {
     
     @Nonnull
     private String removeQuoteAtFront(String exampleArgument) {
+        
         if(exampleArgument.startsWith("\"")) {
             return exampleArgument.substring(1);
         }
@@ -66,9 +74,11 @@ public class BracketExpressionStaticMethodMember extends StaticMethodMember {
     
     @Nonnull
     private String removeQuoteAtBack(String exampleArgument) {
+        
         if(exampleArgument.endsWith("\"")) {
             return exampleArgument.substring(0, exampleArgument.length() - 1);
         }
         return exampleArgument;
     }
+    
 }

@@ -79,7 +79,7 @@ public class ConditionCustom<T extends IIngredient> implements IIngredientCondit
         }
         
         ConditionCustom<?> that = (ConditionCustom<?>) o;
-    
+        
         return Objects.equals(uid, that.uid);
     }
     

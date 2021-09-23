@@ -29,21 +29,25 @@ public class TagManagerFluid implements TagManager<Fluid> {
     public static final TagManagerFluid INSTANCE = new TagManagerFluid();
     
     private TagManagerFluid() {
+    
     }
     
     @Nonnull
     @Override
     public Class<Fluid> getElementClass() {
+        
         return Fluid.class;
     }
     
     @Override
     public String getTagFolder() {
+        
         return "fluids";
     }
     
     @Override
     public List<MCTag<Fluid>> getAllTagsFor(Fluid element) {
+        
         return getTagCollection().getOwningTags(element)
                 .stream()
                 .map(location -> new MCTag<>(location, this))
@@ -52,6 +56,7 @@ public class TagManagerFluid implements TagManager<Fluid> {
     
     @Override
     public void addElements(MCTag<Fluid> to, List<Fluid> toAdd) {
+        
         final ITag<Fluid> internal = getInternal(to);
         if(internal == null) {
             final Tag<Fluid> tagFromContents = new Tag<>(Sets.newHashSet(toAdd), Fluid.class);
@@ -63,12 +68,14 @@ public class TagManagerFluid implements TagManager<Fluid> {
     
     @Override
     public void removeElements(MCTag<Fluid> from, List<Fluid> toRemove) {
+        
         final ITag<Fluid> internal = getInternal(from);
         CraftTweakerAPI.apply(new ActionTagRemove<>(internal, toRemove, from));
     }
     
     @Override
     public List<Fluid> getElementsInTag(MCTag<Fluid> theTag) {
+        
         final ITag<Fluid> internal = getInternal(theTag);
         if(internal == null) {
             return Collections.emptyList();
@@ -80,11 +87,14 @@ public class TagManagerFluid implements TagManager<Fluid> {
     @Nullable
     @Override
     public ITag<Fluid> getInternal(MCTag<Fluid> theTag) {
+        
         return getTagCollection().getIDTagMap().get(theTag.getIdInternal());
     }
     
     @Override
     public ITagCollection<Fluid> getTagCollection() {
+        
         return TagCollectionManager.getManager().getFluidTags();
     }
+    
 }

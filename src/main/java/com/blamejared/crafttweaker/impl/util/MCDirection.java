@@ -1,12 +1,15 @@
 package com.blamejared.crafttweaker.impl.util;
 
-import com.blamejared.crafttweaker.api.annotations.*;
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl_native.util.ExpandDirectionAxis;
-import com.blamejared.crafttweaker_annotations.annotations.*;
-import net.minecraft.util.*;
-import org.openzen.zencode.java.*;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.ZenWrapper;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Util;
+import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents a cardinal direction (north, south, east, west) and (up and down).
@@ -45,10 +48,12 @@ public enum MCDirection {
     private final Direction internal;
     
     MCDirection(Direction internal) {
+        
         this.internal = internal;
     }
     
     public static MCDirection get(Direction internal) {
+        
         return DIRECTION_MAP.get(internal);
     }
     
@@ -59,6 +64,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("index")
     public int getIndex() {
+        
         return getInternal().getIndex();
     }
     
@@ -69,6 +75,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("horizontalIndex")
     public int getHorizontalIndex() {
+        
         return getInternal().getHorizontalIndex();
     }
     
@@ -79,6 +86,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("axisOffset")
     public int getAxisOffset() {
+        
         return getInternal().getAxisDirection().getOffset();
     }
     
@@ -89,24 +97,25 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("opposite")
     public MCDirection getOpposite() {
+        
         return DIRECTION_MAP.get(getInternal().getOpposite());
     }
     
-
+    
     //Once this is in 1.15
-//    /**
-//     * Rotates this direction around a given Axis
-//     *
-//     * @param axis the Axis to rotate around
-//     *
-//     * @return the rotated Direction
-//     *
-//     * @docParam axis <directionaxis:north>
-//     */
-//    @ZenCodeType.Method
-//    public MCDirection rotateAround(ExpandDirectionAxis axis) {
-//        return DIRECTION_MAP.get(internal.rotateAround(axis.getInternal()));
-//    }
+    //    /**
+    //     * Rotates this direction around a given Axis
+    //     *
+    //     * @param axis the Axis to rotate around
+    //     *
+    //     * @return the rotated Direction
+    //     *
+    //     * @docParam axis <directionaxis:north>
+    //     */
+    //    @ZenCodeType.Method
+    //    public MCDirection rotateAround(ExpandDirectionAxis axis) {
+    //        return DIRECTION_MAP.get(internal.rotateAround(axis.getInternal()));
+    //    }
     
     /**
      * Rotates this direction on the Y axis
@@ -115,6 +124,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Method
     public MCDirection rotateY() {
+        
         return DIRECTION_MAP.get(getInternal().rotateY());
     }
     
@@ -125,6 +135,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Method
     public MCDirection rotateYCCW() {
+        
         return DIRECTION_MAP.get(getInternal().rotateYCCW());
     }
     
@@ -135,6 +146,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("xOffset")
     public int getXOffset() {
+        
         return getInternal().getXOffset();
     }
     
@@ -145,6 +157,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("yOffset")
     public int getYOffset() {
+        
         return getInternal().getYOffset();
     }
     
@@ -155,6 +168,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("zOffset")
     public int getZOffset() {
+        
         return getInternal().getZOffset();
     }
     
@@ -165,6 +179,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("axis")
     public Direction.Axis getAxis() {
+        
         return getInternal().getAxis();
     }
     
@@ -175,6 +190,7 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("horizontalAngle")
     public float getHorizontalAngle() {
+        
         return getInternal().getHorizontalAngle();
     }
     
@@ -185,10 +201,12 @@ public enum MCDirection {
      */
     @ZenCodeType.Getter("name")
     public String getName() {
+        
         return getInternal().getName2();
     }
     
     public Direction getInternal() {
+        
         return internal;
     }
 }

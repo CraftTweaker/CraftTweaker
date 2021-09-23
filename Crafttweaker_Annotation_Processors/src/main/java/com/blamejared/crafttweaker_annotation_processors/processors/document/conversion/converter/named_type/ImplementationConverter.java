@@ -14,10 +14,12 @@ public class ImplementationConverter {
     private final TypeConverter typeConverter;
     
     public ImplementationConverter(TypeConverter typeConverter) {
+        
         this.typeConverter = typeConverter;
     }
     
     public List<AbstractTypeInfo> convertInterfacesFor(TypeElement element) {
+        
         return element.getInterfaces()
                 .stream()
                 .map(this::convertInterface)
@@ -27,6 +29,8 @@ public class ImplementationConverter {
     }
     
     private Optional<AbstractTypeInfo> convertInterface(TypeMirror typeMirror) {
+        
         return typeConverter.tryConvertType(typeMirror);
     }
+    
 }

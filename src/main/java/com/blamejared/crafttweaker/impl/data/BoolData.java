@@ -94,11 +94,13 @@ public class BoolData implements IData {
     
     @Override
     public boolean equals(Object o) {
-        
-        if(this == o)
+    
+        if(this == o) {
             return true;
-        if(o == null || getClass() != o.getClass())
+        }
+        if(o == null || getClass() != o.getClass()) {
             return false;
+        }
         
         BoolData boolData = (BoolData) o;
         
@@ -110,4 +112,5 @@ public class BoolData implements IData {
         
         return (internal ? 1 : 0);
     }
+    
 }

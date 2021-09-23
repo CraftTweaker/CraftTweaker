@@ -7,6 +7,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 /**
  * Represents a Number in the form of an {@link IData}, useful for converting between types (double to int / long for example).
+ *
  * @docParam this 1
  */
 @Document("vanilla/api/data/INumberData")
@@ -22,6 +23,7 @@ public interface INumberData extends IData {
     @ZenCodeType.Method
     @ZenCodeType.Caster
     default long getLong() {
+        
         return getInternal().getLong();
     }
     
@@ -33,6 +35,7 @@ public interface INumberData extends IData {
     @ZenCodeType.Method
     @ZenCodeType.Caster
     default int getInt() {
+        
         return getInternal().getInt();
     }
     
@@ -44,6 +47,7 @@ public interface INumberData extends IData {
     @ZenCodeType.Method
     @ZenCodeType.Caster
     default short getShort() {
+        
         return getInternal().getShort();
     }
     
@@ -55,6 +59,7 @@ public interface INumberData extends IData {
     @ZenCodeType.Method
     @ZenCodeType.Caster
     default byte getByte() {
+        
         return getInternal().getByte();
     }
     
@@ -66,6 +71,7 @@ public interface INumberData extends IData {
     @ZenCodeType.Method
     @ZenCodeType.Caster
     default double getDouble() {
+        
         return getInternal().getDouble();
     }
     
@@ -77,14 +83,17 @@ public interface INumberData extends IData {
     @ZenCodeType.Method
     @ZenCodeType.Caster
     default float getFloat() {
+        
         return getInternal().getFloat();
     }
     
     @Override
     NumberNBT getInternal();
-
+    
     @Override
     default String toJsonString() {
+        
         return String.valueOf(getInternal().getAsNumber());
     }
+    
 }

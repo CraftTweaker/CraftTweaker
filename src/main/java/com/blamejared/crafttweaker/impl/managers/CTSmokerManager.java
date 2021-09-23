@@ -25,15 +25,18 @@ public class CTSmokerManager implements ICookingRecipeManager {
     public static final CTSmokerManager INSTANCE = new CTSmokerManager();
     
     private CTSmokerManager() {
+    
     }
     
     @Override
     public AbstractCookingRecipe makeRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime) {
+        
         return new SmokingRecipe(new ResourceLocation(CraftTweaker.MODID, name), "", input.asVanillaIngredient(), output.getInternal(), xp, cookTime);
     }
     
     @Override
     public IRecipeType<SmokingRecipe> getRecipeType() {
+        
         return IRecipeType.SMOKING;
     }
     

@@ -17,13 +17,15 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.predicate.FishingPredicate")
 @Document("vanilla/api/predicate/FishingPredicate")
 public final class FishingPredicate extends IVanillaWrappingPredicate.AnyDefaulting<net.minecraft.loot.FishingPredicate> {
+    
     private TriState inOpenWater;
-
+    
     public FishingPredicate() {
+        
         super(net.minecraft.loot.FishingPredicate.field_234635_a_);
         this.inOpenWater = TriState.UNSET;
     }
-
+    
     /**
      * Indicates that the fishing hook has been used in open waters.
      *
@@ -33,10 +35,11 @@ public final class FishingPredicate extends IVanillaWrappingPredicate.AnyDefault
      */
     @ZenCodeType.Method
     public FishingPredicate withOpenWaters() {
+        
         this.inOpenWater = TriState.TRUE;
         return this;
     }
-
+    
     /**
      * Indicates that the fishing hook has been used in not open waters, such as a pond.
      *
@@ -46,17 +49,21 @@ public final class FishingPredicate extends IVanillaWrappingPredicate.AnyDefault
      */
     @ZenCodeType.Method
     public FishingPredicate withClosedWaters() {
+        
         this.inOpenWater = TriState.FALSE;
         return this;
     }
-
+    
     @Override
     public boolean isAny() {
+        
         return this.inOpenWater.isUnset();
     }
-
+    
     @Override
     public net.minecraft.loot.FishingPredicate toVanilla() {
+        
         return net.minecraft.loot.FishingPredicate.func_234640_a_(this.inOpenWater.toBoolean());
     }
+    
 }

@@ -21,11 +21,12 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.loot.LootManager")
 @Document("vanilla/api/loot/LootManager")
 public final class CTLootManager {
+    
     @ZenCodeGlobals.Global("loot")
     public static final CTLootManager LOOT_MANAGER = new CTLootManager();
-
+    
     private CTLootManager() {}
-
+    
     /**
      * Gets the loot modifiers manager.
      *
@@ -35,9 +36,10 @@ public final class CTLootManager {
      */
     @ZenCodeType.Getter("modifiers")
     public CTLootModifierManager getModifierManager() {
+        
         return CTLootModifierManager.LOOT_MODIFIER_MANAGER;
     }
-
+    
     // TODO("Expose additional loot stuff? Like being able to query loot tables manually?")
     // TODO("Maybe other mods may want to @ZenExpand this")
 }

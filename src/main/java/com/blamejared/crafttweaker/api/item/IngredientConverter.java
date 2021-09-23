@@ -25,8 +25,11 @@ public class IngredientConverter {
         }
         
         // CompoundIngredient does not follow the contract of Ingredient and never sets acceptedItems
-        if (ingredient instanceof CompoundIngredient) {
-            return mergeIngredients(((CompoundIngredient) ingredient).getChildren().stream().map(IngredientConverter::fromIngredient).toArray(IIngredient[]::new));
+        if(ingredient instanceof CompoundIngredient) {
+            return mergeIngredients(((CompoundIngredient) ingredient).getChildren()
+                    .stream()
+                    .map(IngredientConverter::fromIngredient)
+                    .toArray(IIngredient[]::new));
         }
         
         return fromIItemLists(ingredient.acceptedItems);

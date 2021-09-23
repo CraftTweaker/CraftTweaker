@@ -68,10 +68,10 @@ public class ClientHelper {
      */
     public static boolean getIsKeyPressed(KeyBinding keyBinding) {
         
-        if (keyBinding.isKeyDown()) {
+        if(keyBinding.isKeyDown()) {
             return true;
         }
-        if (keyBinding.getKeyModifier().isActive(KeyConflictContext.GUI)) {
+        if(keyBinding.getKeyModifier().isActive(KeyConflictContext.GUI)) {
             //Manually check in case keyBinding#pressed just never got a chance to be updated
             return isKeyDown(keyBinding);
         }

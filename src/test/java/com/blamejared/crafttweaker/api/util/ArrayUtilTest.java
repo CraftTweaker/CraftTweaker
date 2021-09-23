@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.api.util;
 
-import org.assertj.core.internal.bytebuddy.asm.Advice;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;

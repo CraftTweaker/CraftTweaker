@@ -24,12 +24,13 @@ public abstract class MemberConverter<T> {
     protected abstract T createResultObject(DocumentationPageInfo pageInfo);
     
     public T convertFor(TypeElement typeElement, DocumentationPageInfo pageInfo) {
+        
         final T result = createResultObject(pageInfo);
-    
+        
         final List<Element> enclosedElements = new ArrayList<>(this.elementUtils.getAllMembers(typeElement));
         enclosedElements.removeAll(ElementFilter.typesIn(enclosedElements));
         enclosedElements.removeAll(ElementFilter.packagesIn(enclosedElements));
-    
+        
         for(Element enclosedElement : enclosedElements) {
             convertMemberFor(enclosedElement, result, pageInfo);
         }

@@ -38,7 +38,8 @@ public class SerializerScript extends ForgeRegistryEntry<IRecipeSerializer<?>> i
     public void write(PacketBuffer buffer, ScriptRecipe recipe) {
         
         String contents = recipe.getContent();
-        LinkedList<String> split = Lists.newLinkedList(Splitter.fixedLength(Short.MAX_VALUE / Byte.SIZE).split(contents));
+        LinkedList<String> split = Lists.newLinkedList(Splitter.fixedLength(Short.MAX_VALUE / Byte.SIZE)
+                .split(contents));
         buffer.writeString(recipe.getFileName());
         buffer.writeVarInt(split.size());
         split.forEach(buffer::writeString);

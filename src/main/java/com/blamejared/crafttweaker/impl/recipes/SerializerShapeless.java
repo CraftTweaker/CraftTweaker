@@ -25,10 +25,12 @@ public class SerializerShapeless extends ForgeRegistryEntry<IRecipeSerializer<?>
     public static final SerializerShapeless INSTANCE = new SerializerShapeless();
     
     public SerializerShapeless() {
+        
         setRegistryName(new ResourceLocation("crafttweaker:shapeless"));
     }
     
     private static NonNullList<Ingredient> readIngredients(JsonArray p_199568_0_) {
+        
         NonNullList<Ingredient> nonnulllist = NonNullList.create();
         
         for(int i = 0; i < p_199568_0_.size(); ++i) {
@@ -43,6 +45,7 @@ public class SerializerShapeless extends ForgeRegistryEntry<IRecipeSerializer<?>
     
     @Override
     public CTRecipeShapeless read(ResourceLocation recipeId, JsonObject json) {
+        
         NonNullList<Ingredient> nonnulllist = readIngredients(JSONUtils.getJsonArray(json, "ingredients"));
         IIngredient[] ingredients = new IIngredient[nonnulllist.size()];
         for(int i = 0; i < nonnulllist.size(); i++) {
@@ -61,6 +64,7 @@ public class SerializerShapeless extends ForgeRegistryEntry<IRecipeSerializer<?>
     
     @Override
     public CTRecipeShapeless read(ResourceLocation recipeId, PacketBuffer buffer) {
+        
         int i = buffer.readVarInt();
         IIngredient[] ingredients = new IIngredient[i];
         
@@ -74,6 +78,7 @@ public class SerializerShapeless extends ForgeRegistryEntry<IRecipeSerializer<?>
     
     @Override
     public void write(PacketBuffer buffer, CTRecipeShapeless recipe) {
+        
         buffer.writeVarInt(recipe.getIngredients().size());
         for(Ingredient ingredient : recipe.getIngredients()) {
             ingredient.write(buffer);

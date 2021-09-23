@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker.api.mods;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraftforge.fml.ModList;
-import org.openzen.zencode.java.*;
+import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 /**
  * Holds information on all the mods that are registered.
  * Can be accessed using the `loadedMods` global keyword
- * 
+ *
  * @docParam this loadedMods
  */
 @ZenRegister
@@ -26,6 +26,7 @@ public class MCMods {
      */
     @ZenCodeType.Getter("mods")
     public List<MCModInfo> getMods() {
+        
         return ModList.get().getMods().stream().map(MCModInfo::new).collect(Collectors.toList());
     }
     
@@ -33,11 +34,19 @@ public class MCMods {
      * Gets a specific mod
      *
      * @return a specific MCModInfo
+     *
      * @docParam modid "minecraft"
      */
     @ZenCodeType.Method
     public MCModInfo getMod(String modid) {
-        return ModList.get().getMods().stream().filter(modInfo -> modInfo.getModId().equals(modid)).map(MCModInfo::new).findFirst().orElseThrow(() -> new IllegalArgumentException("No modid with name: \"" + modid + "\"!"));
+        
+        return ModList.get()
+                .getMods()
+                .stream()
+                .filter(modInfo -> modInfo.getModId().equals(modid))
+                .map(MCModInfo::new)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No modid with name: \"" + modid + "\"!"));
     }
     
     /**
@@ -46,10 +55,12 @@ public class MCMods {
      * @param modid modid to check
      *
      * @return true if the mod is loaded
+     *
      * @docParam modid "minecraft"
      */
     @ZenCodeType.Method
     public boolean isModLoaded(String modid) {
+        
         return ModList.get().isLoaded(modid);
     }
     
@@ -60,6 +71,7 @@ public class MCMods {
      */
     @ZenCodeType.Getter("size")
     public int getSize() {
+        
         return ModList.get().size();
     }
     

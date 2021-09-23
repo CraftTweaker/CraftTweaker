@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.api.zencode.impl.util;
 
-import com.blamejared.crafttweaker.api.util.StringUtils;
 import org.openzen.zenscript.lexer.ZSTokenType;
 
 import java.util.Arrays;
@@ -34,6 +33,7 @@ public class ZenKeywordUtil {
      * @return The provided string unless it is a keyword, in which case it will be in quotation marks.
      */
     public static String sanitize(String string) {
+        
         if(isKeyword(string)) {
             string = "\"" + string + "\"";
         }

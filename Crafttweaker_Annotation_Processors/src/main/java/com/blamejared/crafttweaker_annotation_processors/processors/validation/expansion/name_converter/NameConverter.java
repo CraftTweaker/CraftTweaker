@@ -2,7 +2,13 @@ package com.blamejared.crafttweaker_annotation_processors.processors.validation.
 
 import com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies.DependencyContainer;
 import com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies.IHasPostCreationCall;
-import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.name_converter.rules.*;
+import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.name_converter.rules.ArrayConversionRule;
+import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.name_converter.rules.GenericConversionRule;
+import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.name_converter.rules.MapConversionRule;
+import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.name_converter.rules.NamedTypeConversionRule;
+import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.name_converter.rules.NativeTypeConversionRule;
+import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.name_converter.rules.OptionalConversionRule;
+import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.name_converter.rules.PrimitiveConversionRule;
 
 import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
@@ -15,10 +21,12 @@ public class NameConverter implements IHasPostCreationCall {
     private final DependencyContainer container;
     
     public NameConverter(DependencyContainer container) {
+        
         this.container = container;
     }
     
     public TypeMirror getTypeMirrorByZenCodeName(String zenCodeName) {
+        
         return rules.stream()
                 .map(rule -> rule.convertZenCodeName(zenCodeName))
                 .filter(Objects::nonNull)
@@ -28,6 +36,7 @@ public class NameConverter implements IHasPostCreationCall {
     
     @Override
     public void afterCreation() {
+        
         addRule(PrimitiveConversionRule.class);
         addRule(ArrayConversionRule.class);
         addRule(OptionalConversionRule.class);
@@ -38,7 +47,9 @@ public class NameConverter implements IHasPostCreationCall {
     }
     
     private void addRule(Class<? extends NameConversionRule> ruleClass) {
+        
         final NameConversionRule rule = container.getInstanceOfClass(ruleClass);
         this.rules.add(rule);
     }
+    
 }

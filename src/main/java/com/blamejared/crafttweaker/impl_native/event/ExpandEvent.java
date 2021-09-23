@@ -14,24 +14,28 @@ public class ExpandEvent {
     @ZenCodeType.Method
     @ZenCodeType.Getter("cancelable")
     public static boolean isCancelable(Event internal) {
+        
         return internal.isCancelable();
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("canceled")
     public static boolean isCanceled(Event internal) {
+        
         return internal.isCanceled();
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Setter("canceled")
     public static void setCanceled(Event internal, boolean cancel) {
+        
         internal.setCanceled(cancel);
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("hasResult")
     public static boolean hasResult(Event internal) {
+        
         return internal.hasResult();
     }
     
@@ -40,6 +44,7 @@ public class ExpandEvent {
      */
     @ZenCodeType.Method
     public static void cancel(Event internal) {
+        
         setCanceled(internal, true);
     }
     
@@ -48,6 +53,7 @@ public class ExpandEvent {
      */
     @ZenCodeType.Method
     public static void setAllow(Event internal) {
+        
         internal.setResult(Event.Result.ALLOW);
     }
     
@@ -56,6 +62,7 @@ public class ExpandEvent {
      */
     @ZenCodeType.Method
     public static void setDeny(Event internal) {
+        
         internal.setResult(Event.Result.DENY);
     }
     
@@ -64,6 +71,8 @@ public class ExpandEvent {
      */
     @ZenCodeType.Method
     public static void setDefault(Event internal) {
+        
         internal.setResult(Event.Result.DEFAULT);
     }
+    
 }

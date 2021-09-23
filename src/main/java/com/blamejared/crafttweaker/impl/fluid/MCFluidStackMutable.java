@@ -28,7 +28,7 @@ public class MCFluidStackMutable implements IFluidStack {
     
     @Override
     public IFluidStack multiply(int amount) {
-    
+        
         getInternal().setAmount(amount);
         return this;
     }
@@ -99,7 +99,7 @@ public class MCFluidStackMutable implements IFluidStack {
         final StringBuilder stringBuilder = new StringBuilder("<fluid:");
         stringBuilder.append(fluid.getRegistryName());
         stringBuilder.append(">");
-    
+        
         if(getInternal().hasTag()) {
             MapData data = (MapData) NBTConverter.convert(getInternal().getTag()).copyInternal();
             if(!data.isEmpty()) {
@@ -108,7 +108,7 @@ public class MCFluidStackMutable implements IFluidStack {
                 stringBuilder.append(")");
             }
         }
-    
+        
         if(!isEmpty()) {
             if(getInternal().getAmount() != 1) {
                 stringBuilder.append(" * ").append(getInternal().getAmount());
@@ -121,7 +121,7 @@ public class MCFluidStackMutable implements IFluidStack {
     @Override
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
     public boolean equals(Object o) {
-    
+        
         if(this == o) {
             return true;
         }

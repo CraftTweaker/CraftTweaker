@@ -23,14 +23,16 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.TimeCheck")
 @Document("vanilla/api/loot/conditions/vanilla/TimeCheck")
 public final class TimeCheckLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     private int timePeriod;
     private IntRangePredicate value;
-
+    
     TimeCheckLootConditionTypeBuilder() {
+        
         this.timePeriod = 0;
         this.value = IntRangePredicate.unbounded();
     }
-
+    
     /**
      * Sets the time period to use for the modulo operation.
      *
@@ -41,14 +43,16 @@ public final class TimeCheckLootConditionTypeBuilder implements ILootConditionTy
      * A value of 0 disables the operation from being carried out. On the other hand a negative value is forbidden.
      *
      * @param period The time period to use for the modulo operation.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public TimeCheckLootConditionTypeBuilder withTimePeriod(final int period) {
+        
         this.timePeriod = period;
         return this;
     }
-
+    
     /**
      * Sets the minimum value of the game time to <code>min</code>.
      *
@@ -61,14 +65,16 @@ public final class TimeCheckLootConditionTypeBuilder implements ILootConditionTy
      * This parameter is <strong>required</strong>.
      *
      * @param min The minimum value the game time can have.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public TimeCheckLootConditionTypeBuilder withMinimumValue(final int min) {
+        
         this.value = IntRangePredicate.mergeLowerBound(this.value, min);
         return this;
     }
-
+    
     /**
      * Sets the maximum value of the game time to <code>max</code>.
      *
@@ -81,14 +87,16 @@ public final class TimeCheckLootConditionTypeBuilder implements ILootConditionTy
      * This parameter is <strong>required</strong>.
      *
      * @param max The maximum value the game time can have.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public TimeCheckLootConditionTypeBuilder withMaximumValue(final int max) {
+        
         this.value = IntRangePredicate.mergeUpperBound(this.value, max);
         return this;
     }
-
+    
     /**
      * Sets both the minimum and maximum values of the game time respectively to <code>min</code> and <code>max</code>.
      *
@@ -102,14 +110,16 @@ public final class TimeCheckLootConditionTypeBuilder implements ILootConditionTy
      *
      * @param min The minimum value the game time can have.
      * @param max The maximum value the game time can have.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public TimeCheckLootConditionTypeBuilder withRangedValue(final int min, final int max) {
+        
         this.value = IntRangePredicate.bounded(min, max);
         return this;
     }
-
+    
     /**
      * Sets the game time to exactly match the given <code>value</code>.
      *
@@ -118,26 +128,30 @@ public final class TimeCheckLootConditionTypeBuilder implements ILootConditionTy
      * This parameter is <strong>required</strong>.
      *
      * @param value The exact value the world time must have.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public TimeCheckLootConditionTypeBuilder withExactValue(final int value) {
+        
         return this.withRangedValue(value, value);
     }
-
+    
     @Override
     public ILootCondition finish() {
-        if (this.value.isAny()) {
+        
+        if(this.value.isAny()) {
             throw new IllegalStateException("A 'TimeCheck' condition needs a time range");
         }
-        if (this.timePeriod < 0) {
+        if(this.timePeriod < 0) {
             throw new IllegalStateException("A 'TimeCheck' condition needs a positive period");
         }
         return context -> {
             final World world = ExpandLootContext.getWorld(context);
             final long time = world.getDayTime();
-            final int actualTime = (int) (this.timePeriod > 0? time % this.timePeriod : time);
+            final int actualTime = (int) (this.timePeriod > 0 ? time % this.timePeriod : time);
             return this.value.match(actualTime);
         };
     }
+    
 }

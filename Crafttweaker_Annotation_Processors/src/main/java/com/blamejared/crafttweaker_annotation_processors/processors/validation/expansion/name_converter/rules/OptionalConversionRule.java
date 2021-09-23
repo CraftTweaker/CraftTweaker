@@ -11,12 +11,14 @@ public class OptionalConversionRule implements NameConversionRule {
     private final NameConverter nameConverter;
     
     public OptionalConversionRule(NameConverter nameConverter) {
+        
         this.nameConverter = nameConverter;
     }
     
     @Nullable
     @Override
     public TypeMirror convertZenCodeName(String zenCodeName) {
+        
         if(isOptional(zenCodeName)) {
             return getWithoutOptional(zenCodeName);
         }
@@ -24,11 +26,14 @@ public class OptionalConversionRule implements NameConversionRule {
     }
     
     private TypeMirror getWithoutOptional(String zenCodeName) {
+        
         final String nameWithoutOptional = zenCodeName.substring(0, zenCodeName.length() - 1);
         return nameConverter.getTypeMirrorByZenCodeName(nameWithoutOptional);
     }
     
     private boolean isOptional(String zenCodeName) {
+        
         return zenCodeName.endsWith("?");
     }
+    
 }

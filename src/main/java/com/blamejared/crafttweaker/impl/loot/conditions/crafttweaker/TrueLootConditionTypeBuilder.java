@@ -15,6 +15,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.crafttweaker.True")
 @Document("vanilla/api/loot/conditions/crafttweaker/True")
 public final class TrueLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     static final TrueLootConditionTypeBuilder INSTANCE = new TrueLootConditionTypeBuilder();
     private static final ILootCondition TRUE = context -> true;
     
@@ -22,6 +23,8 @@ public final class TrueLootConditionTypeBuilder implements ILootConditionTypeBui
     
     @Override
     public ILootCondition finish() {
+        
         return TRUE;
     }
+    
 }

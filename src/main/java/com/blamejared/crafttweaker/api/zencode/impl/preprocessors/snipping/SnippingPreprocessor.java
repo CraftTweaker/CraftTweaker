@@ -1,14 +1,24 @@
 package com.blamejared.crafttweaker.api.zencode.impl.preprocessors.snipping;
 
-import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker.api.annotations.*;
-import com.blamejared.crafttweaker.api.zencode.*;
-import com.blamejared.crafttweaker.api.zencode.impl.*;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.snipping.parameters.*;
-import org.openzen.zencode.shared.*;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
+import com.blamejared.crafttweaker.api.annotations.Preprocessor;
+import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
+import com.blamejared.crafttweaker.api.zencode.PreprocessorMatch;
+import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
+import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.snipping.parameters.SnippingParameterModLoaded;
+import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.snipping.parameters.SnippingParameterModNotLoaded;
+import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.snipping.parameters.SnippingParameterSide;
+import com.blamejared.crafttweaker.api.zencode.impl.preprocessors.snipping.parameters.SnippingParameterStart;
+import org.openzen.zencode.shared.CodePosition;
 
-import javax.annotation.*;
-import java.util.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Preprocessor
 public final class SnippingPreprocessor implements IPreprocessor {
@@ -27,22 +37,26 @@ public final class SnippingPreprocessor implements IPreprocessor {
     }
     
     public void addSnippingParameter(SnippingParameter parameter) {
+        
         knownParameters.put(parameter.getName().toLowerCase(), parameter);
     }
     
     @Override
     public String getName() {
+        
         return NAME;
     }
     
     @Nullable
     @Override
     public String getDefaultValue() {
+        
         return null;
     }
     
     @Override
     public boolean apply(@Nonnull FileAccessSingle file, ScriptLoadingOptions scriptLoadingOptions, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
+        
         final List<SnippingMatch> matches = new ArrayList<>();
         readSnippingMatches(file, preprocessorMatches, matches);
         snipIt(file, matches);
@@ -51,6 +65,7 @@ public final class SnippingPreprocessor implements IPreprocessor {
     }
     
     private void snipIt(FileAccessSingle file, List<SnippingMatch> matches) {
+        
         for(SnippingMatch match : matches) {
             match.snip(file);
         }
@@ -58,6 +73,7 @@ public final class SnippingPreprocessor implements IPreprocessor {
     }
     
     private void readSnippingMatches(@Nonnull FileAccessSingle file, @Nonnull List<PreprocessorMatch> preprocessorMatches, List<SnippingMatch> matches) {
+        
         this.currentMatch = null;
         for(PreprocessorMatch preprocessorMatch : preprocessorMatches) {
             getSnippingMatch(file, matches, preprocessorMatch);
@@ -71,6 +87,7 @@ public final class SnippingPreprocessor implements IPreprocessor {
     }
     
     private void getSnippingMatch(@Nonnull FileAccessSingle file, List<SnippingMatch> matches, PreprocessorMatch preprocessorMatch) {
+        
         final int line = preprocessorMatch.getLine();
         final String fileName = file.getFileName();
         
@@ -121,6 +138,7 @@ public final class SnippingPreprocessor implements IPreprocessor {
     }
     
     private void checkAdditionalSnipsOnSameLine(String[] content, FileAccessSingle file, int line, List<SnippingMatch> matches) {
+        
         final List<String> strings = Arrays.asList(content);
         final int indexOf = strings.indexOf("#" + getName());
         if(indexOf > 0) {
@@ -131,6 +149,7 @@ public final class SnippingPreprocessor implements IPreprocessor {
     
     @Override
     public int getPriority() {
+        
         return 20;
     }
     
@@ -149,4 +168,5 @@ public final class SnippingPreprocessor implements IPreprocessor {
         
         return new CodePosition(file.getSourceFile(), line, startColumn - prefixLength, line, endColumn);
     }
+    
 }

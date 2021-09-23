@@ -1,13 +1,12 @@
 package com.blamejared.crafttweaker.api.zencode.impl.registry;
 
-import com.blamejared.crafttweaker.*;
-import com.blamejared.crafttweaker.api.*;
-import com.blamejared.crafttweaker.api.util.*;
-import com.blamejared.crafttweaker.api.zencode.*;
-import com.google.common.collect.*;
-import org.objectweb.asm.*;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.util.InstantiationUtil;
+import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
+import com.google.common.collect.ImmutableList;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PreprocessorRegistry {
     
@@ -15,6 +14,7 @@ public class PreprocessorRegistry {
     
     
     public void addClass(Class<?> cls) {
+        
         if(!IPreprocessor.class.isAssignableFrom(cls)) {
             CraftTweakerAPI.logWarning("Preprocessor: \"%s\" does not implement IPreprocessor!", cls
                     .getCanonicalName());
@@ -31,6 +31,8 @@ public class PreprocessorRegistry {
     }
     
     public List<IPreprocessor> getPreprocessors() {
+        
         return ImmutableList.copyOf(preprocessors);
     }
+    
 }

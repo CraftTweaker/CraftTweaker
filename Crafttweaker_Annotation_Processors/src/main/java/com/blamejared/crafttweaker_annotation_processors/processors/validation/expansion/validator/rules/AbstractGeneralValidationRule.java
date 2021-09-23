@@ -13,28 +13,34 @@ public abstract class AbstractGeneralValidationRule implements ExpansionInfoVali
     protected final Set<Class<? extends Annotation>> annotationClasses = new HashSet<>();
     
     protected AbstractGeneralValidationRule() {
+        
         fillAnnotationClasses();
     }
     
     @Override
     public boolean canValidate(Element enclosedElement) {
+        
         return hasZenAnnotation(enclosedElement);
     }
     
     private boolean hasZenAnnotation(Element enclosedElement) {
+        
         return annotationClasses.stream().anyMatch(annotationPresentOn(enclosedElement));
     }
     
     
     private Predicate<Class<? extends Annotation>> annotationPresentOn(Element enclosedElement) {
+        
         return annotationClass -> enclosedElement.getAnnotation(annotationClass) != null;
     }
     
     private void fillAnnotationClasses() {
+        
         this.annotationClasses.add(ZenCodeType.Method.class);
         this.annotationClasses.add(ZenCodeType.Getter.class);
         this.annotationClasses.add(ZenCodeType.Setter.class);
         this.annotationClasses.add(ZenCodeType.Caster.class);
         this.annotationClasses.add(ZenCodeType.Operator.class);
     }
+    
 }

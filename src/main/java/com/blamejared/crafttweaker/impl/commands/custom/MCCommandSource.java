@@ -22,67 +22,79 @@ public class MCCommandSource {
     private final CommandSource internal;
     
     public MCCommandSource(CommandSource internal) {
+        
         this.internal = internal;
     }
     
     public CommandSource getInternal() {
+        
         return this.internal;
     }
     
     @ZenCodeType.Method
     public Collection<String> getTeamNames() {
+        
         return getInternal().getTeamNames();
     }
     
     
     @ZenCodeType.Method
     public MCCommandSource withFeedbackDisabled() {
+        
         return new MCCommandSource(getInternal().withFeedbackDisabled());
     }
     
     
     @ZenCodeType.Method
     public boolean hasPermissionLevel(int p_197034_1_) {
+        
         return getInternal().hasPermissionLevel(p_197034_1_);
     }
     
     
     @ZenCodeType.Method
     public Collection<String> getPlayerNames() {
+        
         return getInternal().getPlayerNames();
     }
     
     
     @ZenCodeType.Method
     public MCCommandSource withPermissionLevel(int p_197033_1_) {
+        
         return new MCCommandSource(getInternal().withPermissionLevel(p_197033_1_));
     }
     
     
     @ZenCodeType.Method
     public String getName() {
+        
         return getInternal().getName();
     }
     
     
     @ZenCodeType.Method
     public Collection<String> getTargetedEntity() {
+        
         return getInternal().getTargetedEntity();
     }
     
     @ZenCodeType.Method
     public MCCommandSource withMinPermissionLevel(int p_197026_1_) {
+        
         return new MCCommandSource(getInternal().withMinPermissionLevel(p_197026_1_));
     }
     
     @ZenCodeType.Method
     public boolean isPlayer() {
+        
         return getInternal().getEntity() instanceof ServerPlayerEntity;
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Nullable
     public PlayerEntity getPlayer() {
+        
         try {
             return getInternal().asPlayer();
         } catch(CommandSyntaxException e) {
@@ -93,11 +105,14 @@ public class MCCommandSource {
     
     @ZenCodeType.Method
     public void sendErrorMessage(String message) {
+        
         getInternal().sendErrorMessage(new StringTextComponent(message));
     }
     
     @ZenCodeType.Method
     public void sendFeedback(String feedback, boolean allowLogging) {
+        
         getInternal().sendFeedback(new StringTextComponent(feedback), allowLogging);
     }
+    
 }

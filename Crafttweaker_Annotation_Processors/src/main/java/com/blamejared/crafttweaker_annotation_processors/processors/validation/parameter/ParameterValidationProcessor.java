@@ -17,11 +17,13 @@ public class ParameterValidationProcessor extends AbstractCraftTweakerProcessor 
     
     @Override
     protected void performInitialization() {
+        
         parameterValidator = dependencyContainer.getInstanceOfClass(ParameterValidator.class);
     }
     
     @Override
     public Collection<Class<? extends Annotation>> getSupportedAnnotationClasses() {
+        
         final Set<Class<? extends Annotation>> result = new HashSet<>();
         addSupportedOptionalAnnotations(result);
         addSupportedUnsignedAnnotations(result);
@@ -30,16 +32,19 @@ public class ParameterValidationProcessor extends AbstractCraftTweakerProcessor 
     }
     
     private void addSupportedUnsignedAnnotations(Set<Class<? extends Annotation>> result) {
+        
         result.add(ZenCodeType.USize.class);
         result.add(ZenCodeType.Unsigned.class);
     }
     
     private void addSupportedNullableAnnotations(Set<Class<? extends Annotation>> result) {
+        
         result.add(ZenCodeType.Nullable.class);
         result.add(ZenCodeType.NullableUSize.class);
     }
     
     private void addSupportedOptionalAnnotations(Set<Class<? extends Annotation>> result) {
+        
         result.add(ZenCodeType.Optional.class);
         result.add(ZenCodeType.OptionalInt.class);
         result.add(ZenCodeType.OptionalLong.class);
@@ -59,4 +64,5 @@ public class ParameterValidationProcessor extends AbstractCraftTweakerProcessor 
         
         return false;
     }
+    
 }

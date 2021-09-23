@@ -31,12 +31,13 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTRecipeShape
                                 .map(IIngredient::getCommandString)
                                 .collect(Collectors.joining(", ", "[", "]")))
                         .collect(Collectors.joining(", ", "[", "]")),
-                recipe.getFunction() == null? "" : ", (usualOut, inputs) => { ... }"
+                recipe.getFunction() == null ? "" : ", (usualOut, inputs) => { ... }"
         );
     }
     
     @Override
     public Optional<Function<ResourceLocation, CTRecipeShaped>> replaceIngredients(final IRecipeManager manager, final CTRecipeShaped recipe, final List<IReplacementRule> rules) {
+        
         return ReplacementHandlerHelper.replaceIngredientArray(
                 this.flatten(recipe.getCtIngredients(), recipe.getRecipeWidth(), recipe.getRecipeHeight()),
                 IIngredient.class,
@@ -53,18 +54,21 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTRecipeShape
     }
     
     private IIngredient[] flatten(final IIngredient[][] ingredients, final int width, final int height) {
+        
         final IIngredient[] flattened = new IIngredient[width * height];
-        for (int i = 0; i < flattened.length; ++i) {
+        for(int i = 0; i < flattened.length; ++i) {
             flattened[i] = ingredients[i / height][i % width];
         }
         return flattened;
     }
     
     private IIngredient[][] inflate(final IIngredient[] flattened, final int width, final int height) {
+        
         final IIngredient[][] inflated = new IIngredient[width][height];
-        for (int i = 0; i < flattened.length; ++i) {
+        for(int i = 0; i < flattened.length; ++i) {
             inflated[i / height][i % width] = flattened[i];
         }
         return inflated;
     }
+    
 }

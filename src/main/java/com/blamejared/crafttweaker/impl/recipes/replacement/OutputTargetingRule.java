@@ -13,16 +13,19 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 
 public final class OutputTargetingRule implements ITargetingRule {
+    
     private final IIngredient output;
     private final Collection<IRecipeManager> whitelist;
     
     private OutputTargetingRule(final IIngredient output, final Collection<IRecipeManager> whitelist) {
+        
         this.output = output;
         this.whitelist = whitelist;
     }
     
     public static OutputTargetingRule of(final IIngredient output, final Collection<IRecipeManager> whitelist) {
-        if (output instanceof IItemStack && ((IItemStack) output).isEmpty()) {
+        
+        if(output instanceof IItemStack && ((IItemStack) output).isEmpty()) {
             // Mods that return air, get fucked!
             throw new IllegalArgumentException("Unable to create an output target rule for an empty output");
         }
@@ -30,16 +33,19 @@ public final class OutputTargetingRule implements ITargetingRule {
     }
     
     public static OutputTargetingRule of(final IIngredient output, final IRecipeManager... whitelist) {
+        
         return of(output, new HashSet<>(Arrays.asList(whitelist)));
     }
     
     @Override
     public boolean shouldBeReplaced(final IRecipe<?> recipe, final IRecipeManager manager) {
+        
         return this.output.matches(new MCItemStack(recipe.getRecipeOutput())) && (this.whitelist.isEmpty() || this.whitelist.contains(manager));
     }
     
     @Override
     public String describe() {
+        
         return String.format(
                 "recipes that output %s%s",
                 this.output.getCommandString(),
@@ -48,7 +54,10 @@ public final class OutputTargetingRule implements ITargetingRule {
     }
     
     private String stringifyWhitelist() {
-        if (this.whitelist.isEmpty()) return "";
+    
+        if(this.whitelist.isEmpty()) {
+            return "";
+        }
         
         return this.whitelist.stream()
                 .map(IRecipeManager::getCommandString)

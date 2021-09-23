@@ -1,10 +1,16 @@
 package com.blamejared.crafttweaker.api.data;
 
-import com.blamejared.crafttweaker.impl.data.*;
+import com.blamejared.crafttweaker.impl.data.ByteData;
+import com.blamejared.crafttweaker.impl.data.DoubleData;
+import com.blamejared.crafttweaker.impl.data.FloatData;
+import com.blamejared.crafttweaker.impl.data.IntData;
+import com.blamejared.crafttweaker.impl.data.LongData;
+import com.blamejared.crafttweaker.impl.data.ShortData;
 
 public class NumberConverter {
-    public static IData convertNumber(Number number) {
     
+    public static IData convertNumber(Number number) {
+        
         if(number == null) {
             return null;
         }
@@ -22,9 +28,10 @@ public class NumberConverter {
         } else if(number instanceof Short) {
             return new ShortData(number.shortValue());
         }
-
+        
         //Fallback
         //I don't care what it is, double is the most precise so it should work for most cases.
         return new DoubleData(number.doubleValue());
     }
+    
 }

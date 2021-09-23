@@ -12,17 +12,21 @@ public class NativeTypeConverter {
     private final ClassTypeConverter classTypeConverter;
     
     public NativeTypeConverter(ClassTypeConverter classTypeConverter) {
+        
         this.classTypeConverter = classTypeConverter;
     }
     
     
     public ExpansionInfo convertNativeType(TypeElement element) {
+        
         final TypeMirror expandedType = getExpandedType(element);
         return new ExpansionInfo(expandedType, element);
     }
     
     private TypeMirror getExpandedType(TypeElement typeMirror) {
+        
         final NativeTypeRegistration annotation = typeMirror.getAnnotation(NativeTypeRegistration.class);
         return classTypeConverter.getTypeMirror(annotation, NativeTypeRegistration::value);
     }
+    
 }

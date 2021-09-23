@@ -30,4 +30,5 @@ public class ExpandLivingEntityUseItemEvent {
         
         internal.setDuration(duration);
     }
+    
 }

@@ -10,14 +10,16 @@ import net.minecraft.util.text.TextFormatting;
 import java.io.File;
 
 public final class ScriptCommands {
+    
     private ScriptCommands() {}
     
     public static void registerScriptCommands() {
+        
         CTCommands.registerCommand(CTCommands.playerCommand("log", "Opens the log file", (player, stack) -> {
             CommandUtilities.open(player, new File("logs/crafttweaker.log"));
             return 0;
         }));
-    
+        
         CTCommands.registerCommand(CTCommands.playerCommand("scripts", "Opens the scripts folder", (player, stack) -> {
             CommandUtilities.open(player, CraftTweakerAPI.SCRIPT_DIR);
             return 0;
@@ -29,17 +31,18 @@ public final class ScriptCommands {
                 CommandUtilities.send(CommandUtilities.color("Starting loading scripts for loader '" + loader + "'", TextFormatting.YELLOW), player);
                 CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setLoaderName(loader));
             });
-        
+            
             return 0;
         }));
-    
+        
         CTCommands.registerCommand(CTCommands.playerCommand("format", "Checks the syntax of the scripts and formats them into another folder.", (player, stack) -> {
             LoaderActions.getKnownLoaderNames().forEach(loader -> {
                 CommandUtilities.send(CommandUtilities.color("Loading and formatting scripts for loader '" + loader + "'", TextFormatting.YELLOW), player);
                 CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setLoaderName(loader).format());
             });
-
+            
             return 0;
         }));
     }
+    
 }

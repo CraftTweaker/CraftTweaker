@@ -22,13 +22,13 @@ public class MCIngredientList implements IIngredient {
     
     @ZenCodeType.Constructor
     public MCIngredientList(IIngredient[] ingredients) {
-    
+        
         this.ingredients = ingredients;
     }
     
     @Override
     public boolean matches(IItemStack stack, boolean ignoreDamage) {
-    
+        
         for(IIngredient item : ingredients) {
             if(item.matches(stack, ignoreDamage)) {
                 return true;
@@ -39,7 +39,7 @@ public class MCIngredientList implements IIngredient {
     
     @Override
     public Ingredient asVanillaIngredient() {
-    
+        
         return new IngredientList(Arrays.stream(ingredients)
                 .map(IIngredient::asVanillaIngredient)
                 .collect(Collectors.toList()));
@@ -47,13 +47,13 @@ public class MCIngredientList implements IIngredient {
     
     @Override
     public String getCommandString() {
-    
+        
         return Arrays.stream(ingredients).map(IIngredient::getCommandString).collect(Collectors.joining(" | "));
     }
     
     @Override
     public IItemStack[] getItems() {
-    
+        
         List<IItemStack> stacks = new ArrayList<>();
         Arrays.stream(ingredients).map(ing -> Arrays.asList(ing.getItems())).forEach(stacks::addAll);
         return stacks.toArray(new IItemStack[0]);
@@ -66,23 +66,23 @@ public class MCIngredientList implements IIngredient {
     
     @Override
     public boolean equals(Object o) {
-    
+        
         if(this == o) {
             return true;
         }
         if(o == null || getClass() != o.getClass()) {
             return false;
         }
-    
+        
         MCIngredientList that = (MCIngredientList) o;
-    
+        
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
         return Arrays.equals(ingredients, that.ingredients);
     }
     
     @Override
     public int hashCode() {
-    
+        
         return Arrays.hashCode(ingredients);
     }
     

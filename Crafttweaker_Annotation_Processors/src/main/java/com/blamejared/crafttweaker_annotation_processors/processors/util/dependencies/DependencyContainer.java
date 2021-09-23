@@ -7,4 +7,5 @@ public interface DependencyContainer {
     <Type> void addInstance(Type instance);
     
     <Type, Instance extends Type> void addInstanceAs(Instance instance, Class<Type> as);
+    
 }

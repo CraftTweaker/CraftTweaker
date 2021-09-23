@@ -8,10 +8,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
 public @interface AsIAction {
-
-	String methodName() default "";
-
-	String logFormat();
-
-	boolean repeatable() default true;
+    
+    String methodName() default "";
+    
+    String logFormat();
+    
+    boolean repeatable() default true;
+    
 }

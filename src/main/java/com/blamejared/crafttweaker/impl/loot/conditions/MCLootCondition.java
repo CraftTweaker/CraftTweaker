@@ -13,18 +13,23 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.MCLootCondition")
 @Document("vanilla/api/loot/conditions/MCLootCondition")
 public final class MCLootCondition implements ILootCondition {
+    
     private final net.minecraft.loot.conditions.ILootCondition wrapped;
-
+    
     public MCLootCondition(final net.minecraft.loot.conditions.ILootCondition wrapped) {
+        
         this.wrapped = wrapped;
     }
-
+    
     @Override
     public boolean test(LootContext context) {
+        
         return this.wrapped.test(context);
     }
-
+    
     public net.minecraft.loot.conditions.ILootCondition getInternal() {
+        
         return this.wrapped;
     }
+    
 }

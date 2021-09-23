@@ -49,7 +49,8 @@ public class MCTextFormatting implements CommandStringDisplayable {
     }
     
     @ZenCodeType.Caster(implicit = true)
-    public MCStyle asStyle(){
+    public MCStyle asStyle() {
+        
         return new MCStyle().setFormatting(this);
     }
     
@@ -66,7 +67,7 @@ public class MCTextFormatting implements CommandStringDisplayable {
     
     @Override
     public boolean equals(Object o) {
-    
+        
         if(this == o) {
             return true;
         }

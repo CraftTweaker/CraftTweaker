@@ -5,6 +5,8 @@ public class MessageCopy {
     public final String toCopy;
     
     public MessageCopy(String toCopy) {
+        
         this.toCopy = toCopy;
     }
+    
 }

@@ -20,7 +20,7 @@ import java.util.stream.IntStream;
 
 @IRecipeHandler.For(ShapedRecipe.class)
 public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
-
+    
     @Override
     public String dumpToCommandString(final IRecipeManager manager, final ShapedRecipe recipe) {
         
@@ -41,6 +41,7 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
     
     @Override
     public Optional<Function<ResourceLocation, ShapedRecipe>> replaceIngredients(final IRecipeManager manager, final ShapedRecipe recipe, final List<IReplacementRule> rules) {
+        
         return ReplacementHandlerHelper.replaceNonNullIngredientList(
                 recipe.getIngredients(),
                 Ingredient.class,
@@ -49,4 +50,5 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
                 newIngredients -> id -> new ShapedRecipe(id, recipe.getGroup(), recipe.getRecipeWidth(), recipe.getRecipeHeight(), newIngredients, recipe.getRecipeOutput())
         );
     }
+    
 }

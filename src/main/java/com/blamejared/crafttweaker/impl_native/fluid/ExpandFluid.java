@@ -18,10 +18,12 @@ public class ExpandFluid {
      * Creates a new {@link IFluidStack} with the given amount of fluid.
      *
      * @return a new (immutable) {@link IFluidStack}
+     *
      * @docParam amount 1000
      */
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
     public static IFluidStack multiply(Fluid internal, int amount) {
+        
         return makeStack(internal, amount);
     }
     
@@ -29,15 +31,18 @@ public class ExpandFluid {
      * Creates a new {@link IFluidStack} with the given amount of fluid.
      *
      * @return a new (immutable) {@link IFluidStack}
+     *
      * @docParam amount 1000
      */
     @ZenCodeType.Method
     public static IFluidStack makeStack(Fluid internal, int amount) {
+        
         return new MCFluidStack(new FluidStack(internal, amount));
     }
     
     @ZenCodeType.Getter("commandString")
     public static String getCommandString(Fluid internal) {
+        
         return "<fluid:" + internal.getRegistryName() + ">.fluid";
     }
     

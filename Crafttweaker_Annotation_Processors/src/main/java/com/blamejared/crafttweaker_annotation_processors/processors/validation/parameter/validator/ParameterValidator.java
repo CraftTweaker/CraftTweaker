@@ -18,32 +18,38 @@ public class ParameterValidator implements IHasPostCreationCall {
     private final DependencyContainer dependencyContainer;
     
     public ParameterValidator(DependencyContainer dependencyContainer) {
+        
         this.dependencyContainer = dependencyContainer;
     }
     
     public void validate(Element element) {
+        
         assertIsParameter(element);
         validate((VariableElement) element);
     }
     
     private void validate(VariableElement parameter) {
+        
         this.rules.stream()
                 .filter(rule -> rule.canValidate(parameter))
                 .forEach(rule -> rule.validate(parameter));
     }
     
     private void assertIsParameter(Element element) {
+        
         assertIsVariableElement(element);
         assertParentIsExecutable(element);
     }
     
     private void assertIsVariableElement(Element element) {
+        
         if(element.getKind() != ElementKind.PARAMETER) {
             throw new IllegalArgumentException("Element not a method parameter: " + element);
         }
     }
     
     private void assertParentIsExecutable(Element element) {
+        
         final ElementKind kind = element.getEnclosingElement().getKind();
         if(kind != ElementKind.METHOD && kind != ElementKind.CONSTRUCTOR) {
             throw new IllegalArgumentException("Element not a method parameter: " + element);
@@ -52,12 +58,15 @@ public class ParameterValidator implements IHasPostCreationCall {
     
     @Override
     public void afterCreation() {
+        
         addRule(OptionalsNeedToGoLastRule.class);
         addRule(OptionalTypeValidationRule.class);
     }
     
     private void addRule(Class<? extends ParameterValidationRule> ruleClass) {
+        
         final ParameterValidationRule rule = dependencyContainer.getInstanceOfClass(ruleClass);
         rules.add(rule);
     }
+    
 }

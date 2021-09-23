@@ -9,12 +9,15 @@ public abstract class AbstractVirtualMember {
     private final DocumentationComment comment;
     
     protected AbstractVirtualMember(MemberHeader header, DocumentationComment comment) {
+        
         this.header = header;
         this.comment = comment;
     }
     
     
     public DocumentationComment getComment() {
+        
         return comment;
     }
+    
 }

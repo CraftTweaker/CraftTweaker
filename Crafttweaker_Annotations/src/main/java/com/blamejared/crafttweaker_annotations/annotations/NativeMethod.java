@@ -16,6 +16,7 @@ public @interface NativeMethod {
     Class<?>[] parameters();
     
     String getterName() default "";
+    
     String setterName() default "";
     
     @Target(ElementType.TYPE)

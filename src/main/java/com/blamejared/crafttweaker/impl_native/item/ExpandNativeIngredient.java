@@ -21,6 +21,8 @@ public class ExpandNativeIngredient {
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = true)
     public static IIngredient asIIngredient(Ingredient internal) {
+        
         return IIngredient.fromIngredient(internal);
     }
+    
 }

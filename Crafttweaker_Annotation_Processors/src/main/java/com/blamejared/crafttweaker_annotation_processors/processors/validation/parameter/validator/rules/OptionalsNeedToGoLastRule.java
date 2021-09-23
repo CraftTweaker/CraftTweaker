@@ -29,30 +29,36 @@ public class OptionalsNeedToGoLastRule implements ParameterValidationRule {
     }
     
     public OptionalsNeedToGoLastRule(Messager messager) {
+        
         this.messager = messager;
     }
     
     @Override
     public boolean canValidate(VariableElement parameter) {
+        
         return isOptional(parameter);
     }
     
     private boolean isOptional(VariableElement parameter) {
+        
         return optionalAnnotations.stream().anyMatch(annotationPresentOn(parameter));
     }
     
     private Predicate<Class<? extends Annotation>> annotationPresentOn(VariableElement parameter) {
+        
         return annotationClass -> parameter.getAnnotation(annotationClass) != null;
     }
     
     @Override
     public void validate(VariableElement parameter) {
+        
         if(hasNonOptionalParameterFollowing(parameter)) {
             messager.printMessage(Diagnostic.Kind.ERROR, "Optional parameters must go last", parameter);
         }
     }
     
     private boolean hasNonOptionalParameterFollowing(VariableElement parameter) {
+        
         final ExecutableElement method = (ExecutableElement) parameter.getEnclosingElement();
         final List<? extends VariableElement> parameters = method.getParameters();
         final int parameterIndex = parameters.indexOf(parameter);
@@ -62,4 +68,5 @@ public class OptionalsNeedToGoLastRule implements ParameterValidationRule {
                 .anyMatch(followingParameter -> !isOptional(followingParameter));
         
     }
+    
 }

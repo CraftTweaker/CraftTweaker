@@ -12,7 +12,6 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
-import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 /**

@@ -17,23 +17,29 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/tileentity/MCTileEntity")
 @NativeTypeRegistration(value = TileEntity.class, zenCodeName = "crafttweaker.api.tileentity.MCTileEntity")
 public class ExpandTileEntity {
+    
     @ZenCodeType.Getter("world")
     public static World getWorld(TileEntity internal) {
+        
         return internal.getWorld();
     }
-
+    
     @ZenCodeType.Getter("pos")
     public static BlockPos getPos(TileEntity internal) {
+        
         return internal.getPos();
     }
-
+    
     @ZenCodeType.Getter("data")
     public static MapData getData(TileEntity internal) {
+        
         return new MapData(internal.write(new CompoundNBT()));
     }
-
+    
     @ZenCodeType.Method
     public static void updateData(TileEntity internal, MapData data) {
+        
         internal.read(internal.getBlockState(), getData(internal).merge(data).getInternal());
     }
+    
 }

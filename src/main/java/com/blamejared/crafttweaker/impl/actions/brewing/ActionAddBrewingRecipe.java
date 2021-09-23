@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.actions.brewing;
 
-import com.blamejared.crafttweaker.api.actions.IUndoableAction;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import net.minecraftforge.common.brewing.BrewingRecipe;

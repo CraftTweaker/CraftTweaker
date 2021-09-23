@@ -27,6 +27,7 @@ public class NamedTypeVirtualOperatorConverter extends AbstractEnclosedElementCo
     private final TypeConverter typeConverter;
     
     public NamedTypeVirtualOperatorConverter(CommentConverter commentConverter, HeaderConverter headerConverter, TypeConverter typeConverter) {
+        
         this.commentConverter = commentConverter;
         this.headerConverter = headerConverter;
         this.typeConverter = typeConverter;
@@ -34,11 +35,13 @@ public class NamedTypeVirtualOperatorConverter extends AbstractEnclosedElementCo
     
     @Override
     public boolean canConvert(Element enclosedElement) {
+        
         return isAnnotationPresentOn(ZenCodeType.Operator.class, enclosedElement);
     }
     
     @Override
     public void convertAndAddTo(Element enclosedElement, DocumentedTypeVirtualMembers result, DocumentationPageInfo pageInfo) {
+        
         ExecutableElement method = (ExecutableElement) enclosedElement;
         final OperatorMember operatorMember = convertOperator(method, pageInfo);
         
@@ -46,6 +49,7 @@ public class NamedTypeVirtualOperatorConverter extends AbstractEnclosedElementCo
     }
     
     private OperatorMember convertOperator(ExecutableElement method, DocumentationPageInfo pageInfo) {
+        
         final MemberHeader header = convertHeader(method);
         final DocumentationComment comment = convertComment(method, pageInfo);
         final ZenCodeType.OperatorType type = convertType(method);
@@ -55,6 +59,7 @@ public class NamedTypeVirtualOperatorConverter extends AbstractEnclosedElementCo
     }
     
     private AbstractTypeInfo convertOwnerType(DocumentationPageInfo pageInfo) {
+        
         if(pageInfo instanceof TypePageInfo) {
             return typeConverter.convertByName(((TypePageInfo) pageInfo).zenCodeName);
         }
@@ -63,6 +68,7 @@ public class NamedTypeVirtualOperatorConverter extends AbstractEnclosedElementCo
     }
     
     private MemberHeader convertHeader(ExecutableElement method) {
+        
         final List<? extends VariableElement> parameters = convertParameters(method);
         final List<? extends TypeParameterElement> typeParameters = convertTypeParameters(method);
         final TypeMirror returnType = convertReturnType(method);
@@ -71,22 +77,28 @@ public class NamedTypeVirtualOperatorConverter extends AbstractEnclosedElementCo
     }
     
     private List<? extends VariableElement> convertParameters(ExecutableElement method) {
+        
         return method.getParameters();
     }
     
     private List<? extends TypeParameterElement> convertTypeParameters(ExecutableElement method) {
+        
         return method.getTypeParameters();
     }
     
     private TypeMirror convertReturnType(ExecutableElement method) {
+        
         return method.getReturnType();
     }
     
     private DocumentationComment convertComment(ExecutableElement method, DocumentationPageInfo pageInfo) {
+        
         return commentConverter.convertForMethod(method, pageInfo);
     }
     
     private ZenCodeType.OperatorType convertType(ExecutableElement method) {
+        
         return method.getAnnotation(ZenCodeType.Operator.class).value();
     }
+    
 }

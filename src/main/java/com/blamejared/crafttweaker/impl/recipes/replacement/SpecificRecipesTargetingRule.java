@@ -13,30 +13,36 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 
 public final class SpecificRecipesTargetingRule implements ITargetingRule {
+    
     private final Collection<WrapperRecipe> recipes;
     
     private SpecificRecipesTargetingRule(final Collection<WrapperRecipe> recipes) {
+        
         this.recipes = Collections.unmodifiableCollection(recipes);
     }
     
     public static SpecificRecipesTargetingRule of(final Collection<WrapperRecipe> recipes) {
-        if (recipes.isEmpty()) {
+        
+        if(recipes.isEmpty()) {
             throw new IllegalArgumentException("Unable to create a specific recipes targeting rule without any targets");
         }
         return new SpecificRecipesTargetingRule(recipes);
     }
     
     public static SpecificRecipesTargetingRule of(final WrapperRecipe... recipes) {
+        
         return of(new HashSet<>(Arrays.asList(recipes)));
     }
-
+    
     @Override
     public boolean shouldBeReplaced(final IRecipe<?> recipe, final IRecipeManager manager) {
+        
         return this.recipes.stream().map(WrapperRecipe::getRecipe).anyMatch(it -> it.equals(recipe));
     }
     
     @Override
     public String describe() {
+        
         return this.recipes.stream()
                 .map(WrapperRecipe::getRecipe)
                 .map(IRecipe::getId)
@@ -45,6 +51,8 @@ public final class SpecificRecipesTargetingRule implements ITargetingRule {
     }
     
     public Collection<WrapperRecipe> recipes() {
+        
         return this.recipes;
     }
+    
 }

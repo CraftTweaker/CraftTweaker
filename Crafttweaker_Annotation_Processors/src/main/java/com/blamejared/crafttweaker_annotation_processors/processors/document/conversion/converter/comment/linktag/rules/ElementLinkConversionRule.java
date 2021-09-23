@@ -11,16 +11,19 @@ public class ElementLinkConversionRule implements LinkConversionRule {
     private final LinkConverter linkConverter;
     
     public ElementLinkConversionRule(LinkConverter linkConverter) {
+        
         this.linkConverter = linkConverter;
     }
     
     @Override
     public boolean canConvert(String link) {
+        
         return link.contains("#");
     }
     
     @Override
     public Optional<String> tryConvertToClickableMarkdown(String link, Element element) {
+        
         final String prefix = getPrefix(link, element);
         final String suffix = getSuffix(link);
         
@@ -28,6 +31,7 @@ public class ElementLinkConversionRule implements LinkConversionRule {
     }
     
     private String getPrefix(String link, Element element) {
+        
         final int indexOfSeparator = getIndexOfSeparator(link);
         final String substring = link.substring(0, indexOfSeparator);
         
@@ -35,15 +39,19 @@ public class ElementLinkConversionRule implements LinkConversionRule {
     }
     
     private String getSuffix(String link) {
+        
         final int indexOfSeparator = getIndexOfSeparator(link);
         return link.substring(indexOfSeparator + 1);
     }
     
     private int getIndexOfSeparator(String link) {
+        
         return link.indexOf('#');
     }
     
     private String merge(String prefix, String suffix) {
+        
         return String.format("%s#%s", prefix, suffix);
     }
+    
 }

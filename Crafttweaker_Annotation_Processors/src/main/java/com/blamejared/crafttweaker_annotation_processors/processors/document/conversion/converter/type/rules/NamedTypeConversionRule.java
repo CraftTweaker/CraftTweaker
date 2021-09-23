@@ -18,6 +18,7 @@ public class NamedTypeConversionRule implements TypeConversionRule {
     private final Types typeUtils;
     
     public NamedTypeConversionRule(TypeConverter typeConverter, Types typeUtils) {
+        
         this.typeConverter = typeConverter;
         this.typeUtils = typeUtils;
     }
@@ -25,10 +26,12 @@ public class NamedTypeConversionRule implements TypeConversionRule {
     
     @Override
     public boolean canConvert(TypeMirror mirror) {
+        
         return getNameAnnotation(mirror) != null;
     }
     
     private ZenCodeType.Name getNameAnnotation(TypeMirror mirror) {
+        
         final ZenCodeType.Name annotation = mirror.getAnnotation(ZenCodeType.Name.class);
         if(annotation != null) {
             return annotation;
@@ -45,12 +48,15 @@ public class NamedTypeConversionRule implements TypeConversionRule {
     @Nullable
     @Override
     public AbstractTypeInfo convert(TypeMirror mirror) {
+        
         final TypeName name = convertTypeName(mirror);
         return typeConverter.convertByName(name);
     }
     
     private TypeName convertTypeName(TypeMirror mirror) {
+        
         final ZenCodeType.Name annotation = getNameAnnotation(mirror);
         return new TypeName(Objects.requireNonNull(annotation).value());
     }
+    
 }

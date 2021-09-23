@@ -23,6 +23,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.crafttweaker.BlockTag")
 @Document("vanilla/api/loot/conditions/crafttweaker/BlockTag")
 public final class BlockTagLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     private MCTag<Block> targetTag;
     
     BlockTagLootConditionTypeBuilder() {}
@@ -33,17 +34,20 @@ public final class BlockTagLootConditionTypeBuilder implements ILootConditionTyp
      * <p>This parameter is <strong>required</strong>.</p>
      *
      * @param tag The tag to check.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public BlockTagLootConditionTypeBuilder withTag(final MCTag<Block> tag) {
+        
         this.targetTag = tag;
         return this;
     }
     
     @Override
     public ILootCondition finish() {
-        if (this.targetTag == null) {
+        
+        if(this.targetTag == null) {
             throw new IllegalStateException("A tag for a 'BlockTag' condition must be specified");
         }
         return context -> {

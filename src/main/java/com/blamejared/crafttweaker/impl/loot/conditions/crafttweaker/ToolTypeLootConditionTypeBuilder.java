@@ -27,6 +27,7 @@ import java.util.Arrays;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.crafttweaker.ToolType")
 @Document("vanilla/api/loot/conditions/crafttweaker/ToolType")
 public final class ToolTypeLootConditionTypeBuilder implements ILootConditionTypeBuilder {
+    
     private ToolType type;
     
     ToolTypeLootConditionTypeBuilder() {}
@@ -37,19 +38,23 @@ public final class ToolTypeLootConditionTypeBuilder implements ILootConditionTyp
      * <p>This parameter is <strong>required</strong>.</p>
      *
      * @param type The tool type to check.
+     *
      * @return This builder for chaining.
      */
     @ZenCodeType.Method
     public ToolTypeLootConditionTypeBuilder withToolType(final ToolType type) {
+        
         this.type = type;
         return this;
     }
-
+    
     @Override
     public ILootCondition finish() {
+        
         return context -> {
             final IItemStack tool = ExpandLootContext.getTool(context);
-            return tool != null && !tool.isEmpty() && Arrays.stream(tool.getToolTypes()).anyMatch(it -> it == this.type);
+            return tool != null && !tool.isEmpty() && Arrays.stream(tool.getToolTypes())
+                    .anyMatch(it -> it == this.type);
         };
     }
     

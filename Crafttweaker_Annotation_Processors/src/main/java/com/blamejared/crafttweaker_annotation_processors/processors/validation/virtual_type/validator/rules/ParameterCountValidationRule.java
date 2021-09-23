@@ -21,11 +21,13 @@ public class ParameterCountValidationRule implements VirtualTypeValidationRule {
     private final Map<Class<? extends Annotation>, Integer> methodAnnotationToParameterCount = new HashMap<>();
     
     public ParameterCountValidationRule(Messager messager) {
+        
         this.messager = messager;
         fillParameterMap();
     }
     
     private void fillParameterMap() {
+        
         methodAnnotationToParameterCount.put(ZenCodeType.Getter.class, 0);
         methodAnnotationToParameterCount.put(ZenCodeType.Setter.class, 1);
         methodAnnotationToParameterCount.put(ZenCodeType.Caster.class, 0);
@@ -33,11 +35,13 @@ public class ParameterCountValidationRule implements VirtualTypeValidationRule {
     
     @Override
     public boolean canValidate(Element enclosedElement) {
+        
         return expectedParameterCountsFor(enclosedElement).count() > 0L;
     }
     
     @Override
     public void validate(Element enclosedElement) {
+        
         final int parameterCount = getParameterCount(enclosedElement);
         this.expectedParameterCountsFor(enclosedElement)
                 .filter(countNotEqualTo(parameterCount))
@@ -45,6 +49,7 @@ public class ParameterCountValidationRule implements VirtualTypeValidationRule {
     }
     
     private IntStream expectedParameterCountsFor(Element enclosedElement) {
+        
         return methodAnnotationToParameterCount.keySet()
                 .stream()
                 .filter(annotationPresentOn(enclosedElement))
@@ -53,14 +58,17 @@ public class ParameterCountValidationRule implements VirtualTypeValidationRule {
     }
     
     private Predicate<Class<? extends Annotation>> annotationPresentOn(Element enclosedElement) {
+        
         return annotation -> enclosedElement.getAnnotation(annotation) != null;
     }
     
     private IntPredicate countNotEqualTo(int parameterCount) {
+        
         return count -> count != parameterCount;
     }
     
     private IntConsumer logErrorMessage(Element enclosedElement) {
+        
         return expectedCount -> {
             final String format = "Expected %s parameters for this Expansion Method";
             messager.printMessage(Diagnostic.Kind.ERROR, String.format(format, expectedCount), enclosedElement);
@@ -68,10 +76,12 @@ public class ParameterCountValidationRule implements VirtualTypeValidationRule {
     }
     
     private int getParameterCount(Element enclosedElement) {
+        
         if(enclosedElement.getKind() != ElementKind.METHOD) {
             throw new IllegalArgumentException("Invalid type annotated? " + enclosedElement);
         }
         
         return ((ExecutableElement) enclosedElement).getParameters().size();
     }
+    
 }

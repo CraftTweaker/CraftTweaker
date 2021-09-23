@@ -19,6 +19,7 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
     private final AbstractTypeInfo ownerType;
     
     public OperatorMember(MemberHeader header, DocumentationComment comment, ZenCodeType.OperatorType type, AbstractTypeInfo ownerType) {
+        
         super(header, comment);
         this.type = type;
         this.ownerType = ownerType;
@@ -26,10 +27,12 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
     
     @Override
     public int compareTo(@Nonnull OperatorMember other) {
+        
         return this.type.name().compareToIgnoreCase(other.type.name());
     }
     
     public void write(PageOutputWriter writer) {
+        
         writer.group(this.type.name(), this.getComment().getSinceVersion(), () -> {
             writeDeprecation(writer);
             writeDescription(writer);
@@ -38,6 +41,7 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
     }
     
     private void writeDescription(PageOutputWriter writer) {
+        
         if(getComment().hasDescription()) {
             writer.println(getComment().getMarkdownDescription());
             writer.println();
@@ -45,21 +49,25 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
     }
     
     private void writeDeprecation(final PageOutputWriter writer) {
+        
         writer.deprecationMessage(this.getComment().getDeprecationMessage());
     }
     
     
     private void writeScriptBlock(PageOutputWriter writer) {
+        
         writer.zenBlock(() -> this.writeScriptBlockInner(writer));
         writer.println();
     }
     
     private void writeScriptBlockInner(PageOutputWriter writer) {
+        
         writeHeader(writer);
         writeExamples(writer);
     }
     
     private void writeExamples(PageOutputWriter writer) {
+        
         final int numberOfUsableExamples = header.getNumberOfUsableExamples();
         if(numberOfUsableExamples < 1) {
             return;
@@ -71,6 +79,7 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
     }
     
     private void writeExample(PageOutputWriter writer, int exampleIndex) {
+        
         final List<String> exampleArguments = getExampleArguments(exampleIndex);
         
         exampleArguments.add(0, getExampleCallee());
@@ -83,12 +92,14 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
     
     @Nonnull
     private ArrayList<String> getExampleArguments(int exampleIndex) {
+        
         final String exampleArgument = header.getExampleArgument(exampleIndex);
         final String[] split = exampleArgument.split(", ");
         return new ArrayList<>(Arrays.asList(split));
     }
     
     private void writeHeader(PageOutputWriter writer) {
+        
         final String operatorFormat = OperatorFormatProvider.getOperatorFormat(type);
         final Object[] parameters = getParameters();
         
@@ -98,6 +109,7 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
     
     @Nonnull
     private Object[] getParameters() {
+        
         final List<Object> parametersFromHeader = getParametersFromHeader();
         final Object callee = getHeaderCallee();
         
@@ -108,16 +120,19 @@ public class OperatorMember extends AbstractVirtualMember implements Comparable<
     
     @Nonnull
     private List<Object> getParametersFromHeader() {
+        
         return header.parameters.stream()
                 .map(DocumentedParameter::formatForSignatureExample)
                 .collect(Collectors.toList());
     }
     
     private String getExampleCallee() {
+        
         return getComment().getExamples().getExampleFor("this").getAnyTextValue();
     }
     
     private String getHeaderCallee() {
+        
         return "my" + ownerType.getDisplayName();
     }
     

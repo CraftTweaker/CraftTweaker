@@ -29,7 +29,7 @@ subprojects {
 def projectDeps = [":Crafttweaker_Annotations", ":JavaAnnotations"]
 
 dependencies {
-    projectDeps.collect {compile project(it)}
+    projectDeps.collect { compile project(it) }
 
     compile 'org.jetbrains:annotations:17.0.0'
     compile group: 'org.reflections', name: 'reflections', version: '0.9.10'
@@ -39,7 +39,7 @@ dependencies {
 
 jar {
     dependsOn.addAll(projectDeps.collect { "$it:compileJava" })
-    from files(projectDeps.collect {project(it).sourceSets.main.output})
+    from files(projectDeps.collect { project(it).sourceSets.main.output })
 }
 
 publishing {

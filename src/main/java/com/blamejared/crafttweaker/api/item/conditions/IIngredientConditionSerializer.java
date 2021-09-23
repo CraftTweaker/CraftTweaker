@@ -5,6 +5,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 
 public interface IIngredientConditionSerializer<T extends IIngredientCondition<?>> {
+    
     T parse(PacketBuffer buffer);
     
     T parse(JsonObject json);
@@ -14,4 +15,5 @@ public interface IIngredientConditionSerializer<T extends IIngredientCondition<?
     JsonObject toJson(T transformer);
     
     ResourceLocation getType();
+    
 }
