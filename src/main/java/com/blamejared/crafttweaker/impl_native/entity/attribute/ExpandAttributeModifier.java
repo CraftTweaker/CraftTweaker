@@ -6,11 +6,35 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.UUID;
+
 
 @ZenRegister
 @Document("vanilla/api/entity/AttributeModifier")
 @NativeTypeRegistration(value = AttributeModifier.class, zenCodeName = "crafttweaker.api.entity.AttributeModifier")
 public class ExpandAttributeModifier {
+
+    /**
+     * Creates a new AttributeModifier
+     * @param name the name of this attribute modifier
+     * @param amount the amount of this attribute modifier
+     * @param operation the operation of this attribute modifier.
+     * @param uuid the uuid of this attribute modifier, if omitted, it will use a random one.
+     * @return the new attribute modifier
+     *
+     * @docParam name "My New Attribute Modifier"
+     * @docParam amount 11.4
+     * @docParam operation AttributeOperation.ADDITION
+     * @docParam uuid "6d79f9c1-a4ab-4e72-a0ab-71870b89b4c6"
+     */
+    @ZenCodeType.StaticExpansionMethod
+    public static AttributeModifier create(String name, double amount, AttributeModifier.Operation operation, @ZenCodeType.OptionalString String uuid) {
+        if (uuid.isEmpty()) {
+            return new AttributeModifier(name, amount, operation);
+        } else {
+            return new AttributeModifier(UUID.fromString(uuid), name, amount, operation);
+        }
+    }
     
     /**
      * Gets the ID of this AttributeModifier.
