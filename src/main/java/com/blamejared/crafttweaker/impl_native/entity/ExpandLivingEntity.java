@@ -8,6 +8,8 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -350,6 +352,16 @@ public class ExpandLivingEntity {
     public static void setHeldItem(LivingEntity internal, Hand hand, IItemStack itemStack) {
         
         internal.setHeldItem(hand, itemStack.getInternal().copy());
+    }
+
+    /**
+     * @docParam attribute <attribute:minecraft:generic.attack_damage>
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Nullable
+    public static ModifiableAttributeInstance getAttribute(LivingEntity internal, Attribute attribute) {
+
+        return internal.getAttribute(attribute);
     }
     
 }
