@@ -18,3 +18,9 @@ mandatory = true
 versionRange = "[36.1.52,)"
 ordering = "NONE"
 side = "BOTH"
+[[dependencies.crafttweaker]]
+modId="contenttweaker"
+mandatory=false
+versionRange="[1.0.0.develop.25,)"
+ordering="NONE"
+side="BOTH"

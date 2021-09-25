@@ -4,12 +4,14 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.BracketValidator;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import net.minecraft.block.BlockState;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.function.Function;
 
@@ -190,6 +192,12 @@ public class BracketValidators {
     public static boolean validateToolTypeBracket(String tokens) {
         
         return tokens.chars().allMatch(c -> ('a' <= c && c <= 'z') || c == '_');
+    }
+    
+    @ZenCodeType.Method
+    @BracketValidator("itemgroup")
+    public static boolean validateItemGroupBracket(String tokens) {
+        return Arrays.stream(ItemGroup.GROUPS).anyMatch(group -> group.getPath().equals(tokens));
     }
     
     public static boolean validateBracket(String bracketName, String tokens, Function<String, ?> bracketMethod, boolean logError) {

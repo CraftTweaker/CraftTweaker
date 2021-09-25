@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.blamejared.crafttweaker.impl.tag.registry.CrTTagRegistry;
 import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlock;
 import com.blamejared.crafttweaker.impl_native.entity.attribute.ExpandAttribute;
+import com.blamejared.crafttweaker.impl_native.item.ExpandItemGroup;
 import com.blamejared.crafttweaker.impl_native.potion.ExpandEffect;
 import com.blamejared.crafttweaker.impl_native.potion.ExpandPotion;
 import com.blamejared.crafttweaker.impl_native.tool.ExpandToolType;
@@ -16,6 +17,7 @@ import com.blamejared.crafttweaker.impl_native.villager.ExpandVillagerProfession
 import com.blamejared.crafttweaker.impl_native.world.ExpandBiome;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
@@ -199,6 +201,12 @@ public class BracketDumpers {
                 .stream()
                 .map(ExpandToolType::getCommandString)
                 .collect(Collectors.toList());
+    }
+    
+    @ZenCodeType.Method
+    @BracketDumper(value = "itemgroup")
+    public static Collection<String> getItemGroupBracketDump() {
+        return Arrays.stream(ItemGroup.GROUPS).map(ExpandItemGroup::getCommandString).collect(Collectors.toList());
     }
     
     private static Map<String, ToolType> toolTypeValues = null;

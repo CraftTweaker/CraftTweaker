@@ -32,7 +32,7 @@ public class ExpandRarity {
      *
      * @return A new Rarity with the given name and color
      *
-     * @docParam name "insanely epic"
+     * @docParam name "insanely_epic"
      * @docParam formatting <formatting:obfucated>
      */
     @ZenCodeType.StaticExpansionMethod

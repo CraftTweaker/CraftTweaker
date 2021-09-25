@@ -22,6 +22,7 @@ import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.Potion;
@@ -54,7 +55,7 @@ public class BracketHandlers {
     @ZenCodeType.Method
     @BracketResolver("attribute")
     public static Attribute getAttribute(String tokens) {
-    
+        
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
             CraftTweakerAPI.logWarning("Attribute BEP <attribute:%s> does not seem to be lower-cased!", tokens);
         }
@@ -83,7 +84,7 @@ public class BracketHandlers {
     @ZenCodeType.Method
     @BracketResolver("block")
     public static Block getBlock(String tokens) {
-    
+        
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
             CraftTweakerAPI.logWarning("Block BEP <block:%s> does not seem to be lower-cased!", tokens);
         }
@@ -151,7 +152,7 @@ public class BracketHandlers {
     @ZenCodeType.Method
     @BracketResolver("blockstate")
     public static BlockState getBlockState(String tokens) {
-    
+        
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
             CraftTweakerAPI.logWarning("BlockState BEP <blockstate:%s> does not seem to be lower-cased!", tokens);
         }
@@ -204,11 +205,11 @@ public class BracketHandlers {
     @ZenCodeType.Method
     @BracketResolver("directionaxis")
     public static Direction.Axis getDirectionAxis(String tokens) {
-    
+        
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
             CraftTweakerAPI.logWarning("DirectionAxis BEP <directionaxis:%s> does not seem to be lower-cased!", tokens);
         }
-    
+        
         if(tokens.contains(":")) {
             throw new IllegalArgumentException("Could not get axis with name: <directionaxis:" + tokens + ">! Syntax is <directionaxis:axis>");
         }
@@ -251,7 +252,7 @@ public class BracketHandlers {
     @BracketResolver("effect")
     @ZenCodeType.Method
     public static Effect getEffect(String tokens) {
-    
+        
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
             CraftTweakerAPI.logWarning("Effect BEP <effect:%s> does not seem to be lower-cased!", tokens);
         }
@@ -389,7 +390,7 @@ public class BracketHandlers {
     @BracketResolver("item")
     @ZenCodeType.Method
     public static IItemStack getItem(String tokens) {
-    
+        
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
             CraftTweakerAPI.logWarning("Item BEP <item:%s> does not seem to be lower-cased!", tokens);
         }
@@ -409,7 +410,7 @@ public class BracketHandlers {
     @BracketResolver("potion")
     @ZenCodeType.Method
     public static Potion getPotion(String tokens) {
-    
+        
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
             CraftTweakerAPI.logWarning("Potion BEP <potion:%s> does not seem to be lower-cased!", tokens);
         }
@@ -441,7 +442,7 @@ public class BracketHandlers {
      */
     @ZenCodeType.Method
     public static IRecipeManager getRecipeManager(String tokens) {
-    
+        
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
             CraftTweakerAPI.logWarning("RecipeType BEP <recipetype:%s> does not seem to be lower-cased!", tokens);
         }
@@ -480,7 +481,7 @@ public class BracketHandlers {
     @ZenCodeType.Method
     @BracketResolver("formatting")
     public static MCTextFormatting getTextFormatting(String tokens) {
-    
+        
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
             CraftTweakerAPI.logWarning("Formatting BEP <formatting:%s> does not seem to be lower-cased!", tokens);
         }
@@ -578,6 +579,26 @@ public class BracketHandlers {
     public static ToolType getToolType(String tokens) {
         
         return ToolType.get(tokens);
+    }
+    
+    /**
+     * Gets an ItemGroup by name.
+     * Will throw an error if the group could not be found!
+     *
+     * @param tokens The ItemGroup's name.
+     *
+     * @return The found ItemGroup
+     *
+     * @docParam tokens misc
+     */
+    @ZenCodeType.Method
+    @BracketResolver("itemgroup")
+    public static ItemGroup getItemGroup(String tokens) {
+        
+        return Arrays.stream(ItemGroup.GROUPS)
+                .filter(g -> g.getPath().equals(tokens))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("Could not find itemgroup for '<itemgroup:" + tokens + ">'!"));
     }
     
 }
