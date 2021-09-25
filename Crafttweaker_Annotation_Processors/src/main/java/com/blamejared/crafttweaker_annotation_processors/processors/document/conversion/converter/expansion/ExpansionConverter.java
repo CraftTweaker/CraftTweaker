@@ -79,7 +79,7 @@ public class ExpansionConverter extends DocumentConverter {
         if(expandedType instanceof GenericTypeInfo) {
             return getPageInfoForType(((GenericTypeInfo) expandedType).getBaseClass());
         }
-        throw new IllegalArgumentException("Invalid expanded type! " + expandedType);
+        throw new IllegalArgumentException("Invalid expanded type! " + expandedType + " " + expandedType.getClass());
     }
     
     private TypePageInfo getPageInfo(TypePageTypeInfo expandedType) {
