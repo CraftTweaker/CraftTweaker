@@ -53,7 +53,7 @@ public final class ReplacerAction implements IRuntimeAction {
         
         return Util.make(new HashSet<>(fullExclusions), set -> set.removeIf(it -> {
             final WrapperRecipe recipe = map.get(it);
-            return !rule.shouldBeReplaced(recipe.getRecipe(), recipe.getManager());
+            return recipe != null && !rule.shouldBeReplaced(recipe.getRecipe(), recipe.getManager());
         }));
     }
     
