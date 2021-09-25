@@ -86,7 +86,7 @@ public class ExpansionConverter extends DocumentConverter {
         
         final TypeName zenCodeName = expandedType.getZenCodeName();
         final Optional<TypePageInfo> pageInfoByName = documentRegistry.getPageInfoByName(zenCodeName);
-        return pageInfoByName.orElseThrow(() -> new IllegalArgumentException("Invalid Expanded Type! " + zenCodeName));
+        return pageInfoByName.orElseThrow(() -> new IllegalArgumentException("Invalid Expanded Type! " + zenCodeName + " " + expandedType.getClass()));
     }
     
     private DocumentedStaticMembers getStaticMembers(TypeElement typeElement, DocumentationPageInfo pageInfo) {
