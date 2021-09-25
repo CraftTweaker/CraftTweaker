@@ -64,7 +64,7 @@ class ExpandMaterialTest {
     void getCommandStringUsesMaterialNameForKnownMaterial() {
         //Arrange
         final Material material = Material.AIR;
-        final String expectedBEP = "<blockmaterial:AIR>";
+        final String expectedBEP = "<blockmaterial:air>";
         
         //Act
         final String commandString = ExpandMaterial.getCommandString(material);
