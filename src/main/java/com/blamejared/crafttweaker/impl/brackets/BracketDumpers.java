@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.impl.fluid.MCFluidStack;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.blamejared.crafttweaker.impl.tag.registry.CrTTagRegistry;
+import com.blamejared.crafttweaker.impl_native.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.impl_native.blocks.ExpandBlock;
 import com.blamejared.crafttweaker.impl_native.entity.attribute.ExpandAttribute;
 import com.blamejared.crafttweaker.impl_native.item.ExpandItemGroup;
@@ -56,6 +57,15 @@ public class BracketDumpers {
         return ForgeRegistries.BLOCKS.getValues()
                 .stream()
                 .map(ExpandBlock::getCommandString)
+                .collect(Collectors.toSet());
+    }
+    
+    @BracketDumper("blockmaterial")
+    public static Collection<String> getBlockMaterialDump() {
+        
+        return ExpandMaterial.hardcodedMaterials.values()
+                .stream()
+                .map(ExpandMaterial::getCommandString)
                 .collect(Collectors.toSet());
     }
     

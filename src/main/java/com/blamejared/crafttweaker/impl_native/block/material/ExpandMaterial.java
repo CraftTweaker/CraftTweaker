@@ -11,12 +11,14 @@ import net.minecraft.block.material.PushReaction;
 import net.minecraft.util.Util;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.Locale;
+
 @ZenRegister
 @Document("vanilla/api/block/material/MCMaterial")
 @NativeTypeRegistration(value = Material.class, zenCodeName = "crafttweaker.api.block.material.MCMaterial")
 public class ExpandMaterial {
     
-    private static final BiMap<String, Material> hardcodedMaterials = Util.make(HashBiMap.create(), map -> {
+    public static final BiMap<String, Material> hardcodedMaterials = Util.make(HashBiMap.create(), map -> {
         map.put("AIR", Material.AIR);
         map.put("STRUCTURE_VOID", Material.STRUCTURE_VOID);
         map.put("PORTAL", Material.PORTAL);
@@ -157,12 +159,12 @@ public class ExpandMaterial {
         
         final BiMap<Material, String> inverse = hardcodedMaterials.inverse();
         final String name = inverse.getOrDefault(internal, "UNKNOWN");
-        return "<blockmaterial:" + name + ">";
+        return "<blockmaterial:" + name.toLowerCase(Locale.ROOT) + ">";
         
     }
     
     public static Material tryGet(String tokens) {
-        
+    
         return hardcodedMaterials.get(tokens.toUpperCase());
     }
     
