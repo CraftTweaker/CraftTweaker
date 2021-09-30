@@ -4,7 +4,7 @@ import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.conditions.IIngredientCondition;
 import com.blamejared.crafttweaker.api.item.conditions.IIngredientConditionSerializer;
-import com.blamejared.crafttweaker.impl.ingredients.conditions.serializer.ConditionDamagedSerializer;
+import com.blamejared.crafttweaker.impl.ingredients.conditions.serializer.ConditionDamagedAtMostSerializer;
 
 public class ConditionDamagedAtMost<T extends IIngredient> implements IIngredientCondition<T> {
     
@@ -36,7 +36,7 @@ public class ConditionDamagedAtMost<T extends IIngredient> implements IIngredien
     @Override
     public IIngredientConditionSerializer getSerializer() {
         
-        return ConditionDamagedSerializer.INSTANCE;
+        return ConditionDamagedAtMostSerializer.INSTANCE;
     }
     
     
