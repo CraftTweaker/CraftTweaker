@@ -2,35 +2,35 @@ package com.blamejared.crafttweaker.impl.ingredients.conditions.serializer;
 
 import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.item.conditions.IIngredientConditionSerializer;
-import com.blamejared.crafttweaker.impl.ingredients.conditions.ConditionDamagedAtLeast;
+import com.blamejared.crafttweaker.impl.ingredients.conditions.ConditionDamagedAtMost;
 import com.google.gson.JsonObject;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 
-public enum ConditionDamagedAtMostSerializer implements IIngredientConditionSerializer<ConditionDamagedAtLeast<?>> {
+public enum ConditionDamagedAtMostSerializer implements IIngredientConditionSerializer<ConditionDamagedAtMost<?>> {
     INSTANCE;
     
     @Override
-    public ConditionDamagedAtLeast<?> parse(PacketBuffer buffer) {
+    public ConditionDamagedAtMost<?> parse(PacketBuffer buffer) {
         
-        return new ConditionDamagedAtLeast<>(buffer.readVarInt());
+        return new ConditionDamagedAtMost<>(buffer.readVarInt());
     }
     
     @Override
-    public ConditionDamagedAtLeast<?> parse(JsonObject json) {
+    public ConditionDamagedAtMost<?> parse(JsonObject json) {
         
-        return new ConditionDamagedAtLeast<>(json.getAsJsonPrimitive("damage").getAsInt());
+        return new ConditionDamagedAtMost<>(json.getAsJsonPrimitive("damage").getAsInt());
     }
     
     @Override
-    public void write(PacketBuffer buffer, ConditionDamagedAtLeast<?> ingredient) {
-        buffer.writeVarInt(ingredient.getMinDamage());
+    public void write(PacketBuffer buffer, ConditionDamagedAtMost<?> ingredient) {
+        buffer.writeVarInt(ingredient.getMaxDamage());
     }
     
     @Override
-    public JsonObject toJson(ConditionDamagedAtLeast<?> transformer) {
+    public JsonObject toJson(ConditionDamagedAtMost<?> transformer) {
         final JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("damage", transformer.getMinDamage());
+        jsonObject.addProperty("damage", transformer.getMaxDamage());
         return jsonObject;
     }
     
