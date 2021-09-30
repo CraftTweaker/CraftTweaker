@@ -19,6 +19,8 @@ import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.ingredients.conditions.ConditionAnyDamage;
 import com.blamejared.crafttweaker.impl.ingredients.conditions.ConditionCustom;
 import com.blamejared.crafttweaker.impl.ingredients.conditions.ConditionDamaged;
+import com.blamejared.crafttweaker.impl.ingredients.conditions.ConditionDamagedAtLeast;
+import com.blamejared.crafttweaker.impl.ingredients.conditions.ConditionDamagedAtMost;
 import com.blamejared.crafttweaker.impl.item.MCIngredientList;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.item.conditions.MCIngredientConditioned;
@@ -120,6 +122,16 @@ public interface IIngredient extends CommandStringDisplayable {
     @ZenCodeType.Method
     default MCIngredientConditioned<IIngredient> onlyDamaged() {
         return new MCIngredientConditioned<>(this, new ConditionDamaged<>());
+    }
+    
+    @ZenCodeType.Method
+    default MCIngredientConditioned<IIngredient> onlyDamagedAtLeast(int minDamage) {
+        return new MCIngredientConditioned<>(this, new ConditionDamagedAtLeast<>(minDamage));
+    }
+    
+    @ZenCodeType.Method
+    default MCIngredientConditioned<IIngredient> onlyDamagedAtMost(int maxDamage) {
+        return new MCIngredientConditioned<>(this, new ConditionDamagedAtMost<>(maxDamage));
     }
     
     @ZenCodeType.Method
