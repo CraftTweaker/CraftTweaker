@@ -35,12 +35,10 @@ public class MCItemBlock implements IBlock {
 
     @Override
     public IData getTileData() {
-        if(!item.isEmpty()) {
+        if(item.isEmpty() || item.getTagCompound() == null) {
             return null;
         }
-        if(item.getTagCompound() == null)
-            return null;
-        
+
         return CraftTweakerMC.getIData(item.getTagCompound());
     }
     
