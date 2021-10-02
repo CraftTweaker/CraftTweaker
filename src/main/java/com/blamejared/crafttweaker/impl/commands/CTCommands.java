@@ -37,6 +37,7 @@ public class CTCommands {
     public static void initArgumentTypes() {
         
         ArgumentTypes.register("crafttweaker:item_argument", CTItemArgument.class, new ArgumentSerializer<>(() -> CTItemArgument.INSTANCE));
+        ArgumentTypes.register("crafttweaker:recipe_type_argument", CTRecipeTypeArgument.class, new ArgumentSerializer<>(() -> CTRecipeTypeArgument.INSTANCE));
     }
     
     public static void init(CommandDispatcher<CommandSource> dispatcher) {
