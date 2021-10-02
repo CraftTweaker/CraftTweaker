@@ -5,7 +5,9 @@ import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipes.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipes.IReplacementRule;
 import com.blamejared.crafttweaker.api.util.StringUtils;
-import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
+import com.blamejared.crafttweaker.impl.helper.IngredientHelper;
+import com.blamejared.crafttweaker.impl.helper.ItemStackHelper;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.SmithingRecipe;
 import net.minecraft.util.ResourceLocation;
@@ -23,7 +25,7 @@ public final class SmithingRecipeHandler implements IRecipeHandler<SmithingRecip
         return String.format(
                 "smithing.addRecipe(%s, %s, %s, %s);",
                 StringUtils.quoteAndEscape(recipe.getId()),
-                new MCItemStackMutable(recipe.getRecipeOutput()).getCommandString(),
+                ItemStackHelper.getCommandString(recipe.getRecipeOutput()),
                 IIngredient.fromIngredient(recipe.base).getCommandString(),
                 IIngredient.fromIngredient(recipe.addition).getCommandString()
         );
@@ -40,6 +42,16 @@ public final class SmithingRecipeHandler implements IRecipeHandler<SmithingRecip
         }
         
         return Optional.of(id -> new SmithingRecipe(id, base.orElseGet(() -> recipe.base), addition.orElseGet(() -> recipe.addition), recipe.getRecipeOutput()));
+    }
+    
+    @Override
+    public boolean conflictsWith(final IRecipeManager manager, final SmithingRecipe firstRecipe, final IRecipe<?> secondRecipe) {
+        
+        if (!(secondRecipe instanceof SmithingRecipe)) return false;
+        
+        final SmithingRecipe second = (SmithingRecipe) secondRecipe;
+        
+        return IngredientHelper.canConflict(firstRecipe.base, second.base) && IngredientHelper.canConflict(firstRecipe.addition, second.addition);
     }
     
 }

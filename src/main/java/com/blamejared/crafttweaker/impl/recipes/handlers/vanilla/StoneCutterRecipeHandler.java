@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipes.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipes.IReplacementRule;
 import com.blamejared.crafttweaker.api.util.StringUtils;
-import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
+import com.blamejared.crafttweaker.impl.helper.ItemStackHelper;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.StonecuttingRecipe;
 import net.minecraft.util.ResourceLocation;
@@ -23,7 +23,7 @@ public final class StoneCutterRecipeHandler implements IRecipeHandler<Stonecutti
         return String.format(
                 "stoneCutter.addRecipe(%s, %s, %s);",
                 StringUtils.quoteAndEscape(recipe.getId()),
-                new MCItemStackMutable(recipe.getRecipeOutput()).getCommandString(),
+                ItemStackHelper.getCommandString(recipe.getRecipeOutput()),
                 IIngredient.fromIngredient(recipe.getIngredients().get(0)).getCommandString()
         );
     }

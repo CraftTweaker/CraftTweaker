@@ -6,7 +6,9 @@ import com.blamejared.crafttweaker.api.recipes.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipes.IReplacementRule;
 import com.blamejared.crafttweaker.api.recipes.ReplacementHandlerHelper;
 import com.blamejared.crafttweaker.api.util.StringUtils;
-import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
+import com.blamejared.crafttweaker.impl.helper.ItemStackHelper;
+import com.blamejared.crafttweaker.impl.recipes.helper.CraftingTableRecipeConflictChecker;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.util.NonNullList;
@@ -28,7 +30,7 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
         return String.format(
                 "craftingTable.addShaped(%s, %s, %s);",
                 StringUtils.quoteAndEscape(recipe.getId()),
-                new MCItemStackMutable(recipe.getRecipeOutput()).getCommandString(),
+                ItemStackHelper.getCommandString(recipe.getRecipeOutput()),
                 IntStream.range(0, recipe.getRecipeHeight())
                         .mapToObj(y -> IntStream.range(0, recipe.getRecipeWidth())
                                 .mapToObj(x -> ingredients.get(y * recipe.getRecipeWidth() + x))
@@ -49,6 +51,12 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
                 rules,
                 newIngredients -> id -> new ShapedRecipe(id, recipe.getGroup(), recipe.getRecipeWidth(), recipe.getRecipeHeight(), newIngredients, recipe.getRecipeOutput())
         );
+    }
+    
+    @Override
+    public boolean conflictsWith(final IRecipeManager manager, final ShapedRecipe firstRecipe, final IRecipe<?> secondRecipe) {
+        
+        return CraftingTableRecipeConflictChecker.checkConflicts(manager, firstRecipe, secondRecipe);
     }
     
 }

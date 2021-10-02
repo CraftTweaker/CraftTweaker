@@ -5,7 +5,8 @@ import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipes.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipes.IReplacementRule;
 import com.blamejared.crafttweaker.api.util.StringUtils;
-import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
+import com.blamejared.crafttweaker.impl.helper.IngredientHelper;
+import com.blamejared.crafttweaker.impl.helper.ItemStackHelper;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.item.ItemStack;
@@ -13,6 +14,7 @@ import net.minecraft.item.crafting.AbstractCookingRecipe;
 import net.minecraft.item.crafting.BlastingRecipe;
 import net.minecraft.item.crafting.CampfireCookingRecipe;
 import net.minecraft.item.crafting.FurnaceRecipe;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.SmokingRecipe;
@@ -37,7 +39,7 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
     }
     
     private static final Map<IRecipeType<?>, Pair<String, CookingRecipeFactory<?>>> LOOKUP = ImmutableMap
-            .<IRecipeType<?>, Pair<String, CookingRecipeFactory<?>>> builder()
+            .<IRecipeType<?>, Pair<String, CookingRecipeFactory<?>>>builder()
             .put(IRecipeType.BLASTING, Pair.of("blastFurnace", BlastingRecipe::new))
             .put(IRecipeType.CAMPFIRE_COOKING, Pair.of("campfire", CampfireCookingRecipe::new))
             .put(IRecipeType.SMELTING, Pair.of("furnace", FurnaceRecipe::new))
@@ -51,7 +53,7 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
                 "%s.addRecipe(%s, %s, %s, %s, %s);",
                 LOOKUP.get(recipe.getType()).getFirst(),
                 StringUtils.quoteAndEscape(recipe.getId()),
-                new MCItemStackMutable(recipe.getRecipeOutput()).getCommandString(),
+                ItemStackHelper.getCommandString(recipe.getRecipeOutput()),
                 IIngredient.fromIngredient(recipe.getIngredients().get(0)).getCommandString(),
                 recipe.getExperience(),
                 recipe.getCookTime()
@@ -67,4 +69,9 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
                         .create(id, recipe.getGroup(), input, recipe.getRecipeOutput(), recipe.getExperience(), recipe.getCookTime()));
     }
     
+    @Override
+    public boolean conflictsWith(final IRecipeManager manager, final AbstractCookingRecipe firstRecipe, final IRecipe<?> secondRecipe) {
+        
+        return IngredientHelper.canConflict(firstRecipe.getIngredients().get(0), secondRecipe.getIngredients().get(0));
+    }
 }
