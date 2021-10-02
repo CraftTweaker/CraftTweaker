@@ -16,23 +16,18 @@ public class MCLogger implements ILogger {
 
     public MCLogger(File output) {
         try {
-            writer = new OutputStreamWriter(new FileOutputStream(output), "utf-8");
-            printWriter = new PrintWriter(writer);
-        } catch(UnsupportedEncodingException ex) {
-            throw new RuntimeException("What the heck?");
-        } catch(FileNotFoundException ex) {
             if (output.isDirectory()) {
                 boolean success = output.delete();
                 if(!success) {
                     throw new RuntimeException("Failed to delete log file-as-directory " + output);
                 }
-                try {
-                    writer = new OutputStreamWriter(new FileOutputStream(output), "utf-8");
-                    printWriter = new PrintWriter(writer);
-                } catch(FileNotFoundException ex) {
-                    throw new RuntimeException("Could not open log file " + output);
-                }
             }
+            writer = new OutputStreamWriter(new FileOutputStream(output), "utf-8");
+            printWriter = new PrintWriter(writer);
+        } catch(UnsupportedEncodingException ex) {
+            throw new RuntimeException("What the heck?");
+        } catch(FileNotFoundException ex) {
+            
             throw new RuntimeException("Could not open log file " + output);
         }
     }
