@@ -7,12 +7,18 @@ import com.google.common.collect.Lists;
 import com.mojang.brigadier.LiteralMessage;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import net.minecraft.command.ISuggestionProvider;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.openzen.zenscript.lexer.ParseException;
 
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,6 +45,12 @@ public enum CTItemArgument implements ArgumentType<IItemStack> {
             reader.setCursor(reader.getCursor() + itemLocation.length() + "<item:>.withTag(".length() + e.position.getFromLineOffset());
             throw MALFORMED_DATA.createWithContext(reader, e);
         }
+    }
+    
+    @Override
+    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
+        
+        return ISuggestionProvider.suggest(ForgeRegistries.ITEMS.getKeys().stream().map(it -> String.format("<item:%s>", it)), builder);
     }
     
     @Override
