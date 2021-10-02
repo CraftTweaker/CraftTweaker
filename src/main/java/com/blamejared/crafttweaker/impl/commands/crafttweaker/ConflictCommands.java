@@ -7,7 +7,7 @@ import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.impl.commands.CTRecipeTypeArgument;
 import com.blamejared.crafttweaker.impl.commands.CommandUtilities;
-import com.blamejared.crafttweaker.impl.item.MCItemStack;
+import com.blamejared.crafttweaker.impl.helper.ItemStackHelper;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -16,7 +16,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.concurrent.ThreadTaskExecutor;
 import net.minecraft.util.text.StringTextComponent;
@@ -139,7 +138,7 @@ public final class ConflictCommands {
         };
         
         final Function<ItemStack, DescriptiveFilter> stackFilterMaker = hand ->
-                new DescriptiveFilter(it -> compareStacks(it.getRecipeOutput(), hand), " for output " + new MCItemStack(hand).getCommandString());
+                new DescriptiveFilter(it -> ItemStackHelper.areStacksTheSame(it.getRecipeOutput(), hand), " for output " + ItemStackHelper.getCommandString(hand));
         
         registerCustomCommand.accept(
                 Commands.literal("conflicts")
@@ -258,27 +257,5 @@ public final class ConflictCommands {
             
             runnable.run();
         }
-    }
-    
-    // TODO("This is a copy of IItemStack#matches written to avoid object creation: find a way to avoid code duplication")
-    private static boolean compareStacks(final ItemStack first, final ItemStack second) {
-        
-        if (first.isEmpty() != second.isEmpty()) return false;
-        if (first.getItem() != second.getItem()) return false;
-        if (first.getCount() > second.getCount()) return false;
-        if (first.getDamage() != second.getDamage()) return false;
-        
-        final CompoundNBT firstTag = first.getTag();
-        final CompoundNBT secondTag = second.getTag();
-        
-        // Note: different from original
-        if (firstTag == null) return true;
-        if (secondTag == null) return false;
-        // The original code checks if they are both null and returns true if so, otherwise it converts both of them to
-        // MapData and then checks again if the first tag is null. The only possibility is if firstTag is actually null,
-        // so we can simplify the check. Also, if the first tag is not null, the second tag cannot be null, otherwise
-        // there is no match. We can account for that too.
-        
-        return firstTag.equals(secondTag);
     }
 }
