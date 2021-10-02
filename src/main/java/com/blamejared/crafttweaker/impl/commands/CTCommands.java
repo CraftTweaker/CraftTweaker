@@ -124,6 +124,8 @@ public class CTCommands {
     
     private static void registerCommandInternal(LiteralArgumentBuilder<CommandSource> root, com.blamejared.crafttweaker.impl.commands.CommandImpl command) {
         
+        if (command.getCaller() == null) return;
+        
         LiteralArgumentBuilder<CommandSource> literalCommand = Commands.literal(command.getName());
         final Map<String, com.blamejared.crafttweaker.impl.commands.CommandImpl> subCommands = command.getChildCommands();
         if(!subCommands.isEmpty()) {
@@ -142,7 +144,7 @@ public class CTCommands {
         
         registerCustomCommand(literal);
         if(name != null && description != null) {
-            COMMANDS.put(name, new CommandImpl(name, description, (context -> 0)));
+            COMMANDS.put(name, new CommandImpl(name, description, null));
         }
     }
     
@@ -238,7 +240,7 @@ public class CTCommands {
         public CommandCaller getCaller() {
             
             final com.blamejared.crafttweaker.impl.commands.CommandCaller caller = super.getCaller();
-            return caller instanceof CommandCaller ? (CommandCaller) caller : caller::executeCommand;
+            return (caller == null || caller instanceof CommandCaller)? (CommandCaller) caller : caller::executeCommand;
         }
         
         @Deprecated
