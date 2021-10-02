@@ -10,17 +10,24 @@ import java.util.regex.Pattern;
 public class MCLogger implements ILogger {
 
     private static final Pattern FORMATTING_CODE_PATTERN = Pattern.compile("(?i)" + String.valueOf('\u00a7') + "[0-9A-FK-OR]");
-    private final Writer writer;
-    private final PrintWriter printWriter;
+    private Writer writer;
+    private PrintWriter printWriter;
     private boolean isDefaultDisabled = false;
 
     public MCLogger(File output) {
         try {
+            if (output.isDirectory()) {
+                boolean success = output.delete();
+                if(!success) {
+                    throw new RuntimeException("Failed to delete log file-as-directory " + output);
+                }
+            }
             writer = new OutputStreamWriter(new FileOutputStream(output), "utf-8");
             printWriter = new PrintWriter(writer);
         } catch(UnsupportedEncodingException ex) {
             throw new RuntimeException("What the heck?");
         } catch(FileNotFoundException ex) {
+            
             throw new RuntimeException("Could not open log file " + output);
         }
     }
