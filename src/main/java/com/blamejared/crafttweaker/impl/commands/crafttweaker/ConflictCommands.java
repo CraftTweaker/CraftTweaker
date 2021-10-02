@@ -71,7 +71,6 @@ public final class ConflictCommands {
     private static final class RecipeIterator implements PrimitiveIterator.OfLong {
         
         private final int size;
-        private final int half;
         
         private int currentLeft;
         private int currentRight;
@@ -80,9 +79,8 @@ public final class ConflictCommands {
         RecipeIterator(final int size) {
             
             this.size = size;
-            this.half = (int) Math.ceil(((double) this.size) / 2.0); // If size is odd, then we will have a duplicate rather than potentially "forgetting" a pairing.
             this.currentLeft = 0;
-            this.currentRight = this.half;
+            this.currentRight = this.currentLeft + 1;
             this.kill = false;
         }
         
@@ -93,8 +91,8 @@ public final class ConflictCommands {
             
             final long current = make(this.currentLeft, this.currentRight);
             if (++this.currentRight >= this.size) {
-                if (++this.currentLeft >= this.half) this.kill = true;
-                this.currentRight = this.half;
+                if (++this.currentLeft >= this.size - 1) this.kill = true;
+                this.currentRight = this.currentLeft + 1;
             }
             
             return current;
