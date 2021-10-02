@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker_annotation_processors.processors.document.page.page;
 
 import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageOutputWriter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.file.PageWriter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.DocumentMeta;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.meta.IFillMeta;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.DocumentationPageInfo;
@@ -41,7 +42,7 @@ public abstract class DocumentationPage implements IFillMeta {
         DocumentMeta meta = new DocumentMeta();
         meta.setSince(this.pageInfo.getClassComment().getSinceVersion());
         meta.setDeprecation(this.pageInfo.getClassComment().getDeprecationMessage());
-        meta.setPath(this.pageInfo.getOutputPath());
+        meta.setPath(this.pageInfo.getOutputPathWithExtension(PageWriter.MARKDOWN_EXTENSION));
         meta.setShortDescription(pageInfo.getClassComment().getMetaData().getShortDescription());
         fillMeta(meta);
         virtualMembers.fillMeta(meta);
