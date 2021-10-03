@@ -6,8 +6,8 @@ import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.InstantiationUtil;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import net.minecraft.item.crafting.IRecipe;
-import org.openzen.zenscript.codemodel.Modifiers;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
@@ -51,7 +51,7 @@ public final class RecipeHandlerRegistry {
         if(clazz.isInterface()) {
             throw new IllegalArgumentException("Class " + clazz.getName() + " is an interface and cannot be annotated with @IRecipeHandler.For");
         }
-        if(Modifiers.isAbstract(clazz.getModifiers())) {
+        if(Modifier.isAbstract(clazz.getModifiers())) {
             throw new IllegalArgumentException("Class " + clazz.getName() + " is an abstract class and cannot be annotated with @IRecipeHandler.For");
         }
         //noinspection RedundantCast
