@@ -27,7 +27,7 @@ public final class CTShapelessRecipeHandler implements IRecipeHandler<CTRecipeSh
         return String.format(
                 "craftingTable.addShapeless(%s, %s, %s%s);",
                 StringUtils.quoteAndEscape(recipe.getId()),
-                ItemStackHelper.getCommandString(recipe.getRecipeOutput()),
+                recipe.getCtOutput().getCommandString(),
                 Arrays.stream(recipe.getCtIngredients())
                         .map(IIngredient::getCommandString)
                         .collect(Collectors.joining(", ", "[", "]")),

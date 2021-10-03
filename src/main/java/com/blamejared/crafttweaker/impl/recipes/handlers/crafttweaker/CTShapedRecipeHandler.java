@@ -27,7 +27,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTRecipeShape
         return String.format(
                 "craftingTable.addShaped(%s, %s, %s%s);",
                 StringUtils.quoteAndEscape(recipe.getId()),
-                ItemStackHelper.getCommandString(recipe.getRecipeOutput()),
+                recipe.getCtOutput().getCommandString(),
                 Arrays.stream(recipe.getCtIngredients())
                         .map(row -> Arrays.stream(row)
                                 .map(IIngredient::getCommandString)
