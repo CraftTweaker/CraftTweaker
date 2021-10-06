@@ -2,11 +2,11 @@ package com.blamejared.crafttweaker.impl.item;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
-import com.blamejared.crafttweaker.api.data.NBTConverter;
 import com.blamejared.crafttweaker.api.ingredient.PartialNBTIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.util.AttributeUtil;
 import com.blamejared.crafttweaker.impl.data.MapData;
+import com.blamejared.crafttweaker.impl.helper.ItemStackHelper;
 import com.blamejared.crafttweaker.impl.util.EnchantmentUtil;
 import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -138,32 +138,7 @@ public class MCItemStackMutable implements IItemStack {
     @Override
     public String getCommandString() {
         
-        final StringBuilder sb = new StringBuilder("<item:");
-        sb.append(getInternal().getItem().getRegistryName());
-        sb.append(">");
-        
-        if(getInternal().getTag() != null) {
-            MapData data = (MapData) NBTConverter.convert(getInternal().getTag()).copyInternal();
-            //Damage is special case, if we have more special cases we can handle them here.
-            if(getInternal().getItem().isDamageable()) {
-                data.remove("Damage");
-            }
-            if(!data.isEmpty()) {
-                sb.append(".withTag(");
-                sb.append(data.asString());
-                sb.append(")");
-            }
-        }
-        
-        if(getInternal().getDamage() > 0) {
-            sb.append(".withDamage(").append(getInternal().getDamage()).append(")");
-        }
-        if(!isEmpty()) {
-            if(getAmount() != 1) {
-                sb.append(" * ").append(getAmount());
-            }
-        }
-        return sb.toString();
+        return ItemStackHelper.getCommandString(this.getInternal());
     }
     
     @Override

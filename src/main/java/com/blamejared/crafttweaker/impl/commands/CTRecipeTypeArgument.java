@@ -22,7 +22,7 @@ public enum CTRecipeTypeArgument implements ArgumentType<IRecipeManager> {
     INSTANCE;
     
     private static final Collection<String> EXAMPLES = Lists.newArrayList("<recipetype:minecraft:crafting>", "<recipetype:minecraft:blasting>");
-    private static final SimpleCommandExceptionType INVALID_STRING = new SimpleCommandExceptionType(new LiteralMessage("Invalid String"));
+    private static final SimpleCommandExceptionType INVALID_STRING = new SimpleCommandExceptionType(new LiteralMessage("Unknown Recipe Type"));
     private static final Pattern ITEM_PATTERN = Pattern.compile("<recipetype:(\\w+:\\w+)>");
     
     

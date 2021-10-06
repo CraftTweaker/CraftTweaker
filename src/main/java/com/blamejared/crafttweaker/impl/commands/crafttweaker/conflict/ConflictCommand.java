@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.impl.commands.crafttweaker;
+package com.blamejared.crafttweaker.impl.commands.crafttweaker.conflict;
 
 import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
@@ -7,21 +7,18 @@ import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.impl.commands.CTRecipeTypeArgument;
 import com.blamejared.crafttweaker.impl.commands.CommandUtilities;
-import com.blamejared.crafttweaker.impl.helper.ItemStackHelper;
+import com.blamejared.crafttweaker.impl.helper.ThreadingHelper;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.concurrent.ThreadTaskExecutor;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import org.apache.logging.log4j.util.TriConsumer;
 
@@ -29,130 +26,42 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public final class ConflictCommands {
-    
-    private static final class DescriptiveFilter implements Predicate<Map.Entry<ResourceLocation, IRecipe<?>>> {
-        
-        private final Predicate<IRecipe<?>> delegate;
-        private final String description;
-        
-        DescriptiveFilter(final Predicate<IRecipe<?>> delegate, final String description) {
-            
-            this.delegate = delegate;
-            this.description = description;
-        }
-        
-        @Override
-        public boolean test(final Map.Entry<ResourceLocation, IRecipe<?>> recipe) {
-        
-            return this.delegate.test(recipe.getValue());
-        }
-    
-        String description() {
-            
-            return this.description;
-        }
-    }
-    
-    private static final class RecipeIterator implements PrimitiveIterator.OfLong {
-        
-        private final int size;
-        
-        private int currentLeft;
-        private int currentRight;
-        private boolean kill;
-        
-        RecipeIterator(final int size) {
-            
-            this.size = size;
-            this.currentLeft = 0;
-            this.currentRight = this.currentLeft + 1;
-            this.kill = false;
-        }
-        
-        @Override
-        public long nextLong() {
-        
-            if (this.kill) throw new NoSuchElementException();
-            
-            final long current = make(this.currentLeft, this.currentRight);
-            if (++this.currentRight >= this.size) {
-                if (++this.currentLeft >= this.size - 1) this.kill = true;
-                this.currentRight = this.currentLeft + 1;
-            }
-            
-            return current;
-        }
-        
-        @Override
-        public boolean hasNext() {
-        
-            return !this.kill;
-        }
-    
-        static long make(final int left, final int right) {
-            
-            return (((long) left) << 32L) | ((long) right);
-        }
-        
-        static int first(final long val) {
-            
-            return (int) (val >> 32L);
-        }
-        
-        static int second(final long val) {
-            
-            return (int) val;
-        }
-    }
+public final class ConflictCommand {
     
     private static final ExecutorService OFF_THREAD_SERVICE = Executors.newFixedThreadPool(1, r -> {
         
         final Thread t = new Thread(r, CraftTweaker.MODID + ":conflict_resolution_thread");
         t.setDaemon(true); // We don't want to prevent MC from shutting down if this thread is still processing
-        t.setContextClassLoader(ConflictCommands.class.getClassLoader());
+        t.setContextClassLoader(ConflictCommand.class.getClassLoader());
         return t;
     });
     
-    private ConflictCommands() {}
+    private ConflictCommand() {}
     
     public static void registerConflictCommands(final TriConsumer<LiteralArgumentBuilder<CommandSource>, String, String> registerCustomCommand) {
-    
-        final Function<IRecipeManager, DescriptiveFilter> managerFilterMaker = manager -> {
-            
-            final IRecipeType<?> type = manager.getRecipeType();
-            return new DescriptiveFilter(it -> it.getType() == type, " for type " + manager.getCommandString());
-        };
-        
-        final Function<ItemStack, DescriptiveFilter> stackFilterMaker = hand ->
-                new DescriptiveFilter(it -> ItemStackHelper.areStacksTheSame(it.getRecipeOutput(), hand), " for output " + ItemStackHelper.getCommandString(hand));
         
         registerCustomCommand.accept(
                 Commands.literal("conflicts")
                         .then(Commands.argument("type", CTRecipeTypeArgument.INSTANCE)
-                                .executes(context -> ConflictCommands.conflicts(
+                                .executes(context -> ConflictCommand.conflicts(
                                         context.getSource().asPlayer(),
-                                        managerFilterMaker.apply(context.getArgument("type", IRecipeManager.class))
+                                        DescriptiveFilter.of(context.getArgument("type", IRecipeManager.class))
                                 )))
                         .then(Commands.literal("hand")
-                                .executes(context -> ConflictCommands.conflicts(
+                                .executes(context -> ConflictCommand.conflicts(
                                         context.getSource().asPlayer(),
-                                        stackFilterMaker.apply(context.getSource().asPlayer().getHeldItemMainhand())
+                                        DescriptiveFilter.of(context.getSource().asPlayer().getHeldItemMainhand())
                                 )))
-                        .executes(context -> ConflictCommands.conflicts(context.getSource().asPlayer(), new DescriptiveFilter(it -> true, ""))),
+                        .executes(context -> ConflictCommand.conflicts(context.getSource().asPlayer(), DescriptiveFilter.of())),
                 "conflicts",
                 "Identifies and reports conflicts between various recipes"
         );
@@ -175,8 +84,10 @@ public final class ConflictCommands {
     
     private static void runConflicts(final PlayerEntity player, final RecipeManager manager, final DescriptiveFilter filter) {
         
-        final LogicalSide side = EffectiveSide.get();
+        // Cloning the map to avoid /reload messing up with CMEs when looping on it from off-thread
+        // Also, this deep copies only the two maps: the recipe type, RL, and recipe objects are not also deep copied
         final Map<IRecipeType<?>, Map<ResourceLocation, IRecipe<?>>> recipes = deepCopy(manager.recipes, filter);
+        final LogicalSide side = EffectiveSide.get();
         CompletableFuture.supplyAsync(() -> computeConflicts(recipes), OFF_THREAD_SERVICE)
                 .thenAcceptAsync(message -> dispatchMessageTo(message, player, side), OFF_THREAD_SERVICE);
     }
@@ -198,8 +109,9 @@ public final class ConflictCommands {
         
         return recipes.entrySet()
                 .stream()
-                .flatMap(ConflictCommands::computeConflictsFor)
-                .collect(Collectors.joining("\n- ", "- ", ""));
+                .flatMap(ConflictCommand::computeConflictsFor)
+                .map(it -> "- " + it)
+                .collect(Collectors.joining("\n"));
     }
     
     private static Stream<String> computeConflictsFor(final Map.Entry<IRecipeType<?>, Map<ResourceLocation, IRecipe<?>>> entry) {
@@ -209,11 +121,12 @@ public final class ConflictCommands {
         if (manager == null) return Stream.of();
         
         final List<Map.Entry<ResourceLocation, IRecipe<?>>> recipes = new ArrayList<>(entry.getValue().entrySet());
+        final RecipeLongIterator iterator = new RecipeLongIterator(recipes.size());
         final int characteristics = Spliterator.ORDERED | Spliterator.SORTED | Spliterator.NONNULL | Spliterator.IMMUTABLE;
         
-        return StreamSupport.longStream(Spliterators.spliteratorUnknownSize(new RecipeIterator(recipes.size()), characteristics), false)
-                .filter(it -> conflictsWith(manager, recipes.get(RecipeIterator.first(it)).getValue(), recipes.get(RecipeIterator.second(it)).getValue()))
-                .mapToObj(it -> formatConflict(manager, recipes.get(RecipeIterator.first(it)).getKey(), recipes.get(RecipeIterator.second(it)).getKey()));
+        return StreamSupport.longStream(Spliterators.spliterator(iterator, iterator.estimateLength(), characteristics), false)
+                .filter(it -> conflictsWith(manager, recipes.get(RecipeLongIterator.first(it)).getValue(), recipes.get(RecipeLongIterator.second(it)).getValue()))
+                .mapToObj(it -> formatConflict(manager, recipes.get(RecipeLongIterator.first(it)).getKey(), recipes.get(RecipeLongIterator.second(it)).getKey()));
     }
     
     private static <T extends IRecipe<?>> boolean conflictsWith(final IRecipeManager manager, final T first, final IRecipe<?> second) {
@@ -228,10 +141,10 @@ public final class ConflictCommands {
     
     private static void dispatchMessageTo(final String message, final PlayerEntity player, final LogicalSide side) {
         
-        runOnMainThread(side, () -> {
+        ThreadingHelper.runOnMainThread(side, () -> {
             try {
-                CraftTweakerAPI.logDump("- ".equals(message)? "No conflicts identified" : message);
-                CommandUtilities.send(CommandUtilities.color("Conflict testing completed: results are in the log", TextFormatting.GREEN), player);
+                CraftTweakerAPI.logDump(message.isEmpty()? "No conflicts identified" : message);
+                CommandUtilities.send(CommandUtilities.color("Conflict testing completed: results are in crafttweaker.log", TextFormatting.GREEN), player);
             } catch (final Exception e) {
                 
                 try {
@@ -244,18 +157,5 @@ public final class ConflictCommands {
                 }
             }
         });
-    }
-    
-    private static void runOnMainThread(final LogicalSide currentSide, final Runnable runnable) {
-        
-        final ThreadTaskExecutor<?> executor = LogicalSidedProvider.WORKQUEUE.get(currentSide);
-        
-        if (!executor.isOnExecutionThread()) {
-            
-            executor.deferTask(runnable);
-        } else {
-            
-            runnable.run();
-        }
     }
 }

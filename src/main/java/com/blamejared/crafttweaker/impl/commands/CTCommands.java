@@ -2,7 +2,7 @@ package com.blamejared.crafttweaker.impl.commands;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
-import com.blamejared.crafttweaker.impl.commands.crafttweaker.ConflictCommands;
+import com.blamejared.crafttweaker.impl.commands.crafttweaker.conflict.ConflictCommand;
 import com.blamejared.crafttweaker.impl.commands.crafttweaker.DumpCommands;
 import com.blamejared.crafttweaker.impl.commands.crafttweaker.HandCommands;
 import com.blamejared.crafttweaker.impl.commands.crafttweaker.HelpCommand;
@@ -43,7 +43,7 @@ public class CTCommands {
     
     public static void init(CommandDispatcher<CommandSource> dispatcher) {
         
-        ConflictCommands.registerConflictCommands(CTCommands::registerCustomCommand);
+        ConflictCommand.registerConflictCommands(CTCommands::registerCustomCommand);
         DumpCommands.registerDumpCommands(() -> COMMANDS);
         ExamplesCommand.register();
         HandCommands.registerHandCommands();
