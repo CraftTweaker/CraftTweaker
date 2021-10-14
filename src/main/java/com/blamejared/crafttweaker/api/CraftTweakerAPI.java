@@ -199,37 +199,58 @@ public class CraftTweakerAPI {
     
     public static void logDump(String message, Object... formats) {
         
+        if(formats == null || formats.length == 0) {
+            message = message.replaceAll("%", "%%");
+        }
         logger.log(LogLevel.INFO, String.format(message, formats), false);
     }
     
     public static void logInfo(String message, Object... formats) {
         
+        if(formats == null || formats.length == 0) {
+            message = message.replaceAll("%", "%%");
+        }
         logger.info(String.format(message, formats));
     }
     
     public static void logDebug(String message, Object... formats) {
         
+        if(formats == null || formats.length == 0) {
+            message = message.replaceAll("%", "%%");
+        }
         logger.debug(String.format(message, formats));
     }
     
     public static void logWarning(String message, Object... formats) {
         
+        if(formats == null || formats.length == 0) {
+            message = message.replaceAll("%", "%%");
+        }
         logger.warning(String.format(message, formats));
     }
     
     public static void logError(String message, Object... formats) {
         
+        if(formats == null || formats.length == 0) {
+            message = message.replaceAll("%", "%%");
+        }
         logger.error(String.format(message, formats));
     }
     
     public static void logThrowing(String message, Throwable e, Object... formats) {
         
+        if(formats == null || formats.length == 0) {
+            message = message.replaceAll("%", "%%");
+        }
         e.printStackTrace();
         logger.throwingErr(String.format(message, formats), e);
     }
     
     public static void log(LogLevel level, String filename, int lineNumber, String message, Object... formats) {
         
+        if(formats == null || formats.length == 0) {
+            message = message.replaceAll("%", "%%");
+        }
         logger.log(level, String.format("[%s:%d%s]", filename, lineNumber, String.format(message, formats)));
     }
     
