@@ -21,7 +21,7 @@ public enum CTItemArgument implements ArgumentType<IItemStack> {
     private static final Collection<String> EXAMPLES = Lists.newArrayList("<item:minecraft:apple>", "<item:minecraft:iron_ingot>.withTag({display: {Name: \"wow\" as string}})");
     private static final DynamicCommandExceptionType MALFORMED_DATA = new DynamicCommandExceptionType(o -> new LiteralMessage(((ParseException) o).message));
     private static final SimpleCommandExceptionType INVALID_STRING = new SimpleCommandExceptionType(new LiteralMessage("invalid string"));
-    private static final Pattern ITEM_PATTERN = Pattern.compile("<item:(\\w+:\\w+)>(.withTag\\((\\{.*})\\))?");
+    private static final Pattern ITEM_PATTERN = Pattern.compile("<item:(\\w+:\\w+)>(\\.withTag\\((\\{.*})\\))?");
     
     @Override
     public IItemStack parse(StringReader reader) throws CommandSyntaxException {
