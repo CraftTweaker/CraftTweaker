@@ -48,7 +48,7 @@ public final class ShapelessRecipeHandler implements IRecipeHandler<ShapelessRec
     }
     
     @Override
-    public boolean conflictsWith(final IRecipeManager manager, final ShapelessRecipe firstRecipe, final IRecipe<?> secondRecipe) {
+    public <U extends IRecipe<?>> boolean isThereConflictBetween(final IRecipeManager manager, final ShapelessRecipe firstRecipe, final U secondRecipe) {
     
         return CraftingTableRecipeConflictChecker.checkConflicts(manager, firstRecipe, secondRecipe);
     }

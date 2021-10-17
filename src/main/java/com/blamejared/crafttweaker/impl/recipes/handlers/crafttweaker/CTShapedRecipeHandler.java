@@ -6,7 +6,6 @@ import com.blamejared.crafttweaker.api.recipes.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipes.IReplacementRule;
 import com.blamejared.crafttweaker.api.recipes.ReplacementHandlerHelper;
 import com.blamejared.crafttweaker.api.util.StringUtils;
-import com.blamejared.crafttweaker.impl.helper.ItemStackHelper;
 import com.blamejared.crafttweaker.impl.recipes.CTRecipeShaped;
 import com.blamejared.crafttweaker.impl.recipes.helper.CraftingTableRecipeConflictChecker;
 import net.minecraft.item.crafting.IRecipe;
@@ -56,7 +55,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTRecipeShape
     }
     
     @Override
-    public boolean conflictsWith(final IRecipeManager manager, final CTRecipeShaped firstRecipe, final IRecipe<?> secondRecipe) {
+    public <U extends IRecipe<?>> boolean isThereConflictBetween(final IRecipeManager manager, final CTRecipeShaped firstRecipe, final U secondRecipe) {
         
         return CraftingTableRecipeConflictChecker.checkConflicts(manager, firstRecipe, secondRecipe);
     }

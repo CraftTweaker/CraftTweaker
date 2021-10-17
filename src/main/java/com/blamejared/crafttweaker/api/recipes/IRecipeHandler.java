@@ -262,6 +262,7 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
      * @param firstRecipe The recipe which should be checked for conflict.
      * @param secondRecipe The other recipe which {@code firstRecipe} should be checked against. The recipe may or may
      *                     not be of the same type of {@code firstRecipe}. See the API note section for more details.
+     * @param <U> The type of {@code secondRecipe}.
      * @return Whether the {@code firstRecipe} conflicts with {@code secondRecipe} or not.
      *
      * @apiNote The reason for which {@code secondRecipe} is specified as simply {@link IRecipe} instead of as the
@@ -273,7 +274,7 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
      *
      * @implNote By default, this method returns {@code false}.
      */
-    default boolean conflictsWith(final IRecipeManager manager, final T firstRecipe, final IRecipe<?> secondRecipe) {
+    default <U extends IRecipe<?>> boolean isThereConflictBetween(final IRecipeManager manager, final T firstRecipe, final U secondRecipe) {
         
         return false;
     }

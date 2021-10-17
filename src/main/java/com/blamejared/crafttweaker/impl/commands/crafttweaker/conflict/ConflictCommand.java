@@ -131,7 +131,7 @@ public final class ConflictCommand {
     
     private static <T extends IRecipe<?>> boolean conflictsWith(final IRecipeManager manager, final T first, final IRecipe<?> second) {
         
-        return first != second && CraftTweakerRegistry.getHandlerFor(first).conflictsWith(manager, first, second);
+        return first != second && CraftTweakerRegistry.getHandlerFor(first).isThereConflictBetween(manager, first, second);
     }
     
     private static String formatConflict(final IRecipeManager manager, final ResourceLocation firstName, final ResourceLocation secondName) {
