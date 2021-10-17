@@ -33,7 +33,7 @@ public class ExpandItem {
     }
     
     /**
-     * Checks if this item is in the Given tag.
+     * Checks if this item is in the given tag.
      *
      * @param tag The tag to check against.
      *
@@ -47,6 +47,11 @@ public class ExpandItem {
         return internal.isIn(tag.getInternalRaw());
     }
     
+    /**
+     * Gets the tags that contain this item.
+     *
+     * @return a list of tags that contain this item.
+     */
     @ZenCodeType.Method
     public static List<MCTag<Item>> getTags(Item internal) {
         
