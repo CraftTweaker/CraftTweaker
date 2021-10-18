@@ -48,7 +48,7 @@ final class RecipeLongIterator implements PrimitiveIterator.OfLong {
     
     long estimateLength() {
         
-        return (long) Math.ceil((double) (((long) this.size) * (((long) this.size) - 1L)) / 2.0D);
+        return ((long) this.size * ((long) this.size - 1L)) / 2L;
     }
     
     static long make(final int left, final int right) {

@@ -9,9 +9,12 @@ import com.blamejared.crafttweaker.impl.commands.CTRecipeTypeArgument;
 import com.blamejared.crafttweaker.impl.commands.CommandUtilities;
 import com.blamejared.crafttweaker.impl.helper.ThreadingHelper;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
@@ -31,6 +34,7 @@ import java.util.Spliterators;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.ToIntBiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -52,21 +56,34 @@ public final class ConflictCommand {
         registerCustomCommand.accept(
                 Commands.literal("conflicts")
                         .then(Commands.argument("type", CTRecipeTypeArgument.INSTANCE)
-                                .executes(context -> ConflictCommand.conflicts(
+                                .executes(context -> conflicts(
                                         context.getSource().asPlayer(),
                                         DescriptiveFilter.of(context.getArgument("type", IRecipeManager.class))
                                 )))
                         .then(Commands.literal("hand")
-                                .executes(context -> ConflictCommand.conflicts(
-                                        context.getSource().asPlayer(),
-                                        DescriptiveFilter.of(context.getSource().asPlayer().getHeldItemMainhand())
+                                .executes(context -> ifNotEmpty(
+                                        context,
+                                        (player, item) -> conflicts(player, DescriptiveFilter.of(item))
                                 )))
-                        .executes(context -> ConflictCommand.conflicts(context.getSource().asPlayer(), DescriptiveFilter.of())),
+                        .executes(context -> conflicts(context.getSource().asPlayer(), DescriptiveFilter.of())),
                 "conflicts",
                 "Identifies and reports conflicts between various recipes"
         );
     }
 
+    private static int ifNotEmpty(final CommandContext<CommandSource> source, final ToIntBiFunction<PlayerEntity, ItemStack> command) throws CommandSyntaxException {
+        
+        final PlayerEntity player = source.getSource().asPlayer();
+        final ItemStack stack = player.getHeldItemMainhand();
+        if (stack.isEmpty()) {
+            
+            CommandUtilities.send(CommandUtilities.color("No item in hand: unable to check conflicts for an empty item", TextFormatting.RED), player);
+            return -1;
+        }
+        
+        return command.applyAsInt(player, stack);
+    }
+    
     private static int conflicts(final PlayerEntity player, final DescriptiveFilter filter) {
     
         CommandUtilities.send(
@@ -118,7 +135,7 @@ public final class ConflictCommand {
         
         final IRecipeManager manager = RecipeTypeBracketHandler.getOrDefault(entry.getKey());
         
-        if (manager == null) return Stream.of();
+        if (manager == null) return Stream.empty();
         
         final List<Map.Entry<ResourceLocation, IRecipe<?>>> recipes = new ArrayList<>(entry.getValue().entrySet());
         final RecipeLongIterator iterator = new RecipeLongIterator(recipes.size());
