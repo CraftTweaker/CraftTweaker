@@ -1,0 +1,76 @@
+plugins {
+    id 'fabric-loom' version '0.9-SNAPSHOT'
+    id 'maven-publish'
+    id 'idea'
+}
+
+archivesBaseName = "${mod_name}-fabric-${minecraft_version}"
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-1.17.1:2021.10.10@zip")
+    }
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    implementation project(":Common")
+
+    modRuntime "me.shedaniel:RoughlyEnoughItems-fabric:6.0.267-alpha"
+}
+
+loom {
+    runs {
+        client {
+            client()
+            setConfigName("Fabric Client")
+            ideConfigGenerated(true)
+            runDir("${this.name}/run")
+        }
+        server {
+            server()
+
+            setConfigName("Fabric Server")
+            ideConfigGenerated(true)
+            runDir("${this.name}/run_server")
+        }
+    }
+}
+
+
+processResources {
+    from project(":Common").sourceSets.main.resources
+
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+
+tasks.withType(JavaCompile) {
+    source(project(":Common").sourceSets.main.allSource)
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${mod_name}" }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact(remapJar) {
+                builtBy remapJar
+            }
+            artifact(sourcesJar) {
+                builtBy remapSourcesJar
+            }
+        }
+    }
+
+    repositories {
+    }
+}

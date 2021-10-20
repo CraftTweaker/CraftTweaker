@@ -1,11 +1,24 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+        maven {
+            name = 'Sponge Snapshots'
+            url = 'https://repo.spongepowered.org/repository/maven-public/'
+        }
+    }
+}
+
 rootProject.name = 'CraftTweaker'
+include("Common", "Fabric", "Forge")
+
 include("ZenCode")
 include("Crafttweaker_Annotations")
 include("Crafttweaker_Annotation_Processors")
 
-// Find the directories containing a "build.gradle" file in the root directory
-// of the project. That is, every directory containing a "build.gradle" will
-// be automatically the subproject of this project.
 def excludedProjects = [
         "ModuleDeserializer",
         "ModuleSerializationShared",
@@ -19,8 +32,7 @@ def excludedProjects = [
         "CompilerShared"
 ]
 
-
-def subDirs = new File(rootDir, "ZenCode").listFiles(new FileFilter() {
+def fileFilter = new FileFilter() {
     boolean accept(File file) {
         if (!file.isDirectory()) {
             return false
@@ -30,9 +42,15 @@ def subDirs = new File(rootDir, "ZenCode").listFiles(new FileFilter() {
         }
         return new File(file, 'build.gradle').isFile()
     }
-})
+};
 
-subDirs.each { File dir ->
+new File(rootDir, "Annotations").listFiles(fileFilter).each { File dir ->
+    include(":" + dir.name)
+    project(":" + dir.name).projectDir = new File("./Annotations/" + dir.name)
+}
+
+new File(rootDir, "ZenCode").listFiles(fileFilter).each { File dir ->
     include(":" + dir.name)
     project(":" + dir.name).projectDir = new File("./ZenCode/" + dir.name)
 }
+

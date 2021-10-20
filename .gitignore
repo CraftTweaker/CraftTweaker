@@ -1,44 +1,23 @@
-*.class
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
 
-# Package Files #
-*.war
-*.ear
-/build
-/eclipse
-/bin
-/out
-
-*.classpath
-*.project
-/.gradle
-/.settings
-/.idea
-*.iml
+# idea
+out
 *.ipr
 *.iws
-/.metadata/*
-*.eml
-/run
-/runServer
-/run_server
-*.stackdump
-*.log
-*/.settings
-*/build
+*.iml
+.idea
 
-*.launch
+# gradle
+build
+.gradle
 
-*.db
-/classes/
-desktop.ini
-runServer/
-changelog.md
-
-secrets.json
-
-docsOut/
-src/generated/
-src/main/resources/__StdLibs__/
-CrafttweakerDocumentation/
-lsp
-docsRepo
+# other
+eclipse
+run
+run_server

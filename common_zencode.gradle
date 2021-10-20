@@ -1,0 +1,44 @@
+apply plugin: 'java-library'
+//apply plugin: 'maven-publish'
+
+String mavenGroupId = 'org.openzen.zencode'
+String mavenVersion = '0.3.8'
+
+sourceCompatibility = '1.8'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+repositories {
+    mavenCentral();
+}
+
+dependencies {
+}
+
+String mavenArtifactId = name
+
+group = mavenGroupId
+version = mavenVersion
+task sourcesJar(type: Jar, dependsOn: classes, description: 'Creates a jar from the source files.') {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+artifacts {
+    archives sourcesJar
+}
+//
+//configure(install.repositories.mavenInstaller) {
+//    pom.project {
+//        groupId = mavenGroupId
+//        artifactId = mavenArtifactId
+//        version = mavenVersion
+//    }
+//}
+
+task createFolders(description: 'Creates the source folders if they do not exist.') doLast {
+    sourceSets*.allSource*.srcDirs*.each { File srcDir ->
+        if (!srcDir.isDirectory()) {
+            println "Creating source folder: ${srcDir}"
+            srcDir.mkdirs()
+        }
+    }
+}

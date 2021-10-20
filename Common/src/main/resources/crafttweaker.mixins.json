@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "com.example.examplemod.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "crafttweaker.refmap.json"
+}
