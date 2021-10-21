@@ -42,7 +42,7 @@ public class ExpandLivingDropsEvent {
     }
 
     /**
-     * Sets items will be dropped.
+     * Sets which items will be dropped.
      */
     @ZenCodeType.Setter("drops")
     public static void setDrops(LivingDropsEvent internal, List<IItemStack> drops) {
