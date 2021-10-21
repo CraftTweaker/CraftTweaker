@@ -12,8 +12,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.*;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.server.ServerWorld;
@@ -519,6 +519,26 @@ public class ExpandWorld {
     public static Random getRandom(World internal) {
         
         return internal.rand;
+    }
+
+    /**
+     * Creates a ray trace from one vector to the other vector, which will stop at a block or a fluid.
+     * @param startVec a vector which describes the starting point
+     * @param endVec a vector which describes the direction and length we are searching in
+     * @param blockMode the type of block that the ray trace would stop at.
+     * @param fluidMode the type of fluid that the ray trace would stop at.
+     * @param entity the entity for selection context
+     * @return a {@link BlockRayTraceResult} holding the result, the position and facing the ray stops.
+     *
+     * @docParam startVec new MCVector3d(0.0, 0.0, 0.0)
+     * @docParam endVec new MCVector3d(1.1, 4.5, 1.4)
+     * @docParam blockMode RayTraceBlockMode.OUTLINE
+     * @docParam fluidMode RayTraceFluidMode.NONE
+     * @docParam entity entity
+     */
+    @ZenCodeType.Method
+    public static BlockRayTraceResult rayTraceBlocks(World internal, Vector3d startVec, Vector3d endVec, RayTraceContext.BlockMode blockMode, RayTraceContext.FluidMode fluidMode, @ZenCodeType.Optional Entity entity) {
+        return internal.rayTraceBlocks(new RayTraceContext(startVec, endVec, blockMode, fluidMode, entity));
     }
     
 }
