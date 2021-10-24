@@ -571,11 +571,11 @@ public class Commands {
             public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 if(sender.getCommandSenderEntity() instanceof EntityPlayer) {
                     MCPlayer player = new MCPlayer((EntityPlayer) sender.getCommandSenderEntity());
-                    player.openBrowser("http://docs.blamejared.com/en/");
-                    sender.sendMessage(getClickableBrowserLinkText("http://docs.blamejared.com/en/", "http://docs.blamejared.com/en/"));
+                    player.openBrowser("https://docs.blamejared.com/");
+                    sender.sendMessage(getClickableBrowserLinkText("https://docs.blamejared.com/", "https://docs.blamejared.com/"));
                     
                 } else {
-                    sender.sendMessage(new TextComponentString("http://docs.blamejared.com/en/"));
+                    sender.sendMessage(new TextComponentString("https://docs.blamejared.com/"));
                 }
             }
         });
