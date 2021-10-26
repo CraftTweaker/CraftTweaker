@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.impl.util.text.MCTextFormatting;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.fluid.Fluid;
@@ -53,6 +54,13 @@ public class MCGame {
         
         return ForgeRegistries.POTIONS.getValues();
     }
+    
+    @ZenCodeType.Getter("enchantments")
+    public Collection<Enchantment> getEnchantments() {
+        
+        return ForgeRegistries.ENCHANTMENTS.getValues();
+    }
+    
     
     @ZenCodeType.Getter("entityTypes")
     public Collection<MCEntityType> getMCEntityTypes() {
