@@ -15,6 +15,8 @@ import net.minecraft.world.World;
 import java.util.Objects;
 import java.util.Optional;
 
+import javax.annotation.Nullable;
+
 /**
  * @author Stan
  */
@@ -49,15 +51,60 @@ public class MCBlockDefinition implements IBlockDefinition {
     public void setLightOpacity(int lightOpacity) {
         block.setLightOpacity(lightOpacity);
     }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public float getLightOpacity() {
+        return block.getLightOpacity(block.getDefaultState());
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public float getLightOpacity(IBlockState state) {
+        return block.getLightOpacity(CraftTweakerMC.getBlockState(state));
+    }
+
+    @Override
+    public float getLightOpacity(IBlockState state, IWorld world, IBlockPos pos) {
+        return block.getLightOpacity(CraftTweakerMC.getBlockState(state), CraftTweakerMC.getWorld(world), CraftTweakerMC.getBlockPos(pos));
+    }
     
     @Override
     public void setLightLevel(float lightLevel) {
         block.setLightLevel(lightLevel);
     }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public float getLightLevel() {
+        return block.getLightValue(block.getDefaultState());
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public float getLightLevel(IBlockState state) {
+        return block.getLightValue(CraftTweakerMC.getBlockState(state));
+    }
+
+    @Override
+    public float getLightLevel(IBlockState state, IWorld world, IBlockPos pos) {
+        return block.getLightValue(CraftTweakerMC.getBlockState(state), CraftTweakerMC.getWorld(world), CraftTweakerMC.getBlockPos(pos));
+    }
     
     @Override
     public void setResistance(float resistance) {
-        block.setResistance(resistance);
+        block.setResistance(resistance * 5.0F / 3.0F); // Normalize resistance to accord with getter
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public float getResistance() {
+        return block.getExplosionResistance(null);
+    }
+
+    @Override
+    public float getResistance(IWorld world, IBlockPos pos, @Nullable IEntity entity, @Nullable IExplosion explosion) {
+        return block.getExplosionResistance(CraftTweakerMC.getWorld(world), CraftTweakerMC.getBlockPos(pos), CraftTweakerMC.getEntity(entity), CraftTweakerMC.getExplosion(explosion));
     }
     
     @Override
@@ -91,7 +138,7 @@ public class MCBlockDefinition implements IBlockDefinition {
     }
 
     @Override
-    public void setHarvestLevel(String toolClass, int level, IBlockState state) {
+    public void setHarvestLevel(String toolClass, int level, @Nullable IBlockState state) {
         if (state == null) {
             block.setHarvestLevel(toolClass, level);
         } else {

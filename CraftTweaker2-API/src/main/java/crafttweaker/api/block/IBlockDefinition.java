@@ -26,12 +26,69 @@ public interface IBlockDefinition {
     
     @ZenSetter("lightOpacity")
     void setLightOpacity(int lightOpacity);
+
+    @ZenGetter("lightLevel")
+    @ZenMethod
+    default float getLightOpacity() {
+        CraftTweakerAPI.logError(
+                "Class " + this.getClass().getCanonicalName() + " doesn't override IBlockDefinition::getLightOpacity()");
+        return 0;
+    }
+
+    @ZenMethod
+    default float getLightOpacity(IBlockState state) {
+        CraftTweakerAPI.logError("Class " + this.getClass().getCanonicalName()
+                + " doesn't override IBlockDefinition::getLightOpacity(state)");
+        return 0;
+    }
+
+    @ZenMethod
+    default float getLightOpacity(IBlockState state, IWorld world, IBlockPos pos) {
+        CraftTweakerAPI.logError("Class " + this.getClass().getCanonicalName()
+                + " doesn't override IBlockDefinition::getLightOpacity(state, world, pos)");
+        return 0;
+    }
     
     @ZenSetter("lightLevel")
     void setLightLevel(float lightLevel);
+
+    @ZenGetter("lightLevel")
+    @ZenMethod
+    default float getLightLevel() {
+        CraftTweakerAPI.logError(
+                "Class " + this.getClass().getCanonicalName() + " doesn't override IBlockDefinition::getLightLevel()");
+        return 0;
+    }
+
+    @ZenMethod
+    default float getLightLevel(IBlockState state) {
+        CraftTweakerAPI.logError("Class " + this.getClass().getCanonicalName()
+                + " doesn't override IBlockDefinition::getLightLevel(state)");
+        return 0;
+    }
+
+    @ZenMethod
+    default float getLightLevel(IBlockState state, IWorld world, IBlockPos pos) {
+        CraftTweakerAPI.logError("Class " + this.getClass().getCanonicalName()
+                + " doesn't override IBlockDefinition::getLightLevel(state, world, pos)");
+        return 0;
+    }
     
     @ZenSetter("resistance")
     void setResistance(float resistance);
+
+    @ZenGetter("resistance")
+    @ZenMethod
+    default float getResistance() {
+        CraftTweakerAPI.logError("Class " + this.getClass().getCanonicalName() + " doesn't override IBlockDefinition::getResistance()");
+        return 0;
+    }
+
+    @ZenMethod
+    default float getResistance(IWorld world, IBlockPos pos, IEntity entity, IExplosion explosion) {
+        CraftTweakerAPI.logError("Class " + this.getClass().getCanonicalName() + " doesn't override IBlockDefinition::getResistance(world, pos, entity, explosion)");
+        return 0;
+    }
     
     @ZenSetter("hardness")
     void setHardness(float hardness);
