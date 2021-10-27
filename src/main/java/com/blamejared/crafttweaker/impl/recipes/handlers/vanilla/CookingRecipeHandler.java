@@ -70,7 +70,7 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
     }
     
     @Override
-    public <U extends IRecipe<?>> boolean isThereConflictBetween(final IRecipeManager manager, final AbstractCookingRecipe firstRecipe, final U secondRecipe) {
+    public <U extends IRecipe<?>> boolean doesConflict(final IRecipeManager manager, final AbstractCookingRecipe firstRecipe, final U secondRecipe) {
         
         return IngredientHelper.canConflict(firstRecipe.getIngredients().get(0), secondRecipe.getIngredients().get(0));
     }

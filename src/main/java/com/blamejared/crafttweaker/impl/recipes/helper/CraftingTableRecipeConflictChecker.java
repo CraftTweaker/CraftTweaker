@@ -31,7 +31,7 @@ public final class CraftingTableRecipeConflictChecker {
     private static <T extends IRecipe<?>> boolean redirect(final IRecipeManager manager, final T second, final IRecipe<?> first) {
         
         // We need another lookup because of the wildcard capture
-        return CraftTweakerRegistry.getHandlerFor(second).isThereConflictBetween(manager, second, first);
+        return CraftTweakerRegistry.getHandlerFor(second).doesConflict(manager, second, first);
     }
     
     private static boolean checkConflictsMaybeDifferent(final IRecipe<?> first, final IRecipe<?> second) {

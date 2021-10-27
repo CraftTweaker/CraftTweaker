@@ -274,7 +274,7 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
      *
      * @implNote By default, this method returns {@code false}.
      */
-    default <U extends IRecipe<?>> boolean isThereConflictBetween(final IRecipeManager manager, final T firstRecipe, final U secondRecipe) {
+    default <U extends IRecipe<?>> boolean doesConflict(final IRecipeManager manager, final T firstRecipe, final U secondRecipe) {
         
         return false;
     }

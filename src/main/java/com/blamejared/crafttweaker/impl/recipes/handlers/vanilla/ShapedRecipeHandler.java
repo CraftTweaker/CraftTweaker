@@ -54,7 +54,7 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
     }
     
     @Override
-    public <U extends IRecipe<?>> boolean isThereConflictBetween(final IRecipeManager manager, final ShapedRecipe firstRecipe, final U secondRecipe) {
+    public <U extends IRecipe<?>> boolean doesConflict(final IRecipeManager manager, final ShapedRecipe firstRecipe, final U secondRecipe) {
         
         return CraftingTableRecipeConflictChecker.checkConflicts(manager, firstRecipe, secondRecipe);
     }

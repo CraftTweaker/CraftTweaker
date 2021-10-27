@@ -46,7 +46,7 @@ public final class SmithingRecipeHandler implements IRecipeHandler<SmithingRecip
     }
     
     @Override
-    public <U extends IRecipe<?>> boolean isThereConflictBetween(final IRecipeManager manager, final SmithingRecipe firstRecipe, final U secondRecipe) {
+    public <U extends IRecipe<?>> boolean doesConflict(final IRecipeManager manager, final SmithingRecipe firstRecipe, final U secondRecipe) {
         
         if (!(secondRecipe instanceof SmithingRecipe)) {
             
@@ -66,7 +66,7 @@ public final class SmithingRecipeHandler implements IRecipeHandler<SmithingRecip
     
     private <T extends IRecipe<?>> boolean redirectNonVanilla(final IRecipeManager manager, final T second, final SmithingRecipe first) {
         
-        return CraftTweakerRegistry.getHandlerFor(second).isThereConflictBetween(manager, second, first);
+        return CraftTweakerRegistry.getHandlerFor(second).doesConflict(manager, second, first);
     }
     
 }
