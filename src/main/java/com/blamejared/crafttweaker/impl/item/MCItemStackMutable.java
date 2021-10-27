@@ -138,7 +138,7 @@ public class MCItemStackMutable implements IItemStack {
     @Override
     public String getCommandString() {
         
-        return ItemStackHelper.getCommandString(this.getInternal());
+        return ItemStackHelper.getCommandString(this.getInternal(), true);
     }
     
     @Override

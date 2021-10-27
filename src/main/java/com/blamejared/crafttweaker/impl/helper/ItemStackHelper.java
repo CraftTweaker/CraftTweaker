@@ -8,18 +8,26 @@ import net.minecraft.nbt.CompoundNBT;
 public final class ItemStackHelper {
     
     public static String getCommandString(final ItemStack stack) {
+        
+        return getCommandString(stack, false);
+    }
+    
+    public static String getCommandString(final ItemStack stack, final boolean mutable) {
     
         final StringBuilder sb = new StringBuilder("<item:");
         sb.append(stack.getItem().getRegistryName());
         sb.append('>');
     
         if(stack.getTag() != null) {
+            
             MapData data = (MapData) NBTConverter.convert(stack.getTag()).copyInternal();
             //Damage is special case, if we have more special cases we can handle them here.
             if(stack.getItem().isDamageable()) {
+                
                 data.remove("Damage");
             }
             if(!data.isEmpty()) {
+                
                 sb.append(".withTag(");
                 sb.append(data.asString());
                 sb.append(')');
@@ -27,14 +35,20 @@ public final class ItemStackHelper {
         }
     
         if(stack.getDamage() > 0) {
+            
             sb.append(".withDamage(").append(stack.getDamage()).append(')');
         }
     
-        if(!stack.isEmpty()) {
-            if(stack.getCount() != 1) {
-                sb.append(" * ").append(stack.getCount());
-            }
+        if(!stack.isEmpty() && stack.getCount() != 1) {
+            
+            sb.append(" * ").append(stack.getCount());
         }
+        
+        if (mutable) {
+            
+            sb.append(".mutable()");
+        }
+        
         return sb.toString();
     }
     

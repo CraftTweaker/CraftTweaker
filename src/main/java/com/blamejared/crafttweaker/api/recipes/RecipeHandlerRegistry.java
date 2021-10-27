@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.InstantiationUtil;
+import com.blamejared.crafttweaker.impl.helper.ItemStackHelper;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import net.minecraft.item.crafting.IRecipe;
 import org.openzen.zenscript.codemodel.Modifiers;
@@ -28,7 +29,7 @@ public final class RecipeHandlerRegistry {
             return String.format(
                     "~~ Recipe name: %s, Outputs: %s, Inputs: [%s], Recipe Class: %s, Recipe Serializer: %s ~~",
                     recipe.getId(),
-                    new MCItemStackMutable(recipe.getRecipeOutput()).getCommandString(),
+                    ItemStackHelper.getCommandString(recipe.getRecipeOutput()),
                     recipe.getIngredients()
                             .stream()
                             .map(IIngredient::fromIngredient)
