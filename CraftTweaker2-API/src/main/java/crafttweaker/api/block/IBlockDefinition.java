@@ -27,7 +27,7 @@ public interface IBlockDefinition {
     @ZenSetter("lightOpacity")
     void setLightOpacity(int lightOpacity);
 
-    @ZenGetter("lightLevel")
+    @ZenGetter("lightOpacity")
     @ZenMethod
     default float getLightOpacity() {
         CraftTweakerAPI.logError(
