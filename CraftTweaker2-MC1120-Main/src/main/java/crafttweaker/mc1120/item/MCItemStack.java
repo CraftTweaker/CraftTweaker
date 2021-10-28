@@ -375,7 +375,7 @@ public class MCItemStack implements IItemStack {
         if(stack.hasTagCompound() && matchTagExact) {
             return matchesExact(item);
         }
-        return !internal.isEmpty() && !stack.isEmpty() && internal.getItem() == stack.getItem() && (wildcardSize || internal.getCount() >= stack.getCount()) && (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == internal.getItemDamage() || (!stack.getHasSubtypes() && !stack.getItem().isDamageable()));
+        return !internal.isEmpty() && !stack.isEmpty() && internal.getItem() == stack.getItem() && (wildcardSize || internal.getCount() >= stack.getCount()) && (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE || internal.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == internal.getItemDamage() || (!stack.getHasSubtypes() && !stack.getItem().isDamageable()));
     }
     
     @Override
@@ -391,7 +391,7 @@ public class MCItemStack implements IItemStack {
             return false;
         }
         
-        boolean itemMatches = stack.getItem() == internal.getItem() && (internal.getMetadata() == OreDictionary.WILDCARD_VALUE || stack.getMetadata() == internal.getMetadata());
+        boolean itemMatches = stack.getItem() == internal.getItem() && (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE || internal.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getMetadata() == internal.getMetadata());
         
         if(itemMatches) {
     
