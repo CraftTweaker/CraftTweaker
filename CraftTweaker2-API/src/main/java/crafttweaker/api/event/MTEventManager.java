@@ -16,6 +16,7 @@ public class MTEventManager implements IEventManager {
     private final EventList<PlayerOpenContainerEvent> elPlayerOpenContainer = new EventList<>();
     private final EventList<PlayerPickupXpEvent> elPlayerPickupXp = new EventList<>();
     private final EventList<PlayerSleepInBedEvent> elPlayerSleepInBed = new EventList<>();
+    private final EventList<PlayerWakeUpEvent> elPlayerWakeUp = new EventList<>();
     private final EventList<PlayerUseHoeEvent> elPlayerUseHoe = new EventList<>();
     private final EventList<EntityLivingUseItemEvent.Start> elEntityLivingUseItemStart = new EventList<>();
     private final EventList<EntityLivingUseItemEvent.Stop> elEntityLivingUseItemStop = new EventList<>();
@@ -71,6 +72,7 @@ public class MTEventManager implements IEventManager {
         elPlayerOpenContainer.clear();
         elPlayerPickupXp.clear();
         elPlayerSleepInBed.clear();
+        elPlayerWakeUp.clear();
         elPlayerUseHoe.clear();
         elEntityLivingUseItemStart.clear();
         elEntityLivingUseItemStop.clear();
@@ -449,6 +451,24 @@ public class MTEventManager implements IEventManager {
 
     public void publishPlayerSleepInBed(PlayerSleepInBedEvent event) {
         elPlayerSleepInBed.publish(event);
+    }
+
+    // #############################
+    // ### PlayerWakeUpEvent ###
+    // #############################
+
+
+    @Override
+    public IEventHandle onPlayerWakeUp(IEventHandler<PlayerWakeUpEvent> ev) {
+        return elPlayerWakeUp.add(ev);
+    }
+
+    public boolean hasPlayerWakeUp() {
+        return elPlayerWakeUp.hasHandlers();
+    }
+
+    public void publishPlayerWakeUp(PlayerWakeUpEvent event) {
+        elPlayerWakeUp.publish(event);
     }
 
     // #########################
