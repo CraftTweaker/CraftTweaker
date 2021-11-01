@@ -71,6 +71,9 @@ public interface IEventManager {
     IEventHandle onPlayerSleepInBed(IEventHandler<PlayerSleepInBedEvent> ev);
 
     @ZenMethod
+    IEventHandle onPlayerWakeUp(IEventHandler<PlayerWakeUpEvent> ev);
+
+    @ZenMethod
     IEventHandle onPlayerUseHoe(IEventHandler<PlayerUseHoeEvent> ev);
 
     @ZenMethod

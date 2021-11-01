@@ -212,6 +212,12 @@ public class CommonEventHandler {
     }
     
     @SubscribeEvent
+    public void onPlayerWakeUp(PlayerWakeUpEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasPlayerWakeUp())
+            CrafttweakerImplementationAPI.events.publishPlayerWakeUp(new MCPlayerWakeUpEvent(ev));
+    }
+    
+    @SubscribeEvent
     public void onPlayerOpenContainer(PlayerContainerEvent.Open ev) {
         if (CrafttweakerImplementationAPI.events.hasPlayerOpenContainer())
             CrafttweakerImplementationAPI.events.publishPlayerOpenContainer(new MCPlayerOpenContainerEvent(ev));
