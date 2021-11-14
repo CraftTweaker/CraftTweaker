@@ -7,6 +7,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionBrewing;
 import net.minecraftforge.common.brewing.IBrewingRecipe;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.lang.reflect.Field;
@@ -30,6 +31,12 @@ public abstract class ActionBrewingBase implements IUndoableAction {
         } catch(Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    @Override
+    public boolean shouldApplyOn(LogicalSide side) {
+        
+        return shouldApplySingletons();
     }
     
     protected Ingredient getItemReagent(PotionBrewing.MixPredicate<Potion> mixInstance) {
