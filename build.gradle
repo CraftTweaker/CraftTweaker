@@ -12,11 +12,10 @@ buildscript {
         maven {
             url "https://plugins.gradle.org/m2/"
         }
-        jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
         classpath group: 'com.blamejared', name: 'ModTemplate', version: '1.+', changing: true
     }
@@ -150,20 +149,30 @@ modTemplate {
 def zenCodeDeps = [':CodeFormatter', ':CodeFormatterShared', ':JavaIntegration', ':JavaAnnotations', ':JavaBytecodeCompiler', ':JavaShared', ':Validator', ':Parser', ':CodeModel', ':Shared']
 def zenCodeTestDeps = [':ScriptingExample']
 
+configurations {
+    library
+    implementation.extendsFrom library
+}
+
+minecraft.runs.all {
+    lazyToken('minecraft_classpath') {
+        configurations.library.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
+    }
+}
 dependencies {
-    compile project(":Crafttweaker_Annotations")
+    library project(":Crafttweaker_Annotations")
     annotationProcessor project(":Crafttweaker_Annotation_Processors")
 
-    zenCodeDeps.collect { compile project(it) }
+    zenCodeDeps.collect { implementation project(it) }
 
     minecraft 'net.minecraftforge:forge:1.16.5-36.2.0'
-    compile fg.deobf("mezz.jei:jei-1.16.4:7.6.1.65")
+    implementation fg.deobf("mezz.jei:jei-1.16.4:7.6.1.65")
 
     testImplementation group: "org.junit.jupiter", name: "junit-jupiter", version: "5.6.2"
     testImplementation group: "org.junit.jupiter", name: "junit-jupiter", version: "5.6.2"
 
-    zenCodeTestDeps.collect { testCompile(project(it).sourceSets.test.output) }
-    testCompile group: "org.assertj", name: "assertj-core", version: "3.19.0"
+    zenCodeTestDeps.collect { testImplementation(project(it).sourceSets.test.output) }
+    testImplementation group: "org.assertj", name: "assertj-core", version: "3.19.0"
 }
 
 test {
@@ -191,7 +200,7 @@ jar {
                 "Specification-Vendor"    : "CraftTweaker",
                 "Specification-Version"   : "1",
                 "Implementation-Title"    : project.name,
-                "Implementation-Version"  : "${version}",
+                "Implementation-Version"  : "${archiveVersion}",
                 "Implementation-Vendor"   : "CraftTweaker",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
@@ -203,7 +212,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
     from project(":Crafttweaker_Annotations").sourceSets.main.allSource
     from files(zenCodeDeps.collect { project(it).sourceSets.main.allSource })
-    classifier = 'sources'
+    archiveClassifier.set("sources")
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -211,7 +220,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
     from project(":Crafttweaker_Annotations").javadoc.destinationDir
     from files(zenCodeDeps.collect { project(it).javadoc.destinationDir })
-    classifier = 'javadoc'
+    archiveClassifier.set("javadoc")
 }
 
 task deobfJar(type: Jar) {
@@ -219,7 +228,7 @@ task deobfJar(type: Jar) {
     from sourceSets.main.output
     from project(":Crafttweaker_Annotations").sourceSets.main.output
     from files(zenCodeDeps.collect { project(it).sourceSets.main.output })
-    classifier = "deobf"
+    archiveClassifier.set("deobf")
 }
 
 artifacts {
@@ -241,17 +250,6 @@ publishing {
             artifactId project.archivesBaseName
             version project.version
             from components.java
-
-            // Allows the maven pom file to be modified.
-            pom.withXml {
-
-                // Go through all the dependencies.
-                asNode().dependencies.dependency.each { dep ->
-
-                    println 'Surpressing artifact ' + dep.artifactId.last().value().last() + ' from maven dependencies.'
-                    assert dep.parent().remove(dep)
-                }
-            }
 
             artifact sourcesJar {
                 classifier 'sources'
