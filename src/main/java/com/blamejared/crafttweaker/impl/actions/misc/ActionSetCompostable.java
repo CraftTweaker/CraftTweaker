@@ -15,7 +15,7 @@ public class ActionSetCompostable implements IUndoableAction {
         
         this.stack = stack;
         this.newValue = newValue;
-        this.oldValue = ComposterBlock.CHANCES.getOrDefault(stack.getInternal().getItem(), 0);
+        this.oldValue = ComposterBlock.CHANCES.getOrDefault(stack.getInternal().getItem(), -1);
     }
     
     @Override
@@ -45,7 +45,7 @@ public class ActionSetCompostable implements IUndoableAction {
     @Override
     public boolean shouldApplyOn(LogicalSide side) {
         
-        return true;
+        return shouldApplySingletons();
     }
     
 }
