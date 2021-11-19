@@ -19,27 +19,35 @@ public class ActionSetCompostable implements IUndoableAction {
     }
     
     @Override
-    public void undo() {
-        
-        ComposterBlock.CHANCES.put(stack.getInternal().getItem(), oldValue);
-    }
-    
-    @Override
-    public String describeUndo() {
-        
-        return "Undoing setting Composter value of: " + stack.getCommandString() + ", to: " + newValue + ", reverting to: " + oldValue;
-    }
-    
-    @Override
     public void apply() {
         
-        ComposterBlock.CHANCES.put(stack.getInternal().getItem(), newValue);
+        if(newValue <= 0) {
+            ComposterBlock.CHANCES.remove(stack.getInternal().getItem());
+        } else {
+            ComposterBlock.CHANCES.put(stack.getInternal().getItem(), newValue);
+        }
     }
     
     @Override
     public String describe() {
         
         return "Setting Composter value of: " + stack.getCommandString() + ", to: " + newValue + ", from: " + oldValue;
+    }
+    
+    @Override
+    public void undo() {
+        
+        if(oldValue <= 0) {
+            ComposterBlock.CHANCES.remove(stack.getInternal().getItem());
+        } else {
+            ComposterBlock.CHANCES.put(stack.getInternal().getItem(), oldValue);
+        }
+    }
+    
+    @Override
+    public String describeUndo() {
+        
+        return "Undoing setting Composter value of: " + stack.getCommandString() + ", to: " + newValue + ", reverting to: " + oldValue;
     }
     
     @Override
