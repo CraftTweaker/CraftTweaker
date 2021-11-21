@@ -9,13 +9,18 @@ public final class ArrayUtil {
     
     }
     
-    public static <T> T[] mirror(T[] array) {
+    public static <T> T[] copy(T[] array) {
+        
+        return Arrays.copyOf(array, array.length);
+    }
     
+    public static <T> T[] mirror(T[] array) {
+        
         if(array == null) {
             return null;
         }
         
-        final T[] out = Arrays.copyOf(array, array.length);
+        final T[] out = copy(array);
         
         //We only need half since we go from both ends in the loop
         final int upperIndex = array.length / 2;

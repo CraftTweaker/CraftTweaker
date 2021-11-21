@@ -4,9 +4,9 @@ import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipes.MirrorAxis;
+import com.blamejared.crafttweaker.api.util.ArrayUtil;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
-import com.mojang.datafixers.util.Pair;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
@@ -29,6 +29,9 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
     private static final IntPair INVALID = new IntPair(-1, -1);
     
     private final IIngredient[][] ingredients;
+    
+    private final IIngredient[][][] mirroredIngredients;
+    
     private final IItemStack output;
     /**
      * Only kept so that addons do not break.
@@ -58,6 +61,8 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
         this.function = function;
         this.height = ingredients.length;
         this.width = Arrays.stream(ingredients).mapToInt(row -> row.length).max().orElse(0);
+        this.mirroredIngredients = new IIngredient[MirrorAxis.values().length][][];
+        initMirroredIngredients();
     }
     
     public CTRecipeShaped(String name, IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable IRecipeManager.RecipeFunctionMatrix function) {
@@ -70,12 +75,63 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
         this.function = function;
         this.height = ingredients.length;
         this.width = Arrays.stream(ingredients).mapToInt(row -> row.length).max().orElse(0);
+        this.mirroredIngredients = new IIngredient[MirrorAxis.values().length][][];
+        initMirroredIngredients();
+    }
+    
+    private void initMirroredIngredients() {
+        
+        this.mirroredIngredients[MirrorAxis.NONE.ordinal()] = ingredients;
+        if(mirrorAxis.isMirrored()) {
+            if(mirrorAxis.isVertical()) {
+                mirroredIngredients[MirrorAxis.VERTICAL.ordinal()] = ArrayUtil.mirror(ingredients);
+            }
+            if(mirrorAxis.isHorizontal()) {
+                IIngredient[][] workingIngredients = ArrayUtil.copy(this.ingredients);
+                for(int i = 0; i < workingIngredients.length; i++) {
+                    workingIngredients[i] = ArrayUtil.mirror(workingIngredients[i]);
+                }
+                mirroredIngredients[MirrorAxis.HORIZONTAL.ordinal()] = workingIngredients;
+            }
+            if(mirrorAxis.isDiagonal()) {
+                IIngredient[][] workingIngredients = ArrayUtil.mirror(this.ingredients);
+                for(int i = 0; i < workingIngredients.length; i++) {
+                    workingIngredients[i] = ArrayUtil.mirror(workingIngredients[i]);
+                }
+                mirroredIngredients[MirrorAxis.DIAGONAL.ordinal()] = workingIngredients;
+            }
+        }
     }
     
     
     private IntPair calculateOffset(CraftingInventory inv) {
         
-        return calculateOffset(this.ingredients, inv);
+        IntPair offset = calculateOffset(mirroredIngredients[MirrorAxis.NONE.ordinal()], inv);
+        if(offset != INVALID || !mirrorAxis.isMirrored()) {
+            return offset;
+        }
+        // These cannot be `else if` due to MirrorAxis.ALL
+        if(mirrorAxis.isVertical()) {
+            offset = calculateOffset(mirroredIngredients[MirrorAxis.VERTICAL.ordinal()], inv);
+            if(offset != INVALID) {
+                return offset;
+            }
+        }
+        if(mirrorAxis.isHorizontal()) {
+            offset = calculateOffset(mirroredIngredients[MirrorAxis.HORIZONTAL.ordinal()], inv);
+            if(offset != INVALID) {
+                return offset;
+            }
+        }
+        if(mirrorAxis.isDiagonal()) {
+            offset = calculateOffset(mirroredIngredients[MirrorAxis.DIAGONAL.ordinal()], inv);
+            if(offset != INVALID) {
+                return offset;
+            }
+        }
+        
+        return INVALID;
+        
     }
     
     private IntPair calculateOffset(IIngredient[][] test, CraftingInventory inv) {
@@ -83,31 +139,28 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
         for(int rowOffset = 0; rowOffset <= inv.getHeight() - test.length; rowOffset++) {
             offset:
             for(int columnOffset = 0; columnOffset <= inv.getWidth() - test[0].length; columnOffset++) {
-                for(Pair<Integer, Integer>[][] transformation : mirrorAxis.getTransformations()) {
-                    final boolean[] visited = new boolean[inv.getSizeInventory()];
-                    
-                    for(int rowIndex = 0; rowIndex < test.length; rowIndex++) {
-                        final IIngredient[] row = test[rowIndex];
-                        for(int columnIndex = 0; columnIndex < row.length; columnIndex++) {
-                            Pair<Integer, Integer> coordinates = transformation[rowIndex][columnIndex];
-                            final IIngredient item = test[coordinates.getFirst()][coordinates.getSecond()];
-                            final int slotNumber = (rowIndex + rowOffset) * inv.getWidth() + columnIndex + columnOffset;
-                            final ItemStack stackInSlot = inv.getStackInSlot(slotNumber);
-                            
-                            if(item == null && !stackInSlot.isEmpty() || item != null && !item.matches(new MCItemStackMutable(stackInSlot))) {
-                                continue offset;
-                            }
-                            visited[slotNumber] = true;
-                        }
-                    }
-                    
-                    for(int i = 0; i < visited.length; i++) {
-                        if(!visited[i] && !inv.getStackInSlot(i).isEmpty()) {
+                final boolean[] visited = new boolean[inv.getSizeInventory()];
+                
+                for(int rowIndex = 0; rowIndex < test.length; rowIndex++) {
+                    final IIngredient[] row = test[rowIndex];
+                    for(int columnIndex = 0; columnIndex < row.length; columnIndex++) {
+                        final IIngredient item = row[columnIndex];
+                        final int slotNumber = (rowIndex + rowOffset) * inv.getWidth() + columnIndex + columnOffset;
+                        final ItemStack stackInSlot = inv.getStackInSlot(slotNumber);
+                        
+                        if(item == null && !stackInSlot.isEmpty() || item != null && !item.matches(new MCItemStackMutable(stackInSlot))) {
                             continue offset;
                         }
+                        visited[slotNumber] = true;
                     }
-                    return new IntPair(rowOffset, columnOffset);
                 }
+                
+                for(int i = 0; i < visited.length; i++) {
+                    if(!visited[i] && !inv.getStackInSlot(i).isEmpty()) {
+                        continue offset;
+                    }
+                }
+                return new IntPair(rowOffset, columnOffset);
             }
         }
         return INVALID;
@@ -168,7 +221,35 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
     @Override
     public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv) {
         
-        return getRemainingItems(inv, calculateOffset(ingredients, inv), this.ingredients);
+        IIngredient[][] workingIngredients = mirroredIngredients[MirrorAxis.NONE.ordinal()];
+        IntPair offset = calculateOffset(workingIngredients, inv);
+        if(offset != INVALID || !mirrorAxis.isMirrored()) {
+            return getRemainingItems(inv, offset, workingIngredients);
+        }
+        
+        if(mirrorAxis.isVertical()) {
+            workingIngredients = mirroredIngredients[MirrorAxis.VERTICAL.ordinal()];
+            offset = calculateOffset(workingIngredients, inv);
+            if(offset != INVALID) {
+                return getRemainingItems(inv, offset, workingIngredients);
+            }
+        }
+        
+        if(mirrorAxis.isHorizontal()) {
+            workingIngredients = mirroredIngredients[MirrorAxis.HORIZONTAL.ordinal()];
+            offset = calculateOffset(workingIngredients, inv);
+            if(offset != INVALID) {
+                return getRemainingItems(inv, offset, workingIngredients);
+            }
+        }
+        
+        if(mirrorAxis.isDiagonal()) {
+            workingIngredients = mirroredIngredients[MirrorAxis.DIAGONAL.ordinal()];
+            offset = calculateOffset(workingIngredients, inv);
+            // this should fall through to the call below
+        }
+        
+        return getRemainingItems(inv, offset, workingIngredients);
     }
     
     public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv, IntPair offsetPair, IIngredient[][] ingredients) {
