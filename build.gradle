@@ -17,7 +17,7 @@ buildscript {
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
-        classpath group: 'com.blamejared', name: 'ModTemplate', version: '1.+', changing: true
+        classpath group: 'com.blamejared', name: 'ModTemplate', version: '2.+', changing: true
     }
 }
 apply plugin: 'com.blamejared.modtemplate'
@@ -27,6 +27,7 @@ apply plugin: 'idea'
 apply plugin: 'maven-publish'
 apply plugin: "com.matthewprenger.cursegradle"
 
+import com.blamejared.modtemplate.Utils
 
 //apply from: rootProject.file('common.gradle')
 
@@ -34,7 +35,7 @@ subprojects {
     apply from: rootProject.file('common.gradle')
 }
 
-version = '7.1.2'
+version = Utils.updatingVersion('7.1.2')
 
 group = 'com.blamejared.crafttweaker'
 archivesBaseName = 'CraftTweaker-1.16.5'
