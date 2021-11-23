@@ -7,6 +7,8 @@ import com.blamejared.crafttweaker.impl_native.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.regex.Pattern;
+
 /**
  * Builder for a 'LootTableIdRegex' loot condition.
  *
@@ -22,7 +24,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.LootTableIdRegex")
 @Document("vanilla/api/loot/conditions/vanilla/LootTableIdRegex")
 public final class LootTableIdRegexConditionTypeBuilder implements ILootConditionTypeBuilder {
-    private String regex;
+    private Pattern regex;
 
     LootTableIdRegexConditionTypeBuilder() {}
 
@@ -37,7 +39,7 @@ public final class LootTableIdRegexConditionTypeBuilder implements ILootConditio
      */
     @ZenCodeType.Method
     public LootTableIdRegexConditionTypeBuilder withRegex(String regex) {
-        this.regex = regex;
+        this.regex = Pattern.compile(regex);
         return this;
     }
 
@@ -46,6 +48,6 @@ public final class LootTableIdRegexConditionTypeBuilder implements ILootConditio
         if(this.regex == null) {
             throw new IllegalStateException("Unable to have a 'LootTableIdRegex' condition without a regex");
         }
-        return context -> ExpandLootContext.getLootTableId(context).toString().matches(regex);
+        return context -> regex.matcher(ExpandLootContext.getLootTableId(context).toString()).matches();
     }
 }
