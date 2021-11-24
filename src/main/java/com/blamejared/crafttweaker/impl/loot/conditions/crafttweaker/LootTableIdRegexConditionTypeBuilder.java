@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.impl.loot.conditions.vanilla;
+package com.blamejared.crafttweaker.impl.loot.conditions.crafttweaker;
 
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.loot.conditions.ILootCondition;
@@ -21,8 +21,8 @@ import java.util.regex.Pattern;
  * The 'LootTableIdRegex' condition requires a regex to be built.
  */
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.loot.conditions.vanilla.LootTableIdRegex")
-@Document("vanilla/api/loot/conditions/vanilla/LootTableIdRegex")
+@ZenCodeType.Name("crafttweaker.api.loot.conditions.crafttweaker.LootTableIdRegex")
+@Document("vanilla/api/loot/conditions/crafttweaker/LootTableIdRegex")
 public final class LootTableIdRegexConditionTypeBuilder implements ILootConditionTypeBuilder {
     private Pattern regex;
 
