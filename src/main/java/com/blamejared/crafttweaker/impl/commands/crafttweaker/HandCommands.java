@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.impl.commands.CommandCallerPlayer;
 import com.blamejared.crafttweaker.impl.commands.CommandUtilities;
 import com.blamejared.crafttweaker.impl.data.MapData;
 import com.blamejared.crafttweaker.impl.fluid.MCFluidStackMutable;
+import com.blamejared.crafttweaker.impl.helper.ItemStackHelper;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManager;
@@ -161,7 +162,7 @@ public final class HandCommands {
     // <editor-fold desc="CT Functions">
     private static void sendBasicItemInformation(final PlayerEntity player, final ItemStack target) {
         
-        final String output = new MCItemStackMutable(target).getCommandString();
+        final String output = ItemStackHelper.getCommandString(target);
         sendCopyingHand(player, "Item", output);
     }
     

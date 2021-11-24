@@ -6,7 +6,9 @@ import com.blamejared.crafttweaker.api.recipes.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipes.IReplacementRule;
 import com.blamejared.crafttweaker.api.recipes.ReplacementHandlerHelper;
 import com.blamejared.crafttweaker.api.util.StringUtils;
-import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
+import com.blamejared.crafttweaker.impl.helper.ItemStackHelper;
+import com.blamejared.crafttweaker.impl.recipes.helper.CraftingTableRecipeConflictChecker;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapelessRecipe;
 import net.minecraft.util.ResourceLocation;
@@ -25,7 +27,7 @@ public final class ShapelessRecipeHandler implements IRecipeHandler<ShapelessRec
         return String.format(
                 "craftingTable.addShapeless(%s, %s, %s);",
                 StringUtils.quoteAndEscape(recipe.getId()),
-                new MCItemStackMutable(recipe.getRecipeOutput()).getCommandString(),
+                ItemStackHelper.getCommandString(recipe.getRecipeOutput()),
                 recipe.getIngredients().stream()
                         .map(IIngredient::fromIngredient)
                         .map(IIngredient::getCommandString)
@@ -45,4 +47,9 @@ public final class ShapelessRecipeHandler implements IRecipeHandler<ShapelessRec
         );
     }
     
+    @Override
+    public <U extends IRecipe<?>> boolean doesConflict(final IRecipeManager manager, final ShapelessRecipe firstRecipe, final U secondRecipe) {
+    
+        return CraftingTableRecipeConflictChecker.checkConflicts(manager, firstRecipe, secondRecipe);
+    }
 }

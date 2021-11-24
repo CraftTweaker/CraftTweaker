@@ -249,4 +249,34 @@ public interface IRecipeHandler<T extends IRecipe<?>> {
                 .getName() + "' with manager " + manager.getCommandString());
     }
     
+    /**
+     * Checks if the two recipes conflict with each other.
+     *
+     * <p>In this case, a conflict is defined as the two recipes being made in the exact same way (e.g. with the same
+     * shape and the same ingredients if the two recipes are shaped crafting table ones).</p>
+     *
+     * <p>Conflicts are also considered symmetrical in this implementation, which means that if {@code firstRecipe}
+     * conflicts with {@code secondRecipe}, the opposite is also true.</p>
+     *
+     * @param manager The recipe manager responsible for this kind of recipes.
+     * @param firstRecipe The recipe which should be checked for conflict.
+     * @param secondRecipe The other recipe which {@code firstRecipe} should be checked against. The recipe may or may
+     *                     not be of the same type of {@code firstRecipe}. See the API note section for more details.
+     * @param <U> The type of {@code secondRecipe}.
+     * @return Whether the {@code firstRecipe} conflicts with {@code secondRecipe} or not.
+     *
+     * @apiNote The reason for which {@code secondRecipe} is specified as simply {@link IRecipe} instead of as the
+     * generic parameter {@code T} is to allow more flexibility in the conflict checking. In fact, this choice allows
+     * for checking to also occur between different types of recipes (e.g. shaped vs shapeless crafting table recipes),
+     * allowing for a broader range of checking. Nevertheless, the two recipes are <strong>ensured</strong> to be of the
+     * same {@link net.minecraft.item.crafting.IRecipeType recipe type} (i.e.
+     * {@code firstRecipe.getType() == secondRecipe.getType()}).
+     *
+     * @implNote By default, this method returns {@code false}.
+     */
+    default <U extends IRecipe<?>> boolean doesConflict(final IRecipeManager manager, final T firstRecipe, final U secondRecipe) {
+        
+        return false;
+    }
+    
 }

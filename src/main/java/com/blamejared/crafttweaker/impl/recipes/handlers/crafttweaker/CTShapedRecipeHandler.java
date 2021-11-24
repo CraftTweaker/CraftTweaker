@@ -6,8 +6,9 @@ import com.blamejared.crafttweaker.api.recipes.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipes.IReplacementRule;
 import com.blamejared.crafttweaker.api.recipes.ReplacementHandlerHelper;
 import com.blamejared.crafttweaker.api.util.StringUtils;
-import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.recipes.CTRecipeShaped;
+import com.blamejared.crafttweaker.impl.recipes.helper.CraftingTableRecipeConflictChecker;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Arrays;
@@ -25,7 +26,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTRecipeShape
         return String.format(
                 "craftingTable.addShaped(%s, %s, %s%s);",
                 StringUtils.quoteAndEscape(recipe.getId()),
-                new MCItemStackMutable(recipe.getRecipeOutput()).getCommandString(),
+                recipe.getCtOutput().getCommandString(),
                 Arrays.stream(recipe.getCtIngredients())
                         .map(row -> Arrays.stream(row)
                                 .map(IIngredient::getCommandString)
@@ -51,6 +52,12 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTRecipeShape
                         recipe.getFunction()
                 )
         );
+    }
+    
+    @Override
+    public <U extends IRecipe<?>> boolean doesConflict(final IRecipeManager manager, final CTRecipeShaped firstRecipe, final U secondRecipe) {
+        
+        return CraftingTableRecipeConflictChecker.checkConflicts(manager, firstRecipe, secondRecipe);
     }
     
     private IIngredient[] flatten(final IIngredient[][] ingredients, final int width, final int height) {

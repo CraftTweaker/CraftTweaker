@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl.commands;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
+import com.blamejared.crafttweaker.impl.commands.crafttweaker.conflict.ConflictCommand;
 import com.blamejared.crafttweaker.impl.commands.crafttweaker.DumpCommands;
 import com.blamejared.crafttweaker.impl.commands.crafttweaker.HandCommands;
 import com.blamejared.crafttweaker.impl.commands.crafttweaker.HelpCommand;
@@ -37,10 +38,12 @@ public class CTCommands {
     public static void initArgumentTypes() {
         
         ArgumentTypes.register("crafttweaker:item_argument", CTItemArgument.class, new ArgumentSerializer<>(() -> CTItemArgument.INSTANCE));
+        ArgumentTypes.register("crafttweaker:recipe_type_argument", CTRecipeTypeArgument.class, new ArgumentSerializer<>(() -> CTRecipeTypeArgument.INSTANCE));
     }
     
     public static void init(CommandDispatcher<CommandSource> dispatcher) {
         
+        ConflictCommand.registerConflictCommands(CTCommands::registerCustomCommand);
         DumpCommands.registerDumpCommands(() -> COMMANDS);
         ExamplesCommand.register();
         HandCommands.registerHandCommands();
@@ -124,6 +127,8 @@ public class CTCommands {
     
     private static void registerCommandInternal(LiteralArgumentBuilder<CommandSource> root, com.blamejared.crafttweaker.impl.commands.CommandImpl command) {
         
+        if (command.getCaller() == null) return;
+        
         LiteralArgumentBuilder<CommandSource> literalCommand = Commands.literal(command.getName());
         final Map<String, com.blamejared.crafttweaker.impl.commands.CommandImpl> subCommands = command.getChildCommands();
         if(!subCommands.isEmpty()) {
@@ -142,7 +147,7 @@ public class CTCommands {
         
         registerCustomCommand(literal);
         if(name != null && description != null) {
-            COMMANDS.put(name, new CommandImpl(name, description, (context -> 0)));
+            COMMANDS.put(name, new CommandImpl(name, description, null));
         }
     }
     
@@ -238,7 +243,7 @@ public class CTCommands {
         public CommandCaller getCaller() {
             
             final com.blamejared.crafttweaker.impl.commands.CommandCaller caller = super.getCaller();
-            return caller instanceof CommandCaller ? (CommandCaller) caller : caller::executeCommand;
+            return (caller == null || caller instanceof CommandCaller)? (CommandCaller) caller : caller::executeCommand;
         }
         
         @Deprecated

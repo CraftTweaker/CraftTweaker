@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.entity.NamePlateResult;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
 import com.blamejared.crafttweaker.impl.entity.MCEntityType;
+import com.blamejared.crafttweaker.impl.helper.ItemStackHelper;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
 import net.minecraft.entity.Entity;
@@ -67,7 +68,7 @@ public class CTClientEventHandler {
                                 String.format(
                                         "Unable to run one of the tooltip functions for %s on %s due to an error (for experts, refer to %s)",
                                         ingredient.getCommandString(),
-                                        new MCItemStackMutable(e.getItemStack()).getCommandString(),
+                                        ItemStackHelper.getCommandString(e.getItemStack()),
                                         function.getClass().getName()
                                 ),
                                 exception

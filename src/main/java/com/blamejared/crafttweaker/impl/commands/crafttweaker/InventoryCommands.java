@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.commands.crafttweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.impl.commands.CTCommands;
 import com.blamejared.crafttweaker.impl.commands.CommandUtilities;
+import com.blamejared.crafttweaker.impl.helper.ItemStackHelper;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManagerItem;
@@ -42,7 +43,7 @@ public final class InventoryCommands {
                 final String inventoryContents = IntStream.range(0, inventory.getSlots())
                         .mapToObj(inventory::getStackInSlot)
                         .filter(it -> !it.isEmpty())
-                        .map(it -> Pair.of(new MCItemStackMutable(it).getCommandString(), TagManagerItem.INSTANCE.getAllTagsFor(it.getItem())))
+                        .map(it -> Pair.of(ItemStackHelper.getCommandString(it), TagManagerItem.INSTANCE.getAllTagsFor(it.getItem())))
                         .map(it -> it.getFirst() + '\n' + stringify(it.getSecond()))
                         .collect(Collectors.joining("\n", "Inventory item tags\n", ""));
                 
