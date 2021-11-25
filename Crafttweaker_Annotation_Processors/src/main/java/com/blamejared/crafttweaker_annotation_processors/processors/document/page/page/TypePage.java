@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public final class TypePage extends DocumentationPage {
+public class TypePage extends DocumentationPage {
     
     final TypePageInfo typePageInfo;
     
