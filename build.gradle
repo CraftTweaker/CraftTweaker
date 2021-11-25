@@ -224,18 +224,9 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     archiveClassifier.set("javadoc")
 }
 
-task deobfJar(type: Jar) {
-    description = 'Creates a JAR containing the non-obfuscated compiled code.'
-    from sourceSets.main.output
-    from project(":Crafttweaker_Annotations").sourceSets.main.output
-    from files(zenCodeDeps.collect { project(it).sourceSets.main.output })
-    archiveClassifier.set("deobf")
-}
-
 artifacts {
     archives sourcesJar
     archives javadocJar
-    archives deobfJar
 }
 
 publish.dependsOn(project.tasks.getByName("assemble"))
@@ -263,7 +254,6 @@ publishing {
                 }
             }
 
-
             artifact sourcesJar {
                 classifier 'sources'
             }
@@ -272,9 +262,6 @@ publishing {
                 classifier 'javadoc'
             }
 
-            artifact deobfJar {
-                classifier 'deobf'
-            }
         }
     }
 
@@ -283,6 +270,14 @@ publishing {
             url "file://" + System.getenv("local_maven")
         }
     }
+}
+
+// Disables Gradle's custom module metadata from being published to maven. The
+// metadata includes mapped dependencies which are not reasonably consumable by
+// other mod developers.
+tasks.withType(GenerateModuleMetadata) {
+
+    enabled = false
 }
 
 curseforge {
@@ -300,7 +295,6 @@ curseforge {
                 requiredDependency "jeitweaker"
             }
         }
-        addArtifact(deobfJar)
     }
 }
 
