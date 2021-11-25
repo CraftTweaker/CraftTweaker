@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.brackets.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.impl.commands.CTCommands;
 import com.blamejared.crafttweaker.impl.commands.CommandUtilities;
+import com.blamejared.crafttweaker.impl.helper.ItemStackHelper;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -35,7 +36,7 @@ public final class RecipeCommands {
         
         CraftTweakerAPI.logInfo("Dumping all recipes!");
         
-        player.world.getRecipeManager().recipes.forEach((recipeType, map) -> dumpRecipe(recipeType, map.values(), it -> true));
+        player.world.getRecipeManager().recipes.forEach((recipeType, map) -> dumpRecipe(recipeType, map.values(), it -> true, false));
         
         CommandUtilities.send(CommandUtilities.color("Recipe list generated! Check the crafttweaker.log file!", TextFormatting.GREEN), player);
         return 0;
@@ -51,15 +52,16 @@ public final class RecipeCommands {
         
         final IItemStack workingStack = new MCItemStackMutable(stack.copy()).setAmount(1);
         
-        CraftTweakerAPI.logInfo("Dumping all recipes that output %s!", workingStack.getCommandString());
+        CraftTweakerAPI.logInfo("Dumping all recipes that output %s!", ItemStackHelper.getCommandString(workingStack.getInternal()));
         
-        player.world.getRecipeManager().recipes.forEach((recipeType, map) -> dumpRecipe(recipeType, map.values(), it -> workingStack.matches(new MCItemStackMutable(it.getRecipeOutput()))));
+        player.world.getRecipeManager().recipes.forEach((recipeType, map) ->
+                dumpRecipe(recipeType, map.values(), it -> workingStack.matches(new MCItemStackMutable(it.getRecipeOutput())), true));
         
         CommandUtilities.send(CommandUtilities.color("Recipe list generated! Check the crafttweaker.log file!", TextFormatting.GREEN), player);
         return 0;
     }
     
-    private static void dumpRecipe(final IRecipeType<?> type, final Collection<IRecipe<?>> recipes, final Predicate<IRecipe<?>> filter) {
+    private static void dumpRecipe(final IRecipeType<?> type, final Collection<IRecipe<?>> recipes, final Predicate<IRecipe<?>> filter, final boolean hideEmpty) {
         
         final IRecipeManager manager = RecipeTypeBracketHandler.getOrDefault(type);
         if(manager == null) {
@@ -72,6 +74,8 @@ public final class RecipeCommands {
                 .sorted(Comparator.comparing(RecipeCommands::serializer).thenComparing(IRecipe::getId))
                 .map(it -> dump(manager, it))
                 .collect(Collectors.joining("\n  "));
+        
+        if (hideEmpty && dumpResult.isEmpty()) return;
         
         CraftTweakerAPI.logDump("Recipe type: '%s'\n  %s\n", manager.getCommandString(), dumpResult.isEmpty() ? "No recipe found" : dumpResult);
     }
