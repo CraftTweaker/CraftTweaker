@@ -22,7 +22,7 @@ public enum GameMode {
      * survive, or simply exploring. The player is restricted in its movements and has to worry about both health and
      * hunger. Resources need also to be gathered from the game world.
      */
-    @ZenCodeType.Field SURVIVAL(GameType.SURVIVAL),
+    SURVIVAL(GameType.SURVIVAL),
     /**
      * The creative game mode.
      *
@@ -31,7 +31,7 @@ public enum GameMode {
      * and no enemies to worry about. The player is also free to fly around in the world, though cannot clip through
      * blocks.
      */
-    @ZenCodeType.Field CREATIVE(GameType.CREATIVE),
+    CREATIVE(GameType.CREATIVE),
     /**
      * The adventure game mode.
      *
@@ -39,7 +39,7 @@ public enum GameMode {
      * against enemies. While the player still needs to handle both health and hunger, it cannot break nor place any
      * blocks unless specifically enabled to do so by the game itself.
      */
-    @ZenCodeType.Field ADVENTURE(GameType.ADVENTURE),
+    ADVENTURE(GameType.ADVENTURE),
     /**
      * The spectator game mode.
      *
@@ -47,7 +47,7 @@ public enum GameMode {
      * movements, allowing both flying and no-clip through blocks. It is also the only game mode in which players can
      * assume the point of view (i.e. spectate) other entities, including other players.
      */
-    @ZenCodeType.Field SPECTATOR(GameType.SPECTATOR);
+    SPECTATOR(GameType.SPECTATOR);
     
     private final GameType vanillaType;
     

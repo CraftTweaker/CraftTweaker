@@ -23,28 +23,28 @@ public enum TargetedEntity {
      *
      * Examples of an actor can be the creeper that exploded or the player that gained an advancement.
      */
-    @ZenCodeType.Field ACTOR(ExpandLootContext::getThisEntity),
+    ACTOR(ExpandLootContext::getThisEntity),
     /**
      * The entity that caused the death of the actor.
      *
      * This entity is the actual killer, instead of the entity that actually dealt the final blow to the actor. As an
      * example, if a skeleton killed a creeper by shooting an arrow, the killer will be the skeleton.
      */
-    @ZenCodeType.Field KILLER(ExpandLootContext::getKillerEntity),
+    KILLER(ExpandLootContext::getKillerEntity),
     /**
      * The entity that directly caused the death of the actor.
      *
      * The entity is the entity that dealt the final blow to the actor, rather than its actual killer. As an example,
      * if a skeleton killed a creeper by shooting an arrow, the direct killer will be the arrow.
      */
-    @ZenCodeType.Field DIRECT_KILLER(ExpandLootContext::getDirectKillerEntity),
+    DIRECT_KILLER(ExpandLootContext::getDirectKillerEntity),
     /**
      * The player that caused the death of the actor, if applicable.
      *
      * This entity is exactly the same as the killer, except it is only available if the final blow was dealt by a
      * player.
      */
-    @ZenCodeType.Field PLAYER_KILLER(ExpandLootContext::getLastDamagePlayer);
+    PLAYER_KILLER(ExpandLootContext::getLastDamagePlayer);
     
     private final Function<LootContext, ? extends Entity> lootContextDiscriminator;
     

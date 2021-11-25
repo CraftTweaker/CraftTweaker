@@ -16,19 +16,19 @@ public enum TriState {
      *
      * It can be considered the same as a boolean's 'true' value.
      */
-    @ZenCodeType.Field TRUE(true),
+    TRUE(true),
     /**
      * The false value of the TriState.
      *
      * It can be considered the same as a boolean's 'false' value.
      */
-    @ZenCodeType.Field FALSE(false),
+    FALSE(false),
     /**
      * The unset value of the TriState.
      *
      * It represents the lack of a state or a decision that hasn't been made yet.
      */
-    @ZenCodeType.Field UNSET(null);
+    UNSET(null);
     
     private final Boolean bool;
     
