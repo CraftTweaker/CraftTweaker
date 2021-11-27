@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl_native.server;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RegistryKey;
@@ -42,22 +43,32 @@ public class ExpandServer {
     }
     
     /**
-     * Runs a command.
+     * Runs a command, if silent is true, the output is hidden.
      *
      * Returns The success value of the command, or 0 if an exception occurred.
      * <p>
      * Note: Some commands' success value is 0
      *
      * @docParam command "time set day"
+     *  @docParam silent true
      */
     @ZenCodeType.Method
+    public static int executeCommand(MinecraftServer internal, String command, @ZenCodeType.OptionalBoolean boolean silent) {
+        
+        CommandSource source = internal.getCommandSource();
+        return executeCommandInternal(internal, command, silent ? source.withFeedbackDisabled() : source);
+    }
+    
+    // Left over for binary compat, doesn't need to be registered
+    // TODO remove
+    @Deprecated
     public static int executeCommand(MinecraftServer internal, String command) {
         
-        return internal.getCommandManager().handleCommand(internal.getCommandSource(), command);
+        return executeCommandInternal(internal, command, internal.getCommandSource());
     }
     
     /**
-     * let a player send a command
+     * let a player send a command, if silent is true, the output is hidden.
      *
      * Returns The success value of the command, or 0 if an exception occurred.
      * <p>
@@ -65,11 +76,27 @@ public class ExpandServer {
      *
      * @docParam command "time set day"
      * @docParam player player
+     * @docParam silent true
      */
     @ZenCodeType.Method
+    public static int executeCommand(MinecraftServer internal, String command, PlayerEntity player, @ZenCodeType.OptionalBoolean boolean silent) {
+        
+        CommandSource source = player.getCommandSource();
+        return executeCommandInternal(internal, command, silent ? source.withFeedbackDisabled() : source);
+    }
+    
+    // Left over for binary compat, doesn't need to be registered
+    // TODO remove
+    @Deprecated
     public static int executeCommand(MinecraftServer internal, String command, PlayerEntity player) {
         
-        return internal.getCommandManager().handleCommand(player.getCommandSource(), command);
+        CommandSource source = player.getCommandSource();
+        return executeCommandInternal(internal, command, source);
+    }
+    
+    private static int executeCommandInternal(MinecraftServer internal, String command, CommandSource source) {
+        
+        return internal.getCommandManager().handleCommand(source, command);
     }
     
 }
