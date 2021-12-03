@@ -8,6 +8,7 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
@@ -22,14 +23,15 @@ public enum CTRecipeTypeArgument implements ArgumentType<IRecipeManager> {
     INSTANCE;
     
     private static final Collection<String> EXAMPLES = Lists.newArrayList("<recipetype:minecraft:crafting>", "<recipetype:minecraft:blasting>");
-    private static final SimpleCommandExceptionType INVALID_STRING = new SimpleCommandExceptionType(new LiteralMessage("Unknown Recipe Type"));
-    private static final Pattern ITEM_PATTERN = Pattern.compile("<recipetype:(\\w+:\\w+)>");
+    private static final SimpleCommandExceptionType INVALID_STRING = new SimpleCommandExceptionType(new LiteralMessage("Invalid String"));
+    private static final DynamicCommandExceptionType UNKNOWN_RECIPE_TYPE = new DynamicCommandExceptionType(o -> new LiteralMessage("Unknown Recipe Type: " + o));
+    private static final Pattern RECIPE_TYPE_PATTERN = Pattern.compile("^<recipetype:(\\w+:\\w+)>");
     
     
     @Override
     public IRecipeManager parse(final StringReader reader) throws CommandSyntaxException {
         
-        final Matcher matcher = ITEM_PATTERN.matcher(reader.getRemaining());
+        final Matcher matcher = RECIPE_TYPE_PATTERN.matcher(reader.getRemaining());
 
         if (!matcher.find()) {
             
@@ -37,10 +39,13 @@ public enum CTRecipeTypeArgument implements ArgumentType<IRecipeManager> {
         }
         
         final String location = matcher.group(1);
-        
-        final IRecipeManager type = RecipeTypeBracketHandler.getRecipeManager(location);
         reader.setCursor(reader.getCursor() + matcher.group(0).length());
-        return type;
+
+        try {
+            return RecipeTypeBracketHandler.getRecipeManager(location);
+        } catch(IllegalArgumentException e) {
+            throw UNKNOWN_RECIPE_TYPE.createWithContext(reader, location);
+        }
     }
     
     @Override

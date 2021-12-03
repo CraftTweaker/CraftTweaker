@@ -41,6 +41,10 @@ public class DocumentationPageInfo {
         
         return outputPath;
     }
+
+    public boolean shouldOutput() {
+        return true;
+    }
     
     public void setTypeComment(DocumentationComment typeComment) {
         

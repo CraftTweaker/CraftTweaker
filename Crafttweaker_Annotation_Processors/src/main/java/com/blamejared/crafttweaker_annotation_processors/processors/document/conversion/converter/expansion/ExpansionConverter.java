@@ -86,7 +86,7 @@ public class ExpansionConverter extends DocumentConverter {
         
         final TypeName zenCodeName = expandedType.getZenCodeName();
         final Optional<TypePageInfo> pageInfoByName = documentRegistry.getPageInfoByName(zenCodeName);
-        return pageInfoByName.orElseThrow(() -> new IllegalArgumentException("Invalid Expanded Type! " + zenCodeName + " " + expandedType.getClass()));
+        return pageInfoByName.orElseGet(() -> new DummyTypePageInfo(zenCodeName));
     }
     
     private DocumentedStaticMembers getStaticMembers(TypeElement typeElement, DocumentationPageInfo pageInfo) {
@@ -111,6 +111,18 @@ public class ExpansionConverter extends DocumentConverter {
         final TypePageInfo pageInfoForType = getPageInfoForType(getExpandedType(typeElement));
         final DocumentationComment classComment = pageInfoForType.getClassComment();
         return classComment.getExamples().getExampleFor("this");
+    }
+
+    public static class DummyTypePageInfo extends TypePageInfo {
+
+        public DummyTypePageInfo(TypeName zenCodeName) {
+            super("crafttweaker", "", zenCodeName);
+        }
+
+        @Override
+        public boolean shouldOutput() {
+            return false;
+        }
     }
     
 }
