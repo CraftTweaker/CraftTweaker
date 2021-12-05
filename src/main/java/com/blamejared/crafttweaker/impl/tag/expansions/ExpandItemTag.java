@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.api.item.IIngredientWithAmount;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.ingredients.ExpandIIngredient;
 import com.blamejared.crafttweaker.impl.ingredients.IIngredientWrapped;
+import com.blamejared.crafttweaker.impl.item.MCIngredientList;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.tag.MCTag;
 import com.blamejared.crafttweaker.impl.tag.manager.TagManagerItem;
@@ -55,7 +56,9 @@ public class ExpandItemTag {
     @ZenCodeType.Method
     public static void add(MCTag<Item> _this, List<IItemStack> items) {
         
-        _this.add(items.stream().map(IItemStack::getDefinition).collect(Collectors.toList()));
+        _this.add(items.stream()
+                .map(IItemStack::getDefinition)
+                .collect(Collectors.toList()));
     }
     
     @ZenCodeType.Method
@@ -64,6 +67,13 @@ public class ExpandItemTag {
         
         final IIngredient iIngredient = asIIngredient(_this);
         return ExpandIIngredient.asIIngredientWithAmount(iIngredient);
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)
+    public static MCIngredientList or(MCTag<Item> _this, IIngredient other) {
+        
+        return new MCIngredientList(new IIngredient[] {asIIngredient(_this), other});
     }
     
 }
