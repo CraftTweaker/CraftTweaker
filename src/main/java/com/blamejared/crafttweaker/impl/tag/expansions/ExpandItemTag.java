@@ -76,4 +76,11 @@ public class ExpandItemTag {
         return new MCIngredientList(new IIngredient[] {asIIngredient(_this), other});
     }
     
+    @ZenCodeType.Method
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)
+    public static MCIngredientList or(MCTag<Item> _this, MCTag<Item> other) {
+        
+        return new MCIngredientList(new IIngredient[] {asIIngredient(_this), asIIngredient(other)});
+    }
+    
 }
