@@ -12,6 +12,9 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @docParam this MCTextComponent.createStringTextComponent("Hello World!")
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.util.text.MCTextComponent")
 @Document("vanilla/api/util/text/MCTextComponent")

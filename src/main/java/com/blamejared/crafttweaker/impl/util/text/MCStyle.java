@@ -8,6 +8,9 @@ import net.minecraft.util.text.Color;
 import net.minecraft.util.text.Style;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this new MCStyle()
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.util.text.MCStyle")
 @Document("vanilla/api/util/text/MCStyle")
