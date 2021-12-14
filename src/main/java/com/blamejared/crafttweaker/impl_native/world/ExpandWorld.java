@@ -14,6 +14,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.server.ServerWorld;
@@ -34,6 +35,16 @@ import java.util.function.Predicate;
 @Document("vanilla/api/world/MCWorld")
 @NativeTypeRegistration(value = World.class, zenCodeName = "crafttweaker.api.world.MCWorld")
 public class ExpandWorld {
+    
+    // TODO remove
+    // World has a lot of super classes before it reaches IBlockDisplayReader, because of this, ZC doesn't know how to cast it automatically.
+    // Those super classes aren't expanded right now because they would just be empty.
+    @ZenCodeType.Method
+    @ZenCodeType.Caster(implicit = true)
+    public static IBlockDisplayReader asBlockDisplayReader(World internal) {
+        
+        return (IBlockDisplayReader) internal;
+    }
     
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = false)
