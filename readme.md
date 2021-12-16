@@ -56,7 +56,7 @@ CraftTweaker also has automated markdown documentation, the output of that will 
 ## Maven
 
 
-Every push to this repository is built and published to the [BlameJared](https://maven.blamejared.com) maven, to use this builds in your project, simply use the following code in your build.gradle
+Every push to this repository is built and published to the [BlameJared](https://maven.blamejared.com) maven, to use these builds in your project, simply add the following code in your build.gradle
 
 ```gradle
 repositories {
