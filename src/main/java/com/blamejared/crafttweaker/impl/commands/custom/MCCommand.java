@@ -7,6 +7,7 @@ import net.minecraft.command.CommandSource;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.function.Function;
+import java.util.function.ToIntFunction;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.commands.custom.MCCommand")
@@ -20,10 +21,16 @@ public class MCCommand {
         this.internal = internal;
     }
     
-    @ZenCodeType.Constructor
+    @Deprecated
     public MCCommand(Function<MCCommandContext, Integer> fun) {
         
         internal = context -> fun.apply(new MCCommandContext(context));
+    }
+
+    @ZenCodeType.Constructor
+    public MCCommand(ToIntFunction<MCCommandContext> fun) {
+
+        internal = context -> fun.applyAsInt(new MCCommandContext(context));
     }
     
     public Command<CommandSource> getInternal() {
