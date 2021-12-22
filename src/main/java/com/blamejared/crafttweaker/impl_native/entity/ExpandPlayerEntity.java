@@ -11,6 +11,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -214,4 +215,8 @@ public class ExpandPlayerEntity {
         ItemHandlerHelper.giveItemToPlayer(internal, stack.getInternal());
     }
     
+    @ZenCodeType.Method
+    public static IItemStack getHeldItem(PlayerEntity internal, Hand hand){
+        return new MCItemStack(internal.getHeldItem(hand));
+    }
 }
