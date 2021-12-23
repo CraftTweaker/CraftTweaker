@@ -60,7 +60,7 @@ pipeline {
                     }
                     steps {
                         script {
-                            if (sh(script: "git log -1 --pretty=%B | fgrep -ie '[skip deploy]' -e '[skip deploy]'", returnStatus: true) == 0) {
+                            if (sh(script: "git log -1 --pretty=%B | fgrep -i -e '[skip deploy]' -e '[skip-deploy]'", returnStatus: true) == 0) {
                                 echo 'Skipping Update Version due to [skip deploy]'
                             } else {
                                 echo 'Updating Version'
@@ -87,7 +87,7 @@ pipeline {
                     }
                     steps {
                         script {
-                            if (sh(script: "git log -1 --pretty=%B | fgrep -ie '[skip deploy]' -e '[skip deploy]'", returnStatus: true) == 0) {
+                            if (sh(script: "git log -1 --pretty=%B | fgrep -i -e '[skip deploy]' -e '[skip-deploy]'", returnStatus: true) == 0) {
                                 echo 'Skipping CurseForge due to [skip deploy]'
                             } else {
                                 echo 'Deploying to CurseForge'
