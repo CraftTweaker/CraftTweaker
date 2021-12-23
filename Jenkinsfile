@@ -39,6 +39,13 @@ pipeline {
             }
         }
 
+        stage('Test') {
+            steps {
+                echo 'Checking'
+                sh './gradlew check'
+            }
+        }
+
         stage('Git Changelog') {
             steps {
                 sh './gradlew genGitChangelog'
@@ -135,6 +142,7 @@ pipeline {
         always {
             archiveArtifacts 'build/libs/**.jar'
             archiveArtifacts 'changelog.md'
+            junit 'build/test-results/**/*.xml'
         }
     }
     options {
