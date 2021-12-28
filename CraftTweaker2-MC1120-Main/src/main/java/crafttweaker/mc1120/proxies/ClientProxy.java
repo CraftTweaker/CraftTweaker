@@ -13,6 +13,7 @@ import net.minecraft.client.util.SearchTreeManager;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.resource.*;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Loader;
 
 public class ClientProxy extends CommonProxy {
     
@@ -37,6 +38,8 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void fixRecipeBook() {
+        if (Loader.isModLoaded("norecipebook"))
+            return;
         final Minecraft minecraft = Minecraft.getMinecraft();
         if(!CraftTweaker.alreadyChangedThePlayer) {
             CraftTweaker.alreadyChangedThePlayer = true;
