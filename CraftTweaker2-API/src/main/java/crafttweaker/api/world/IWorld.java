@@ -93,6 +93,11 @@ public interface IWorld extends IBlockAccess {
     
     @ZenMethod
     boolean spawnEntity(IEntity entity);
+
+    @ZenMethod
+    default void removeEntity(IEntity entity) {
+        CraftTweakerAPI.logError(this.getClass().getName() + " does not override IWorld.removeEntity, tell the author to fix that.");
+    }
     
     @ZenMethod
     default IRayTraceResult rayTraceBlocks(IVector3d begin, IVector3d ray, @Optional boolean stopOnLiquid, @Optional boolean ignoreBlockWithoutBoundingBox, @Optional(valueBoolean = true) boolean returnLastUncollidableBlock) {

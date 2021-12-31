@@ -127,8 +127,13 @@ public class MCWorld extends MCBlockAccess implements IWorld {
     public boolean spawnEntity(IEntity entity) {
         return world.spawnEntity(CraftTweakerMC.getEntity(entity));
     }
-    
-    @Override
+
+	@Override
+	public void removeEntity(IEntity entity) {
+		world.removeEntity(CraftTweakerMC.getEntity(entity));
+	}
+
+	@Override
     public IRayTraceResult rayTraceBlocks(IVector3d begin, IVector3d ray, boolean stopOnLiquid, boolean ignoreBlockWithoutBoundingBox, boolean returnLastUncollidableBlock) {
         return CraftTweakerMC.getIRayTraceResult(this.world.rayTraceBlocks(CraftTweakerMC.getVec3d(begin), CraftTweakerMC.getVec3d(ray), stopOnLiquid, ignoreBlockWithoutBoundingBox, returnLastUncollidableBlock));
     }
