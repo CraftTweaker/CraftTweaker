@@ -82,7 +82,7 @@ public final class MiscCommands {
         }));
         
         CTCommands.registerCommand(CTCommands.playerCommand("wiki", "Opens a link to the wiki", (player, stack) -> {
-            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://docs.blamejared.com/1.16/en/index"));
+            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://docs.blamejared.com"));
             return 0;
         }));
         
