@@ -81,6 +81,16 @@ public final class MiscCommands {
             return 0;
         }));
         
+        CTCommands.registerCommand(CTCommands.playerCommand("wiki", "Opens a link to the wiki", (player, stack) -> {
+            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://docs.blamejared.com/1.16/en/index"));
+            return 0;
+        }));
+        
+        CTCommands.registerCommand(CTCommands.playerCommand("ctgui", "Provides info on the state of CTGUI", (player, stack) -> {
+            CommandUtilities.send("CT GUI was limiting and very buggy and has since been removed. It is now recommended to learn ZenScript instead - you can browse the wiki for reference (/wiki) or ask for help on the Discord server (/discord).", player);
+            return 0;
+        }));
+        
         CTCommands.registerCommand(CTCommands.playerCommand(
                 "block_info",
                 "Activates or deactivates the block reader. In block info mode, right-clicking a block will tell you it's name, metadata and Tile Entity data if applicable.",
