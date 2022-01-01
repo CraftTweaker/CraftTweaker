@@ -234,7 +234,7 @@ public class CommonEventHandler {
         List<IItemStack> ingredients = MCOreDictEntry.REMOVED_CONTENTS.get(ev.getName());
         if (ingredients != null)
             for (IItemStack ingredient : ingredients)
-                if (ingredient.matches(CraftTweakerMC.getIItemStack(ev.getOre())))
+                if (ingredient.matches(CraftTweakerMC.getIItemStackForMatching(ev.getOre())))
                     OreDictionary.getOres(ev.getName()).remove(ev.getOre());
     }
     

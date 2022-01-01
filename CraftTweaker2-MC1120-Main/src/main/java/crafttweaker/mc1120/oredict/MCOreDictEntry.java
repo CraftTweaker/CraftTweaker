@@ -136,7 +136,7 @@ public class MCOreDictEntry implements IOreDictEntry {
             REMOVED_CONTENTS.get(id).add(item);
             ItemStack result = ItemStack.EMPTY;
             for(ItemStack itemStack : OreDictionary.getOres(id)) {
-                if(item.matches(getIItemStackWildcardSize(itemStack))) {
+                if(item.matches(getIItemStackForMatching(itemStack, true))) {
                     result = itemStack;
                     break;
                 }

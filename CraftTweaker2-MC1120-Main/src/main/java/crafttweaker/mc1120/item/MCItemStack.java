@@ -99,7 +99,7 @@ public class MCItemStack implements IItemStack {
         this.tag = tag;
     }
     
-    private MCItemStack(ItemStack itemStack, IData tag, boolean wildcardSize) {
+    protected MCItemStack(ItemStack itemStack, IData tag, boolean wildcardSize) {
         if(itemStack.isEmpty())
             throw new IllegalArgumentException("stack cannot be null");
         stack = itemStack;
@@ -111,7 +111,7 @@ public class MCItemStack implements IItemStack {
     
     /**
      * This is a constructor which creates a itemstack that doesn't copy the internal stack
-     * Only use this is you are sure it will never be changed
+     * Only use this if you are sure it will never be changed
      *
      * @param unused to prevent constructor conflicts, has no purpose
      */

@@ -31,7 +31,7 @@ public class VanillaIngredient extends Ingredient {
     
     @Override
     public boolean apply(@Nullable ItemStack itemStack) {
-        return ingredient.matches(CraftTweakerMC.getIItemStack(itemStack));
+        return ingredient.matches(CraftTweakerMC.getIItemStackForMatching(itemStack));
     }
     
     @Override

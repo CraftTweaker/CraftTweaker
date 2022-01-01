@@ -3,8 +3,6 @@ package crafttweaker.mc1120.events.handling;
 import crafttweaker.api.event.PlayerWakeUpEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
-import crafttweaker.api.world.IBlockPos;
-import net.minecraft.entity.player.EntityPlayer;
 
 public class MCPlayerWakeUpEvent implements PlayerWakeUpEvent {
 

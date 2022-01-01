@@ -21,8 +21,8 @@ public final class VanillaBrewingPlus extends VanillaBrewingRecipe {
 
     @Override
     public ItemStack getOutput(ItemStack input, ItemStack ingredient) {
-        IItemStack _input = CraftTweakerMC.getIItemStack(input);
-        IItemStack _ingredient = CraftTweakerMC.getIItemStack(ingredient);
+        IItemStack _input = CraftTweakerMC.getIItemStackForMatching(input);
+        IItemStack _ingredient = CraftTweakerMC.getIItemStackForMatching(ingredient);
 
         if (removedRecipes.stream().anyMatch(t -> t.getFirst().matches(_input) && t.getSecond().matches(_ingredient))) {
             return ItemStack.EMPTY;
@@ -33,7 +33,7 @@ public final class VanillaBrewingPlus extends VanillaBrewingRecipe {
 
     @Override
     public boolean isIngredient(@Nonnull ItemStack stack) {
-        IItemStack _ingredient = CraftTweakerMC.getIItemStack(stack);
+        IItemStack _ingredient = CraftTweakerMC.getIItemStackForMatching(stack);
 
         return super.isIngredient(stack) && removedRecipes.stream().noneMatch(t -> t.getFirst() == IngredientAny.INSTANCE && t.getSecond().matches(_ingredient));
     }

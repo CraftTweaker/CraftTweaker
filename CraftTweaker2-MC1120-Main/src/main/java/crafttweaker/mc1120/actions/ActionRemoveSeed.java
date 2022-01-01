@@ -26,7 +26,7 @@ public class ActionRemoveSeed implements IAction {
             
             for(Object entry : SEEDS) {
                 ItemStack itemStack = CraftTweakerHacks.getSeedEntrySeed(entry);
-                if(pattern.matches(CraftTweakerMC.getIItemStack(itemStack))) {
+                if(pattern.matches(CraftTweakerMC.getIItemStackForMatching(itemStack))) {
                     removed.add(entry);
                 }
             }

@@ -26,6 +26,10 @@ public class MCMutableItemStack extends MCItemStack implements IMutableItemStack
         super(itemStack, NBTConverter.from(itemStack.getTagCompound(), false));
     }
 
+    public MCMutableItemStack(ItemStack itemStack, boolean wildcardSize) {
+        super(itemStack, NBTConverter.from(itemStack.getTagCompound(), false), wildcardSize);
+    }
+
     @Override
     public void shrink(int quality) {
         origin.shrink(quality);
