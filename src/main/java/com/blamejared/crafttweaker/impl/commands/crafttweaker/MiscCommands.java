@@ -87,7 +87,7 @@ public final class MiscCommands {
         }));
         
         CTCommands.registerCommand(CTCommands.playerCommand("ctgui", "Provides info on the state of CTGUI", (player, stack) -> {
-            CommandUtilities.send("CT GUI was limiting and very buggy and has since been removed. It is now recommended to learn ZenScript instead - you can browse the wiki for reference (/wiki) or ask for help on the Discord server (/discord).", player);
+            CommandUtilities.send("CT GUI was limiting and very buggy and has since been removed. It is now recommended to learn ZenScript instead - you can browse the wiki for reference (/ct wiki) or ask for help on the Discord server (/ct discord).", player);
             return 0;
         }));
         
