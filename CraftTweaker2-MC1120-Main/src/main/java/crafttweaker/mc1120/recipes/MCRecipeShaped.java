@@ -300,7 +300,7 @@ public class MCRecipeShaped extends MCRecipeBase implements IShapedRecipe {
                                 continue;
                             else
                                 return offsetInvalid;
-                        if(itemStack.isEmpty() || !ingredients[row][column].matches(CraftTweakerMC.getIItemStack(itemStack)))
+                        if(itemStack.isEmpty() || !ingredients[row][column].matches(CraftTweakerMC.getIItemStackForMatching(itemStack)))
                             continue outer;
                         visited[(column + columnOffset) + (row + rowOffset) * inv.getWidth()] = true;
 

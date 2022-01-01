@@ -47,7 +47,7 @@ public class MCRecipeShapeless extends MCRecipeBase {
                 ItemStack stackInSlot = inv.getStackInSlot(slot);
                 if(visited[slot] || stackInSlot.isEmpty())
                     continue;
-                if(ingredient.matches(CraftTweakerMC.getIItemStack(stackInSlot))) {
+                if(ingredient.matches(CraftTweakerMC.getIItemStackForMatching(stackInSlot))) {
                     //make sure no slot is matched twice
                     visited[slot] = true;
                     continue outer;

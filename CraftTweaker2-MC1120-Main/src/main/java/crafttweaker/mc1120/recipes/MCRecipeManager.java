@@ -5,7 +5,6 @@ import crafttweaker.IAction;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.item.IngredientOr;
-import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.recipes.*;
 import crafttweaker.mc1120.CraftTweaker;
 import crafttweaker.mc1120.item.MCItemStack;
@@ -31,6 +30,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static crafttweaker.api.minecraft.CraftTweakerMC.getIItemStackForMatching;
 import static crafttweaker.api.minecraft.CraftTweakerMC.getIItemStack;
 import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
 import static crafttweaker.api.minecraft.CraftTweakerMC.getOreDict;
@@ -54,7 +54,8 @@ public final class MCRecipeManager implements IRecipeManager {
     }
     
     private static boolean matchesItem(ItemStack input, IIngredient ingredient) {
-        return ingredient == null ? input.isEmpty() : !input.isEmpty() && ingredient.matches(getIItemStack(input));
+        return ingredient == null ? input.isEmpty() : 
+                !input.isEmpty() && ingredient.matches(getIItemStackForMatching(input));
     }
     
     private static boolean matches(Object input, IIngredient ingredient) {
@@ -124,7 +125,7 @@ public final class MCRecipeManager implements IRecipeManager {
         for(Map.Entry<ResourceLocation, IRecipe> ent : recipes) {
             ItemStack stack = ent.getValue().getRecipeOutput();
             if(!stack.isEmpty()) {
-                if(ingredient.matches(CraftTweakerMC.getIItemStack(stack))) {
+                if(ingredient.matches(getIItemStackForMatching(stack))) {
                     if(ent.getValue() instanceof MCRecipeBase) {
                         results.add((MCRecipeBase) ent.getValue());
                     } else
@@ -341,7 +342,7 @@ public final class MCRecipeManager implements IRecipeManager {
             for(Map.Entry<ResourceLocation, IRecipe> recipeEntry : recipes) {
                 final IRecipe recipe = recipeEntry.getValue();
                 final ItemStack output = recipe.getRecipeOutput();
-                if(output.isEmpty() || !this.output.matches(MCItemStack.createNonCopy(output))) {
+                if(output.isEmpty() || !this.output.matches(getIItemStackForMatching(output))) {
                     continue;
                 }
                 
@@ -367,7 +368,7 @@ public final class MCRecipeManager implements IRecipeManager {
                                 } else {
                                     input = ing.getMatchingStacks()[0];
                                 }
-                                if(!matches(input, ingredient)) {
+                                if(!matchesItem(input, ingredient)) {
                                     continue outer;
                                 }
                             }
@@ -414,7 +415,7 @@ public final class MCRecipeManager implements IRecipeManager {
             outer:
             for(Map.Entry<ResourceLocation, IRecipe> entry : recipes) {
                 IRecipe recipe = entry.getValue();
-                if(entry.getValue().getRecipeOutput().isEmpty() || !output.matches(MCItemStack.createNonCopy(entry.getValue().getRecipeOutput()))) {
+                if(entry.getValue().getRecipeOutput().isEmpty() || !output.matches(getIItemStackForMatching(entry.getValue().getRecipeOutput()))) {
                     continue;
                 }
                 if(recipe instanceof IShapedRecipe) {
@@ -499,7 +500,7 @@ public final class MCRecipeManager implements IRecipeManager {
             
             for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
                 ItemStack recipeOutput = recipe.getValue().getRecipeOutput();
-                IItemStack stack = getIItemStack(recipeOutput);
+                IItemStack stack = getIItemStackForMatching(recipeOutput);
                 if(stack != null && matches(stack)) {
                     toRemove.add(recipe.getKey());
                 }
@@ -543,7 +544,7 @@ public final class MCRecipeManager implements IRecipeManager {
             for(Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
                 if(recipe.getKey().toString().equals(recipeName)) {
                     if(filter != null) {
-                        if(filter.matches(getIItemStack(recipe.getValue().getRecipeOutput())))
+                        if(filter.matches(getIItemStackForMatching(recipe.getValue().getRecipeOutput())))
                             toRemove.add(recipe.getKey());
                     } else {
                         toRemove.add(recipe.getKey());
@@ -613,7 +614,7 @@ public final class MCRecipeManager implements IRecipeManager {
                 Matcher m = p.matcher(resourceLocation.toString());
                 if(m.matches()) {
                     if(filter != null) {
-                        if(filter.matches(getIItemStack(recipe.getValue().getRecipeOutput())))
+                        if(filter.matches(getIItemStackForMatching(recipe.getValue().getRecipeOutput())))
                             toRemove.add(recipe.getKey());
                     } else {
                         toRemove.add(resourceLocation);

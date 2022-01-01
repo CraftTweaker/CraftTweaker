@@ -29,12 +29,12 @@ public class MultiBrewingRecipe implements IBrewingRecipe {
 
 	@Override
 	public boolean isIngredient(ItemStack tester) {
-		return ingredient.matches(CraftTweakerMC.getIItemStack(tester)); 
+		return ingredient.matches(CraftTweakerMC.getIItemStackForMatching(tester)); 
 	}
 
 	@Override
 	public boolean isInput(ItemStack tester) {
-		return input.matches(CraftTweakerMC.getIItemStack(tester));
+		return input.matches(CraftTweakerMC.getIItemStackForMatching(tester));
 	}
 	
 	public ItemStack getOutput() {

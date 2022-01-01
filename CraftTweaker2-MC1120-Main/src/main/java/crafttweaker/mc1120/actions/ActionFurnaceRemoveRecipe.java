@@ -6,9 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-import static crafttweaker.api.minecraft.CraftTweakerMC.getIItemStack;
+import static crafttweaker.api.minecraft.CraftTweakerMC.getIItemStackForMatching;
 
 public class ActionFurnaceRemoveRecipe implements IActionFurnaceRemoval {
     
@@ -26,20 +25,20 @@ public class ActionFurnaceRemoveRecipe implements IActionFurnaceRemoval {
         Map<ItemStack, ItemStack> smeltingList = FurnaceRecipes.instance().getSmeltingList();
         if(input == null) {
             for(Map.Entry<ItemStack, ItemStack> entry : smeltingList.entrySet()) {
-                if(output.matches(getIItemStack(entry.getValue()))) {
+                if(output.matches(getIItemStackForMatching(entry.getValue()))) {
                     smeltingMap.put(entry.getKey(), entry.getValue());
                 }
             }
         } else {
             for(Map.Entry<ItemStack, ItemStack> entry : smeltingList.entrySet()) {
-                if(output.matches(getIItemStack(entry.getValue())) && input.matches(getIItemStack(entry.getKey()))) {
+                if(output.matches(getIItemStackForMatching(entry.getValue())) && input.matches(getIItemStackForMatching(entry.getKey()))) {
                     smeltingMap.put(entry.getKey(), entry.getValue());
                 }
             }
         }
         for(Map.Entry<ItemStack, ItemStack> entry : smeltingMap.entrySet()) {
             FurnaceRecipes.instance().getSmeltingList().remove(entry.getKey(), entry.getValue());
-            FurnaceRecipes.instance().experienceList.keySet().removeIf(itemStack -> output.matches(getIItemStack(itemStack)));
+            FurnaceRecipes.instance().experienceList.keySet().removeIf(itemStack -> output.matches(getIItemStackForMatching(itemStack)));
         }
         CraftTweakerAPI.logInfo(smeltingMap.size() + " recipes removed for: " + output);
     }

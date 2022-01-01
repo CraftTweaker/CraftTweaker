@@ -45,6 +45,7 @@ import crafttweaker.mc1120.entity.attribute.MCEntityAttributeModifier;
 import crafttweaker.mc1120.entity.expand.ExpandEntityEquipmentSlot;
 import crafttweaker.mc1120.game.MCTeam;
 import crafttweaker.mc1120.item.MCItemStack;
+import crafttweaker.mc1120.item.MCMutableItemStack;
 import crafttweaker.mc1120.item.VanillaIngredient;
 import crafttweaker.mc1120.liquid.MCLiquidDefinition;
 import crafttweaker.mc1120.liquid.MCLiquidStack;
@@ -222,10 +223,60 @@ public class CraftTweakerMC {
      * @return crafttweaker stack
      */
     public static IItemStack getIItemStackWildcardSize(ItemStack item) {
-        if(item.isEmpty())
+        if(item == null || item.isEmpty())
             return null;
         
         return new MCItemStack(item, true);
+    }
+
+    /**
+     * Returns the CraftTweaker mutable item stack for this item.
+     *
+     * @param item minecraft item stack
+     *
+     * @return crafttweaker mutable item stack
+     */
+    public static IItemStack getIItemStackMutable(ItemStack item) {
+        if (item == null || item.isEmpty())
+            return null;
+
+        return new MCMutableItemStack(item);
+    }
+
+    /**
+     * Constructs a mutable item stack with wildcard size.
+     *
+     * @param item minecraft item stack
+     *
+     * @return crafttweaker mutable item stack
+     */
+    public static IItemStack getIItemStackMutableWildcardSize(ItemStack item) {
+        if (item == null || item.isEmpty())
+            return null;
+
+        return new MCMutableItemStack(item, true);
+    }
+
+    /**
+     * Constructs an item stack for matching. Less performance-heavy than normal getIItemStack.
+     * 
+     * @param item minecraft item stack
+     * 
+     * @return crafttweaker item stack for matching
+     */
+    public static IItemStack getIItemStackForMatching(ItemStack item) {
+        return getIItemStackForMatching(item, false);
+    }
+
+    /**
+     * Constructs an item stack for matching with wildcard size. Less performance-heavy than normal getIItemStack.
+     * 
+     * @param item minecraft item stack
+     * 
+     * @return crafttweaker item stack for matching
+     */
+    public static IItemStack getIItemStackForMatching(ItemStack item, boolean wildcardSize) {
+        return wildcardSize ? getIItemStackMutableWildcardSize(item) : getIItemStackMutable(item);
     }
     
     /**
@@ -239,6 +290,7 @@ public class CraftTweakerMC {
     public static IItemStack getIItemStackWildcardSize(Item item, int meta) {
         if(item == null)
             return null;
+        
         return new MCItemStack(new ItemStack(item, 1, meta), true);
     }
     
