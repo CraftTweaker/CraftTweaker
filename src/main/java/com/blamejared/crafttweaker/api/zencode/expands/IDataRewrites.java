@@ -104,8 +104,7 @@ public class IDataRewrites {
         if(typeID.isOptional()) {
             typeID = typeID.withoutOptional();
         }
-        if(!(typeID instanceof DefinitionTypeID) || !((DefinitionTypeID) typeID).definition.name.equals("IData") && ((DefinitionTypeID) typeID).definition.name
-                .equals("MapData")) {
+        if(!(typeID instanceof DefinitionTypeID) || !(((DefinitionTypeID) typeID).definition.name.equals("IData") || ((DefinitionTypeID) typeID).definition.name.equals("MapData"))) {
             return null;
         }
         
