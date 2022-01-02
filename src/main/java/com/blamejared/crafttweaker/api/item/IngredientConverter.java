@@ -32,6 +32,12 @@ public class IngredientConverter {
                     .toArray(IIngredient[]::new));
         }
         
+        if(ingredient.acceptedItems.length == 0) {
+            return mergeIngredients(Arrays.stream(ingredient.getMatchingStacks())
+                    .map(MCItemStack::new)
+                    .toArray(IItemStack[]::new));
+        }
+        
         return fromIItemLists(ingredient.acceptedItems);
     }
     
