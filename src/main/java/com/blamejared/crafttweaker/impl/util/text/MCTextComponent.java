@@ -40,7 +40,8 @@ public class MCTextComponent {
     public MCTextComponent setStyle(MCStyle style) {
         
         IFormattableTextComponent newInternal = getInternal().deepCopy();
-        newInternal.setStyle(newInternal.getStyle().mergeStyle(style.getInternal()));
+        newInternal.setStyle(newInternal.getStyle()
+                .mergeStyle(style.getInternal()));
         return new MCTextComponent(newInternal);
     }
     
@@ -95,7 +96,10 @@ public class MCTextComponent {
     @ZenCodeType.Getter("siblings")
     public List<MCTextComponent> getSiblings() {
         
-        return getInternal().getSiblings().stream().map(MCTextComponent::new).collect(Collectors.toList());
+        return getInternal().getSiblings()
+                .stream()
+                .map(MCTextComponent::new)
+                .collect(Collectors.toList());
     }
     
     @ZenCodeType.Method
@@ -172,6 +176,23 @@ public class MCTextComponent {
     public ITextComponent getInternal() {
         
         return internal;
+    }
+    
+    /**
+     * If this is a Translation Text Component, return the actual translation key used for localization.
+     * If this is not a Translation Text Component, returns an empty string.
+     *
+     * @return the translation key or an empty string.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("key")
+    public String getKey() {
+        
+        if(getInternal() instanceof TranslationTextComponent) {
+            return ((TranslationTextComponent) getInternal()).getKey();
+        }
+        
+        return "";
     }
     
 }
