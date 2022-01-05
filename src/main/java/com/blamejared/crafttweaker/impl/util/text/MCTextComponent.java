@@ -185,8 +185,8 @@ public class MCTextComponent {
      * @return the translation key or an empty string.
      */
     @ZenCodeType.Method
-    @ZenCodeType.Getter("key")
-    public String getKey() {
+    @ZenCodeType.Getter("translationKey")
+    public String getTranslationKey() {
         
         if(getInternal() instanceof TranslationTextComponent) {
             return ((TranslationTextComponent) getInternal()).getKey();
