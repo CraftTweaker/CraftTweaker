@@ -192,7 +192,8 @@ public class ExpandPlayerEntity {
     @ZenCodeType.Method
     public static MapData getPersistentData(PlayerEntity internal) {
         
-        return new MapData(internal.getPersistentData().getCompound(PlayerEntity.PERSISTED_NBT_TAG));
+        return new MapData(internal.getPersistentData()
+                .getCompound(PlayerEntity.PERSISTED_NBT_TAG));
     }
     
     /**
@@ -203,7 +204,8 @@ public class ExpandPlayerEntity {
         
         CompoundNBT persistentData = internal.getPersistentData();
         if(persistentData.contains(PlayerEntity.PERSISTED_NBT_TAG, 10)) {
-            persistentData.getCompound(PlayerEntity.PERSISTED_NBT_TAG).merge(data.getInternal());
+            persistentData.getCompound(PlayerEntity.PERSISTED_NBT_TAG)
+                    .merge(data.getInternal());
         } else {
             persistentData.put(PlayerEntity.PERSISTED_NBT_TAG, data.getInternal());
         }
@@ -216,7 +218,15 @@ public class ExpandPlayerEntity {
     }
     
     @ZenCodeType.Method
-    public static IItemStack getHeldItem(PlayerEntity internal, Hand hand){
+    public static IItemStack getHeldItem(PlayerEntity internal, Hand hand) {
+        
         return new MCItemStack(internal.getHeldItem(hand));
     }
+    
+    @ZenCodeType.Method
+    public static void swing(PlayerEntity internal, Hand hand, boolean updateSelf) {
+        
+        internal.swing(hand, updateSelf);
+    }
+    
 }
