@@ -6,7 +6,7 @@ import com.matthewprenger.cursegradle.Options
 plugins {
     `maven-publish`
     id("fabric-loom") version "0.10-SNAPSHOT"
-    id("com.blamejared.modtemplate") version ("[2.34,)")
+    id("com.blamejared.modtemplate") version ("[2.0.0.34,)")
     id("com.matthewprenger.cursegradle") version ("1.4.0")
 }
 
