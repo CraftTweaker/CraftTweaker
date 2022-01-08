@@ -4,7 +4,7 @@ A uniform place to keep track of new features of the 1.17 port.
 
 1) Fabric support
 2) IData visitors
-3) Log4J logger
+3) Log4J logger (well this was timed badly😬)
 4) default script priority is now 0
 5) ItemStack tag is now a MapData and is nullable.
 6) New `IItemStack#modify` to get rid of partial code duplication
