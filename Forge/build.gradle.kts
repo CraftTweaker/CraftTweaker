@@ -3,6 +3,8 @@ plugins {
     id("net.minecraftforge.gradle") version ("5.1.+")
     id("org.parchmentmc.librarian.forgegradle") version ("1.+")
     id("org.spongepowered.mixin") version ("0.7-SNAPSHOT")
+    id("com.blamejared.modtemplate") version ("2.+")
+    id("com.matthewprenger.cursegradle") version ("1.4.0")
 }
 
 val minecraftVersion: String by project
@@ -11,6 +13,11 @@ val forgeAtsEnabled: String by project
 val modName: String by project
 val modAuthor: String by project
 val modId: String by project
+val modAvatar: String by project
+val curseProjectId: String by project
+val curseHomepage: String by project
+val gitFirstCommit: String by project
+val gitRepo: String by project
 
 val baseArchiveName = "${modName}-forge-${minecraftVersion}"
 
@@ -108,6 +115,29 @@ minecraft {
     }
 }
 
+modTemplate {
+    mcVersion(minecraftVersion)
+    curseHomepage(curseHomepage)
+    displayName(modName)
+    modLoader("Forge")
+    changelog.apply {
+        enabled(true)
+        firstCommit(gitFirstCommit)
+        repo(gitRepo)
+    }
+    versionTracker.apply {
+        enabled(true)
+        author(modAuthor)
+        projectName(modName)
+        homepage(curseHomepage)
+    }
+    webhook.apply {
+        enabled(true)
+        curseId(curseProjectId)
+        avatarUrl(modAvatar)
+    }
+}
+
 sourceSets.main.get().resources.srcDir("src/generated/resources")
 
 tasks.withType<JavaCompile> {
@@ -146,4 +176,17 @@ publishing {
     repositories {
         maven("file://${System.getenv("local_maven")}")
     }
+}
+
+curseforge {
+
+    apiKey = System.getenv("curseforgeApiToken") ?: 0
+    project(closureOf<com.matthewprenger.cursegradle.CurseProject> {
+        id = curseProjectId
+        releaseType = "release"
+        changelog = file("changelog.md")
+        changelogType = "markdown"
+        addGameVersion("Forge")
+        addGameVersion(minecraftVersion)
+    })
 }

@@ -15,6 +15,9 @@ pluginManagement {
         maven("https://maven.parchmentmc.org") {
             name = "ParchmentMC"
         }
+        maven("https://maven.blamejared.com") {
+            name = "BlameJared"
+        }
     }
     resolutionStrategy {
         eachPlugin {
@@ -23,6 +26,9 @@ pluginManagement {
             }
             if (requested.id.id == "org.spongepowered.mixin") {
                 useModule("org.spongepowered:mixingradle:${requested.version}")
+            }
+            if (requested.id.id == "com.blamejared.modtemplate") {
+                useModule("com.blamejared:ModTemplate:${requested.version}")
             }
         }
     }

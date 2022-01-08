@@ -1,13 +1,21 @@
 plugins {
     `maven-publish`
     id("fabric-loom") version "0.10-SNAPSHOT"
+    id("com.blamejared.modtemplate") version ("2.+")
+    id("com.matthewprenger.cursegradle") version ("1.4.0")
 }
 
 val minecraftVersion: String by project
 val fabricVersion: String by project
 val fabricLoaderVersion: String by project
 val modName: String by project
+val modAuthor: String by project
 val modId: String by project
+val modAvatar: String by project
+val curseProjectId: String by project
+val curseHomepage: String by project
+val gitFirstCommit: String by project
+val gitRepo: String by project
 
 val baseArchiveName = "${modName}-fabric-${minecraftVersion}"
 
@@ -70,6 +78,31 @@ loom {
 }
 
 
+modTemplate {
+    mcVersion(minecraftVersion)
+    curseHomepage(curseHomepage)
+    displayName(modName)
+    modLoader("Fabric")
+    changelog.apply {
+        enabled(true)
+        firstCommit(gitFirstCommit)
+        repo(gitRepo)
+    }
+    versionTracker.apply {
+        enabled(true)
+        author(modAuthor)
+        projectName(modName)
+        homepage(curseHomepage)
+    }
+    webhook.apply {
+        enabled(true)
+        curseId(curseProjectId)
+        avatarUrl(modAvatar)
+    }
+}
+
+
+
 tasks.compileGametestJava {
     source(project(":Common").sourceSets.gametest.get().java)
 }
@@ -110,4 +143,18 @@ publishing {
     repositories {
         maven("file://${System.getenv("local_maven")}")
     }
+}
+
+curseforge {
+
+    apiKey = System.getenv("curseforgeApiToken") ?: 0
+    project(closureOf<com.matthewprenger.cursegradle.CurseProject> {
+        id = curseProjectId
+        releaseType = "release"
+        changelog = file("changelog.md")
+        changelogType = "markdown"
+        addGameVersion("Fabric")
+        addGameVersion(minecraftVersion)
+        mainArtifact(file("${project.buildDir}/libs/${baseArchiveName}.jar"))
+    })
 }
