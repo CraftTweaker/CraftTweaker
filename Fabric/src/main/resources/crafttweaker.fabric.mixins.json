@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.blamejared.crafttweaker.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "common.access.item.AccessBucketItem",
+    "common.access.tag.AccessStaticTags",
+    "common.transform.item.MixinItemStackAttributes",
+    "common.transform.loot.MixinLootTable",
+    "common.transform.server.MixinServerResources"
+  ],
+  "client": [
+    "client.access.AccessKeyMapping",
+    "client.transform.multiplayer.MixinClientPacketListener"
+  ],
+  "server": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

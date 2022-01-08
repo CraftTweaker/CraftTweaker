@@ -11,7 +11,8 @@ out
 *.ipr
 *.iws
 *.iml
-.idea
+.idea/*
+!.idea/scopes
 
 # gradle
 build
@@ -21,3 +22,14 @@ build
 eclipse
 run
 run_server
+
+Common/docsOut
+Fabric/docsOut
+Forge/docsOut
+
+classes
+logs
+
+fabric-game-tests.html
+
+secrets.json

@@ -57,6 +57,9 @@ public class HeaderConverter {
     
     private void removeClassParametersIfPresent(List<? extends VariableElement> parameters, int maximumNumberOfParameters) {
         
+        if(parameters.isEmpty()) {
+            return;
+        }
         for(int i = 0; i < maximumNumberOfParameters; i++) {
             final VariableElement variableElement = parameters.get(0);
             final Element element = typeUtils.asElement(variableElement.asType());

@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.co
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.type.TypeConversionRule;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.ExistingTypeInfo;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;

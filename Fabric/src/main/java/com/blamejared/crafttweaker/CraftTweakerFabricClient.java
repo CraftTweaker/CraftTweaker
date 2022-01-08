@@ -1,0 +1,35 @@
+package com.blamejared.crafttweaker;
+
+import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
+import com.blamejared.crafttweaker.impl.network.message.ClientMessages;
+import com.blamejared.crafttweaker.platform.Services;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+
+public class CraftTweakerFabricClient implements ClientModInitializer {
+    
+    @Override
+    public void onInitializeClient() {
+        
+        ItemTooltipCallback.EVENT.register(Services.CLIENT::applyTooltips);
+        
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            CraftTweakerLogger.addPlayer(client.player);
+        });
+        
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            CraftTweakerLogger.removePlayer(client.player);
+        });
+        
+        for(ClientMessages msg : ClientMessages.values()) {
+            ClientPlayNetworking.registerGlobalReceiver(msg.getId(), (client, handler, buf, responseSender) -> msg.getMessageFactory()
+                    .apply(buf)
+                    .handle());
+        }
+        
+        
+    }
+    
+}

@@ -56,6 +56,9 @@ public class PageWriter {
     
     private void writePage(DocumentationPage page) throws IOException {
         
+        if(!page.pageInfo.shouldOutput()) {
+            return;
+        }
         final File file = new File(outputDirectory, page.pageInfo.getOutputPathWithExtension(MARKDOWN_EXTENSION));
         ensureDirectoryExistsFor(file);
         writePageInfoAt(page, file);
@@ -63,6 +66,9 @@ public class PageWriter {
     
     private void writeMeta(DocumentationPage page) throws IOException {
         
+        if(!page.pageInfo.shouldOutput()) {
+            return;
+        }
         final File file = new File(outputDirectory, page.pageInfo.getOutputPathWithExtension(JSON_EXTENSION));
         ensureDirectoryExistsFor(file);
         writePageMetaAt(page, file);

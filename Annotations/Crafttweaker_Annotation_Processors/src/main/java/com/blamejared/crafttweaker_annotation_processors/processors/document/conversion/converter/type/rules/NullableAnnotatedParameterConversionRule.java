@@ -3,9 +3,7 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.co
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.type.TypeConversionRule;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.type.TypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.NullableTypeInfo;
-import com.sun.tools.javac.code.Type;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
@@ -41,13 +39,15 @@ public class NullableAnnotatedParameterConversionRule implements TypeConversionR
     @Nullable
     @Override
     public AbstractTypeInfo convert(final TypeMirror mirror) {
-    
-        if(!(mirror instanceof Type.AnnotatedType)) {
-            return null;
-        }
-        final Element underlyingType = ((Type.AnnotatedType) mirror).asElement();
-        final AbstractTypeInfo typeInfo = this.converter.convertType(underlyingType.asType());
-        return new NullableTypeInfo(typeInfo);
+        
+        return null;
+        // TODO module stuff stop us from accessing this...
+        //        if(!(mirror instanceof Type.AnnotatedType)) {
+        //            return null;
+        //        }
+        //        final Element underlyingType = ((Type.AnnotatedType) mirror).asElement();
+        //        final AbstractTypeInfo typeInfo = this.converter.convertType(underlyingType.asType());
+        //        return new NullableTypeInfo(typeInfo);
     }
     
 }

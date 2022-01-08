@@ -1,11 +1,34 @@
 {
-  "required": true,
-  "package": "com.example.examplemod.mixin",
-  "compatibilityLevel": "JAVA_16",
-  "mixins": [
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  },
-  "refmap": "crafttweaker.refmap.json"
+    "required": true,
+    "minVersion": "0.8",
+    "package": "com.blamejared.crafttweaker.mixin",
+    "refmap": "${refmap_target}refmap.json",
+    "compatibilityLevel": "JAVA_16",
+    "mixins": [
+        "common.access.block.AccessBlockBehaviour",
+        "common.access.block.AccessBlockStateBase",
+        "common.access.entity.AccessLightningBolt",
+        "common.access.food.AccessFoodPropertiesBuilder",
+        "common.access.item.AccessIngredient",
+        "common.access.item.AccessIngredientTagValue",
+        "common.access.item.AccessItem",
+        "common.access.predicate.AccessLightningBoltPredicate",
+        "common.access.predicate.AccessStatePropertiesPredicateBuilder",
+        "common.access.recipe.AccessRecipeManager",
+        "common.access.server.AccessMinecraftServer",
+        "common.access.tag.AccessSetTag",
+        "common.access.villager.AccessDyedArmorForEmeralds",
+        "common.access.villager.AccessEmeraldForItems",
+        "common.access.villager.AccessEnchantedItemForEmeralds",
+        "common.access.villager.AccessItemsAndEmeraldsToItems",
+        "common.access.villager.AccessItemsForEmeralds",
+        "common.access.villager.AccessTippedArrowForItemsAndEmeralds"
+    ],
+    "client": [
+    ],
+    "server": [
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
 }

@@ -64,7 +64,7 @@ public class TypeConverter implements IHasPostCreationCall {
         }
         
         //Problem: When preparing the ATIs we already convert the comments :thinking:
-        throw new UnsupportedOperationException("TODO: " + name.getZenCodeName());
+        throw new UnsupportedOperationException("TODO: Unable to convert page: " + name.getZenCodeName() + " Make sure it has an @Document annotation!");
     }
     
     private AbstractTypeInfo getGeneric(TypeName name) {
@@ -120,8 +120,21 @@ public class TypeConverter implements IHasPostCreationCall {
     
     public AbstractTypeInfo convertType(TypeMirror typeMirror) {
         
-        return tryConvertType(typeMirror)
-                .orElseThrow(() -> new IllegalArgumentException("Could not convert " + typeMirror));
+        // TODO
+        return tryConvertType(typeMirror).orElse(new AbstractTypeInfo() {
+            @Override
+            public String getDisplayName() {
+                
+                return "invalid";
+            }
+            
+            @Override
+            public String getClickableMarkdown() {
+                
+                return "**invalid**";
+            }
+        });
+        //                .orElseThrow(() -> new IllegalArgumentException("Could not convert " + typeMirror));
     }
     
     public Optional<AbstractTypeInfo> tryConvertType(TypeMirror typeMirror) {

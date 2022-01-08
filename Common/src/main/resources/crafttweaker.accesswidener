@@ -1,0 +1,27 @@
+accessWidener   v1      named
+accessible      class   net/minecraft/world/item/crafting/Ingredient$Value
+
+accessible      class   net/minecraft/world/item/crafting/Ingredient$TagValue
+accessible      method  net/minecraft/world/item/crafting/Ingredient$TagValue <init> (Lnet/minecraft/tags/Tag;)V
+
+accessible      class   net/minecraft/world/item/crafting/Ingredient$ItemValue
+accessible      method  net/minecraft/world/item/crafting/Ingredient$ItemValue <init> (Lnet/minecraft/world/item/ItemStack;)V
+
+accessible      method  net/minecraft/world/item/crafting/Ingredient valueFromJson (Lcom/google/gson/JsonObject;)Lnet/minecraft/world/item/crafting/Ingredient$Value;
+
+accessible      method  net/minecraft/world/damagesource/DamageSource <init> (Ljava/lang/String;)V
+
+accessible      class   net/minecraft/world/entity/npc/VillagerTrades$DyedArmorForEmeralds
+accessible      class   net/minecraft/world/entity/npc/VillagerTrades$EmeraldForItems
+accessible      class   net/minecraft/world/entity/npc/VillagerTrades$EmeraldsForVillagerTypeItem
+accessible      class   net/minecraft/world/entity/npc/VillagerTrades$EnchantBookForEmeralds
+accessible      class   net/minecraft/world/entity/npc/VillagerTrades$EnchantedItemForEmeralds
+accessible      class   net/minecraft/world/entity/npc/VillagerTrades$ItemsAndEmeraldsToItems
+accessible      class   net/minecraft/world/entity/npc/VillagerTrades$ItemsForEmeralds
+accessible      class   net/minecraft/world/entity/npc/VillagerTrades$SuspisciousStewForEmerald
+accessible      class   net/minecraft/world/entity/npc/VillagerTrades$TippedArrowForItemsAndEmeralds
+accessible      class   net/minecraft/world/entity/npc/VillagerTrades$TreasureMapForEmeralds
+
+accessible      class   net/minecraft/advancements/critereon/StatePropertiesPredicate$ExactPropertyMatcher
+accessible      class   net/minecraft/advancements/critereon/StatePropertiesPredicate$PropertyMatcher
+accessible      class   net/minecraft/advancements/critereon/StatePropertiesPredicate$RangedPropertyMatcher

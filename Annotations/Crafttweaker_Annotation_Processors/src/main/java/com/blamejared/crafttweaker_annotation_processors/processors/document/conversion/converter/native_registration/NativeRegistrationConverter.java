@@ -3,22 +3,24 @@ package com.blamejared.crafttweaker_annotation_processors.processors.document.co
 import com.blamejared.crafttweaker_annotation_processors.processors.document.NativeConversionRegistry;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.DocumentConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.comment.CommentConverter;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.EnumConstantConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.header.GenericParameterConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.member.static_member.StaticMemberConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.named_type.ImplementationConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.named_type.SuperTypeConverter;
-import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.native_registration.member.NativeEnumConstantConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.converter.native_registration.member.NativeTypeVirtualMemberConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.element.ClassTypeConverter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.conversion.mods.KnownModList;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.DocumentationPageInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.TypeName;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.info.TypePageInfo;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.enum_constant.DocumentedEnumConstants;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.DocumentedGenericParameter;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.header.examples.Example;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.static_member.DocumentedStaticMembers;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.member.virtual_member.DocumentedVirtualMembers;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.page.DocumentationPage;
+import com.blamejared.crafttweaker_annotation_processors.processors.document.page.page.EnumTypePage;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.page.TypePage;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.TypePageTypeInfo;
@@ -26,6 +28,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 
 import javax.annotation.Nonnull;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
@@ -42,9 +45,9 @@ public class NativeRegistrationConverter extends DocumentConverter {
     private final NativeConversionRegistry nativeConversionRegistry;
     private final Types typeUtils;
     private final ClassTypeConverter classTypeConverter;
-    private final NativeEnumConstantConverter nativeEnumConstantConverter;
+    private final EnumConstantConverter enumConstantConverter;
     
-    public NativeRegistrationConverter(KnownModList knownModList, CommentConverter commentConverter, StaticMemberConverter staticMemberConverter, NativeTypeVirtualMemberConverter virtualMemberConverter, SuperTypeConverter superTypeConverter, ImplementationConverter implementationConverter, GenericParameterConverter genericParameterConverter, NativeConversionRegistry nativeConversionRegistry, Types typeUtils, ClassTypeConverter classTypeConverter, NativeEnumConstantConverter nativeEnumConstantConverter) {
+    public NativeRegistrationConverter(KnownModList knownModList, CommentConverter commentConverter, StaticMemberConverter staticMemberConverter, NativeTypeVirtualMemberConverter virtualMemberConverter, SuperTypeConverter superTypeConverter, ImplementationConverter implementationConverter, GenericParameterConverter genericParameterConverter, NativeConversionRegistry nativeConversionRegistry, Types typeUtils, ClassTypeConverter classTypeConverter, EnumConstantConverter enumConstantConverter) {
         
         super(knownModList, commentConverter);
         this.staticMemberConverter = staticMemberConverter;
@@ -55,7 +58,7 @@ public class NativeRegistrationConverter extends DocumentConverter {
         this.nativeConversionRegistry = nativeConversionRegistry;
         this.typeUtils = typeUtils;
         this.classTypeConverter = classTypeConverter;
-        this.nativeEnumConstantConverter = nativeEnumConstantConverter;
+        this.enumConstantConverter = enumConstantConverter;
     }
     
     @Override
@@ -134,10 +137,13 @@ public class NativeRegistrationConverter extends DocumentConverter {
         final List<AbstractTypeInfo> implementedInterfaces = convertImplementedInterfaces(typeElement);
         final DocumentedStaticMembers staticMembers = convertStaticMembers(typeElement, pageInfo);
         final List<DocumentedGenericParameter> genericParameters = convertGenericParameters(typeElement);
-        final AbstractTypeInfo thisType = convertThisType(typeElement);
-        convertNativeEnumMembers(typeElement, staticMembers, thisType);
-        
-        return new TypePage((TypePageInfo) pageInfo, virtualMembers, superType, implementedInterfaces, staticMembers, genericParameters);
+        if(isNativeEnum(typeElement)) {
+            DocumentedEnumConstants enumConstants = new DocumentedEnumConstants(getName(typeElement));
+            convertNativeEnumMembers(typeElement, enumConstants);
+            return new EnumTypePage((TypePageInfo) pageInfo, virtualMembers, superType, implementedInterfaces, staticMembers, genericParameters, enumConstants);
+        } else {
+            return new TypePage((TypePageInfo) pageInfo, virtualMembers, superType, implementedInterfaces, staticMembers, genericParameters);
+        }
     }
     
     private DocumentedVirtualMembers convertVirtualMembers(TypeElement typeElement, DocumentationPageInfo pageInfo) {
@@ -147,6 +153,10 @@ public class NativeRegistrationConverter extends DocumentConverter {
     
     private AbstractTypeInfo convertSuperType(TypeElement typeElement) {
         
+        if(isNativeEnum(typeElement)) {
+            // we should not print redundant information "extending Enum<E>"
+            return null;
+        }
         final TypeElement nativeType = getNativeType(typeElement);
         return superTypeConverter.convertSuperTypeFor(nativeType).orElse(null);
     }
@@ -167,9 +177,9 @@ public class NativeRegistrationConverter extends DocumentConverter {
         return staticMemberConverter.convertFor(typeElement, pageInfo);
     }
     
-    private void convertNativeEnumMembers(TypeElement typeElement, DocumentedStaticMembers documentedStaticMembers, AbstractTypeInfo thisType) {
+    private void convertNativeEnumMembers(TypeElement typeElement, DocumentedEnumConstants documentedEnumConstants) {
         
-        nativeEnumConstantConverter.convertAndAddTo(getNativeType(typeElement), documentedStaticMembers, thisType);
+        enumConstantConverter.convertAndAddTo(getNativeType(typeElement), documentedEnumConstants);
     }
     
     private List<DocumentedGenericParameter> convertGenericParameters(TypeElement typeElement) {
@@ -178,6 +188,11 @@ public class NativeRegistrationConverter extends DocumentConverter {
                 .stream()
                 .map(genericParameterConverter::convertGenericParameter)
                 .collect(Collectors.toList());
+    }
+    
+    private boolean isNativeEnum(TypeElement typeElement) {
+        
+        return getNativeType(typeElement).getKind() == ElementKind.ENUM;
     }
     
 }

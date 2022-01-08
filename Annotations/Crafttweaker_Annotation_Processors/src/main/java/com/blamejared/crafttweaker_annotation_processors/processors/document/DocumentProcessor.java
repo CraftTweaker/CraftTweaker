@@ -44,6 +44,7 @@ public class DocumentProcessor extends AbstractCraftTweakerProcessor {
         final HashSet<String> result = new HashSet<>(2);
         result.add("com.blamejared.crafttweaker_annotations.annotations.Document");
         result.add("net.minecraftforge.fml.common.Mod");
+        result.add("net.minecraft.obfuscate.DontObfuscate");
         return result;
     }
     
@@ -74,6 +75,7 @@ public class DocumentProcessor extends AbstractCraftTweakerProcessor {
     @Override
     protected boolean performProcessing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         
+        System.out.println(annotations);
         if(roundEnv.processingOver()) {
             handleLastRound();
         } else {

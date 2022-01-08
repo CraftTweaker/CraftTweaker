@@ -1,39 +1,47 @@
 {
     "schemaVersion": 1,
-    "id": "modid",
+    "id": "crafttweaker",
     "version": "${version}",
-  
-    "name": "Example Mod",
-    "description": "This is an example description! Tell everyone what your mod is about!",
+    "name": "CraftTweaker",
+    "description": "Customize your minecraft experience!",
     "authors": [
-      "Me!"
+        "Jaredlll08",
+        "Kindlich",
+        "StanHebben",
+        "TheSilkMiner"
     ],
     "contact": {
-      "homepage": "https://fabricmc.net/",
-      "sources": "https://github.com/FabricMC/fabric-example-mod"
+        "homepage": "https://minecraft.curseforge.com/projects/crafttweaker",
+        "sources": "https://github.com/CraftTweaker/CraftTweaker"
     },
-  
-    "license": "CC0-1.0",
-    "icon": "assets/modid/icon.png",
-  
+    "license": "MIT",
+    "icon": "assets/crafttweaker/logo.png",
     "environment": "*",
     "entrypoints": {
-      "main": [
-        "com.example.examplemod.ExampleMod"
-      ]
+        "main": [
+            "com.blamejared.crafttweaker.CraftTweakerFabric"
+        ],
+        "client": [
+            "com.blamejared.crafttweaker.CraftTweakerFabricClient"
+        ],
+        "fabric-gametest": [
+            "com.blamejared.crafttweaker.gametest.CraftTweakerGameTests"
+        ],
+        "rei": [
+            "com.blamejared.crafttweaker.impl.comat.rei.CraftTweakerPlugin"
+        ]
     },
     "mixins": [
-      "modid.mixins.json"
+        "crafttweaker.mixins.json",
+        "crafttweaker.fabric.mixins.json"
     ],
-  
     "depends": {
-      "fabricloader": ">=0.11.3",
-      "fabric": "*",
-      "minecraft": "1.17.x",
-      "java": ">=16"
+        "fabricloader": ">=0.11.3",
+        "fabric": "*",
+        "minecraft": "1.17.x",
+        "java": ">=16",
+        "ingredient-extension-api": "*"
     },
-    "suggests": {
-      "another-mod": "*"
-    }
-  }
+    "accessWidener": "crafttweaker.accesswidener"
+}
   

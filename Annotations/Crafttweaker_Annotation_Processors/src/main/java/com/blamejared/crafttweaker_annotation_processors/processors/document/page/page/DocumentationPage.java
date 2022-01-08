@@ -30,9 +30,11 @@ public abstract class DocumentationPage implements IFillMeta {
         writeTitle(writer);
         writeDeprecation(writer);
         writeDescription(writer);
-        if(!pageInfo.declaringModId.equals("crafttweaker")) {
-            writeOwnerModId(writer);
-        }
+        
+        //TODO re-add
+        //        if(!pageInfo.declaringModId.equals("crafttweaker")) {
+        //            writeOwnerModId(writer);
+        //        }
         beforeWritingMembers(writer);
         writeMembers(writer);
     }
