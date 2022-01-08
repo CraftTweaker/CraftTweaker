@@ -1,3 +1,8 @@
+import com.blamejared.modtemplate.Utils
+import com.matthewprenger.cursegradle.CurseProject
+import com.matthewprenger.cursegradle.CurseRelation
+import com.matthewprenger.cursegradle.Options
+
 plugins {
     `maven-publish`
     id("fabric-loom") version "0.10-SNAPSHOT"
@@ -5,6 +10,7 @@ plugins {
     id("com.matthewprenger.cursegradle") version ("1.4.0")
 }
 
+val modVersion: String by project
 val minecraftVersion: String by project
 val fabricVersion: String by project
 val fabricLoaderVersion: String by project
@@ -19,6 +25,7 @@ val gitRepo: String by project
 
 val baseArchiveName = "${modName}-fabric-${minecraftVersion}"
 
+version = Utils.updatingSemVersion(modVersion)
 base {
     archivesName.set(baseArchiveName)
 }
@@ -148,7 +155,7 @@ publishing {
 curseforge {
 
     apiKey = System.getenv("curseforgeApiToken") ?: 0
-    project(closureOf<com.matthewprenger.cursegradle.CurseProject> {
+    project(closureOf<CurseProject> {
         id = curseProjectId
         releaseType = "release"
         changelog = file("changelog.md")
@@ -156,5 +163,16 @@ curseforge {
         addGameVersion("Fabric")
         addGameVersion(minecraftVersion)
         mainArtifact(file("${project.buildDir}/libs/${baseArchiveName}.jar"))
+        relations(closureOf<CurseRelation> {
+            requiredDependency("ingredient-extension-api")
+            requiredDependency("fabric-api")
+        })
+        
+        afterEvaluate {
+            uploadTask.dependsOn(tasks.remapJar)
+        }
+    })
+    options(closureOf<Options> {
+        forgeGradleIntegration = false
     })
 }

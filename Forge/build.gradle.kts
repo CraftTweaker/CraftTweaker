@@ -1,3 +1,6 @@
+import com.blamejared.modtemplate.Utils
+import com.matthewprenger.cursegradle.CurseProject
+
 plugins {
     `maven-publish`
     id("net.minecraftforge.gradle") version ("5.1.+")
@@ -7,6 +10,7 @@ plugins {
     id("com.matthewprenger.cursegradle") version ("1.4.0")
 }
 
+val modVersion: String by project
 val minecraftVersion: String by project
 val forgeVersion: String by project
 val forgeAtsEnabled: String by project
@@ -21,6 +25,7 @@ val gitRepo: String by project
 
 val baseArchiveName = "${modName}-forge-${minecraftVersion}"
 
+version = Utils.updatingSemVersion(modVersion)
 base {
     archivesName.set(baseArchiveName)
 }
@@ -181,7 +186,7 @@ publishing {
 curseforge {
 
     apiKey = System.getenv("curseforgeApiToken") ?: 0
-    project(closureOf<com.matthewprenger.cursegradle.CurseProject> {
+    project(closureOf<CurseProject> {
         id = curseProjectId
         releaseType = "release"
         changelog = file("changelog.md")

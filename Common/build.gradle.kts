@@ -1,9 +1,11 @@
+import com.blamejared.modtemplate.Utils
 plugins {
     `java-library`
     `maven-publish`
+    id("com.blamejared.modtemplate") version ("2.+")
     id("org.spongepowered.gradle.vanilla") version "0.2.1-SNAPSHOT"
 }
-
+val modVersion: String by project
 val minecraftVersion: String by project
 val commonRunsEnabled: String by project
 val commonClientRunName: String? by project
@@ -13,6 +15,7 @@ val modId: String by project
 
 val baseArchiveName = "${modName}-common-${minecraftVersion}"
 
+version = Utils.updatingSemVersion(modVersion)
 tasks.withType<JavaCompile> {
     source(project(":Crafttweaker_Annotations").sourceSets.main.get().allSource)
 }
