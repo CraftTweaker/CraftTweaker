@@ -82,7 +82,7 @@ subprojects {
     // </editor-fold>
     // <editor-fold desc="Modloader projects">
     else if (setOf("Common", "Forge", "Fabric").contains(project.name)) {
-        apply(plugin = "java-library")
+        apply(plugin = "java")
         apply(plugin = "idea")
         val library by configurations.creating
 
@@ -108,7 +108,7 @@ subprojects {
         }
 
         dependencies {
-            library(project(":Crafttweaker_Annotations"))
+//            library(project(":Crafttweaker_Annotations"))
             annotationProcessor(project(":Crafttweaker_Annotation_Processors"))
 
             implementation("com.google.code.findbugs:jsr305:3.0.1")

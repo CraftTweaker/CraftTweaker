@@ -41,12 +41,14 @@ mixin {
 dependencies {
     "minecraft"("net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}")
     compileOnly(project(":Common"))
+    compileOnly(project(":Crafttweaker_Annotations"))
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         implementation(project(it.toString()))
     }
 
     implementation(fg.deobf("mezz.jei:jei-1.18.1:9.1.2.68"))
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
+
 }
 
 minecraft {
@@ -73,6 +75,7 @@ minecraft {
                 create(modId) {
                     source(sourceSets.main.get())
                     source(project(":Common").sourceSets.main.get())
+                    source(project(":Crafttweaker_Annotations").sourceSets.main.get())
                     (project.ext["zenCodeDeps"] as Set<*>).forEach {
                         source(project(it.toString()).sourceSets.main.get())
                     }
@@ -88,6 +91,7 @@ minecraft {
                 create(modId) {
                     source(sourceSets.main.get())
                     source(project(":Common").sourceSets.main.get())
+                    source(project(":Crafttweaker_Annotations").sourceSets.main.get())
                     (project.ext["zenCodeDeps"] as Set<*>).forEach {
                         source(project(it.toString()).sourceSets.main.get())
                     }
@@ -111,6 +115,7 @@ minecraft {
                 create(modId) {
                     source(sourceSets.main.get())
                     source(project(":Common").sourceSets.main.get())
+                    source(project(":Crafttweaker_Annotations").sourceSets.main.get())
                     (project.ext["zenCodeDeps"] as Set<*>).forEach {
                         source(project(it.toString()).sourceSets.main.get())
                     }
