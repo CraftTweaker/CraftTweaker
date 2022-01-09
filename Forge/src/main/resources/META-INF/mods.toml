@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[37,)"
+loaderVersion = "[39,)"
 license = "MIT"
 issueTrackerURL = "https://github.com/CraftTweaker/CraftTweaker/issues"
 [[mods]]
@@ -7,7 +7,7 @@ modId = "crafttweaker"
 version = "${file.jarVersion}"
 displayName = "CraftTweaker"
 displayURL = "https://minecraft.curseforge.com/projects/crafttweaker"
-updateJSONURL = "https://updates.blamejared.com/get?n=crafttweaker&gv=1.17.1"
+updateJSONURL = "https://updates.blamejared.com/get?n=crafttweaker&gv=1.18.1"
 logoFile = "logo.png"
 authors = "Jaredlll08, Kindlich, StanHebben and TheSilkMiner"
 description = "Customize your minecraft experience!"
@@ -15,12 +15,12 @@ itemIcon = "minecraft:crafting_table"
 [[dependencies.crafttweaker]]
 modId = "forge"
 mandatory = true
-versionRange = "[37,)"
+versionRange = "[39,)"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.crafttweaker]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.17.1,1.18)"
+versionRange = "[1.18.1,1.19)"
 ordering = "NONE"
 side = "BOTH"

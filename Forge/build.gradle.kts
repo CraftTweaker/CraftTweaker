@@ -45,12 +45,12 @@ dependencies {
         implementation(project(it.toString()))
     }
 
-    implementation(fg.deobf("mezz.jei:jei-1.17.1:8.1.0.26"))
+    implementation(fg.deobf("mezz.jei:jei-1.18.1:9.1.2.68"))
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
 }
 
 minecraft {
-    mappings("parchment", "2021.10.10-1.17.1")
+    mappings("parchment", "2021.12.19-1.18.1")
 
     if (forgeAtsEnabled.toBoolean()) {
         accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg"))

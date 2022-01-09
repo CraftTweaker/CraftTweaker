@@ -5,7 +5,6 @@ import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -34,7 +33,7 @@ public class ExpandBlockEntity {
     @ZenCodeType.Getter("data")
     public static MapData getData(BlockEntity internal) {
         
-        return new MapData(internal.save(new CompoundTag()));
+        return new MapData(internal.saveWithoutMetadata());
     }
     
     @ZenCodeType.Method

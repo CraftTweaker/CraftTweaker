@@ -132,7 +132,7 @@ public class ExpandServer {
     @ZenCodeType.Getter("moddeStatus")
     public static String getModdedStatus(MinecraftServer internal) {
         
-        return internal.getModdedStatus().orElse(null);
+        return internal.getModdedStatus().fullDescription();
     }
     
     @ZenCodeType.Method

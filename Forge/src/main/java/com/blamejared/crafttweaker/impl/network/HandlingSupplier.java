@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.network;
 
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
+
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;

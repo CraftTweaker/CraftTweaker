@@ -27,24 +27,11 @@ public class ExpandBiome {
         return internal.getWaterFogColor();
     }
     
-    @ZenCodeType.Getter("scale")
-    public static float getScale(Biome internal) {
-        
-        return internal.getScale();
-    }
-    
     @ZenCodeType.Getter("downfall")
     public static float getDownFall(Biome internal) {
         
         return internal.getDownfall();
     }
-    
-    @ZenCodeType.Getter("depth")
-    public static float getDepth(Biome internal) {
-        
-        return internal.getDepth();
-    }
-    
     
     @ZenCodeType.Getter("isHumid")
     public static boolean isHumid(Biome internal) {
@@ -76,12 +63,6 @@ public class ExpandBiome {
     public static String getRainType(Biome internal) {
         
         return internal.getPrecipitation().getName();
-    }
-    
-    @ZenCodeType.Method
-    public static float getTemperature(Biome internal, BlockPos pos) {
-        
-        return internal.getTemperature(pos);
     }
     
     @ZenCodeType.Method

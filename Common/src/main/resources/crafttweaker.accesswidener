@@ -18,7 +18,7 @@ accessible      class   net/minecraft/world/entity/npc/VillagerTrades$EnchantBoo
 accessible      class   net/minecraft/world/entity/npc/VillagerTrades$EnchantedItemForEmeralds
 accessible      class   net/minecraft/world/entity/npc/VillagerTrades$ItemsAndEmeraldsToItems
 accessible      class   net/minecraft/world/entity/npc/VillagerTrades$ItemsForEmeralds
-accessible      class   net/minecraft/world/entity/npc/VillagerTrades$SuspisciousStewForEmerald
+accessible      class   net/minecraft/world/entity/npc/VillagerTrades$SuspiciousStewForEmerald
 accessible      class   net/minecraft/world/entity/npc/VillagerTrades$TippedArrowForItemsAndEmeralds
 accessible      class   net/minecraft/world/entity/npc/VillagerTrades$TreasureMapForEmeralds
 

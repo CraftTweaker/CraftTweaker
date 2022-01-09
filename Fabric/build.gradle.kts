@@ -34,7 +34,7 @@ dependencies {
     minecraft("com.mojang:minecraft:${minecraftVersion}")
     mappings(loom.layered {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.17.1:2021.10.10@zip")
+        parchment("org.parchmentmc.data:parchment-1.18.1:2021.12.19@zip")
     })
     modImplementation("net.fabricmc:fabric-loader:${fabricLoaderVersion}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")

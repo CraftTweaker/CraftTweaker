@@ -34,7 +34,7 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.BasicTrade;
+import net.minecraftforge.common.BasicItemListing;
 import net.minecraftforge.common.ForgeInternalHandler;
 import net.minecraftforge.common.ForgeTagHandler;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
@@ -264,8 +264,8 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public void registerCustomTradeConverters(Map<Class<? extends VillagerTrades.ItemListing>, Function<VillagerTrades.ItemListing, CTTradeObject>> classFunctionMap) {
         
-        classFunctionMap.put(BasicTrade.class, iTrade -> {
-            if(iTrade instanceof BasicTrade) {
+        classFunctionMap.put(BasicItemListing.class, iTrade -> {
+            if(iTrade instanceof BasicItemListing) {
                 return new CTTradeObject(
                         createMCItemStackMutable(((AccessBasicTrade) iTrade).getPrice()),
                         createMCItemStackMutable(((AccessBasicTrade) iTrade).getPrice2()),

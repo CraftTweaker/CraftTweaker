@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker.impl.network.message.MessageCopy;
 import com.blamejared.crafttweaker.impl.network.message.MessageOpen;
 import com.blamejared.crafttweaker.platform.services.INetworkHelper;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 
 public class ForgeNetworkHelper implements INetworkHelper {
     

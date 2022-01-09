@@ -129,7 +129,7 @@ public class CTVillagerTrades {
             }
             throw new IllegalArgumentException("Invalid trade passed to trade function! Given: " + iTrade.getClass());
         });
-        classFunctionMap.put(VillagerTrades.SuspisciousStewForEmerald.class, iTrade -> new CTTradeObject(
+        classFunctionMap.put(VillagerTrades.SuspiciousStewForEmerald.class, iTrade -> new CTTradeObject(
                 emerald,
                 Services.PLATFORM.getEmptyIItemStack(),
                 suspiciousStew));
@@ -440,7 +440,7 @@ public class CTVillagerTrades {
     @ZenCodeType.Method
     public void removeSuspiciousStewForEmeraldTrade(VillagerProfession profession, int villagerLevel) {
         
-        removeTradeInternal(profession, villagerLevel, trade -> trade instanceof VillagerTrades.SuspisciousStewForEmerald);
+        removeTradeInternal(profession, villagerLevel, trade -> trade instanceof VillagerTrades.SuspiciousStewForEmerald);
     }
     
     /**

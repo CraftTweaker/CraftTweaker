@@ -228,7 +228,7 @@ public class ExpandLevel {
         
         CompoundTag nbt = new CompoundTag();
         BlockEntity te = internal.getBlockEntity(pos);
-        return te == null ? new MapData() : TagToDataConverter.convertCompound(te.save(nbt));
+        return te == null ? new MapData() : TagToDataConverter.convertCompound(te.saveWithoutMetadata());
     }
     
     /**

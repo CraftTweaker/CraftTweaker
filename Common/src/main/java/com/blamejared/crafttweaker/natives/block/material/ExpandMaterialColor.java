@@ -12,9 +12,9 @@ import org.openzen.zencode.java.ZenCodeType;
 public class ExpandMaterialColor {
     
     @ZenCodeType.Method
-    public static int calculateRGBColor(MaterialColor internal, int index) {
+    public static int calculateRGBColor(MaterialColor internal, MaterialColor.Brightness brightness) {
         
-        return internal.calculateRGBColor(index);
+        return internal.calculateRGBColor(brightness);
     }
     
 }

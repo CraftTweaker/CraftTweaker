@@ -1,13 +1,13 @@
 package com.blamejared.crafttweaker.impl.network;
 
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
-import com.blamejared.crafttweaker.impl.network.message.IMessage;
 import com.blamejared.crafttweaker.impl.network.message.ClientMessages;
+import com.blamejared.crafttweaker.impl.network.message.IMessage;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
-import net.minecraftforge.fmllegacy.network.NetworkRegistry;
-import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
