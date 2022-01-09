@@ -18,7 +18,7 @@ import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
  * @docEvent canceled it will not process.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/use/LivingEntityUseItemStartEvent")
+@Document("forge/api/event/entity/living/use/LivingEntityUseItemStartEvent")
 @NativeTypeRegistration(value = LivingEntityUseItemEvent.Start.class, zenCodeName = "crafttweaker.api.event.entity.living.use.LivingEntityUseItemStartEvent")
 public class ExpandLivingEntityUseItemStartEvent {
 }

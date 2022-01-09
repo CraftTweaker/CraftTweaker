@@ -15,7 +15,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled the entity is not hurt
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/LivingHurtEvent")
+@Document("forge/api/event/entity/living/LivingHurtEvent")
 @NativeTypeRegistration(value = LivingHurtEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.LivingHurtEvent")
 public class ExpandLivingHurtEvent {
     

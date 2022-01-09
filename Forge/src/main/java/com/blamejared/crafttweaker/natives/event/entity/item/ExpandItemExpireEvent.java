@@ -12,7 +12,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled will prevent the EntityItem from being flagged as dead, thus staying it's removal from the world. If canceled it will add more time to the entities life equal to extraLife.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/item/ItemExpireEvent")
+@Document("forge/api/event/entity/item/ItemExpireEvent")
 @NativeTypeRegistration(value = ItemExpireEvent.class, zenCodeName = "crafttweaker.api.event.entity.item.ItemExpireEvent")
 public class ExpandItemExpireEvent {
     

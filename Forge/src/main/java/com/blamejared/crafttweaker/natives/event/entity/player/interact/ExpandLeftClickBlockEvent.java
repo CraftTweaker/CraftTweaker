@@ -23,7 +23,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled none of the above noted methods to be called.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/player/interact/LeftClickBlockEvent")
+@Document("forge/api/event/entity/player/interact/LeftClickBlockEvent")
 @NativeTypeRegistration(value = PlayerInteractEvent.LeftClickBlock.class, zenCodeName = "crafttweaker.api.event.entity.player.interact.LeftClickBlockEvent")
 public class ExpandLeftClickBlockEvent {
     

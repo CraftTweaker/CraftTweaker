@@ -10,7 +10,7 @@ import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@Document("vanilla/api/event/entity/living/LivingEquipmentChangeEvent")
+@Document("forge/api/event/entity/living/LivingEquipmentChangeEvent")
 @NativeTypeRegistration(value = LivingEquipmentChangeEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.LivingEquipmentChangeEvent")
 public class ExpandLivingEquipmentChangeEvent {
     

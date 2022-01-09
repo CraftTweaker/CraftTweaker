@@ -11,7 +11,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled the experience will not drop.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/LivingExperienceDropEvent")
+@Document("forge/api/event/entity/living/LivingExperienceDropEvent")
 @NativeTypeRegistration(value = LivingExperienceDropEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.LivingExperienceDropEvent")
 public class ExpandLivingExperienceDropEvent {
     

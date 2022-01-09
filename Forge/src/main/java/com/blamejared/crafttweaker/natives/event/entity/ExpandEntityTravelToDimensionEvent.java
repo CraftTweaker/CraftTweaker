@@ -15,7 +15,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled the Entity will not travel to the dimension.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/EntityTravelToDimensionEvent")
+@Document("forge/api/event/entity/EntityTravelToDimensionEvent")
 @NativeTypeRegistration(value = EntityTravelToDimensionEvent.class, zenCodeName = "crafttweaker.api.event.entity.EntityTravelToDimensionEvent")
 public class ExpandEntityTravelToDimensionEvent {
     

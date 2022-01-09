@@ -12,7 +12,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
  * HIGHEST is the first to execute, LOWEST is the last to execute.
  */
 @ZenRegister
-@Document("vanilla/api/event/EventPriority")
+@Document("forge/api/event/EventPriority")
 @NativeTypeRegistration(value = EventPriority.class, zenCodeName = "crafttweaker.api.events.EventPriority")
 @BracketEnum("forge:event/priority")
 public class ExpandEventPriority {

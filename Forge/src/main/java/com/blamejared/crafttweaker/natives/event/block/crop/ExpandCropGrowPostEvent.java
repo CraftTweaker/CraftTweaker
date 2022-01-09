@@ -8,7 +8,7 @@ import net.minecraftforge.event.world.BlockEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@Document("vanilla/api/event/block/crop/CropGrowPostEvent")
+@Document("forge/api/event/block/crop/CropGrowPostEvent")
 @NativeTypeRegistration(value = BlockEvent.CropGrowEvent.Post.class, zenCodeName = "crafttweaker.api.event.block.crop.CropGrowPostEvent")
 public class ExpandCropGrowPostEvent {
     

@@ -12,7 +12,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 
 @ZenRegister
-@Document("vanilla/api/event/entity/player/ItemPickupEvent")
+@Document("forge/api/event/entity/player/ItemPickupEvent")
 @NativeTypeRegistration(value = PlayerEvent.ItemPickupEvent.class, zenCodeName = "crafttweaker.api.event.entity.player.ItemPickupEvent")
 public class ExpandItemPickupEvent {
     

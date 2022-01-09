@@ -13,7 +13,7 @@ import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
  * @docEvent canceled the player will stop using the item.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/use/LivingEntityUseItemTickEvent")
+@Document("forge/api/event/entity/living/use/LivingEntityUseItemTickEvent")
 @NativeTypeRegistration(value = LivingEntityUseItemEvent.Tick.class, zenCodeName = "crafttweaker.api.event.entity.living.use.LivingEntityUseItemTickEvent")
 public class ExpandLivingEntityUseItemTickEvent {
 }

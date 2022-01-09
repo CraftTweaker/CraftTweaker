@@ -7,7 +7,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraftforge.event.TickEvent;
 
 @ZenRegister
-@Document("vanilla/api/event/tick/Phase")
+@Document("forge/api/event/tick/Phase")
 @NativeTypeRegistration(value = TickEvent.Phase.class, zenCodeName = "crafttweaker.api.event.tick.Phase")
 @BracketEnum("forge:event/tick/phase")
 public class ExpandTickEventPhase {

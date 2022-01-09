@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.MCItemStackMutable")
-@Document("vanilla/api/item/MCItemStackMutable")
+@Document("forge/api/item/MCItemStackMutable")
 public class MCItemStackMutable implements ForgeItemStack {
     
     public static Supplier<MCItemStackMutable> EMPTY = () -> new MCItemStackMutable(ItemStack.EMPTY);

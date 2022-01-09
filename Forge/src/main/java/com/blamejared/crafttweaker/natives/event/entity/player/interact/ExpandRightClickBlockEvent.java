@@ -16,7 +16,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled will cause none of the above three to be called.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/player/interact/RightClickBlockEvent")
+@Document("forge/api/event/entity/player/interact/RightClickBlockEvent")
 @NativeTypeRegistration(value = PlayerInteractEvent.RightClickBlock.class, zenCodeName = "crafttweaker.api.event.entity.player.interact.RightClickBlockEvent")
 public class ExpandRightClickBlockEvent {
     

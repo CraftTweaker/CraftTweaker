@@ -11,7 +11,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled the farmland won't turn to dirt
  */
 @ZenRegister
-@Document("vanilla/api/event/block/FarmlandTrampleEvent")
+@Document("forge/api/event/block/FarmlandTrampleEvent")
 @NativeTypeRegistration(value = BlockEvent.FarmlandTrampleEvent.class, zenCodeName = "crafttweaker.api.event.block.FarmlandTrampleEvent")
 public class ExpandFarmlandTrampleEvent {
     

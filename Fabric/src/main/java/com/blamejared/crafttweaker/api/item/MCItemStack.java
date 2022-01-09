@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.MCItemStack")
-@Document("vanilla/api/item/MCItemStack")
+@Document("fabric/api/item/MCItemStack")
 public class MCItemStack implements FabricItemStack {
     
     // TODO move this somewhere else

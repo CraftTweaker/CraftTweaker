@@ -7,7 +7,7 @@ import net.minecraftforge.event.TickEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@Document("vanilla/api/event/tick/TickEvent")
+@Document("forge/api/event/tick/TickEvent")
 @NativeTypeRegistration(value = TickEvent.class, zenCodeName = "crafttweaker.api.event.tick.TickEvent")
 public class ExpandTickEvent {
     

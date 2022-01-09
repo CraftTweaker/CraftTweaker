@@ -17,7 +17,7 @@ import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
  * @docEvent canceled will prevent the Item from being notified that it has stopped being used. The only vanilla item this would effect are bows, and it would cause them NOT to fire their arrow.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/use/LivingEntityUseItemStopEvent")
+@Document("forge/api/event/entity/living/use/LivingEntityUseItemStopEvent")
 @NativeTypeRegistration(value = LivingEntityUseItemEvent.Stop.class, zenCodeName = "crafttweaker.api.event.entity.living.use.LivingEntityUseItemStopEvent")
 public class ExpandLivingEntityUseItemStopEvent {
 }

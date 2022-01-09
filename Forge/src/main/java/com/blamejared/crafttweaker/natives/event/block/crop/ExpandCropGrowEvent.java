@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraftforge.event.world.BlockEvent;
 
 @ZenRegister
-@Document("vanilla/api/event/block/crop/CropGrowEvent")
+@Document("forge/api/event/block/crop/CropGrowEvent")
 @NativeTypeRegistration(value = BlockEvent.CropGrowEvent.class, zenCodeName = "crafttweaker.api.event.block.crop.CropGrowEvent")
 public class ExpandCropGrowEvent {
 }

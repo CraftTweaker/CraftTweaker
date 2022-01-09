@@ -11,6 +11,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
  * It does not offer any special getters, but you can still access all members from {@link PlayerInteractEvent}
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/player/interact/RightClickEmptyEvent")
+@Document("forge/api/event/entity/player/interact/RightClickEmptyEvent")
 @NativeTypeRegistration(value = PlayerInteractEvent.RightClickEmpty.class, zenCodeName = "crafttweaker.api.event.entity.player.interact.RightClickEmptyEvent")
 public class ExpandRightClickEmptyEvent {}

@@ -23,7 +23,7 @@ import java.util.stream.Stream;
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.fluid.FluidIngredient")
-@Document("vanilla/api/fluid/FluidIngredient")
+@Document("forge/api/fluid/FluidIngredient")
 public abstract class CTFluidIngredient implements CommandStringDisplayable {
     
     CTFluidIngredient() {}

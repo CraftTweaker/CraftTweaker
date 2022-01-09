@@ -11,7 +11,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled the Entity is not hurt. Used resources WILL NOT be restored.
  */
 @ZenRegister
-@Document("vanilla/api/event/living/LivingDamageEvent")
+@Document("forge/api/event/living/LivingDamageEvent")
 @NativeTypeRegistration(value = LivingDamageEvent.class, zenCodeName = "crafttweaker.api.event.living.LivingDamageEvent")
 public class ExpandLivingDamageEvent {
     

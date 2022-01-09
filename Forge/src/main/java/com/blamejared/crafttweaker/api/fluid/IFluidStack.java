@@ -15,7 +15,7 @@ import java.util.List;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.fluid.IFluidStack")
-@Document("vanilla/api/fluid/IFluidStack")
+@Document("forge/api/fluid/IFluidStack")
 public interface IFluidStack extends CommandStringDisplayable {
     
     /**

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * Attributes are calculated on the client when rendering an item's tooltip to show relevant attributes.
  */
 @ZenRegister
-@Document("vanilla/api/event/ItemAttributeModifierEvent")
+@Document("forge/api/event/ItemAttributeModifierEvent")
 @NativeTypeRegistration(value = ItemAttributeModifierEvent.class, zenCodeName = "crafttweaker.api.event.ItemAttributeModifierEvent")
 public class ExpandItemAttributeModifierEvent {
     

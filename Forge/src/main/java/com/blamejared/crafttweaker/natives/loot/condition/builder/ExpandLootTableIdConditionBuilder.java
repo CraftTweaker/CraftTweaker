@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraftforge.common.loot.LootTableIdCondition;
 
 @ZenRegister
-@Document("vanilla/api/loot/condition/builder/LootTableIdLootConditionBuilder")
+@Document("forge/api/loot/condition/builder/LootTableIdLootConditionBuilder")
 @NativeTypeRegistration(value = LootTableIdCondition.Builder.class, zenCodeName = "crafttweaker.api.loot.condition.builder.LootTableIdLootConditionBuilder")
 public final class ExpandLootTableIdConditionBuilder {
 }

@@ -18,7 +18,7 @@ import java.util.List;
  * @docEvent canceled will cause the player to receive no items at all
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/player/ItemFishedEvent")
+@Document("forge/api/event/entity/player/ItemFishedEvent")
 @NativeTypeRegistration(value = ItemFishedEvent.class, zenCodeName = "crafttweaker.api.event.entity.player.ItemFishedEvent")
 public class ExpandItemFishedEvent {
     

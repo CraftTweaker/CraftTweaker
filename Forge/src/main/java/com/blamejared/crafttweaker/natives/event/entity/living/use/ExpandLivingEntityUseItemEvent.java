@@ -16,7 +16,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * to target a specific phase instead of this event.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/use/LivingEntityUseItemEvent")
+@Document("forge/api/event/entity/living/use/LivingEntityUseItemEvent")
 @NativeTypeRegistration(value = LivingEntityUseItemEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.use.LivingEntityUseItemEvent")
 public class ExpandLivingEntityUseItemEvent {
     

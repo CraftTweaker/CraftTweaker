@@ -19,7 +19,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * The result item stack is the stack that is placed in the player's inventory in replacement of the stack that is currently being used.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/use/LivingEntityUseItemFinishEvent")
+@Document("forge/api/event/entity/living/use/LivingEntityUseItemFinishEvent")
 @NativeTypeRegistration(value = LivingEntityUseItemEvent.Finish.class, zenCodeName = "crafttweaker.api.event.entity.living.use.LivingEntityUseItemFinishEvent")
 public class ExpandLivingEntityUseItemFinishEvent {
     

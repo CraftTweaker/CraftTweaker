@@ -13,7 +13,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled the entity does not take attack damage.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/LivingAttackEvent")
+@Document("forge/api/event/entity/living/LivingAttackEvent")
 @NativeTypeRegistration(value = LivingAttackEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.LivingAttackEvent")
 public class ExpandLivingAttackEvent {
     

@@ -12,7 +12,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled the block will not be placed
  */
 @ZenRegister
-@Document("vanilla/api/event/block/BlockPlaceEvent")
+@Document("forge/api/event/block/BlockPlaceEvent")
 @NativeTypeRegistration(value = BlockEvent.EntityPlaceEvent.class, zenCodeName = "crafttweaker.api.event.block.BlockPlaceEvent")
 public class ExpandBlockPlaceEvent {
     

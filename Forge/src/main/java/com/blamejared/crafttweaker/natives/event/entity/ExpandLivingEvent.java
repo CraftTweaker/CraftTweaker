@@ -8,7 +8,7 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@Document("vanilla/api/event/entity/LivingEvent")
+@Document("forge/api/event/entity/LivingEvent")
 @NativeTypeRegistration(value = LivingEvent.class, zenCodeName = "crafttweaker.api.event.entity.LivingEvent")
 public class ExpandLivingEvent {
     

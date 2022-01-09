@@ -17,7 +17,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent notCanceled but the output is not empty, it will set the output and not run vanilla behavior.
  */
 @ZenRegister
-@Document("vanilla/api/event/AnvilUpdateEvent")
+@Document("forge/api/event/AnvilUpdateEvent")
 @NativeTypeRegistration(value = AnvilUpdateEvent.class, zenCodeName = "crafttweaker.api.event.AnvilUpdateEvent")
 public class ExpandAnvilUpdateEvent {
     

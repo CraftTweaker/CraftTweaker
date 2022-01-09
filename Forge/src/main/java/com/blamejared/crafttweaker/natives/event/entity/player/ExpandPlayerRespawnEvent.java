@@ -12,7 +12,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * This Event is fired whenever a player respawns due to dying, or due to using the end portal.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/player/PlayerRespawnEvent")
+@Document("forge/api/event/entity/player/PlayerRespawnEvent")
 @NativeTypeRegistration(value = PlayerEvent.PlayerRespawnEvent.class, zenCodeName = "crafttweaker.api.event.entity.player.PlayerRespawnEvent")
 public class ExpandPlayerRespawnEvent {
     

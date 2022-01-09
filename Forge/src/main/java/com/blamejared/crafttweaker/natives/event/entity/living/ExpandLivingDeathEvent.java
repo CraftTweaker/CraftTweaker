@@ -15,7 +15,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled the entity does not die.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/LivingDeathEvent")
+@Document("forge/api/event/entity/living/LivingDeathEvent")
 @NativeTypeRegistration(value = LivingDeathEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.LivingDeathEvent")
 public class ExpandLivingDeathEvent {
     

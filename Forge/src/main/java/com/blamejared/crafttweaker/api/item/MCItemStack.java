@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.MCItemStack")
-@Document("vanilla/api/item/MCItemStack")
+@Document("forge/api/item/MCItemStack")
 public class MCItemStack implements ForgeItemStack {
     
     // TODO move this somewhere else

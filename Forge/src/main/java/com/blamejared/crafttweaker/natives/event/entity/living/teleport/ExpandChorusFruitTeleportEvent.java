@@ -13,7 +13,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled the teleport won't happen.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/teleport/ChorusFruitTeleportEvent")
+@Document("forge/api/event/entity/living/teleport/ChorusFruitTeleportEvent")
 @NativeTypeRegistration(value = EntityTeleportEvent.ChorusFruit.class, zenCodeName = "crafttweaker.api.event.living.teleport.ChorusFruitTeleportEvent")
 public class ExpandChorusFruitTeleportEvent {
     

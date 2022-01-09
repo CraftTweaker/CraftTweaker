@@ -7,7 +7,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraftforge.event.entity.player.PlayerXpEvent;
 
 @ZenRegister
-@Document("vanilla/api/event/entity/player/xp/PlayerXpEvent")
+@Document("forge/api/event/entity/player/xp/PlayerXpEvent")
 @NativeTypeRegistration(value = PlayerXpEvent.class, zenCodeName = "crafttweaker.api.event.entity.player.xp.PlayerXpEvent")
 public class ExpandPlayerXpEvent {
 

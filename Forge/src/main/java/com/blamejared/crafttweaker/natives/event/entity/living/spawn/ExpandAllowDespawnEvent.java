@@ -14,7 +14,7 @@ import net.minecraftforge.eventbus.api.Event;
  * This is fired every tick for every despawnable entity. Be efficient in your handlers.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/spawn/AllowDespawnEvent")
+@Document("forge/api/event/entity/living/spawn/AllowDespawnEvent")
 @NativeTypeRegistration(value = LivingSpawnEvent.AllowDespawn.class, zenCodeName = "crafttweaker.api.event.entity.living.spawn.AllowDespawnEvent")
 public class ExpandAllowDespawnEvent {
 

@@ -11,7 +11,7 @@ import net.minecraftforge.event.world.BlockEvent;
  * @docEvent deny it will prevent the plant from advancing a growth stage
  */
 @ZenRegister
-@Document("vanilla/api/event/block/crop/CropGrowPreEvent")
+@Document("forge/api/event/block/crop/CropGrowPreEvent")
 @NativeTypeRegistration(value = BlockEvent.CropGrowEvent.Pre.class, zenCodeName = "crafttweaker.api.event.block.crop.CropGrowPreEvent")
 public class ExpandCropGrowPreEvent {
 }

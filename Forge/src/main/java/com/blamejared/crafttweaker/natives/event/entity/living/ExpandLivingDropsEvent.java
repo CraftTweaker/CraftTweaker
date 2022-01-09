@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * @docEvent canceled the entity does not drop anything.
  */
 @ZenRegister
-@Document("vanilla/api/event/living/LivingDropsEvent")
+@Document("forge/api/event/living/LivingDropsEvent")
 @NativeTypeRegistration(value = LivingDropsEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.LivingDropsEvent")
 public class ExpandLivingDropsEvent {
     

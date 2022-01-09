@@ -15,7 +15,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docParam this event
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/player/AdvancementEvent")
+@Document("forge/api/event/entity/player/AdvancementEvent")
 @NativeTypeRegistration(value = AdvancementEvent.class, zenCodeName = "crafttweaker.api.event.entity.player.AdvancementEvent")
 public class ExpandAdvancementEvent {
     

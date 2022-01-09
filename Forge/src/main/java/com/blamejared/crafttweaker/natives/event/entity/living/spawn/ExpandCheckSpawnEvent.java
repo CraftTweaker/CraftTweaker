@@ -17,7 +17,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * DENY:    deny the spawn
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/spawn/CheckSpawnEvent")
+@Document("forge/api/event/entity/living/spawn/CheckSpawnEvent")
 @NativeTypeRegistration(value = LivingSpawnEvent.CheckSpawn.class, zenCodeName = "crafttweaker.api.event.entity.living.spawn.CheckSpawnEvent")
 public class ExpandCheckSpawnEvent {
     

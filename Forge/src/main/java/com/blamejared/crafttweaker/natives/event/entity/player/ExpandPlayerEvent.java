@@ -8,7 +8,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@Document("vanilla/api/event/entity/player/PlayerEvent")
+@Document("forge/api/event/entity/player/PlayerEvent")
 @NativeTypeRegistration(value = PlayerEvent.class, zenCodeName = "crafttweaker.api.event.entity.player.PlayerEvent")
 public class ExpandPlayerEvent {
     

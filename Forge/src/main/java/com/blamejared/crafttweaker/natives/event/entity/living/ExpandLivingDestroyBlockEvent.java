@@ -12,7 +12,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled the block will not be destroyed.
  */
 @ZenRegister
-@Document("vanilla/api/event/living/LivingDestroyBlockEvent")
+@Document("forge/api/event/living/LivingDestroyBlockEvent")
 @NativeTypeRegistration(value = LivingDestroyBlockEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.LivingDestroyBlockEvent")
 public class ExpandLivingDestroyBlockEvent {
     

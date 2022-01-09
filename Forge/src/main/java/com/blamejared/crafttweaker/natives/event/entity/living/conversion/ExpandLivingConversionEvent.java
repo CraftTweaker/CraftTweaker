@@ -12,7 +12,7 @@ import net.minecraftforge.event.entity.living.LivingConversionEvent;
  * to target a specific phase instead of this event.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/conversion/LivingConversionEvent")
+@Document("forge/api/event/entity/living/conversion/LivingConversionEvent")
 @NativeTypeRegistration(value = LivingConversionEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.conversion.LivingConversionEvent")
 public class ExpandLivingConversionEvent {
     

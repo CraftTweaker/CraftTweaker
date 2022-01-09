@@ -13,7 +13,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled will cause the entity to not be interacted with
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/player/interact/EntityInteractEvent")
+@Document("forge/api/event/entity/player/interact/EntityInteractEvent")
 @NativeTypeRegistration(value = PlayerInteractEvent.EntityInteract.class, zenCodeName = "crafttweaker.api.event.entity.player.interact.EntityInteractEvent")
 public class ExpandPlayerEntityInteractEvent {
     

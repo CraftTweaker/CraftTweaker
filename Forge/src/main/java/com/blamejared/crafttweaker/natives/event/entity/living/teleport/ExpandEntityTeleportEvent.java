@@ -16,7 +16,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled the teleport won't happen.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/teleport/EntityTeleportEvent")
+@Document("forge/api/event/entity/living/teleport/EntityTeleportEvent")
 @NativeTypeRegistration(value = EntityTeleportEvent.class, zenCodeName = "crafttweaker.api.event.living.teleport.EntityTeleportEvent")
 public class ExpandEntityTeleportEvent {
     

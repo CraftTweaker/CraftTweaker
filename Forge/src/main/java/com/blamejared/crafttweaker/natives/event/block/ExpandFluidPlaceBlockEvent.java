@@ -16,7 +16,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * You can use this event to change what block is set, so you could replace cobblestone with something else.
  */
 @ZenRegister
-@Document("vanilla/api/event/block/FluidPlaceBlockEvent")
+@Document("forge/api/event/block/FluidPlaceBlockEvent")
 @NativeTypeRegistration(value = BlockEvent.FluidPlaceBlockEvent.class, zenCodeName = "crafttweaker.api.event.block.FluidPlaceBlockEvent")
 public class ExpandFluidPlaceBlockEvent {
     

@@ -95,7 +95,7 @@ pipeline {
 
                 stage('Exporting Documentation') {
                     when {
-                        branch branchName
+                        branch "branchName"
                     }
                     steps {
                         echo "Cloning Repository at Branch main"

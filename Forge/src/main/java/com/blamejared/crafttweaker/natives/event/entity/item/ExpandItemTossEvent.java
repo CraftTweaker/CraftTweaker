@@ -14,7 +14,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled will stop the items from entering the world, but will not prevent them being removed from the inventory - and thus removed from the system.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/item/ItemTossEvent")
+@Document("forge/api/event/entity/item/ItemTossEvent")
 @NativeTypeRegistration(value = ItemTossEvent.class, zenCodeName = "crafttweaker.api.event.item.ItemTossEvent")
 public class ExpandItemTossEvent {
     

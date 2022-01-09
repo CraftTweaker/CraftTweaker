@@ -12,6 +12,6 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
  * Since it is a {@link PlayerEvent}, you can already access the player getter
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/player/PlayerLoggedInEvent")
+@Document("forge/api/event/entity/player/PlayerLoggedInEvent")
 @NativeTypeRegistration(value = PlayerEvent.PlayerLoggedInEvent.class, zenCodeName = "crafttweaker.api.event.entity.player.PlayerLoggedInEvent")
 public class ExpandPlayerLoggedInEvent {}

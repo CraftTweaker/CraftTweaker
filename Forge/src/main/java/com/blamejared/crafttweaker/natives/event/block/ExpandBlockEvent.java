@@ -10,7 +10,7 @@ import net.minecraftforge.event.world.BlockEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@Document("vanilla/api/event/block/BlockEvent")
+@Document("forge/api/event/block/BlockEvent")
 @NativeTypeRegistration(value = BlockEvent.class, zenCodeName = "crafttweaker.api.event.block.BlockEvent")
 public class ExpandBlockEvent {
     

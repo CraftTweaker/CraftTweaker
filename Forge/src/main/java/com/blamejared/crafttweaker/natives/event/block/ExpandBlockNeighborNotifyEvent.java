@@ -17,7 +17,7 @@ import java.util.Set;
  * @docEvent canceled vanilla logic won't be executed
  */
 @ZenRegister
-@Document("vanilla/api/event/block/BlockNeighborNotifyEvent")
+@Document("forge/api/event/block/BlockNeighborNotifyEvent")
 @NativeTypeRegistration(value = BlockEvent.NeighborNotifyEvent.class, zenCodeName = "crafttweaker.api.event.block.BlockNeighborNotifyEvent")
 public class ExpandBlockNeighborNotifyEvent {
     

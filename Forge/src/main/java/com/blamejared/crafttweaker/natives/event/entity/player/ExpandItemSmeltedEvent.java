@@ -11,7 +11,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 
 @ZenRegister
-@Document("vanilla/api/event/entity/player/ItemSmeltedEvent")
+@Document("forge/api/event/entity/player/ItemSmeltedEvent")
 @NativeTypeRegistration(value = PlayerEvent.ItemSmeltedEvent.class, zenCodeName = "crafttweaker.api.event.entity.player.ItemSmeltedEvent")
 public class ExpandItemSmeltedEvent {
     

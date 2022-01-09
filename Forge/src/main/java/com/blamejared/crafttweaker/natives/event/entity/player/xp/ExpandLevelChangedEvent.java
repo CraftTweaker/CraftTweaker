@@ -17,7 +17,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled the xp level will not change
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/player/xp/LevelChangeEvent")
+@Document("forge/api/event/entity/player/xp/LevelChangeEvent")
 @NativeTypeRegistration(value = LevelChange.class, zenCodeName = "crafttweaker.api.event.entity.player.xp.LevelChangeEvent")
 public class ExpandLevelChangedEvent {
     

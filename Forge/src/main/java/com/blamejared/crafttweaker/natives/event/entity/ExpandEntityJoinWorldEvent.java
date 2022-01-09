@@ -11,7 +11,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled it will deny the entity to join the world
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/EntityJoinWorldEvent")
+@Document("forge/api/event/entity/EntityJoinWorldEvent")
 @NativeTypeRegistration(value = EntityJoinWorldEvent.class, zenCodeName = "crafttweaker.api.event.entity.EntityJoinWorldEvent")
 public class ExpandEntityJoinWorldEvent {
     

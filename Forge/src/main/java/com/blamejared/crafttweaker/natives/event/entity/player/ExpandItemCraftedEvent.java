@@ -10,7 +10,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@Document("vanilla/api/event/entity/player/ItemCraftedEvent")
+@Document("forge/api/event/entity/player/ItemCraftedEvent")
 @NativeTypeRegistration(value = PlayerEvent.ItemCraftedEvent.class, zenCodeName = "crafttweaker.api.event.player.ItemCraftedEvent")
 public class ExpandItemCraftedEvent {
     

@@ -12,7 +12,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
  * @docEvent canceled Item#onItemRightClick will not be called
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/player/interact/RightClickItemEvent")
+@Document("forge/api/event/entity/player/interact/RightClickItemEvent")
 @NativeTypeRegistration(value = PlayerInteractEvent.RightClickItem.class, zenCodeName = "crafttweaker.api.event.entity.player.interact.RightClickItemEvent")
 public class ExpandRightClickItemEvent {
 }

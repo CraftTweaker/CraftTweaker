@@ -14,7 +14,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * to target a specific mechanic instead of this event.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/spawn/LivingSpawnEvent")
+@Document("forge/api/event/entity/living/spawn/LivingSpawnEvent")
 @NativeTypeRegistration(value = LivingSpawnEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.spawn.LivingSpawnEvent")
 public class ExpandLivingSpawnEvent {
     

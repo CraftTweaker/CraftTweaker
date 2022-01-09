@@ -11,7 +11,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled the entity is not knocked back.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/LivingKnockBackEvent")
+@Document("forge/api/event/entity/living/LivingKnockBackEvent")
 @NativeTypeRegistration(value = LivingKnockBackEvent.class, zenCodeName = "crafttweaker.api.event.living.LivingKnockBackEvent")
 public class ExpandLivingKnockBackEvent {
     

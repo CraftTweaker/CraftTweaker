@@ -21,7 +21,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
  * @docEvent canceled none of the above noted methods to be called.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/player/interact/LeftClickEmptyEvent")
+@Document("forge/api/event/entity/player/interact/LeftClickEmptyEvent")
 @NativeTypeRegistration(value = PlayerInteractEvent.LeftClickEmpty.class, zenCodeName = "crafttweaker.api.event.entity.player.interact.LeftClickEmptyEvent")
 public class ExpandLeftClickEmptyEvent {
 

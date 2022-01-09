@@ -8,7 +8,7 @@ import net.minecraftforge.event.entity.living.LivingConversionEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@Document("vanilla/api/event/entity/living/conversion/LivingConversionPostEvent")
+@Document("forge/api/event/entity/living/conversion/LivingConversionPostEvent")
 @NativeTypeRegistration(value = LivingConversionEvent.Post.class, zenCodeName = "crafttweaker.api.event.entity.living.conversion.LivingConversionPostEvent")
 public class ExpandLivingConversionPostEvent {
     

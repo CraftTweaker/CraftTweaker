@@ -18,7 +18,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docParam this event
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/player/PlayerDestroyItemEvent")
+@Document("forge/api/event/entity/player/PlayerDestroyItemEvent")
 @NativeTypeRegistration(value = PlayerDestroyItemEvent.class, zenCodeName = "crafttweaker.api.event.entity.player.PlayerDestroyItemEvent")
 public class ExpandPlayerDestroyItemEvent {
     

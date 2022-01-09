@@ -7,7 +7,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.ForgeItemStack")
-@Document("vanilla/api/item/ForgeItemStack")
+@Document("forge/api/item/ForgeItemStack")
 public interface ForgeItemStack extends IItemStack {
     
     @Override

@@ -8,7 +8,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@Document("vanilla/api/loot/condition/LootTableIdRegexLootCondition")
+@Document("forge/api/loot/condition/LootTableIdRegexLootCondition")
 @NativeTypeRegistration(value = LootTableIdRegexCondition.class, zenCodeName = "crafttweaker.api.loot.condition.LootTableIdRegexLootCondition")
 public final class ExpandLootTableIdRegexCondition {
     

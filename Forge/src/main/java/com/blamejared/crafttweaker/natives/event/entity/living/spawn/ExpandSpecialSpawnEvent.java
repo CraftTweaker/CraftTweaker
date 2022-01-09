@@ -14,7 +14,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent cancled the Entity will not be spawned.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/spawn/SpecialSpawnEvent")
+@Document("forge/api/event/entity/living/spawn/SpecialSpawnEvent")
 @NativeTypeRegistration(value = LivingSpawnEvent.SpecialSpawn.class, zenCodeName = "crafttweaker.api.event.entity.living.spawn.SpecialSpawnEvent")
 public class ExpandSpecialSpawnEvent {
     

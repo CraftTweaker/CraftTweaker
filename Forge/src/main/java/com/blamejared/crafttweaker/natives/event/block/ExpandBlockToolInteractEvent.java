@@ -18,7 +18,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled this will prevent the tool from changing the block's state.
  */
 @ZenRegister
-@Document("vanilla/api/event/block/BlockToolInteractEvent")
+@Document("forge/api/event/block/BlockToolInteractEvent")
 @NativeTypeRegistration(value = BlockEvent.BlockToolInteractEvent.class, zenCodeName = "crafttweaker.api.event.block.BlockToolInteractEvent")
 public class ExpandBlockToolInteractEvent {
     

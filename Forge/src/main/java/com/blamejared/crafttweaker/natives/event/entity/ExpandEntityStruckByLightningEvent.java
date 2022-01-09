@@ -11,7 +11,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled the entity is not struck by the lightening.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/EntityStruckByLightningEvent")
+@Document("forge/api/event/entity/EntityStruckByLightningEvent")
 @NativeTypeRegistration(value = EntityStruckByLightningEvent.class, zenCodeName = "crafttweaker.api.event.entity.EntityStruckByLightningEvent")
 public class ExpandEntityStruckByLightningEvent {
     

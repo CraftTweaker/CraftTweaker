@@ -15,7 +15,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled the entity is not healed
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/LivingHealEvent")
+@Document("forge/api/event/entity/living/LivingHealEvent")
 @NativeTypeRegistration(value = LivingHealEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.LivingHealEvent")
 public class ExpandLivingHealEvent {
     

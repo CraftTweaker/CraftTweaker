@@ -17,7 +17,7 @@ import java.util.function.Consumer;
  * Make sure to tell ZC of the type you are using, so that you can access the event's properties.
  */
 @ZenRegister
-@Document("vanilla/api/event/CTEventManager")
+@Document("forge/api/event/CTEventManager")
 @ZenCodeType.Name("crafttweaker.api.events.CTEventManager")
 public class CTEventManager {
     

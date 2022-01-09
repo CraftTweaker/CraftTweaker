@@ -11,7 +11,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled prevents the block from being broken.
  */
 @ZenRegister
-@Document("vanilla/api/event/block/BlockBreakEvent")
+@Document("forge/api/event/block/BlockBreakEvent")
 @NativeTypeRegistration(value = BlockEvent.BreakEvent.class, zenCodeName = "crafttweaker.api.event.block.BlockBreakEvent")
 public class ExpandBlockBreakEvent {
     

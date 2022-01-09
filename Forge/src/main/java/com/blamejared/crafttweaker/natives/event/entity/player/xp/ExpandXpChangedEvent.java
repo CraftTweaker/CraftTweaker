@@ -17,7 +17,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled the xp will not change
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/player/xp/XpChangeEvent")
+@Document("forge/api/event/entity/player/xp/XpChangeEvent")
 @NativeTypeRegistration(value = XpChange.class, zenCodeName = "crafttweaker.api.event.entity.player.xp.XpChangeEvent")
 public class ExpandXpChangedEvent {
     

@@ -11,6 +11,6 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
  * Since it is a {@link PlayerEvent}, you can already access the player getter
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/player/PlayerLoggedOutEvent")
+@Document("forge/api/event/entity/player/PlayerLoggedOutEvent")
 @NativeTypeRegistration(value = PlayerEvent.PlayerLoggedOutEvent.class, zenCodeName = "crafttweaker.api.event.entity.player.PlayerLoggedOutEvent")
 public class ExpandPlayerLoggedOutEvent {}

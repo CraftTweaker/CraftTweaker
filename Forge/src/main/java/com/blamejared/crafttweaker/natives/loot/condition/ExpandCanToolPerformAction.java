@@ -9,7 +9,7 @@ import net.minecraftforge.common.loot.CanToolPerformAction;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@Document("vanilla/api/loot/condition/CanToolPerformActionLootCondition")
+@Document("forge/api/loot/condition/CanToolPerformActionLootCondition")
 @NativeTypeRegistration(value = CanToolPerformAction.class, zenCodeName = "crafttweaker.api.loot.condition.CanToolPerformActionLootCondition")
 public final class ExpandCanToolPerformAction {
     

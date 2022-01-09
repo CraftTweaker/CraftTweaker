@@ -14,7 +14,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled the replacement will not occur
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/conversion/LivingConversionPreEvent")
+@Document("forge/api/event/entity/living/conversion/LivingConversionPreEvent")
 @NativeTypeRegistration(value = LivingConversionEvent.Pre.class, zenCodeName = "crafttweaker.api.event.living.conversion.LivingConversionPreEvent")
 public class ExpandLivingConversionPreEvent {
     

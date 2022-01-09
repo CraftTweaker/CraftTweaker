@@ -10,7 +10,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled the Entity does not fall (no fall damage is inflicted).
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/LivingFallEvent")
+@Document("forge/api/event/entity/living/LivingFallEvent")
 @NativeTypeRegistration(value = LivingFallEvent.class, zenCodeName = "crafttweaker.api.event.living.LivingFallEvent")
 public class ExpandLivingFallEvent {
     

@@ -19,7 +19,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * Generally, you want to use the subtypes of this event.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/player/interact/PlayerInteractEvent")
+@Document("forge/api/event/entity/player/interact/PlayerInteractEvent")
 @NativeTypeRegistration(value = PlayerInteractEvent.class, zenCodeName = "crafttweaker.api.event.entity.player.interact.PlayerInteractEvent")
 public class ExpandPlayerInteractEvent {
     

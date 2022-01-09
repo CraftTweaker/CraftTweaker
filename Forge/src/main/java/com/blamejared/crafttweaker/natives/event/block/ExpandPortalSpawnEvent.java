@@ -9,7 +9,7 @@ import net.minecraftforge.event.world.BlockEvent;
  * @docEvent canceled the portal won't be spawned
  */
 @ZenRegister
-@Document("vanilla/api/event/block/PortalSpawnEvent")
+@Document("forge/api/event/block/PortalSpawnEvent")
 @NativeTypeRegistration(value = BlockEvent.PortalSpawnEvent.class, zenCodeName = "crafttweaker.api.event.block.PortalSpawnEvent")
 public class ExpandPortalSpawnEvent {
 }

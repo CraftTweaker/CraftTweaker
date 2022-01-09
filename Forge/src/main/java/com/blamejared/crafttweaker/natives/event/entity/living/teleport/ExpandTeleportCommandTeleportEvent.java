@@ -11,7 +11,7 @@ import net.minecraftforge.event.entity.EntityTeleportEvent;
  * @docEvent canceled the teleport won't happen.
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/living/teleport/TeleportCommandTeleportEvent")
+@Document("forge/api/event/entity/living/teleport/TeleportCommandTeleportEvent")
 @NativeTypeRegistration(value = EntityTeleportEvent.TeleportCommand.class, zenCodeName = "crafttweaker.api.event.living.teleport.TeleportCommandTeleportEvent")
 public class ExpandTeleportCommandTeleportEvent {
 

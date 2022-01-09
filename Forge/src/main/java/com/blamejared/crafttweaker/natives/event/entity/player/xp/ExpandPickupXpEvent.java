@@ -16,7 +16,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docEvent canceled the xp will not change
  */
 @ZenRegister
-@Document("vanilla/api/event/entity/player/xp/PickupXpEvent")
+@Document("forge/api/event/entity/player/xp/PickupXpEvent")
 @NativeTypeRegistration(value = PlayerXpEvent.PickupXp.class, zenCodeName = "crafttweaker.api.event.entity.player.xp.PickupXpEvent")
 public class ExpandPickupXpEvent {
     
