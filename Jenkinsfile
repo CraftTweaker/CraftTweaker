@@ -43,11 +43,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Running tests'
-                sh './gradlew check'
-            }
-            steps {
-                echo 'Running Fabric GameTests'
-                sh './gradlew :Fabric:runGameTest'
+                sh './gradlew check :Fabric:runGameTest'
             }
         }
 
