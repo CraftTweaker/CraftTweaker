@@ -65,9 +65,12 @@ body:
             label: Modloader
             description: |
                 What Modloader are you using?
+                
+                If you have tested on both modloaders and the issue affects both, then select all
             options:
-                - Forge
+                - All
                 - Fabric
+                - Forge
         validations:
             required: true
     -   type: input
