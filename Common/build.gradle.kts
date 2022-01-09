@@ -41,6 +41,7 @@ base {
 
 dependencies {
     compileOnly("org.spongepowered:mixin:0.8.4")
+    implementation(project(":Crafttweaker_Annotations"))
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         implementation(project(it.toString()))
     }
