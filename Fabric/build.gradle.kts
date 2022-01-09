@@ -163,7 +163,7 @@ curseforge {
         changelogType = "markdown"
         addGameVersion("Fabric")
         addGameVersion(minecraftVersion)
-        mainArtifact(file("${project.buildDir}/libs/${baseArchiveName}.jar"))
+        mainArtifact(file("${project.buildDir}/libs/${baseArchiveName}-${version}.jar"))
         relations(closureOf<CurseRelation> {
             requiredDependency("ingredient-extension-api")
             requiredDependency("fabric-api")
