@@ -139,7 +139,6 @@ pipeline {
             archiveArtifacts 'Common/build/libs/**.jar'
             archiveArtifacts 'Fabric/build/libs/**.jar'
             archiveArtifacts 'Forge/build/libs/**.jar'
-            archiveArtifacts 'changelog.md'
         }
     }
     options {
