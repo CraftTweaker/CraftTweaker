@@ -104,6 +104,7 @@ modTemplate {
     }
     webhook.apply {
         enabled(true)
+        url(System.getenv("discordCFWebhook"))
         curseId(curseProjectId)
         avatarUrl(modAvatar)
     }
