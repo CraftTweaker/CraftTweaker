@@ -35,6 +35,13 @@ publishing {
         register("mavenJava", MavenPublication::class) {
             artifactId = baseArchiveName
             from(components["java"])
+
+            pom.withXml {
+
+                (asNode()["dependencies"] as groovy.util.NodeList).forEach {
+                    (it as groovy.util.Node).parent().remove(it)
+                }
+            }
         }
 
     }
