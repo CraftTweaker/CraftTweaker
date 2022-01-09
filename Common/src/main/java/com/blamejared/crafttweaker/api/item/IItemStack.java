@@ -671,7 +671,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MOD)
     default Percentaged<IItemStack> percent(double percentage) {
         
-        return new Percentaged<>(this, percentage / 100.0D, IIngredient::getCommandString);
+        return new Percentaged<>(this, percentage / 100.0D, iItemStack -> iItemStack.getCommandString() + " % " + percentage);
     }
     
     //    @ZenCodeType.Method
