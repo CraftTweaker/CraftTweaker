@@ -113,10 +113,9 @@ pipeline {
 
                         echo "Moving Generated Documentation to Local Clone"
                         sh "mkdir --parents ./$documentationDir/$exportDirInRepo"
-                        sh "mv -f ./Common/$docsOutDir/* ./$documentationDir/$exportDirInRepo/"
-                        sh "mv -f ./Fabric/$docsOutDir/* ./$documentationDir/$exportDirInRepo/"
-                        sh "mv -f ./Forge/$docsOutDir/* ./$documentationDir/$exportDirInRepo/"
-
+                        sh "cp -r ./Common/$docsOutDir/* ./$documentationDir/$exportDirInRepo/"
+                        sh "cp -r ./Fabric/$docsOutDir/* ./$documentationDir/$exportDirInRepo/"
+                        sh "cp -r ./Forge/$docsOutDir/* ./$documentationDir/$exportDirInRepo/"
 
                         echo "Committing and Pushing to the repository"
                         dir(documentationDir) {
