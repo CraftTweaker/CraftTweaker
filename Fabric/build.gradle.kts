@@ -19,7 +19,7 @@ val modAuthor: String by project
 val modId: String by project
 val modAvatar: String by project
 val curseProjectId: String by project
-val curseHomepage: String by project
+val curseHomepageLink: String by project
 val gitFirstCommit: String by project
 val gitRepo: String by project
 
@@ -87,7 +87,7 @@ loom {
 
 modTemplate {
     mcVersion(minecraftVersion)
-    curseHomepage(curseHomepage)
+    curseHomepage(curseHomepageLink)
     displayName(modName)
     modLoader("Fabric")
     changelog.apply {
@@ -100,7 +100,7 @@ modTemplate {
         endpoint(System.getenv("versionTrackerAPI"))
         author(modAuthor)
         projectName(modName)
-        homepage(curseHomepage)
+        homepage(curseHomepageLink)
     }
     webhook.apply {
         enabled(true)
