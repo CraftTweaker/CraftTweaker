@@ -163,7 +163,7 @@ public final class MCTag<T> implements CommandStringDisplayable, Iterable<T> {
     @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
     public Many<MCTag<T>> withAmount(int amount) {
         
-        return new Many<>(this, amount, MCTag::getCommandString);
+        return new Many<>(this, amount, ts -> ts.getCommandString() + " * " + amount);
     }
     
     @ZenCodeType.Method
