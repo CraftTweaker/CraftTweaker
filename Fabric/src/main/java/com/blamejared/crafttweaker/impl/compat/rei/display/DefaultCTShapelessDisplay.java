@@ -1,31 +1,29 @@
-package com.blamejared.crafttweaker.impl.comat.rei.display;
+package com.blamejared.crafttweaker.impl.compat.rei.display;
 
-import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipeBase;
+import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipeBase;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.plugin.common.displays.crafting.DefaultCraftingDisplay;
 
 import java.util.Collections;
 import java.util.Optional;
 
-public class DefaultCTShapedDisplay extends DefaultCraftingDisplay<CTShapedRecipeBase> {
+public class DefaultCTShapelessDisplay extends DefaultCraftingDisplay<CTShapelessRecipeBase> {
     
-    public DefaultCTShapedDisplay(CTShapedRecipeBase recipe) {
+    public DefaultCTShapelessDisplay(CTShapelessRecipeBase recipe) {
         
         super(EntryIngredients.ofIngredients(recipe.getIngredients()), Collections.singletonList(EntryIngredients.of(recipe.getResultItem())), Optional.of(recipe));
     }
     
     @SuppressWarnings("OptionalGetWithoutIsPresent")
-    @Override
     public int getWidth() {
         
-        return recipe.get().getRecipeWidth();
+        return this.recipe.get().getIngredients().size() > 4 ? 3 : 2;
     }
     
     @SuppressWarnings("OptionalGetWithoutIsPresent")
-    @Override
     public int getHeight() {
         
-        return recipe.get().getRecipeHeight();
+        return this.recipe.get().getIngredients().size() > 4 ? 3 : 2;
     }
     
 }

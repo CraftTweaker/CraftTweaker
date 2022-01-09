@@ -1,9 +1,9 @@
-package com.blamejared.crafttweaker.impl.comat.rei;
+package com.blamejared.crafttweaker.impl.compat.rei;
 
 import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipeBase;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipeBase;
-import com.blamejared.crafttweaker.impl.comat.rei.display.DefaultCTShapedDisplay;
-import com.blamejared.crafttweaker.impl.comat.rei.display.DefaultCTShapelessDisplay;
+import com.blamejared.crafttweaker.impl.compat.rei.display.DefaultCTShapedDisplay;
+import com.blamejared.crafttweaker.impl.compat.rei.display.DefaultCTShapelessDisplay;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.impl.client.registry.display.DisplayRegistryImpl;

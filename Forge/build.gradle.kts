@@ -132,6 +132,7 @@ modTemplate {
     }
     versionTracker.apply {
         enabled(true)
+        endpoint(System.getenv("versionTrackerAPI"))
         author(modAuthor)
         projectName(modName)
         homepage(curseHomepage)
