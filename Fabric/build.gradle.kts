@@ -39,6 +39,7 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${fabricLoaderVersion}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
     implementation(project(":Common"))
+    implementation(project(":Crafttweaker_Annotations"))
 
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         implementation(project(it.toString()))

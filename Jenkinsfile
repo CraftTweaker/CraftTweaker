@@ -9,20 +9,19 @@ def botEmail = 'crafttweakerbot@gmail.com'
 def documentationDir = 'CrafttweakerDocumentation'
 def exportDirInRepo = 'docs_exported/1.18/crafttweaker'
 
-
 def branchName = "1.18";
 
 pipeline {
     agent any
     tools {
-        jdk "jdk-16.0.1+9"
+        jdk "jdk-17.0.1"
     }
 
     environment {
-        curseforgeApiToken    = credentials('curseforge_token')
-        discordCFWebhook      = credentials('discord_cf_webhook')
-        versionTrackerKey     = credentials('version_tracker_key')
-        versionTrackerAPI     = credentials('version_tracker_api')
+        curseforgeApiToken = credentials('curseforge_token')
+        discordCFWebhook = credentials('discord_cf_webhook')
+        versionTrackerKey = credentials('version_tracker_key')
+        versionTrackerAPI = credentials('version_tracker_api')
     }
 
     stages {
@@ -38,6 +37,17 @@ pipeline {
             steps {
                 echo 'Building'
                 sh './gradlew build'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running tests'
+                sh './gradlew check'
+            }
+            steps {
+                echo 'Running Fabric GameTests'
+                sh './gradlew :Fabric:runGameTest'
             }
         }
 
@@ -139,6 +149,8 @@ pipeline {
             archiveArtifacts 'Common/build/libs/**.jar'
             archiveArtifacts 'Fabric/build/libs/**.jar'
             archiveArtifacts 'Forge/build/libs/**.jar'
+            junit 'ZenCode/ScriptingExample/build/test-results/**/*.xml'
+            junit 'Fabric/fabric-game-tests.html'
         }
     }
     options {
