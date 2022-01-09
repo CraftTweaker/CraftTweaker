@@ -28,7 +28,7 @@
             "com.blamejared.crafttweaker.gametest.CraftTweakerGameTests"
         ],
         "rei": [
-            "com.blamejared.crafttweaker.impl.comat.rei.CraftTweakerPlugin"
+            "com.blamejared.crafttweaker.impl.compat.rei.CraftTweakerPlugin"
         ]
     },
     "mixins": [
