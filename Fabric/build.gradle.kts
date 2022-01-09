@@ -44,12 +44,13 @@ dependencies {
         implementation(project(it.toString()))
     }
 
-    modImplementation("me.shedaniel:RoughlyEnoughItems-fabric:6.3.358")
+    modImplementation("me.shedaniel:RoughlyEnoughItems-fabric:7.1.357")
+
     implementation("org.reflections:reflections:0.10.2")?.let { include(it) }
     implementation("org.javassist:javassist:3.28.0-GA")?.let { include(it) } // required for reflections
 
 
-    modImplementation("com.faux.ingredientextension:IngredientExtensionAPI-fabric-1.17.1:1.0.0")
+    modImplementation("com.faux.ingredientextension:IngredientExtensionAPI-fabric-1.18.1:2.0.1")
 
     gametestCompileOnly(files(project(":Common").dependencyProject.sourceSets.gametest.get().java.srcDirs))
     (project.ext["zenCodeTestDeps"] as Set<*>).forEach {
