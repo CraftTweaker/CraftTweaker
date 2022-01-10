@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api;
 import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.api.annotation.Preprocessor;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.command.type.BracketDumperInfo;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipe.handler.RecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
@@ -15,7 +16,6 @@ import com.blamejared.crafttweaker.api.zencode.impl.registry.BracketEnumRegistry
 import com.blamejared.crafttweaker.api.zencode.impl.registry.BracketResolverRegistry;
 import com.blamejared.crafttweaker.api.zencode.impl.registry.PreprocessorRegistry;
 import com.blamejared.crafttweaker.api.zencode.impl.registry.ZenClassRegistry;
-import com.blamejared.crafttweaker.impl.command.type.BracketDumperInfo;
 import com.blamejared.crafttweaker.platform.Services;
 import com.google.common.collect.BiMap;
 import com.mojang.datafixers.util.Either;

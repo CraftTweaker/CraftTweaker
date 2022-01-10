@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.impl.command.argument;
+package com.blamejared.crafttweaker.api.command.argument;
 
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;

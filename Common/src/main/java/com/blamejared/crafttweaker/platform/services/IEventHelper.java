@@ -47,6 +47,8 @@ public interface IEventHelper {
     
     void fireRegisterBEPEvent(IgnorePrefixCasingBracketParser bep);
     
+    void fireCTCommandRegisterEvent();
+    
     void setBurnTime(IIngredient ingredient, int burnTime);
     
     int getBurnTime(IItemStack stack);

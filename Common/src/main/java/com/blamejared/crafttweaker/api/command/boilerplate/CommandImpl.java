@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.impl.command.boilerplate;
+package com.blamejared.crafttweaker.api.command.boilerplate;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
