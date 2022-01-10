@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.action.base.ActionApplier;
 import com.blamejared.crafttweaker.api.action.base.IAction;
 import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
+import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.game.Game;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
 import com.blamejared.crafttweaker.api.mod.Mods;
@@ -23,6 +24,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openzen.zencode.java.ScriptingEngine;
 import org.openzen.zencode.java.ZenCodeGlobals;
+import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.shared.SourceFile;
 import org.openzen.zenscript.parser.expression.ParsedExpressionArray;
 import org.openzen.zenscript.parser.expression.ParsedExpressionMap;
@@ -38,6 +40,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@ZenRegister
+@ZenCodeType.Name("crafttweaker.api.CraftTweakerAPI")
 public class CraftTweakerAPI {
     
     // Do we want to make a log4j wrapper and expose it to a script...? 😬
@@ -48,10 +52,10 @@ public class CraftTweakerAPI {
     
     private static RecipeManager recipeManager;
     
-    @ZenCodeGlobals.Global
+    @ZenCodeGlobals.Global("game")
     public static final Game GAME = new Game();
     
-    @ZenCodeGlobals.Global
+    @ZenCodeGlobals.Global("loadedMods")
     public static final Mods MODS = new Mods();
     
     /**
