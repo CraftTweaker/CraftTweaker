@@ -1,8 +1,8 @@
 package com.blamejared.crafttweaker.impl.command.type;
 
+import com.blamejared.crafttweaker.api.command.CommandUtilities;
+import com.blamejared.crafttweaker.api.command.boilerplate.CommandImpl;
 import com.blamejared.crafttweaker.impl.command.CTCommands;
-import com.blamejared.crafttweaker.impl.command.CommandUtilities;
-import com.blamejared.crafttweaker.impl.command.boilerplate.CommandImpl;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;

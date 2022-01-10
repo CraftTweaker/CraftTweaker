@@ -2,8 +2,8 @@ package com.blamejared.crafttweaker.impl.command;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
-import com.blamejared.crafttweaker.impl.command.boilerplate.CommandImpl;
-import com.blamejared.crafttweaker.impl.command.type.BracketDumperInfo;
+import com.blamejared.crafttweaker.api.command.boilerplate.CommandImpl;
+import com.blamejared.crafttweaker.api.command.type.BracketDumperInfo;
 import com.blamejared.crafttweaker.impl.command.type.DumpCommands;
 import com.blamejared.crafttweaker.impl.command.type.HandCommands;
 import com.blamejared.crafttweaker.impl.command.type.HelpCommand;
@@ -14,6 +14,7 @@ import com.blamejared.crafttweaker.impl.command.type.RecipeCommands;
 import com.blamejared.crafttweaker.impl.command.type.conflict.ConflictCommand;
 import com.blamejared.crafttweaker.impl.command.type.script.ScriptCommands;
 import com.blamejared.crafttweaker.impl.command.type.script.example.ExamplesCommand;
+import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -42,11 +43,12 @@ public final class CTCommands {
         HandCommands.registerCommands();
         ScriptCommands.registerCommands();
         MiscCommands.registerCommands();
-        DumpCommands.registerDumpers();
         ModCommands.registerCommands();
         RecipeCommands.registerCommands();
         CTCommands.registerCommand(new ExamplesCommand());
-        
+        DumpCommands.registerDumpers();
+    
+        Services.EVENT.fireCTCommandRegisterEvent();
         
         dispatcher.getRoot().addChild(root);
         dispatcher.getRoot().addChild(rootAlternative.redirect(root).build());
@@ -68,7 +70,6 @@ public final class CTCommands {
         COMMANDS.forEach((s, command) -> registerCommandInternal(root, command));
         
     }
-    
     
     public static void registerCommand(CommandImpl command) {
         

@@ -1,10 +1,10 @@
 package com.blamejared.crafttweaker.impl.command.type;
 
+import com.blamejared.crafttweaker.api.command.CommandUtilities;
+import com.blamejared.crafttweaker.api.command.argument.CTItemArgument;
+import com.blamejared.crafttweaker.api.command.boilerplate.CommandImpl;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.command.CTCommands;
-import com.blamejared.crafttweaker.impl.command.CommandUtilities;
-import com.blamejared.crafttweaker.impl.command.argument.CTItemArgument;
-import com.blamejared.crafttweaker.impl.command.boilerplate.CommandImpl;
 import com.blamejared.crafttweaker.natives.entity.type.player.ExpandPlayer;
 import com.blamejared.crafttweaker.platform.services.IEventHelper;
 import com.mojang.brigadier.Command;

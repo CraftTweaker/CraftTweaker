@@ -1,8 +1,8 @@
-package com.blamejared.crafttweaker.impl.command.type;
+package com.blamejared.crafttweaker.api.command.type;
 
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.impl.command.CommandUtilities;
+import com.blamejared.crafttweaker.api.command.CommandUtilities;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;

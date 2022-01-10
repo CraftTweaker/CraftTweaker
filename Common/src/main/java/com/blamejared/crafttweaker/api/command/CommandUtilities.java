@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.impl.command;
+package com.blamejared.crafttweaker.api.command;
 
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;

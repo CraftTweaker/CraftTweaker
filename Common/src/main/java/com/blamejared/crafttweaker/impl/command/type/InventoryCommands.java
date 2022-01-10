@@ -1,13 +1,13 @@
 package com.blamejared.crafttweaker.impl.command.type;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.command.CommandUtilities;
+import com.blamejared.crafttweaker.api.command.boilerplate.CommandImpl;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.api.tag.manager.TagManagerItem;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.impl.command.CTCommands;
-import com.blamejared.crafttweaker.impl.command.CommandUtilities;
-import com.blamejared.crafttweaker.impl.command.boilerplate.CommandImpl;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
 import com.mojang.brigadier.Command;

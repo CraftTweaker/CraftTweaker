@@ -1,9 +1,9 @@
 package com.blamejared.crafttweaker.impl.command.type;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.command.CommandUtilities;
+import com.blamejared.crafttweaker.api.command.boilerplate.CommandImpl;
 import com.blamejared.crafttweaker.impl.command.CTCommands;
-import com.blamejared.crafttweaker.impl.command.CommandUtilities;
-import com.blamejared.crafttweaker.impl.command.boilerplate.CommandImpl;
 import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.brigadier.Command;
 import net.minecraft.ChatFormatting;
