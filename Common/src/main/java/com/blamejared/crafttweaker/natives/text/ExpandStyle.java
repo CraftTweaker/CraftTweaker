@@ -14,6 +14,11 @@ import org.openzen.zencode.java.ZenCodeType;
 @NativeTypeRegistration(value = Style.class, zenCodeName = "crafttweaker.api.text.Style")
 public class ExpandStyle {
     
+    @ZenCodeType.StaticExpansionMethod
+    public static Style empty(){
+        return Style.EMPTY;
+    }
+    
     @ZenCodeType.Method
     @ZenCodeType.Nullable
     @ZenCodeType.Getter("color")
