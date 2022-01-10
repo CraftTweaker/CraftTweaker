@@ -101,7 +101,6 @@ public class CTCommonEventHandler {
     public static void playerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         
         CraftTweakerLogger.addPlayer(event.getPlayer());
-        System.out.println(Services.PLATFORM.getCustomTags());
     }
     
     @SubscribeEvent
