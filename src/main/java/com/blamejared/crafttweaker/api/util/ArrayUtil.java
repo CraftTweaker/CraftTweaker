@@ -32,4 +32,20 @@ public final class ArrayUtil {
         return out;
     }
     
+    public static <T> T[] copyOf(T[] original, int newLength, T defaultValue) {
+        
+        T[] arr = Arrays.copyOf(original, newLength);
+        replaceNulls(arr, defaultValue);
+        return arr;
+    }
+    
+    public static <T> void replaceNulls(T[] arr, T defaultValue) {
+        
+        for(int i = 0; i < arr.length; i++) {
+            if(arr[i] == null) {
+                arr[i] = defaultValue;
+            }
+        }
+    }
+    
 }

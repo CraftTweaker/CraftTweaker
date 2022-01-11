@@ -64,7 +64,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTRecipeShape
         
         final IIngredient[] flattened = new IIngredient[width * height];
         for(int i = 0; i < flattened.length; ++i) {
-            flattened[i] = ingredients[i / height][i % width];
+            flattened[i] = ingredients[i / width][i % width];
         }
         return flattened;
     }
@@ -73,7 +73,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTRecipeShape
         
         final IIngredient[][] inflated = new IIngredient[width][height];
         for(int i = 0; i < flattened.length; ++i) {
-            inflated[i / height][i % width] = flattened[i];
+            inflated[i / width][i % width] = flattened[i];
         }
         return inflated;
     }

@@ -62,6 +62,11 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
         this.height = ingredients.length;
         this.width = Arrays.stream(ingredients).mapToInt(row -> row.length).max().orElse(0);
         this.mirroredIngredients = new IIngredient[MirrorAxis.values().length][][];
+    
+        for(int index = 0; index < this.ingredients.length; index++) {
+            if(this.ingredients[index].length < width)
+                this.ingredients[index] = ArrayUtil.copyOf(this.ingredients[index], width, MCItemStack.EMPTY.get());
+        }
         initMirroredIngredients();
     }
     
@@ -76,6 +81,10 @@ public class CTRecipeShaped implements ICraftingRecipe, net.minecraftforge.commo
         this.height = ingredients.length;
         this.width = Arrays.stream(ingredients).mapToInt(row -> row.length).max().orElse(0);
         this.mirroredIngredients = new IIngredient[MirrorAxis.values().length][][];
+        for(int index = 0; index < this.ingredients.length; index++) {
+            if(this.ingredients[index].length < width)
+                this.ingredients[index] = ArrayUtil.copyOf(this.ingredients[index], width, MCItemStack.EMPTY.get());
+        }
         initMirroredIngredients();
     }
     
