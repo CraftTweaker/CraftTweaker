@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@ZenCodeType.Expansion("crafttweaker.api.BracketValidators")
+@ZenCodeType.Name("crafttweaker.api.bracket.ForgeBracketValidators")
 @Document("forge/api/ForgeBracketValidators")
 public final class ForgeBracketValidators {
     

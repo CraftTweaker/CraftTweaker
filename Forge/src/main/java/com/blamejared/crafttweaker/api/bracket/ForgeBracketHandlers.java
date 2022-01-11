@@ -16,7 +16,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * This class contains the "simple" Forge Bracket handlers from CraftTweaker.
  */
 @ZenRegister
-@ZenCodeType.Expansion("crafttweaker.api.bracket.BracketHandlers")
+@ZenCodeType.Name("crafttweaker.api.bracket.ForgeBracketHandlers")
 @Document("forge/api/BracketHandlers")
 public final class ForgeBracketHandlers {
     
