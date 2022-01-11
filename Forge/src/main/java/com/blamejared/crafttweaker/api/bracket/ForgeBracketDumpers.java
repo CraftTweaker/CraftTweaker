@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @ZenRegister
-@ZenCodeType.Expansion("crafttweaker.api.BracketDumpers")
+@ZenCodeType.Name("crafttweaker.api.bracket.ForgeBracketDumpers")
 @Document("forge/api/ForgeBracketDumpers")
 public final class ForgeBracketDumpers {
     
