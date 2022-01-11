@@ -32,9 +32,6 @@ import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -175,35 +172,6 @@ public class CraftTweaker {
     public void playerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         
         ((GroupLogger) CraftTweakerAPI.logger).removePlayerLogger(event.getPlayer());
-    }
-    
-    @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
-    public void getRecipes(RecipesUpdatedEvent event) {
-        /*
-         * Called on the client when joining a world and the server.
-         *
-         * Recipes are only written and read on the server, we should not load scripts on the client if it is a single player world.
-         *
-         * Use a Recipe serializer to serialize the scripts from the server and run those scripts here.
-         *
-         *
-         * In the recipe serializer we should set a boolean, and only load the scripts on the client if the boolean is true.
-         */
-        if(event.getRecipeManager().recipes.getOrDefault(CraftTweaker.RECIPE_TYPE_SCRIPTS, new HashMap<>())
-                .size() == 0) {
-            // probably joining single player, but possible the server doesn't have any recipes as well, either way, don't reload scripts!
-            return;
-        }
-        //ImmutableMap of ImmutableMaps. Nice.
-        RecipeManager recipeManager = event.getRecipeManager();
-        recipeManager.recipes = new HashMap<>(recipeManager.recipes);
-        recipeManager.recipes.replaceAll((t, v) -> new HashMap<>(recipeManager.recipes.get(t)));
-        
-        serverOverride = false;
-        CTCraftingTableManager.recipeManager = event.getRecipeManager();
-        final ScriptLoadingOptions scriptLoadingOptions = new ScriptLoadingOptions().execute();
-        CraftTweakerAPI.loadScriptsFromRecipeManager(event.getRecipeManager(), scriptLoadingOptions);
     }
     
     @SubscribeEvent
