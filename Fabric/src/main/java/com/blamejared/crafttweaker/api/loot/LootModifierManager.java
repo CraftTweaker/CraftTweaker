@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.impl.loot.modifier;
+package com.blamejared.crafttweaker.api.loot;
 
 import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
 import net.minecraft.Util;

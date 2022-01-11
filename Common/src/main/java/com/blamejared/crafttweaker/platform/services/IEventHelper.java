@@ -6,6 +6,8 @@ import com.blamejared.crafttweaker.api.data.base.visitor.DataToTextComponentVisi
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.attribute.ItemAttributeModifierBase;
+import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
+import com.blamejared.crafttweaker.api.recipe.replacement.event.IGatherReplacementExclusionEvent;
 import com.blamejared.crafttweaker.api.util.AttributeUtil;
 import com.blamejared.crafttweaker.api.zencode.bracket.IgnorePrefixCasingBracketParser;
 import com.blamejared.crafttweaker.natives.entity.ExpandEntity;
@@ -48,6 +50,8 @@ public interface IEventHelper {
     void fireRegisterBEPEvent(IgnorePrefixCasingBracketParser bep);
     
     void fireCTCommandRegisterEvent();
+    
+    IGatherReplacementExclusionEvent fireGatherReplacementExclusionEvent(final IRecipeManager manager);
     
     void setBurnTime(IIngredient ingredient, int burnTime);
     

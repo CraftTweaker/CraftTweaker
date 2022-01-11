@@ -157,6 +157,7 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.processResources {
+    outputs.upToDateWhen { false }
     from(project(":Common").sourceSets.main.get().resources)
     dependsOn(":StdLibs:zipItUp")
     from(files(evaluationDependsOn(":StdLibs").tasks.getByName("zipItUp").outputs))

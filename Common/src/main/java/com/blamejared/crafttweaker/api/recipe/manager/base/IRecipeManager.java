@@ -52,7 +52,7 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
      * Adds a recipe based on a provided IData. The provided IData should represent a DataPack json, this effectively allows you to register recipes for any DataPack supporting RecipeType systems.
      *
      * @param name name of the recipe
-     * @param data data representing the json file
+     * @param mapData data representing the json file
      *
      * @docParam name "recipe_name"
      * @docParam data {ingredient:{item:<item:minecraft:gold_ore>.registryName},result:<item:minecraft:cooked_porkchop>.registryName,experience:0.35 as float, cookingtime:100}

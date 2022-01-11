@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.mixin.common.transform.loot;
 
-import com.blamejared.crafttweaker.impl.loot.modifier.LootCapturingConsumer;
-import com.blamejared.crafttweaker.impl.loot.modifier.LootModifierManager;
+import com.blamejared.crafttweaker.api.loot.LootCapturingConsumer;
+import com.blamejared.crafttweaker.api.loot.LootModifierManager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;

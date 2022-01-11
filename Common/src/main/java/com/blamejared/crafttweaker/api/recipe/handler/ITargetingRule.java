@@ -24,7 +24,7 @@ public interface ITargetingRule {
      *
      * @return Whether the given recipe should undergo ingredient replacement or not.
      */
-    boolean shouldBeReplaced(final Recipe<?> recipe, final IRecipeManager manager);
+    boolean shouldBeReplaced(final Recipe<?> recipe, final IRecipeManager<?> manager);
     
     /**
      * Describes in a short and simple sentence the behavior of this rule.

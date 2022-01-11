@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.impl.event;
+package com.blamejared.crafttweaker.api.event.type;
 
 import com.blamejared.crafttweaker.api.zencode.bracket.IgnorePrefixCasingBracketParser;
 import net.minecraftforge.eventbus.api.Event;

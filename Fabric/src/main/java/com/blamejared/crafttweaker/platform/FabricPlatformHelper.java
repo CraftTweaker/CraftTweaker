@@ -4,13 +4,15 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.MCItemStack;
 import com.blamejared.crafttweaker.api.item.MCItemStackMutable;
+import com.blamejared.crafttweaker.api.loot.LootModifierManager;
 import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
 import com.blamejared.crafttweaker.api.mod.Mod;
+import com.blamejared.crafttweaker.api.recipe.handler.helper.CraftingTableRecipeConflictChecker;
+import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.tag.manager.TagManagerWrapper;
 import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistryData;
 import com.blamejared.crafttweaker.api.util.HandleHelper;
 import com.blamejared.crafttweaker.api.util.StringUtils;
-import com.blamejared.crafttweaker.impl.loot.modifier.LootModifierManager;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
 import com.blamejared.crafttweaker.impl.script.ScriptSerializer;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessBucketItem;
@@ -33,6 +35,7 @@ import net.minecraft.tags.TagCollection;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.material.Fluid;
@@ -138,18 +141,19 @@ public class FabricPlatformHelper implements IPlatformHelper {
     
     @Override
     public <T extends Annotation> Stream<? extends Class<?>> findClassesWithAnnotation(Class<T> annotationCls, Consumer<Mod> consumer, Predicate<Either<T, Map<String, Object>>> annotationFilter) {
-    
+        
         Set<Class<?>> typesAnnotatedWith = REFLECTIONS.get().getTypesAnnotatedWith(annotationCls);
         typesAnnotatedWith.stream().map(this::getModsForClass).flatMap(Collection::stream).forEach(consumer);
         return typesAnnotatedWith.stream();
     }
     
     private List<Mod> getModsForClass(Class<?> clazz) {
+        
         File classFile = new File(clazz.getProtectionDomain().getCodeSource().getLocation().getPath());
         List<Mod> mods = new ArrayList<>();
         FabricLoader.getInstance().getAllMods().forEach(modContainer -> {
             if(modContainer instanceof ModContainerImpl impl) {
-
+                
                 if(impl.getOriginPath().toFile().equals(classFile)) {
                     mods.add(new Mod(modContainer.getMetadata().getId(), modContainer.getMetadata()
                             .getName(), modContainer.getMetadata().getVersion().getFriendlyString()));
@@ -166,7 +170,9 @@ public class FabricPlatformHelper implements IPlatformHelper {
         
         final String mappedName = FabricLoader.getInstance()
                 .getMappingResolver()
-                .mapMethodName(FabricLoader.getInstance().getMappingResolver().getCurrentRuntimeNamespace(), clazz.getName(), methodName, "(%s)%s".formatted(Arrays.stream(parameterTypes)
+                .mapMethodName(FabricLoader.getInstance()
+                        .getMappingResolver()
+                        .getCurrentRuntimeNamespace(), clazz.getName(), methodName, "(%s)%s".formatted(Arrays.stream(parameterTypes)
                         .map(Class::descriptorString)
                         .collect(Collectors.joining()), returnType.descriptorString()));
         try {
@@ -183,7 +189,9 @@ public class FabricPlatformHelper implements IPlatformHelper {
         
         final String mappedName = FabricLoader.getInstance()
                 .getMappingResolver()
-                .mapFieldName(FabricLoader.getInstance().getMappingResolver().getCurrentRuntimeNamespace(), clazz.getName(), fieldName, fieldDescription);
+                .mapFieldName(FabricLoader.getInstance()
+                        .getMappingResolver()
+                        .getCurrentRuntimeNamespace(), clazz.getName(), fieldName, fieldDescription);
         
         try {
             Field field = clazz.getDeclaredField(mappedName);
@@ -220,6 +228,12 @@ public class FabricPlatformHelper implements IPlatformHelper {
     public IInventoryWrapper getPlayerInventory(Player player) {
         
         return new TAInventoryWrapper(PlayerInventoryStorage.of(player));
+    }
+    
+    @Override
+    public boolean doCraftingTableRecipesConflict(IRecipeManager manager, Recipe<?> first, Recipe<?> second) {
+        
+        return CraftingTableRecipeConflictChecker.checkConflicts(manager, first, second);
     }
     
     @Override

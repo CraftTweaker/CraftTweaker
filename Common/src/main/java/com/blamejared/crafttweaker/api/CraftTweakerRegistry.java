@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class CraftTweakerRegistry {
     
@@ -73,7 +74,7 @@ public class CraftTweakerRegistry {
                 .filter(aClass -> !aClass.equals(TagManagerWrapper.class))
                 .forEach(CrTTagRegistryData.INSTANCE::addTagImplementationClass);
         
-        Services.PLATFORM.findClassesWithAnnotation(IRecipeHandler.For.class)
+        Stream.concat(Services.PLATFORM.findClassesWithAnnotation(IRecipeHandler.For.class), Services.PLATFORM.findClassesWithAnnotation(IRecipeHandler.For.Container.class))
                 .distinct()
                 .forEach(RECIPE_HANDLER_REGISTRY::addClass);
     }
