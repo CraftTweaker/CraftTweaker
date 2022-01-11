@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.annotation.BracketResolver;
 import com.blamejared.crafttweaker.api.annotation.BracketValidator;
 import com.blamejared.crafttweaker.api.command.type.BracketDumperInfo;
 import com.blamejared.crafttweaker.api.zencode.bracket.ValidatedEscapableBracketParser;
+import com.blamejared.crafttweaker_annotations.annotations.TypedExpansion;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableMap;
 import org.openzen.zencode.java.ScriptingEngine;
@@ -133,9 +134,7 @@ public class BracketResolverRegistry {
             bracketResolvers.put(name, method);
             
             final Class<?> cls = method.getDeclaringClass();
-            final String clsName = cls.isAnnotationPresent(ZenCodeType.Name.class)
-                    ? cls.getAnnotation(ZenCodeType.Name.class).value()
-                    : cls.getCanonicalName();
+            final String clsName = this.findZenCodeName(cls);
             
             bracketNamesByRootPackage.computeIfAbsent(clsName.split("[.]", 2)[0], s -> new ArrayList<>())
                     .add(name);
@@ -200,6 +199,26 @@ public class BracketResolverRegistry {
         if(valid) {
             bracketValidators.put(value, method);
         }
+    }
+    
+    private String findZenCodeName(final Class<?> cls) {
+        
+        if(cls.isAnnotationPresent(ZenCodeType.Name.class)) {
+            
+            return cls.getAnnotation(ZenCodeType.Name.class).value();
+        }
+        
+        if(cls.isAnnotationPresent(ZenCodeType.Expansion.class)) {
+            
+            return cls.getAnnotation(ZenCodeType.Expansion.class).value();
+        }
+        
+        if(cls.isAnnotationPresent(TypedExpansion.class)) {
+            
+            return this.findZenCodeName(cls.getAnnotation(TypedExpansion.class).value());
+        }
+        
+        return cls.getCanonicalName();
     }
     
 }
