@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.natives.entity;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.MapData;
+import com.blamejared.crafttweaker.api.entity.CTEntityIngredient;
 import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -19,6 +20,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.openzen.zencode.java.ZenCodeType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @ZenRegister
 @Document("vanilla/api/entity/EntityType")
@@ -141,6 +145,21 @@ public class ExpandEntityType {
     public static String getCommandString(EntityType internal) {
         
         return "<entitytype:" + Services.REGISTRY.getRegistryKey(internal) + ">";
+    }
+    
+    @ZenCodeType.Caster(implicit = true)
+    public static CTEntityIngredient asEntityIngredient(EntityType internal) {
+        
+        return new CTEntityIngredient.EntityTypeIngredient(internal);
+    }
+    
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)
+    public static CTEntityIngredient asList(EntityType internal, CTEntityIngredient other) {
+        
+        List<CTEntityIngredient> elements = new ArrayList<>();
+        elements.add(asEntityIngredient(internal));
+        elements.add(other);
+        return new CTEntityIngredient.CompoundEntityIngredient(elements);
     }
     
 }

@@ -1,9 +1,11 @@
 package com.blamejared.crafttweaker.platform.event;
 
+import com.blamejared.crafttweaker.api.event.CraftTweakerEvents;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
+import com.blamejared.crafttweaker.api.recipe.replacement.event.IGatherReplacementExclusionEvent;
 import com.blamejared.crafttweaker.api.zencode.bracket.IgnorePrefixCasingBracketParser;
-import com.blamejared.crafttweaker.impl.event.CraftTweakerEvents;
 import com.blamejared.crafttweaker.platform.services.IEventHelper;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 
@@ -19,6 +21,14 @@ public class FabricEventHelper implements IEventHelper {
     public void fireCTCommandRegisterEvent() {
         
         CraftTweakerEvents.COMMAND_REGISTER_EVENT.invoker().accept(new CTCommandRegisterEvent());
+    }
+    
+    @Override
+    public IGatherReplacementExclusionEvent fireGatherReplacementExclusionEvent(final IRecipeManager manager) {
+        
+        GatherReplacementExclusionEvent event = new GatherReplacementExclusionEvent(manager);
+        CraftTweakerEvents.GATHER_REPLACEMENT_EXCLUSION_EVENT.invoker().accept(event);
+        return event;
     }
     
     @Override

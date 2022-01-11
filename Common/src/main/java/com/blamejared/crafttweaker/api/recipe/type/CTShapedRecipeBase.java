@@ -50,6 +50,11 @@ public class CTShapedRecipeBase implements CraftingRecipe {
                 .max()
                 .orElse(0);
         this.mirroredIngredients = new IIngredient[MirrorAxis.values().length][][];
+        for(int index = 0; index < this.ingredients.length; index++) {
+            if(this.ingredients[index].length < width) {
+                this.ingredients[index] = ArrayUtil.copyOf(this.ingredients[index], width, Services.PLATFORM.getEmptyIItemStack());
+            }
+        }
         initMirroredIngredients();
     }
     

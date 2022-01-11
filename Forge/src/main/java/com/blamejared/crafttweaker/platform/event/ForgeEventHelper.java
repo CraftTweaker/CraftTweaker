@@ -1,10 +1,13 @@
 package com.blamejared.crafttweaker.platform.event;
 
+import com.blamejared.crafttweaker.api.event.type.CTCommandRegisterEvent;
+import com.blamejared.crafttweaker.api.event.type.CTRegisterBEPEvent;
+import com.blamejared.crafttweaker.api.event.type.GatherReplacementExclusionEvent;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
+import com.blamejared.crafttweaker.api.recipe.replacement.event.IGatherReplacementExclusionEvent;
 import com.blamejared.crafttweaker.api.zencode.bracket.IgnorePrefixCasingBracketParser;
-import com.blamejared.crafttweaker.impl.event.CTCommandRegisterEvent;
-import com.blamejared.crafttweaker.impl.event.CTRegisterBEPEvent;
 import com.blamejared.crafttweaker.platform.services.IEventHelper;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
@@ -21,6 +24,14 @@ public class ForgeEventHelper implements IEventHelper {
     public void fireCTCommandRegisterEvent() {
         
         MinecraftForge.EVENT_BUS.post(new CTCommandRegisterEvent());
+    }
+    
+    @Override
+    public IGatherReplacementExclusionEvent fireGatherReplacementExclusionEvent(IRecipeManager manager) {
+        
+        GatherReplacementExclusionEvent event = new GatherReplacementExclusionEvent(manager);
+        MinecraftForge.EVENT_BUS.post(event);
+        return event;
     }
     
     @Override

@@ -3,8 +3,10 @@ package com.blamejared.crafttweaker.impl.event;
 import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.action.villager.ActionTradeBase;
+import com.blamejared.crafttweaker.api.event.type.GatherReplacementExclusionEvent;
 import com.blamejared.crafttweaker.api.item.attribute.ItemAttributeModifierBase;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
+import com.blamejared.crafttweaker.api.recipe.replacement.rule.DefaultExclusionReplacements;
 import com.blamejared.crafttweaker.api.villager.CTVillagerTrades;
 import com.blamejared.crafttweaker.impl.script.ScriptReloadListener;
 import com.blamejared.crafttweaker.platform.Services;
@@ -32,8 +34,14 @@ import java.util.List;
 public class CTCommonEventHandler {
     
     @SubscribeEvent
-    public static void blockInteract(PlayerInteractEvent.RightClickBlock e) {
+    public void onGatherReplacementExclusion(GatherReplacementExclusionEvent event) {
+        
+        DefaultExclusionReplacements.handleDefaultExclusions(event);
+    }
     
+    @SubscribeEvent
+    public static void blockInteract(PlayerInteractEvent.RightClickBlock e) {
+        
         if(Services.EVENT.onBlockInteract(e.getPlayer(), e.getHand(), e.getHitVec())) {
             e.setCanceled(true);
         }

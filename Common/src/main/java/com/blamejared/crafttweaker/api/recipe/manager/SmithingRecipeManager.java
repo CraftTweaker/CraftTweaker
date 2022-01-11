@@ -8,7 +8,6 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.UpgradeRecipe;
 import org.openzen.zencode.java.ZenCodeGlobals;
@@ -17,7 +16,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.recipe.SmithingRecipeManager")
 @Document("vanilla/api/recipe/manager/SmithingRecipeManager")
-public enum SmithingRecipeManager implements IRecipeManager<CraftingRecipe> {
+public enum SmithingRecipeManager implements IRecipeManager<UpgradeRecipe> {
     
     @ZenCodeGlobals.Global("smithing")
     INSTANCE;
@@ -41,13 +40,13 @@ public enum SmithingRecipeManager implements IRecipeManager<CraftingRecipe> {
         
         recipeName = fixRecipeName(recipeName);
         final UpgradeRecipe smithing = new UpgradeRecipe(CraftTweakerConstants.rl(recipeName), base.asVanillaIngredient(), addition.asVanillaIngredient(), result.getInternal());
-        CraftTweakerAPI.apply(new ActionAddRecipe(this, smithing, ""));
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, smithing, ""));
     }
     
     @Override
-    public RecipeType<CraftingRecipe> getRecipeType() {
+    public RecipeType<UpgradeRecipe> getRecipeType() {
         
-        return RecipeType.CRAFTING;
+        return RecipeType.SMITHING;
     }
     
 }

@@ -1,5 +1,7 @@
 package com.blamejared.crafttweaker;
 
+import com.blamejared.crafttweaker.api.event.CraftTweakerEvents;
+import com.blamejared.crafttweaker.api.recipe.replacement.rule.DefaultExclusionReplacements;
 import com.blamejared.crafttweaker.platform.Services;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
@@ -31,6 +33,8 @@ public class CraftTweakerFabric implements ModInitializer {
             }
             return InteractionResult.PASS;
         });
+        
+        CraftTweakerEvents.GATHER_REPLACEMENT_EXCLUSION_EVENT.register(DefaultExclusionReplacements::handleDefaultExclusions);
         
         Services.PLATFORM.registerCustomTags();
         
