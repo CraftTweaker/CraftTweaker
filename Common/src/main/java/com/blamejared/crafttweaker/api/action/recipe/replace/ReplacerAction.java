@@ -49,7 +49,7 @@ public final class ReplacerAction implements IRuntimeAction {
     
     private static Collection<ResourceLocation> filter(final ITargetingRule rule, final Collection<ResourceLocation> fullExclusions) {
         
-        final Map<ResourceLocation, Recipe<?>> map = GenericRecipesManager.RECIPES.getRecipeMap(); // Holy hell if it's inefficient otherwise
+        final Map<ResourceLocation, Recipe<?>> map = GenericRecipesManager.INSTANCE.getRecipeMap(); // Holy hell if it's inefficient otherwise
         
         
         return Util.make(new HashSet<>(fullExclusions), set -> set.removeIf(it -> {
@@ -61,7 +61,7 @@ public final class ReplacerAction implements IRuntimeAction {
     @Override
     public void apply() {
         
-        this.specificRecipesOrElse(GenericRecipesManager.RECIPES::getAllRecipes)
+        this.specificRecipesOrElse(GenericRecipesManager.INSTANCE::getAllRecipes)
                 .stream()
                 .filter(it -> !this.defaultExclusions.contains(it.getId()))
                 .map(it -> Pair.of(it, RecipeTypeBracketHandler.getOrDefault(it.getType())))

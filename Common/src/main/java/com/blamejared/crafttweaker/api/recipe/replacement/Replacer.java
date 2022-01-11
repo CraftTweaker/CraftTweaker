@@ -86,7 +86,7 @@ public final class Replacer {
             () -> (id, original) -> original
     );
     private static final Supplier<Map<IRecipeManager<?>, Collection<ResourceLocation>>> DEFAULT_EXCLUSIONS = Suppliers.memoize(
-            () -> GenericRecipesManager.RECIPES.getAllManagers()
+            () -> GenericRecipesManager.INSTANCE.getAllManagers()
                     .stream()
                     .map(Replacer::gatherDefaultExclusions)
                     .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond))
