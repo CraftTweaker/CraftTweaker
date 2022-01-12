@@ -99,8 +99,9 @@ modTemplate {
         enabled(true)
         endpoint(System.getenv("versionTrackerAPI"))
         author(modAuthor)
-        projectName(modName)
+        projectName("${modName}-Fabric")
         homepage(curseHomepageLink)
+        uid(System.getenv("versionTrackerKey"))
     }
     webhook.apply {
         enabled(true)
@@ -109,8 +110,6 @@ modTemplate {
         avatarUrl(modAvatar)
     }
 }
-
-
 
 tasks.compileGametestJava {
     source(project(":Common").sourceSets.gametest.get().java)

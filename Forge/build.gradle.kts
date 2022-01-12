@@ -61,7 +61,7 @@ minecraft {
         all {
             lazyToken("minecraft_classpath") {
                 configurations.library.get().copyRecursive().resolve()
-                    .joinToString(File.pathSeparator) { it.absolutePath }
+                        .joinToString(File.pathSeparator) { it.absolutePath }
             }
         }
         create("client") {
@@ -100,12 +100,12 @@ minecraft {
             workingDirectory(project.file("run"))
             ideaModule("${rootProject.name}.${project.name}.main")
             args("--mod",
-                modId,
-                "--all",
-                "--output",
-                file("src/generated/resources/"),
-                "--existing",
-                file("src/main/resources/"))
+                    modId,
+                    "--all",
+                    "--output",
+                    file("src/generated/resources/"),
+                    "--existing",
+                    file("src/main/resources/"))
             args("-mixin.config=${modId}.mixins.json", "-mixin.config=${modId}.forge.mixins.json")
             mods {
                 create(modId) {
@@ -134,8 +134,9 @@ modTemplate {
         enabled(true)
         endpoint(System.getenv("versionTrackerAPI"))
         author(modAuthor)
-        projectName(modName)
+        projectName("${modName}-Forge")
         homepage(curseHomepageLink)
+        uid(System.getenv("versionTrackerKey"))
     }
     webhook.apply {
         enabled(true)
