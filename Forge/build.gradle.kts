@@ -1,5 +1,8 @@
 import com.blamejared.modtemplate.Utils
 import com.matthewprenger.cursegradle.CurseProject
+import groovy.namespace.QName
+import groovy.util.Node
+import groovy.util.NodeList
 
 plugins {
     `maven-publish`
@@ -184,6 +187,21 @@ publishing {
         register("mavenJava", MavenPublication::class) {
             artifactId = baseArchiveName
             from(components["java"])
+
+            pom.withXml {
+                val depNodeList = asNode()["dependencies"] as NodeList
+                depNodeList.map { it as Node }.forEach { depList ->
+                    val deps = depList.getAt(QName("http://maven.apache.org/POM/4.0.0", "dependency"))
+                    deps.map { it as Node }.forEach { dep ->
+                        val versionList = dep.getAt(QName("http://maven.apache.org/POM/4.0.0", "version"))
+                        versionList.map { it as Node }.map { it.value() as NodeList }.map { it.text() }.forEach { version ->
+                            if (version.contains("_mapped_")) {
+                                dep.parent().remove(dep)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
