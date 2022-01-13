@@ -183,7 +183,7 @@ publishing {
     publications {
         register("mavenJava", MavenPublication::class) {
             artifactId = baseArchiveName
-            artifact(tasks.jar)
+            from(components["java"])
         }
     }
 
