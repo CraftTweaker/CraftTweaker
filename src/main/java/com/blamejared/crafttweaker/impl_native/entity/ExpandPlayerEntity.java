@@ -24,6 +24,37 @@ public class ExpandPlayerEntity {
     
     
     @ZenCodeType.Method
+    @ZenCodeType.Getter("experience")
+    public static float getExperience(PlayerEntity internal) {
+        
+        return internal.experience;
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("experienceLevel")
+    public static int getExperienceLevel(PlayerEntity internal) {
+        
+        return internal.experienceLevel;
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("experienceTotal")
+    public static int getExperienceTotal(PlayerEntity internal) {
+        
+        return internal.experienceTotal;
+    }
+    
+    @ZenCodeType.Method
+    public static void addExperienceLevels(PlayerEntity internal, int levels){
+        internal.addExperienceLevel(levels);
+    }
+    
+    @ZenCodeType.Method
+    public static void giveExperiencePoints(PlayerEntity internal, int experience){
+        internal.giveExperiencePoints(experience);
+    }
+    
+    @ZenCodeType.Method
     @ZenCodeType.Getter("inventory")
     public static PlayerInventory getInventory(PlayerEntity internal) {
         
