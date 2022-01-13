@@ -19,13 +19,17 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 public class DocumentProcessor extends AbstractCraftTweakerProcessor {
     
     private static final String defaultOutputDirectory = "docsOut";
     private static final String outputDirectoryOptionName = "crafttweaker.processor.document.output_directory";
+    private static final String multiSourceOptionName = "crafttweaker.processor.document.multi_source";
+    
     private File outputDirectory;
+    private boolean multiSourceProject;
     
     private KnownElementList knownElementList;
     private KnownModList knownModList;
@@ -35,6 +39,7 @@ public class DocumentProcessor extends AbstractCraftTweakerProcessor {
         
         final Set<String> supportedOptions = new HashSet<>(super.getSupportedOptions());
         supportedOptions.add(outputDirectoryOptionName);
+        supportedOptions.add(multiSourceOptionName);
         return supportedOptions;
     }
     
@@ -70,12 +75,13 @@ public class DocumentProcessor extends AbstractCraftTweakerProcessor {
         final String docsOut = processingEnv.getOptions()
                 .getOrDefault(outputDirectoryOptionName, defaultOutputDirectory);
         outputDirectory = new File(docsOut);
+        final String multiSource = processingEnv.getOptions().getOrDefault(multiSourceOptionName, "false");
+        multiSourceProject = Boolean.parseBoolean(multiSource.toLowerCase(Locale.ROOT));
     }
     
     @Override
     protected boolean performProcessing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         
-        System.out.println(annotations);
         if(roundEnv.processingOver()) {
             handleLastRound();
         } else {
@@ -126,7 +132,7 @@ public class DocumentProcessor extends AbstractCraftTweakerProcessor {
     private void writeDocsJsonFile() {
         
         final DocumentRegistry documentRegistry = dependencyContainer.getInstanceOfClass(DocumentRegistry.class);
-        final DocsJsonWriter docsJsonWriter = new DocsJsonWriter(outputDirectory, documentRegistry);
+        final DocsJsonWriter docsJsonWriter = new DocsJsonWriter(outputDirectory, multiSourceProject, documentRegistry);
         try {
             docsJsonWriter.write();
         } catch(IOException exception) {
@@ -143,7 +149,7 @@ public class DocumentProcessor extends AbstractCraftTweakerProcessor {
     private void writePages() {
         
         final DocumentRegistry documentRegistry = dependencyContainer.getInstanceOfClass(DocumentRegistry.class);
-        final PageWriter pageWriter = new PageWriter(documentRegistry, new File(outputDirectory, "docs"));
+        final PageWriter pageWriter = new PageWriter(documentRegistry, new File(outputDirectory, "docs"), multiSourceProject);
         try {
             pageWriter.write();
         } catch(IOException exception) {

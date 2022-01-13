@@ -128,7 +128,9 @@ subprojects {
         tasks.withType<JavaCompile> {
             options.encoding = "UTF-8"
             options.release.set(modJavaVersion.toInt())
-            options.compilerArgs.add("-Acrafttweaker.processor.document.output_directory=${file("docsOut")}")
+            options.compilerArgs.add("-Acrafttweaker.processor.document.output_directory=${rootProject.file("docsOut")}")
+            options.compilerArgs.add("-Acrafttweaker.processor.document.multi_source=true")
+
         }
 
         tasks {

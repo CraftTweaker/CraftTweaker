@@ -20,16 +20,20 @@ public class PageWriter {
     
     private final DocumentRegistry documentRegistry;
     private final File outputDirectory;
+    private final boolean multiSourceProject;
     
-    public PageWriter(DocumentRegistry documentRegistry, File outputDirectory) {
+    public PageWriter(DocumentRegistry documentRegistry, File outputDirectory, boolean multiSourceProject) {
         
         this.documentRegistry = documentRegistry;
         this.outputDirectory = outputDirectory;
+        this.multiSourceProject = multiSourceProject;
     }
     
     public void write() throws IOException {
         
-        clearOutputDirectory();
+        if(!multiSourceProject) {
+            clearOutputDirectory();
+        }
         writePages();
     }
     
