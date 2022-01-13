@@ -54,7 +54,7 @@ public class TableOfContentTypeAdapter extends TypeAdapter<TableOfContent> {
     @Override
     public TableOfContent read(JsonReader in) {
         
-        throw new UnsupportedOperationException("Not needed here");
+        throw new UnsupportedOperationException("Cannot read Table Of Contents from Json!");
     }
     
 }

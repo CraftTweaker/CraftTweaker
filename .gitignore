@@ -23,9 +23,7 @@ eclipse
 run
 run_server
 
-Common/docsOut
-Fabric/docsOut
-Forge/docsOut
+docsOut
 
 classes
 logs
