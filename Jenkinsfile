@@ -30,6 +30,7 @@ pipeline {
                 echo 'Cleaning Project'
                 sh 'chmod +x gradlew'
                 sh './gradlew clean'
+                sh "rm -rf $docsOutDir"
             }
         }
 
@@ -101,7 +102,7 @@ pipeline {
 
                 stage('Exporting Documentation') {
                     when {
-                        branch "branchName"
+                        branch branchName
                     }
                     steps {
                         echo "Cloning Repository at Branch main"
@@ -119,9 +120,7 @@ pipeline {
 
                         echo "Moving Generated Documentation to Local Clone"
                         sh "mkdir --parents ./$documentationDir/$exportDirInRepo"
-                        sh "cp -r ./Common/$docsOutDir/* ./$documentationDir/$exportDirInRepo/"
-                        sh "cp -r ./Fabric/$docsOutDir/* ./$documentationDir/$exportDirInRepo/"
-                        sh "cp -r ./Forge/$docsOutDir/* ./$documentationDir/$exportDirInRepo/"
+                        sh "mv ./$docsOutDir/* ./$documentationDir/$exportDirInRepo/"
 
                         echo "Committing and Pushing to the repository"
                         dir(documentationDir) {
