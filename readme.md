@@ -5,7 +5,6 @@
 [![GitHub issues](https://img.shields.io/github/issues/CraftTweaker/CraftTweaker?style=flat-square)](https://github.com/CraftTweaker/CraftTweaker/issues)
 [![GitHub license](https://img.shields.io/github/license/CraftTweaker/CraftTweaker?color=0690ff&style=flat-square)](https://github.com/CraftTweaker/CraftTweaker/blob/1.18/LICENSE)
 ![Jenkins](https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fci.blamejared.com%2Fjob%2FCraftTweaker%2Fjob%2F1.18%2F&style=flat-square)
-[![Maven](https://img.shields.io/maven-metadata/v?color=C71A36&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fblamejared%2Fcrafttweaker%2FCraftTweaker-1.18.1%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/blamejared/crafttweaker/)
 [![Discord](https://img.shields.io/badge/Discord-%237289DA?style=flat-square&logo=Discord&logoColor=white)](https://discord.blamejared.com/)
 [![](http://cf.way2muchnoise.eu/crafttweaker.svg?badge_style=flat)](https://minecraft.curseforge.com/projects/crafttweaker)
 
@@ -18,19 +17,18 @@
 - [Build](#build)
 - [Maven](#maven)
 
-
 ## Introduction
 
 CraftTweaker is a Minecraft mod which allows modpacks and servers to customize the game. With CraftTweaker you can change recipes, script events, add new commands and even change item properties! When used with other mods the possibilities become endless! Ranging from custom machine recipes to entirely new blocks and items!
 
 ## Feedback
 
-If you're looking for help with the mod, or just want to come hang out, we have a [Discord](https://discord.blamejared.com). If you're running into a bug or have a feature request, please don't be afraid to make an [issue on the tracker](https://github.com/CraftTweaker/CraftTweaker/issues).
+If you're looking for help with the mod, or just want to come hang out, we have a [Discord server](https://discord.blamejared.com).  
+If you're running into a bug or have a feature request, please don't be afraid to make an [issue on the tracker](https://github.com/CraftTweaker/CraftTweaker/issues).
 
 ## License
 
 Distributed under the MIT License. See the [LICENSE](https://github.com/CraftTweaker/CraftTweaker/blob/1.18/LICENSE) file for more information.
-
 
 ## Setup
 
@@ -49,27 +47,54 @@ Simply run:
 ```bash
 gradlew build
 ```
-and the outputted `.jar` files will be put in `build/libs/`.
+and the outputted `.jar` files will be put in `build/libs/` folder of each subproject (`Common/build/libs/`, `Fabric/build/libs/` and `Forge/build/libs/`).
 
 CraftTweaker also has automated markdown documentation, the output of that will be in the `docsOut/` folder.
 
 ## Maven
 
+Every push to this repository is built and published to the [BlameJared](https://maven.blamejared.com) maven, to use these builds in your project, first add the BlameJared maven to your `repositories` block in your build.gradle file like so:
 
-Every push to this repository is built and published to the [BlameJared](https://maven.blamejared.com) maven, to use this builds in your project, simply use the following code in your build.gradle
-
-```gradle
+```groovy
 repositories {
-    maven { url 'https://maven.blamejared.com' }
-}
-
-dependencies {
-    runtimeOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.18.1:[VERSION]")
+    maven { 
+        url = 'https://maven.blamejared.com'
+        name = 'BlameJared Maven'
+    }
 }
 ```
 
-Just replace `[VERSION]` with the latest released version, which is currently:
+Then, depending on what modloader you are using, you can use the following snippets, just replace `[VERSION]` with the latest version for each artifact.
 
-[![Maven](https://img.shields.io/maven-metadata/v?label=&color=C71A36&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fblamejared%2Fcrafttweaker%2FCraftTweaker-1.18.1%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/blamejared/crafttweaker/)
+### Fabric [![Maven](https://img.shields.io/maven-metadata/v?color=C71A36&label=Latest%20version&logo=Latest%20version&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fblamejared%2Fcrafttweaker%2FCraftTweaker-fabric-1.18.1%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/blamejared/crafttweaker/CraftTweaker-fabric-1.18.1/)
 
-Simply remove the `v` and use that version, so `v7.0.0.0` becomes `7.0.0.0`
+```groovy
+dependencies {
+    modCompileOnly('com.blamejared.crafttweaker:CraftTweaker-fabric-1.18.1:[VERSION]')
+    // Example:
+    // modCompileOnly('com.blamejared.crafttweaker:CraftTweaker-fabric-1.18.1:9.0.0+24')
+}
+```
+
+### Forge [![Maven](https://img.shields.io/maven-metadata/v?color=C71A36&label=Latest%20version&logo=Latest%20version&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fblamejared%2Fcrafttweaker%2FCraftTweaker-forge-1.18.1%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/blamejared/crafttweaker/CraftTweaker-forge-1.18.1/)
+
+
+```groovy
+dependencies {
+    compileOnly(fg.deobf('com.blamejared.crafttweaker:CraftTweaker-forge-1.18.1:[VERSION]'))
+    // Example:
+    // compileOnly(fg.deobf('com.blamejared.crafttweaker:CraftTweaker-forge-1.18.1:9.0.0+24'))
+}
+```
+
+### Common [![Maven](https://img.shields.io/maven-metadata/v?color=C71A36&label=Latest%20version&logo=Latest%20version&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fblamejared%2Fcrafttweaker%2FCraftTweaker-common-1.18.1%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/blamejared/crafttweaker/CraftTweaker-common-1.18.1/)
+
+If you are in a multi-modloader environment (Such as [MultiLoader](https://github.com/jaredlll08/MultiLoader-Template)), you can bring the Common artifact (code that does not depend on any specific mod loader but rather just the vanilla game) into your Common project like so:
+
+```groovy
+dependencies {
+    compileOnly('com.blamejared.crafttweaker:CraftTweaker-common-1.18.1:[VERSION]')
+    // Example:
+    // compileOnly('com.blamejared.crafttweaker:CraftTweaker-common-1.18.1:9.0.0+24')
+}
+```
