@@ -1,4 +1,5 @@
 import com.blamejared.modtemplate.Utils
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
 
 plugins {
     `maven-publish`
@@ -147,12 +148,12 @@ publishing {
     }
 }
 
-tasks.create<net.darkhax.curseforgegradle.TaskPublishCurseForge>("publishCurseForge") {
+tasks.create<TaskPublishCurseForge>("publishCurseForge") {
     apiToken = System.getenv("curseforgeApiToken") ?: 0
 
     val mainFile = upload(curseProjectId, file("${project.buildDir}/libs/$baseArchiveName-$version.jar"))
     mainFile.changelogType = "markdown"
-    mainFile.changelog = file("changelog.md").readText(Charsets.UTF_8)
+    mainFile.changelog = file("changelog.md")
     mainFile.releaseType = net.darkhax.curseforgegradle.Constants.RELEASE_TYPE_RELEASE
     mainFile.addJavaVersion("Java $modJavaVersion")
     mainFile.addRequirement("ingredient-extension-api")

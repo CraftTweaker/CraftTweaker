@@ -215,7 +215,6 @@ subprojects {
     // </editor-fold>
 }
 
-
 tasks.create("postDiscord") {
 
     doLast {
