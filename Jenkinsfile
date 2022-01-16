@@ -93,7 +93,7 @@ pipeline {
                                 echo 'Skipping CurseForge due to [skip deploy]'
                             } else {
                                 echo 'Deploying to CurseForge'
-                                sh './gradlew publishCurseForge'
+                                sh './gradlew publishCurseForge postDiscord'
                             }
                         }
 
