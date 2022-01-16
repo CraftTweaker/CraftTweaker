@@ -1,6 +1,23 @@
-
+import com.blamejared.modtemplate.Utils
+import com.diluv.schoomp.Webhook
+import com.diluv.schoomp.message.Message
+import com.diluv.schoomp.message.embed.Embed
+import java.io.ByteArrayOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+
+// Not sure how to do this without the buildscript block
+buildscript {
+    repositories {
+        mavenCentral()
+        maven("https://maven.blamejared.com") { }
+    }
+    dependencies {
+        classpath("com.diluv.schoomp:Schoomp:1.2.5")
+        classpath("com.blamejared:ModTemplate:[2.0.0.34,)")
+    }
+}
 
 val minecraftVersion: String by project
 val commonRunsEnabled: String by project
@@ -15,11 +32,16 @@ val modAuthor: String by project
 val modId: String by project
 val modJavaVersion: String by project
 val zenCodeJavaVersion: String by project
+val gitRepo: String by project
+val modAvatar: String by project
+val modVersion: String by project
 
 plugins {
     `java-library`
     idea
 }
+
+version = Utils.updatingSemVersion(modVersion)
 
 allprojects {
     repositories {
@@ -59,7 +81,21 @@ allprojects {
 
 subprojects {
 
-    this.ext.set("zenCodeDeps", setOf(":CodeFormatter", ":CodeFormatterShared", ":JavaIntegration", ":JavaAnnotations", ":JavaBytecodeCompiler", ":JavaShared", ":Validator", ":Parser", ":CodeModel", ":Shared"))
+    this.ext.set(
+        "zenCodeDeps",
+        setOf(
+            ":CodeFormatter",
+            ":CodeFormatterShared",
+            ":JavaIntegration",
+            ":JavaAnnotations",
+            ":JavaBytecodeCompiler",
+            ":JavaShared",
+            ":Validator",
+            ":Parser",
+            ":CodeModel",
+            ":Shared"
+        )
+    )
     this.ext.set("zenCodeTestDeps", setOf(":ScriptingExample"))
 
     // <editor-fold desc="ZenCode projects">
@@ -142,16 +178,16 @@ subprojects {
             jar {
                 manifest {
                     attributes(
-                            "Specification-Title" to modName,
-                            "Specification-Vendor" to modAuthor,
-                            "Specification-Version" to archiveVersion,
-                            "Implementation-Title" to project.name,
-                            "Implementation-Version" to archiveVersion,
-                            "Implementation-Vendor" to modAuthor,
-                            "Implementation-Timestamp" to SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(Date()),
-                            "Timestamp" to System.currentTimeMillis(),
-                            "Built-On-Java" to "${System.getProperty("java.vm.version")} (${System.getProperty("java.vm.vendor")})",
-                            "Build-On-Minecraft" to minecraftVersion
+                        "Specification-Title" to modName,
+                        "Specification-Vendor" to modAuthor,
+                        "Specification-Version" to archiveVersion,
+                        "Implementation-Title" to project.name,
+                        "Implementation-Version" to archiveVersion,
+                        "Implementation-Vendor" to modAuthor,
+                        "Implementation-Timestamp" to SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(Date()),
+                        "Timestamp" to System.currentTimeMillis(),
+                        "Built-On-Java" to "${System.getProperty("java.vm.version")} (${System.getProperty("java.vm.vendor")})",
+                        "Build-On-Minecraft" to minecraftVersion
                     )
                 }
             }
@@ -177,4 +213,101 @@ subprojects {
         // Any AP specific stuff can go here
     }
     // </editor-fold>
+}
+
+
+tasks.create("postDiscord") {
+
+    doLast {
+        try {
+
+            // Create a new webhook instance for Discord
+            val webhook = Webhook(
+                System.getenv("discordCFWebhook"),
+                "$modName CurseForge Gradle Upload"
+            )
+
+            // Craft a message to send to Discord using the webhook.
+            val message = Message()
+            message.username = modName
+            message.avatarUrl = modAvatar
+            message.content = "$modName $version for Minecraft $minecraftVersion has been published!"
+
+            val embed = Embed()
+            val downloadSources = StringJoiner("\n")
+
+            if (project(":Fabric").ext.has("curse_file_url")) {
+
+                downloadSources.add("<:fabric:932163720568782878> [Fabric](${project(":Fabric").ext.get("curse_file_url")})")
+            }
+
+            if (project(":Forge").ext.has("curse_file_url")) {
+
+                downloadSources.add("<:forge:932163698003443804> [Forge](${project(":Forge").ext.get("curse_file_url")})")
+            }
+
+            downloadSources.add(
+                "<:maven:932165250738970634> `\"com.blamejared.crafttweaker:${project(":Common").base.archivesName.get()}:${
+                    project(":Common").version
+                }\"`"
+            )
+            downloadSources.add(
+                "<:maven:932165250738970634> `\"com.blamejared.crafttweaker:${project(":Fabric").base.archivesName.get()}:${
+                    project(":Fabric").version
+                }\"`"
+            )
+            downloadSources.add(
+                "<:maven:932165250738970634> `\"com.blamejared.crafttweaker:${project(":Forge").base.archivesName.get()}:${
+                    project(":Forge").version
+                }\"`"
+            )
+
+            // Add Curseforge DL link if available.
+            val downloadString = downloadSources.toString()
+
+            if (downloadString.isNotEmpty()) {
+
+                embed.addField("Download", downloadString, false)
+            }
+
+            // Just use the Forge changelog for now, the files are the same anyway.
+            embed.addField("Changelog", getCIChangelog().take(1000), false)
+
+            embed.color = 0xF16436
+            message.addEmbed(embed)
+
+            webhook.sendMessage(message)
+        } catch (e: IOException) {
+
+            project.logger.error("Failed to push CF Discord webhook.")
+        }
+    }
+
+}
+
+fun getCIChangelog(): String {
+    return try {
+        val stdout = ByteArrayOutputStream()
+        val gitHash: String? = System.getenv("GIT_COMMIT")
+        val gitPrevHash: String? = System.getenv("GIT_PREVIOUS_COMMIT")
+        val repo = "$gitRepo/commit/"
+        if (gitHash != null && gitPrevHash != null) {
+            exec {
+                this.commandLine("git")
+                    .args("log", "--pretty=tformat:- [%s]($repo%H) - %aN ", "$gitPrevHash...$gitHash").standardOutput =
+                    stdout
+            }
+            stdout.toString().trim()
+        } else if (gitHash != null) {
+            exec {
+                this.commandLine("git")
+                    .args("log", "--pretty=tformat:- [%s]($repo%H) - %aN ", "-1", gitHash).standardOutput = stdout
+            }
+            stdout.toString().trim()
+        } else {
+            "Unavailable"
+        }
+    } catch (ignored: Exception) {
+        "Unavailable"
+    }
 }

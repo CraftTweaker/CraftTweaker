@@ -2,7 +2,7 @@ import com.blamejared.modtemplate.Utils
 plugins {
     `java-library`
     `maven-publish`
-    id("com.blamejared.modtemplate") version ("[2.0.0.34,)")
+    id("com.blamejared.modtemplate")
     id("org.spongepowered.gradle.vanilla") version "0.2.1-SNAPSHOT"
 }
 val modVersion: String by project

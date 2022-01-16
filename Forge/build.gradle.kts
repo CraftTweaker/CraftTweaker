@@ -1,16 +1,17 @@
 import com.blamejared.modtemplate.Utils
-import com.matthewprenger.cursegradle.CurseProject
 import groovy.namespace.QName
 import groovy.util.Node
 import groovy.util.NodeList
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+import net.darkhax.curseforgegradle.Constants as CFG_Contants
 
 plugins {
     `maven-publish`
     id("net.minecraftforge.gradle") version ("5.1.+")
     id("org.parchmentmc.librarian.forgegradle") version ("1.+")
     id("org.spongepowered.mixin") version ("0.7-SNAPSHOT")
-    id("com.blamejared.modtemplate") version ("[2.0.0.34,)")
-    id("com.matthewprenger.cursegradle") version ("1.4.0")
+    id("com.blamejared.modtemplate")
+    id("net.darkhax.curseforgegradle") version ("1.0.8")
 }
 
 val modVersion: String by project
@@ -25,6 +26,7 @@ val curseProjectId: String by project
 val curseHomepageLink: String by project
 val gitFirstCommit: String by project
 val gitRepo: String by project
+val modJavaVersion: String by project
 
 val baseArchiveName = "${modName}-forge-${minecraftVersion}"
 
@@ -66,7 +68,7 @@ minecraft {
         all {
             lazyToken("minecraft_classpath") {
                 configurations.library.get().copyRecursive().resolve()
-                        .joinToString(File.pathSeparator) { it.absolutePath }
+                    .joinToString(File.pathSeparator) { it.absolutePath }
             }
         }
         create("client") {
@@ -106,13 +108,15 @@ minecraft {
             taskName("Data")
             workingDirectory(project.file("run"))
             ideaModule("${rootProject.name}.${project.name}.main")
-            args("--mod",
-                    modId,
-                    "--all",
-                    "--output",
-                    file("src/generated/resources/"),
-                    "--existing",
-                    file("src/main/resources/"))
+            args(
+                "--mod",
+                modId,
+                "--all",
+                "--output",
+                file("src/generated/resources/"),
+                "--existing",
+                file("src/main/resources/")
+            )
             args("-mixin.config=${modId}.mixins.json", "-mixin.config=${modId}.forge.mixins.json")
             mods {
                 create(modId) {
@@ -145,12 +149,6 @@ modTemplate {
         projectName("${modName}-Forge")
         homepage(curseHomepageLink)
         uid(System.getenv("versionTrackerKey"))
-    }
-    webhook.apply {
-        enabled(true)
-        url(System.getenv("discordCFWebhook"))
-        curseId(curseProjectId)
-        avatarUrl(modAvatar)
     }
 }
 
@@ -194,11 +192,12 @@ publishing {
                     val deps = depList.getAt(QName("http://maven.apache.org/POM/4.0.0", "dependency"))
                     deps.map { it as Node }.forEach { dep ->
                         val versionList = dep.getAt(QName("http://maven.apache.org/POM/4.0.0", "version"))
-                        versionList.map { it as Node }.map { it.value() as NodeList }.map { it.text() }.forEach { version ->
-                            if (version.contains("_mapped_")) {
-                                dep.parent().remove(dep)
+                        versionList.map { it as Node }.map { it.value() as NodeList }.map { it.text() }
+                            .forEach { version ->
+                                if (version.contains("_mapped_")) {
+                                    dep.parent().remove(dep)
+                                }
                             }
-                        }
                     }
                 }
             }
@@ -210,15 +209,16 @@ publishing {
     }
 }
 
-curseforge {
+tasks.create<TaskPublishCurseForge>("publishCurseForge") {
+    apiToken = System.getenv("curseforgeApiToken") ?: 0
 
-    apiKey = System.getenv("curseforgeApiToken") ?: 0
-    project(closureOf<CurseProject> {
-        id = curseProjectId
-        releaseType = "release"
-        changelog = file("changelog.md")
-        changelogType = "markdown"
-        addGameVersion("Forge")
-        addGameVersion(minecraftVersion)
-    })
+    val mainFile = upload(curseProjectId, file("${project.buildDir}/libs/$baseArchiveName-$version.jar"))
+    mainFile.changelogType = "markdown"
+    mainFile.changelog = TaskPublishCurseForge.parseString(file("changelog.md"))
+    mainFile.releaseType = CFG_Contants.RELEASE_TYPE_RELEASE
+    mainFile.addJavaVersion("Java $modJavaVersion")
+
+    doLast {
+        project.ext.set("curse_file_url", "${curseHomepageLink}/files/${mainFile.curseFileId}")
+    }
 }

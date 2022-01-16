@@ -1,13 +1,10 @@
 import com.blamejared.modtemplate.Utils
-import com.matthewprenger.cursegradle.CurseProject
-import com.matthewprenger.cursegradle.CurseRelation
-import com.matthewprenger.cursegradle.Options
 
 plugins {
     `maven-publish`
     id("fabric-loom") version "0.10-SNAPSHOT"
-    id("com.blamejared.modtemplate") version ("[2.0.0.34,)")
-    id("com.matthewprenger.cursegradle") version ("1.4.0")
+    id("com.blamejared.modtemplate")
+    id("net.darkhax.curseforgegradle") version ("1.0.8")
 }
 
 val modVersion: String by project
@@ -22,6 +19,7 @@ val curseProjectId: String by project
 val curseHomepageLink: String by project
 val gitFirstCommit: String by project
 val gitRepo: String by project
+val modJavaVersion: String by project
 
 val baseArchiveName = "${modName}-fabric-${minecraftVersion}"
 
@@ -105,12 +103,6 @@ modTemplate {
         homepage(curseHomepageLink)
         uid(System.getenv("versionTrackerKey"))
     }
-    webhook.apply {
-        enabled(true)
-        url(System.getenv("discordCFWebhook"))
-        curseId(curseProjectId)
-        avatarUrl(modAvatar)
-    }
 }
 
 tasks.compileGametestJava {
@@ -155,27 +147,18 @@ publishing {
     }
 }
 
-curseforge {
+tasks.create<net.darkhax.curseforgegradle.TaskPublishCurseForge>("publishCurseForge") {
+    apiToken = System.getenv("curseforgeApiToken") ?: 0
 
-    apiKey = System.getenv("curseforgeApiToken") ?: 0
-    project(closureOf<CurseProject> {
-        id = curseProjectId
-        releaseType = "release"
-        changelog = file("changelog.md")
-        changelogType = "markdown"
-        addGameVersion("Fabric")
-        addGameVersion(minecraftVersion)
-        mainArtifact(file("${project.buildDir}/libs/${baseArchiveName}-${version}.jar"))
-        relations(closureOf<CurseRelation> {
-            requiredDependency("ingredient-extension-api")
-            requiredDependency("fabric-api")
-        })
+    val mainFile = upload(curseProjectId, file("${project.buildDir}/libs/$baseArchiveName-$version.jar"))
+    mainFile.changelogType = "markdown"
+    mainFile.changelog = net.darkhax.curseforgegradle.TaskPublishCurseForge.parseString(file("changelog.md"))
+    mainFile.releaseType = net.darkhax.curseforgegradle.Constants.RELEASE_TYPE_RELEASE
+    mainFile.addJavaVersion("Java $modJavaVersion")
+    mainFile.addRequirement("ingredient-extension-api")
+    mainFile.addRequirement("fabric-api")
 
-        afterEvaluate {
-            uploadTask.dependsOn(tasks.remapJar)
-        }
-    })
-    options(closureOf<Options> {
-        forgeGradleIntegration = false
-    })
+    doLast {
+        project.ext.set("curse_file_url", "${curseHomepageLink}/files/${mainFile.curseFileId}")
+    }
 }
