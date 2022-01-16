@@ -152,7 +152,7 @@ tasks.create<net.darkhax.curseforgegradle.TaskPublishCurseForge>("publishCurseFo
 
     val mainFile = upload(curseProjectId, file("${project.buildDir}/libs/$baseArchiveName-$version.jar"))
     mainFile.changelogType = "markdown"
-    mainFile.changelog = net.darkhax.curseforgegradle.TaskPublishCurseForge.parseString(file("changelog.md"))
+    mainFile.changelog = file("changelog.md").readText(Charsets.UTF_8)
     mainFile.releaseType = net.darkhax.curseforgegradle.Constants.RELEASE_TYPE_RELEASE
     mainFile.addJavaVersion("Java $modJavaVersion")
     mainFile.addRequirement("ingredient-extension-api")

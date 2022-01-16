@@ -214,7 +214,7 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
 
     val mainFile = upload(curseProjectId, file("${project.buildDir}/libs/$baseArchiveName-$version.jar"))
     mainFile.changelogType = "markdown"
-    mainFile.changelog = TaskPublishCurseForge.parseString(file("changelog.md"))
+    mainFile.changelog = file("changelog.md").readText(Charsets.UTF_8)
     mainFile.releaseType = CFG_Contants.RELEASE_TYPE_RELEASE
     mainFile.addJavaVersion("Java $modJavaVersion")
 
