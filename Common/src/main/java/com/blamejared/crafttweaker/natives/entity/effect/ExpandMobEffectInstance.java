@@ -63,8 +63,11 @@ public class ExpandMobEffectInstance {
     }
     
     @ZenCodeType.Method
-    public static boolean tick(MobEffectInstance internal, LivingEntity entity, @ZenCodeType.Optional("() => {}") Runnable onFinish) {
+    public static boolean tick(MobEffectInstance internal, LivingEntity entity, @ZenCodeType.Optional("null") @ZenCodeType.Nullable Runnable onFinish) {
         
+        if(onFinish == null) {
+            onFinish = () -> {};
+        }
         return internal.tick(entity, onFinish);
     }
     
