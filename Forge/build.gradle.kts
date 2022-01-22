@@ -68,7 +68,7 @@ minecraft {
         all {
             lazyToken("minecraft_classpath") {
                 configurations.library.get().copyRecursive().resolve()
-                    .joinToString(File.pathSeparator) { it.absolutePath }
+                        .joinToString(File.pathSeparator) { it.absolutePath }
             }
         }
         create("client") {
@@ -109,13 +109,13 @@ minecraft {
             workingDirectory(project.file("run"))
             ideaModule("${rootProject.name}.${project.name}.main")
             args(
-                "--mod",
-                modId,
-                "--all",
-                "--output",
-                file("src/generated/resources/"),
-                "--existing",
-                file("src/main/resources/")
+                    "--mod",
+                    modId,
+                    "--all",
+                    "--output",
+                    file("src/generated/resources/"),
+                    "--existing",
+                    file("src/main/resources/")
             )
             args("-mixin.config=${modId}.mixins.json", "-mixin.config=${modId}.forge.mixins.json")
             mods {
@@ -193,11 +193,11 @@ publishing {
                     deps.map { it as Node }.forEach { dep ->
                         val versionList = dep.getAt(QName("http://maven.apache.org/POM/4.0.0", "version"))
                         versionList.map { it as Node }.map { it.value() as NodeList }.map { it.text() }
-                            .forEach { version ->
-                                if (version.contains("_mapped_")) {
-                                    dep.parent().remove(dep)
+                                .forEach { version ->
+                                    if (version.contains("_mapped_")) {
+                                        dep.parent().remove(dep)
+                                    }
                                 }
-                            }
                     }
                 }
             }
@@ -210,14 +210,13 @@ publishing {
 }
 
 tasks.create<TaskPublishCurseForge>("publishCurseForge") {
-    apiToken = System.getenv("curseforgeApiToken") ?: 0
+    apiToken = Utils.locateProperty(project, "curseforgeApiToken") ?: 0
 
     val mainFile = upload(curseProjectId, file("${project.buildDir}/libs/$baseArchiveName-$version.jar"))
     mainFile.changelogType = "markdown"
-    mainFile.changelog = file("changelog.md")
+    mainFile.changelog = Utils.getFullChangelog(project)
     mainFile.releaseType = CFG_Contants.RELEASE_TYPE_RELEASE
     mainFile.addJavaVersion("Java $modJavaVersion")
-
 
     doLast {
         project.ext.set("curse_file_url", "${curseHomepageLink}/files/${mainFile.curseFileId}")

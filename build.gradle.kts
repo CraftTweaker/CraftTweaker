@@ -2,7 +2,6 @@ import com.blamejared.modtemplate.Utils
 import com.diluv.schoomp.Webhook
 import com.diluv.schoomp.message.Message
 import com.diluv.schoomp.message.embed.Embed
-import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -11,11 +10,9 @@ import java.util.*
 buildscript {
     repositories {
         mavenCentral()
-        maven("https://maven.blamejared.com") { }
     }
     dependencies {
         classpath("com.diluv.schoomp:Schoomp:1.2.5")
-        classpath("com.blamejared:ModTemplate:[2.0.0.34,)")
     }
 }
 
@@ -39,6 +36,7 @@ val modVersion: String by project
 plugins {
     `java-library`
     idea
+    id("com.blamejared.modtemplate") version ("3.0.0.37")
 }
 
 version = Utils.updatingSemVersion(modVersion)
@@ -166,7 +164,6 @@ subprojects {
             options.release.set(modJavaVersion.toInt())
             options.compilerArgs.add("-Acrafttweaker.processor.document.output_directory=${rootProject.file("docsOut")}")
             options.compilerArgs.add("-Acrafttweaker.processor.document.multi_source=true")
-
         }
 
         tasks {
@@ -246,17 +243,17 @@ tasks.create("postDiscord") {
             }
 
             downloadSources.add(
-                "<:maven:932165250738970634> `\"com.blamejared.crafttweaker:${project(":Common").base.archivesName.get()}:${
+                "<:maven:932165250738970634> `\"${project(":Common").group}:${project(":Common").base.archivesName.get()}:${
                     project(":Common").version
                 }\"`"
             )
             downloadSources.add(
-                "<:maven:932165250738970634> `\"com.blamejared.crafttweaker:${project(":Fabric").base.archivesName.get()}:${
+                "<:maven:932165250738970634> `\"${project(":Fabric").group}:${project(":Fabric").base.archivesName.get()}:${
                     project(":Fabric").version
                 }\"`"
             )
             downloadSources.add(
-                "<:maven:932165250738970634> `\"com.blamejared.crafttweaker:${project(":Forge").base.archivesName.get()}:${
+                "<:maven:932165250738970634> `\"${project(":Forge").group}:${project(":Forge").base.archivesName.get()}:${
                     project(":Forge").version
                 }\"`"
             )
@@ -270,7 +267,7 @@ tasks.create("postDiscord") {
             }
 
             // Just use the Forge changelog for now, the files are the same anyway.
-            embed.addField("Changelog", getCIChangelog().take(1000), false)
+            embed.addField("Changelog", Utils.getCIChangelog(project, gitRepo).take(1000), false)
 
             embed.color = 0xF16436
             message.addEmbed(embed)
@@ -282,31 +279,4 @@ tasks.create("postDiscord") {
         }
     }
 
-}
-
-fun getCIChangelog(): String {
-    return try {
-        val stdout = ByteArrayOutputStream()
-        val gitHash: String? = System.getenv("GIT_COMMIT")
-        val gitPrevHash: String? = System.getenv("GIT_PREVIOUS_COMMIT")
-        val repo = "$gitRepo/commit/"
-        if (gitHash != null && gitPrevHash != null) {
-            exec {
-                this.commandLine("git")
-                    .args("log", "--pretty=tformat:- [%s]($repo%H) - %aN ", "$gitPrevHash...$gitHash").standardOutput =
-                    stdout
-            }
-            stdout.toString().trim()
-        } else if (gitHash != null) {
-            exec {
-                this.commandLine("git")
-                    .args("log", "--pretty=tformat:- [%s]($repo%H) - %aN ", "-1", gitHash).standardOutput = stdout
-            }
-            stdout.toString().trim()
-        } else {
-            "Unavailable"
-        }
-    } catch (ignored: Exception) {
-        "Unavailable"
-    }
 }
