@@ -4,13 +4,19 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
+import com.blamejared.crafttweaker.api.bracket.custom.EnumConstantBracketHandler;
+import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
+import com.blamejared.crafttweaker.api.bracket.custom.TagBracketHandler;
+import com.blamejared.crafttweaker.api.bracket.custom.TagManagerBracketHandler;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
+import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistryData;
 import com.blamejared.crafttweaker.impl.command.CTCommands;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openzen.zenscript.parser.BracketExpressionParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,6 +26,7 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 public class CraftTweakerCommon {
@@ -58,6 +65,16 @@ public class CraftTweakerCommon {
                 e.printStackTrace();
             }
         }).start();
+    }
+    
+    public static void registerCraftTweakerBracketHandlers(final BiConsumer<String, BracketExpressionParser> reg) {
+        
+        final TagManagerBracketHandler tagManagerBep = new TagManagerBracketHandler(CrTTagRegistryData.INSTANCE);
+        
+        reg.accept("recipetype", new RecipeTypeBracketHandler(CraftTweakerRegistry.getRecipeManagers()));
+        reg.accept("constant", new EnumConstantBracketHandler());
+        reg.accept("tagmanager", tagManagerBep);
+        reg.accept("tag", new TagBracketHandler(tagManagerBep));
     }
     
     public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, Commands.CommandSelection environment) {

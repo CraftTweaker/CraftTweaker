@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
+import com.blamejared.crafttweaker.api.zencode.impl.CraftTweakerDefaultScriptRunConfiguration;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -63,7 +64,9 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
                 .replaceAll((k, v) -> new HashMap<>(accessRecipeManager.getRecipes().get(k)));
         CraftTweakerAPI.setRecipeManager(recipeManager);
         
-        CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setSource(ScriptLoadingOptions.RELOAD_LISTENER_SCRIPT_SOURCE)
+        CraftTweakerAPI.loadScripts(new ScriptLoadingOptions()
+                .setSource(ScriptLoadingOptions.RELOAD_LISTENER_SCRIPT_SOURCE)
+                .setRunConfiguration(CraftTweakerDefaultScriptRunConfiguration.DEFAULT_CONFIGURATION)
                 .execute());
         List<File> scriptFiles = CraftTweakerAPI.getScriptFiles();
         scriptFiles.stream()

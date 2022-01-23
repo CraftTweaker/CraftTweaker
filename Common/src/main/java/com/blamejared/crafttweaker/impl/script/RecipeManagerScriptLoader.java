@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.script;
 import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
+import com.blamejared.crafttweaker.api.zencode.impl.CraftTweakerDefaultScriptRunConfiguration;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -29,7 +30,9 @@ public class RecipeManagerScriptLoader {
         accessRecipeManager.getRecipes().replaceAll((k, v) -> new HashMap<>(accessRecipeManager.getRecipes().get(k)));
         CraftTweakerAPI.setRecipeManager(manager);
         
-        final ScriptLoadingOptions scriptLoadingOptions = new ScriptLoadingOptions().setSource(ScriptLoadingOptions.CLIENT_RECIPES_UPDATED_SCRIPT_SOURCE)
+        final ScriptLoadingOptions scriptLoadingOptions = new ScriptLoadingOptions()
+                .setSource(ScriptLoadingOptions.CLIENT_RECIPES_UPDATED_SCRIPT_SOURCE)
+                .setRunConfiguration(CraftTweakerDefaultScriptRunConfiguration.DEFAULT_CONFIGURATION)
                 .execute();
         CraftTweakerAPI.loadScriptsFromRecipeManager(manager, scriptLoadingOptions);
     }

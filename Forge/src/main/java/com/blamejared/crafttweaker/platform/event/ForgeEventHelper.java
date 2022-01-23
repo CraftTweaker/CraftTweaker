@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.platform.event;
 
 import com.blamejared.crafttweaker.api.event.type.CTCommandRegisterEvent;
 import com.blamejared.crafttweaker.api.event.type.CTRegisterBEPEvent;
+import com.blamejared.crafttweaker.api.event.type.CTRegisterCustomBepEvent;
 import com.blamejared.crafttweaker.api.event.type.GatherReplacementExclusionEvent;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
@@ -11,13 +12,23 @@ import com.blamejared.crafttweaker.api.zencode.bracket.IgnorePrefixCasingBracket
 import com.blamejared.crafttweaker.platform.services.IEventHelper;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
+import org.openzen.zenscript.parser.BracketExpressionParser;
+
+import java.util.function.BiConsumer;
 
 public class ForgeEventHelper implements IEventHelper {
     
+    @Deprecated(forRemoval = true)
     @Override
     public void fireRegisterBEPEvent(IgnorePrefixCasingBracketParser bep) {
         
         MinecraftForge.EVENT_BUS.post(new CTRegisterBEPEvent(bep));
+    }
+    
+    @Override
+    public void fireCustomRegisterBepEvent(final String loader, final BiConsumer<String, BracketExpressionParser> registrationFunction) {
+        
+        MinecraftForge.EVENT_BUS.post(new CTRegisterCustomBepEvent(loader, registrationFunction));
     }
     
     @Override

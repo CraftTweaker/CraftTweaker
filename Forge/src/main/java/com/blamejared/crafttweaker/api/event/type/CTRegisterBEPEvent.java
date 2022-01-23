@@ -11,7 +11,10 @@ import java.util.Set;
  * This event is invoked every time a new script run is started, even for syntax checks.
  * <p>
  * This event is invoked very early in the load cycle, so {@link #getKnownBEPNames()} won't contain BEPs added by the {@link com.blamejared.crafttweaker.api.annotation.BracketResolver} annotation.
+ *
+ * @deprecated Use {@link CTRegisterCustomBepEvent}
  */
+@Deprecated(forRemoval = true)
 public class CTRegisterBEPEvent extends Event {
     
     private final IgnorePrefixCasingBracketParser bep;

@@ -2,41 +2,29 @@ package com.blamejared.crafttweaker.api.zencode.impl.loader;
 
 import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
-import com.blamejared.crafttweaker.api.bracket.custom.EnumConstantBracketHandler;
-import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
-import com.blamejared.crafttweaker.api.bracket.custom.TagBracketHandler;
-import com.blamejared.crafttweaker.api.bracket.custom.TagManagerBracketHandler;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
 import com.blamejared.crafttweaker.api.logger.ForwardingSELogger;
-import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
-import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistryData;
 import com.blamejared.crafttweaker.api.zencode.bracket.IgnorePrefixCasingBracketParser;
-import com.blamejared.crafttweaker.api.zencode.bracket.ValidatedEscapableBracketParser;
-import com.blamejared.crafttweaker.api.zencode.impl.native_type.CrTJavaNativeConverterBuilder;
 import com.blamejared.crafttweaker.platform.Services;
 import org.openzen.zencode.java.ScriptingEngine;
-import org.openzen.zencode.java.module.JavaNativeModule;
-import org.openzen.zencode.java.module.converters.JavaNativeConverterBuilder;
 import org.openzen.zencode.shared.CompileException;
 import org.openzen.zencode.shared.SourceFile;
 import org.openzen.zenscript.codemodel.FunctionParameter;
 import org.openzen.zenscript.codemodel.HighLevelDefinition;
-import org.openzen.zenscript.codemodel.ScriptBlock;
 import org.openzen.zenscript.codemodel.SemanticModule;
 import org.openzen.zenscript.formatter.FileFormatter;
 import org.openzen.zenscript.formatter.ScriptFormattingSettings;
 import org.openzen.zenscript.lexer.ParseException;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 
 public class ScriptRun {
@@ -92,7 +80,7 @@ public class ScriptRun {
      */
     public void run() throws Exception {
         
-        if(!scriptLoadingOptions.isExecute()) {
+        if(!this.scriptLoadingOptions.isExecute()) {
             CraftTweakerAPI.LOGGER.info("This is only a syntax check. Script changes will not be applied.");
         }
         
@@ -101,127 +89,81 @@ public class ScriptRun {
         }
         
         initializeBep();
-        registerModules();
+        configureRun();
         readAndExecuteScripts();
-        
     }
     
     private void initializeBep() {
         
         this.bep = new IgnorePrefixCasingBracketParser();
-        Services.EVENT.fireRegisterBEPEvent(bep);
+        Services.EVENT.fireCustomRegisterBepEvent(this.scriptLoadingOptions.getLoaderName(), this.bep::register);
+    }
+    
+    private void configureRun() throws CompileException {
         
-        final List<Class<? extends IRecipeManager>> recipeManagers = CraftTweakerRegistry.getRecipeManagers();
-        bep.register("recipetype", new RecipeTypeBracketHandler(recipeManagers));
-        bep.register("constant", new EnumConstantBracketHandler());
-        
-        
-        final TagManagerBracketHandler tagManagerBEP = new TagManagerBracketHandler(CrTTagRegistryData.INSTANCE);
-        bep.register("tagManager", tagManagerBEP);
-        bep.register("tag", new TagBracketHandler(tagManagerBEP));
+        this.scriptLoadingOptions.configureRun(this.bep, this.scriptingEngine);
     }
     
     private void readAndExecuteScripts() throws ParseException {
         
-        SemanticModule scripts = scriptingEngine.createScriptedModule("scripts", sourceFiles, bep, FunctionParameter.NONE);
+        final SemanticModule scripts = this.scriptingEngine.createScriptedModule("scripts", this.sourceFiles, this.bep, FunctionParameter.NONE);
         
         if(!scripts.isValid()) {
+            
             CraftTweakerAPI.LOGGER.error("Scripts are invalid!");
             CraftTweakerCommon.LOG.info("Scripts are invalid!");
             return;
         }
         
         //  toggle this to format scripts. Set by /ct format
-        if(scriptLoadingOptions.isFormat()) {
+        if(this.scriptLoadingOptions.isFormat()) {
+            
             writeFormattedFiles(scripts);
         }
         
-        if(scriptLoadingOptions.isExecute()) {
+        if(this.scriptLoadingOptions.isExecute()) {
+            
             //Now that we execute, we increment the runCount and therefore it's no longer a first run
             final LoaderActions loaderActions = getLoaderActions();
             CraftTweakerAPI.LOGGER.debug("This is loader '{}' run #{}", scriptLoadingOptions.getLoaderName(), loaderActions
                     .getRunCount() + 1);
             
-            scriptingEngine.registerCompiled(scripts);
-            scriptingEngine.run(Collections.emptyMap(), CraftTweakerCommon.class.getClassLoader());
+            this.scriptingEngine.registerCompiled(scripts);
+            this.scriptingEngine.run(Collections.emptyMap(), CraftTweakerCommon.class.getClassLoader());
             loaderActions.incrementRunCount();
             
         } else if(CraftTweakerAPI.DEBUG_MODE) {
-            scriptingEngine.createRunUnit().dump(new File("classes"));
+            this.scriptingEngine.createRunUnit().dump(Paths.get("classes").toFile());
         }
     }
     
-    private void registerModules() throws CompileException {
+    private void writeFormattedFiles(final SemanticModule scripts) {
         
-        final List<JavaNativeModule> modules = new LinkedList<>();
-        final CrTJavaNativeConverterBuilder nativeConverterBuilder = new CrTJavaNativeConverterBuilder();
+        final List<HighLevelDefinition> all = scripts.definitions.getAll();
+        final ScriptFormattingSettings.Builder builder = new ScriptFormattingSettings.Builder();
+        final FileFormatter formatter = new FileFormatter(builder.build());
+        final Path root = Paths.get("scriptsFormatted");
         
-        //Register crafttweaker module first to assign deps
-        final JavaNativeModule crafttweakerModule = createModule(bep, CraftTweakerConstants.MOD_ID, CraftTweakerConstants.MOD_ID, nativeConverterBuilder);
-        
-        scriptingEngine.registerNativeProvided(crafttweakerModule);
-        modules.add(crafttweakerModule);
-        
-        final HashSet<String> rootPackages = new HashSet<>(CraftTweakerRegistry.getRootPackages());
-        rootPackages.remove(CraftTweakerConstants.MOD_ID);
-        for(String rootPackage : rootPackages) {
-            final JavaNativeModule module = createModule(bep, rootPackage, rootPackage, nativeConverterBuilder, crafttweakerModule);
-            scriptingEngine.registerNativeProvided(module);
-            modules.add(module);
-        }
-        
-        
-        final JavaNativeModule expModule = createModule(bep, "expansions", "", nativeConverterBuilder, modules.toArray(new JavaNativeModule[0]));
-        for(List<Class<?>> expansionList : CraftTweakerRegistry.getExpansions().values()) {
-            for(Class<?> expansionClass : expansionList) {
-                expModule.addClass(expansionClass);
-            }
-        }
-        scriptingEngine.registerNativeProvided(expModule);
-        
-        nativeConverterBuilder.headerConverter.reinitializeAllLazyValues();
-    }
-    
-    private JavaNativeModule createModule(IgnorePrefixCasingBracketParser bep, String moduleName, String basePackage, JavaNativeConverterBuilder nativeConverterBuilder, JavaNativeModule... dependencies) {
-        
-        JavaNativeModule module = scriptingEngine.createNativeModule(moduleName, basePackage, dependencies, nativeConverterBuilder);
-        
-        
-        for(ValidatedEscapableBracketParser bracketResolver : CraftTweakerRegistry.getBracketResolvers(moduleName, scriptingEngine, module)) {
-            bep.register(bracketResolver.getName(), bracketResolver);
-        }
-        module.registerBEP(bep);
-        for(Class<?> aClass : CraftTweakerRegistry.getGlobalsInPackage(moduleName)) {
-            module.addGlobals(aClass);
-        }
-        for(Class<?> aClass : CraftTweakerRegistry.getClassesInPackage(moduleName)) {
-            module.addClass(aClass);
-        }
-        
-        return module;
-    }
-    
-    private void writeFormattedFiles(SemanticModule scripts) {
-        
-        List<HighLevelDefinition> all = scripts.definitions.getAll();
-        ScriptFormattingSettings.Builder builder = new ScriptFormattingSettings.Builder();
-        FileFormatter formatter = new FileFormatter(builder.build());
-        List<ScriptBlock> blocks = scripts.scripts;
-        for(ScriptBlock block : blocks) {
+        scripts.scripts.forEach(block -> {
             String format = formatter.format(scripts.rootPackage, block, all);
-            File parent = new File("scriptsFormatted");
-            File file = new File(parent, block.file.getFilename());
+            final Path file = root.resolve(block.file.getFilename());
             
-            if(!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
-                CraftTweakerAPI.LOGGER.error("Could not find or create folder {}, aborting formatting task!", file
-                        .getParent());
+            try {
+                
+                Files.createDirectories(file.getParent());
+            } catch(final IOException e) {
+                
+                CraftTweakerAPI.LOGGER.error(() -> "Could not find or create folder " + file.getParent() + ", aborting formatting task!", e);
             }
-            try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            
+            try(final BufferedWriter writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8, StandardOpenOption.CREATE)) {
+                
                 writer.write(format);
-            } catch(IOException e) {
+            } catch(final IOException e) {
+                
                 CraftTweakerAPI.LOGGER.error("Could not write formatted files", e);
             }
-        }
+        });
     }
     
 }
