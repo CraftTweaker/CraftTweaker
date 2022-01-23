@@ -49,9 +49,20 @@ public final class CraftTweakerDefaultScriptRunConfiguration {
             addModule(registrationFunction, addingFunction, modules::add, engine, rootPackage, rootPackage, nativeConverterBuilder, crafttweakerModule);
         }
         
-        final JavaNativeModule expModule =
-                addModule(registrationFunction, addingFunction, it -> {}, engine, "expansions", "", nativeConverterBuilder, modules.toArray(JavaNativeModule[]::new));
-        CraftTweakerRegistry.getExpansions().values().stream().flatMap(List::stream).forEach(expModule::addClass);
+        addModule(
+                registrationFunction,
+                addingFunction,
+                it -> CraftTweakerRegistry.getExpansions()
+                        .values()
+                        .stream()
+                        .flatMap(List::stream)
+                        .forEach(it::addClass),
+                engine,
+                "expansions",
+                "",
+                nativeConverterBuilder,
+                modules.toArray(JavaNativeModule[]::new)
+        );
         
         nativeConverterBuilder.headerConverter.reinitializeAllLazyValues();
     }
@@ -68,8 +79,8 @@ public final class CraftTweakerDefaultScriptRunConfiguration {
     ) throws CompileException {
         
         final JavaNativeModule module = createModule(registrationFunction, addingFunction, engine, moduleName, basePackage, nativeConverterBuilder, dependencies);
-        engine.registerNativeProvided(module);
         applyFunction.accept(module);
+        engine.registerNativeProvided(module);
         return module;
     }
     
