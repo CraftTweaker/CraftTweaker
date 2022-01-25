@@ -38,8 +38,8 @@ import java.util.stream.Collectors;
  * @docParam this recipes
  */
 @ZenRegister
-@Document("vanilla/api/managers/GenericRecipesManager")
 @ZenCodeType.Name("crafttweaker.api.GenericRecipesManager")
+@Document("vanilla/api/recipe/manager/GenericRecipesManager")
 public enum GenericRecipesManager {
     
     @ZenCodeGlobals.Global("recipes")
@@ -217,3 +217,4 @@ public enum GenericRecipesManager {
     }
     
 }
+
