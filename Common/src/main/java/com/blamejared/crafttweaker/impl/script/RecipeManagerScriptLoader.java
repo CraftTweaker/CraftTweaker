@@ -32,7 +32,7 @@ public class RecipeManagerScriptLoader {
         
         final ScriptLoadingOptions scriptLoadingOptions = new ScriptLoadingOptions()
                 .setSource(ScriptLoadingOptions.CLIENT_RECIPES_UPDATED_SCRIPT_SOURCE)
-                .setRunConfiguration(CraftTweakerDefaultScriptRunConfiguration.DEFAULT_CONFIGURATION)
+                .setRunConfigurator(CraftTweakerDefaultScriptRunConfiguration.INSTANCE)
                 .execute();
         CraftTweakerAPI.loadScriptsFromRecipeManager(manager, scriptLoadingOptions);
     }

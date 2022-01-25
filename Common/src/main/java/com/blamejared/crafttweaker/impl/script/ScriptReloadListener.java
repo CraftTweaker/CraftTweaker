@@ -66,7 +66,7 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
         
         CraftTweakerAPI.loadScripts(new ScriptLoadingOptions()
                 .setSource(ScriptLoadingOptions.RELOAD_LISTENER_SCRIPT_SOURCE)
-                .setRunConfiguration(CraftTweakerDefaultScriptRunConfiguration.DEFAULT_CONFIGURATION)
+                .setRunConfigurator(CraftTweakerDefaultScriptRunConfiguration.INSTANCE)
                 .execute());
         List<File> scriptFiles = CraftTweakerAPI.getScriptFiles();
         scriptFiles.stream()

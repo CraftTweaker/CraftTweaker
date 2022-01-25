@@ -2,37 +2,42 @@ package com.blamejared.crafttweaker.api.zencode.impl;
 
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
-import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.zencode.impl.native_type.CrTJavaNativeConverterBuilder;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IBepRegistrationHandler;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IBepToModuleAdder;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptLoadingOptionsView;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunConfigurator;
 import org.openzen.zencode.java.ScriptingEngine;
 import org.openzen.zencode.java.module.JavaNativeModule;
 import org.openzen.zencode.java.module.converters.JavaNativeConverterBuilder;
 import org.openzen.zencode.shared.CompileException;
-import org.openzen.zenscript.parser.BracketExpressionParser;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public final class CraftTweakerDefaultScriptRunConfiguration {
+public final class CraftTweakerDefaultScriptRunConfiguration implements IScriptRunConfigurator {
     
-    public static final ScriptLoadingOptions.ScriptRunConfiguration DEFAULT_CONFIGURATION = CraftTweakerDefaultScriptRunConfiguration::configure;
+    public static final CraftTweakerDefaultScriptRunConfiguration INSTANCE = new CraftTweakerDefaultScriptRunConfiguration();
     
-    private static void configure(
-            final BiConsumer<String, BracketExpressionParser> registrationFunction,
-            final Consumer<JavaNativeModule> addingFunction,
-            final ScriptingEngine engine
+    private CraftTweakerDefaultScriptRunConfiguration() {}
+    
+    @Override
+    public void configure(
+            final IBepRegistrationHandler registrationHandler,
+            final IBepToModuleAdder moduleAdder,
+            final ScriptingEngine engine,
+            final IScriptLoadingOptionsView options
     ) throws CompileException {
         
-        registerModules(registrationFunction, addingFunction, engine);
+        this.registerModules(registrationHandler, moduleAdder, engine);
     }
     
-    private static void registerModules(
-            final BiConsumer<String, BracketExpressionParser> registrationFunction,
-            final Consumer<JavaNativeModule> addingFunction,
+    private void registerModules(
+            final IBepRegistrationHandler registrationHandler,
+            final IBepToModuleAdder moduleAdder,
             final ScriptingEngine engine
     ) throws CompileException {
         
@@ -41,17 +46,17 @@ public final class CraftTweakerDefaultScriptRunConfiguration {
         
         //Register crafttweaker module first to assign deps
         final JavaNativeModule crafttweakerModule =
-                addModule(registrationFunction, addingFunction, modules::add, engine, CraftTweakerConstants.MOD_ID, CraftTweakerConstants.MOD_ID, nativeConverterBuilder);
+                addModule(registrationHandler, moduleAdder, modules::add, engine, CraftTweakerConstants.MOD_ID, CraftTweakerConstants.MOD_ID, nativeConverterBuilder);
         
         final Set<String> rootPackages = new HashSet<>(CraftTweakerRegistry.getRootPackages());
         rootPackages.remove(CraftTweakerConstants.MOD_ID);
         for(String rootPackage : rootPackages) {
-            addModule(registrationFunction, addingFunction, modules::add, engine, rootPackage, rootPackage, nativeConverterBuilder, crafttweakerModule);
+            addModule(registrationHandler, moduleAdder, modules::add, engine, rootPackage, rootPackage, nativeConverterBuilder, crafttweakerModule);
         }
         
         addModule(
-                registrationFunction,
-                addingFunction,
+                registrationHandler,
+                moduleAdder,
                 it -> CraftTweakerRegistry.getExpansions()
                         .values()
                         .stream()
@@ -68,9 +73,9 @@ public final class CraftTweakerDefaultScriptRunConfiguration {
     }
     
     private static JavaNativeModule addModule(
-            final BiConsumer<String, BracketExpressionParser> registrationFunction,
-            final Consumer<JavaNativeModule> addingFunction,
-            final Consumer<JavaNativeModule> applyFunction,
+            final IBepRegistrationHandler registrationHandler,
+            final IBepToModuleAdder moduleAdder,
+            final Consumer<JavaNativeModule> applyLambda,
             final ScriptingEngine engine,
             final String moduleName,
             final String basePackage,
@@ -78,15 +83,15 @@ public final class CraftTweakerDefaultScriptRunConfiguration {
             final JavaNativeModule... dependencies
     ) throws CompileException {
         
-        final JavaNativeModule module = createModule(registrationFunction, addingFunction, engine, moduleName, basePackage, nativeConverterBuilder, dependencies);
-        applyFunction.accept(module);
+        final JavaNativeModule module = createModule(registrationHandler, moduleAdder, engine, moduleName, basePackage, nativeConverterBuilder, dependencies);
+        applyLambda.accept(module);
         engine.registerNativeProvided(module);
         return module;
     }
     
     private static JavaNativeModule createModule(
-            final BiConsumer<String, BracketExpressionParser> registrationFunction,
-            final Consumer<JavaNativeModule> addingFunction,
+            final IBepRegistrationHandler registrationHandler,
+            final IBepToModuleAdder moduleAdder,
             final ScriptingEngine engine,
             final String moduleName,
             final String basePackage,
@@ -97,8 +102,8 @@ public final class CraftTweakerDefaultScriptRunConfiguration {
         JavaNativeModule module = engine.createNativeModule(moduleName, basePackage, dependencies, nativeConverterBuilder);
         
         CraftTweakerRegistry.getBracketResolvers(moduleName, engine, module)
-                .forEach(it -> registrationFunction.accept(it.getName(), it));
-        addingFunction.accept(module);
+                .forEach(registrationHandler::registerBracketHandler);
+        moduleAdder.addBepToModule(module);
         
         CraftTweakerRegistry.getGlobalsInPackage(moduleName).forEach(module::addGlobals);
         CraftTweakerRegistry.getClassesInPackage(moduleName).forEach(module::addClass);

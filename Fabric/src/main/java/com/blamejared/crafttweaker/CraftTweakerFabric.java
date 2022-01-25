@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.event.CraftTweakerEvents;
 import com.blamejared.crafttweaker.api.recipe.replacement.rule.DefaultExclusionReplacements;
-import com.blamejared.crafttweaker.impl.util.WrappingBracketParser;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.WrappingBracketParser;
 import com.blamejared.crafttweaker.platform.Services;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
@@ -40,10 +40,12 @@ public class CraftTweakerFabric implements ModInitializer {
         
         Services.PLATFORM.registerCustomTags();
         
-        CraftTweakerEvents.REGISTER_CUSTOM_BEP_EVENT.register((loader, regFun) -> {
-            if(CraftTweakerConstants.MOD_ID.equals(loader)) {
+        CraftTweakerEvents.REGISTER_CUSTOM_BEP_EVENT.register(event -> {
+            if(event.appliesLoader(CraftTweakerConstants.DEFAULT_LOADER_NAME)) {
                 // Fire the old event for compatibility: this is only required for the CrT loader
-                Services.EVENT.fireRegisterBEPEvent(new WrappingBracketParser(regFun));
+                // Our custom bracket handlers will then be registered in the "legacy" event
+                // TODO("Move registration here")
+                Services.EVENT.fireRegisterBEPEvent(new WrappingBracketParser(event::registerBep));
             }
         });
         // Ensure that our BEPs are registered on every loader that explicitly fires the old event (which means it is

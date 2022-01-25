@@ -1,10 +1,10 @@
 package com.blamejared.crafttweaker;
 
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
+import com.blamejared.crafttweaker.api.event.type.CTCustomBepRegistrationEvent;
 import com.blamejared.crafttweaker.api.event.type.CTRegisterBEPEvent;
-import com.blamejared.crafttweaker.api.event.type.CTRegisterCustomBepEvent;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.WrappingBracketParser;
 import com.blamejared.crafttweaker.impl.network.PacketHandler;
-import com.blamejared.crafttweaker.impl.util.WrappingBracketParser;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -29,10 +29,12 @@ public class CraftTweakerForge {
         CraftTweakerCommon.loadInitScripts();
     }
     
-    private void onCustomBracketParserRegistration(final CTRegisterCustomBepEvent event) {
+    private void onCustomBracketParserRegistration(final CTCustomBepRegistrationEvent event) {
         
-        if(CraftTweakerConstants.MOD_ID.equals(event.getCurrentLoader())) {
+        if(event.currentOptions().appliesLoader(CraftTweakerConstants.DEFAULT_LOADER_NAME)) {
             // Fire the old event for compatibility: this is only required for the CrT loader
+            // Our custom bracket handlers will then be registered in the "legacy" event
+            // TODO("Move registration here")
             Services.EVENT.fireRegisterBEPEvent(new WrappingBracketParser(event::registerBep));
         }
     }

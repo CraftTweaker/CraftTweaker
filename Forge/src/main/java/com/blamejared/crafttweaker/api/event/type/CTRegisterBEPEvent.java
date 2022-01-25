@@ -12,7 +12,7 @@ import java.util.Set;
  * <p>
  * This event is invoked very early in the load cycle, so {@link #getKnownBEPNames()} won't contain BEPs added by the {@link com.blamejared.crafttweaker.api.annotation.BracketResolver} annotation.
  *
- * @deprecated Use {@link CTRegisterCustomBepEvent}
+ * @deprecated Use {@link CTCustomBepRegistrationEvent}
  */
 @Deprecated(forRemoval = true)
 public class CTRegisterBEPEvent extends Event {

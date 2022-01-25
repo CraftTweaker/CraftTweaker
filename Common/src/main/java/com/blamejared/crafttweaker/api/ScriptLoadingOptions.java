@@ -1,28 +1,36 @@
 package com.blamejared.crafttweaker.api;
 
-import com.blamejared.crafttweaker.api.zencode.bracket.IgnorePrefixCasingBracketParser;
 import com.blamejared.crafttweaker.api.zencode.impl.CraftTweakerDefaultScriptRunConfiguration;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IBepRegistrationHandler;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IBepToModuleAdder;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptLoadingOptionsView;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunConfigurator;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.WrappingBracketParser;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.resources.ResourceLocation;
 import org.openzen.zencode.java.ScriptingEngine;
-import org.openzen.zencode.java.module.JavaNativeModule;
 import org.openzen.zencode.shared.CompileException;
-import org.openzen.zenscript.parser.BracketExpressionParser;
 
 import javax.annotation.Nonnull;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
-public class ScriptLoadingOptions {
+// TODO("Move to zencode/scriptrun package in 1.19")
+public class ScriptLoadingOptions implements IScriptLoadingOptionsView {
     
     public static final ScriptLoadSource RELOAD_LISTENER_SCRIPT_SOURCE = new ScriptLoadSource(CraftTweakerConstants.rl("reload_listener"));
     public static final ScriptLoadSource CLIENT_RECIPES_UPDATED_SCRIPT_SOURCE = new ScriptLoadSource(CraftTweakerConstants.rl("client_recipes_updated"));
     
+    private final Set<String> inheritedLoaders = new LinkedHashSet<>(List.of(CraftTweakerConstants.DEFAULT_LOADER_NAME)); // TODO("Empty set in 1.19")
     private boolean format;
     private boolean execute;
     private String loaderName = CraftTweakerConstants.DEFAULT_LOADER_NAME;
     private ScriptLoadSource source = RELOAD_LISTENER_SCRIPT_SOURCE;
-    private LegacyRunConfig runConfiguration = this::legacyConfig;
+    private IScriptRunConfigurator runConfigurator = LegacyConfig.INSTANCE;
     
     public ScriptLoadingOptions() {
     
@@ -50,6 +58,7 @@ public class ScriptLoadingOptions {
     /**
      * @see #format()
      */
+    @Override
     public boolean isFormat() {
         
         return format;
@@ -67,6 +76,7 @@ public class ScriptLoadingOptions {
     /**
      * @see #execute()
      */
+    @Override
     public boolean isExecute() {
         
         return execute;
@@ -84,6 +94,7 @@ public class ScriptLoadingOptions {
     /**
      * The current loader name
      */
+    @Override
     public String getLoaderName() {
         
         return loaderName;
@@ -104,6 +115,7 @@ public class ScriptLoadingOptions {
      *
      * @return The source type of this script load.
      */
+    @Override
     public ScriptLoadSource getSource() {
         
         return source;
@@ -120,50 +132,63 @@ public class ScriptLoadingOptions {
         return this;
     }
     
-    public ScriptLoadingOptions setRunConfiguration(final ScriptRunConfiguration runConfiguration) {
+    @Override
+    public Collection<String> getInheritedLoaders() {
         
-        this.runConfiguration = LegacyRunConfig.adapt(runConfiguration);
+        return Collections.unmodifiableCollection(this.inheritedLoaders);
+    }
+    
+    @Deprecated(forRemoval = true) // TODO("Remove in 1.19")
+    public ScriptLoadingOptions noInherit() {
+        
+        this.inheritedLoaders.clear();
+        return this;
+    }
+    
+    public ScriptLoadingOptions inheritFromLoader(final String... otherLoaders) {
+        
+        this.inheritedLoaders.addAll(Arrays.asList(otherLoaders));
+        return this;
+    }
+    
+    public ScriptLoadingOptions setRunConfigurator(final IScriptRunConfigurator runConfigurator) {
+        
+        this.runConfigurator = runConfigurator;
         return this;
     }
     
     @Deprecated(forRemoval = true) // Replace with equivalent of LegacyRunConfig#adapt
-    public void configureRun(final IgnorePrefixCasingBracketParser bep, final ScriptingEngine engine) throws CompileException {
+    public void configureRun(final IBepRegistrationHandler bepRegistrationHandler, final IBepToModuleAdder moduleAdder, final ScriptingEngine engine) throws CompileException {
         
-        this.runConfiguration.configureRun(bep, engine);
-    }
-    
-    @Deprecated(forRemoval = true)
-    private void legacyConfig(final IgnorePrefixCasingBracketParser bep, final ScriptingEngine engine) throws CompileException {
-        
-        CraftTweakerAPI.LOGGER.info("The loader '{}' is using the legacy script run configuration: this will not survive a 1.19 update", this.loaderName);
-        Services.EVENT.fireRegisterBEPEvent(bep); // Backwards compatibility event, should not be used anymore
-        LegacyRunConfig.adapt(CraftTweakerDefaultScriptRunConfiguration.DEFAULT_CONFIGURATION)
-                .configureRun(bep, engine);
+        this.runConfigurator.configure(bepRegistrationHandler, moduleAdder, engine, this);
     }
     
     public record ScriptLoadSource(ResourceLocation id) {}
     
-    @FunctionalInterface
-    public interface ScriptRunConfiguration {
+    @SuppressWarnings("ClassCanBeRecord")
+    private static final class LegacyConfig implements IScriptRunConfigurator {
         
-        void configureRun(
-                final BiConsumer<String, BracketExpressionParser> registrationFunction,
-                final Consumer<JavaNativeModule> addingFunction,
-                final ScriptingEngine engine
-        ) throws CompileException;
+        static final IScriptRunConfigurator INSTANCE = new LegacyConfig(CraftTweakerDefaultScriptRunConfiguration.INSTANCE);
         
-    }
-    
-    @Deprecated(forRemoval = true)
-    @FunctionalInterface
-    private interface LegacyRunConfig {
+        private final IScriptRunConfigurator delegate;
         
-        static LegacyRunConfig adapt(final ScriptRunConfiguration config) {
+        private LegacyConfig(final IScriptRunConfigurator delegate) {
             
-            return (bep, engine) -> config.configureRun(bep::register, it -> it.registerBEP(bep), engine);
+            this.delegate = delegate;
         }
         
-        void configureRun(final IgnorePrefixCasingBracketParser parser, final ScriptingEngine engine) throws CompileException;
+        @Override
+        public void configure(
+                final IBepRegistrationHandler registrationHandler,
+                final IBepToModuleAdder moduleAdder,
+                final ScriptingEngine engine,
+                final IScriptLoadingOptionsView options
+        ) throws CompileException {
+            
+            CraftTweakerAPI.LOGGER.info("The loader '{}' is using the legacy script run configuration: this will not survive a 1.19 update", options.getLoaderName());
+            Services.EVENT.fireRegisterBEPEvent(new WrappingBracketParser(registrationHandler)); // Backwards compatibility event, should not be used anymore
+            this.delegate.configure(registrationHandler, moduleAdder, engine, options);
+        }
         
     }
     

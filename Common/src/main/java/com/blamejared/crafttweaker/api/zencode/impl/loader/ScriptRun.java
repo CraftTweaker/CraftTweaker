@@ -96,12 +96,12 @@ public class ScriptRun {
     private void initializeBep() {
         
         this.bep = new IgnorePrefixCasingBracketParser();
-        Services.EVENT.fireCustomRegisterBepEvent(this.scriptLoadingOptions.getLoaderName(), this.bep::register);
+        Services.EVENT.fireCustomRegisterBepEvent(this.scriptLoadingOptions, this.bep::register);
     }
     
     private void configureRun() throws CompileException {
         
-        this.scriptLoadingOptions.configureRun(this.bep, this.scriptingEngine);
+        this.scriptLoadingOptions.configureRun(this.bep::register, it -> it.registerBEP(this.bep), this.scriptingEngine);
     }
     
     private void readAndExecuteScripts() throws ParseException {

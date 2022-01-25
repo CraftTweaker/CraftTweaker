@@ -10,6 +10,8 @@ import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.replacement.event.IGatherReplacementExclusionEvent;
 import com.blamejared.crafttweaker.api.util.AttributeUtil;
 import com.blamejared.crafttweaker.api.zencode.bracket.IgnorePrefixCasingBracketParser;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IBepRegistrationHandler;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptLoadingOptionsView;
 import com.blamejared.crafttweaker.natives.entity.ExpandEntity;
 import com.blamejared.crafttweaker.natives.entity.ExpandEntityType;
 import com.blamejared.crafttweaker.natives.entity.type.player.ExpandPlayer;
@@ -28,7 +30,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import org.openzen.zenscript.parser.BracketExpressionParser;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,7 +37,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public interface IEventHelper {
@@ -52,7 +52,7 @@ public interface IEventHelper {
     @Deprecated(forRemoval = true)
     void fireRegisterBEPEvent(IgnorePrefixCasingBracketParser bep);
     
-    void fireCustomRegisterBepEvent(final String loader, final BiConsumer<String, BracketExpressionParser> registrationFunction);
+    void fireCustomRegisterBepEvent(final IScriptLoadingOptionsView view, final IBepRegistrationHandler handler);
     
     void fireCTCommandRegisterEvent();
     
