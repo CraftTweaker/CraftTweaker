@@ -18,6 +18,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @NativeTypeRegistration(value = LivingConversionEvent.Pre.class, zenCodeName = "crafttweaker.api.event.living.conversion.LivingConversionPreEvent")
 public class ExpandLivingConversionPreEvent {
     
+    @ZenCodeType.Method
     @ZenCodeType.Getter("outcome")
     public static EntityType getOutcome(LivingConversionEvent.Pre internal) {
         
