@@ -45,7 +45,7 @@ dependencies {
         implementation(project(it.toString()))
     }
 
-    modImplementation("me.shedaniel:RoughlyEnoughItems-fabric:7.1.357")
+    modImplementation("me.shedaniel:RoughlyEnoughItems-fabric:7.2.409")
 
     implementation("org.reflections:reflections:0.10.2")?.let { include(it) }
     implementation("org.javassist:javassist:3.28.0-GA")?.let { include(it) } // required for reflections
