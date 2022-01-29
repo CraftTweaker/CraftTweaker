@@ -101,7 +101,8 @@ public final class ConflictCommand {
         // Also, this deep copies only the two maps: the recipe type, RL, and recipe objects are not also deep copied
         final Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> recipes = deepCopy(((AccessRecipeManager) manager).getRecipes(), filter);
         CompletableFuture.supplyAsync(() -> computeConflicts(recipes), OFF_THREAD_SERVICE)
-                .thenAcceptAsync(message -> dispatchMessageTo(message, player), OFF_THREAD_SERVICE);
+                .thenAcceptAsync(message -> dispatchCompletionTo(message, player), OFF_THREAD_SERVICE)
+                .exceptionallyAsync(exception -> dispatchExceptionTo(exception, player), OFF_THREAD_SERVICE);
     }
     
     private static Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> deepCopy(final Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> original, final DescriptiveFilter filter) {
@@ -155,7 +156,7 @@ public final class ConflictCommand {
         return String.format("Recipes '%s' and '%s' in type '%s' have conflicting inputs", firstName, secondName, manager.getCommandString());
     }
     
-    private static void dispatchMessageTo(final String message, final Player player) {
+    private static void dispatchCompletionTo(final String message, final Player player) {
         //TODO make this go on the correct thread
         
         try {
@@ -169,6 +170,24 @@ public final class ConflictCommand {
                 e.printStackTrace(System.err); // It's not going to be useful if the logging throws errors, but at least we can say we tried
             }
         }
+    }
+    
+    private static Void dispatchExceptionTo(final Throwable exception, final Player player) {
+        //TODO make this go on the correct thread
+        
+        try {
+            CraftTweakerAPI.LOGGER.error("Unable to verify for conflicts due to an exception", exception);
+            CommandUtilities.send(CommandUtilities.openingLogFile(new TranslatableComponent("crafttweaker.command.conflict.error").withStyle(ChatFormatting.RED)), player);
+        } catch(final Exception e) {
+            try {
+                CraftTweakerAPI.LOGGER.error("An error occurred while reporting conflicts, hopefully it does not happen again", e);
+            } catch(final Exception another) {
+                e.addSuppressed(another);
+                e.printStackTrace(System.err); // It's not going to be useful if the logging throws errors, but at least we can say we tried
+            }
+        }
+        
+        return null;
     }
     
 }
