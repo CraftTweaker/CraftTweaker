@@ -107,7 +107,7 @@ public final class ConflictCommand {
         final LogicalSide side = EffectiveSide.get();
         CompletableFuture.supplyAsync(() -> computeConflicts(recipes), OFF_THREAD_SERVICE)
                 .thenAcceptAsync(message -> dispatchCompletionTo(message, player, side), OFF_THREAD_SERVICE)
-                .exceptionallyAsync(exception -> dispatchExceptionTo(exception, player, side), OFF_THREAD_SERVICE);
+                .exceptionally(exception -> dispatchExceptionTo(exception, player, side));
     }
     
     private static Map<IRecipeType<?>, Map<ResourceLocation, IRecipe<?>>> deepCopy(final Map<IRecipeType<?>, Map<ResourceLocation, IRecipe<?>>> original, final DescriptiveFilter filter) {
