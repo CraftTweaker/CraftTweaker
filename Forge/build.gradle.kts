@@ -191,13 +191,7 @@ publishing {
                 depNodeList.map { it as Node }.forEach { depList ->
                     val deps = depList.getAt(QName("http://maven.apache.org/POM/4.0.0", "dependency"))
                     deps.map { it as Node }.forEach { dep ->
-                        val versionList = dep.getAt(QName("http://maven.apache.org/POM/4.0.0", "version"))
-                        versionList.map { it as Node }.map { it.value() as NodeList }.map { it.text() }
-                                .forEach { version ->
-                                    if (version.contains("_mapped_")) {
-                                        dep.parent().remove(dep)
-                                    }
-                                }
+                        dep.parent().remove(dep)
                     }
                 }
             }
