@@ -106,7 +106,8 @@ public final class ConflictCommand {
         final Map<IRecipeType<?>, Map<ResourceLocation, IRecipe<?>>> recipes = deepCopy(manager.recipes, filter);
         final LogicalSide side = EffectiveSide.get();
         CompletableFuture.supplyAsync(() -> computeConflicts(recipes), OFF_THREAD_SERVICE)
-                .thenAcceptAsync(message -> dispatchMessageTo(message, player, side), OFF_THREAD_SERVICE);
+                .thenAcceptAsync(message -> dispatchCompletionTo(message, player, side), OFF_THREAD_SERVICE)
+                .exceptionallyAsync(exception -> dispatchExceptionTo(exception, player, side), OFF_THREAD_SERVICE);
     }
     
     private static Map<IRecipeType<?>, Map<ResourceLocation, IRecipe<?>>> deepCopy(final Map<IRecipeType<?>, Map<ResourceLocation, IRecipe<?>>> original, final DescriptiveFilter filter) {
@@ -156,7 +157,7 @@ public final class ConflictCommand {
         return String.format("Recipes '%s' and '%s' in type '%s' have conflicting inputs", firstName, secondName, manager.getCommandString());
     }
     
-    private static void dispatchMessageTo(final String message, final PlayerEntity player, final LogicalSide side) {
+    private static void dispatchCompletionTo(final String message, final PlayerEntity player, final LogicalSide side) {
         
         ThreadingHelper.runOnMainThread(side, () -> {
             try {
@@ -175,4 +176,28 @@ public final class ConflictCommand {
             }
         });
     }
+    
+    private static Void dispatchExceptionTo(final Throwable exception, final PlayerEntity player, final LogicalSide side) {
+        
+        ThreadingHelper.runOnMainThread(side, () -> {
+            try {
+                CraftTweakerAPI.logThrowing("Unable to verify for conflicts due to an exception", exception);
+                CommandUtilities.send(CommandUtilities.color("An error has occurred during conflict testing: please check the logs", TextFormatting.RED), player);
+            } catch(final Exception e) {
+                
+                try {
+                    
+                    CraftTweakerAPI.logThrowing("An error occurred while reporting conflicts, hopefully it does not happen again", e);
+                } catch(final Exception another) {
+                    
+                    e.addSuppressed(another);
+                    e.printStackTrace(System.err); // It's not going to be useful if the logging throws errors, but at least we can say we tried
+                }
+            }
+        });
+
+        return null;
+    }
+
+
 }
