@@ -8,6 +8,7 @@
   "crafttweaker.command.conflict.complete": "Conflict testing completed: results are in crafttweaker.log",
   "crafttweaker.command.conflict.description.output": " for output %s",
   "crafttweaker.command.conflict.description.type": " for type %s",
+  "crafttweaker.command.conflict.error": "An error has occurred during conflict testing: please check the logs",
   "crafttweaker.command.conflict.hand.empty": "No item in hand: unable to check conflicts for an empty item",
   "crafttweaker.command.conflict.warnings": "do not /reload the server or quit the world in the meantime",
   "crafttweaker.command.description.conflicts": "Identifies and reports conflicts between various recipes",
