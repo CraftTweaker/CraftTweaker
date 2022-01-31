@@ -180,7 +180,7 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
      * @docParam modid "minecraft"
      */
     @ZenCodeType.Method
-    default void removeByModid(String modid, @ZenCodeType.Optional("(name) => false") Predicate<String> exclude) {
+    default void removeByModid(String modid, @ZenCodeType.Optional("(name as string) as bool => false") Predicate<String> exclude) {
         
         CraftTweakerAPI.apply(new ActionRemoveRecipeByModid<>(this, modid, exclude));
     }
@@ -194,7 +194,7 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
      * @docParam exclude (name as string) => {return name == "orange_wool";}
      */
     @ZenCodeType.Method
-    default void removeByRegex(String regex, @ZenCodeType.Optional("(name) => false") Predicate<String> exclude) {
+    default void removeByRegex(String regex, @ZenCodeType.Optional("(name as string) as bool => false") Predicate<String> exclude) {
         
         CraftTweakerAPI.apply(new ActionRemoveRecipeByRegex<>(this, regex, exclude));
     }
