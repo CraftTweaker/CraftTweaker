@@ -34,7 +34,7 @@ import java.util.List;
 public class CTCommonEventHandler {
     
     @SubscribeEvent
-    public void onGatherReplacementExclusion(GatherReplacementExclusionEvent event) {
+    public static void onGatherReplacementExclusion(GatherReplacementExclusionEvent event) {
         
         DefaultExclusionReplacements.handleDefaultExclusions(event);
     }
