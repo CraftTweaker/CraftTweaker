@@ -15,7 +15,7 @@ val modId: String by project
 
 val baseArchiveName = "${modName}-common-${minecraftVersion}"
 
-version = Utils.updatingSemVersion(modVersion)
+version = Utils.updatingVersion(modVersion)
 tasks.withType<JavaCompile> {
     source(project(":Crafttweaker_Annotations").sourceSets.main.get().allSource)
 }

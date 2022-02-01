@@ -30,7 +30,7 @@ val modJavaVersion: String by project
 
 val baseArchiveName = "${modName}-forge-${minecraftVersion}"
 
-version = Utils.updatingSemVersion(modVersion)
+version = Utils.updatingVersion(modVersion)
 base {
     archivesName.set(baseArchiveName)
 }
