@@ -3,8 +3,8 @@ package com.blamejared.crafttweaker.api.recipe.manager;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.action.recipe.ActionAddRecipe;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.ingredient.type.IIngredientEmpty;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
+import com.blamejared.crafttweaker.api.ingredient.type.IIngredientEmpty;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.MirrorAxis;
 import com.blamejared.crafttweaker.api.recipe.function.RecipeFunctionArray;
@@ -23,6 +23,9 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @docParam this craftingTable
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.recipe.CraftingTableRecipeManager")
 @Document("vanilla/api/recipe/manager/CraftingTableRecipeManager")

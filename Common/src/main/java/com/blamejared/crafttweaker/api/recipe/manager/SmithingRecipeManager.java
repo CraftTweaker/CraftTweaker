@@ -13,6 +13,9 @@ import net.minecraft.world.item.crafting.UpgradeRecipe;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this smithing
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.recipe.SmithingRecipeManager")
 @Document("vanilla/api/recipe/manager/SmithingRecipeManager")

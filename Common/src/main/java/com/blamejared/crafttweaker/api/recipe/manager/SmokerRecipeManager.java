@@ -11,6 +11,9 @@ import net.minecraft.world.item.crafting.SmokingRecipe;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * @docParam this smoker
+ */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.recipe.SmokerRecipeManager")
 @Document("vanilla/api/recipe/manager/SmokerRecipeManager")
