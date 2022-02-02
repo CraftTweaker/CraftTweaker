@@ -21,6 +21,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.pag
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.TypePageTypeInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies.DependencyContainer;
 import com.blamejared.crafttweaker_annotation_processors.processors.util.dependencies.IHasPostCreationCall;
+import com.blamejared.crafttweaker_annotation_processors.processors.validation.expansion.name_converter.rules.GenericConversionRule;
 
 import javax.annotation.Nonnull;
 import javax.lang.model.type.TypeMirror;
@@ -31,7 +32,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class TypeConverter implements IHasPostCreationCall {
@@ -97,8 +97,7 @@ public class TypeConverter implements IHasPostCreationCall {
     @Nonnull
     private Matcher getGenericMatcher(TypeName name) {
         
-        final Pattern compile = Pattern.compile("([^<]+)<([^>]+)>");
-        final Matcher matcher = compile.matcher(name.getZenCodeName());
+        final Matcher matcher = GenericConversionRule.GENERIC_PATTERN.matcher(name.getZenCodeName());
         return matcher;
     }
     

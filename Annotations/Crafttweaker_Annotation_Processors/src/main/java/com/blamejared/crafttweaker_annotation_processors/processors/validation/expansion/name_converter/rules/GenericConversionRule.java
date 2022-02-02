@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 public class GenericConversionRule implements NameConversionRule {
     
-    private final Pattern pattern = Pattern.compile("([^<]+)<([^>]+)>");
+    public static final Pattern GENERIC_PATTERN = Pattern.compile("([^<]+)<(.+)>");
     
     private final Types typeUtils;
     private final NameConverter nameConverter;
@@ -37,12 +37,12 @@ public class GenericConversionRule implements NameConversionRule {
     
     private boolean isGeneric(String zenCodeName) {
         
-        return pattern.matcher(zenCodeName).matches();
+        return GENERIC_PATTERN.matcher(zenCodeName).matches();
     }
     
     private TypeMirror getGeneric(String zenCodeName) {
         
-        final Matcher matcher = pattern.matcher(zenCodeName);
+        final Matcher matcher = GENERIC_PATTERN.matcher(zenCodeName);
         if(!matcher.matches()) {
             throw new IllegalStateException("It matched before but not now? " + zenCodeName);
         }
