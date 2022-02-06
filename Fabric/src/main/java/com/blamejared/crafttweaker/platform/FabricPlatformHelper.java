@@ -26,7 +26,6 @@ import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
 import net.fabricmc.fabric.impl.tag.extension.TagFactoryImpl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.impl.ModContainerImpl;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -46,6 +45,7 @@ import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -151,10 +151,11 @@ public class FabricPlatformHelper implements IPlatformHelper {
         
         File classFile = new File(clazz.getProtectionDomain().getCodeSource().getLocation().getPath());
         List<Mod> mods = new ArrayList<>();
+        // This doesn't work for the current mod in dev.
+        // The origin paths just include build/resources/main, not build/classes/main, but otherwise works great
         FabricLoader.getInstance().getAllMods().forEach(modContainer -> {
-            if(modContainer instanceof ModContainerImpl impl) {
-                
-                if(impl.getOriginPath().toFile().equals(classFile)) {
+            for(Path rootPath : modContainer.getOrigin().getPaths()) {
+                if(rootPath.toFile().equals(classFile)) {
                     mods.add(new Mod(modContainer.getMetadata().getId(), modContainer.getMetadata()
                             .getName(), modContainer.getMetadata().getVersion().getFriendlyString()));
                 }
