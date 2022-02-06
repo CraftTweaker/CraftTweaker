@@ -51,6 +51,22 @@ dependencies {
     }
 }
 
+tasks.processResources {
+    outputs.upToDateWhen { false }
+    dependsOn(":StdLibs:zipItUp")
+    from(files(evaluationDependsOn(":StdLibs").tasks.getByName("zipItUp").outputs))
+
+    inputs.property("version", project.version)
+}
+
+tasks.withType<JavaCompile> {
+    source(project(":Crafttweaker_Annotations").sourceSets.main.get().allSource)
+
+    (project.ext["zenCodeDeps"] as Set<*>).forEach {
+        source(project(it.toString()).sourceSets.main.get().allSource)
+    }
+}
+
 publishing {
     publications {
         register("mavenJava", MavenPublication::class) {
