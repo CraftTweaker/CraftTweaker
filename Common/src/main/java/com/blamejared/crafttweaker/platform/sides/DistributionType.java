@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 public enum DistributionType {
-    CLIENT(Set.of("client")), SERVER(Set.of("server", "dedicated_Server"));
+    CLIENT(Set.of("client")), SERVER(Set.of("server", "dedicated_server"));
     
     private static final Map<Enum<?>, DistributionType> CACHE = new HashMap<>();
     
