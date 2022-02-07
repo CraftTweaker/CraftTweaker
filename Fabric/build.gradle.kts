@@ -6,7 +6,7 @@ plugins {
     `maven-publish`
     id("fabric-loom") version "0.10-SNAPSHOT"
     id("com.blamejared.modtemplate")
-    id("net.darkhax.curseforgegradle") version ("1.0.8")
+    id("net.darkhax.curseforgegradle") version ("1.0.9")
 }
 
 val modVersion: String by project

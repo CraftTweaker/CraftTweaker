@@ -11,7 +11,7 @@ plugins {
     id("org.parchmentmc.librarian.forgegradle") version ("1.+")
     id("org.spongepowered.mixin") version ("0.7-SNAPSHOT")
     id("com.blamejared.modtemplate")
-    id("net.darkhax.curseforgegradle") version ("1.0.8")
+    id("net.darkhax.curseforgegradle") version ("1.0.9")
 }
 
 val modVersion: String by project
