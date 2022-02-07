@@ -60,7 +60,7 @@ public class TAInventoryWrapper implements IInventoryWrapper {
             if(!storage.supportsInsertion() || !storageSlot.supportsInsertion()) {
                 return stack;
             }
-            if(storageSlot.getResource().matches(stack)) {
+            if(storageSlot.isResourceBlank() || storageSlot.getResource().matches(stack)) {
                 try(Transaction transaction = Transaction.openOuter()) {
                     long insert = storageSlot.insert(variant, needToInsert, transaction);
                     transaction.commit();

@@ -354,7 +354,7 @@ public class ExpandPlayer {
         
         IInventoryWrapper inventory = Services.PLATFORM.getPlayerInventory(internal);
         Level level = internal.level;
-        // How much wasn'*wasn't* inserted?
+        // How much *wasn't* inserted?
         ItemStack leftOvers = inventory.insertItem(slot, stack.getInternal(), false);
         OptionalInt availableSlot = inventory.getSlotFor(leftOvers);
         
