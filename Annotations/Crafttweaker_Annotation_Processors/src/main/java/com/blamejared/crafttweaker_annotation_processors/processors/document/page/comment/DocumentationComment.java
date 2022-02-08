@@ -46,7 +46,7 @@ public class DocumentationComment {
     
     public String getMarkdownDescription() {
         
-        return getDescription().replaceAll("\n", "  \n");
+        return getDescription().replaceAll("\n", " <br /> ");
     }
     
     public boolean hasDescription() {
