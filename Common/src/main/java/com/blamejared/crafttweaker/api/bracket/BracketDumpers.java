@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.api.bracket;
 
 
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.BracketDumper;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.tag.MCTag;
@@ -64,7 +64,7 @@ public class BracketDumpers {
     @BracketDumper("constant")
     public static Collection<String> getConstantDump() {
         
-        return CraftTweakerRegistry.collectBracketEnums();
+        return CraftTweakerAPI.getRegistry().getAllEnumsForEnumBracket();
     }
     
     @ZenCodeType.Method

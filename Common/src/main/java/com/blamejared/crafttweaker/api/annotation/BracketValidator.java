@@ -12,4 +12,6 @@ public @interface BracketValidator {
     
     String value();
     
+    boolean validatesCustom() default false;
+    
 }

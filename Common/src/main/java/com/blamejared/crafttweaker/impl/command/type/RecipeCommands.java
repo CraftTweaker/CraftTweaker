@@ -1,11 +1,11 @@
 package com.blamejared.crafttweaker.impl.command.type;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.command.CommandUtilities;
 import com.blamejared.crafttweaker.api.command.boilerplate.CommandImpl;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.impl.command.CTCommands;
@@ -50,7 +50,7 @@ public final class RecipeCommands {
         
         ((AccessRecipeManager) player.level.getRecipeManager()).getRecipes()
                 .forEach((recipeType, map) -> dumpRecipe(recipeType, map.values(), it -> true, false));
-    
+        
         CommandUtilities.send(CommandUtilities.openingLogFile(new TranslatableComponent("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(new TranslatableComponent("crafttweaker.command.misc.recipes.list")), CommandUtilities.getFormattedLogFile()).withStyle(ChatFormatting.GREEN)), player);
         return Command.SINGLE_SUCCESS;
     }
@@ -69,7 +69,7 @@ public final class RecipeCommands {
         
         ((AccessRecipeManager) player.level.getRecipeManager()).getRecipes().forEach((recipeType, map) ->
                 dumpRecipe(recipeType, map.values(), it -> workingStack.matches(Services.PLATFORM.createMCItemStack(it.getResultItem())), true));
-    
+        
         CommandUtilities.send(CommandUtilities.openingLogFile(new TranslatableComponent("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(new TranslatableComponent("crafttweaker.command.misc.recipes.list")), CommandUtilities.getFormattedLogFile()).withStyle(ChatFormatting.GREEN)), player);
         return Command.SINGLE_SUCCESS;
     }
@@ -102,7 +102,7 @@ public final class RecipeCommands {
     
     private static <T extends Recipe<?>> String dump(final IRecipeManager<?> manager, final T recipe) {
         
-        return CraftTweakerRegistry.getHandlerFor(recipe).dumpToCommandString(manager, recipe);
+        return IRecipeHandlerRegistry.getHandlerFor(recipe).dumpToCommandString(manager, recipe);
     }
     
 }

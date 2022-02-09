@@ -1,19 +1,22 @@
-package com.blamejared.crafttweaker.api.zencode.impl.registry;
+package com.blamejared.crafttweaker.impl.registry.zencode;
 
 import com.blamejared.crafttweaker_annotations.annotations.BracketEnum;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Contains all info on Bracket resolvers, validators and dumpers
  */
-public class BracketEnumRegistry {
+public final class EnumBracketRegistry {
     
     private final Map<ResourceLocation, Class<Enum<?>>> enums = new HashMap<>();
+    private final Map<ResourceLocation, Class<Enum<?>>> view = Collections.unmodifiableMap(this.enums);
     
     public void addClasses(final List<Class<?>> clsList) {
         
@@ -48,9 +51,16 @@ public class BracketEnumRegistry {
         
     }
     
+    @SuppressWarnings("unchecked")
+    public <T extends Enum<T>> Optional<Class<T>> getEnum(final ResourceLocation type) {
+        
+        return Optional.ofNullable(this.enums.get(type)).map(it -> (Class<T>) it);
+    }
+    
+    
     public Map<ResourceLocation, Class<Enum<?>>> getEnums() {
         
-        return enums;
+        return this.view;
     }
     
 }

@@ -14,8 +14,10 @@ import com.blamejared.crafttweaker.api.zencode.impl.loader.LoaderActions;
 import com.blamejared.crafttweaker.api.zencode.impl.loader.ScriptRun;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
+import com.blamejared.crafttweaker.platform.Services;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
@@ -39,10 +41,13 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.CraftTweakerAPI")
 public class CraftTweakerAPI {
+    
+    private static final Supplier<ICraftTweakerRegistry> REGISTRY = Suppliers.memoize(Services.BRIDGE::registry);
     
     // Do we want to make a log4j wrapper and expose it to a script...? 😬
     public static final Logger LOGGER = LogManager.getLogger(CraftTweakerLogger.LOGGER_NAME);
@@ -85,9 +90,10 @@ public class CraftTweakerAPI {
         NO_BRAND = false;
         final List<File> fileList = getScriptFiles();
         
-        final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
+        final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerAPI.getRegistry()
+                .getPreprocessors());
         SourceFile[] sourceFiles = fileList.stream()
-                .map(file -> new FileAccessSingle(CraftTweakerConstants.SCRIPT_DIR, file, scriptLoadingOptions, CraftTweakerRegistry
+                .map(file -> new FileAccessSingle(CraftTweakerConstants.SCRIPT_DIR, file, scriptLoadingOptions, CraftTweakerAPI.getRegistry()
                         .getPreprocessors()))
                 .filter(FileAccessSingle::shouldBeLoaded)
                 .sorted(comparator)
@@ -122,6 +128,11 @@ public class CraftTweakerAPI {
     public static void apply(IAction action) {
         
         ACTION_APPLIER.apply(action);
+    }
+    
+    public static ICraftTweakerRegistry getRegistry() {
+        
+        return REGISTRY.get();
     }
     
     public static List<File> getScriptFiles() {
@@ -249,11 +260,12 @@ public class CraftTweakerAPI {
         Collection<Recipe<?>> recipes = map.values();
         CraftTweakerAPI.NO_BRAND = false;
         
-        final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
+        final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerAPI.getRegistry()
+                .getPreprocessors());
         final SourceFile[] sourceFiles = recipes.stream()
                 .map(iRecipe -> (ScriptRecipe) iRecipe)
                 .map(recipe -> new FileAccessSingle(recipe.getFileName(), new InputStreamReader(new ByteArrayInputStream(recipe.getContent()
-                        .getBytes(StandardCharsets.UTF_8))), scriptLoadingOptions, CraftTweakerRegistry
+                        .getBytes(StandardCharsets.UTF_8))), scriptLoadingOptions, CraftTweakerAPI.getRegistry()
                         .getPreprocessors()))
                 .filter(FileAccessSingle::shouldBeLoaded)
                 .sorted(comparator)

@@ -2,12 +2,13 @@ package com.blamejared.crafttweaker;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.command.argument.IItemStackArgument;
 import com.blamejared.crafttweaker.api.command.argument.RecipeTypeArgument;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
+import com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin;
 import com.blamejared.crafttweaker.impl.command.CTCommands;
+import com.blamejared.crafttweaker.impl.plugin.core.PluginManager;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -24,12 +25,16 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CraftTweakerCommon {
     
     public static final Logger LOG = LogManager.getLogger(CraftTweakerConstants.MOD_NAME);
     private static Set<String> PATRON_LIST = new HashSet<>();
+    
+    private static final AtomicReference<PluginManager> PLUGIN_MANAGER = new AtomicReference<>(null);
     
     public static void init() {
         
@@ -42,8 +47,8 @@ public class CraftTweakerCommon {
         CraftTweakerLogger.init();
         
         CraftTweakerAPI.LOGGER.info("Starting building internal Registries");
-        CraftTweakerRegistry.addAdvancedBEPName("recipemanager");
-        CraftTweakerRegistry.findClasses();
+        //CraftTweakerRegistry.addAdvancedBEPName("recipemanager");
+        //CraftTweakerRegistry.findClasses();
         CraftTweakerAPI.LOGGER.info("Completed building internal Registries");
         
         CraftTweakerRegistries.init();
@@ -64,6 +69,12 @@ public class CraftTweakerCommon {
         }).start();
     }
     
+    public static void handlePlugins(final Stream<Class<? extends ICraftTweakerPlugin>> pluginClasses) {
+        
+        PLUGIN_MANAGER.set(PluginManager.of(pluginClasses));
+        PLUGIN_MANAGER.get().loadPlugins();
+    }
+    
     public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, Commands.CommandSelection environment) {
         
         CTCommands.init(dispatcher, environment);
@@ -82,7 +93,8 @@ public class CraftTweakerCommon {
     
     public static void loadInitScripts() {
         
-        final ScriptLoadingOptions setupCommon = new ScriptLoadingOptions().setLoaderName("initialize").execute();
+        final ScriptLoadingOptions setupCommon = new ScriptLoadingOptions().setLoaderName(CraftTweakerConstants.INIT_LOADER_NAME)
+                .execute();
         CraftTweakerAPI.loadScripts(setupCommon);
     }
     

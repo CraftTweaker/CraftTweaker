@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.platform;
 
+import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.MCItemStack;
 import com.blamejared.crafttweaker.api.item.MCItemStackMutable;
@@ -14,6 +14,7 @@ import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistryData;
 import com.blamejared.crafttweaker.api.util.HandleHelper;
 import com.blamejared.crafttweaker.api.util.StringUtils;
 import com.blamejared.crafttweaker.api.villager.CTTradeObject;
+import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.impl.loot.CraftTweakerPrivilegedLootModifierMap;
 import com.blamejared.crafttweaker.impl.loot.ForgeLootModifierMapAdapter;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
@@ -177,7 +178,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
                                 .map(iModInfo -> new Mod(iModInfo.getModId(), iModInfo.getDisplayName(), iModInfo.getVersion()
                                         .toString())).forEach(consumer))
                         .map(ModFileScanData.AnnotationData::clazz))
-                .map(CraftTweakerRegistry::getClassFromType)
+                .map(ForgePlatformHelper::getClassFromType)
                 .filter(Objects::nonNull);
     }
     
@@ -253,8 +254,11 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @SuppressWarnings({"rawtypes"})
     public void registerTagManagerFromRegistry(ResourceLocation name, ForgeRegistry<?> registry, String tagFolder) {
         
+        final IScriptLoader loader = null;
         final Class<?> registrySuperType = registry.getRegistrySuperType();
-        final Optional<String> s = CraftTweakerRegistry.tryGetZenClassNameFor(registrySuperType);
+        final Optional<String> s = CraftTweakerAPI.getRegistry()
+                .getZenClassRegistry()
+                .getNameFor(loader, registrySuperType);
         if(s.isEmpty()) {
             CraftTweakerAPI.LOGGER.debug("Could not register tag manager for " + tagFolder);
             return;
@@ -326,5 +330,14 @@ public class ForgePlatformHelper implements IPlatformHelper {
         return CraftingTableRecipeConflictChecker.checkConflicts(manager, first, second);
     }
     
+    private static Class<?> getClassFromType(Type type) {
+        
+        try {
+            return Class.forName(type.getClassName(), false, CraftTweakerCommon.class.getClassLoader());
+        } catch(ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     
 }

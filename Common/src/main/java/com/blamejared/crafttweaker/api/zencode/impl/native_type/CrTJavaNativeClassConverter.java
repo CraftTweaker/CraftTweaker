@@ -2,7 +2,7 @@ package com.blamejared.crafttweaker.api.zencode.impl.native_type;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.natives.NativeTypeRegistry;
-import com.blamejared.crafttweaker.api.zencode.impl.registry.ZenClassRegistry;
+import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
 import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.java.module.JavaNativeTypeConversionContext;
 import org.openzen.zencode.java.module.converters.JavaNativeClassConverter;
@@ -17,9 +17,9 @@ import java.lang.reflect.Method;
 
 class CrTJavaNativeClassConverter extends JavaNativeClassConverter {
     
-    private final ZenClassRegistry zenClassRegistry;
+    private final IZenClassRegistry zenClassRegistry;
     
-    public CrTJavaNativeClassConverter(JavaNativePackageInfo packageInfo, JavaNativeTypeConversionContext typeConversionContext, JavaNativeTypeConverter typeConverter, JavaNativeHeaderConverter headerConverter, JavaNativeMemberConverter memberConverter, ZenClassRegistry zenClassRegistry) {
+    public CrTJavaNativeClassConverter(JavaNativePackageInfo packageInfo, JavaNativeTypeConversionContext typeConversionContext, JavaNativeTypeConverter typeConverter, JavaNativeHeaderConverter headerConverter, JavaNativeMemberConverter memberConverter, IZenClassRegistry zenClassRegistry) {
         
         super(typeConverter, memberConverter, packageInfo, typeConversionContext, headerConverter);
         this.zenClassRegistry = zenClassRegistry;
@@ -27,7 +27,6 @@ class CrTJavaNativeClassConverter extends JavaNativeClassConverter {
     
     @Override
     public String getNameForScripts(Class<?> cls) {
-        
         
         if(getNativeTypeRegistry().hasInfoFor(cls)) {
             return getNativeTypeRegistry().getCrTNameFor(cls);
@@ -42,7 +41,7 @@ class CrTJavaNativeClassConverter extends JavaNativeClassConverter {
     
     private NativeTypeRegistry getNativeTypeRegistry() {
         
-        return zenClassRegistry.getNativeTypeRegistry();
+        return zenClassRegistry.getNativeTypeRegistry(null); // TODO("")
     }
     
     @Override

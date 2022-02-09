@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker.api.recipe.handler.helper;
 
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
+import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.IngredientUtil;
 import net.minecraft.core.NonNullList;
@@ -33,7 +33,7 @@ public final class CraftingTableRecipeConflictChecker {
     private static <T extends Recipe<?>> boolean redirect(final IRecipeManager manager, final T second, final Recipe<?> first) {
         
         // We need another lookup because of the wildcard capture
-        return CraftTweakerRegistry.getHandlerFor(second).doesConflict(manager, second, first);
+        return IRecipeHandlerRegistry.getHandlerFor(second).doesConflict(manager, second, first);
     }
     
     private static boolean checkConflictsMaybeDifferent(final Recipe<?> first, final Recipe<?> second) {
@@ -52,7 +52,7 @@ public final class CraftingTableRecipeConflictChecker {
     }
     
     private static boolean doShapedShapedConflict(final IShapedRecipe<?> first, final IShapedRecipe<?> second) {
-    
+        
         if(first.getRecipeHeight() != second.getRecipeHeight()) {
             return false;
         }
@@ -67,7 +67,7 @@ public final class CraftingTableRecipeConflictChecker {
             
             final Ingredient firstIngredient = firstIngredients.get(i);
             final Ingredient secondIngredient = secondIngredients.get(i);
-    
+            
             if(!IngredientUtil.canConflict(firstIngredient, secondIngredient)) {
                 return false;
             }
@@ -90,7 +90,7 @@ public final class CraftingTableRecipeConflictChecker {
     }
     
     private static boolean doShapelessShapelessConflict(final List<Ingredient> first, final List<Ingredient> second) {
-    
+        
         if(first.size() != second.size()) {
             return false;
         }
@@ -105,7 +105,7 @@ public final class CraftingTableRecipeConflictChecker {
         for(final Ingredient target : first) {
             
             for(int j = 0; j < second.size(); ++j) {
-    
+                
                 if(visitData.get(j)) {
                     continue;
                 }

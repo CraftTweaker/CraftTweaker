@@ -1,115 +1,188 @@
-package com.blamejared.crafttweaker.api.zencode.impl.registry;
+package com.blamejared.crafttweaker.impl.registry.zencode;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.natives.CrTNativeTypeInfo;
 import com.blamejared.crafttweaker.api.natives.NativeTypeRegistry;
-import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
-import com.blamejared.crafttweaker.platform.Services;
-import com.blamejared.crafttweaker_annotations.annotations.NativeMethod;
-import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
-import com.blamejared.crafttweaker_annotations.annotations.TypedExpansion;
+import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
+import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
+import com.google.common.base.Suppliers;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import org.openzen.zencode.java.ZenCodeGlobals;
-import org.openzen.zencode.java.ZenCodeType;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public class ZenClassRegistry {
+public final class ZenClassRegistry implements IZenClassRegistry {
     
-    private final NativeTypeRegistry nativeTypeRegistry = new NativeTypeRegistry();
-    
-    /**
-     * All classes with @ZenRegister and their modDeps fulfilled
-     */
-    private final List<Class<?>> allRegisteredClasses = new ArrayList<>();
-    
-    /**
-     * All classes that caused errors when evaluating
-     * Used to skip incompatible classes instead of throwing multiple Errors
-     * (One error will always be thrown when validating at the beginning!)
-     */
-    private final Set<Class<?>> blacklistedClasses = new HashSet<>();
-    
-    /**
-     * All classes that have at least one global field, with their @Name as the key
-     */
-    private final BiMap<String, Class<?>> zenGlobals = HashBiMap.create();
-    
-    /**
-     * All Classes with @Name, key is @Name#value
-     */
-    private final BiMap<String, Class<?>> zenClasses = HashBiMap.create();
-    
-    /**
-     * All classes with @Expansion, grouped by @Expansion#value
-     */
-    private final Map<String, List<Class<?>>> expansionsByExpandedName = new HashMap<>();
-    
-    
-    public List<Class<? extends IRecipeManager>> getRecipeManagers() {
+    public record ClassData(List<Class<?>> registeredClasses,
+                            BiMap<String, Class<?>> globals,
+                            BiMap<String, Class<?>> classes,
+                            Multimap<String, Class<?>> expansions
+    ) implements IZenClassRegistry.IClassData {
         
-        return getImplementationsOf(IRecipeManager.class);
-    }
-    
-    public boolean isRegistered(Class<?> cls) {
-        
-        return zenClasses.inverse().containsKey(cls);
-    }
-    
-    public String getNameFor(Class<?> cls) {
-        
-        return zenClasses.inverse().get(cls);
-    }
-    
-    public Optional<String> tryGetNameFor(Class<?> cls) {
-        
-        if(isRegistered(cls)) {
-            return Optional.ofNullable(getNameFor(cls));
+        private ClassData() {
+            
+            this(new ArrayList<>(), HashBiMap.create(), HashBiMap.create(), HashMultimap.create());
         }
-        return Optional.empty();
-    }
-    
-    public <T> List<Class<? extends T>> getImplementationsOf(Class<T> checkFor) {
-        //Cast okay because of isAssignableFrom
-        return allRegisteredClasses.stream()
-                .filter(checkFor::isAssignableFrom)
-                .filter(cls -> !cls.isInterface() && !Modifier.isAbstract(cls.getModifiers()))
-                .map(cls -> (Class<? extends T>) cls)
-                .collect(Collectors.toList());
-    }
-    
-    public List<Class<?>> getAllRegisteredClasses() {
         
-        return allRegisteredClasses;
-    }
-    
-    public BiMap<String, Class<?>> getZenGlobals() {
+        @SuppressWarnings("CopyConstructorMissesField") // It is not a copy constructor, IntelliJ...
+        private ClassData(final ClassData view) {
+            
+            this(
+                    Collections.unmodifiableList(view.registeredClasses()),
+                    Maps.unmodifiableBiMap(view.globals()),
+                    Maps.unmodifiableBiMap(view.classes()),
+                    Multimaps.unmodifiableMultimap(view.expansions())
+            );
+        }
         
-        return zenGlobals;
     }
     
-    public BiMap<String, Class<?>> getZenClasses() {
+    private static final class LoaderSpecificZenClassRegistry {
         
-        return zenClasses;
-    }
-    
-    public Map<String, List<Class<?>>> getExpansionsByExpandedName() {
+        private final NativeTypeRegistry nativeTypeRegistry = new NativeTypeRegistry();
+        private final ClassData data = new ClassData();
+        private final Supplier<ClassData> view = Suppliers.memoize(() -> new ClassData(this.data));
         
-        return expansionsByExpandedName;
+        private boolean isRegistered(final Class<?> clazz) {
+            
+            return this.data.classes().containsValue(clazz);
+        }
+        
+        private Optional<String> getNameFor(final Class<?> clazz) {
+            
+            return Optional.ofNullable(this.data.classes().inverse().get(clazz));
+        }
+        
+        @SuppressWarnings("unchecked")
+        private <T> List<Class<? extends T>> getImplementationsOf(final Class<T> checkFor) {
+            //Cast okay because of isAssignableFrom
+            return this.data.registeredClasses()
+                    .stream()
+                    .filter(checkFor::isAssignableFrom)
+                    .filter(cls -> !cls.isInterface() && !Modifier.isAbstract(cls.getModifiers()))
+                    .map(cls -> (Class<? extends T>) cls)
+                    .collect(Collectors.toList());
+        }
+        
+        private IClassData getImmutableDataView() {
+            
+            return this.view.get();
+        }
+        
+        private NativeTypeRegistry getNativeTypeRegistry() {
+            
+            return this.nativeTypeRegistry;
+        }
+        
+        private List<Class<?>> getClassesInPackage(final String packageName) {
+            
+            return this.data.classes()
+                    .entrySet()
+                    .stream()
+                    .filter(entry -> entry.getKey().startsWith(packageName))
+                    .map(Map.Entry::getValue)
+                    .collect(Collectors.toList());
+        }
+        
+        private List<Class<?>> getGlobalsInPackage(final String packageName) {
+            
+            return this.data.globals()
+                    .entrySet()
+                    .stream()
+                    .filter(entry -> entry.getKey().startsWith(packageName))
+                    .map(Map.Entry::getValue)
+                    .collect(Collectors.toList());
+        }
+        
+        private Set<String> getRootPackages() {
+            
+            return this.data.classes()
+                    .keySet()
+                    .stream()
+                    .map(key -> key.split("\\.", 2)[0])
+                    .collect(Collectors.toSet());
+        }
+        
     }
     
+    private static final LoaderSpecificZenClassRegistry EMPTY = new LoaderSpecificZenClassRegistry();
+    private final Set<Class<?>> blacklistedClasses = new HashSet<>();
+    private final Map<IScriptLoader, LoaderSpecificZenClassRegistry> registryMap = new HashMap<>();
+    
+    @Override
+    public boolean isRegistered(final IScriptLoader loader, final Class<?> clazz) {
+        
+        return this.get(loader).isRegistered(clazz);
+    }
+    
+    @Override
+    public Optional<String> getNameFor(final IScriptLoader loader, final Class<?> clazz) {
+        
+        return this.get(loader).getNameFor(clazz);
+    }
+    
+    @Override
+    public <T> List<Class<? extends T>> getImplementationsOf(final IScriptLoader loader, final Class<T> checkFor) {
+        
+        return this.get(loader).getImplementationsOf(checkFor);
+    }
+    
+    @Override
+    public IClassData getClassData(final IScriptLoader loader) {
+        
+        return this.get(loader).getImmutableDataView();
+    }
+    
+    @Override
+    public List<Class<?>> getClassesInPackage(final IScriptLoader loader, final String packageName) {
+        
+        return this.get(loader).getClassesInPackage(packageName);
+    }
+    
+    @Override
+    public List<Class<?>> getGlobalsInPackage(final IScriptLoader loader, final String packageName) {
+        
+        return this.get(loader).getGlobalsInPackage(packageName);
+    }
+    
+    @Override
+    public Set<String> getRootPackages(final IScriptLoader loader) {
+        
+        return this.get(loader).getRootPackages();
+    }
+    
+    @Override
+    public NativeTypeRegistry getNativeTypeRegistry(final IScriptLoader loader) {
+        
+        return this.get(loader).getNativeTypeRegistry();
+    }
+    
+    @Override
+    public boolean isBlacklisted(final Class<?> cls) {
+        
+        return this.blacklistedClasses.contains(cls);
+    }
+    
+    private LoaderSpecificZenClassRegistry get(final IScriptLoader loader) {
+        
+        return this.registryMap.getOrDefault(Objects.requireNonNull(loader, "loader"), EMPTY);
+    }
+    
+    /*
     public void addClass(Class<?> cls) {
         
         if(areModsMissing(cls.getAnnotation(ZenRegister.class))) {
@@ -145,14 +218,14 @@ public class ZenClassRegistry {
                 CraftTweakerAPI.LOGGER.warn("Class: '{}' has a Global value, but is missing the '{}' annotation! Please report this to the mod author!", cls, ZenCodeType.Name.class.getName());
             }
         }
-    }
+    }*/
     
     /**
      * Checks that the class does not have any fields or methods that would cause errors when converting in the JavaNativeModule.
      * Does so by simply calling the declaredMethods and fields getters.
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private boolean isIncompatible(Class<?> cls) {
+    private boolean isIncompatible(final Class<?> cls) {
         
         try {
             cls.getDeclaredFields();
@@ -169,6 +242,7 @@ public class ZenClassRegistry {
         }
     }
     
+    /*
     private void addTypedExpansion(Class<?> cls) {
         
         final TypedExpansion annotation = cls.getAnnotation(TypedExpansion.class);
@@ -236,33 +310,9 @@ public class ZenClassRegistry {
                 .filter(member -> Modifier.isPublic(member.getModifiers()))
                 .anyMatch(member -> Modifier.isStatic(member.getModifiers()));
     }
+    */
     
-    public List<Class<?>> getClassesInPackage(String name) {
-        
-        return zenClasses.entrySet()
-                .stream()
-                .filter(entry -> entry.getKey().startsWith(name))
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toList());
-    }
-    
-    public List<Class<?>> getGlobalsInPackage(String name) {
-        
-        return zenGlobals.entrySet()
-                .stream()
-                .filter(entry -> entry.getKey().startsWith(name))
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toList());
-    }
-    
-    public Set<String> getRootPackages() {
-        
-        return zenClasses.keySet()
-                .stream()
-                .map(key -> key.split("\\.", 2)[0])
-                .collect(Collectors.toSet());
-    }
-    
+    /*
     public void addNativeType(Class<?> cls) {
         
         if(areModsMissing(cls.getAnnotation(ZenRegister.class))) {
@@ -283,16 +333,6 @@ public class ZenClassRegistry {
             zenClasses.put(craftTweakerName, nativeTypeInfo.getVanillaClass());
             CraftTweakerAPI.LOGGER.debug("Registering {} for native type '{}'", craftTweakerName, vanillaClass);
         }
-    }
-    
-    public NativeTypeRegistry getNativeTypeRegistry() {
-        
-        return nativeTypeRegistry;
-    }
-    
-    public boolean isBlacklisted(Class<?> cls) {
-        
-        return blacklistedClasses.contains(cls);
-    }
+    }*/
     
 }

@@ -1,5 +1,7 @@
 package com.blamejared.crafttweaker.api.annotation;
 
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -20,5 +22,7 @@ public @interface ZenRegister {
      * @return array of modids.
      */
     String[] modDeps() default "";
+    
+    String loader() default CraftTweakerConstants.DEFAULT_LOADER_NAME;
     
 }

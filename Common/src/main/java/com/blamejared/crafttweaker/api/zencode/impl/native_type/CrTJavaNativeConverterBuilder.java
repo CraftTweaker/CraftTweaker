@@ -2,8 +2,7 @@ package com.blamejared.crafttweaker.api.zencode.impl.native_type;
 
 //import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
-import com.blamejared.crafttweaker.api.zencode.impl.registry.ZenClassRegistry;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import org.openzen.zencode.java.module.JavaNativeTypeConversionContext;
 import org.openzen.zencode.java.module.converters.JavaNativeClassConverter;
 import org.openzen.zencode.java.module.converters.JavaNativeConverter;
@@ -23,8 +22,8 @@ public class CrTJavaNativeConverterBuilder extends JavaNativeConverterBuilder {
     @Override
     public JavaNativeClassConverter getClassConverter(JavaNativePackageInfo packageInfo, JavaNativeTypeConversionContext typeConversionContext, JavaNativeTypeConverter typeConverter, JavaNativeHeaderConverter headerConverter, JavaNativeMemberConverter memberConverter) {
         
-        final ZenClassRegistry zenClassRegistry = CraftTweakerRegistry.getZenClassRegistry();
-        return new CrTJavaNativeClassConverter(packageInfo, typeConversionContext, typeConverter, headerConverter, memberConverter, zenClassRegistry);
+        return new CrTJavaNativeClassConverter(packageInfo, typeConversionContext, typeConverter, headerConverter, memberConverter, CraftTweakerAPI.getRegistry()
+                .getZenClassRegistry());
     }
     
     @Override

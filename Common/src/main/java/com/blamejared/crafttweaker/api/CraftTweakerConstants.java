@@ -13,6 +13,7 @@ public class CraftTweakerConstants {
     public static final File SCRIPT_DIR = new File("scripts");
     public static final String LOG_PATH = "logs/crafttweaker.log";
     
+    public static final String INIT_LOADER_NAME = "initialize";
     public static final String DEFAULT_LOADER_NAME = "crafttweaker";
     
     /**

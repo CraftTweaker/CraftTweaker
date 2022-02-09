@@ -1,10 +1,10 @@
 package com.blamejared.crafttweaker.api.tag.registry;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.manager.TagManagerWrapper;
 import com.blamejared.crafttweaker.api.util.InstantiationUtil;
+import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Collection;
@@ -118,8 +118,9 @@ public final class CrTTagRegistryData {
             throw new IllegalArgumentException("Could not find registry for name " + tagFolder);
         }
         
+        final IScriptLoader loader = null;
         final Class<?> elementClass = allInstances.get(tagFolder).getElementClass();
-        final Optional<String> s = CraftTweakerRegistry.tryGetZenClassNameFor(elementClass);
+        final Optional<String> s = CraftTweakerAPI.getRegistry().getZenClassRegistry().getNameFor(loader, elementClass);
         return s.orElseThrow(() -> new IllegalArgumentException("Cannot find ZC type for name " + tagFolder));
     }
     

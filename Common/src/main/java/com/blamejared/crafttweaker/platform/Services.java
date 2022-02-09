@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.platform;
 
 import com.blamejared.crafttweaker.CraftTweakerCommon;
+import com.blamejared.crafttweaker.platform.services.IBridgeService;
 import com.blamejared.crafttweaker.platform.services.IClientHelper;
 import com.blamejared.crafttweaker.platform.services.IDistributionHelper;
 import com.blamejared.crafttweaker.platform.services.IEventHelper;
@@ -12,6 +13,7 @@ import java.util.ServiceLoader;
 
 public class Services {
     
+    public static final IBridgeService BRIDGE = load(IBridgeService.class);
     public static final IPlatformHelper PLATFORM = load(IPlatformHelper.class);
     public static final IDistributionHelper DISTRIBUTION = load(IDistributionHelper.class);
     public static final IClientHelper CLIENT = load(IClientHelper.class);

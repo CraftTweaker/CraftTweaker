@@ -2,11 +2,11 @@ package com.blamejared.crafttweaker.impl.command.type.conflict;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.command.CommandUtilities;
 import com.blamejared.crafttweaker.api.command.argument.RecipeTypeArgument;
 import com.blamejared.crafttweaker.api.command.boilerplate.CommandImpl;
+import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.impl.command.CTCommands;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
@@ -148,7 +148,7 @@ public final class ConflictCommand {
     
     private static <T extends Recipe<?>> boolean conflictsWith(final IRecipeManager<?> manager, final T first, final Recipe<?> second) {
         
-        return first != second && CraftTweakerRegistry.getHandlerFor(first).doesConflict(manager, first, second);
+        return first != second && IRecipeHandlerRegistry.getHandlerFor(first).doesConflict(manager, first, second);
     }
     
     private static String formatConflict(final IRecipeManager<?> manager, final ResourceLocation firstName, final ResourceLocation secondName) {

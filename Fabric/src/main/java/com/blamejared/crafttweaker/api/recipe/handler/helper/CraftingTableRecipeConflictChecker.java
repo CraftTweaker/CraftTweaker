@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker.api.recipe.handler.helper;
 
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
+import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipeBase;
 import com.blamejared.crafttweaker.api.util.IngredientUtil;
@@ -36,7 +36,7 @@ public final class CraftingTableRecipeConflictChecker {
     private static <T extends Recipe<?>> boolean redirect(final IRecipeManager manager, final T second, final Recipe<?> first) {
         
         // We need another lookup because of the wildcard capture
-        return CraftTweakerRegistry.getHandlerFor(second).doesConflict(manager, second, first);
+        return IRecipeHandlerRegistry.getHandlerFor(second).doesConflict(manager, second, first);
     }
     
     private static boolean checkConflictsMaybeDifferent(final Recipe<?> first, final Recipe<?> second) {
@@ -46,13 +46,13 @@ public final class CraftingTableRecipeConflictChecker {
             int firstWidth = first instanceof ShapedRecipe ? ((ShapedRecipe) first).getWidth() : ((CTShapedRecipeBase) first).getRecipeWidth();
             int firstHeight = first instanceof ShapedRecipe ? ((ShapedRecipe) first).getHeight() : ((CTShapedRecipeBase) first).getRecipeHeight();
             ShapedRecipeDelegate firstDelegate = new ShapedRecipeDelegate(first, () -> Pair.of(firstWidth, firstHeight));
-    
+            
             if(second instanceof ShapedRecipe || second instanceof CTShapedRecipeBase) {
-    
+                
                 int secondWidth = second instanceof ShapedRecipe ? ((ShapedRecipe) second).getWidth() : ((CTShapedRecipeBase) second).getRecipeWidth();
                 int secondHeight = second instanceof ShapedRecipe ? ((ShapedRecipe) second).getHeight() : ((CTShapedRecipeBase) second).getRecipeHeight();
                 ShapedRecipeDelegate secondDelegate = new ShapedRecipeDelegate(second, () -> Pair.of(secondWidth, secondHeight));
-    
+                
                 return doShapedShapedConflict(firstDelegate, secondDelegate);
             }
             
@@ -137,23 +137,23 @@ public final class CraftingTableRecipeConflictChecker {
     
     private record ShapedRecipeDelegate(Recipe<?> recipe,
                                         Supplier<Pair<Integer, Integer>> sizeGetter) {
-    
-        public NonNullList<Ingredient> getIngredients() {
         
+        public NonNullList<Ingredient> getIngredients() {
+            
             return recipe.getIngredients();
         }
-    
-        public int getWidth() {
         
+        public int getWidth() {
+            
             return sizeGetter.get().getFirst();
         }
-    
-    
-        public int getHeight() {
         
+        
+        public int getHeight() {
+            
             return sizeGetter.get().getSecond();
         }
-    
+        
     }
     
 }

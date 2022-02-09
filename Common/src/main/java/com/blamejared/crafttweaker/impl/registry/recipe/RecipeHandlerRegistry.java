@@ -1,7 +1,9 @@
-package com.blamejared.crafttweaker.api.recipe.handler;
+package com.blamejared.crafttweaker.impl.registry.recipe;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
+import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
+import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.InstantiationUtil;
 import com.blamejared.crafttweaker.platform.Services;
@@ -16,16 +18,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public final class RecipeHandlerRegistry {
+public final class RecipeHandlerRegistry implements IRecipeHandlerRegistry {
     
     private static final class DefaultRecipeHandler implements IRecipeHandler<Recipe<?>> {
         
         private static final DefaultRecipeHandler INSTANCE = new DefaultRecipeHandler();
-    
+        
         @Override
         public String dumpToCommandString(IRecipeManager manager, Recipe<?> recipe) {
-    
-    
+            
+            
             return String.format(
                     "~~ Recipe name: %s, Outputs: %s, Inputs: [%s], Recipe Class: %s, Recipe Serializer: %s ~~",
                     recipe.getId(),
@@ -40,7 +42,7 @@ public final class RecipeHandlerRegistry {
                     Services.REGISTRY.getRegistryKey(recipe.getSerializer())
             );
         }
-    
+        
     }
     
     private final Map<Class<? extends Recipe<?>>, IRecipeHandler<?>> recipeHandlers = new HashMap<>();
@@ -74,13 +76,15 @@ public final class RecipeHandlerRegistry {
                 });
     }
     
-    public <T extends Recipe<?>> IRecipeHandler<T> getHandlerFor(final T recipe) {
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Recipe<?>> IRecipeHandler<T> getRecipeHandlerFor(final T recipe) {
         
-        return (IRecipeHandler<T>) this.getHandlerFor(recipe.getClass())
+        return (IRecipeHandler<T>) this.getRecipeHandlerFor(recipe.getClass())
                 .orElse(DefaultRecipeHandler.INSTANCE);
     }
     
-    private Optional<IRecipeHandler<?>> getHandlerFor(final Class<?> recipeClass) {
+    private Optional<IRecipeHandler<?>> getRecipeHandlerFor(final Class<?> recipeClass) {
         
         final Deque<Class<?>> classes = new ArrayDeque<>();
         classes.offer(recipeClass);

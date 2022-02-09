@@ -1,9 +1,7 @@
 package com.blamejared.crafttweaker.impl.command;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.command.boilerplate.CommandImpl;
-import com.blamejared.crafttweaker.api.command.type.BracketDumperInfo;
 import com.blamejared.crafttweaker.impl.command.type.DumpCommands;
 import com.blamejared.crafttweaker.impl.command.type.HandCommands;
 import com.blamejared.crafttweaker.impl.command.type.HelpCommand;
@@ -21,6 +19,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -47,24 +46,29 @@ public final class CTCommands {
         RecipeCommands.registerCommands();
         CTCommands.registerCommand(new ExamplesCommand());
         DumpCommands.registerDumpers();
-    
+        
         Services.EVENT.fireCTCommandRegisterEvent();
         
         dispatcher.getRoot().addChild(root);
         dispatcher.getRoot().addChild(rootAlternative.redirect(root).build());
         
         final CommandImpl dump = COMMANDS.get("dump");
-        for(BracketDumperInfo dumperInfo : CraftTweakerRegistry.getBracketDumpers().values()) {
-            final String subCommandName = dumperInfo.getSubCommandName();
-            
-            // This means that a mod used .registerDump on a name for which a @BracketDumper exists as well
-            // Let's log a warning because then the .registerDump will win
-            if(dump.getSubCommands().containsKey(subCommandName)) {
-                CraftTweakerAPI.LOGGER.warn("Found both an explicit Dumping command and a BracketDumper annotation for the name '{}'. This is a (non-fatal) mod issue!", subCommandName);
-            } else {
-                registerDump(new CommandImpl(subCommandName, dumperInfo.getDescription(), commandSourceStackLiteralArgumentBuilder -> commandSourceStackLiteralArgumentBuilder.executes(dumperInfo)));
-            }
-        }
+        CraftTweakerAPI.getRegistry().getAllLoaders()
+                .stream()
+                .map(CraftTweakerAPI.getRegistry()::getBracketDumpers)
+                .map(Map::values)
+                .flatMap(Collection::stream)
+                .forEach(it -> {
+                    final String subCommandName = it.getSubCommandName();
+                    
+                    // This means that a mod used .registerDump on a name for which a @BracketDumper exists as well
+                    // Let's log a warning because then the .registerDump will win
+                    if(dump.getSubCommands().containsKey(subCommandName)) {
+                        CraftTweakerAPI.LOGGER.warn("Found both an explicit Dumping command and a BracketDumper annotation for the name '{}'. This is a (non-fatal) mod issue!", subCommandName);
+                    } else {
+                        registerDump(new CommandImpl(subCommandName, it.getDescription(), commandSourceStackLiteralArgumentBuilder -> commandSourceStackLiteralArgumentBuilder.executes(it)));
+                    }
+                });
         
         HelpCommand.registerCommands();
         COMMANDS.forEach((s, command) -> registerCommandInternal(root, command));

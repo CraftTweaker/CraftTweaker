@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker.api.zencode.impl.loader;
 import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
+import com.blamejared.crafttweaker.api.ICraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.bracket.custom.EnumConstantBracketHandler;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
@@ -13,8 +13,8 @@ import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
 import com.blamejared.crafttweaker.api.logger.ForwardingSELogger;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistryData;
+import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.bracket.IgnorePrefixCasingBracketParser;
-import com.blamejared.crafttweaker.api.zencode.bracket.ValidatedEscapableBracketParser;
 import com.blamejared.crafttweaker.api.zencode.impl.native_type.CrTJavaNativeConverterBuilder;
 import com.blamejared.crafttweaker.platform.Services;
 import org.openzen.zencode.java.ScriptingEngine;
@@ -111,7 +111,10 @@ public class ScriptRun {
         this.bep = new IgnorePrefixCasingBracketParser();
         Services.EVENT.fireRegisterBEPEvent(bep);
         
-        final List<Class<? extends IRecipeManager>> recipeManagers = CraftTweakerRegistry.getRecipeManagers();
+        final ICraftTweakerRegistry registry = CraftTweakerAPI.getRegistry();
+        final IScriptLoader loader = registry.findLoader(this.scriptLoadingOptions.getLoaderName());
+        final List<Class<? extends IRecipeManager>> recipeManagers = registry.getZenClassRegistry()
+                .getImplementationsOf(loader, IRecipeManager.class);
         bep.register("recipetype", new RecipeTypeBracketHandler(recipeManagers));
         bep.register("constant", new EnumConstantBracketHandler());
         
@@ -162,7 +165,10 @@ public class ScriptRun {
         scriptingEngine.registerNativeProvided(crafttweakerModule);
         modules.add(crafttweakerModule);
         
-        final HashSet<String> rootPackages = new HashSet<>(CraftTweakerRegistry.getRootPackages());
+        final ICraftTweakerRegistry registry = CraftTweakerAPI.getRegistry();
+        final IScriptLoader loader = registry.findLoader(this.scriptLoadingOptions.getLoaderName());
+        
+        final HashSet<String> rootPackages = new HashSet<>(registry.getZenClassRegistry().getRootPackages(loader));
         rootPackages.remove(CraftTweakerConstants.MOD_ID);
         for(String rootPackage : rootPackages) {
             final JavaNativeModule module = createModule(bep, rootPackage, rootPackage, nativeConverterBuilder, crafttweakerModule);
@@ -172,10 +178,8 @@ public class ScriptRun {
         
         
         final JavaNativeModule expModule = createModule(bep, "expansions", "", nativeConverterBuilder, modules.toArray(new JavaNativeModule[0]));
-        for(List<Class<?>> expansionList : CraftTweakerRegistry.getExpansions().values()) {
-            for(Class<?> expansionClass : expansionList) {
-                expModule.addClass(expansionClass);
-            }
+        for(Class<?> expansionClass : registry.getZenClassRegistry().getClassData(loader).expansions().values()) {
+            expModule.addClass(expansionClass);
         }
         scriptingEngine.registerNativeProvided(expModule);
         
@@ -186,15 +190,17 @@ public class ScriptRun {
         
         JavaNativeModule module = scriptingEngine.createNativeModule(moduleName, basePackage, dependencies, nativeConverterBuilder);
         
+        final ICraftTweakerRegistry registry = CraftTweakerAPI.getRegistry();
+        final IScriptLoader loader = registry.findLoader(this.scriptLoadingOptions.getLoaderName());
         
-        for(ValidatedEscapableBracketParser bracketResolver : CraftTweakerRegistry.getBracketResolvers(moduleName, scriptingEngine, module)) {
-            bep.register(bracketResolver.getName(), bracketResolver);
-        }
+        registry.getBracketHandlers(loader, basePackage, this.scriptingEngine, module)
+                .forEach(it -> bep.register(it.getFirst(), it.getSecond()));
         module.registerBEP(bep);
-        for(Class<?> aClass : CraftTweakerRegistry.getGlobalsInPackage(moduleName)) {
+        
+        for(Class<?> aClass : registry.getZenClassRegistry().getGlobalsInPackage(loader, moduleName)) {
             module.addGlobals(aClass);
         }
-        for(Class<?> aClass : CraftTweakerRegistry.getClassesInPackage(moduleName)) {
+        for(Class<?> aClass : registry.getZenClassRegistry().getClassesInPackage(loader, moduleName)) {
             module.addClass(aClass);
         }
         

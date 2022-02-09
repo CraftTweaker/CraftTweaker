@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.impl.command.type;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.command.CommandUtilities;
 import com.blamejared.crafttweaker.api.command.boilerplate.CommandImpl;
 import com.blamejared.crafttweaker.api.loot.LootManager;
@@ -29,6 +28,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Map;
 
 
 public final class DumpCommands {
@@ -45,14 +45,19 @@ public final class DumpCommands {
                     CraftTweakerAPI.LOGGER.error("Could not create output folder '{}'", folder);
                 }
                 
-                CraftTweakerRegistry.getBracketDumpers().forEach((name, dumpSupplier) -> {
-                    final String dumpedFileName = dumpSupplier.getDumpedFileName() + ".txt";
-                    try(final PrintWriter writer = new PrintWriter(new FileWriter(new File(folder, dumpedFileName), false))) {
-                        dumpSupplier.getDumpedValuesStream().sorted().forEach(writer::println);
-                    } catch(IOException e) {
-                        CraftTweakerAPI.LOGGER.error("Error writing to file '{}'", dumpedFileName, e);
-                    }
-                });
+                CraftTweakerAPI.getRegistry().getAllLoaders()
+                        .stream()
+                        .map(CraftTweakerAPI.getRegistry()::getBracketDumpers)
+                        .map(Map::values)
+                        .flatMap(Collection::stream)
+                        .forEach(it -> {
+                            final String dumpedFileName = it.getDumpedFileName() + ".txt";
+                            try(final PrintWriter writer = new PrintWriter(new FileWriter(new File(folder, dumpedFileName), false))) {
+                                it.getDumpedValuesStream().sorted().forEach(writer::println);
+                            } catch(IOException e) {
+                                CraftTweakerAPI.LOGGER.error("Error writing to file '{}'", dumpedFileName, e);
+                            }
+                        });
                 
                 CommandUtilities.send(CommandUtilities.openingFile(new TranslatableComponent("crafttweaker.command.files.created").withStyle(ChatFormatting.GREEN), "ct_dumps"), context.getSource());
                 return Command.SINGLE_SUCCESS;

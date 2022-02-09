@@ -1,8 +1,8 @@
 package com.blamejared.crafttweaker.impl.recipe.handler.type.vanilla;
 
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
+import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.recipe.handler.IReplacementRule;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.IngredientUtil;
@@ -28,22 +28,22 @@ public final class SmithingRecipeHandler implements IRecipeHandler<UpgradeRecipe
                 "smithing.addRecipe(%s, %s, %s, %s);",
                 StringUtils.quoteAndEscape(recipe.getId()),
                 ItemStackUtil.getCommandString(recipe.getResultItem()),
-                IIngredient.fromIngredient(((AccessUpgradeRecipe)recipe).getBase()).getCommandString(),
-                IIngredient.fromIngredient(((AccessUpgradeRecipe)recipe).getAddition()).getCommandString()
+                IIngredient.fromIngredient(((AccessUpgradeRecipe) recipe).getBase()).getCommandString(),
+                IIngredient.fromIngredient(((AccessUpgradeRecipe) recipe).getAddition()).getCommandString()
         );
     }
     
     @Override
     public Optional<Function<ResourceLocation, UpgradeRecipe>> replaceIngredients(final IRecipeManager manager, final UpgradeRecipe recipe, final List<IReplacementRule> rules) {
         
-        final Optional<Ingredient> base = IRecipeHandler.attemptReplacing(((AccessUpgradeRecipe)recipe).getBase(), Ingredient.class, recipe, rules);
-        final Optional<Ingredient> addition = IRecipeHandler.attemptReplacing(((AccessUpgradeRecipe)recipe).getAddition(), Ingredient.class, recipe, rules);
+        final Optional<Ingredient> base = IRecipeHandler.attemptReplacing(((AccessUpgradeRecipe) recipe).getBase(), Ingredient.class, recipe, rules);
+        final Optional<Ingredient> addition = IRecipeHandler.attemptReplacing(((AccessUpgradeRecipe) recipe).getAddition(), Ingredient.class, recipe, rules);
         
         if(!base.isPresent() && !addition.isPresent()) {
             return Optional.empty();
         }
         
-        return Optional.of(id -> new UpgradeRecipe(id, base.orElseGet(() -> ((AccessUpgradeRecipe)recipe).getBase()), addition.orElseGet(() -> ((AccessUpgradeRecipe)recipe).getAddition()), recipe.getResultItem()));
+        return Optional.of(id -> new UpgradeRecipe(id, base.orElseGet(() -> ((AccessUpgradeRecipe) recipe).getBase()), addition.orElseGet(() -> ((AccessUpgradeRecipe) recipe).getAddition()), recipe.getResultItem()));
     }
     
     @Override
@@ -62,12 +62,12 @@ public final class SmithingRecipeHandler implements IRecipeHandler<UpgradeRecipe
         
         final UpgradeRecipe second = (UpgradeRecipe) secondRecipe;
         
-        return IngredientUtil.canConflict(((AccessUpgradeRecipe)firstRecipe).getBase(), ((AccessUpgradeRecipe)second).getBase()) && IngredientUtil.canConflict(((AccessUpgradeRecipe)firstRecipe).getAddition(), ((AccessUpgradeRecipe)second).getAddition());
+        return IngredientUtil.canConflict(((AccessUpgradeRecipe) firstRecipe).getBase(), ((AccessUpgradeRecipe) second).getBase()) && IngredientUtil.canConflict(((AccessUpgradeRecipe) firstRecipe).getAddition(), ((AccessUpgradeRecipe) second).getAddition());
     }
     
     private <T extends Recipe<?>> boolean redirectNonVanilla(final IRecipeManager manager, final T second, final UpgradeRecipe first) {
         
-        return CraftTweakerRegistry.getHandlerFor(second).doesConflict(manager, second, first);
+        return IRecipeHandlerRegistry.getHandlerFor(second).doesConflict(manager, second, first);
     }
     
 }

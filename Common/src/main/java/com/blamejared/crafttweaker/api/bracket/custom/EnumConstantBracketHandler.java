@@ -1,9 +1,10 @@
 package com.blamejared.crafttweaker.api.bracket.custom;
 
 
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.util.ParseUtil;
+import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.natives.resource.ExpandResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
@@ -33,7 +34,7 @@ public class EnumConstantBracketHandler implements BracketExpressionParser {
     
     }
     
-    public static Class<Enum<?>> getOrDefault(final ResourceLocation location) {
+    public static <T extends Enum<T>> Class<T> getOrDefault(final ResourceLocation location) {
         
         return lookup(location);
     }
@@ -41,7 +42,7 @@ public class EnumConstantBracketHandler implements BracketExpressionParser {
     @ZenCodeType.Method
     public static <T extends Enum<T>> Enum<T> getEnum(ResourceLocation type, String value) {
         
-        return CraftTweakerRegistry.getBracketEnumValue(type, value);
+        return CraftTweakerAPI.getRegistry().getEnumBracketValue(type, value);
     }
     
     
@@ -57,23 +58,24 @@ public class EnumConstantBracketHandler implements BracketExpressionParser {
             throw new ParseException(position, "Invalid ResourceLocation, expected: <constant:modid:location>");
         }
         
-        Class<Enum<?>> bracketEnum = CraftTweakerRegistry.getBracketEnum(type);
-        if(bracketEnum != null) {
-            return getCall(contents, bracketEnum, type, name, position);
-        }
-        
-        //Unknown BEP
-        throw new ParseException(position, String.format("Unknown RecipeType: <recipetype:%s>", name));
+        return CraftTweakerAPI.getRegistry().getEnumBracketFor(type)
+                .map(it -> this.getCall(contents, it, type, name, position))
+                .orElseThrow(() -> new ParseException(position, String.format("Unknown enum type <constant:%s:%s>", type, name)));
     }
     
-    private ParsedExpression getCall(String location, Class<Enum<?>> bracketEnum, ResourceLocation type, String value, CodePosition position) {
+    private <T extends Enum<T>> ParsedExpression getCall(String location, Class<T> bracketEnum, ResourceLocation type, String value, CodePosition position) {
+        
         final ParsedExpressionVariable crafttweaker = new ParsedExpressionVariable(position, "crafttweaker", null);
         final ParsedExpressionMember api = new ParsedExpressionMember(position, crafttweaker, "api", Collections.emptyList());
         final ParsedExpressionMember bracket = new ParsedExpressionMember(position, api, "bracket", Collections.emptyList());
         final ParsedExpressionMember enumConstantBracketHandler = new ParsedExpressionMember(position, bracket, "EnumConstantBracketHandler", Collections.emptyList());
         final ParsedExpressionMember getRecipeManager = new ParsedExpressionMember(position, enumConstantBracketHandler, "getEnum", Collections.emptyList());
         
-        final String nameContent = CraftTweakerRegistry.tryGetZenClassNameFor(bracketEnum).get();
+        final IScriptLoader loader = null; // TODO("")
+        final String nameContent = CraftTweakerAPI.getRegistry()
+                .getZenClassRegistry()
+                .getNameFor(loader, bracketEnum)
+                .orElseThrow(NullPointerException::new);
         final IParsedType parsedType = ParseUtil.readParsedType(nameContent, position);
         final ParsedNewExpression rlExpression = createResourceLocationArgument(position, type);
         
@@ -82,9 +84,12 @@ public class EnumConstantBracketHandler implements BracketExpressionParser {
         return new ParsedExpressionCast(position, parsedExpressionCall, parsedType, false);
     }
     
-    private static Class<Enum<?>> lookup(final ResourceLocation location) {
+    @SuppressWarnings("unchecked")
+    private static <T extends Enum<T>> Class<T> lookup(final ResourceLocation location) {
         
-        return CraftTweakerRegistry.getBracketEnum(location);
+        return (Class<T>) CraftTweakerAPI.getRegistry()
+                .getEnumBracketFor(location)
+                .orElseThrow(() -> new IllegalArgumentException("No such enum " + location));
     }
     
     private ParsedNewExpression createResourceLocationArgument(CodePosition position, ResourceLocation location) {
