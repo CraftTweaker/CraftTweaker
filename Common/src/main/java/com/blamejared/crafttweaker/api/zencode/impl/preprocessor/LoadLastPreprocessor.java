@@ -13,6 +13,8 @@ import java.util.List;
 @Preprocessor
 public class LoadLastPreprocessor implements IPreprocessor {
     
+    public static final LoadLastPreprocessor INSTANCE = new LoadLastPreprocessor();
+    
     @Override
     public String getName() {
         
