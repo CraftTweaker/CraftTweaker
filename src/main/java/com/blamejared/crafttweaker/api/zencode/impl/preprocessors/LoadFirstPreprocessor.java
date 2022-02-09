@@ -13,6 +13,8 @@ import java.util.List;
 @Preprocessor
 public class LoadFirstPreprocessor implements IPreprocessor {
     
+    public static final LoadFirstPreprocessor INSTANCE = new LoadFirstPreprocessor();
+    
     @Override
     public String getName() {
         
