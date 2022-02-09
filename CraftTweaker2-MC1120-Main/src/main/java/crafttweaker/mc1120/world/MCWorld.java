@@ -100,7 +100,7 @@ public class MCWorld extends MCBlockAccess implements IWorld {
 
 	@Override
 	public int getMoonPhase() {
-		return world.getMoonPhase();
+		return world.provider.getMoonPhase(this.getWorldTime());
 	}
 
 	@Override
