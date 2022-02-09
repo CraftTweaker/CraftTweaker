@@ -22,6 +22,7 @@ val curseHomepageLink: String by project
 val gitFirstCommit: String by project
 val gitRepo: String by project
 val modJavaVersion: String by project
+val reiVersion: String by project
 
 val baseArchiveName = "${modName}-fabric-${minecraftVersion}"
 
@@ -45,7 +46,9 @@ dependencies {
         implementation(project(it.toString()))
     }
 
-    modImplementation("me.shedaniel:RoughlyEnoughItems-fabric:7.2.409")
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${reiVersion}")
+    modLocalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${reiVersion}")
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:${reiVersion}")
 
     implementation("org.reflections:reflections:0.10.2")?.let { include(it) }
     implementation("org.javassist:javassist:3.28.0-GA")?.let { include(it) } // required for reflections
@@ -79,7 +82,7 @@ loom {
             server()
             source(sourceSets.gametest.get())
             vmArgs("-Dfabric-api.gametest=1",
-                "-Dfabric-api.gametest.report-file=${file("fabric-game-tests.html").path}")
+                    "-Dfabric-api.gametest.report-file=${file("fabric-game-tests.html").path}")
             configName = "Fabric Game Test"
             ideConfigGenerated(true)
         }
