@@ -17,6 +17,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.npc.VillagerTrades;
 
@@ -96,32 +97,38 @@ public final class DumpCommands {
                 return Command.SINGLE_SUCCESS;
             });
         }));
-    
-        CTCommands.registerDump(new CommandImpl("loot_modifiers", new TranslatableComponent("crafttweaker.command.description.dump.loot_modifiers"), builder -> {
         
-            builder.executes(context -> {
+        CTCommands.registerDump(new CommandImpl("loot_modifiers", new TranslatableComponent("crafttweaker.command.description.dump.loot_modifiers"), builder -> {
             
+            builder.executes(context -> {
+                
                 final ServerPlayer player = context.getSource().getPlayerOrException();
                 LootManager.INSTANCE.getModifierManager().getAllNames().forEach(CraftTweakerAPI.LOGGER::info);
-            
+                
                 CommandUtilities.send(CommandUtilities.openingLogFile(new TranslatableComponent("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(new TranslatableComponent("crafttweaker.command.misc.loot_modifiers")), CommandUtilities.getFormattedLogFile()).withStyle(ChatFormatting.GREEN)), player);
-            
+                
                 return Command.SINGLE_SUCCESS;
             });
         }));
         
-        //TODO Needs more looking into
-        //        CTCommands.registerPlayerDump("loot_tables", "Outputs the names of all registered loot tables", (player, stack) -> {
-        //            ServerLifecycleHooks.getCurrentServer()
-        //                    .getLootTableManager()
-        //                    .getLootTableKeys()
-        //                    .stream()
-        //                    .map(ResourceLocation::toString)
-        //                    .sorted()
-        //                    .forEach(CraftTweakerAPI::logDump);
-        //            CommandUtilities.send(CommandUtilities.color("Loot table list generated! Check the crafttweaker.log file!", TextFormatting.GREEN), player);
-        //            return 0;
-        //        });
+        CTCommands.registerDump(new CommandImpl("loot_tables", new TranslatableComponent("crafttweaker.command.description.dump.loot_tables"), builder -> {
+            
+            builder.executes(context -> {
+                
+                final ServerPlayer player = context.getSource().getPlayerOrException();
+                MinecraftServer server = context.getSource().getServer();
+                server.getLootTables()
+                        .getIds()
+                        .stream()
+                        .map(ResourceLocation::toString)
+                        .sorted()
+                        .forEach(CraftTweakerAPI.LOGGER::info);
+                
+                CommandUtilities.send(CommandUtilities.openingLogFile(new TranslatableComponent("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(new TranslatableComponent("crafttweaker.command.misc.loot_tables")), CommandUtilities.getFormattedLogFile()).withStyle(ChatFormatting.GREEN)), player);
+                
+                return Command.SINGLE_SUCCESS;
+            });
+        }));
         
         //TODO Forge specific
         //        CTCommands.registerPlayerDump("fake_players", "Outputs the data for all currently available fake players", (player, stack) -> {
