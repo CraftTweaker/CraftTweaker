@@ -47,4 +47,9 @@ public final class PluginManager {
         throw new UnsupportedOperationException("Not yet implemented");
     }
     
+    public void broadcastEnd() {
+        
+        // TODO("")
+    }
+    
 }

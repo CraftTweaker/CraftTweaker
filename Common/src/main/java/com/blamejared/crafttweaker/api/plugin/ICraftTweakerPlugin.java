@@ -15,4 +15,6 @@ public interface ICraftTweakerPlugin {
     
     default void manageJavaNativeIntegration(final IJavaNativeIntegrationRegistrationHandler handler) {}
     
+    default void registerListeners(final IListenerRegistrationHandler handler) {}
+    
 }
