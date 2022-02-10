@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.command.CommandUtilities;
-import com.blamejared.crafttweaker.api.command.argument.CTRecipeTypeArgument;
+import com.blamejared.crafttweaker.api.command.argument.RecipeTypeArgument;
 import com.blamejared.crafttweaker.api.command.boilerplate.CommandImpl;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.impl.command.CTCommands;
@@ -53,7 +53,7 @@ public final class ConflictCommand {
     public static void registerCommands() {
         
         CTCommands.registerCommand(new CommandImpl("conflicts", new TranslatableComponent("crafttweaker.command.description.conflicts"), builder -> {
-            builder.then(Commands.argument("type", CTRecipeTypeArgument.INSTANCE)
+            builder.then(Commands.argument("type", RecipeTypeArgument.get())
                             .executes(context -> conflicts(
                                     context.getSource().getPlayerOrException(),
                                     DescriptiveFilter.of(context.getArgument("type", IRecipeManager.class))

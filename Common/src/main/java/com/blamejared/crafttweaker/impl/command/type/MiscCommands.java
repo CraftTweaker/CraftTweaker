@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.impl.command.type;
 
 import com.blamejared.crafttweaker.api.command.CommandUtilities;
-import com.blamejared.crafttweaker.api.command.argument.CTItemArgument;
+import com.blamejared.crafttweaker.api.command.argument.IItemStackArgument;
 import com.blamejared.crafttweaker.api.command.boilerplate.CommandImpl;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.impl.command.CTCommands;
@@ -21,7 +21,7 @@ public final class MiscCommands {
         
         CTCommands.registerCommand(new CommandImpl("give", new TranslatableComponent("crafttweaker.command.description.give"), builder -> {
             builder.requires((source) -> source.hasPermission(2))
-                    .then(Commands.argument("item", CTItemArgument.INSTANCE)
+                    .then(Commands.argument("item", IItemStackArgument.get())
                             .executes(context -> {
                                 ExpandPlayer.give(context.getSource()
                                         .getPlayerOrException(), context.getArgument("item", IItemStack.class), -1);

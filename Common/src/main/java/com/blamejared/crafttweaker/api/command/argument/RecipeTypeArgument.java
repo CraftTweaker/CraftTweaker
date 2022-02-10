@@ -19,12 +19,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Replaced by {@link RecipeTypeArgument} to deal with commands not liking singleton arguments
- */
-@Deprecated(forRemoval = true)
-public enum CTRecipeTypeArgument implements ArgumentType<IRecipeManager> {
-    INSTANCE;
+public class RecipeTypeArgument implements ArgumentType<IRecipeManager> {
     
     private static final Collection<String> EXAMPLES = Lists.newArrayList("<recipetype:minecraft:crafting>", "<recipetype:minecraft:blasting>");
     private static final SimpleCommandExceptionType INVALID_STRING = new SimpleCommandExceptionType(new LiteralMessage("Invalid String"));
@@ -65,6 +60,12 @@ public enum CTRecipeTypeArgument implements ArgumentType<IRecipeManager> {
     public Collection<String> getExamples() {
         
         return EXAMPLES;
+    }
+    
+    
+    public static RecipeTypeArgument get() {
+        
+        return new RecipeTypeArgument();
     }
     
 }

@@ -17,6 +17,7 @@ public class CraftTweakerFabric implements ModInitializer {
     public void onInitialize() {
         
         CraftTweakerCommon.init();
+        CraftTweakerCommon.registerCommandArguments();
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
             CraftTweakerCommon.registerCommands(dispatcher, dedicated ? Commands.CommandSelection.DEDICATED : Commands.CommandSelection.INTEGRATED);
         });

@@ -18,12 +18,8 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Replaced by {@link RecipeTypeArgument} to deal with commands not liking singleton arguments
- */
-@Deprecated(forRemoval = true)
-public enum CTItemArgument implements ArgumentType<IItemStack> {
-    INSTANCE;
+public class IItemStackArgument implements ArgumentType<IItemStack> {
+    
     private static final Collection<String> EXAMPLES = Lists.newArrayList("<item:minecraft:apple>", "<item:minecraft:iron_ingot>.withTag({display: {Name: \"wow\" as string}})");
     private static final DynamicCommandExceptionType MALFORMED_DATA = new DynamicCommandExceptionType(o -> new LiteralMessage(((ParseException) o).message));
     private static final DynamicCommandExceptionType UNKNOWN_ITEM = new DynamicCommandExceptionType(o -> new LiteralMessage("Unknown item: " + o));
@@ -78,6 +74,11 @@ public enum CTItemArgument implements ArgumentType<IItemStack> {
             }
         }
         return stack;
+    }
+    
+    public static IItemStackArgument get() {
+        
+        return new IItemStackArgument();
     }
     
 }
