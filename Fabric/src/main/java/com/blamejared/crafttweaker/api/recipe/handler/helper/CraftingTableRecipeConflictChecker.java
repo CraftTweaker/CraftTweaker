@@ -151,7 +151,7 @@ public final class CraftingTableRecipeConflictChecker {
     
         public int getHeight() {
         
-            return sizeGetter.get().getFirst();
+            return sizeGetter.get().getSecond();
         }
     
     }
