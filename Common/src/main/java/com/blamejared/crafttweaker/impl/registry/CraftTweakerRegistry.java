@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -36,14 +37,27 @@ import java.util.stream.Collectors;
 
 public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
     
-    public static final Supplier<CraftTweakerRegistry> REGISTRY = Suppliers.memoize(CraftTweakerRegistry::new);
+    private static final Supplier<CraftTweakerRegistry> REGISTRY = Suppliers.memoize(CraftTweakerRegistry::new);
     
-    private final BracketResolverRegistry bracketResolverRegistry = new BracketResolverRegistry();
-    private final EnumBracketRegistry enumBracketRegistry = new EnumBracketRegistry();
-    private final LoaderRegistry loaderRegistry = new LoaderRegistry();
-    private final PreprocessorRegistry preprocessorRegistry = new PreprocessorRegistry();
-    private final RecipeHandlerRegistry recipeHandlerRegistry = new RecipeHandlerRegistry();
-    private final ZenClassRegistry zenClassRegistry = new ZenClassRegistry();
+    private final Registries registries;
+    
+    private CraftTweakerRegistry() {
+        
+        this.registries = new Registries(
+                new BracketResolverRegistry(),
+                new EnumBracketRegistry(),
+                new LoaderRegistry(),
+                new PreprocessorRegistry(),
+                new RecipeHandlerRegistry(),
+                new ZenClassRegistry()
+        );
+    }
+    
+    public static ICraftTweakerRegistry get() {
+        
+        return REGISTRY.get();
+    }
+    
     
     public void populateRegistries() {
         /*
@@ -81,43 +95,44 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
     @Override
     public IScriptLoader findLoader(final String name) {
         
-        return this.loaderRegistry.find(name);
+        return this.registries.loaderRegistry().find(name);
     }
     
     @Override
     public IZenClassRegistry getZenClassRegistry() {
         
-        return this.zenClassRegistry;
+        return this.registries.zenClassRegistry();
     }
     
     @Override
     public Collection<IScriptLoader> getAllLoaders() {
         
-        return this.loaderRegistry.getAllLoaders();
+        return this.registries.loaderRegistry().getAllLoaders();
     }
     
     @Override
     public Map<String, BracketDumperInfo> getBracketDumpers(final IScriptLoader loader) {
         
-        return ImmutableMap.copyOf(this.bracketResolverRegistry.getBracketDumpers(loader));
+        return ImmutableMap.copyOf(this.registries.bracketResolverRegistry().getBracketDumpers(loader));
     }
     
     @Override
     public List<Pair<String, BracketExpressionParser>> getBracketHandlers(final IScriptLoader loader, final String rootPackage, final ScriptingEngine engine, final JavaNativeModule ctModule) {
         
-        return ImmutableList.copyOf(this.bracketResolverRegistry.getBracketResolvers(loader, rootPackage, engine, ctModule));
+        return ImmutableList.copyOf(this.registries.bracketResolverRegistry()
+                .getBracketResolvers(loader, rootPackage, engine, ctModule));
     }
     
     @Override
     public List<IPreprocessor> getPreprocessors() {
         
-        return ImmutableList.copyOf(this.preprocessorRegistry.getPreprocessors());
+        return ImmutableList.copyOf(this.registries.preprocessorRegistry().getPreprocessors());
     }
     
     @Override
     public <T extends Recipe<?>> IRecipeHandler<T> getRecipeHandlerFor(final T recipe) {
         
-        return this.recipeHandlerRegistry.getRecipeHandlerFor(recipe);
+        return this.registries.recipeHandlerRegistry().getRecipeHandlerFor(recipe);
     }
     
     @Override
@@ -133,13 +148,15 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
     @Override
     public <T extends Enum<T>> Optional<Class<T>> getEnumBracketFor(final ResourceLocation type) {
         
-        return this.enumBracketRegistry.getEnum(type);
+        return this.registries.enumBracketRegistry().getEnum(type);
     }
     
     @Override
     public Set<String> getAllEnumsForEnumBracket() {
         
-        return this.enumBracketRegistry.getEnums().entrySet()
+        return this.registries.enumBracketRegistry()
+                .getEnums()
+                .entrySet()
                 .stream()
                 .flatMap(it -> Arrays.stream(it.getValue().getEnumConstants()).map(c -> Pair.of(it.getKey(), c)))
                 .map(it -> String.format("<constant:%s:%s>", it.getFirst(), it.getSecond()

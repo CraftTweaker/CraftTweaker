@@ -9,7 +9,7 @@ public final class BridgeService implements IBridgeService {
     @Override
     public ICraftTweakerRegistry registry() {
         
-        return CraftTweakerRegistry.REGISTRY.get();
+        return CraftTweakerRegistry.get();
     }
     
 }
