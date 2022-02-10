@@ -10,6 +10,7 @@ record Registries(
         BracketResolverRegistry bracketResolverRegistry,
         EnumBracketRegistry enumBracketRegistry,
         LoaderRegistry loaderRegistry,
+        LoadSourceRegistry loadSourceRegistry,
         PreprocessorRegistry preprocessorRegistry,
         RecipeHandlerRegistry recipeHandlerRegistry,
         ZenClassRegistry zenClassRegistry

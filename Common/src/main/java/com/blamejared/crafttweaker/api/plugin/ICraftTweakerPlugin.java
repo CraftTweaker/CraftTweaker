@@ -4,6 +4,8 @@ public interface ICraftTweakerPlugin {
     
     default void registerLoaders(final ILoaderRegistrationHandler handler) {}
     
+    default void registerLoadSource(final IScriptLoadSourceRegistrationHandler handler) {}
+    
     default void registerBracketParsers(final IBracketParserRegistrationHandler handler) {}
     
     default void manageJavaNativeIntegration(final IJavaNativeIntegrationRegistrationHandler handler) {}

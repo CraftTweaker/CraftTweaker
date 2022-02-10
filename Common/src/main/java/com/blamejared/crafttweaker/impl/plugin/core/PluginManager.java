@@ -90,8 +90,9 @@ public final class PluginManager {
         
         final IPluginRegistryAccess pluginRegistryAccess = CraftTweakerRegistry.pluginAccess(this.req);
         final Collection<IScriptLoader> loaders = LoaderRegistrationHandler.gather(h -> this.plugins.forEach(p -> p.registerLoaders(h)));
+        
         pluginRegistryAccess.registerLoaders(loaders);
-        // TODO("The rest")
+        pluginRegistryAccess.registerLoadSources(LoadSourceRegistrationHandler.gather(h -> this.plugins.forEach(p -> p.registerLoadSource(h))));
     }
     
     public void broadcastEnd() {

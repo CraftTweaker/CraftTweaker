@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.registry;
 
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
+import com.blamejared.crafttweaker.api.zencode.impl.IScriptLoadSource;
 import com.blamejared.crafttweaker.impl.plugin.core.IPluginRegistryAccess;
 
 import java.util.Collection;
@@ -19,6 +20,12 @@ final class PluginRegistryAccess implements IPluginRegistryAccess {
     public void registerLoaders(final Collection<IScriptLoader> loader) {
         
         this.registries.loaderRegistry().registerLoaders(loader);
+    }
+    
+    @Override
+    public void registerLoadSources(final Collection<IScriptLoadSource> sources) {
+        
+        this.registries.loadSourceRegistry().registerLoadSources(sources);
     }
     
 }

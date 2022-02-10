@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
+import com.blamejared.crafttweaker.api.zencode.impl.IScriptLoadSource;
 import com.blamejared.crafttweaker.impl.plugin.core.IPluginRegistryAccess;
 import com.blamejared.crafttweaker.impl.plugin.core.PluginManager;
 import com.blamejared.crafttweaker.impl.registry.recipe.RecipeHandlerRegistry;
@@ -50,6 +51,7 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
                 new BracketResolverRegistry(),
                 new EnumBracketRegistry(),
                 new LoaderRegistry(),
+                new LoadSourceRegistry(),
                 new PreprocessorRegistry(),
                 new RecipeHandlerRegistry(),
                 new ZenClassRegistry()
@@ -108,15 +110,21 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
     }
     
     @Override
-    public IZenClassRegistry getZenClassRegistry() {
-        
-        return this.registries.zenClassRegistry();
-    }
-    
-    @Override
     public Collection<IScriptLoader> getAllLoaders() {
         
         return this.registries.loaderRegistry().getAllLoaders();
+    }
+    
+    @Override
+    public IScriptLoadSource findLoadSource(final ResourceLocation id) {
+        
+        return this.registries.loadSourceRegistry().get(id);
+    }
+    
+    @Override
+    public IZenClassRegistry getZenClassRegistry() {
+        
+        return this.registries.zenClassRegistry();
     }
     
     @Override

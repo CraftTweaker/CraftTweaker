@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
+import com.blamejared.crafttweaker.api.zencode.impl.IScriptLoadSource;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
@@ -29,6 +30,8 @@ public interface ICraftTweakerRegistry {
     }
     
     Collection<IScriptLoader> getAllLoaders();
+    
+    IScriptLoadSource findLoadSource(final ResourceLocation id);
     
     IZenClassRegistry getZenClassRegistry();
     

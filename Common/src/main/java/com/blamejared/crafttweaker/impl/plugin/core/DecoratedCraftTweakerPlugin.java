@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin;
 import com.blamejared.crafttweaker.api.plugin.IJavaNativeIntegrationRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IListenerRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ILoaderRegistrationHandler;
+import com.blamejared.crafttweaker.api.plugin.IScriptLoadSourceRegistrationHandler;
 import net.minecraft.resources.ResourceLocation;
 
 record DecoratedCraftTweakerPlugin(ResourceLocation id, ICraftTweakerPlugin plugin) implements ICraftTweakerPlugin {
@@ -13,6 +14,12 @@ record DecoratedCraftTweakerPlugin(ResourceLocation id, ICraftTweakerPlugin plug
     public void registerLoaders(final ILoaderRegistrationHandler handler) {
         
         this.plugin.registerLoaders(handler);
+    }
+    
+    @Override
+    public void registerLoadSource(final IScriptLoadSourceRegistrationHandler handler) {
+        
+        this.plugin.registerLoadSource(handler);
     }
     
     @Override
