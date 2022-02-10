@@ -7,6 +7,8 @@ import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
+import com.blamejared.crafttweaker.impl.plugin.core.IPluginRegistryAccess;
+import com.blamejared.crafttweaker.impl.plugin.core.PluginManager;
 import com.blamejared.crafttweaker.impl.registry.recipe.RecipeHandlerRegistry;
 import com.blamejared.crafttweaker.impl.registry.zencode.BracketResolverRegistry;
 import com.blamejared.crafttweaker.impl.registry.zencode.EnumBracketRegistry;
@@ -40,6 +42,7 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
     private static final Supplier<CraftTweakerRegistry> REGISTRY = Suppliers.memoize(CraftTweakerRegistry::new);
     
     private final Registries registries;
+    private final IPluginRegistryAccess access;
     
     private CraftTweakerRegistry() {
         
@@ -51,6 +54,7 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
                 new RecipeHandlerRegistry(),
                 new ZenClassRegistry()
         );
+        this.access = new PluginRegistryAccess(this.registries);
     }
     
     public static ICraftTweakerRegistry get() {
@@ -58,6 +62,11 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
         return REGISTRY.get();
     }
     
+    public static IPluginRegistryAccess pluginAccess(final PluginManager.Req req) {
+        
+        Objects.requireNonNull(req);
+        return REGISTRY.get().access;
+    }
     
     public void populateRegistries() {
         /*

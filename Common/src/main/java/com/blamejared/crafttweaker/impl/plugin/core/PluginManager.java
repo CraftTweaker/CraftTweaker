@@ -14,16 +14,31 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-@SuppressWarnings("ClassCanBeRecord")
 public final class PluginManager {
     
+    public static final class Req {
+        
+        private static final AtomicBoolean X = new AtomicBoolean(false);
+        
+        private Req() {
+            
+            if(X.get()) {
+                throw new RuntimeException();
+            }
+            X.set(true);
+        }
+        
+    }
+    
     private final List<DecoratedCraftTweakerPlugin> plugins;
+    private final Req req;
     
     private PluginManager(final List<DecoratedCraftTweakerPlugin> plugins) {
         
         this.plugins = List.copyOf(plugins);
+        this.req = new Req();
     }
     
     public static PluginManager of() {
@@ -73,7 +88,10 @@ public final class PluginManager {
     
     public void loadPlugins() {
         
-        throw new UnsupportedOperationException("Not yet implemented");
+        final IPluginRegistryAccess pluginRegistryAccess = CraftTweakerRegistry.pluginAccess(this.req);
+        final Collection<IScriptLoader> loaders = LoaderRegistrationHandler.gather(h -> this.plugins.forEach(p -> p.registerLoaders(h)));
+        pluginRegistryAccess.registerLoaders(loaders);
+        // TODO("The rest")
     }
     
     public void broadcastEnd() {
