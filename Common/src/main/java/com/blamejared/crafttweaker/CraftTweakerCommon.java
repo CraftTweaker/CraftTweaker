@@ -6,7 +6,6 @@ import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.command.argument.IItemStackArgument;
 import com.blamejared.crafttweaker.api.command.argument.RecipeTypeArgument;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
-import com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin;
 import com.blamejared.crafttweaker.impl.command.CTCommands;
 import com.blamejared.crafttweaker.impl.plugin.core.PluginManager;
 import com.mojang.brigadier.CommandDispatcher;
@@ -27,7 +26,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class CraftTweakerCommon {
     
@@ -69,9 +67,9 @@ public class CraftTweakerCommon {
         }).start();
     }
     
-    public static void handlePlugins(final Stream<Class<? extends ICraftTweakerPlugin>> pluginClasses) {
+    public static void handlePlugins() {
         
-        PLUGIN_MANAGER.set(PluginManager.of(pluginClasses));
+        PLUGIN_MANAGER.set(PluginManager.of());
         PLUGIN_MANAGER.get().loadPlugins();
     }
     
