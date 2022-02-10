@@ -6,12 +6,12 @@ import java.util.Collection;
 
 public interface IScriptLoader {
     
-    static IScriptLoader findFor(final String name) {
+    static IScriptLoader find(final String name) {
         
         return CraftTweakerAPI.getRegistry().findLoader(name);
     }
     
-    String loader();
+    String name();
     
     Collection<IScriptLoader> inheritedLoaders();
     
