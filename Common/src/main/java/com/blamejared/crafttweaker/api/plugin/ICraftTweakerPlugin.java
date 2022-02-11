@@ -8,6 +8,8 @@ public interface ICraftTweakerPlugin {
     
     default void registerBracketParsers(final IBracketParserRegistrationHandler handler) {}
     
+    default void registerRecipeHandlers(final IRecipeHandlerRegistrationHandler handler) {}
+    
     default void manageJavaNativeIntegration(final IJavaNativeIntegrationRegistrationHandler handler) {}
     
     default void registerListeners(final IListenerRegistrationHandler handler) {}

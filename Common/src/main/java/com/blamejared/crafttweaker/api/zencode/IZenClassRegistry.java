@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker.api.zencode;
 
-import com.blamejared.crafttweaker.api.natives.NativeTypeRegistry;
+import com.blamejared.crafttweaker.api.natives.INativeTypeRegistry;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.Multimap;
 
@@ -36,7 +36,7 @@ public interface IZenClassRegistry {
     
     Set<String> getRootPackages(final IScriptLoader loader);
     
-    NativeTypeRegistry getNativeTypeRegistry(final IScriptLoader loader); // TODO("Interface?")
+    INativeTypeRegistry getNativeTypeRegistry(final IScriptLoader loader);
     
     boolean isBlacklisted(final Class<?> clazz);
     

@@ -11,10 +11,13 @@ import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public final class PluginManager {
     
@@ -89,15 +92,43 @@ public final class PluginManager {
     public void loadPlugins() {
         
         final IPluginRegistryAccess pluginRegistryAccess = CraftTweakerRegistry.pluginAccess(this.req);
-        final Collection<IScriptLoader> loaders = LoaderRegistrationHandler.gather(h -> this.plugins.forEach(p -> p.registerLoaders(h)));
+        final Map<String, IScriptLoader> loaders = LoaderRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerLoaders));
         
-        pluginRegistryAccess.registerLoaders(loaders);
-        pluginRegistryAccess.registerLoadSources(LoadSourceRegistrationHandler.gather(h -> this.plugins.forEach(p -> p.registerLoadSource(h))));
+        pluginRegistryAccess.registerLoaders(loaders.values());
+        pluginRegistryAccess.registerLoadSources(LoadSourceRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerLoadSource)));
+        
+        final JavaNativeIntegrationRegistrationHandler handler = JavaNativeIntegrationRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::manageJavaNativeIntegration));
+        this.manageZenRegistration(pluginRegistryAccess, handler, name -> {
+            if(loaders.containsKey(name)) {
+                return loaders.get(name);
+            }
+            throw new IllegalArgumentException("Unknown loader '" + name + "' queried");
+        });
     }
     
     public void broadcastEnd() {
         
         // TODO("")
+    }
+    
+    private <T> Consumer<T> onEach(final BiConsumer<ICraftTweakerPlugin, T> consumer) {
+        
+        return handler -> this.plugins.forEach(plugin -> {
+            try {
+                consumer.accept(plugin, handler);
+            } catch(final Exception e) {
+                throw new IllegalStateException("Plugin " + plugin.id() + " failed to initialize", e);
+            }
+        });
+    }
+    
+    private void manageZenRegistration(final IPluginRegistryAccess access, final JavaNativeIntegrationRegistrationHandler handler, final Function<String, IScriptLoader> loaderGetter) {
+        
+        handler.preprocessors().forEach(access::registerPreprocessor);
+        handler.nativeClassRequests()
+                .forEach(r -> access.registerNativeType(loaderGetter.apply(r.loader()), r.info()));
+        handler.zenClassRequests()
+                .forEach((r, g) -> access.registerZenType(loaderGetter.apply(r.loader()), r.clazz(), r.info(), g));
     }
     
 }

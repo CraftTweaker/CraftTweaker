@@ -1,9 +1,12 @@
 package com.blamejared.crafttweaker.impl.registry.zencode;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.natives.NativeTypeRegistry;
+import com.blamejared.crafttweaker.api.natives.INativeTypeRegistry;
+import com.blamejared.crafttweaker.api.natives.NativeTypeInfo;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
+import com.blamejared.crafttweaker.api.zencode.ZenTypeInfo;
+import com.blamejared.crafttweaker.impl.registry.natives.NativeTypeRegistry;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -11,9 +14,14 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
+import org.openzen.zencode.java.ZenCodeGlobals;
+import org.openzen.zenscript.codemodel.Modifiers;
 
+import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,6 +32,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class ZenClassRegistry implements IZenClassRegistry {
     
@@ -83,7 +92,7 @@ public final class ZenClassRegistry implements IZenClassRegistry {
             return this.view.get();
         }
         
-        private NativeTypeRegistry getNativeTypeRegistry() {
+        private INativeTypeRegistry getNativeTypeRegistry() {
             
             return this.nativeTypeRegistry;
         }
@@ -115,6 +124,69 @@ public final class ZenClassRegistry implements IZenClassRegistry {
                     .stream()
                     .map(key -> key.split("\\.", 2)[0])
                     .collect(Collectors.toSet());
+        }
+        
+        private void registerNativeType(final NativeTypeInfo info) {
+            
+            if(this == EMPTY) {
+                throw new UnsupportedOperationException();
+            }
+            
+            this.nativeTypeRegistry.addNativeType(info);
+            this.data.classes().put(info.name(), info.targetedType());
+            CraftTweakerAPI.LOGGER.debug("Registering {} for native type '{}'", info.name(), info.targetedType()
+                    .getName());
+        }
+        
+        private void registerZenType(final Class<?> clazz, final ZenTypeInfo info, final boolean globals) {
+            
+            if(this == EMPTY) {
+                throw new UnsupportedOperationException();
+            }
+            
+            this.data.registeredClasses().add(clazz);
+            
+            switch(info.kind()) {
+                case CLASS -> this.registerZenClass(clazz, info.targetName());
+                case EXPANSION -> this.registerZenExpansion(clazz, info.targetName());
+            }
+            if(globals) {
+                this.registerGlobals(clazz, info);
+            }
+        }
+        
+        private void registerZenClass(final Class<?> clazz, final String name) {
+            
+            final Class<?> other = this.data.classes().get(name);
+            if(other != null) {
+                CraftTweakerAPI.LOGGER.error("Duplicate ZenCode Name '{}' in classes '{}' and '{}'", name, other, clazz);
+                return;
+            }
+            
+            this.data.classes().put(name, clazz);
+            CraftTweakerAPI.LOGGER.debug("Registering '{}' to '{}'", name, clazz);
+        }
+        
+        private void registerZenExpansion(final Class<?> clazz, final String expansionTarget) {
+            
+            this.data.expansions().put(expansionTarget, clazz);
+            CraftTweakerAPI.LOGGER.debug("Registering expansion '{}' to '{}'", clazz, expansionTarget);
+        }
+        
+        private void registerGlobals(final Class<?> clazz, final ZenTypeInfo info) {
+            
+            if(info.kind() == ZenTypeInfo.TypeKind.EXPANSION) {
+                throw new IllegalArgumentException("Cannot register globals for an expansion");
+            }
+            
+            boolean hasGlobals = Stream.concat(Arrays.stream(clazz.getDeclaredFields()), Arrays.stream(clazz.getDeclaredMethods()))
+                    .filter(it -> it.isAnnotationPresent(ZenCodeGlobals.Global.class))
+                    .mapToInt(Member::getModifiers)
+                    .anyMatch(it -> Modifiers.isPublic(it) && Modifiers.isStatic(it));
+            
+            if(hasGlobals) {
+                this.data.globals().put(info.targetName(), clazz);
+            }
         }
         
     }
@@ -166,7 +238,7 @@ public final class ZenClassRegistry implements IZenClassRegistry {
     }
     
     @Override
-    public NativeTypeRegistry getNativeTypeRegistry(final IScriptLoader loader) {
+    public INativeTypeRegistry getNativeTypeRegistry(final IScriptLoader loader) {
         
         return this.get(loader).getNativeTypeRegistry();
     }
@@ -175,6 +247,26 @@ public final class ZenClassRegistry implements IZenClassRegistry {
     public boolean isBlacklisted(final Class<?> cls) {
         
         return this.blacklistedClasses.contains(cls);
+    }
+    
+    public void fillLoaderData(final Collection<IScriptLoader> loaders) {
+        
+        loaders.forEach(it -> this.registryMap.put(it, new LoaderSpecificZenClassRegistry()));
+    }
+    
+    public void registerNativeType(final IScriptLoader loader, final NativeTypeInfo info) {
+        
+        this.get(loader).registerNativeType(info);
+    }
+    
+    public void registerZenType(final IScriptLoader loader, final Class<?> clazz, final ZenTypeInfo info, final boolean globals) {
+        
+        if(this.isIncompatible(clazz)) {
+            this.blacklistedClasses.add(clazz);
+            return;
+        }
+        
+        this.get(loader).registerZenType(clazz, info, globals);
     }
     
     private LoaderSpecificZenClassRegistry get(final IScriptLoader loader) {
@@ -261,78 +353,11 @@ public final class ZenClassRegistry implements IZenClassRegistry {
         }
     }
     
-    private void addNativeAnnotation(Class<?> cls) {
-        
-        final NativeTypeRegistration annotation = cls.getAnnotation(NativeTypeRegistration.class);
-        final String zenCodeName = annotation.zenCodeName();
-        nativeTypeRegistry.addNativeType(annotation, cls.getAnnotationsByType(NativeMethod.class));
-        addExpansion(cls, zenCodeName);
-    }
-    
     private boolean areModsMissing(ZenRegister register) {
         
         return register == null || !Arrays.stream(register.modDeps())
                 .filter(modId -> modId != null && !modId.isEmpty())
                 .allMatch(Services.PLATFORM::isModLoaded);
     }
-    
-    private void addZenClass(Class<?> cls) {
-        
-        final ZenCodeType.Name annotation = cls.getAnnotation(ZenCodeType.Name.class);
-        final String name = annotation.value();
-        if(zenClasses.containsKey(name)) {
-            final Class<?> otherCls = zenClasses.get(name);
-            CraftTweakerAPI.LOGGER.error("Duplicate ZenCode Name '{}' in classes '{}' and '{}'", name, otherCls, cls);
-        }
-        
-        zenClasses.put(name, cls);
-        CraftTweakerAPI.LOGGER.debug("Registering '{}'", name);
-    }
-    
-    private void addGlobal(Class<?> cls) {
-        
-        final ZenCodeType.Name annotation = cls.getAnnotation(ZenCodeType.Name.class);
-        zenGlobals.put(annotation.value(), cls);
-    }
-    
-    private void addExpansion(Class<?> cls, String expandedClassName) {
-        
-        if(!expansionsByExpandedName.containsKey(expandedClassName)) {
-            expansionsByExpandedName.put(expandedClassName, new ArrayList<>());
-        }
-        expansionsByExpandedName.get(expandedClassName).add(cls);
-    }
-    
-    private boolean hasGlobals(Class<?> cls) {
-        
-        return Stream.concat(Arrays.stream(cls.getFields()), Arrays.stream(cls.getMethods()))
-                .filter(member -> member.isAnnotationPresent(ZenCodeGlobals.Global.class))
-                .filter(member -> Modifier.isPublic(member.getModifiers()))
-                .anyMatch(member -> Modifier.isStatic(member.getModifiers()));
-    }
     */
-    
-    /*
-    public void addNativeType(Class<?> cls) {
-        
-        if(areModsMissing(cls.getAnnotation(ZenRegister.class))) {
-            return;
-        }
-        
-        if(cls.isAnnotationPresent(NativeTypeRegistration.class)) {
-            addNativeAnnotation(cls);
-        }
-    }
-    
-    public void initNativeTypes() {
-        
-        for(CrTNativeTypeInfo nativeTypeInfo : nativeTypeRegistry.getNativeTypeInfos()) {
-            final String craftTweakerName = nativeTypeInfo.getCraftTweakerName();
-            final String vanillaClass = nativeTypeInfo.getVanillaClass().getCanonicalName();
-            
-            zenClasses.put(craftTweakerName, nativeTypeInfo.getVanillaClass());
-            CraftTweakerAPI.LOGGER.debug("Registering {} for native type '{}'", craftTweakerName, vanillaClass);
-        }
-    }*/
-    
 }

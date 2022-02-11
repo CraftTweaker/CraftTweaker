@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.api.zencode.impl.native_type;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.natives.NativeTypeRegistry;
+import com.blamejared.crafttweaker.api.natives.INativeTypeRegistry;
 import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
 import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.java.module.JavaNativeTypeConversionContext;
@@ -14,6 +14,7 @@ import org.openzen.zencode.java.module.converters.JavaNativeTypeConverter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 class CrTJavaNativeClassConverter extends JavaNativeClassConverter {
     
@@ -28,8 +29,9 @@ class CrTJavaNativeClassConverter extends JavaNativeClassConverter {
     @Override
     public String getNameForScripts(Class<?> cls) {
         
-        if(getNativeTypeRegistry().hasInfoFor(cls)) {
-            return getNativeTypeRegistry().getCrTNameFor(cls);
+        final Optional<String> name = this.getNativeTypeRegistry().getZenNameFor(cls);
+        if(name.isPresent()) {
+            return name.get();
         }
         
         if(cls.getCanonicalName().startsWith("net.minecraft")) {
@@ -39,7 +41,7 @@ class CrTJavaNativeClassConverter extends JavaNativeClassConverter {
         return super.getNameForScripts(cls);
     }
     
-    private NativeTypeRegistry getNativeTypeRegistry() {
+    private INativeTypeRegistry getNativeTypeRegistry() {
         
         return zenClassRegistry.getNativeTypeRegistry(null); // TODO("")
     }
@@ -57,7 +59,7 @@ class CrTJavaNativeClassConverter extends JavaNativeClassConverter {
     @Override
     protected ZenCodeType.Constructor getConstructorAnnotation(Constructor<?> constructor) {
         
-        return getNativeTypeRegistry().getMethodInfoFor(constructor)
+        return getNativeTypeRegistry().getExecutableReferenceInfoFor(constructor)
                 .flatMap(it -> it.getAnnotation(ZenCodeType.Constructor.class))
                 .orElseGet(() -> super.getConstructorAnnotation(constructor));
     }
@@ -66,7 +68,7 @@ class CrTJavaNativeClassConverter extends JavaNativeClassConverter {
     @Override
     protected <T extends Annotation> T getAnnotation(Method method, Class<T> cls) {
         
-        return getNativeTypeRegistry().getMethodInfoFor(method)
+        return getNativeTypeRegistry().getExecutableReferenceInfoFor(method)
                 .flatMap(it -> it.getAnnotation(cls))
                 .orElseGet(() -> super.getAnnotation(method, cls));
     }

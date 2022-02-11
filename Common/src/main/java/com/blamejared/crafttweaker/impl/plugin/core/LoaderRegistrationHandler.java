@@ -2,7 +2,7 @@ package com.blamejared.crafttweaker.impl.plugin.core;
 
 import com.blamejared.crafttweaker.api.plugin.ILoaderRegistrationHandler;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ final class LoaderRegistrationHandler implements ILoaderRegistrationHandler {
         this.requests = new HashMap<>();
     }
     
-    static Collection<IScriptLoader> gather(final Consumer<ILoaderRegistrationHandler> populatingConsumer) {
+    static Map<String, IScriptLoader> gather(final Consumer<ILoaderRegistrationHandler> populatingConsumer) {
         
         final LoaderRegistrationHandler handler = new LoaderRegistrationHandler();
         populatingConsumer.accept(handler);
@@ -41,7 +41,7 @@ final class LoaderRegistrationHandler implements ILoaderRegistrationHandler {
         this.requests.put(name, new LoaderRequest(name, List.of(inheritedLoaders)));
     }
     
-    Collection<IScriptLoader> build() {
+    Map<String, IScriptLoader> build() {
         
         final Map<String, LoaderRequest> unsatisfiedRequests = new HashMap<>(this.requests);
         final Map<String, IScriptLoader> loaders = new HashMap<>();
@@ -57,7 +57,7 @@ final class LoaderRegistrationHandler implements ILoaderRegistrationHandler {
             satisfiableRequests.keySet().forEach(unsatisfiedRequests::remove);
         }
         
-        return ImmutableList.copyOf(loaders.values());
+        return ImmutableMap.copyOf(loaders);
     }
     
     private Map<String, LoaderRequest> findValidRequests(final Map<String, LoaderRequest> requests, final Set<String> availableIds) {
