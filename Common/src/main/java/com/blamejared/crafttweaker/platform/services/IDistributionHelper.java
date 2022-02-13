@@ -46,4 +46,14 @@ public interface IDistributionHelper {
     
     DistributionType getDistributionType();
     
+    default boolean isClient() {
+        
+        return getDistributionType().isClient();
+    }
+    
+    default boolean isServer() {
+        
+        return getDistributionType().isServer();
+    }
+    
 }

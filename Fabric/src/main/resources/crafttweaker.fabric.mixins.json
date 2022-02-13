@@ -12,7 +12,8 @@
   ],
   "client": [
     "client.access.AccessKeyMapping",
-    "client.transform.multiplayer.MixinClientPacketListener"
+    "client.transform.multiplayer.MixinClientPacketListener",
+    "client.transform.tag.MixinTagContainer"
   ],
   "server": [
   ],

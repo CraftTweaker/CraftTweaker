@@ -6,11 +6,11 @@ import com.blamejared.crafttweaker.api.action.tag.ActionTagCreate;
 import com.blamejared.crafttweaker.api.action.tag.ActionTagRemove;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.tag.MCTag;
+import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistry;
 import com.blamejared.crafttweaker.mixin.common.access.tag.AccessSetTag;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.common.collect.Sets;
 import net.minecraft.core.Registry;
-import net.minecraft.tags.SerializationTags;
 import net.minecraft.tags.SetTag;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagCollection;
@@ -97,8 +97,8 @@ public class TagManagerBlock implements ITagManager<Block> {
     
     @Override
     public TagCollection<Block> getTagCollection() {
-        
-        return SerializationTags.getInstance().getOrEmpty(Registry.BLOCK_REGISTRY);
+    
+        return CrTTagRegistry.INSTANCE.getCurrentTagContainer().get().getOrEmpty(Registry.BLOCK_REGISTRY);
     }
     
 }

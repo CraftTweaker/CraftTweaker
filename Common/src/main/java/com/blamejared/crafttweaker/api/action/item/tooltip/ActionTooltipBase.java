@@ -25,7 +25,7 @@ public abstract class ActionTooltipBase implements IUndoableAction {
     @Override
     public boolean shouldApplyOn(ScriptLoadingOptions.ScriptLoadSource source) {
         
-        return Services.DISTRIBUTION.getDistributionType().isClient();
+        return Services.DISTRIBUTION.isClient();
     }
     
 }
