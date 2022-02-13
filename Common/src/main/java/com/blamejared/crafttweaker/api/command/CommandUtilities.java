@@ -4,7 +4,6 @@ package com.blamejared.crafttweaker.api.command;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.impl.network.message.MessageCopy;
-import com.blamejared.crafttweaker.impl.network.message.MessageOpen;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -55,11 +54,10 @@ public final class CommandUtilities {
     }
     
     public static void open(final Player player, final File file) {
-        
-        if(player instanceof ServerPlayer) {
-            Services.NETWORK.sendOpenMessage((ServerPlayer) player, new MessageOpen(file.toURI()
-                    .toString()));
-        }
+    
+        MutableComponent component = new TranslatableComponent("crafttweaker.command.click.open", new TextComponent(file.getPath()).withStyle(ChatFormatting.GOLD));
+        send(component.withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, component))
+                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file.getPath()))), player);
     }
     
     public static String stripNewLine(String string) {

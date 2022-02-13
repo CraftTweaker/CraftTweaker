@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker.impl.network.message;
 
-import net.minecraft.Util;
+import com.blamejared.crafttweaker.CraftTweakerCommon;
 import net.minecraft.network.FriendlyByteBuf;
 
 public record MessageOpen(String path) implements IMessage<MessageOpen> {
@@ -14,7 +14,7 @@ public record MessageOpen(String path) implements IMessage<MessageOpen> {
     @Override
     public void handle() {
         
-        Util.getPlatform().openUri(path());
+        CraftTweakerCommon.LOG.info("Unable to open {}!", path());
     }
     
     public static MessageOpen deserialize(FriendlyByteBuf buf) {
