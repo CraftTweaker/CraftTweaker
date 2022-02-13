@@ -44,20 +44,6 @@ public final class MiscCommands {
             });
         }));
         
-        CTCommands.registerCommand(new CommandImpl("reload", new TranslatableComponent("crafttweaker.command.description.reload"), builder -> {
-            builder.executes(context -> {
-                ServerPlayer player = context.getSource().getPlayerOrException();
-                CommandUtilities.send(
-                        CommandUtilities.run(
-                                new TranslatableComponent("crafttweaker.command.misc.reload.info").withStyle(ChatFormatting.AQUA),
-                                "/reload"
-                        ),
-                        player
-                );
-                return Command.SINGLE_SUCCESS;
-            });
-        }));
-        
         CTCommands.registerCommand(new CommandImpl("discord", new TranslatableComponent("crafttweaker.command.description.discord"), builder -> {
             builder.executes(context -> {
                 ServerPlayer player = context.getSource().getPlayerOrException();
