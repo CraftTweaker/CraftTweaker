@@ -3,18 +3,18 @@ package com.blamejared.crafttweaker.impl.commands;
 import com.blamejared.crafttweaker.CraftTweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.text.FormattedTextComponent;
-import com.blamejared.crafttweaker.api.util.StringUtils;
 import com.blamejared.crafttweaker.impl.network.PacketHandler;
 import com.blamejared.crafttweaker.impl.network.messages.MessageCopy;
-import com.blamejared.crafttweaker.impl.network.messages.MessageOpen;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -62,11 +62,9 @@ public final class CommandUtilities {
     }
     
     public static void open(final PlayerEntity player, final File file) {
-        
-        if(player instanceof ServerPlayerEntity) {
-            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen(file.toURI()
-                    .toString()));
-        }
+    
+        String link = file.getPath();
+        CommandUtilities.send(CommandUtilities.openingUrl(new TranslationTextComponent("Click to open: %s", CommandUtilities.makeNoticeable(link)).mergeStyle(TextFormatting.GREEN), link), player);
     }
     
     @Deprecated // Using string concatenation for color is... bad
@@ -89,7 +87,7 @@ public final class CommandUtilities {
         
         Style style = base.getStyle();
         style = style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new FormattedTextComponent("Click to copy [%s]", color(toCopy, TextFormatting.GOLD))));
-        style = style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ct copy " + StringUtils.quoteAndEscape(toCopy) + ""));
+        style = style.setClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, toCopy));
         return base.setStyle(style);
     }
     
@@ -109,6 +107,23 @@ public final class CommandUtilities {
         base.setStyle(style);
         
         return base;
+    }
+    
+    public static ITextComponent openingUrl(IFormattableTextComponent base, String url) {
+        
+        IFormattableTextComponent component = new StringTextComponent(String.format("Click to go to [%s]", url));
+        return base.modifyStyle(style -> style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, component))
+                .setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url)));
+    }
+    
+    public static IFormattableTextComponent makeNoticeable(IFormattableTextComponent text) {
+        
+        return text.mergeStyle(TextFormatting.YELLOW);
+    }
+    
+    public static IFormattableTextComponent makeNoticeable(String text) {
+        
+        return makeNoticeable(new StringTextComponent(text));
     }
     
 }

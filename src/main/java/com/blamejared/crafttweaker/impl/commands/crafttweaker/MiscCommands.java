@@ -5,8 +5,6 @@ import com.blamejared.crafttweaker.impl.commands.CTCommands;
 import com.blamejared.crafttweaker.impl.commands.CTItemArgument;
 import com.blamejared.crafttweaker.impl.commands.CommandUtilities;
 import com.blamejared.crafttweaker.impl.events.CTEventHandler;
-import com.blamejared.crafttweaker.impl.network.PacketHandler;
-import com.blamejared.crafttweaker.impl.network.messages.MessageOpen;
 import com.blamejared.crafttweaker.impl_native.entity.ExpandPlayerEntity;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -15,10 +13,10 @@ import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.fml.network.PacketDistributor;
 import org.apache.logging.log4j.util.TriConsumer;
 
 public final class MiscCommands {
@@ -65,24 +63,29 @@ public final class MiscCommands {
             );
             return 0;
         }));
-        
+    
         CTCommands.registerCommand(CTCommands.playerCommand("discord", "Opens a link to discord", (player, stack) -> {
-            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://discord.blamejared.com"));
+    
+            String link = "https://discord.blamejared.com";
+            CommandUtilities.send(CommandUtilities.openingUrl(new TranslationTextComponent("Link: %s", CommandUtilities.makeNoticeable(link)).mergeStyle(TextFormatting.GREEN), link), player);
             return 0;
         }));
         
         CTCommands.registerCommand(CTCommands.playerCommand("issues", "Opens a link to the issue tracker", (player, stack) -> {
-            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://github.com/CraftTweaker/CraftTweaker/issues"));
+            String link = "https://github.com/CraftTweaker/CraftTweaker/issues";
+            CommandUtilities.send(CommandUtilities.openingUrl(new TranslationTextComponent("Link: %s", CommandUtilities.makeNoticeable(link)).mergeStyle(TextFormatting.GREEN), link), player);
             return 0;
         }));
         
         CTCommands.registerCommand(CTCommands.playerCommand("patreon", "Opens a link to patreon", (player, stack) -> {
-            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://patreon.com/jaredlll08"));
+            String link = "https://patreon.com/jaredlll08";
+            CommandUtilities.send(CommandUtilities.openingUrl(new TranslationTextComponent("Link: %s", CommandUtilities.makeNoticeable(link)).mergeStyle(TextFormatting.GREEN), link), player);
             return 0;
         }));
         
         CTCommands.registerCommand(CTCommands.playerCommand("wiki", "Opens a link to the wiki", (player, stack) -> {
-            PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MessageOpen("https://docs.blamejared.com"));
+            String link = "https://docs.blamejared.com";
+            CommandUtilities.send(CommandUtilities.openingUrl(new TranslationTextComponent("Link: %s", CommandUtilities.makeNoticeable(link)).mergeStyle(TextFormatting.GREEN), link), player);
             return 0;
         }));
         
