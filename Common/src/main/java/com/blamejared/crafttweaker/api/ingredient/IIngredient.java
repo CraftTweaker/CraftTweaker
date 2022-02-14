@@ -206,7 +206,7 @@ public interface IIngredient extends CommandStringDisplayable {
      * @docParam name "Extra Power"
      * @docParam value 10
      * @docParam operation AttributeOperation.ADDITION
-     * @docParam slotTypes [<equipmentslot:chest>]
+     * @docParam slotTypes [<constant:minecraft:equipmentslot:chest>]
      */
     @ZenCodeType.Method
     default void addGlobalAttributeModifier(Attribute attribute, String name, double value, AttributeModifier.Operation operation, EquipmentSlot[] slotTypes) {
@@ -246,7 +246,7 @@ public interface IIngredient extends CommandStringDisplayable {
      * @docParam name "Extra Power"
      * @docParam value 10
      * @docParam operation AttributeOperation.ADDITION
-     * @docParam slotTypes [<equipmentslot:chest>]
+     * @docParam slotTypes [<constant:minecraft:equipmentslot:chest>]
      */
     @ZenCodeType.Method
     default void addGlobalAttributeModifier(Attribute attribute, String uuid, String name, double value, AttributeModifier.Operation operation, EquipmentSlot[] slotTypes) {
@@ -278,7 +278,7 @@ public interface IIngredient extends CommandStringDisplayable {
      * @param slotTypes The slot types to remove it from.
      *
      * @docParam attribute <attribute:minecraft:generic.attack_damage>
-     * @docParam slotTypes [<equipmentslot:chest>]
+     * @docParam slotTypes [<constant:minecraft:equipmentslot:chest>]
      */
     @ZenCodeType.Method
     default void removeGlobalAttribute(Attribute attribute, EquipmentSlot[] slotTypes) {
@@ -299,7 +299,7 @@ public interface IIngredient extends CommandStringDisplayable {
      * @param slotTypes The slot types to remove it from.
      *
      * @docParam uuid "8c1b5535-9f79-448b-87ae-52d81480aaa3"
-     * @docParam slotTypes [<equipmentslot:chest>]
+     * @docParam slotTypes [<constant:minecraft:equipmentslot:chest>]
      */
     @ZenCodeType.Method
     default void removeGlobalAttributeModifier(String uuid, EquipmentSlot[] slotTypes) {

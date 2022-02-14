@@ -334,7 +334,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      * @docParam name "Extra Power"
      * @docParam value 10
      * @docParam operation AttributeOperation.ADDITION
-     * @docParam slotTypes [<equipmentslot:chest>]
+     * @docParam slotTypes [<constant:minecraft:equipmentslot:chest>]
      * @docParam preserveDefaults true
      */
     @ZenCodeType.Method
@@ -374,7 +374,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      * @docParam name "Extra Power"
      * @docParam value 10
      * @docParam operation AttributeOperation.ADDITION
-     * @docParam slotTypes [<equipmentslot:chest>]
+     * @docParam slotTypes [<constant:minecraft:equipmentslot:chest>]
      * @docParam preserveDefaults true
      */
     @ZenCodeType.Method
@@ -398,7 +398,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      *
      * @return A Map of Attribute to a List of AttributeModifier for the given EquipmentSlot.
      *
-     * @docParam slotType <equipmentslot:chest>
+     * @docParam slotType <constant:minecraft:equipmentslot:chest>
      */
     @ZenCodeType.Method
     default Map<Attribute, List<AttributeModifier>> getAttributes(EquipmentSlot slotType) {
