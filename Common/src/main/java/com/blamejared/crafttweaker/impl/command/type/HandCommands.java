@@ -22,8 +22,6 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagCollection;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -245,12 +243,12 @@ public final class HandCommands {
     
     private static Collection<String> sendItemTagsInformation(final Player player, final Item item) {
         
-        return sendTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.item"), TagManagerItem.INSTANCE, ItemTags.getAllTags(), item);
+        return sendTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.item"), TagManagerItem.INSTANCE, TagManagerItem.INSTANCE.getTagCollection(), item);
     }
     
     private static Collection<String> sendBlockTagsInformation(final Player player, final BlockItem item) {
         
-        return sendTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.block"), TagManagerBlock.INSTANCE, BlockTags.getAllTags(), item
+        return sendTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.block"), TagManagerBlock.INSTANCE, TagManagerBlock.INSTANCE.getTagCollection(), item
                 .getBlock());
     }
     
@@ -303,12 +301,12 @@ public final class HandCommands {
     
     private static void sendVanillaItemTagsInformation(final Player player, final Item item) {
         
-        sendVanillaTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.item"), ItemTags.getAllTags(), item);
+        sendVanillaTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.item"), TagManagerItem.INSTANCE.getTagCollection(), item);
     }
     
     private static void sendVanillaBlockTagsInformation(final Player player, final BlockItem item) {
         
-        sendVanillaTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.block"), BlockTags.getAllTags(), item.getBlock());
+        sendVanillaTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.block"), TagManagerBlock.INSTANCE.getTagCollection(), item.getBlock());
     }
     
     private static <T> void sendVanillaTagsInformation(final Player player, final MutableComponent header, final TagCollection<T> tagCollection, final T target) {
