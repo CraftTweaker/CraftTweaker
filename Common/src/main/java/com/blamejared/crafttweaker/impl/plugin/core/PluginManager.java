@@ -67,7 +67,14 @@ public final class PluginManager {
         
         final ResourceLocation id;
         try {
-            id = new ResourceLocation(Objects.requireNonNull(clazz.getAnnotation(CraftTweakerPlugin.class)).value());
+            final String targetId = Objects.requireNonNull(clazz.getAnnotation(CraftTweakerPlugin.class)).value();
+            if(!targetId.contains(":")) {
+                throw new ResourceLocationException("Not within a namespace");
+            }
+            if(targetId.startsWith("minecraft:")) {
+                throw new ResourceLocationException("Illegal namespace 'minecraft'");
+            }
+            id = new ResourceLocation(targetId);
         } catch(final ResourceLocationException e) {
             throw new IllegalArgumentException("Invalid plugin class ID: not a valid resource location", e);
         }
@@ -108,7 +115,7 @@ public final class PluginManager {
     
     public void broadcastEnd() {
         
-        // TODO("")
+        throw new UnsupportedOperationException("Requires implementation");
     }
     
     private <T> Consumer<T> onEach(final BiConsumer<ICraftTweakerPlugin, T> consumer) {

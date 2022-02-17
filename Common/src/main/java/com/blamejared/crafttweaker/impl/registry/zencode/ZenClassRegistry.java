@@ -159,7 +159,7 @@ public final class ZenClassRegistry implements IZenClassRegistry {
             
             final Class<?> other = this.data.classes().get(name);
             if(other != null) {
-                CraftTweakerAPI.LOGGER.error("Duplicate ZenCode Name '{}' in classes '{}' and '{}'", name, other, clazz);
+                CraftTweakerAPI.LOGGER.error("Duplicate ZenCode Name '{}' in classes '{}' and '{}'", name, other.getName(), clazz.getName());
                 return;
             }
             
@@ -169,8 +169,11 @@ public final class ZenClassRegistry implements IZenClassRegistry {
         
         private void registerZenExpansion(final Class<?> clazz, final String expansionTarget) {
             
+            if(!this.data.classes().containsKey(expansionTarget)) {
+                throw new IllegalArgumentException("Unable to register expansion for '" + expansionTarget + "' as it does not exist");
+            }
             this.data.expansions().put(expansionTarget, clazz);
-            CraftTweakerAPI.LOGGER.debug("Registering expansion '{}' to '{}'", clazz, expansionTarget);
+            CraftTweakerAPI.LOGGER.debug("Registering expansion '{}' to '{}'", clazz.getName(), expansionTarget);
         }
         
         private void registerGlobals(final Class<?> clazz, final ZenTypeInfo info) {
