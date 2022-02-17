@@ -11,6 +11,7 @@ import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -38,11 +39,13 @@ public final class PluginManager {
     
     private final List<DecoratedCraftTweakerPlugin> plugins;
     private final Req req;
+    private final List<Runnable> endListeners;
     
     private PluginManager(final List<DecoratedCraftTweakerPlugin> plugins) {
         
         this.plugins = List.copyOf(plugins);
         this.req = new Req();
+        this.endListeners = new ArrayList<>();
     }
     
     public static PluginManager of() {
@@ -119,11 +122,14 @@ public final class PluginManager {
         
         RecipeHandlerRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerRecipeHandlers))
                 .forEach(it -> pluginRegistryAccess.registerHandler(this.uncheck(it.recipeClass()), it.handler()));
+        
+        this.endListeners.addAll(ListenerRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerListeners)));
     }
     
     public void broadcastEnd() {
         
-        throw new UnsupportedOperationException("Requires implementation");
+        this.endListeners.forEach(Runnable::run);
+        this.endListeners.clear();
     }
     
     private <T> Consumer<T> onEach(final BiConsumer<ICraftTweakerPlugin, T> consumer) {
