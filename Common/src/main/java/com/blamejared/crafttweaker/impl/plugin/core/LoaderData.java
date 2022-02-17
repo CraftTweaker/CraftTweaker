@@ -4,4 +4,12 @@ import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 
 import java.util.Collection;
 
-public record LoaderData(String loader, Collection<IScriptLoader> inheritedLoaders) implements IScriptLoader {}
+record LoaderData(String name, Collection<IScriptLoader> inheritedLoaders) implements IScriptLoader {
+    
+    @Override
+    public String toString() {
+        
+        return "%s <- %s".formatted(this.name(), this.inheritedLoaders());
+    }
+    
+}
