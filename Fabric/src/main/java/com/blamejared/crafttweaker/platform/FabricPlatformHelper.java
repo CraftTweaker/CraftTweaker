@@ -145,7 +145,8 @@ public class FabricPlatformHelper implements IPlatformHelper {
         
         Set<Class<?>> typesAnnotatedWith = REFLECTIONS.get().getTypesAnnotatedWith(annotationCls);
         typesAnnotatedWith.stream().map(this::getModsForClass).flatMap(Collection::stream).forEach(consumer);
-        return typesAnnotatedWith.stream();
+        return typesAnnotatedWith.stream()
+                .filter(it -> annotationFilter.test(Either.left(it.getAnnotation(annotationCls))));
     }
     
     private List<Mod> getModsForClass(Class<?> clazz) {
@@ -154,14 +155,18 @@ public class FabricPlatformHelper implements IPlatformHelper {
         List<Mod> mods = new ArrayList<>();
         // This doesn't work for the current mod in dev.
         // The origin paths just include build/resources/main, not build/classes/main, but otherwise works great
-        FabricLoader.getInstance().getAllMods().stream().filter(modContainer -> modContainer.getOrigin().getKind() == ModOrigin.Kind.PATH).forEach(modContainer -> {
-            for(Path rootPath : modContainer.getOrigin().getPaths()) {
-                if(rootPath.toFile().equals(classFile)) {
-                    mods.add(new Mod(modContainer.getMetadata().getId(), modContainer.getMetadata()
-                            .getName(), modContainer.getMetadata().getVersion().getFriendlyString()));
-                }
-            }
-        });
+        FabricLoader.getInstance()
+                .getAllMods()
+                .stream()
+                .filter(modContainer -> modContainer.getOrigin().getKind() == ModOrigin.Kind.PATH)
+                .forEach(modContainer -> {
+                    for(Path rootPath : modContainer.getOrigin().getPaths()) {
+                        if(rootPath.toFile().equals(classFile)) {
+                            mods.add(new Mod(modContainer.getMetadata().getId(), modContainer.getMetadata()
+                                    .getName(), modContainer.getMetadata().getVersion().getFriendlyString()));
+                        }
+                    }
+                });
         return mods;
     }
     
