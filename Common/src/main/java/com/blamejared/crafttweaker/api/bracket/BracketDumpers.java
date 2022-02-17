@@ -64,7 +64,12 @@ public class BracketDumpers {
     @BracketDumper("constant")
     public static Collection<String> getConstantDump() {
         
-        return CraftTweakerAPI.getRegistry().getAllEnumsForEnumBracket();
+        return CraftTweakerAPI.getRegistry()
+                .getAllLoaders()
+                .stream()
+                .map(CraftTweakerAPI.getRegistry()::getAllEnumsForEnumBracket)
+                .flatMap(Collection::stream)
+                .toList();
     }
     
     @ZenCodeType.Method

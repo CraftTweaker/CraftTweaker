@@ -1,11 +1,13 @@
 package com.blamejared.crafttweaker.impl.registry;
 
 import com.blamejared.crafttweaker.api.natives.NativeTypeInfo;
+import com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.ZenTypeInfo;
 import com.blamejared.crafttweaker.api.zencode.impl.IScriptLoadSource;
 import com.blamejared.crafttweaker.impl.plugin.core.IPluginRegistryAccess;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;
 
@@ -48,6 +50,23 @@ final class PluginRegistryAccess implements IPluginRegistryAccess {
     public void registerZenType(final IScriptLoader loader, final Class<?> clazz, final ZenTypeInfo info, final boolean globals) {
         
         this.registries.zenClassRegistry().registerZenType(loader, clazz, info, globals);
+    }
+    
+    @Override
+    public void registerBracket(
+            final IScriptLoader loader,
+            final String name,
+            final IBracketParserRegistrationHandler.Creator bracketCreator,
+            final IBracketParserRegistrationHandler.DumperData dumperData
+    ) {
+        
+        this.registries.bracketResolverRegistry().registerBracket(loader, name, bracketCreator, dumperData);
+    }
+    
+    @Override
+    public <T extends Enum<T>> void registerEnum(final IScriptLoader loader, final ResourceLocation id, final Class<T> enumClass) {
+        
+        this.registries.enumBracketRegistry().register(loader, id, enumClass);
     }
     
 }

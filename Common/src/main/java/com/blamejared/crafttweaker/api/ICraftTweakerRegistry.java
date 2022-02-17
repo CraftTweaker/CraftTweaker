@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.api;
 
-import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.command.type.BracketDumperInfo;
+import com.blamejared.crafttweaker.api.command.type.IBracketDumperInfo;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
@@ -24,18 +23,13 @@ public interface ICraftTweakerRegistry {
     
     IScriptLoader findLoader(final String name);
     
-    default IScriptLoader findLoader(final Class<?> clazz) {
-        
-        return this.findLoader(clazz.getAnnotation(ZenRegister.class).loader());
-    }
-    
     Collection<IScriptLoader> getAllLoaders();
     
     IScriptLoadSource findLoadSource(final ResourceLocation id);
     
     IZenClassRegistry getZenClassRegistry();
     
-    Map<String, BracketDumperInfo> getBracketDumpers(final IScriptLoader loader);
+    Map<String, IBracketDumperInfo> getBracketDumpers(final IScriptLoader loader);
     
     // TODO("Better API")
     List<Pair<String, BracketExpressionParser>> getBracketHandlers(final IScriptLoader loader, final String rootPackage, final ScriptingEngine engine, final JavaNativeModule ctModule);
@@ -44,10 +38,10 @@ public interface ICraftTweakerRegistry {
     
     <T extends Recipe<?>> IRecipeHandler<T> getRecipeHandlerFor(final T recipe);
     
-    <T extends Enum<T>> T getEnumBracketValue(final ResourceLocation type, final String value);
+    <T extends Enum<T>> T getEnumBracketValue(final IScriptLoader loader, final ResourceLocation type, final String value);
     
-    <T extends Enum<T>> Optional<Class<T>> getEnumBracketFor(final ResourceLocation type);
+    <T extends Enum<T>> Optional<Class<T>> getEnumBracketFor(final IScriptLoader loader, final ResourceLocation type);
     
-    Set<String> getAllEnumsForEnumBracket();
+    Set<String> getAllEnumsForEnumBracket(final IScriptLoader loader);
     
 }

@@ -101,17 +101,21 @@ public final class PluginManager {
         
         final IPluginRegistryAccess pluginRegistryAccess = CraftTweakerRegistry.pluginAccess(this.req);
         final Map<String, IScriptLoader> loaders = LoaderRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerLoaders));
-        
-        pluginRegistryAccess.registerLoaders(loaders.values());
-        pluginRegistryAccess.registerLoadSources(LoadSourceRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerLoadSource)));
-        
-        final JavaNativeIntegrationRegistrationHandler handler = JavaNativeIntegrationRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::manageJavaNativeIntegration));
-        this.manageZenRegistration(pluginRegistryAccess, handler, name -> {
+        final Function<String, IScriptLoader> loaderFinder = name -> {
             if(loaders.containsKey(name)) {
                 return loaders.get(name);
             }
             throw new IllegalArgumentException("Unknown loader '" + name + "' queried");
-        });
+        };
+        
+        pluginRegistryAccess.registerLoaders(loaders.values());
+        pluginRegistryAccess.registerLoadSources(LoadSourceRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerLoadSource)));
+        
+        final JavaNativeIntegrationRegistrationHandler javaHandler = JavaNativeIntegrationRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::manageJavaNativeIntegration));
+        this.manageZenRegistration(pluginRegistryAccess, javaHandler, loaderFinder);
+        
+        final BracketParserRegistrationHandler bracketHandler = BracketParserRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::registerBracketParsers));
+        this.manageBracketRegistration(pluginRegistryAccess, bracketHandler, loaderFinder);
     }
     
     public void broadcastEnd() {
@@ -141,6 +145,20 @@ public final class PluginManager {
                 .sorted(Comparator.comparing(it -> it.getKey().info().kind()))
                 .forEach(entry -> access.registerZenType(loaderGetter.apply(entry.getKey().loader()), entry.getKey()
                         .clazz(), entry.getKey().info(), entry.getBooleanValue()));
+    }
+    
+    private void manageBracketRegistration(final IPluginRegistryAccess access, final BracketParserRegistrationHandler handler, final Function<String, IScriptLoader> loaderFinder) {
+        
+        handler.bracketRequests()
+                .forEach(it -> access.registerBracket(loaderFinder.apply(it.loader()), it.parserName(), it.parserCreator(), it.parserDumper()));
+        handler.enumRequests()
+                .forEach(it -> access.registerEnum(loaderFinder.apply(it.loader()), it.id(), this.uncheck(it.enumClass())));
+    }
+    
+    @SuppressWarnings("unchecked")
+    private <T, U> T uncheck(final U u) {
+        
+        return (T) u;
     }
     
 }

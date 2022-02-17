@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.api.zencode.bracket;
+package com.blamejared.crafttweaker.impl.plugin.core;
 
 import org.openzen.zencode.shared.CodePosition;
 import org.openzen.zencode.shared.CompileException;
@@ -21,28 +21,60 @@ import org.openzen.zenscript.parser.expression.ParsedExpression;
 import org.openzen.zenscript.parser.expression.ParsedExpressionBinary;
 import org.openzen.zenscript.parser.expression.ParsedExpressionString;
 
-import java.lang.reflect.Method;
+import java.lang.invoke.MethodHandle;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValidatedEscapableBracketParser implements BracketExpressionParser {
+final class ValidatedEscapableBracketParser implements BracketExpressionParser {
+    
+    private static final class StaticMethodCallExpression extends ParsedExpression {
+        
+        private final DefinitionTypeID id;
+        private final FunctionalMemberRef targetMethod;
+        private final ParsedExpression call;
+        
+        public StaticMethodCallExpression(final CodePosition position, final DefinitionTypeID id, final FunctionalMemberRef targetMethod, final List<ParsedExpression> expressions) {
+            
+            super(position);
+            this.id = id;
+            this.targetMethod = targetMethod;
+            this.call = expressions.stream()
+                    .skip(1L)
+                    .reduce(expressions.get(0), (a, b) -> new ParsedExpressionBinary(b.position, a, b, OperatorType.ADD));
+        }
+        
+        @Override
+        public IPartialExpression compile(ExpressionScope scope) throws CompileException {
+            
+            final Expression methodCall = this.call.compile(scope.withHint(BasicTypeID.STRING)).eval();
+            final CallArguments arguments = new CallArguments(methodCall);
+            return new CallStaticExpression(this.position, this.id, this.targetMethod, this.targetMethod.getHeader(), arguments);
+        }
+        
+        @Override
+        public boolean hasStrongType() {
+            
+            return true;
+        }
+        
+    }
     
     private final FunctionalMemberRef method;
-    private final Method validationMethod;
+    private final MethodHandle validationMethod;
     private final String name;
     private final DefinitionTypeID targetType;
     
-    public ValidatedEscapableBracketParser(String name, FunctionalMemberRef parserMethod, Method validationMethod, GlobalTypeRegistry registry) {
+    ValidatedEscapableBracketParser(final String name, final FunctionalMemberRef parserMethod, final MethodHandle validationMethod, final GlobalTypeRegistry registry) {
         
         this.method = parserMethod;
         this.validationMethod = validationMethod;
         this.name = name;
-        targetType = registry.getForDefinition(parserMethod.getTarget().definition);
+        this.targetType = registry.getForDefinition(parserMethod.getTarget().definition);
     }
     
     public String getName() {
         
-        return name;
+        return this.name;
     }
     
     @Override
@@ -100,55 +132,24 @@ public class ValidatedEscapableBracketParser implements BracketExpressionParser 
         
         if(expressionList.size() == 1) {
             final ParsedExpression parsedExpression = expressionList.get(0);
-            if(validationMethod != null && parsedExpression instanceof ParsedExpressionString) {
-                final String value = ((ParsedExpressionString) parsedExpression).value;
+            if(this.validationMethod != null && parsedExpression instanceof ParsedExpressionString stringExpression) {
+                final String value = stringExpression.value;
                 boolean valid;
                 try {
-                    valid = (boolean) validationMethod.invoke(null, value);
-                } catch(Exception e) {
-                    final String message = String.format("Invalid parameters to BEP %s: '<%s:%s>", name, name, value);
+                    valid = (boolean) this.validationMethod.invokeExact(value);
+                } catch(final Throwable e) {
+                    final String message = String.format("Invalid parameters to BEP %s: '<%s:%s>", this.name, this.name, value);
                     throw new ParseException(position, message, e);
                 }
                 
                 if(!valid) {
-                    final String format = String.format("Invalid parameters to BEP %s: '<%s:%s>. There may be more information about this in the log.", name, name, value);
+                    final String format = String.format("Invalid parameters to BEP %s: '<%s:%s>. There may be more information about this in the log.", this.name, this.name, value);
                     throw new ParseException(position, format);
                 }
             }
         }
         
-        return new StaticMethodCallExpression(position, expressionList);
-    }
-    
-    private class StaticMethodCallExpression extends ParsedExpression {
-        
-        private final ParsedExpression call;
-        
-        public StaticMethodCallExpression(CodePosition position, List<ParsedExpression> expressions) {
-            
-            super(position);
-            ParsedExpression p = null;
-            for(ParsedExpression expression : expressions) {
-                p = p == null ? expression : new ParsedExpressionBinary(expression.position, p, expression, OperatorType.ADD);
-            }
-            
-            this.call = p;
-        }
-        
-        @Override
-        public IPartialExpression compile(ExpressionScope scope) throws CompileException {
-            
-            final Expression methodCall = call.compile(scope.withHint(BasicTypeID.STRING)).eval();
-            final CallArguments arguments = new CallArguments(methodCall);
-            return new CallStaticExpression(position, targetType, method, method.getHeader(), arguments);
-        }
-        
-        @Override
-        public boolean hasStrongType() {
-            
-            return true;
-        }
-        
+        return new StaticMethodCallExpression(position, this.targetType, this.method, expressionList);
     }
     
 }

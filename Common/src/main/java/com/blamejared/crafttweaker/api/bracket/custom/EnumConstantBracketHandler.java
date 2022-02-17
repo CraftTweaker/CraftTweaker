@@ -42,7 +42,7 @@ public class EnumConstantBracketHandler implements BracketExpressionParser {
     @ZenCodeType.Method
     public static <T extends Enum<T>> Enum<T> getEnum(ResourceLocation type, String value) {
         
-        return CraftTweakerAPI.getRegistry().getEnumBracketValue(type, value);
+        return CraftTweakerAPI.getRegistry().getEnumBracketValue(null, type, value); // TODO("Loader")
     }
     
     
@@ -58,7 +58,7 @@ public class EnumConstantBracketHandler implements BracketExpressionParser {
             throw new ParseException(position, "Invalid ResourceLocation, expected: <constant:modid:location>");
         }
         
-        return CraftTweakerAPI.getRegistry().getEnumBracketFor(type)
+        return CraftTweakerAPI.getRegistry().getEnumBracketFor(null, type) // TODO("Loader")
                 .map(it -> this.getCall(contents, it, type, name, position))
                 .orElseThrow(() -> new ParseException(position, String.format("Unknown enum type <constant:%s:%s>", type, name)));
     }
@@ -88,7 +88,7 @@ public class EnumConstantBracketHandler implements BracketExpressionParser {
     private static <T extends Enum<T>> Class<T> lookup(final ResourceLocation location) {
         
         return (Class<T>) CraftTweakerAPI.getRegistry()
-                .getEnumBracketFor(location)
+                .getEnumBracketFor(null, location) // TODO("Loader")
                 .orElseThrow(() -> new IllegalArgumentException("No such enum " + location));
     }
     
