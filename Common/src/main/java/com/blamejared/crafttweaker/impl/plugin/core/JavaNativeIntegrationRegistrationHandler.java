@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-class JavaNativeIntegrationRegistrationHandler implements IJavaNativeIntegrationRegistrationHandler {
+final class JavaNativeIntegrationRegistrationHandler implements IJavaNativeIntegrationRegistrationHandler {
     
     record NativeClassRequest(String loader, NativeTypeInfo info) {}
     
