@@ -116,6 +116,9 @@ public final class PluginManager {
         
         final BracketParserRegistrationHandler bracketHandler = BracketParserRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::registerBracketParsers));
         this.manageBracketRegistration(pluginRegistryAccess, bracketHandler, loaderFinder);
+        
+        RecipeHandlerRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerRecipeHandlers))
+                .forEach(it -> pluginRegistryAccess.registerHandler(this.uncheck(it.recipeClass()), it.handler()));
     }
     
     public void broadcastEnd() {

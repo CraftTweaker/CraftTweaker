@@ -1,15 +1,12 @@
 package com.blamejared.crafttweaker.impl.registry.recipe;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
-import com.blamejared.crafttweaker.api.util.InstantiationUtil;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.world.item.crafting.Recipe;
 
-import java.lang.reflect.Modifier;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
@@ -47,33 +44,9 @@ public final class RecipeHandlerRegistry implements IRecipeHandlerRegistry {
     
     private final Map<Class<? extends Recipe<?>>, IRecipeHandler<?>> recipeHandlers = new HashMap<>();
     
-    public void addClass(final Class<?> clazz) {
+    public <T extends Recipe<?>> void register(Class<? extends T> clazz, IRecipeHandler<T> handler) {
         
-        if(!IRecipeHandler.class.isAssignableFrom(clazz)) {
-            throw new IllegalArgumentException("Class " + clazz.getName() + " does not implement IRecipeHandler");
-        }
-        if(clazz.isInterface()) {
-            throw new IllegalArgumentException("Class " + clazz.getName() + " is an interface and cannot be annotated with @IRecipeHandler.For");
-        }
-        if(Modifier.isAbstract(clazz.getModifiers())) {
-            throw new IllegalArgumentException("Class " + clazz.getName() + " is an abstract class and cannot be annotated with @IRecipeHandler.For");
-        }
-        //noinspection RedundantCast
-        Arrays.stream(clazz.getAnnotationsByType(IRecipeHandler.For.class))
-                .map(IRecipeHandler.For::value)
-                .filter(it -> (Class<?>) it != Recipe.class)
-                .forEach(it -> {
-                    if(this.recipeHandlers.containsKey(it)) {
-                        CraftTweakerAPI.LOGGER.warn(
-                                "Multiple recipe handlers found for the same recipe class {}: attempted registration of {}, using {}",
-                                it.getName(),
-                                clazz.getName(),
-                                this.recipeHandlers.get(it).getClass().getName()
-                        );
-                    } else {
-                        this.recipeHandlers.put(it, (IRecipeHandler<?>) InstantiationUtil.getOrCreateInstance(clazz));
-                    }
-                });
+        this.recipeHandlers.put(clazz, handler);
     }
     
     @Override

@@ -2,12 +2,14 @@ package com.blamejared.crafttweaker.impl.registry;
 
 import com.blamejared.crafttweaker.api.natives.NativeTypeInfo;
 import com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler;
+import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.ZenTypeInfo;
 import com.blamejared.crafttweaker.api.zencode.impl.IScriptLoadSource;
 import com.blamejared.crafttweaker.impl.plugin.core.IPluginRegistryAccess;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.Collection;
 
@@ -67,6 +69,12 @@ final class PluginRegistryAccess implements IPluginRegistryAccess {
     public <T extends Enum<T>> void registerEnum(final IScriptLoader loader, final ResourceLocation id, final Class<T> enumClass) {
         
         this.registries.enumBracketRegistry().register(loader, id, enumClass);
+    }
+    
+    @Override
+    public <T extends Recipe<?>> void registerHandler(final Class<? extends T> clazz, final IRecipeHandler<T> handler) {
+        
+        this.registries.recipeHandlerRegistry().register(clazz, handler);
     }
     
 }
