@@ -11,6 +11,7 @@ import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -135,7 +136,11 @@ public final class PluginManager {
         handler.nativeClassRequests()
                 .forEach(r -> access.registerNativeType(loaderGetter.apply(r.loader()), r.info()));
         handler.zenClassRequests()
-                .forEach((r, g) -> access.registerZenType(loaderGetter.apply(r.loader()), r.clazz(), r.info(), g));
+                .object2BooleanEntrySet()
+                .stream()
+                .sorted(Comparator.comparing(it -> it.getKey().info().kind()))
+                .forEach(entry -> access.registerZenType(loaderGetter.apply(entry.getKey().loader()), entry.getKey()
+                        .clazz(), entry.getKey().info(), entry.getBooleanValue()));
     }
     
 }
