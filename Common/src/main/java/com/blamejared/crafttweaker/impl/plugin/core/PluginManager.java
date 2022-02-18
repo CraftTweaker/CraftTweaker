@@ -37,15 +37,24 @@ public final class PluginManager {
         
     }
     
+    private record Listeners(List<Runnable> zenListeners, List<Runnable> endListeners) {
+        
+        Listeners() {
+            
+            this(new ArrayList<>(), new ArrayList<>());
+        }
+        
+    }
+    
     private final List<DecoratedCraftTweakerPlugin> plugins;
     private final Req req;
-    private final List<Runnable> endListeners;
+    private final Listeners listeners;
     
     private PluginManager(final List<DecoratedCraftTweakerPlugin> plugins) {
         
         this.plugins = List.copyOf(plugins);
         this.req = new Req();
-        this.endListeners = new ArrayList<>();
+        this.listeners = new Listeners();
     }
     
     public static PluginManager of() {
@@ -103,33 +112,50 @@ public final class PluginManager {
     public void loadPlugins() {
         
         final IPluginRegistryAccess pluginRegistryAccess = CraftTweakerRegistry.pluginAccess(this.req);
+        this.gatherListeners();
+        
+        this.handleZenDataRegistration(pluginRegistryAccess);
+        this.handleAdditionalRegistration(pluginRegistryAccess);
+    }
+    
+    public void broadcastEnd() {
+        
+        this.listeners.endListeners().forEach(Runnable::run);
+    }
+    
+    private void gatherListeners() {
+        
+        final ListenerRegistrationHandler handler = ListenerRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::registerListeners));
+        this.listeners.endListeners().addAll(handler.endListeners());
+        this.listeners.zenListeners().addAll(handler.zenListeners());
+    }
+    
+    private void handleZenDataRegistration(final IPluginRegistryAccess access) {
+        
         final Map<String, IScriptLoader> loaders = LoaderRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerLoaders));
         final Function<String, IScriptLoader> loaderFinder = name -> {
             if(loaders.containsKey(name)) {
                 return loaders.get(name);
             }
-            throw new IllegalArgumentException("Unknown loader '" + name + "' queried");
+            throw new IllegalArgumentException("Unknown loader '" + name + "' queried: missing registration?");
         };
         
-        pluginRegistryAccess.registerLoaders(loaders.values());
-        pluginRegistryAccess.registerLoadSources(LoadSourceRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerLoadSource)));
+        access.registerLoaders(loaders.values());
+        access.registerLoadSources(LoadSourceRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerLoadSource)));
         
         final JavaNativeIntegrationRegistrationHandler javaHandler = JavaNativeIntegrationRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::manageJavaNativeIntegration));
-        this.manageZenRegistration(pluginRegistryAccess, javaHandler, loaderFinder);
+        this.manageZenRegistration(access, javaHandler, loaderFinder);
         
         final BracketParserRegistrationHandler bracketHandler = BracketParserRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::registerBracketParsers));
-        this.manageBracketRegistration(pluginRegistryAccess, bracketHandler, loaderFinder);
+        this.manageBracketRegistration(access, bracketHandler, loaderFinder);
         
-        RecipeHandlerRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerRecipeHandlers))
-                .forEach(it -> pluginRegistryAccess.registerHandler(this.uncheck(it.recipeClass()), it.handler()));
-        
-        this.endListeners.addAll(ListenerRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerListeners)));
+        this.listeners.zenListeners().forEach(Runnable::run);
     }
     
-    public void broadcastEnd() {
+    private void handleAdditionalRegistration(final IPluginRegistryAccess access) {
         
-        this.endListeners.forEach(Runnable::run);
-        this.endListeners.clear();
+        RecipeHandlerRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerRecipeHandlers))
+                .forEach(it -> access.registerHandler(this.uncheck(it.recipeClass()), it.handler()));
     }
     
     private <T> Consumer<T> onEach(final BiConsumer<ICraftTweakerPlugin, T> consumer) {

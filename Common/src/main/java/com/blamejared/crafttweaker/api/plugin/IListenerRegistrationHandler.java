@@ -2,6 +2,8 @@ package com.blamejared.crafttweaker.api.plugin;
 
 public interface IListenerRegistrationHandler {
     
-    void registerCraftTweakerLoadCompleteListener(final Runnable runnable);
+    void onZenDataRegistrationCompletion(final Runnable runnable);
+    
+    void onCraftTweakerLoadCompletion(final Runnable runnable);
     
 }

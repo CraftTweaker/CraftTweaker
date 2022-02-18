@@ -73,8 +73,8 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
     @SuppressWarnings("CodeBlock2Expr")
     public void registerListeners(final IListenerRegistrationHandler handler) {
         
-        // TODO("Find a better place for this; and also per-loader API?")
-        handler.registerCraftTweakerLoadCompleteListener(() -> {
+        handler.onZenDataRegistrationCompletion(() -> {
+            // TODO("Per-loader API")
             CraftTweakerAPI.getRegistry().getAllLoaders().forEach(loader -> {
                 CraftTweakerAPI.getRegistry().getZenClassRegistry().getImplementationsOf(loader, ITagManager.class)
                         .stream()
