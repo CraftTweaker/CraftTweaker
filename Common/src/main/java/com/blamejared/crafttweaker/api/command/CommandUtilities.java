@@ -56,8 +56,8 @@ public final class CommandUtilities {
     public static void open(final Player player, final File file) {
     
         MutableComponent component = new TranslatableComponent("crafttweaker.command.click.open", new TextComponent(file.getPath()).withStyle(ChatFormatting.GOLD));
-        send(component.withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, component))
-                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file.getPath()))), player);
+        send(component.withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, component.copy()))
+                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, file.getPath()))), player);
     }
     
     public static String stripNewLine(String string) {
