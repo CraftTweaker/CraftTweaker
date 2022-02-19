@@ -9,8 +9,11 @@ import it.unimi.dsi.fastutil.objects.Object2BooleanMaps;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 final class JavaNativeIntegrationRegistrationHandler implements IJavaNativeIntegrationRegistrationHandler {
@@ -19,13 +22,13 @@ final class JavaNativeIntegrationRegistrationHandler implements IJavaNativeInteg
     
     record ZenClassRequest(String loader, Class<?> clazz, ZenTypeInfo info) {}
     
-    private final List<IPreprocessor> preprocessors;
+    private final Map<String, IPreprocessor> preprocessors;
     private final List<NativeClassRequest> nativeClassRequests;
     private final Object2BooleanMap<ZenClassRequest> zenClassRequests;
     
     private JavaNativeIntegrationRegistrationHandler() {
         
-        this.preprocessors = new ArrayList<>();
+        this.preprocessors = new HashMap<>();
         this.nativeClassRequests = new ArrayList<>();
         this.zenClassRequests = new Object2BooleanOpenHashMap<>();
     }
@@ -66,13 +69,17 @@ final class JavaNativeIntegrationRegistrationHandler implements IJavaNativeInteg
     @Override
     public void registerPreprocessor(final IPreprocessor preprocessor) {
         
-        // TODO("Checks")
-        this.preprocessors.add(preprocessor);
+        final String name = preprocessor.getName();
+        final IPreprocessor other = this.preprocessors.get(name);
+        if(other != null) {
+            throw new IllegalArgumentException("A preprocessor with the name '" + name + "' is already registered: old " + other + ", new " + preprocessor);
+        }
+        this.preprocessors.put(name, preprocessor);
     }
     
-    List<IPreprocessor> preprocessors() {
+    Collection<IPreprocessor> preprocessors() {
         
-        return Collections.unmodifiableList(this.preprocessors);
+        return Collections.unmodifiableCollection(this.preprocessors.values());
     }
     
     List<NativeClassRequest> nativeClassRequests() {
