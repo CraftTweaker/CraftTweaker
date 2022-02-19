@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.api.zencode.impl.preprocessor;
+package com.blamejared.crafttweaker.impl.preprocessor;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
@@ -9,42 +9,29 @@ import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Preprocessor
-public class LoaderPreprocessor implements IPreprocessor {
+public class NoBrandPreprocessor implements IPreprocessor {
     
     @Override
     public String getName() {
         
-        return "loader";
+        return "nobrand";
     }
     
     @Nullable
     @Override
     public String getDefaultValue() {
         
-        return "crafttweaker";
+        return null;
     }
     
     @Override
     public boolean apply(@Nonnull FileAccessSingle file, ScriptLoadingOptions scriptLoadingOptions, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
         
-        final List<String> distinct = preprocessorMatches.stream()
-                .map(PreprocessorMatch::getContent)
-                .flatMap(s -> Arrays.stream(s.split(" ")))
-                .map(String::toLowerCase)
-                .distinct()
-                .collect(Collectors.toList());
-        
-        if(distinct.size() > 1) {
-            CraftTweakerAPI.LOGGER.warn("Multiple Loaders found for file {}: {}", file.getFileName(), distinct);
-        }
-        
-        return distinct.contains(scriptLoadingOptions.getLoaderName().toLowerCase());
-        
+        CraftTweakerAPI.NO_BRAND = true;
+        return true;
     }
     
 }

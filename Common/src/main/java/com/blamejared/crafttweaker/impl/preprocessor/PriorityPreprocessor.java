@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.api.zencode.impl.preprocessor;
+package com.blamejared.crafttweaker.impl.preprocessor;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;

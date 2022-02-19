@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.api.zencode.impl.preprocessor.onlyif;
+package com.blamejared.crafttweaker.impl.preprocessor.onlyif;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
@@ -6,12 +6,12 @@ import com.blamejared.crafttweaker.api.annotation.Preprocessor;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.PreprocessorMatch;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessor.onlyif.parameter.OnlyIfParameterFalse;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessor.onlyif.parameter.OnlyIfParameterModLoaded;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessor.onlyif.parameter.OnlyIfParameterModLoader;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessor.onlyif.parameter.OnlyIfParameterModNotLoaded;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessor.onlyif.parameter.OnlyIfParameterSide;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessor.onlyif.parameter.OnlyIfParameterTrue;
+import com.blamejared.crafttweaker.impl.preprocessor.onlyif.parameter.OnlyIfParameterFalse;
+import com.blamejared.crafttweaker.impl.preprocessor.onlyif.parameter.OnlyIfParameterModLoaded;
+import com.blamejared.crafttweaker.impl.preprocessor.onlyif.parameter.OnlyIfParameterModLoader;
+import com.blamejared.crafttweaker.impl.preprocessor.onlyif.parameter.OnlyIfParameterModNotLoaded;
+import com.blamejared.crafttweaker.impl.preprocessor.onlyif.parameter.OnlyIfParameterSide;
+import com.blamejared.crafttweaker.impl.preprocessor.onlyif.parameter.OnlyIfParameterTrue;
 import org.openzen.zencode.shared.CodePosition;
 
 import javax.annotation.Nonnull;
@@ -176,7 +176,7 @@ public final class OnlyIfPreprocessor implements IPreprocessor {
                 newContent = String.join(" ", strings.subList(indexOfEnd, content.length)).substring(1);
                 getOnlyIfMatch(file, matches, new PreprocessorMatch(new EndIfPreprocessor(), line, newContent));
             }
-
+            
             
         }
     }

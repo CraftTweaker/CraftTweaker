@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.api.zencode.impl.preprocessor;
+package com.blamejared.crafttweaker.impl.preprocessor;
 
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.annotation.Preprocessor;
@@ -11,14 +11,14 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 @Preprocessor
-public class LoadLastPreprocessor implements IPreprocessor {
+public class LoadFirstPreprocessor implements IPreprocessor {
     
-    public static final LoadLastPreprocessor INSTANCE = new LoadLastPreprocessor();
+    public static final LoadFirstPreprocessor INSTANCE = new LoadFirstPreprocessor();
     
     @Override
     public String getName() {
         
-        return "loadlast";
+        return "loadfirst";
     }
     
     @Nullable
@@ -37,13 +37,13 @@ public class LoadLastPreprocessor implements IPreprocessor {
     @Override
     public int getPriority() {
         
-        return 11;
+        return 13;
     }
     
     @Override
     public int compare(FileAccessSingle o1, FileAccessSingle o2) {
         
-        return Boolean.compare(o1.hasMatchFor(this), o2.hasMatchFor(this));
+        return Boolean.compare(o2.hasMatchFor(this), o1.hasMatchFor(this));
     }
     
 }

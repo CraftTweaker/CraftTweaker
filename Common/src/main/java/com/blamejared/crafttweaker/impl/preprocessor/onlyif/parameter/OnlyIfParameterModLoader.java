@@ -1,7 +1,7 @@
-package com.blamejared.crafttweaker.api.zencode.impl.preprocessor.onlyif.parameter;
+package com.blamejared.crafttweaker.impl.preprocessor.onlyif.parameter;
 
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessor.onlyif.OnlyIfParameter;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessor.onlyif.OnlyIfParameterHit;
+import com.blamejared.crafttweaker.impl.preprocessor.onlyif.OnlyIfParameter;
+import com.blamejared.crafttweaker.impl.preprocessor.onlyif.OnlyIfParameterHit;
 import com.blamejared.crafttweaker.platform.Services;
 
 public class OnlyIfParameterModLoader extends OnlyIfParameter {
@@ -19,7 +19,7 @@ public class OnlyIfParameterModLoader extends OnlyIfParameter {
         }
         String modLoader = additionalArguments[0];
         
-    
+        
         final boolean conditionMet = Services.PLATFORM.getPlatformName().equalsIgnoreCase(modLoader);
         if(conditionMet) {
             return OnlyIfParameterHit.conditionPassed(additionalArguments.length);

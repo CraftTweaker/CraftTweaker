@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.api.zencode.impl.preprocessor.onlyif;
+package com.blamejared.crafttweaker.impl.preprocessor.onlyif;
 
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import org.openzen.zencode.shared.CodePosition;

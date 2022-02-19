@@ -1,7 +1,7 @@
-package com.blamejared.crafttweaker.api.zencode.impl.preprocessor.onlyif.parameter;
+package com.blamejared.crafttweaker.impl.preprocessor.onlyif.parameter;
 
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessor.onlyif.OnlyIfParameter;
-import com.blamejared.crafttweaker.api.zencode.impl.preprocessor.onlyif.OnlyIfParameterHit;
+import com.blamejared.crafttweaker.impl.preprocessor.onlyif.OnlyIfParameter;
+import com.blamejared.crafttweaker.impl.preprocessor.onlyif.OnlyIfParameterHit;
 import com.blamejared.crafttweaker.platform.Services;
 
 import java.util.Arrays;

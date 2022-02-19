@@ -1,5 +1,6 @@
-package com.blamejared.crafttweaker.api.zencode.impl.preprocessor;
+package com.blamejared.crafttweaker.impl.preprocessor;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.annotation.Preprocessor;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
@@ -10,13 +11,16 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+/**
+ * {@code #replace toReplace replaceWith}
+ */
 @Preprocessor
-public class NoLoadPreprocessor implements IPreprocessor {
+public class ReplacePreprocessor implements IPreprocessor {
     
     @Override
     public String getName() {
         
-        return "noload";
+        return "replace";
     }
     
     @Nullable
@@ -29,7 +33,16 @@ public class NoLoadPreprocessor implements IPreprocessor {
     @Override
     public boolean apply(@Nonnull FileAccessSingle file, ScriptLoadingOptions scriptLoadingOptions, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
         
-        return false;
+        for(PreprocessorMatch preprocessorMatch : preprocessorMatches) {
+            final String[] split = preprocessorMatch.getContent().split(" ", 2);
+            if(split.length != 2) {
+                CraftTweakerAPI.LOGGER.warn("[{}:{}] Invalid Preprocessor line: #replace {}", file.getFileName(), preprocessorMatch.getLine(), preprocessorMatch.getContent());
+                continue;
+            }
+            file.getFileContents().replaceAll(s -> s.replaceAll(split[0], split[1]));
+        }
+        
+        return true;
     }
     
 }
