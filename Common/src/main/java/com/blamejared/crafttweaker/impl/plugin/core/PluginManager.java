@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public final class PluginManager {
     
@@ -120,19 +122,26 @@ public final class PluginManager {
     
     public void broadcastEnd() {
         
-        this.listeners.endListeners().forEach(Runnable::run);
+        this.callListeners("initialization end", this.listeners.endListeners());
     }
     
     private void gatherListeners() {
         
-        final ListenerRegistrationHandler handler = ListenerRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::registerListeners));
+        final ListenerRegistrationHandler handler = this.verifying(
+                "gathering listeners",
+                () -> ListenerRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::registerListeners))
+        );
         this.listeners.endListeners().addAll(handler.endListeners());
         this.listeners.zenListeners().addAll(handler.zenListeners());
     }
     
     private void handleZenDataRegistration(final IPluginRegistryAccess access) {
         
-        final Map<String, IScriptLoader> loaders = LoaderRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerLoaders));
+        final Map<String, IScriptLoader> loaders = this.verifying(
+                "registering loaders",
+                () -> LoaderRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerLoaders))
+        );
+        
         final Function<String, IScriptLoader> loaderFinder = name -> {
             if(loaders.containsKey(name)) {
                 return loaders.get(name);
@@ -141,21 +150,95 @@ public final class PluginManager {
         };
         
         access.registerLoaders(loaders.values());
-        access.registerLoadSources(LoadSourceRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerLoadSource)));
+        access.registerLoadSources(this.verifying(
+                "registering load sources",
+                () -> LoadSourceRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerLoadSource))
+        ));
         
-        final JavaNativeIntegrationRegistrationHandler javaHandler = JavaNativeIntegrationRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::manageJavaNativeIntegration));
+        final JavaNativeIntegrationRegistrationHandler javaHandler = this.verifying(
+                "gathering ZenCode integration data",
+                () -> JavaNativeIntegrationRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::manageJavaNativeIntegration))
+        );
         this.manageZenRegistration(access, javaHandler, loaderFinder);
         
-        final BracketParserRegistrationHandler bracketHandler = BracketParserRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::registerBracketParsers));
+        final BracketParserRegistrationHandler bracketHandler = this.verifying(
+                "gathering BEP data",
+                () -> BracketParserRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::registerBracketParsers))
+        );
         this.manageBracketRegistration(access, bracketHandler, loaderFinder);
         
-        this.listeners.zenListeners().forEach(Runnable::run);
+        this.callListeners("ZenCode registration end", this.listeners.zenListeners());
     }
     
     private void handleAdditionalRegistration(final IPluginRegistryAccess access) {
         
-        RecipeHandlerRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerRecipeHandlers))
-                .forEach(it -> access.registerHandler(this.uncheck(it.recipeClass()), it.handler()));
+        this.verifying(
+                "registering recipe handlers",
+                () -> RecipeHandlerRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerRecipeHandlers))
+                        .forEach(it -> access.registerHandler(this.uncheck(it.recipeClass()), it.handler()))
+        );
+    }
+    
+    private void manageZenRegistration(final IPluginRegistryAccess access, final JavaNativeIntegrationRegistrationHandler handler, final Function<String, IScriptLoader> loaderGetter) {
+        
+        this.verifying(
+                "registering preprocessors",
+                () -> handler.preprocessors().forEach(access::registerPreprocessor)
+        );
+        this.verifying(
+                "registering native types",
+                () -> handler.nativeClassRequests()
+                        .forEach(r -> access.registerNativeType(loaderGetter.apply(r.loader()), r.info()))
+        );
+        this.verifying(
+                "registering Zen types",
+                () -> handler.zenClassRequests()
+                        .object2BooleanEntrySet()
+                        .stream()
+                        .sorted(Comparator.comparing(it -> it.getKey().info().kind()))
+                        .forEach(entry ->
+                                access.registerZenType(
+                                        loaderGetter.apply(entry.getKey().loader()),
+                                        entry.getKey().clazz(),
+                                        entry.getKey().info(),
+                                        entry.getBooleanValue()
+                                )
+                        )
+        );
+        
+    }
+    
+    private void manageBracketRegistration(final IPluginRegistryAccess access, final BracketParserRegistrationHandler handler, final Function<String, IScriptLoader> loaderFinder) {
+        
+        this.verifying(
+                "registering BEPs",
+                () -> handler.bracketRequests().forEach(it ->
+                        access.registerBracket(loaderFinder.apply(it.loader()), it.parserName(), it.parserCreator(), it.parserDumper())
+                )
+        );
+        this.verifying(
+                "registering enum brackets",
+                () -> handler.enumRequests().forEach(it ->
+                        access.registerEnum(loaderFinder.apply(it.loader()), it.id(), this.uncheck(it.enumClass()))
+                )
+        );
+    }
+    
+    private void verifying(final String what, final Runnable block) {
+        
+        this.verifying(what, () -> {
+            block.run();
+            return null;
+        });
+    }
+    
+    private <T> T verifying(final String what, final Supplier<T> block) {
+        
+        try {
+            return block.get();
+        } catch(final Throwable t) {
+            throw new IllegalStateException("An error occurred while " + what, t);
+        }
     }
     
     private <T> Consumer<T> onEach(final BiConsumer<ICraftTweakerPlugin, T> consumer) {
@@ -169,25 +252,9 @@ public final class PluginManager {
         });
     }
     
-    private void manageZenRegistration(final IPluginRegistryAccess access, final JavaNativeIntegrationRegistrationHandler handler, final Function<String, IScriptLoader> loaderGetter) {
+    private void callListeners(final String type, final Collection<Runnable> listeners) {
         
-        handler.preprocessors().forEach(access::registerPreprocessor);
-        handler.nativeClassRequests()
-                .forEach(r -> access.registerNativeType(loaderGetter.apply(r.loader()), r.info()));
-        handler.zenClassRequests()
-                .object2BooleanEntrySet()
-                .stream()
-                .sorted(Comparator.comparing(it -> it.getKey().info().kind()))
-                .forEach(entry -> access.registerZenType(loaderGetter.apply(entry.getKey().loader()), entry.getKey()
-                        .clazz(), entry.getKey().info(), entry.getBooleanValue()));
-    }
-    
-    private void manageBracketRegistration(final IPluginRegistryAccess access, final BracketParserRegistrationHandler handler, final Function<String, IScriptLoader> loaderFinder) {
-        
-        handler.bracketRequests()
-                .forEach(it -> access.registerBracket(loaderFinder.apply(it.loader()), it.parserName(), it.parserCreator(), it.parserDumper()));
-        handler.enumRequests()
-                .forEach(it -> access.registerEnum(loaderFinder.apply(it.loader()), it.id(), this.uncheck(it.enumClass())));
+        listeners.forEach(it -> this.verifying("calling " + type + " listener", it::run));
     }
     
     @SuppressWarnings("unchecked")
