@@ -23,6 +23,6 @@ public @interface ZenRegister {
      */
     String[] modDeps() default "";
     
-    String loader() default CraftTweakerConstants.DEFAULT_LOADER_NAME;
+    String[] loaders() default {CraftTweakerConstants.DEFAULT_LOADER_NAME};
     
 }

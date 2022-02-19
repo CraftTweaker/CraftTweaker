@@ -5,12 +5,14 @@ import com.blamejared.crafttweaker.platform.Services;
 import com.google.common.base.Suppliers;
 import com.mojang.datafixers.util.Either;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 final class ZenClassGatherer {
     
@@ -26,7 +28,7 @@ final class ZenClassGatherer {
             final CraftTweakerModList modList = new CraftTweakerModList();
             final List<ZenClassData> classes = Services.PLATFORM.findClassesWithAnnotation(ZenRegister.class, modList::add, this::checkModDependencies)
                     .filter(Objects::nonNull)
-                    .map(it -> new ZenClassData(it, it.getDeclaredAnnotation(ZenRegister.class).loader()))
+                    .flatMap(this::makeForClass)
                     .toList();
             return new ZenCandidates(Collections.unmodifiableList(classes), modList::printToLog);
         });
@@ -48,6 +50,12 @@ final class ZenClassGatherer {
         return annotationData.map(zenRegister -> List.of(zenRegister.modDeps()), map -> (List<String>) map.getOrDefault("modDeps", List.of()))
                 .stream()
                 .allMatch(Services.PLATFORM::isModLoaded);
+    }
+    
+    private Stream<ZenClassData> makeForClass(final Class<?> clazz) {
+        
+        return Arrays.stream(clazz.getDeclaredAnnotation(ZenRegister.class).loaders())
+                .map(it -> new ZenClassData(clazz, it));
     }
     
 }
