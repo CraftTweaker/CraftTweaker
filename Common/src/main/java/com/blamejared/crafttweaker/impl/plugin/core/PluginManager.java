@@ -254,7 +254,7 @@ public final class PluginManager {
     
     private void callListeners(final String type, final Collection<Runnable> listeners) {
         
-        listeners.forEach(it -> this.verifying("calling " + type + " listener", it::run));
+        listeners.forEach(it -> this.verifying("calling " + type + " listener", it));
     }
     
     @SuppressWarnings("unchecked")
