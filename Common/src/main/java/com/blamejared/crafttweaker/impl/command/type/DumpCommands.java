@@ -51,9 +51,9 @@ public final class DumpCommands {
                         .map(Map::values)
                         .flatMap(Collection::stream)
                         .forEach(it -> {
-                            final String dumpedFileName = it.getDumpedFileName() + ".txt";
+                            final String dumpedFileName = it.dumpedFileName() + ".txt";
                             try(final PrintWriter writer = new PrintWriter(new FileWriter(new File(folder, dumpedFileName), false))) {
-                                it.getDumpedValuesStream().sorted().forEach(writer::println);
+                                it.values().sorted().forEach(writer::println);
                             } catch(IOException e) {
                                 CraftTweakerAPI.LOGGER.error("Error writing to file '{}'", dumpedFileName, e);
                             }

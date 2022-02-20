@@ -59,14 +59,14 @@ public final class CTCommands {
                 .map(Map::values)
                 .flatMap(Collection::stream)
                 .forEach(it -> {
-                    final String subCommandName = it.getSubCommandName();
+                    final String subCommandName = it.subCommandName();
                     
                     // This means that a mod used .registerDump on a name for which a @BracketDumper exists as well
                     // Let's log a warning because then the .registerDump will win
                     if(dump.getSubCommands().containsKey(subCommandName)) {
                         CraftTweakerAPI.LOGGER.warn("Found both an explicit Dumping command and a BracketDumper annotation for the name '{}'. This is a (non-fatal) mod issue!", subCommandName);
                     } else {
-                        registerDump(new CommandImpl(subCommandName, it.getDescription(), commandSourceStackLiteralArgumentBuilder -> commandSourceStackLiteralArgumentBuilder.executes(it)));
+                        registerDump(new CommandImpl(subCommandName, it.description(), commandSourceStackLiteralArgumentBuilder -> commandSourceStackLiteralArgumentBuilder.executes(it)));
                     }
                 });
         
