@@ -117,6 +117,7 @@ public final class PluginManager {
         this.gatherListeners();
         
         this.handleZenDataRegistration(pluginRegistryAccess);
+        this.applyInheritanceRules(pluginRegistryAccess);
         this.handleAdditionalRegistration(pluginRegistryAccess);
     }
     
@@ -168,6 +169,11 @@ public final class PluginManager {
         this.manageBracketRegistration(access, bracketHandler, loaderFinder);
         
         this.callListeners("ZenCode registration end", this.listeners.zenListeners());
+    }
+    
+    private void applyInheritanceRules(final IPluginRegistryAccess access) {
+        
+        this.verifying("applying inheritance rules", access::applyInheritanceRules);
     }
     
     private void handleAdditionalRegistration(final IPluginRegistryAccess access) {

@@ -47,6 +47,17 @@ public final class NativeTypeRegistry implements INativeTypeRegistry {
         this.info.put(targetedType, new BakedTypeInfo(zenName, targetedType, executables));
     }
     
+    public void inheritFrom(final NativeTypeRegistry other) {
+        
+        other.info.forEach((clazz, info) -> {
+            if(this.info.containsKey(clazz)) {
+                // TODO("Maybe merge executables?")
+                throw new IllegalStateException("Unable to duplicate native type data for " + clazz);
+            }
+            this.info.put(clazz, info);
+        });
+    }
+    
     private Map<String, ExecutableReferenceGroupInfo> getExecutableInfo(final NativeTypeInfo info) {
         
         final HashMap<String, ExecutableReferenceGroupInfo> result = new HashMap<>();

@@ -35,4 +35,6 @@ public interface IPluginRegistryAccess {
     
     <T extends Recipe<?>> void registerHandler(final Class<? extends T> clazz, final IRecipeHandler<T> handler);
     
+    void applyInheritanceRules();
+    
 }

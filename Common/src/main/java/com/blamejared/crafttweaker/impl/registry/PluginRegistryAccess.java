@@ -77,4 +77,12 @@ final class PluginRegistryAccess implements IPluginRegistryAccess {
         this.registries.recipeHandlerRegistry().register(clazz, handler);
     }
     
+    @Override
+    public void applyInheritanceRules() {
+        
+        this.registries.bracketResolverRegistry().applyInheritanceRules();
+        this.registries.enumBracketRegistry().applyInheritanceRules();
+        this.registries.zenClassRegistry().applyInheritanceRules();
+    }
+    
 }

@@ -58,6 +58,35 @@ public final class ZenClassRegistry implements IZenClassRegistry {
             );
         }
         
+        private void inheritFrom(final ClassData other) {
+            
+            other.registeredClasses().forEach(clazz -> {
+                if(this.registeredClasses().contains(clazz)) {
+                    throw new IllegalStateException("Unable to register the same class twice: " + clazz.getName());
+                }
+                this.registeredClasses().add(clazz);
+            });
+            other.globals().forEach((global, clazz) -> {
+                if(this.globals().containsKey(global) || this.globals().containsValue(clazz)) {
+                    throw new IllegalStateException("Unable to register a global twice: (" + global + ", " + clazz + ')');
+                }
+                this.globals().put(global, clazz);
+            });
+            other.classes().forEach((name, clazz) -> {
+                if(this.classes().containsKey(name) || this.classes().containsValue(clazz)) {
+                    throw new IllegalStateException("Unable to register a class twice: (" + name + ", " + clazz + ')');
+                }
+                this.classes().put(name, clazz);
+            });
+            other.expansions().forEach((target, expansion) -> {
+                final Collection<Class<?>> current = this.expansions().get(target);
+                if(current.contains(expansion)) {
+                    throw new IllegalStateException("Unable to register an expansion for " + target + " twice: " + expansion);
+                }
+                this.expansions().put(target, expansion);
+            });
+        }
+        
     }
     
     private static final class LoaderSpecificZenClassRegistry {
@@ -192,6 +221,20 @@ public final class ZenClassRegistry implements IZenClassRegistry {
             }
         }
         
+        private void inheritFrom(final Collection<LoaderSpecificZenClassRegistry> registries) {
+            
+            if(this == EMPTY) {
+                throw new UnsupportedOperationException();
+            }
+            registries.forEach(this::inheritFrom);
+        }
+        
+        private void inheritFrom(final LoaderSpecificZenClassRegistry other) {
+            
+            this.nativeTypeRegistry.inheritFrom(other.nativeTypeRegistry);
+            this.data.inheritFrom(other.view.get());
+        }
+        
     }
     
     private static final LoaderSpecificZenClassRegistry EMPTY = new LoaderSpecificZenClassRegistry();
@@ -272,48 +315,26 @@ public final class ZenClassRegistry implements IZenClassRegistry {
         this.get(loader).registerZenType(clazz, info, globals);
     }
     
+    public void applyInheritanceRules() {
+        
+        List.copyOf(this.registryMap.keySet()).forEach(loader -> {
+            try {
+                final LoaderSpecificZenClassRegistry loaderData = this.get(loader);
+                final Collection<LoaderSpecificZenClassRegistry> inheritedData = loader.inheritedLoaders()
+                        .stream()
+                        .map(this::get)
+                        .toList();
+                loaderData.inheritFrom(inheritedData);
+            } catch(final Exception e) {
+                throw new IllegalStateException("Unable to apply inheritance rules for loader " + loader.name());
+            }
+        });
+    }
+    
     private LoaderSpecificZenClassRegistry get(final IScriptLoader loader) {
         
         return this.registryMap.getOrDefault(Objects.requireNonNull(loader, "loader"), EMPTY);
     }
-    
-    /*
-    public void addClass(Class<?> cls) {
-        
-        if(areModsMissing(cls.getAnnotation(ZenRegister.class))) {
-            final String canonicalName = cls.getCanonicalName();
-            CraftTweakerAPI.LOGGER.debug("Skipping class '{}' since its Mod dependencies are not fulfilled", canonicalName);
-            return;
-        }
-        
-        if(isIncompatible(cls)) {
-            blacklistedClasses.add(cls);
-            return;
-        }
-        
-        allRegisteredClasses.add(cls);
-        
-        if(cls.isAnnotationPresent(ZenCodeType.Name.class)) {
-            addZenClass(cls);
-        }
-        
-        if(cls.isAnnotationPresent(ZenCodeType.Expansion.class)) {
-            final String expandedClassName = cls.getAnnotation(ZenCodeType.Expansion.class).value();
-            addExpansion(cls, expandedClassName);
-        }
-        
-        if(cls.isAnnotationPresent(TypedExpansion.class)) {
-            addTypedExpansion(cls);
-        }
-        
-        if(hasGlobals(cls)) {
-            if(cls.isAnnotationPresent(ZenCodeType.Name.class)) {
-                addGlobal(cls);
-            } else {
-                CraftTweakerAPI.LOGGER.warn("Class: '{}' has a Global value, but is missing the '{}' annotation! Please report this to the mod author!", cls, ZenCodeType.Name.class.getName());
-            }
-        }
-    }*/
     
     /**
      * Checks that the class does not have any fields or methods that would cause errors when converting in the JavaNativeModule.
@@ -337,30 +358,4 @@ public final class ZenClassRegistry implements IZenClassRegistry {
         }
     }
     
-    /*
-    private void addTypedExpansion(Class<?> cls) {
-        
-        final TypedExpansion annotation = cls.getAnnotation(TypedExpansion.class);
-        final Class<?> expandedType = annotation.value();
-        
-        if(nativeTypeRegistry.hasInfoFor(expandedType)) {
-            final String expandedClassName = nativeTypeRegistry.getCrTNameFor(expandedType);
-            addExpansion(cls, expandedClassName);
-        } else if(expandedType.isAnnotationPresent(ZenCodeType.Name.class)) {
-            final ZenCodeType.Name nameAnnotation = expandedType.getAnnotation(ZenCodeType.Name.class);
-            final String expandedClassName = nameAnnotation.value();
-            addExpansion(cls, expandedClassName);
-        } else {
-            final String expandedTypeClassName = expandedType.getCanonicalName();
-            CraftTweakerAPI.LOGGER.error("Cannot add Expansion for '{}' as the expanded type is not registered!", expandedTypeClassName);
-        }
-    }
-    
-    private boolean areModsMissing(ZenRegister register) {
-        
-        return register == null || !Arrays.stream(register.modDeps())
-                .filter(modId -> modId != null && !modId.isEmpty())
-                .allMatch(Services.PLATFORM::isModLoaded);
-    }
-    */
 }

@@ -46,6 +46,16 @@ public final class BracketResolverRegistry {
         brackets.put(name, new BracketHandle(bracketCreator, new BracketDumperInfo(name, dumperData)));
     }
     
+    public void applyInheritanceRules() {
+        
+        List.copyOf(this.brackets.keySet()).forEach(it -> {
+            try {
+                this.applyInheritanceRules(it);
+            } catch(final Exception e) {
+                throw new IllegalStateException("Unable to apply inheritance rules for " + it.name());
+            }
+        });
+    }
     
     public Map<String, IBracketDumperInfo> getBracketDumpers(final IScriptLoader loader) {
         
@@ -66,6 +76,28 @@ public final class BracketResolverRegistry {
                 .stream()
                 .map(it -> Pair.of(it.getKey(), it.getValue().creator().createParser(engine, module)))
                 .toList();
+    }
+    
+    private void applyInheritanceRules(final IScriptLoader loader) {
+        
+        final Map<String, BracketHandle> loaderData = this.brackets.get(loader).brackets();
+        loader.inheritedLoaders().forEach(it -> {
+            try {
+                this.tryMerge(loaderData, this.brackets.getOrDefault(it, new BracketData()).brackets());
+            } catch(final Exception e) {
+                throw new IllegalStateException("Unable to inherit from " + it.name());
+            }
+        });
+    }
+    
+    private void tryMerge(final Map<String, BracketHandle> loaderData, final Map<String, BracketHandle> inheritedData) {
+        
+        inheritedData.forEach((name, handle) -> {
+            if(loaderData.containsKey(name)) {
+                throw new IllegalStateException("A bracket handler with the name " + name + " is already registered");
+            }
+            loaderData.put(name, handle);
+        });
     }
     
 }

@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -32,6 +33,17 @@ public final class EnumBracketRegistry {
         enums.put(id, clazz);
     }
     
+    public void applyInheritanceRules() {
+        
+        List.copyOf(this.data.keySet()).forEach(it -> {
+            try {
+                this.applyInheritanceRules(it);
+            } catch(final Exception e) {
+                throw new IllegalStateException("Unable to apply inheritance rules for " + it.name());
+            }
+        });
+    }
+    
     @SuppressWarnings("unchecked")
     public <T extends Enum<T>> Optional<Class<T>> getEnum(final IScriptLoader loader, final ResourceLocation type) {
         
@@ -44,6 +56,28 @@ public final class EnumBracketRegistry {
     public Map<ResourceLocation, Class<? extends Enum<?>>> getEnums(final IScriptLoader loader) {
         
         return ImmutableMap.copyOf(this.data.getOrDefault(loader, new EnumData()).enums());
+    }
+    
+    private void applyInheritanceRules(final IScriptLoader loader) {
+        
+        final Map<ResourceLocation, Class<? extends Enum<?>>> loaderData = this.data.get(loader).enums();
+        loader.inheritedLoaders().forEach(it -> {
+            try {
+                this.tryMerge(loaderData, this.data.getOrDefault(it, new EnumData()).enums());
+            } catch(final Exception e) {
+                throw new IllegalStateException("Unable to inherit from " + it.name());
+            }
+        });
+    }
+    
+    private void tryMerge(final Map<ResourceLocation, Class<? extends Enum<?>>> loaderEnums, final Map<ResourceLocation, Class<? extends Enum<?>>> inheritedEnums) {
+        
+        inheritedEnums.forEach((id, clazz) -> {
+            if(loaderEnums.containsKey(id)) {
+                throw new IllegalStateException(id + " is already assigned to an enum");
+            }
+            loaderEnums.put(id, clazz);
+        });
     }
     
 }
