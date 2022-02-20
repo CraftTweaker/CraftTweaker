@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.impl.plugin.core;
 
 import com.blamejared.crafttweaker.api.plugin.IScriptLoadSourceRegistrationHandler;
-import com.blamejared.crafttweaker.api.zencode.impl.IScriptLoadSource;
+import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.resources.ResourceLocation;
 

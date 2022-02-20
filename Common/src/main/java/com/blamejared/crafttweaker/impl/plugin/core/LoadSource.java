@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker.impl.plugin.core;
 
-import com.blamejared.crafttweaker.api.zencode.impl.IScriptLoadSource;
+import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import net.minecraft.resources.ResourceLocation;
 
 record LoadSource(ResourceLocation id) implements IScriptLoadSource {

@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker.impl.registry;
 
-import com.blamejared.crafttweaker.api.zencode.impl.IScriptLoadSource;
+import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;

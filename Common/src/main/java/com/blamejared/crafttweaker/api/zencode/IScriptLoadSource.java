@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.api.zencode.impl;
+package com.blamejared.crafttweaker.api.zencode;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import net.minecraft.resources.ResourceLocation;
