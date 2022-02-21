@@ -24,6 +24,12 @@ public class ElementLinkConversionRule implements LinkConversionRule {
     @Override
     public Optional<String> tryConvertToClickableMarkdown(String link, Element element) {
         
+        if(link.startsWith("#")){
+        
+            final String prefix = String.format("[this%s]", link);
+            final String suffix = String.format("(%s)", link);
+            return Optional.of(prefix + suffix);
+        }
         final String prefix = getPrefix(link, element);
         final String suffix = getSuffix(link);
         
