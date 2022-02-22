@@ -15,6 +15,7 @@ import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.base.visitor.DataToJsonStringVisitor;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.recipe.RecipeList;
 import com.blamejared.crafttweaker.api.util.NameUtil;
 import com.blamejared.crafttweaker.api.zencode.impl.util.PositionUtil;
 import com.blamejared.crafttweaker.platform.Services;
@@ -34,7 +35,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * Default interface for Registry based handlers as they can all remove recipes by ResourceLocation.
@@ -51,7 +51,7 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
     /**
      * Adds a recipe based on a provided IData. The provided IData should represent a DataPack json, this effectively allows you to register recipes for any DataPack supporting RecipeType systems.
      *
-     * @param name name of the recipe
+     * @param name    name of the recipe
      * @param mapData data representing the json file
      *
      * @docParam name "recipe_name"
@@ -91,30 +91,27 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
                     """.formatted(Services.REGISTRY.getRegistryKey(iRecipe.getSerializer()), Services.REGISTRY.recipeTypes()
                     .getKey(recipeType), recipeTypeKey));
         }
-        CraftTweakerAPI.apply(new ActionAddRecipe<T>(this, iRecipe, ""));
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, iRecipe, ""));
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Nullable
     default T getRecipeByName(String name) {
         
-        return getRecipes().get(new ResourceLocation(name));
+        return getRecipeList().get(name);
     }
     
     @ZenCodeType.Method
     default List<T> getRecipesByOutput(IIngredient output) {
         
-        return getRecipes().values()
-                .stream()
-                .filter(iRecipe -> output.matches(Services.PLATFORM.createMCItemStackMutable(iRecipe.getResultItem())))
-                .collect(Collectors.toList());
+        return getRecipeList().getRecipesByOutput(output);
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("allRecipes")
     default List<T> getAllRecipes() {
         
-        return getRecipes().values().stream().toList();
+        return getRecipeList().getAllRecipes();
     }
     
     /**
@@ -126,8 +123,7 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
     @ZenCodeType.Getter("recipeMap")
     default Map<ResourceLocation, T> getRecipeMap() {
         
-        return getRecipes().entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        return getRecipeList().getRecipes();
     }
     
     /**
@@ -215,6 +211,29 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
      */
     RecipeType<T> getRecipeType();
     
+    
+    /**
+     * Gets a {@link RecipeList} which can be used to change recipes for this manager.
+     *
+     * Changes made through a {@link RecipeList} are applied to all the places that vanilla keeps track of recipes.
+     *
+     * @return A {@link RecipeList} for this manager.
+     */
+    default RecipeList<T> getRecipeList() {
+        
+        return new RecipeList<>(getRecipeType(), getRecipes(), CraftTweakerAPI.getAccessibleRecipeManager()
+                .getByName());
+    }
+    
+    /**
+     * Gets the recipes for this RecipeManager.
+     *
+     * This should only be used to view recipes, if you need to change the map, use {@link #getRecipeList()}
+     *
+     * In the future this method will either be removed or made to return an immutable map.
+     *
+     * @return A map of name to recipe for the manager type.
+     */
     default Map<ResourceLocation, T> getRecipes() {
         
         return (Map<ResourceLocation, T>) CraftTweakerAPI.getAccessibleRecipeManager()

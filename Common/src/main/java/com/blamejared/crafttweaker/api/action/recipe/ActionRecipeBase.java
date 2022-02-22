@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.action.recipe;
 
 
 import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
+import com.blamejared.crafttweaker.api.recipe.RecipeList;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.resources.ResourceLocation;
@@ -24,9 +25,27 @@ public abstract class ActionRecipeBase<T extends Recipe<?>> implements IRuntimeA
         return manager;
     }
     
+    /**
+     * Gets the recipes for the manager type.
+     * This should only be used to view recipes, if you need to change the map, use {@link #getRecipeMutator()}
+     *
+     * In the future this method will either be removed or made to return an immutable map.
+     *
+     * @return A map of name to recipe for the manager type.
+     */
     public Map<ResourceLocation, T> getRecipes() {
         
         return this.getManager().getRecipes();
+    }
+    
+    /**
+     * Gets a {@link RecipeList} for this manager, which helps ensure that changes are applied to all recipe maps that vanilla has.
+     *
+     * @return A {@link RecipeList} for the recipe manager type.
+     */
+    public RecipeList<T> getRecipeMutator() {
+        
+        return this.getManager().getRecipeList();
     }
     
     public RecipeType<T> getRecipeType() {

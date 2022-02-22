@@ -1,9 +1,8 @@
 package com.blamejared.crafttweaker.api.action.recipe.generic;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.recipe.RecipeList;
 import com.blamejared.crafttweaker.api.recipe.manager.RecipeManagerWrapper;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.Map;
@@ -14,12 +13,13 @@ public class ActionRemoveAllGenericRecipes extends ActionWholeRegistryBase {
     @Override
     public void apply() {
         
-        final Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> recipesByType = getRecipesByType();
+        Map<RecipeType<?>, RecipeList<?>> recipeLists = getRecipeLists();
+        
         final Map<String, Integer> numberOfRemovedRecipesByType = new TreeMap<>();
         int totalRemoved = 0;
         
-        for(RecipeType recipeType : recipesByType.keySet()) {
-            final int removedRecipes = remove(recipesByType.get(recipeType));
+        for(RecipeType recipeType : recipeLists.keySet()) {
+            final int removedRecipes = remove(recipeLists.get(recipeType));
             if(removedRecipes > 0) {
                 totalRemoved += removedRecipes;
                 final String commandString = new RecipeManagerWrapper(recipeType).getCommandString();
@@ -32,10 +32,10 @@ public class ActionRemoveAllGenericRecipes extends ActionWholeRegistryBase {
         CraftTweakerAPI.LOGGER.info("Removed {} recipes across these {} managers: {}", totalRemoved, managerCount, recipeTypeList);
     }
     
-    private int remove(Map<ResourceLocation, Recipe<?>> map) {
+    private int remove(RecipeList<?> list) {
         
-        final int size = map.size();
-        map.clear();
+        final int size = list.getSize();
+        list.removeAll();
         return size;
     }
     

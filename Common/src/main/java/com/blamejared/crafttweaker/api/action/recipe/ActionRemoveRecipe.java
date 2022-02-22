@@ -29,7 +29,7 @@ public class ActionRemoveRecipe<T extends Recipe<?>> extends ActionRecipeBase<T>
     @Override
     public void apply() {
         
-        getRecipes().keySet().removeIf(location -> removePredicate.test(getRecipes().get(location)));
+        getRecipeMutator().removeByRecipeTest(removePredicate);
     }
     
     @Override

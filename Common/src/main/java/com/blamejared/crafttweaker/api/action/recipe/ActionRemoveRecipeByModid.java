@@ -20,8 +20,7 @@ public class ActionRemoveRecipeByModid<T extends Recipe<?>> extends ActionRecipe
     @Override
     public void apply() {
         
-        getRecipes().keySet().removeIf(resourceLocation -> resourceLocation.getNamespace()
-                .equals(modid) && !exclude.test(resourceLocation.getPath()));
+        getRecipeMutator().removeByIdTest(resourceLocation -> resourceLocation.getNamespace().equals(modid), exclude);
     }
     
     @Override

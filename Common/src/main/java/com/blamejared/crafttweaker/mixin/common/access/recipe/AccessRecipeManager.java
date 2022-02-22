@@ -18,4 +18,11 @@ public interface AccessRecipeManager {
     @Accessor("recipes")
     void setRecipes(Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> recipeMap);
     
+    
+    @Accessor("byName")
+    Map<ResourceLocation, Recipe<?>> getByName();
+    
+    @Accessor("byName")
+    void setByName(Map<ResourceLocation, Recipe<?>> byName);
+    
 }

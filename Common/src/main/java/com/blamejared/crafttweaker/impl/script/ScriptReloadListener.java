@@ -61,6 +61,7 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
         accessRecipeManager.setRecipes(new HashMap<>(accessRecipeManager.getRecipes()));
         accessRecipeManager.getRecipes()
                 .replaceAll((k, v) -> new HashMap<>(accessRecipeManager.getRecipes().get(k)));
+        accessRecipeManager.setByName(new HashMap<>(accessRecipeManager.getByName()));
         CraftTweakerAPI.setRecipeManager(recipeManager);
         
         CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setSource(ScriptLoadingOptions.RELOAD_LISTENER_SCRIPT_SOURCE)
