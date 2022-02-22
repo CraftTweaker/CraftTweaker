@@ -150,6 +150,7 @@ public class MapData implements IData {
      * @docParam key "Hello"
      */
     @ZenCodeType.Method
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
     public boolean contains(String key) {
         
         return getInternal().contains(key);
