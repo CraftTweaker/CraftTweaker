@@ -13,6 +13,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public abstract class ActionWholeRegistryBase implements IRuntimeAction {
@@ -24,7 +25,7 @@ public abstract class ActionWholeRegistryBase implements IRuntimeAction {
     
     protected Map<RecipeType<?>, RecipeList<?>> getRecipeLists() {
     
-        return RecipeTypeBracketHandler.getManagerInstances().stream().map(IRecipeManager::getRecipeList).collect(Collectors.toMap(RecipeList::getRecipeType, recipeRecipeList -> recipeRecipeList));
+        return RecipeTypeBracketHandler.getManagerInstances().stream().map(IRecipeManager::getRecipeList).collect(Collectors.toMap(RecipeList::getRecipeType, Function.identity()));
     }
     
     protected Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> getRecipesByType() {
