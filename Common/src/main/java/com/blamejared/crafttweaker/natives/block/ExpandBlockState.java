@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.natives.block;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.action.block.ActionSetBlockProperty;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.block.CTBlockIngredient;
 import com.blamejared.crafttweaker.mixin.common.access.block.AccessBlockStateBase;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
@@ -291,5 +292,12 @@ public class ExpandBlockState {
         builder.append(">");
         return builder.toString();
     }
+    
+    @ZenCodeType.Caster(implicit = true)
+    public static CTBlockIngredient asBlockIngredient(BlockState internal) {
+        
+        return new CTBlockIngredient.BlockStateIngredient(internal);
+    }
+    
     
 }

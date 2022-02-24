@@ -4,6 +4,7 @@ package com.blamejared.crafttweaker.natives.block;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.action.block.ActionSetBlockProperty;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.block.CTBlockIngredient;
 import com.blamejared.crafttweaker.mixin.common.access.block.AccessBlockBehaviour;
 import com.blamejared.crafttweaker.natives.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.platform.Services;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -320,6 +322,21 @@ public class ExpandBlock {
         CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal,
                 "Material", material, ((AccessBlockBehaviour) internal).getMaterial(),
                 ((AccessBlockBehaviour) internal)::setMaterial, ExpandMaterial::getCommandString));
+    }
+    
+    @ZenCodeType.Caster(implicit = true)
+    public static CTBlockIngredient asBlockIngredient(Block internal) {
+        
+        return new CTBlockIngredient.BlockIngredient(internal);
+    }
+    
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)
+    public static CTBlockIngredient asList(Block internal, CTBlockIngredient other) {
+        
+        List<CTBlockIngredient> elements = new ArrayList<>();
+        elements.add(asBlockIngredient(internal));
+        elements.add(other);
+        return new CTBlockIngredient.CompoundBlockIngredient(elements);
     }
     
 }
