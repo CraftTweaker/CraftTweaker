@@ -131,7 +131,7 @@ public final class ConflictCommand {
         
         final IRecipeManager<?> manager = RecipeTypeBracketHandler.getOrDefault(entry.getKey());
         
-        if(manager == null) {
+        if(manager == null || entry.getValue().size() == 1) {
             return Stream.empty();
         }
         
