@@ -299,5 +299,13 @@ public class ExpandBlockState {
         return new CTBlockIngredient.BlockStateIngredient(internal);
     }
     
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)
+    public static CTBlockIngredient asList(BlockState internal, CTBlockIngredient other) {
+        
+        List<CTBlockIngredient> elements = new ArrayList<>();
+        elements.add(asBlockIngredient(internal));
+        elements.add(other);
+        return new CTBlockIngredient.CompoundBlockIngredient(elements);
+    }
     
 }
