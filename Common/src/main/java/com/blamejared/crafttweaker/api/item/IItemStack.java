@@ -32,6 +32,7 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -42,6 +43,12 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     
     @ZenCodeType.Field
     String CRAFTTWEAKER_DATA_KEY = "CraftTweakerData";
+    
+    @ZenCodeType.Field
+    UUID BASE_ATTACK_DAMAGE_UUID = AccessItem.getBASE_ATTACK_DAMAGE_UUID();
+    
+    @ZenCodeType.Field
+    UUID BASE_ATTACK_SPEED_UUID = AccessItem.getBASE_ATTACK_SPEED_UUID();
     
     /**
      * Creates a copy
@@ -340,12 +347,46 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     @ZenCodeType.Method
     default IItemStack withAttributeModifier(Attribute attribute, String uuid, String name, double value, AttributeModifier.Operation operation, EquipmentSlot[] slotTypes, @ZenCodeType.OptionalBoolean boolean preserveDefaults) {
         
+        return withAttributeModifier(attribute, UUID.fromString(uuid), name, value, operation, slotTypes, preserveDefaults);
+    }
+    
+    /**
+     * Adds an AttributeModifier to this IItemStack using a specific UUID.
+     *
+     * The UUID can be used to override an existing attribute on an ItemStack with this new modifier.
+     * You can use `/ct hand attributes` to get the UUID of the attributes on an ItemStack.
+     *
+     * Attributes added with this method will only appear on this specific IItemStack.
+     *
+     * By defaults, adding a modifier will remove the default Attribute Modifiers on the Item, like the Diamond Chestplate's Armor and Toughness values.
+     * When `preserveDefaults` is set to true (by default it is false.), the default Attribute Modifiers will be preserved when adding this modifier.
+     * This means that if you were adding the `forge:nametag_distance` attribute to an Item, it would keep its default attributes (like Armor and Toughness values).
+     *
+     * @param uuid             The unique identifier of the modifier to replace.
+     * @param attribute        The Attribute of the modifier.
+     * @param name             The name of the modifier.
+     * @param value            The value of the modifier.
+     * @param operation        The operation of the modifier.
+     * @param slotTypes        What slots the modifier is valid for.
+     * @param preserveDefaults Should the default Item Attribute Modifiers be preserved when adding this modifier.
+     *
+     * @docParam attribute <attribute:minecraft:generic.attack_damage>
+     * @docParam uuid "8c1b5535-9f79-448b-87ae-52d81480aaa3"
+     * @docParam name "Extra Power"
+     * @docParam value 10
+     * @docParam operation AttributeOperation.ADDITION
+     * @docParam slotTypes [<constant:minecraft:equipmentslot:chest>]
+     * @docParam preserveDefaults true
+     */
+    @ZenCodeType.Method
+    default IItemStack withAttributeModifier(Attribute attribute, UUID uuid, String name, double value, AttributeModifier.Operation operation, EquipmentSlot[] slotTypes, @ZenCodeType.OptionalBoolean boolean preserveDefaults) {
+        
         return modify(itemStack -> {
             for(EquipmentSlot slotType : slotTypes) {
                 if(preserveDefaults) {
-                    AttributeUtil.addAttributeModifier(itemStack, attribute, new AttributeModifier(name, value, operation), slotType);
+                    AttributeUtil.addAttributeModifier(itemStack, attribute, new AttributeModifier(uuid, name, value, operation), slotType);
                 } else {
-                    itemStack.addAttributeModifier(attribute, new AttributeModifier(name, value, operation), slotType);
+                    itemStack.addAttributeModifier(attribute, new AttributeModifier(uuid, name, value, operation), slotType);
                 }
             }
         });
@@ -635,6 +676,17 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         return Services.EVENT.getBurnTime(this);
     }
     
+    /**
+     * Checks if this IItemStack burns when thrown into fire / lava or damaged by fire.
+     *
+     * @return True if this IItemStack is immune to fire. False otherwise.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("fireResistant")
+    default boolean isFireResistant() {
+        
+        return getInternal().getItem().isFireResistant();
+    }
     
     /**
      * Sets if this IItemStack is immune to fire / lava.
@@ -652,19 +704,6 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         CraftTweakerAPI.apply(new ActionSetItemProperty<>(this, "Fire Resistant", fireResistant, this.getInternal()
                 .getItem().isFireResistant(), ((AccessItem) this.getInternal()
                 .getItem())::setFireResistant));
-    }
-    
-    
-    /**
-     * Checks if this IItemStack burns when thrown into fire / lava or damaged by fire.
-     *
-     * @return True if this IItemStack is immune to fire. False otherwise.
-     */
-    @ZenCodeType.Method
-    @ZenCodeType.Getter("fireResistant")
-    default boolean isFireResistant() {
-        
-        return getInternal().getItem().isFireResistant();
     }
     
     @ZenCodeType.Method

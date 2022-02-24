@@ -251,7 +251,38 @@ public interface IIngredient extends CommandStringDisplayable {
     @ZenCodeType.Method
     default void addGlobalAttributeModifier(Attribute attribute, String uuid, String name, double value, AttributeModifier.Operation operation, EquipmentSlot[] slotTypes) {
         
-        AttributeModifier modifier = new AttributeModifier(UUID.fromString(uuid), name, value, operation);
+        addGlobalAttributeModifier(attribute, UUID.fromString(uuid), name, value, operation, slotTypes);
+    }
+    
+    /**
+     * Adds an AttributeModifier to this IIngredient using a specific UUID.
+     *
+     * The UUID can be used to override an existing attribute on an ItemStack with this new modifier.
+     * You can use `/ct hand attributes` to get the UUID of the attributes on an ItemStack.
+     *
+     * Attributes added with this method appear on all ItemStacks that match this IIngredient,
+     * regardless of how or when the ItemStack was made, if you want to have the attribute on a
+     * single specific ItemStack (such as a specific Diamond Sword made in a recipe), then you should use
+     * IItemStack#withAttributeModifier
+     *
+     * @param uuid      The unique identifier of the modifier to replace.
+     * @param attribute The Attribute of the modifier.
+     * @param name      The name of the modifier.
+     * @param value     The value of the modifier.
+     * @param operation The operation of the modifier.
+     * @param slotTypes What slots the modifier is valid for.
+     *
+     * @docParam attribute <attribute:minecraft:generic.attack_damage>
+     * @docParam uuid IItemStack.BASE_ATTACK_DAMAGE_UUID
+     * @docParam name "Extra Power"
+     * @docParam value 10
+     * @docParam operation AttributeOperation.ADDITION
+     * @docParam slotTypes [<constant:minecraft:equipmentslot:chest>]
+     */
+    @ZenCodeType.Method
+    default void addGlobalAttributeModifier(Attribute attribute, UUID uuid, String name, double value, AttributeModifier.Operation operation, EquipmentSlot[] slotTypes) {
+        
+        AttributeModifier modifier = new AttributeModifier(uuid, name, value, operation);
         final Set<EquipmentSlot> validSlots = new HashSet<>(Arrays.asList(slotTypes));
         CraftTweakerAPI.apply(new ActionModifyAttribute(this, event -> {
             if(validSlots.contains(event.getSlotType())) {
@@ -304,13 +335,28 @@ public interface IIngredient extends CommandStringDisplayable {
     @ZenCodeType.Method
     default void removeGlobalAttributeModifier(String uuid, EquipmentSlot[] slotTypes) {
         
+        removeGlobalAttributeModifier(UUID.fromString(uuid), slotTypes);
+    }
+    
+    /**
+     * Removes all AttributeModifiers who's ID is the same as the given uuid from this IIngredient.
+     *
+     * @param uuid      The unique id of the AttributeModifier to remove.
+     * @param slotTypes The slot types to remove it from.
+     *
+     * @docParam uuid IItemStack.BASE_ATTACK_DAMAGE_UUID
+     * @docParam slotTypes [<constant:minecraft:equipmentslot:chest>]
+     */
+    @ZenCodeType.Method
+    default void removeGlobalAttributeModifier(UUID uuid, EquipmentSlot[] slotTypes) {
+        
         final Set<EquipmentSlot> validSlots = new HashSet<>(Arrays.asList(slotTypes));
         CraftTweakerAPI.apply(new ActionModifyAttribute(this, event -> {
             if(validSlots.contains(event.getSlotType())) {
                 event.getModifiers()
                         .entries()
                         .stream()
-                        .filter(entry -> entry.getValue().getId().equals(UUID.fromString(uuid)))
+                        .filter(entry -> entry.getValue().getId().equals(uuid))
                         .forEach(entry -> event.removeModifier(entry.getKey(), entry.getValue()));
             }
         }));
