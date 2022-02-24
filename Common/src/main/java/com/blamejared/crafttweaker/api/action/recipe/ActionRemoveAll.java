@@ -14,7 +14,7 @@ public class ActionRemoveAll<T extends Recipe<?>> extends ActionRecipeBase<T> {
     @Override
     public void apply() {
         
-        getRecipes().clear();
+        getRecipeMutator().removeAll();
     }
     
     @Override

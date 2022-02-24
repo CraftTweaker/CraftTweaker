@@ -22,10 +22,8 @@ public class ActionRemoveRecipeByRegex<T extends Recipe<?>> extends ActionRecipe
     @Override
     public void apply() {
         
-        getRecipes()
-                .keySet()
-                .removeIf(resourceLocation -> compiledPat.matcher(resourceLocation.toString())
-                        .matches() && !exclude.test(resourceLocation.getPath()));
+        getRecipeMutator().removeByIdTest(resourceLocation -> compiledPat.matcher(resourceLocation.toString())
+                .matches(), exclude);
     }
     
     @Override

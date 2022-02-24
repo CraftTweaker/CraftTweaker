@@ -19,7 +19,8 @@ public class ActionRemoveRecipeByName<T extends Recipe<?>> extends ActionRecipeB
     @Override
     public void apply() {
         
-        getRecipes().remove(name);
+        getRecipeMutator().remove(name);
+        
     }
     
     @Override
@@ -31,7 +32,8 @@ public class ActionRemoveRecipeByName<T extends Recipe<?>> extends ActionRecipeB
     @Override
     public boolean validate(Logger logger) {
         
-        boolean containsKey = getRecipes().containsKey(name);
+        
+        boolean containsKey = getRecipeMutator().has(name);
         if(!containsKey) {
             logger.warn("No recipe with type: '{}' and name: '{}'", getRecipeTypeName(), name);
         }

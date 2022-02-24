@@ -1,8 +1,8 @@
 package com.blamejared.crafttweaker.api.action.recipe.generic;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.recipe.RecipeList;
 import com.blamejared.crafttweaker.api.recipe.manager.RecipeManagerWrapper;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 
@@ -16,10 +16,10 @@ public abstract class ActionRemoveGenericRecipeBase extends ActionWholeRegistryB
         
         final Map<String, Integer> numberOfRemovedRecipesByType = new TreeMap<>();
         int numberOfRemovedRecipes = 0;
-        
-        final Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> recipesByType = getRecipesByType();
-        for(RecipeType recipeType : recipesByType.keySet()) {
-            int removedRecipes = applyToRegistry(recipesByType.get(recipeType));
+    
+        Map<RecipeType<?>, RecipeList<?>> recipeLists = getRecipeLists();
+        for(RecipeType recipeType : recipeLists.keySet()) {
+            int removedRecipes = applyToRegistry(recipeLists.get(recipeType));
             if(removedRecipes > 0) {
                 final String commandString = new RecipeManagerWrapper(recipeType).getCommandString();
                 numberOfRemovedRecipesByType.put(commandString, removedRecipes);
@@ -31,11 +31,11 @@ public abstract class ActionRemoveGenericRecipeBase extends ActionWholeRegistryB
         CraftTweakerAPI.LOGGER.info("Removed {} recipes registered in these {} recipe managers: {}", numberOfRemovedRecipes, numberOfRecipeTypes, recipeTypeList);
     }
     
-    private int applyToRegistry(Map<ResourceLocation, Recipe<?>> registry) {
+    private int applyToRegistry(RecipeList<?> list) {
         
-        final int initialSize = registry.size();
-        registry.values().removeIf(this::shouldRemove);
-        return initialSize - registry.size();
+        final int initialSize = list.getSize();
+        list.removeByRecipeTest(this::shouldRemove);
+        return initialSize - list.getSize();
     }
     
     protected abstract boolean shouldRemove(Recipe<?> recipe);

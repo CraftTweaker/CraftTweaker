@@ -1,12 +1,8 @@
 package com.blamejared.crafttweaker.api.action.recipe;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.platform.Services;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
-
-import java.util.Map;
 
 public class ActionAddRecipe<T extends Recipe<?>> extends ActionRecipeBase<T> {
     
@@ -30,14 +26,7 @@ public class ActionAddRecipe<T extends Recipe<?>> extends ActionRecipeBase<T> {
     @Override
     public void apply() {
         
-        final Map<ResourceLocation, T> recipes = getManager().getRecipes();
-        if(recipes.containsKey(recipe.getId())) {
-            CraftTweakerAPI.LOGGER.warn(
-                    "A recipe with the name '{}' already exists and will be overwritten: this is most likely an error in your scripts",
-                    recipe.getId().getPath()
-            );
-        }
-        recipes.put(recipe.getId(), recipe);
+        getRecipeMutator().add(recipe.getId(), recipe);
     }
     
     @Override

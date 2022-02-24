@@ -27,6 +27,8 @@ public class RecipeManagerScriptLoader {
         AccessRecipeManager accessRecipeManager = (AccessRecipeManager) manager;
         accessRecipeManager.setRecipes(new HashMap<>(accessRecipeManager.getRecipes()));
         accessRecipeManager.getRecipes().replaceAll((k, v) -> new HashMap<>(accessRecipeManager.getRecipes().get(k)));
+        accessRecipeManager.setByName(new HashMap<>(accessRecipeManager.getByName()));
+        
         CraftTweakerAPI.setRecipeManager(manager);
         
         final ScriptLoadingOptions scriptLoadingOptions = new ScriptLoadingOptions().setSource(ScriptLoadingOptions.CLIENT_RECIPES_UPDATED_SCRIPT_SOURCE)
