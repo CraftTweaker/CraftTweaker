@@ -10,9 +10,11 @@ import com.blamejared.crafttweaker.api.plugin.IListenerRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ILoaderRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IRecipeHandlerRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IScriptLoadSourceRegistrationHandler;
+import com.blamejared.crafttweaker.api.plugin.IScriptRunModuleConfiguratorRegistrationHandler;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.manager.TagManagerWrapper;
 import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistryData;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
 
 @CraftTweakerPlugin(CraftTweakerConstants.MOD_ID + ":builtin")
 @SuppressWarnings("unused") // Autowired
@@ -45,6 +47,14 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         
         handler.registerLoadSource(CraftTweakerConstants.RELOAD_LISTENER_SOURCE_ID);
         handler.registerLoadSource(CraftTweakerConstants.CLIENT_RECIPES_UPDATED_SOURCE_ID);
+    }
+    
+    @Override
+    public void registerModuleConfigurators(final IScriptRunModuleConfiguratorRegistrationHandler handler) {
+        
+        final IScriptRunModuleConfigurator defaultConfig = IScriptRunModuleConfigurator.createDefault(CraftTweakerConstants.MOD_ID);
+        handler.registerConfigurator(CraftTweakerConstants.DEFAULT_LOADER_NAME, defaultConfig);
+        handler.registerConfigurator(CraftTweakerConstants.INIT_LOADER_NAME, defaultConfig); // TODO("Is this valid?")
     }
     
     @Override

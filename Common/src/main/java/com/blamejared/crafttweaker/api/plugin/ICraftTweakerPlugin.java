@@ -6,6 +6,8 @@ public interface ICraftTweakerPlugin {
     
     default void registerLoadSource(final IScriptLoadSourceRegistrationHandler handler) {}
     
+    default void registerModuleConfigurators(final IScriptRunModuleConfiguratorRegistrationHandler handler) {}
+    
     default void registerBracketParsers(final IBracketParserRegistrationHandler handler) {}
     
     default void registerRecipeHandlers(final IRecipeHandlerRegistrationHandler handler) {}

@@ -13,5 +13,6 @@ record Registries(
         LoadSourceRegistry loadSourceRegistry,
         PreprocessorRegistry preprocessorRegistry,
         RecipeHandlerRegistry recipeHandlerRegistry,
+        ScriptRunModuleConfiguratorRegistry scriptRunModuleConfiguratorRegistry,
         ZenClassRegistry zenClassRegistry
 ) {}

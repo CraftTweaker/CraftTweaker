@@ -156,6 +156,12 @@ public final class PluginManager {
                 () -> LoadSourceRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerLoadSource))
         ));
         
+        this.verifying(
+                "registering script run module configurations",
+                () -> ScriptRunModuleConfigurationRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerModuleConfigurators))
+                        .forEach(it -> access.registerRunModuleConfigurator(loaderFinder.apply(it.getKey()), it.getValue()))
+        );
+        
         final JavaNativeIntegrationRegistrationHandler javaHandler = this.verifying(
                 "gathering ZenCode integration data",
                 () -> JavaNativeIntegrationRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::manageJavaNativeIntegration))

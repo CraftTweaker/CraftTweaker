@@ -52,6 +52,7 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
                 new LoadSourceRegistry(),
                 new PreprocessorRegistry(),
                 new RecipeHandlerRegistry(),
+                new ScriptRunModuleConfiguratorRegistry(),
                 new ZenClassRegistry()
         );
         this.access = new PluginRegistryAccess(this.registries);
@@ -95,7 +96,7 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
     @Override
     public IScriptRunModuleConfigurator getConfiguratorFor(final IScriptLoader loader) {
         
-        throw new UnsupportedOperationException("Not yet implemented");
+        return this.registries.scriptRunModuleConfiguratorRegistry().find(loader);
     }
     
     @Override

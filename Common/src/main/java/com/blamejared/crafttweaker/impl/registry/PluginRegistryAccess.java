@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.ZenTypeInfo;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
 import com.blamejared.crafttweaker.impl.plugin.core.IPluginRegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
@@ -34,6 +35,12 @@ final class PluginRegistryAccess implements IPluginRegistryAccess {
     public void registerLoadSources(final Collection<IScriptLoadSource> sources) {
         
         this.registries.loadSourceRegistry().registerLoadSources(sources);
+    }
+    
+    @Override
+    public void registerRunModuleConfigurator(final IScriptLoader loader, final IScriptRunModuleConfigurator configurator) {
+        
+        this.registries.scriptRunModuleConfiguratorRegistry().register(loader, configurator);
     }
     
     @Override
