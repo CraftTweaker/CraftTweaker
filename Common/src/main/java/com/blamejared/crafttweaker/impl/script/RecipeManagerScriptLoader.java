@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.impl.script;
 
 import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.world.item.crafting.RecipeManager;

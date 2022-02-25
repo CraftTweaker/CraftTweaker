@@ -9,7 +9,6 @@ import com.blamejared.crafttweaker.api.item.attribute.ItemAttributeModifierBase;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.replacement.event.IGatherReplacementExclusionEvent;
 import com.blamejared.crafttweaker.api.util.AttributeUtil;
-import com.blamejared.crafttweaker.api.zencode.bracket.IgnorePrefixCasingBracketParser;
 import com.blamejared.crafttweaker.natives.entity.ExpandEntity;
 import com.blamejared.crafttweaker.natives.entity.ExpandEntityType;
 import com.blamejared.crafttweaker.natives.entity.type.player.ExpandPlayer;

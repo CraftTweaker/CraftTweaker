@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.api.event;
 
 import com.blamejared.crafttweaker.api.command.event.ICTCommandRegisterEvent;
 import com.blamejared.crafttweaker.api.recipe.replacement.event.IGatherReplacementExclusionEvent;
-import com.blamejared.crafttweaker.api.zencode.bracket.IgnorePrefixCasingBracketParser;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 

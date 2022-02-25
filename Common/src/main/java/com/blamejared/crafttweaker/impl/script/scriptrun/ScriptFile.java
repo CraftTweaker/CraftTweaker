@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -164,6 +165,12 @@ final class ScriptFile implements IScriptFile {
     public Optional<SourceFile> toSourceFile() {
         
         return this.preprocessedFile.get().allowLoading() ? Optional.of(this.toFile()) : Optional.empty();
+    }
+    
+    @Override
+    public List<IPreprocessor.Match> matchesFor(final IPreprocessor preprocessor) {
+        
+        return Collections.unmodifiableList(this.matches.get(preprocessor));
     }
     
     private PreprocessedData preprocess() {

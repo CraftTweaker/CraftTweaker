@@ -71,6 +71,22 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
             this.bracketParserRegistrationManager.attemptRegistration(candidate.clazz(), candidate.loader(), handler);
             this.enumBracketParserRegistrationManager.attemptRegistration(candidate.clazz(), candidate.loader(), handler);
         });
+    
+        /*
+         * THE FOLLOWING ONLY APPLIES TO THE "crafttweaker" LOADER!
+         *
+        final ICraftTweakerRegistry registry = CraftTweakerAPI.getRegistry();
+        final IScriptLoader loader = registry.findLoader(this.scriptLoadingOptions.getLoaderName());
+        final List<Class<? extends IRecipeManager>> recipeManagers = registry.getZenClassRegistry()
+                .getImplementationsOf(loader, IRecipeManager.class);
+        bep.register("recipetype", new RecipeTypeBracketHandler(recipeManagers));
+        bep.register("constant", new EnumConstantBracketHandler());
+        
+        
+        final TagManagerBracketHandler tagManagerBEP = new TagManagerBracketHandler(CrTTagRegistryData.INSTANCE);
+        bep.register("tagManager", tagManagerBEP);
+        bep.register("tag", new TagBracketHandler(tagManagerBEP));
+         */
     }
     
     @Override

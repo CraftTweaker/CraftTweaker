@@ -16,7 +16,7 @@ import com.blamejared.crafttweaker.api.data.StringData;
 import com.blamejared.crafttweaker.api.data.base.IData;
 import com.blamejared.crafttweaker.api.data.base.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker.api.util.StringUtils;
-import com.blamejared.crafttweaker.api.zencode.impl.util.ZenKeywordUtil;
+import com.blamejared.crafttweaker.api.zencode.util.ZenKeywordUtil;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.LongTag;

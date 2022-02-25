@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.api.action.misc;
 
-import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import net.minecraft.world.level.block.ComposterBlock;

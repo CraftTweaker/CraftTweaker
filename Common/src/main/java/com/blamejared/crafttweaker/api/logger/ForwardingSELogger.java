@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.api.logger;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.zencode.impl.SourceFilePreprocessed;
 import com.blamejared.crafttweaker.impl.preprocessor.PriorityPreprocessor;
 import org.openzen.zencode.java.logger.ScriptingEngineLogger;
 import org.openzen.zencode.shared.CompileException;

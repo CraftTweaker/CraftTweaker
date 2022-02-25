@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker.api.action.base;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
-import com.blamejared.crafttweaker.api.zencode.impl.util.PositionUtil;
+import com.blamejared.crafttweaker.api.zencode.util.PositionUtil;
 import org.apache.logging.log4j.Logger;
 import org.openzen.zencode.shared.CodePosition;
 

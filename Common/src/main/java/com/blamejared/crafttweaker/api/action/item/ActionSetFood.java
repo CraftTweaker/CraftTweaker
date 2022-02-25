@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.api.action.item;
 
-import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessItem;

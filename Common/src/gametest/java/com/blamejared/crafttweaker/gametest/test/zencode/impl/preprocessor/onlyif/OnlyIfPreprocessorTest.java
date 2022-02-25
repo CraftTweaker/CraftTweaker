@@ -1,7 +1,5 @@
 package com.blamejared.crafttweaker.gametest.test.zencode.impl.preprocessor.onlyif;
 
-import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
-import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.impl.preprocessor.onlyif.EndIfPreprocessor;
 import com.blamejared.crafttweaker.impl.preprocessor.onlyif.OnlyIfPreprocessor;
 import com.blamejared.crafttweaker.gametest.CraftTweakerGameTest;

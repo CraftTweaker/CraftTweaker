@@ -7,7 +7,6 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.replacement.event.IGatherReplacementExclusionEvent;
-import com.blamejared.crafttweaker.api.zencode.bracket.IgnorePrefixCasingBracketParser;
 import com.blamejared.crafttweaker.platform.services.IEventHelper;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
