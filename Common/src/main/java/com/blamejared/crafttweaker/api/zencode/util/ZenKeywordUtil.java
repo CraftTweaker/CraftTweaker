@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.api.zencode.impl.util;
+package com.blamejared.crafttweaker.api.zencode.util;
 
 import org.openzen.zenscript.lexer.ZSTokenType;
 
@@ -6,12 +6,14 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ZenKeywordUtil {
+public final class ZenKeywordUtil {
     
     private static final Set<String> KEYWORDS = Arrays.stream(ZSTokenType.values())
             .filter(zsTokenType -> zsTokenType.isKeyword)
             .map(zsTokenType -> zsTokenType.flyweight.content)
             .collect(Collectors.toSet());
+    
+    private ZenKeywordUtil() {}
     
     /**
      * Checks if the given String is a reserved ZenCode keyword.

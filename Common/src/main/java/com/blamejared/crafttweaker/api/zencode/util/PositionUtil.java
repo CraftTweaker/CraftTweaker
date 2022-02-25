@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.api.zencode.impl.util;
+package com.blamejared.crafttweaker.api.zencode.util;
 
 import org.openzen.zencode.shared.CodePosition;
 import org.openzen.zencode.shared.VirtualSourceFile;
@@ -6,7 +6,9 @@ import org.openzen.zencode.shared.VirtualSourceFile;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 
-public class PositionUtil {
+public final class PositionUtil {
+    
+    private PositionUtil() {}
     
     /**
      * Reads the current script position based on the current Thread's stacktrace
