@@ -31,7 +31,7 @@ final class BracketDumperInfo implements IBracketDumperInfo {
         this.bepHandlerName = bepHandlerName;
         this.subCommandName = Optional.ofNullable(subCommandName).orElseGet(() -> makePlural(this.bepHandlerName));
         this.dumpedFileName = Optional.ofNullable(dumpedFileName)
-                .orElseGet(() -> this.bepHandlerName.toLowerCase(Locale.ROOT));
+                .orElseGet(() -> this.bepHandlerName.toLowerCase(Locale.ENGLISH));
         this.data = data;
     }
     

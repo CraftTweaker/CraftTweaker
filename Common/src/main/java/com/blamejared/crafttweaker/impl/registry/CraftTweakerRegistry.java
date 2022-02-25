@@ -123,7 +123,7 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
         final Class<T> clazz = (Class<T>) this.getEnumBracketFor(loader, type)
                 .orElseThrow(() -> new IllegalArgumentException(String.format("No enum found for type '%s'", type)));
         
-        return Enum.valueOf(clazz, value.toUpperCase(Locale.ROOT));
+        return Enum.valueOf(clazz, value.toUpperCase(Locale.ENGLISH));
     }
     
     @Override
@@ -142,7 +142,7 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
                 .flatMap(it -> Arrays.stream(it.getValue().getEnumConstants()).map(c -> Pair.of(it.getKey(), c)))
                 .map(it -> String.format("<constant:%s:%s>", it.getFirst(), it.getSecond()
                         .name()
-                        .toLowerCase(Locale.ROOT)))
+                        .toLowerCase(Locale.ENGLISH)))
                 .collect(Collectors.toUnmodifiableSet());
     }
     
