@@ -1,36 +1,33 @@
 package com.blamejared.crafttweaker.impl.preprocessor;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.annotation.Preprocessor;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
-import com.blamejared.crafttweaker.api.zencode.PreprocessorMatch;
-import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IMutableScriptRunInfo;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 @Preprocessor
-public class NoBrandPreprocessor implements IPreprocessor {
+public final class NoBrandPreprocessor implements IPreprocessor {
     
     @Override
-    public String getName() {
+    public String name() {
         
         return "nobrand";
     }
     
     @Nullable
     @Override
-    public String getDefaultValue() {
+    public String defaultValue() {
         
         return null;
     }
     
     @Override
-    public boolean apply(@Nonnull FileAccessSingle file, ScriptLoadingOptions scriptLoadingOptions, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
+    public boolean apply(final IScriptFile file, final List<String> preprocessedContents, final IMutableScriptRunInfo runInfo, final List<Match> matches) {
         
-        CraftTweakerAPI.NO_BRAND = true;
+        runInfo.displayBranding(false);
         return true;
     }
     

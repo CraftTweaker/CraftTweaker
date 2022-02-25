@@ -4,7 +4,7 @@ import com.blamejared.crafttweaker.impl.preprocessor.onlyif.OnlyIfParameter;
 import com.blamejared.crafttweaker.impl.preprocessor.onlyif.OnlyIfParameterHit;
 import com.blamejared.crafttweaker.platform.Services;
 
-public class OnlyIfParameterModLoader extends OnlyIfParameter {
+public final class OnlyIfParameterModLoader extends OnlyIfParameter {
     
     public OnlyIfParameterModLoader() {
         
@@ -12,20 +12,15 @@ public class OnlyIfParameterModLoader extends OnlyIfParameter {
     }
     
     @Override
-    public OnlyIfParameterHit isHit(String[] additionalArguments) {
+    public OnlyIfParameterHit isHit(final String[] additionalArguments) {
         
         if(additionalArguments.length != 1) {
             return OnlyIfParameterHit.invalid();
         }
-        String modLoader = additionalArguments[0];
         
-        
+        final String modLoader = additionalArguments[0];
         final boolean conditionMet = Services.PLATFORM.getPlatformName().equalsIgnoreCase(modLoader);
-        if(conditionMet) {
-            return OnlyIfParameterHit.conditionPassed(additionalArguments.length);
-        } else {
-            return OnlyIfParameterHit.conditionFailed(additionalArguments.length);
-        }
+        return OnlyIfParameterHit.basedOn(conditionMet, additionalArguments.length);
     }
     
 }

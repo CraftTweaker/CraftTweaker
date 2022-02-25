@@ -1,46 +1,47 @@
 package com.blamejared.crafttweaker.impl.preprocessor;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.annotation.Preprocessor;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
-import com.blamejared.crafttweaker.api.zencode.PreprocessorMatch;
-import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IMutableScriptRunInfo;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * {@code #replace toReplace replaceWith}
  */
 @Preprocessor
-public class ReplacePreprocessor implements IPreprocessor {
+public final class ReplacePreprocessor implements IPreprocessor {
+    
+    private static final String SPACE = Pattern.quote(" ");
     
     @Override
-    public String getName() {
+    public String name() {
         
         return "replace";
     }
     
     @Nullable
     @Override
-    public String getDefaultValue() {
+    public String defaultValue() {
         
         return null;
     }
     
     @Override
-    public boolean apply(@Nonnull FileAccessSingle file, ScriptLoadingOptions scriptLoadingOptions, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
+    public boolean apply(final IScriptFile file, final List<String> preprocessedContents, final IMutableScriptRunInfo runInfo, final List<Match> matches) {
         
-        for(PreprocessorMatch preprocessorMatch : preprocessorMatches) {
-            final String[] split = preprocessorMatch.getContent().split(" ", 2);
+        matches.forEach(match -> {
+            final String[] split = match.content().split(SPACE, 2);
             if(split.length != 2) {
-                CraftTweakerAPI.LOGGER.warn("[{}:{}] Invalid Preprocessor line: #replace {}", file.getFileName(), preprocessorMatch.getLine(), preprocessorMatch.getContent());
-                continue;
+                CraftTweakerAPI.LOGGER.warn("[{}:{}] Invalid Preprocessor line: #replace {}", file.name(), match.line(), match.content());
+            } else {
+                preprocessedContents.replaceAll(s -> s.replace(split[0], split[1]));
             }
-            file.getFileContents().replaceAll(s -> s.replaceAll(split[0], split[1]));
-        }
+        });
         
         return true;
     }

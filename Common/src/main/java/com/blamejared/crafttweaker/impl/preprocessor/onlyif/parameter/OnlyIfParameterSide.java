@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker.impl.preprocessor.onlyif.OnlyIfParameterHit;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker.platform.sides.DistributionType;
 
-public class OnlyIfParameterSide extends OnlyIfParameter {
+public final class OnlyIfParameterSide extends OnlyIfParameter {
     
     public OnlyIfParameterSide() {
         
@@ -13,14 +13,14 @@ public class OnlyIfParameterSide extends OnlyIfParameter {
     }
     
     @Override
-    public OnlyIfParameterHit isHit(String[] additionalArguments) {
+    public OnlyIfParameterHit isHit(final String[] additionalArguments) {
         
         if(additionalArguments.length == 0) {
             return OnlyIfParameterHit.invalid();
         }
-        String side = additionalArguments[0];
+        final String side = additionalArguments[0];
         
-        DistributionType targetDistribution = null;
+        final DistributionType targetDistribution;
         if(DistributionType.SERVER.matches(side)) {
             targetDistribution = DistributionType.SERVER;
         } else if(DistributionType.CLIENT.matches(side)) {
@@ -29,14 +29,8 @@ public class OnlyIfParameterSide extends OnlyIfParameter {
             throw new IllegalArgumentException("Unknown side passed into #onlyif side: " + side);
         }
         
-        
-        boolean conditionMet = Services.DISTRIBUTION.getDistributionType() == targetDistribution;
-        
-        if(conditionMet) {
-            return OnlyIfParameterHit.conditionPassed(additionalArguments.length);
-        } else {
-            return OnlyIfParameterHit.conditionFailed(additionalArguments.length);
-        }
+        final boolean conditionMet = Services.DISTRIBUTION.getDistributionType() == targetDistribution;
+        return OnlyIfParameterHit.basedOn(conditionMet, additionalArguments.length);
     }
     
 }

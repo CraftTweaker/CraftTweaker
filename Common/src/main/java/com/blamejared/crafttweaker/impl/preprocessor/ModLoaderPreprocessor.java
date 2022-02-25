@@ -1,40 +1,41 @@
 package com.blamejared.crafttweaker.impl.preprocessor;
 
-import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.annotation.Preprocessor;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
-import com.blamejared.crafttweaker.api.zencode.PreprocessorMatch;
-import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IMutableScriptRunInfo;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
 import com.blamejared.crafttweaker.platform.Services;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Preprocessor
-public class ModLoaderPreprocessor implements IPreprocessor {
+public final class ModLoaderPreprocessor implements IPreprocessor {
+    
+    private static final String SPACE = Pattern.quote(" ");
     
     @Override
-    public String getName() {
+    public String name() {
         
         return "modloader";
     }
     
     @Nullable
     @Override
-    public String getDefaultValue() {
+    public String defaultValue() {
         
         return null;
     }
     
     @Override
-    public boolean apply(@Nonnull FileAccessSingle file, ScriptLoadingOptions scriptLoadingOptions, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
+    public boolean apply(final IScriptFile file, final List<String> preprocessedContents, final IMutableScriptRunInfo runInfo, final List<Match> matches) {
         
-        return preprocessorMatches.stream()
-                .map(PreprocessorMatch::getContent)
-                .flatMap(s -> Arrays.stream(s.split(" ")))
-                .map(String::toLowerCase)
+        return matches.stream()
+                .map(Match::content)
+                .map(it -> it.split(SPACE))
+                .flatMap(Arrays::stream)
                 .distinct()
                 .anyMatch(Services.PLATFORM.getPlatformName()::equalsIgnoreCase);
     }

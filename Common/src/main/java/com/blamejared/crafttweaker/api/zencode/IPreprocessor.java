@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.api.zencode;
 
-import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IMutableScriptRunInfo;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
 
@@ -62,7 +61,7 @@ public interface IPreprocessor extends Comparator<IScriptFile> {
      * If your Preprocessor changes the order of script execution, then you can override this method.
      *
      * Careful, this will be called for every preprocessor, regardless of whether it is actually in the compared files or not
-     * You can use {@link FileAccessSingle#hasMatchFor(IPreprocessor)} to see if the preprocessor is in the files
+     * You can use {@link IScriptFile#hasMatchesFor(IPreprocessor)} to see if the preprocessor is in the files
      */
     @Override
     default int compare(final IScriptFile a, final IScriptFile b) {

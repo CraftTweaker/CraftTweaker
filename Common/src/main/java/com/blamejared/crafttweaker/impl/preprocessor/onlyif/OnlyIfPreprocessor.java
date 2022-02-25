@@ -1,11 +1,10 @@
 package com.blamejared.crafttweaker.impl.preprocessor.onlyif;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.annotation.Preprocessor;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
-import com.blamejared.crafttweaker.api.zencode.PreprocessorMatch;
-import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IMutableScriptRunInfo;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
 import com.blamejared.crafttweaker.impl.preprocessor.onlyif.parameter.OnlyIfParameterFalse;
 import com.blamejared.crafttweaker.impl.preprocessor.onlyif.parameter.OnlyIfParameterModLoaded;
 import com.blamejared.crafttweaker.impl.preprocessor.onlyif.parameter.OnlyIfParameterModLoader;
@@ -14,107 +13,101 @@ import com.blamejared.crafttweaker.impl.preprocessor.onlyif.parameter.OnlyIfPara
 import com.blamejared.crafttweaker.impl.preprocessor.onlyif.parameter.OnlyIfParameterTrue;
 import org.openzen.zencode.shared.CodePosition;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 @Preprocessor
 public final class OnlyIfPreprocessor implements IPreprocessor {
     
+    public static final OnlyIfPreprocessor INSTANCE = new OnlyIfPreprocessor();
     public static final String NAME = "onlyif";
+    
+    private static final String SPACE = Pattern.quote(" ");
+    
     private final Map<String, OnlyIfParameter> knownParameters = new HashMap<>();
     private OnlyIfMatch currentMatch;
     
     public OnlyIfPreprocessor() {
         //Replace this with something from the CrT registry at some point?
         //That would allow other mods to add their own parameters as well :thinking:
-        addParameter(new OnlyIfParameterTrue());
-        addParameter(new OnlyIfParameterFalse());
-        addParameter(new OnlyIfParameterModLoaded());
-        addParameter(new OnlyIfParameterModNotLoaded());
-        addParameter(new OnlyIfParameterSide());
-        addParameter(new OnlyIfParameterModLoader());
+        this.addParameter(new OnlyIfParameterTrue());
+        this.addParameter(new OnlyIfParameterFalse());
+        this.addParameter(new OnlyIfParameterModLoaded());
+        this.addParameter(new OnlyIfParameterModNotLoaded());
+        this.addParameter(new OnlyIfParameterSide());
+        this.addParameter(new OnlyIfParameterModLoader());
     }
     
-    public void addParameter(OnlyIfParameter parameter) {
+    public void addParameter(final OnlyIfParameter parameter) {
         
-        knownParameters.put(parameter.getName().toLowerCase(), parameter);
+        this.knownParameters.put(parameter.name().toLowerCase(), parameter);
     }
     
     @Override
-    public String getName() {
+    public String name() {
         
         return NAME;
     }
     
     @Override
-    public String getMatchEnder() {
+    public String preprocessorEndMarker() {
         
         return "endif";
     }
     
     @Nullable
     @Override
-    public String getDefaultValue() {
+    public String defaultValue() {
         
         return null;
     }
     
     @Override
-    public boolean apply(@Nonnull FileAccessSingle file, ScriptLoadingOptions scriptLoadingOptions, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
+    public boolean apply(final IScriptFile file, final List<String> preprocessedContents, final IMutableScriptRunInfo runInfo, final List<Match> matches) {
         
-        final List<OnlyIfMatch> matches = new ArrayList<>();
-        readMatches(file, preprocessorMatches, matches);
-        removeIt(file, matches);
+        final List<OnlyIfMatch> onlyIfMatches = new ArrayList<>();
+        this.readMatches(file, preprocessedContents, matches, onlyIfMatches);
+        this.removeData(onlyIfMatches, preprocessedContents);
         
         return true;
     }
     
-    private void removeIt(FileAccessSingle file, List<OnlyIfMatch> matches) {
+    @Override
+    public int priority() {
         
-        for(OnlyIfMatch match : matches) {
-            match.remove(file);
-        }
+        return 20;
     }
     
-    private void readMatches(@Nonnull FileAccessSingle file, @Nonnull List<PreprocessorMatch> preprocessorMatches, List<OnlyIfMatch> matches) {
+    private void readMatches(final IScriptFile file, final List<String> contents, final List<Match> preprocessorMatches, final List<OnlyIfMatch> matches) {
         
         this.currentMatch = null;
-        List<PreprocessorMatch> allMatches = file.getMatches().values()
-                .stream()
-                .flatMap(Collection::stream)
-                .filter(match -> match.getLine() != -1)
-                .filter(match -> match.getPreprocessor()
-                        .getName()
-                        .equalsIgnoreCase(this.getName()) || match.getPreprocessor()
-                        .getName()
-                        .equalsIgnoreCase(this.getMatchEnder()))
-                .sorted(Comparator.comparingInt(PreprocessorMatch::getLine))
-                .toList();
-        for(PreprocessorMatch preprocessorMatch : allMatches) {
-            getOnlyIfMatch(file, matches, preprocessorMatch);
-        }
         
-        if(currentMatch != null) {
-            final CodePosition start = currentMatch.getStart();
-            final String name = currentMatch.getName();
+        Stream.concat(preprocessorMatches.stream(), file.matchesFor(EndIfPreprocessor.INSTANCE).stream())
+                .filter(it -> it.line() != -1)
+                .sorted(Comparator.comparingInt(Match::line))
+                .forEach(it -> this.getOnlyIfMatch(file, contents, matches, it));
+        
+        if(this.currentMatch != null) {
+            final CodePosition start = this.currentMatch.start();
+            final String name = this.currentMatch.name();
             CraftTweakerAPI.LOGGER.warn("{} onlyif '{}' starting at line {}:{} was not closed properly", file, name, start.fromLine, start.fromLineOffset);
         }
     }
     
-    private void getOnlyIfMatch(@Nonnull FileAccessSingle file, List<OnlyIfMatch> matches, PreprocessorMatch preprocessorMatch) {
+    private void getOnlyIfMatch(final IScriptFile file, final List<String> contents, final List<OnlyIfMatch> matches, final Match preprocessorMatch) {
         
-        final int line = preprocessorMatch.getLine();
-        final String fileName = file.getFileName();
+        final int line = preprocessorMatch.line();
+        final String fileName = file.name();
         
         //The rest of the line is considered possible arguments
-        final String[] content = preprocessorMatch.getContent().split(" ");
+        final String[] content = preprocessorMatch.content().split(SPACE);
         //If none were given that means only '#onlyif' was called, ignore for now.
         if(content.length < 1) {
             CraftTweakerAPI.LOGGER.warn("{}:{} Using 'onlyif' requires a parameter, like start, end, modloaded, etc", fileName, line);
@@ -124,18 +117,22 @@ public final class OnlyIfPreprocessor implements IPreprocessor {
         //The first argument is the name
         final String parameterName = content[0];
         
-        if(preprocessorMatch.getPreprocessor().getName().equalsIgnoreCase(getMatchEnder())) {
-            if(currentMatch != null) {
-                currentMatch.setEnd(getPosition(file, line, new String[] {""}, 1, true));
-                matches.add(currentMatch);
-                currentMatch = currentMatch.getParent();
+        if(preprocessorMatch.preprocessor().name().equalsIgnoreCase(this.preprocessorEndMarker())) {
+            
+            if(this.currentMatch != null) {
+                
+                this.currentMatch.end(this.getPosition(file, contents, line, new String[] {""}, 1, true));
+                matches.add(this.currentMatch);
+                this.currentMatch = this.currentMatch.parent();
             } else {
+                
                 CraftTweakerAPI.LOGGER.warn("{}:{} Called 'onlyif end' without prior start", fileName, line);
             }
+            
             return;
         }
         
-        if(!knownParameters.containsKey(parameterName.toLowerCase())) {
+        if(!this.knownParameters.containsKey(parameterName.toLowerCase())) {
             CraftTweakerAPI.LOGGER.warn("{}:{} Unknown 'onlyif' parameter: '{}'", fileName, line, parameterName);
             return;
         }
@@ -146,62 +143,67 @@ public final class OnlyIfPreprocessor implements IPreprocessor {
         final OnlyIfParameterHit hit = parameter.isHit(additionalArguments);
         
         //Invalid arguments
-        if(!hit.validArguments) {
+        if(!hit.validArguments()) {
             final String array = Arrays.toString(additionalArguments);
             CraftTweakerAPI.LOGGER.warn("{}:{} Invalid 'onlyif' arguments for parameter '{}': {}'", fileName, line, parameterName, array);
             return;
         }
         
-        final CodePosition startPosition = getPosition(file, line, content, hit.numberOfConsumedArguments + 1, false);
-        currentMatch = new OnlyIfMatch(startPosition, parameterName, currentMatch, hit);
+        final CodePosition startPosition = this.getPosition(file, contents, line, content, hit.numberOfConsumedArguments() + 1, false);
+        this.currentMatch = new OnlyIfMatch(startPosition, parameterName, this.currentMatch, hit);
         
-        checkAdditionalOnlyIfsOnSameLine(content, file, line, matches);
+        this.checkAdditionalOnlyIfsOnSameLine(contents, content, file, line, matches);
     }
     
-    private void checkAdditionalOnlyIfsOnSameLine(String[] content, FileAccessSingle file, int line, List<OnlyIfMatch> matches) {
+    private void checkAdditionalOnlyIfsOnSameLine(final List<String> contents, final String[] content, final IScriptFile file, final int line, final List<OnlyIfMatch> matches) {
         
         final List<String> strings = Arrays.asList(content);
-        int indexOfStart = strings.indexOf("#" + getName());
-        int indexOfEnd = strings.indexOf("#" + getMatchEnder());
+        final int indexOfStart = strings.indexOf("#" + this.name());
+        final int indexOfEnd = strings.indexOf("#" + this.preprocessorEndMarker());
+        
         if(indexOfStart > 0 || indexOfEnd > 0) {
             
-            boolean foundStart = (Math.min(indexOfStart, indexOfEnd) == indexOfStart) != (indexOfStart == -1);
-            String newContent;
+            final boolean foundStart = (Math.min(indexOfStart, indexOfEnd) == indexOfStart) != (indexOfStart == -1);
+            final String newContent;
             
             if(foundStart) {
+                
                 newContent = String.join(" ", strings.subList(indexOfStart + 1, content.length));
-                getOnlyIfMatch(file, matches, new PreprocessorMatch(this, line, newContent));
+                this.getOnlyIfMatch(file, contents, matches, new Match(this, line, newContent));
             } else {
+                
                 // Substring 1 to get rid of the # of #endif
                 newContent = String.join(" ", strings.subList(indexOfEnd, content.length)).substring(1);
-                getOnlyIfMatch(file, matches, new PreprocessorMatch(new EndIfPreprocessor(), line, newContent));
+                this.getOnlyIfMatch(file, contents, matches, new Match(EndIfPreprocessor.INSTANCE, line, newContent));
             }
-            
-            
         }
     }
     
-    @Override
-    public int getPriority() {
+    private CodePosition getPosition(
+            final IScriptFile file,
+            final List<String> contents,
+            final int line,
+            final String[] preprocessorContent,
+            final int contentPosition,
+            final boolean isEnd
+    ) {
         
-        return 20;
-    }
-    
-    private CodePosition getPosition(FileAccessSingle file, int line, String[] preprocessorContent, int contentPosition, boolean isEnd) {
         //The length of '#onlyif ' since we want to remove that as well ^^
-        final int prefixLength = isEnd ? getMatchEnder().length() + 1 : NAME.length() + 2;
+        final int prefixLength = isEnd ? this.preprocessorEndMarker().length() + 1 : NAME.length() + 2;
         
-        
-        final int startColumn = file.getFileContents()
-                .get(line - 1)
-                .lastIndexOf(String.join(" ", preprocessorContent));
+        final int startColumn = contents.get(line - 1).lastIndexOf(String.join(" ", preprocessorContent));
         
         int endColumn = startColumn + contentPosition - 1;
         for(int i = 0; i < contentPosition; i++) {
             endColumn += preprocessorContent[i].length();
         }
         
-        return new CodePosition(file.getSourceFile(), line, startColumn - prefixLength, line, endColumn);
+        return new CodePosition(new FakeSourceFile(file.name()), line, startColumn - prefixLength, line, endColumn);
+    }
+    
+    private void removeData(final List<OnlyIfMatch> matches, final List<String> preprocessedFileContents) {
+        
+        matches.forEach(it -> it.remove(preprocessedFileContents));
     }
     
 }

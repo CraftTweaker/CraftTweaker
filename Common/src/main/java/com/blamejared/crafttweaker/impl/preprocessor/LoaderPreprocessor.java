@@ -1,50 +1,48 @@
 package com.blamejared.crafttweaker.impl.preprocessor;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.Preprocessor;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
-import com.blamejared.crafttweaker.api.zencode.PreprocessorMatch;
-import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IMutableScriptRunInfo;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.regex.Pattern;
 
 @Preprocessor
-public class LoaderPreprocessor implements IPreprocessor {
+public final class LoaderPreprocessor implements IPreprocessor {
+    
+    private static final String SPACE = Pattern.quote(" ");
     
     @Override
-    public String getName() {
+    public String name() {
         
         return "loader";
     }
     
-    @Nullable
     @Override
-    public String getDefaultValue() {
+    public String defaultValue() {
         
-        return "crafttweaker";
+        return CraftTweakerConstants.DEFAULT_LOADER_NAME;
     }
     
     @Override
-    public boolean apply(@Nonnull FileAccessSingle file, ScriptLoadingOptions scriptLoadingOptions, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
+    public boolean apply(final IScriptFile file, final List<String> preprocessedContents, final IMutableScriptRunInfo runInfo, final List<Match> matches) {
         
-        final List<String> distinct = preprocessorMatches.stream()
-                .map(PreprocessorMatch::getContent)
-                .flatMap(s -> Arrays.stream(s.split(" ")))
-                .map(String::toLowerCase)
+        final List<String> distinct = matches.stream()
+                .map(Match::content)
+                .map(it -> it.split(SPACE))
+                .flatMap(Arrays::stream)
                 .distinct()
-                .collect(Collectors.toList());
+                .toList();
         
         if(distinct.size() > 1) {
-            CraftTweakerAPI.LOGGER.warn("Multiple Loaders found for file {}: {}", file.getFileName(), distinct);
+            CraftTweakerAPI.LOGGER.warn("Multiple script loaders found for file {}: {}", file.name(), distinct);
         }
         
-        return distinct.contains(scriptLoadingOptions.getLoaderName().toLowerCase());
-        
+        return distinct.contains(runInfo.loader().name());
     }
     
 }

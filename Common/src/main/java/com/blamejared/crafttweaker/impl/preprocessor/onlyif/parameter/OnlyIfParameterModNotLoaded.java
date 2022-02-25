@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker.platform.Services;
 
 import java.util.Arrays;
 
-public class OnlyIfParameterModNotLoaded extends OnlyIfParameter {
+public final class OnlyIfParameterModNotLoaded extends OnlyIfParameter {
     
     public OnlyIfParameterModNotLoaded() {
         
@@ -14,18 +14,14 @@ public class OnlyIfParameterModNotLoaded extends OnlyIfParameter {
     }
     
     @Override
-    public OnlyIfParameterHit isHit(String[] additionalArguments) {
+    public OnlyIfParameterHit isHit(final String[] additionalArguments) {
         
         if(additionalArguments.length == 0) {
             return OnlyIfParameterHit.invalid();
         }
         
         final boolean conditionMet = Arrays.stream(additionalArguments).noneMatch(Services.PLATFORM::isModLoaded);
-        if(conditionMet) {
-            return OnlyIfParameterHit.conditionPassed(additionalArguments.length);
-        } else {
-            return OnlyIfParameterHit.conditionFailed(additionalArguments.length);
-        }
+        return OnlyIfParameterHit.basedOn(conditionMet, additionalArguments.length);
     }
     
 }

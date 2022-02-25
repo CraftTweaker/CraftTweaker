@@ -1,71 +1,74 @@
 package com.blamejared.crafttweaker.impl.preprocessor;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.annotation.Preprocessor;
-import com.blamejared.crafttweaker.api.util.StringUtils;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
-import com.blamejared.crafttweaker.api.zencode.PreprocessorMatch;
-import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IMutableScriptRunInfo;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 @Preprocessor
-public class PriorityPreprocessor implements IPreprocessor {
+public final class PriorityPreprocessor implements IPreprocessor {
     
     public static final PriorityPreprocessor INSTANCE = new PriorityPreprocessor();
     
+    private static final int DEFAULT_PRIORITY = 0;
+    
     private PriorityPreprocessor() {}
     
-    
     @Override
-    public String getName() {
+    public String name() {
         
         return "priority";
     }
     
-    @Nullable
     @Override
-    public String getDefaultValue() {
+    public String defaultValue() {
         
-        return "0";
+        return Integer.toString(DEFAULT_PRIORITY);
     }
     
     @Override
-    public boolean apply(@Nonnull FileAccessSingle file, ScriptLoadingOptions scriptLoadingOptions, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
+    public boolean apply(final IScriptFile file, final List<String> preprocessedContents, final IMutableScriptRunInfo runInfo, final List<Match> matches) {
         
-        if(preprocessorMatches.size() > 1) {
-            CraftTweakerAPI.LOGGER.warn("There are more than one #priority preprocessors in the file {}", file.getFileName());
+        if(matches.size() > 1) {
+            CraftTweakerAPI.LOGGER.warn("Conflicting priorities in file {}: only the first will be used", file.name());
         }
         
+        final String priority = matches.get(0).content().trim();
+        
         try {
-            Integer.parseInt(preprocessorMatches.get(0).getContent().trim());
-        } catch(NumberFormatException ex) {
-            CraftTweakerAPI.LOGGER.warn("Incorrect Priority value: {}", StringUtils.wrap(preprocessorMatches.get(0)
-                    .getContent()
-                    .trim(), "`", false));
-            preprocessorMatches.set(0, new PreprocessorMatch(this, -1, getDefaultValue()));
+            Integer.parseInt(priority);
+        } catch(final NumberFormatException e) {
+            CraftTweakerAPI.LOGGER.warn("Invalid priority value '{}' for file {}", priority, file.name());
         }
         
         return true;
     }
     
     @Override
-    public int compare(FileAccessSingle o1, FileAccessSingle o2) {
-        //We know PriorityPreprocessor has a default value, so it will always have a "match"
-        //Otherwise we'd need to check if the file has a match
-        final int i1 = Integer.parseInt(o1.getMatchesFor(this).get(0).getContent().trim());
-        final int i2 = Integer.parseInt(o2.getMatchesFor(this).get(0).getContent().trim());
+    public int compare(final IScriptFile a, final IScriptFile b) {
         
-        return Integer.compare(i2, i1);
+        return Integer.compare(
+                this.getIntSafely(a.matchesFor(this).get(0)),
+                this.getIntSafely(b.matchesFor(this).get(0))
+        );
     }
     
     @Override
-    public int getPriority() {
+    public int priority() {
         
         return 100;
+    }
+    
+    private int getIntSafely(final Match match) {
+        
+        try {
+            return Integer.parseInt(match.content().trim());
+        } catch(final NumberFormatException e) {
+            return DEFAULT_PRIORITY;
+        }
     }
     
 }

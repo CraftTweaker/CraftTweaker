@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker.impl.preprocessor.onlyif.parameter;
 import com.blamejared.crafttweaker.impl.preprocessor.onlyif.OnlyIfParameter;
 import com.blamejared.crafttweaker.impl.preprocessor.onlyif.OnlyIfParameterHit;
 
-public class OnlyIfParameterFalse extends OnlyIfParameter {
+public final class OnlyIfParameterFalse extends OnlyIfParameter {
     
     public OnlyIfParameterFalse() {
         
@@ -11,7 +11,7 @@ public class OnlyIfParameterFalse extends OnlyIfParameter {
     }
     
     @Override
-    public OnlyIfParameterHit isHit(String[] additionalArguments) {
+    public OnlyIfParameterHit isHit(final String[] additionalArguments) {
         
         return OnlyIfParameterHit.conditionFailed(0);
     }

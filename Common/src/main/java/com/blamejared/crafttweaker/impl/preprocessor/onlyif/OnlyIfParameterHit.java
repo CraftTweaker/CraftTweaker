@@ -1,10 +1,11 @@
 package com.blamejared.crafttweaker.impl.preprocessor.onlyif;
 
+@SuppressWarnings("ClassCanBeRecord")
 public final class OnlyIfParameterHit {
     
-    final boolean validArguments;
-    final int numberOfConsumedArguments;
-    final boolean conditionMet;
+    private final boolean validArguments;
+    private final int numberOfConsumedArguments;
+    private final boolean conditionMet;
     
     private OnlyIfParameterHit(boolean validArguments, int numberOfConsumedArguments, boolean conditionMet) {
         
@@ -18,14 +19,34 @@ public final class OnlyIfParameterHit {
         return new OnlyIfParameterHit(false, -1, false);
     }
     
-    public static OnlyIfParameterHit conditionPassed(int numberOfConsumedArguments) {
+    public static OnlyIfParameterHit conditionPassed(final int numberOfConsumedArguments) {
         
         return new OnlyIfParameterHit(true, numberOfConsumedArguments, true);
     }
     
-    public static OnlyIfParameterHit conditionFailed(int numberOfConsumedArguments) {
+    public static OnlyIfParameterHit conditionFailed(final int numberOfConsumedArguments) {
         
         return new OnlyIfParameterHit(true, numberOfConsumedArguments, false);
+    }
+    
+    public static OnlyIfParameterHit basedOn(final boolean conditionMet, final int numberOfConsumedArguments) {
+        
+        return conditionMet ? conditionPassed(numberOfConsumedArguments) : conditionFailed(numberOfConsumedArguments);
+    }
+    
+    public boolean validArguments() {
+        
+        return this.validArguments;
+    }
+    
+    public int numberOfConsumedArguments() {
+        
+        return this.numberOfConsumedArguments;
+    }
+    
+    public boolean conditionMet() {
+        
+        return this.conditionMet;
     }
     
 }

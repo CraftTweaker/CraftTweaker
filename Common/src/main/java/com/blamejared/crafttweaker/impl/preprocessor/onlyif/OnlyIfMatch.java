@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.preprocessor.onlyif;
 
-import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import org.openzen.zencode.shared.CodePosition;
 
 import java.util.ArrayList;
@@ -15,12 +14,12 @@ final class OnlyIfMatch {
     private final OnlyIfParameterHit parameterHit;
     private CodePosition end;
     
-    OnlyIfMatch(CodePosition start, String name, OnlyIfMatch parent, OnlyIfParameterHit parameterHit) {
+    OnlyIfMatch(final CodePosition start, final String name, final OnlyIfMatch parent, final OnlyIfParameterHit parameterHit) {
         
         this.start = start;
         this.name = name;
         this.parameterHit = parameterHit;
-        children = new ArrayList<>();
+        this.children = new ArrayList<>();
         this.parent = parent;
         
         if(parent != null) {
@@ -28,7 +27,7 @@ final class OnlyIfMatch {
         }
     }
     
-    private static String removeInLine(String lineContent, int startColumn, int endColumn) {
+    private static String removeInLine(final String lineContent, final int startColumn, final int endColumn) {
         
         final char[] chars = lineContent.toCharArray();
         for(int i = startColumn; i < endColumn; i++) {
@@ -37,62 +36,63 @@ final class OnlyIfMatch {
         return new String(chars);
     }
     
-    public CodePosition getStart() {
+    public CodePosition start() {
         
-        return start;
+        return this.start;
     }
     
-    public CodePosition getEnd() {
+    public CodePosition end() {
         
-        return end;
+        return this.end;
     }
     
-    public void setEnd(CodePosition end) {
+    public void end(final CodePosition end) {
         
         this.end = end;
     }
     
-    public OnlyIfMatch getParent() {
+    public OnlyIfMatch parent() {
         
-        return parent;
+        return this.parent;
     }
     
-    private void addChild(OnlyIfMatch child) {
+    private void addChild(final OnlyIfMatch child) {
         
-        children.add(child);
+        this.children.add(child);
     }
     
-    public String getName() {
+    public String name() {
         
-        return name;
+        return this.name;
     }
     
-    public void remove(FileAccessSingle file) {
+    public void remove(final List<String> fileContents) {
         
-        if(!parameterHit.conditionMet) {
-            removeComplete(file);
+        if(!this.parameterHit.conditionMet()) {
+            
+            this.removeComplete(fileContents);
         } else {
-            removePreprocessorCallsOnly(file);
-            removeChildren(file);
+            
+            this.removePreprocessorCallsOnly(fileContents);
+            this.removeChildren(fileContents);
         }
     }
     
-    private void removePreprocessorCallsOnly(FileAccessSingle file) {
+    private void removePreprocessorCallsOnly(final List<String> fileContents) {
         
-        final List<String> fileContents = file.getFileContents();
         {
-            final int position = start.fromLine - 1;
-            final int onlyIfStart = start.fromLineOffset;
-            final int onlyIfEnd = start.toLineOffset;
+            final int position = this.start.fromLine - 1;
+            final int onlyIfStart = this.start.fromLineOffset;
+            final int onlyIfEnd = this.start.toLineOffset;
             
             final String toOnlyIf = fileContents.get(position);
             final String removed = removeInLine(toOnlyIf, onlyIfStart, onlyIfEnd);
             fileContents.set(position, removed);
         }
         {
-            final int position = end.fromLine - 1;
-            final int onlyIfStart = end.fromLineOffset;
-            final int onlyIfend = end.toLineOffset;
+            final int position = this.end.fromLine - 1;
+            final int onlyIfStart = this.end.fromLineOffset;
+            final int onlyIfend = this.end.toLineOffset;
             
             final String toOnlyIf = fileContents.get(position);
             final String removed = removeInLine(toOnlyIf, onlyIfStart, onlyIfend);
@@ -101,30 +101,27 @@ final class OnlyIfMatch {
         
     }
     
-    private void removeComplete(FileAccessSingle file) {
+    private void removeComplete(final List<String> fileContents) {
         
-        for(int i = start.fromLine; i <= end.toLine; i++) {
-            removeLine(i, file);
+        for(int i = this.start.fromLine; i <= this.end.toLine; i++) {
+            removeLine(i, fileContents);
         }
     }
     
-    private void removeLine(int lineNumber, FileAccessSingle file) {
+    private void removeLine(final int lineNumber, final List<String> fileContents) {
         
-        final List<String> fileContents = file.getFileContents();
         final int position = lineNumber - 1;
         final String toOnlyIf = fileContents.get(position);
         
-        final int onlyIfStart = lineNumber != start.fromLine ? 0 : start.fromLineOffset;
-        final int onlyIfEnd = lineNumber != end.toLine ? toOnlyIf.length() : end.toLineOffset;
+        final int onlyIfStart = lineNumber != this.start.fromLine ? 0 : this.start.fromLineOffset;
+        final int onlyIfEnd = lineNumber != this.end.toLine ? toOnlyIf.length() : this.end.toLineOffset;
         final String removed = removeInLine(toOnlyIf, onlyIfStart, onlyIfEnd);
         fileContents.set(position, removed);
     }
     
-    private void removeChildren(FileAccessSingle file) {
+    private void removeChildren(final List<String> fileContents) {
         
-        for(OnlyIfMatch child : children) {
-            child.remove(file);
-        }
+        this.children.forEach(it -> it.remove(fileContents));
     }
     
 }

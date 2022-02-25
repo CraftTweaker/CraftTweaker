@@ -9,11 +9,11 @@ public abstract class OnlyIfParameter {
         this.name = name;
     }
     
-    public String getName() {
+    public String name() {
         
         return name;
     }
     
-    public abstract OnlyIfParameterHit isHit(String[] additionalArguments);
+    public abstract OnlyIfParameterHit isHit(final String[] additionalArguments);
     
 }

@@ -1,49 +1,47 @@
 package com.blamejared.crafttweaker.impl.preprocessor;
 
-import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.annotation.Preprocessor;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
-import com.blamejared.crafttweaker.api.zencode.PreprocessorMatch;
-import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IMutableScriptRunInfo;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-@Preprocessor
-public class LoadFirstPreprocessor implements IPreprocessor {
+@Preprocessor // TODO("Does it make sense to keep it given we have priority?")
+public final class LoadFirstPreprocessor implements IPreprocessor {
     
     public static final LoadFirstPreprocessor INSTANCE = new LoadFirstPreprocessor();
     
     @Override
-    public String getName() {
+    public String name() {
         
         return "loadfirst";
     }
     
     @Nullable
     @Override
-    public String getDefaultValue() {
+    public String defaultValue() {
         
         return null;
     }
     
     @Override
-    public boolean apply(@Nonnull FileAccessSingle file, ScriptLoadingOptions scriptLoadingOptions, @Nonnull List<PreprocessorMatch> preprocessorMatches) {
+    public boolean apply(final IScriptFile file, final List<String> preprocessedContents, final IMutableScriptRunInfo runInfo, final List<Match> matches) {
         
         return true;
     }
     
     @Override
-    public int getPriority() {
+    public int priority() {
         
         return 13;
     }
     
     @Override
-    public int compare(FileAccessSingle o1, FileAccessSingle o2) {
+    public int compare(final IScriptFile a, final IScriptFile b) {
         
-        return Boolean.compare(o2.hasMatchFor(this), o1.hasMatchFor(this));
+        return Boolean.compare(b.hasMatchesFor(this), a.hasMatchesFor(this));
     }
     
 }
