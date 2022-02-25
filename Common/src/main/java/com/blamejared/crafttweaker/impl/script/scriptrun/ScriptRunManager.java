@@ -28,7 +28,9 @@ import java.util.function.Supplier;
 public final class ScriptRunManager implements IScriptRunManager {
     
     private static final Supplier<ScriptRunManager> INSTANCE = Suppliers.memoize(ScriptRunManager::new);
-    private static final Supplier<Comparator<IScriptFile>> FILE_COMPARATOR = Suppliers.memoize(() -> {
+    
+    // Package-private to allow ThroughRecipeScriptRunManager to access it TODO("Remove")
+    static final Supplier<Comparator<IScriptFile>> FILE_COMPARATOR = Suppliers.memoize(() -> {
         final Comparator<IScriptFile> noop = (a, b) -> 0; // Required to allow for type inference
         return CraftTweakerAPI.getRegistry()
                 .getPreprocessors()
@@ -55,9 +57,15 @@ public final class ScriptRunManager implements IScriptRunManager {
     @Override
     public IScriptRun createScriptRun(final ScriptRunConfiguration configuration) {
         
+        return this.createScriptRun(lookupScriptFiles(), configuration);
+    }
+    
+    @Override
+    public IScriptRun createScriptRun(final List<Path> files, final ScriptRunConfiguration configuration) {
+        
         final List<IPreprocessor> preprocessors = CraftTweakerAPI.getRegistry().getPreprocessors();
         final RunInfo info = RunInfo.create(configuration);
-        final List<SourceFile> sources = lookupScriptFiles()
+        final List<SourceFile> sources = files
                 .stream()
                 .map(it -> ScriptFile.of(CraftTweakerAPI.getScriptsDirectory(), it, info, preprocessors))
                 .sorted(FILE_COMPARATOR.get())
@@ -69,7 +77,7 @@ public final class ScriptRunManager implements IScriptRunManager {
     }
     
     @Override
-    public IScriptRun createScriptRun(final List<SourceFile> sources, final ScriptRunConfiguration configuration) {
+    public IScriptRun createScriptRunWith(final List<SourceFile> sources, final ScriptRunConfiguration configuration) {
         
         return this.createScriptRun(sources, RunInfo.create(configuration));
     }
@@ -95,6 +103,12 @@ public final class ScriptRunManager implements IScriptRunManager {
         this.applyActionInRun(action);
     }
     
+    // Package-private to allow ThroughRecipeScriptRunManager to access it TODO("Remove")
+    IScriptRun createScriptRun(final List<SourceFile> sources, final RunInfo info) {
+        
+        return new ScriptRun(sources, info, this::updateCurrentRunInfo, this.previousRunInfo::get);
+    }
+    
     private List<Path> lookupScriptFiles() {
         
         try {
@@ -104,11 +118,6 @@ public final class ScriptRunManager implements IScriptRunManager {
         } catch(final IOException e) {
             throw new UncheckedIOException(e);
         }
-    }
-    
-    private IScriptRun createScriptRun(final List<SourceFile> sources, final RunInfo info) {
-        
-        return new ScriptRun(sources, info, this::updateCurrentRunInfo, this.previousRunInfo::get);
     }
     
     private void updateCurrentRunInfo(final RunInfo current) {
