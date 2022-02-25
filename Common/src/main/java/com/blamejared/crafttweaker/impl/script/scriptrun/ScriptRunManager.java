@@ -1,6 +1,8 @@
 package com.blamejared.crafttweaker.impl.script.scriptrun;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.action.base.IAction;
+import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
@@ -78,6 +80,21 @@ public final class ScriptRunManager implements IScriptRunManager {
         return Objects.requireNonNull(this.currentRunInfo, "Unable to get current run info outside a script run");
     }
     
+    @Override
+    public void applyAction(final IAction action) {
+        
+        if(this.currentRunInfo == null) {
+            this.applyActionOutsideRun(action);
+            return;
+        }
+        
+        if(!(action instanceof IRuntimeAction) && !this.currentRunInfo.isFirstRun()) {
+            return;
+        }
+        
+        this.applyActionInRun(action);
+    }
+    
     private List<Path> lookupScriptFiles() {
         
         try {
@@ -120,6 +137,46 @@ public final class ScriptRunManager implements IScriptRunManager {
         
         this.previousRunInfo.put(this.currentRunInfo.loader(), this.currentRunInfo);
         this.currentRunInfo = null;
+    }
+    
+    private void applyActionOutsideRun(@SuppressWarnings("unused") final IAction action) {
+        
+        // TODO("Should this be supported? Custom IAction impl if so?")
+        throw new UnsupportedOperationException("Unable to apply an action outside of a script run");
+    }
+    
+    private void applyActionInRun(final IAction action) {
+        
+        final RunInfo info = Objects.requireNonNull(this.currentRunInfo);
+        
+        try {
+            
+            if(!action.shouldApplyOn(info.loadSource())) {
+                return;
+            }
+            
+            if(!action.validate(CraftTweakerAPI.LOGGER)) {
+                info.enqueueAction(action, false);
+                return;
+            }
+            
+            CraftTweakerAPI.LOGGER.info(this.makeDescription(action));
+            action.apply();
+            info.enqueueAction(action, true);
+            
+        } catch(final Exception e) {
+            CraftTweakerAPI.LOGGER.error("Unable to run action due to an error", e);
+        }
+    }
+    
+    private String makeDescription(final IAction action) {
+        
+        final String description = action.describe();
+        if(description == null || description.isEmpty()) {
+            return "Applying unknown action '" + action + "': tell the mod author to properly implement describe";
+        }
+        
+        return description;
     }
     
 }
