@@ -92,4 +92,10 @@ final class PluginRegistryAccess implements IPluginRegistryAccess {
         this.registries.zenClassRegistry().applyInheritanceRules();
     }
     
+    @Override
+    public void verifyProperRegistration() {
+        
+        this.registries.scriptRunModuleConfiguratorRegistry().verify(this.registries.loaderRegistry().getAllLoaders());
+    }
+    
 }

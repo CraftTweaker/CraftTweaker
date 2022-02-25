@@ -119,6 +119,7 @@ public final class PluginManager {
         this.handleZenDataRegistration(pluginRegistryAccess);
         this.applyInheritanceRules(pluginRegistryAccess);
         this.handleAdditionalRegistration(pluginRegistryAccess);
+        this.verifyProperRegistration(pluginRegistryAccess);
     }
     
     public void broadcastEnd() {
@@ -180,6 +181,11 @@ public final class PluginManager {
     private void applyInheritanceRules(final IPluginRegistryAccess access) {
         
         this.verifying("applying inheritance rules", access::applyInheritanceRules);
+    }
+    
+    private void verifyProperRegistration(final IPluginRegistryAccess access) {
+        
+        this.verifying("verifying correct registration", access::verifyProperRegistration);
     }
     
     private void handleAdditionalRegistration(final IPluginRegistryAccess access) {

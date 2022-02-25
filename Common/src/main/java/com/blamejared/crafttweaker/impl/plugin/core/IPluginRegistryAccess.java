@@ -40,4 +40,6 @@ public interface IPluginRegistryAccess {
     
     void applyInheritanceRules();
     
+    void verifyProperRegistration();
+    
 }
