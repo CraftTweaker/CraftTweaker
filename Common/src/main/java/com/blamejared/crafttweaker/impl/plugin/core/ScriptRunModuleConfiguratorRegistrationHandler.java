@@ -8,18 +8,18 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-final class ScriptRunModuleConfigurationRegistrationHandler implements IScriptRunModuleConfiguratorRegistrationHandler {
+final class ScriptRunModuleConfiguratorRegistrationHandler implements IScriptRunModuleConfiguratorRegistrationHandler {
     
     private final Map<String, IScriptRunModuleConfigurator> configurators;
     
-    private ScriptRunModuleConfigurationRegistrationHandler() {
+    private ScriptRunModuleConfiguratorRegistrationHandler() {
         
         this.configurators = new HashMap<>();
     }
     
     static Stream<Map.Entry<String, IScriptRunModuleConfigurator>> gather(final Consumer<IScriptRunModuleConfiguratorRegistrationHandler> populatingConsumer) {
         
-        final ScriptRunModuleConfigurationRegistrationHandler handler = new ScriptRunModuleConfigurationRegistrationHandler();
+        final ScriptRunModuleConfiguratorRegistrationHandler handler = new ScriptRunModuleConfiguratorRegistrationHandler();
         populatingConsumer.accept(handler);
         return handler.configurators.entrySet().stream();
     }

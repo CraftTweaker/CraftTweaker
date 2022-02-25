@@ -158,7 +158,7 @@ public final class PluginManager {
         
         this.verifying(
                 "registering script run module configurations",
-                () -> ScriptRunModuleConfigurationRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerModuleConfigurators))
+                () -> ScriptRunModuleConfiguratorRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerModuleConfigurators))
                         .forEach(it -> access.registerRunModuleConfigurator(loaderFinder.apply(it.getKey()), it.getValue()))
         );
         
