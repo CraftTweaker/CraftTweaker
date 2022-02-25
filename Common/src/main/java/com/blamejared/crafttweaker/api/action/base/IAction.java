@@ -1,7 +1,8 @@
 package com.blamejared.crafttweaker.api.action.base;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
+import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.api.zencode.impl.util.PositionUtil;
 import org.apache.logging.log4j.Logger;
 import org.openzen.zencode.shared.CodePosition;
@@ -48,24 +49,23 @@ public interface IAction {
         return true;
     }
     
-    
     /**
      * Determines if an action should be applied.
      *
      * By default, actions will only be applied if the script was loaded in a reload-listener.
      * This ensures that scripts are only loaded on the server thread.
      *
-     * If you need an action to apply when joining a server, you can reference {@link ScriptLoadingOptions#CLIENT_RECIPES_UPDATED_SCRIPT_SOURCE}
+     * If you need an action to apply when joining a server, you can reference a load source with the ID of
+     * {@link CraftTweakerConstants#CLIENT_RECIPES_UPDATED_SOURCE_ID}.
      *
-     * @param source The current {@link ScriptLoadingOptions.ScriptLoadSource}.
+     * @param source The current {@link IScriptLoadSource}.
      *
      * @return True if the action should be applied. False otherwise.
      */
-    default boolean shouldApplyOn(ScriptLoadingOptions.ScriptLoadSource source) {
+    default boolean shouldApplyOn(final IScriptLoadSource source) {
         
-        return source.equals(ScriptLoadingOptions.RELOAD_LISTENER_SCRIPT_SOURCE);
+        return source.id().equals(CraftTweakerConstants.RELOAD_LISTENER_SOURCE_ID);
     }
-    
     
     /**
      * Used to retrieve the script file an line that this action was created on.
@@ -82,7 +82,7 @@ public interface IAction {
     }
     
     /**
-     * Ensures that an action is only applied on a certain loader. This should be used in {@link IAction#shouldApplyOn(ScriptLoadingOptions.ScriptLoadSource)}.
+     * Ensures that an action is only applied on a certain loader. This should be used in {@link IAction#shouldApplyOn(IScriptLoadSource)}.
      *
      * Will return true if the action should run, otherwise will log a warning of where the actions failed (if it can find it in the script, see {@link IAction#getDeclaredScriptPosition()}) and what loader it is meant to be used on, as well as the current loader.
      *

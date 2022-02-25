@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
@@ -28,6 +29,8 @@ public interface ICraftTweakerRegistry {
     IScriptLoadSource findLoadSource(final ResourceLocation id);
     
     IZenClassRegistry getZenClassRegistry();
+    
+    IScriptRunModuleConfigurator getConfiguratorFor(final IScriptLoader loader);
     
     Map<String, IBracketDumperInfo> getBracketDumpers(final IScriptLoader loader);
     

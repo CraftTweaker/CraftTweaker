@@ -69,7 +69,7 @@ final class JavaNativeIntegrationRegistrationHandler implements IJavaNativeInteg
     @Override
     public void registerPreprocessor(final IPreprocessor preprocessor) {
         
-        final String name = preprocessor.getName();
+        final String name = preprocessor.name();
         final IPreprocessor other = this.preprocessors.get(name);
         if(other != null) {
             throw new IllegalArgumentException("A preprocessor with the name '" + name + "' is already registered: old " + other + ", new " + preprocessor);

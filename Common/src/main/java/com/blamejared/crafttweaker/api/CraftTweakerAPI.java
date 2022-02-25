@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.api.zencode.expand.IDataRewrites;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.api.zencode.impl.loader.LoaderActions;
 import com.blamejared.crafttweaker.api.zencode.impl.loader.ScriptRun;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunManager;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.blamejared.crafttweaker.platform.Services;
@@ -39,9 +40,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class CraftTweakerAPI {
+public final class CraftTweakerAPI {
     
     private static final Supplier<ICraftTweakerRegistry> REGISTRY = Suppliers.memoize(Services.BRIDGE::registry);
+    private static final Supplier<IScriptRunManager> SCRIPT_RUN_MANAGER = Suppliers.memoize(Services.BRIDGE::scriptRunManager);
     private static final Supplier<Path> SCRIPTS_DIRECTORY = Suppliers.memoize(() -> Services.PLATFORM.getPathFromGameDirectory(CraftTweakerConstants.SCRIPTS_DIRECTORY));
     
     // Do we want to make a log4j wrapper and expose it to a script...? 😬
@@ -76,6 +78,11 @@ public class CraftTweakerAPI {
     public static ICraftTweakerRegistry getRegistry() {
         
         return REGISTRY.get();
+    }
+    
+    public static IScriptRunManager getScriptRunManager() {
+        
+        return SCRIPT_RUN_MANAGER.get();
     }
     
     public static Path getScriptsDirectory() {

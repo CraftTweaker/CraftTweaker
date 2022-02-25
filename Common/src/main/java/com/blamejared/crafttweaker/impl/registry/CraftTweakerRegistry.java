@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
 import com.blamejared.crafttweaker.impl.plugin.core.IPluginRegistryAccess;
 import com.blamejared.crafttweaker.impl.plugin.core.PluginManager;
 import com.blamejared.crafttweaker.impl.registry.recipe.RecipeHandlerRegistry;
@@ -89,6 +90,12 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
     public IZenClassRegistry getZenClassRegistry() {
         
         return this.registries.zenClassRegistry();
+    }
+    
+    @Override
+    public IScriptRunModuleConfigurator getConfiguratorFor(final IScriptLoader loader) {
+        
+        throw new UnsupportedOperationException("Not yet implemented");
     }
     
     @Override

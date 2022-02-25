@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.api.zencode.impl.native_type;
+package com.blamejared.crafttweaker.impl.script.scriptrun.natives;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
@@ -12,23 +12,31 @@ import org.openzen.zencode.java.module.converters.JavaNativeMemberConverter;
 import org.openzen.zencode.java.module.converters.JavaNativeTypeConverter;
 import org.openzen.zenscript.codemodel.HighLevelDefinition;
 
-class CrTJavaNativeConverter extends JavaNativeConverter {
+final class CtJavaNativeConverter extends JavaNativeConverter {
     
-    public CrTJavaNativeConverter(JavaNativeTypeConverter typeConverter, JavaNativeHeaderConverter headerConverter, JavaNativeMemberConverter memberConverter, JavaNativeClassConverter classConverter, JavaNativeGlobalConverter globalConverter, JavaNativeExpansionConverter expansionConverter, JavaNativeTypeConversionContext typeConversionContext) {
+    CtJavaNativeConverter(
+            final JavaNativeTypeConverter typeConverter,
+            final JavaNativeHeaderConverter headerConverter,
+            final JavaNativeMemberConverter memberConverter,
+            final JavaNativeClassConverter classConverter,
+            final JavaNativeGlobalConverter globalConverter,
+            final JavaNativeExpansionConverter expansionConverter,
+            final JavaNativeTypeConversionContext typeConversionContext
+    ) {
         
         super(typeConverter, headerConverter, memberConverter, classConverter, globalConverter, expansionConverter, typeConversionContext);
     }
     
     @Override
-    public HighLevelDefinition addClass(Class<?> cls) {
+    public HighLevelDefinition addClass(final Class<?> cls) {
         
         try {
             if(cls.isAnnotationPresent(NativeTypeRegistration.class)) {
-                return expansionConverter.convertExpansion(cls);
+                return this.expansionConverter.convertExpansion(cls);
             }
             
             return super.addClass(cls);
-        } catch(Throwable e) {
+        } catch(final Throwable e) {
             CraftTweakerAPI.LOGGER.error("Error while registering class: '{}', this is most likely a compatibility issue:", cls.getName(), e);
             return null;
         }

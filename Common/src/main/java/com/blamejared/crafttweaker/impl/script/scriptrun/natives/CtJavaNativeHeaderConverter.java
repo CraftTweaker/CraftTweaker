@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.api.zencode.impl.native_type;
+package com.blamejared.crafttweaker.impl.script.scriptrun.natives;
 
 import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.java.module.JavaNativeTypeConversionContext;
@@ -21,53 +21,56 @@ import java.util.List;
  *
  * Attempts to handle the case when the Optional value relies on Expansions.
  */
-public class CrTJavaNativeHeaderConverter extends JavaNativeHeaderConverter {
+final class CtJavaNativeHeaderConverter extends JavaNativeHeaderConverter {
     
+    private final List<DefaultedLazyValue> lazyValues;
     
-    private static final List<LazyDefaultValueValue> lazyDefaultValueValueList = new ArrayList<>();
-    
-    public CrTJavaNativeHeaderConverter(JavaNativeTypeConverter typeConverter, JavaNativePackageInfo packageInfo, JavaNativeTypeConversionContext typeConversionContext) {
+    CtJavaNativeHeaderConverter(
+            final JavaNativeTypeConverter typeConverter,
+            final JavaNativePackageInfo packageInfo,
+            final JavaNativeTypeConversionContext typeConversionContext
+    ) {
         
         super(typeConverter, packageInfo, typeConversionContext);
+        this.lazyValues = new ArrayList<>();
     }
     
     
     @Override
-    public Expression getDefaultValue(Parameter parameter, TypeID type, FunctionParameter functionParameter) {
+    public Expression getDefaultValue(final Parameter parameter, final TypeID type, final FunctionParameter functionParameter) {
         
         final Expression defaultValue = super.getDefaultValue(parameter, type, functionParameter);
         
         //Null even if trying to parse => let's try again later
-        if(isInvalid((defaultValue)) && parameter.isAnnotationPresent(ZenCodeType.Optional.class)) {
-            lazyDefaultValueValueList.add(new LazyDefaultValueValue(parameter, type, functionParameter));
+        if(this.isInvalid(defaultValue) && parameter.isAnnotationPresent(ZenCodeType.Optional.class)) {
+            
+            this.lazyValues.add(new DefaultedLazyValue(parameter, type, functionParameter));
         }
         
         return defaultValue;
     }
     
-    private boolean isInvalid(Expression expression) {
-        if(expression instanceof WrapOptionalExpression) {
-            return isInvalid(((WrapOptionalExpression) expression).value);
+    private boolean isInvalid(final Expression expression) {
+        
+        if(expression instanceof WrapOptionalExpression wrapped) {
+            return this.isInvalid(wrapped.value);
         }
         
         return expression == null || expression instanceof InvalidExpression || expression instanceof InvalidAssignExpression;
     }
     
-    
-    public void reinitializeAllLazyValues() {
+    void reinitializeAllLazyValues() {
         
-        for(LazyDefaultValueValue lazyDefaultValueValue : lazyDefaultValueValueList) {
-            reinitializeLazyValue(lazyDefaultValueValue);
-        }
-        
-        lazyDefaultValueValueList.clear();
+        this.lazyValues.forEach(this::reinitializeLazyValue);
+        this.lazyValues.clear();
     }
     
-    private void reinitializeLazyValue(LazyDefaultValueValue lazyDefaultValueValue) {
+    private void reinitializeLazyValue(final DefaultedLazyValue lazyDefaultValueValue) {
         
-        final Parameter parameter = lazyDefaultValueValue.parameter;
-        final TypeID typeID = lazyDefaultValueValue.typeID;
-        final FunctionParameter functionParameter = lazyDefaultValueValue.functionParameter;
+        final Parameter parameter = lazyDefaultValueValue.parameter();
+        final TypeID typeID = lazyDefaultValueValue.typeId();
+        final FunctionParameter functionParameter = lazyDefaultValueValue.functionParameter();
+        
         functionParameter.defaultValue = super.getDefaultValue(parameter, typeID, functionParameter);
     }
     
