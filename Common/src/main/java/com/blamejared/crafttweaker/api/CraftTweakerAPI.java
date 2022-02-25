@@ -4,10 +4,7 @@ import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.action.base.ActionApplier;
 import com.blamejared.crafttweaker.api.action.base.IAction;
 import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
-import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.game.Game;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
-import com.blamejared.crafttweaker.api.mod.Mods;
 import com.blamejared.crafttweaker.api.zencode.expand.IDataRewrites;
 import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
 import com.blamejared.crafttweaker.api.zencode.impl.loader.LoaderActions;
@@ -25,8 +22,6 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openzen.zencode.java.ScriptingEngine;
-import org.openzen.zencode.java.ZenCodeGlobals;
-import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.shared.SourceFile;
 import org.openzen.zenscript.parser.expression.ParsedExpressionArray;
 import org.openzen.zenscript.parser.expression.ParsedExpressionMap;
@@ -44,8 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-@ZenRegister
-@ZenCodeType.Name("crafttweaker.api.CraftTweakerAPI")
 public class CraftTweakerAPI {
     
     private static final Supplier<ICraftTweakerRegistry> REGISTRY = Suppliers.memoize(Services.BRIDGE::registry);
@@ -61,12 +54,6 @@ public class CraftTweakerAPI {
     
     @Deprecated(forRemoval = true)
     private static RecipeManager recipeManager;
-    
-    @ZenCodeGlobals.Global("game")
-    public static final Game GAME = new Game();
-    
-    @ZenCodeGlobals.Global("loadedMods")
-    public static final Mods MODS = new Mods();
     
     /**
      * This field is effectively final, it should never change in normal gameplay, but it is changed during testing,
