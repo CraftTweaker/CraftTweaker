@@ -43,8 +43,8 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
     @Override
     public void registerLoadSource(final IScriptLoadSourceRegistrationHandler handler) {
         
-        handler.registerLoadSource(CraftTweakerConstants.rl("reload_listener"));
-        handler.registerLoadSource(CraftTweakerConstants.rl("client_recipes_updated"));
+        handler.registerLoadSource(CraftTweakerConstants.RELOAD_LISTENER_SOURCE_ID);
+        handler.registerLoadSource(CraftTweakerConstants.CLIENT_RECIPES_UPDATED_SOURCE_ID);
     }
     
     @Override
