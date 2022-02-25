@@ -45,6 +45,7 @@ import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifierManager;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.forgespi.language.ModFileScanData;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -58,6 +59,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -159,6 +161,11 @@ public class ForgePlatformHelper implements IPlatformHelper {
         return item.getFluid();
     }
     
+    @Override
+    public Path getGameDirectory() {
+        
+        return FMLPaths.GAMEDIR.get();
+    }
     
     @Override
     public <T extends Annotation> Stream<? extends Class<?>> findClassesWithAnnotation(Class<T> annotationCls, Consumer<Mod> consumer, Predicate<Either<T, Map<String, Object>>> annotationFilter) {

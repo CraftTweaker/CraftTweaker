@@ -35,6 +35,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -48,13 +49,17 @@ import java.util.function.Supplier;
 public class CraftTweakerAPI {
     
     private static final Supplier<ICraftTweakerRegistry> REGISTRY = Suppliers.memoize(Services.BRIDGE::registry);
+    private static final Supplier<Path> SCRIPTS_DIRECTORY = Suppliers.memoize(() -> Services.PLATFORM.getPathFromGameDirectory(CraftTweakerConstants.SCRIPTS_DIRECTORY));
     
     // Do we want to make a log4j wrapper and expose it to a script...? 😬
     public static final Logger LOGGER = LogManager.getLogger(CraftTweakerLogger.LOGGER_NAME);
     
+    @Deprecated(forRemoval = true)
     public static boolean DEBUG_MODE = false;
+    @Deprecated(forRemoval = true)
     public static boolean NO_BRAND = false;
     
+    @Deprecated(forRemoval = true)
     private static RecipeManager recipeManager;
     
     @ZenCodeGlobals.Global("game")
@@ -67,17 +72,31 @@ public class CraftTweakerAPI {
      * This field is effectively final, it should never change in normal gameplay, but it is changed during testing,
      * which means that it cannot have the final modifier.
      */
+    @Deprecated(forRemoval = true)
     private static ActionApplier ACTION_APPLIER = CraftTweakerAPI::applyActionInternal;
     
     /**
      * The last ScriptRun that was executed is regarded as "current" run.
      */
+    @Deprecated(forRemoval = true)
     private static ScriptRun currentRun;
     
     static {
         ParsedExpressionMap.compileOverrides.add(IDataRewrites::rewriteMap);
         ParsedExpressionArray.compileOverrides.add(IDataRewrites::rewriteArray);
     }
+    
+    public static ICraftTweakerRegistry getRegistry() {
+        
+        return REGISTRY.get();
+    }
+    
+    public static Path getScriptsDirectory() {
+        
+        return SCRIPTS_DIRECTORY.get();
+    }
+    
+    // Down below there's old stuff that can and should be moved away
     
     /**
      * Loads the scripts with the given loadingOptions.
@@ -128,11 +147,6 @@ public class CraftTweakerAPI {
     public static void apply(IAction action) {
         
         ACTION_APPLIER.apply(action);
-    }
-    
-    public static ICraftTweakerRegistry getRegistry() {
-        
-        return REGISTRY.get();
     }
     
     public static List<File> getScriptFiles() {

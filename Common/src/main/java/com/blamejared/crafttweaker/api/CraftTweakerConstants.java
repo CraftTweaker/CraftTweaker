@@ -10,7 +10,9 @@ public class CraftTweakerConstants {
     public static final String MOD_ID = "crafttweaker";
     public static final String MOD_NAME = "CraftTweaker";
     public static final UUID CRAFTTWEAKER_UUID = UUID.nameUUIDFromBytes(MOD_ID.getBytes());
-    public static final File SCRIPT_DIR = new File("scripts");
+    public static final String SCRIPTS_DIRECTORY = "./scripts";
+    @Deprecated(forRemoval = true)
+    public static final File SCRIPT_DIR = new File(SCRIPTS_DIRECTORY); // TODO("See above, use Path, and go through platform")
     public static final String LOG_PATH = "logs/crafttweaker.log";
     
     public static final String INIT_LOADER_NAME = "initialize";

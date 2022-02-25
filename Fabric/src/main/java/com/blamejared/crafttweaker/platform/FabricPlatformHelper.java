@@ -139,6 +139,11 @@ public class FabricPlatformHelper implements IPlatformHelper {
         return ((AccessBucketItem) item).getContent();
     }
     
+    @Override
+    public Path getGameDirectory() {
+        
+        return FabricLoader.getInstance().getGameDir();
+    }
     
     @Override
     public <T extends Annotation> Stream<? extends Class<?>> findClassesWithAnnotation(Class<T> annotationCls, Consumer<Mod> consumer, Predicate<Either<T, Map<String, Object>>> annotationFilter) {

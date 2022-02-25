@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +63,17 @@ public interface IPlatformHelper {
     
     Fluid getBucketContent(BucketItem item);
     
+    Path getGameDirectory();
+    
+    default Path getPathFromGameDirectory(final Path path) {
+        
+        return this.getGameDirectory().resolve(path);
+    }
+    
+    default Path getPathFromGameDirectory(final String path) {
+        
+        return this.getPathFromGameDirectory(Path.of(path));
+    }
     
     /**
      * Finds classes with the given annotation
@@ -135,4 +147,5 @@ public interface IPlatformHelper {
     
     
     boolean doCraftingTableRecipesConflict(final IRecipeManager manager, final Recipe<?> first, final Recipe<?> second);
+    
 }
