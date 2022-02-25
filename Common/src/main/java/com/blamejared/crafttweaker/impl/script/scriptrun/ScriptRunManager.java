@@ -57,17 +57,17 @@ public final class ScriptRunManager implements IScriptRunManager {
     @Override
     public IScriptRun createScriptRun(final ScriptRunConfiguration configuration) {
         
-        return this.createScriptRun(lookupScriptFiles(), configuration);
+        return this.createScriptRun(CraftTweakerAPI.getScriptsDirectory(), lookupScriptFiles(), configuration);
     }
     
     @Override
-    public IScriptRun createScriptRun(final List<Path> files, final ScriptRunConfiguration configuration) {
+    public IScriptRun createScriptRun(final Path root, final List<Path> files, final ScriptRunConfiguration configuration) {
         
         final List<IPreprocessor> preprocessors = CraftTweakerAPI.getRegistry().getPreprocessors();
         final RunInfo info = RunInfo.create(configuration);
         final List<SourceFile> sources = files
                 .stream()
-                .map(it -> ScriptFile.of(CraftTweakerAPI.getScriptsDirectory(), it, info, preprocessors))
+                .map(it -> ScriptFile.of(root, it, info, preprocessors))
                 .sorted(FILE_COMPARATOR.get())
                 .map(ScriptFile::toSourceFile)
                 .filter(Optional::isPresent)
@@ -77,7 +77,7 @@ public final class ScriptRunManager implements IScriptRunManager {
     }
     
     @Override
-    public IScriptRun createScriptRunWith(final List<SourceFile> sources, final ScriptRunConfiguration configuration) {
+    public IScriptRun createScriptRun(final List<SourceFile> sources, final ScriptRunConfiguration configuration) {
         
         return this.createScriptRun(sources, RunInfo.create(configuration));
     }

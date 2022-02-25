@@ -10,10 +10,9 @@ public interface IScriptRunManager {
     
     IScriptRun createScriptRun(final ScriptRunConfiguration configuration);
     
-    IScriptRun createScriptRun(final List<Path> files, final ScriptRunConfiguration configuration);
+    IScriptRun createScriptRun(final Path root, final List<Path> files, final ScriptRunConfiguration configuration);
     
-    // TODO("Different name? I'd like 'createScriptRun' but Java erasure be like")
-    IScriptRun createScriptRunWith(final List<SourceFile> sources, final ScriptRunConfiguration configuration);
+    IScriptRun createScriptRun(final List<SourceFile> sources, final ScriptRunConfiguration configuration);
     
     IScriptRunInfo currentRunInfo();
     
