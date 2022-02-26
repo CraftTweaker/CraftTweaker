@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.recipe.RecipeList;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
+import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -20,7 +21,7 @@ public abstract class ActionWholeRegistryBase implements IRuntimeAction {
     
     private RecipeManager getRecipeManager() {
         
-        return CraftTweakerAPI.getRecipeManager();
+        return CraftTweakerAPI.getAccessibleElementsProvider().recipeManager();
     }
     
     protected Map<RecipeType<?>, RecipeList<?>> getRecipeLists() {
@@ -30,8 +31,8 @@ public abstract class ActionWholeRegistryBase implements IRuntimeAction {
     
     protected Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> getRecipesByType() {
         
-        final HashMap<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> result = new HashMap<>(CraftTweakerAPI.getAccessibleRecipeManager()
-                .getRecipes());
+        final AccessRecipeManager manager = CraftTweakerAPI.getAccessibleElementsProvider().accessibleRecipeManager();
+        final HashMap<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> result = new HashMap<>(manager.getRecipes());
         result.remove(CraftTweakerRegistries.RECIPE_TYPE_SCRIPTS);
         return result;
     }

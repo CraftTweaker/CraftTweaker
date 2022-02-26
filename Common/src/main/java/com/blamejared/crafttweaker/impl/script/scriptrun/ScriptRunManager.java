@@ -57,7 +57,7 @@ public final class ScriptRunManager implements IScriptRunManager {
     @Override
     public IScriptRun createScriptRun(final ScriptRunConfiguration configuration) {
         
-        return this.createScriptRun(CraftTweakerAPI.getScriptsDirectory(), lookupScriptFiles(), configuration);
+        return this.createScriptRun(CraftTweakerAPI.getScriptsDirectory(), this.lookupScriptFiles(), configuration);
     }
     
     @Override

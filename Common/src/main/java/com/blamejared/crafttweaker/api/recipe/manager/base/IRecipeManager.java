@@ -236,7 +236,8 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
      */
     default Map<ResourceLocation, T> getRecipes() {
         
-        return (Map<ResourceLocation, T>) CraftTweakerAPI.getAccessibleRecipeManager()
+        return (Map<ResourceLocation, T>) CraftTweakerAPI.getAccessibleElementsProvider()
+                .accessibleRecipeManager()
                 .getRecipes()
                 .computeIfAbsent(getRecipeType(), key -> new HashMap<>());
     }

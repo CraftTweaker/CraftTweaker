@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.platform.event;
 
 import com.blamejared.crafttweaker.api.event.type.CTCommandRegisterEvent;
-import com.blamejared.crafttweaker.api.event.type.CTRegisterBEPEvent;
 import com.blamejared.crafttweaker.api.event.type.GatherReplacementExclusionEvent;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
@@ -12,12 +11,6 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ForgeEventHelper implements IEventHelper {
-    
-    @Override
-    public void fireRegisterBEPEvent(IgnorePrefixCasingBracketParser bep) {
-        
-        MinecraftForge.EVENT_BUS.post(new CTRegisterBEPEvent(bep));
-    }
     
     @Override
     public void fireCTCommandRegisterEvent() {

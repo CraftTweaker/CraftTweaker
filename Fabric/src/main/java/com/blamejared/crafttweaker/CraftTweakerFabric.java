@@ -17,6 +17,9 @@ public class CraftTweakerFabric implements ModInitializer {
     public void onInitialize() {
         
         CraftTweakerCommon.init();
+        CraftTweakerCommon.handlePlugins();
+        
+        // TODO("Will be removed")
         CraftTweakerCommon.registerCommandArguments();
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
             CraftTweakerCommon.registerCommands(dispatcher, dedicated ? Commands.CommandSelection.DEDICATED : Commands.CommandSelection.INTEGRATED);
@@ -38,6 +41,8 @@ public class CraftTweakerFabric implements ModInitializer {
         CraftTweakerEvents.GATHER_REPLACEMENT_EXCLUSION_EVENT.register(DefaultExclusionReplacements::handleDefaultExclusions);
         
         Services.PLATFORM.registerCustomTags();
+        
+        CraftTweakerCommon.handleFullSetupEnd(); // TODO("Another place?")
         
         CraftTweakerCommon.loadInitScripts();
     }

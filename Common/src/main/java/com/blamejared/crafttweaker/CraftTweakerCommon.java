@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.command.argument.IItemStackArgument;
 import com.blamejared.crafttweaker.api.command.argument.RecipeTypeArgument;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.command.CTCommands;
 import com.blamejared.crafttweaker.impl.plugin.core.PluginManager;
 import com.mojang.brigadier.CommandDispatcher;
@@ -36,17 +37,17 @@ public class CraftTweakerCommon {
     public static void init() {
         
         try {
-            Files.createDirectories(CraftTweakerConstants.SCRIPT_DIR.toPath());
+            Files.createDirectories(CraftTweakerAPI.getScriptsDirectory());
         } catch(IOException e) {
-            final String path = CraftTweakerConstants.SCRIPT_DIR.getAbsolutePath();
+            final String path = CraftTweakerAPI.getScriptsDirectory().toAbsolutePath().toString();
             throw new IllegalStateException("Could not create Directory " + path);
         }
         CraftTweakerLogger.init();
         
-        CraftTweakerAPI.LOGGER.info("Starting building internal Registries");
+        //CraftTweakerAPI.LOGGER.info("Starting building internal Registries");
         //CraftTweakerRegistry.addAdvancedBEPName("recipemanager");
         //CraftTweakerRegistry.findClasses();
-        CraftTweakerAPI.LOGGER.info("Completed building internal Registries");
+        //CraftTweakerAPI.LOGGER.info("Completed building internal Registries");
         
         CraftTweakerRegistries.init();
         
@@ -95,9 +96,19 @@ public class CraftTweakerCommon {
     
     public static void loadInitScripts() {
         
-        final ScriptLoadingOptions setupCommon = new ScriptLoadingOptions().setLoaderName(CraftTweakerConstants.INIT_LOADER_NAME)
-                .execute();
-        CraftTweakerAPI.loadScripts(setupCommon);
+        final ScriptRunConfiguration configuration = new ScriptRunConfiguration(
+                CraftTweakerConstants.INIT_LOADER_NAME,
+                CraftTweakerConstants.RELOAD_LISTENER_SOURCE_ID, // TODO("Custom load source?")
+                ScriptRunConfiguration.RunKind.EXECUTE
+        );
+        
+        try {
+            CraftTweakerAPI.getScriptRunManager()
+                    .createScriptRun(configuration)
+                    .execute();
+        } catch(final Throwable e) {
+            CraftTweakerAPI.LOGGER.error("Unable to run init scripts due to an error", e);
+        }
     }
     
 }

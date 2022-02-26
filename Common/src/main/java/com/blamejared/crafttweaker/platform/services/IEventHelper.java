@@ -46,8 +46,6 @@ public interface IEventHelper {
     
     Map<IIngredient, List<Consumer<ItemAttributeModifierBase>>> ATTRIBUTE_MODIFIERS = new HashMap<>();
     
-    void fireRegisterBEPEvent(IgnorePrefixCasingBracketParser bep);
-    
     void fireCTCommandRegisterEvent();
     
     IGatherReplacementExclusionEvent fireGatherReplacementExclusionEvent(final IRecipeManager manager);

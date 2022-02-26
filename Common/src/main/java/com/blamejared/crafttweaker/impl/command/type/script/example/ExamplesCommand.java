@@ -16,10 +16,11 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import org.apache.commons.io.IOUtils;
 import org.openzen.zencode.shared.SourceFile;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public final class ExamplesCommand extends CommandImpl {
     
@@ -44,33 +45,37 @@ public final class ExamplesCommand extends CommandImpl {
             writeScriptFile(new ResourceManagerSourceFile(file, resourceManager));
         }
         
-        player.sendMessage(CommandUtilities.openingFile(new TranslatableComponent("crafttweaker.command.example.generated").withStyle(ChatFormatting.GREEN), getExamplesDir().getPath()), CraftTweakerConstants.CRAFTTWEAKER_UUID);
+        player.sendMessage(CommandUtilities.openingFile(new TranslatableComponent("crafttweaker.command.example.generated").withStyle(ChatFormatting.GREEN), getExamplesDir().toString()), CraftTweakerConstants.CRAFTTWEAKER_UUID);
         return Command.SINGLE_SUCCESS;
     }
     
-    private static void writeScriptFile(SourceFile sourceFile) {
+    private static void writeScriptFile(final SourceFile sourceFile) {
         
-        final File file = new File(getExamplesDir(), sourceFile.getFilename());
-        if(file.exists()) {
+        final Path file = getExamplesDir().resolve(sourceFile.getFilename());
+        if(Files.exists(file)) {
             CraftTweakerAPI.LOGGER.info("Skip writing example file '{}' since it already exists", file);
             return;
         }
         
-        if(!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
-            CraftTweakerAPI.LOGGER.error("Could not create folder '{}'", file.getParentFile());
-            return;
+        if(!Files.exists(file.getParent())) {
+            try {
+                Files.createDirectories(file.getParent());
+            } catch(final IOException e) {
+                CraftTweakerAPI.LOGGER.error("Could not create folder '" + file.getParent() + "'", e);
+                return;
+            }
         }
         
-        try(final FileWriter writer = new FileWriter(file, false); final Reader reader = sourceFile.open()) {
-            IOUtils.copy(reader, writer);
-        } catch(IOException e) {
+        try(final Reader reader = sourceFile.open()) {
+            Files.copy(IOUtils.toInputStream(IOUtils.toString(reader), StandardCharsets.UTF_8), file);
+        } catch(final IOException e) {
             CraftTweakerAPI.LOGGER.warn("Could not write script example: ", e);
         }
     }
     
-    private static File getExamplesDir() {
+    private static Path getExamplesDir() {
         
-        return new File(CraftTweakerConstants.SCRIPT_DIR, "examples");
+        return CraftTweakerAPI.getScriptsDirectory().resolve("./examples");
     }
     
 }

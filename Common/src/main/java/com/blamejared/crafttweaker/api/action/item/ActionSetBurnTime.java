@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.action.item;
 
 import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
+import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.platform.Services;
 
 public class ActionSetBurnTime implements IUndoableAction {
@@ -40,7 +41,7 @@ public class ActionSetBurnTime implements IUndoableAction {
     }
     
     @Override
-    public boolean shouldApplyOn(ScriptLoadingOptions.ScriptLoadSource source) {
+    public boolean shouldApplyOn(final IScriptLoadSource source) {
         
         return true;
     }

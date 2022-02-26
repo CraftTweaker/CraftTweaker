@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRun;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunInfo;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.preprocessor.PriorityPreprocessor;
 import com.blamejared.crafttweaker.impl.script.scriptrun.runner.ScriptRunner;
@@ -51,6 +52,12 @@ final class ScriptRun implements IScriptRun {
         }
     }
     
+    @Override
+    public IScriptRunInfo specificRunInfo() {
+        
+        return this.info;
+    }
+    
     private void undoPreviousRun(final RunInfo info) {
         
         CraftTweakerLogger.clearPreviousMessages(); // TODO("Move to internal method?")
@@ -58,7 +65,7 @@ final class ScriptRun implements IScriptRun {
         if(info == null) {
             return;
         }
-        if(this.info.configuration().runKind() == ScriptRunConfiguration.RunKind.EXECUTE) {
+        if(this.info.configuration().runKind() != ScriptRunConfiguration.RunKind.EXECUTE) {
             return;
         }
         

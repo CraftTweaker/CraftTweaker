@@ -13,9 +13,6 @@ public class CraftTweakerEvents {
     public static final Event<Consumer<ICTCommandRegisterEvent>> COMMAND_REGISTER_EVENT = EventFactory.createArrayBacked(Consumer.class, listeners -> event -> Arrays.stream(listeners)
             .forEach(handler -> handler.accept(event)));
     
-    public static final Event<Consumer<IgnorePrefixCasingBracketParser>> REGISTER_BEP_EVENT = EventFactory.createArrayBacked(Consumer.class, listeners -> event -> Arrays.stream(listeners)
-            .forEach(handler -> handler.accept(event)));
-    
     public static final Event<Consumer<IGatherReplacementExclusionEvent>> GATHER_REPLACEMENT_EXCLUSION_EVENT = EventFactory.createArrayBacked(Consumer.class, listeners -> event -> Arrays.stream(listeners)
             .forEach(handler -> handler.accept(event)));
     

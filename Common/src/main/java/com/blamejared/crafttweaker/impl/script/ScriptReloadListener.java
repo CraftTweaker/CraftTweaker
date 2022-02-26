@@ -4,7 +4,10 @@ import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRun;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -15,87 +18,166 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Random;
-import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
     
-    public static final MutableComponent MSG_RELOAD_STARTING = new TranslatableComponent("crafttweaker.reload.start");
-    public static final MutableComponent MSG_RELOAD_COMPLETE = new TranslatableComponent("crafttweaker.reload.complete");
+    private static final class ScriptsDiscoverer extends SimpleFileVisitor<Path> {
+        
+        private final Consumer<Path> adder;
+        
+        ScriptsDiscoverer(final Consumer<Path> adder) {
+            
+            this.adder = adder;
+        }
+        
+        @Override
+        public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
+            
+            super.visitFile(file, attrs);
+            if(attrs.isRegularFile()) {
+                this.adder.accept(file);
+            }
+            return FileVisitResult.CONTINUE;
+        }
+        
+    }
+    
+    private static final MutableComponent MSG_RELOAD_STARTING = new TranslatableComponent("crafttweaker.reload.start");
+    private static final MutableComponent MSG_RELOAD_COMPLETE = new TranslatableComponent("crafttweaker.reload.complete");
+    private static final Random RANDOM = ThreadLocalRandom.current();
     
     private final Supplier<RecipeManager> managerSupplier;
     private final Consumer<MutableComponent> feedbackConsumer;
     
-    public ScriptReloadListener(Supplier<RecipeManager> managerSupplier, Consumer<MutableComponent> feedbackConsumer) {
+    public ScriptReloadListener(final Supplier<RecipeManager> managerSupplier, final Consumer<MutableComponent> feedbackConsumer) {
         
         this.managerSupplier = managerSupplier;
         this.feedbackConsumer = feedbackConsumer;
     }
     
     @Override
-    protected Void prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
+    @SuppressWarnings("NullableProblems")
+    protected Void prepare(final ResourceManager resourceManager, final ProfilerFiller profiler) {
         
         return null;
     }
     
     @Override
     @ParametersAreNonnullByDefault
-    protected void apply(Void objectIn, ResourceManager resourceManagerIn, ProfilerFiller profilerIn) {
+    protected void apply(final Void objectIn, final ResourceManager resourceManagerIn, final ProfilerFiller profilerIn) {
         
-        feedbackConsumer.accept(MSG_RELOAD_STARTING);
+        final RecipeManager manager = this.managerSupplier.get();
+        
+        this.feedbackConsumer.accept(MSG_RELOAD_STARTING);
+        this.fixRecipeManager(manager);
+        final Pair<Path, List<Path>> scripts = this.gatherScripts();
+        final IScriptRun preparedRun = this.prepareRun(scripts);
+        
+        try {
+            preparedRun.execute();
+        } catch(final Throwable e) {
+            CraftTweakerAPI.LOGGER.error("Unable to execute script run", e);
+            return;
+        }
+        
+        this.storeScriptsInRecipes(manager, scripts);
+        
+        this.feedbackConsumer.accept(MSG_RELOAD_COMPLETE);
+        if(!scripts.getSecond().isEmpty() && preparedRun.specificRunInfo().displayBranding()) {
+            
+            this.displayPatreonBranding();
+        }
+    }
+    
+    private void fixRecipeManager(final RecipeManager manager) {
+        
         //ImmutableMap of ImmutableMaps. Nice.
-        RecipeManager recipeManager = managerSupplier.get();
-        AccessRecipeManager accessRecipeManager = (AccessRecipeManager) recipeManager;
+        final AccessRecipeManager accessRecipeManager = (AccessRecipeManager) manager;
         accessRecipeManager.setRecipes(new HashMap<>(accessRecipeManager.getRecipes()));
         accessRecipeManager.getRecipes()
                 .replaceAll((k, v) -> new HashMap<>(accessRecipeManager.getRecipes().get(k)));
         accessRecipeManager.setByName(new HashMap<>(accessRecipeManager.getByName()));
-        CraftTweakerAPI.setRecipeManager(recipeManager);
-        
-        CraftTweakerAPI.loadScripts(new ScriptLoadingOptions().setSource(ScriptLoadingOptions.RELOAD_LISTENER_SCRIPT_SOURCE)
-                .execute());
-        List<File> scriptFiles = CraftTweakerAPI.getScriptFiles();
-        scriptFiles.stream()
-                .map(file -> new ScriptRecipe(new ResourceLocation(CraftTweakerConstants.MOD_ID, file.getPath()
-                        .substring("scripts\\".length())
-                        .replaceAll("[^a-z0-9_.-]", "_")), file.getPath()
-                        .substring("scripts\\".length()), readContents(file)))
-                .forEach(scriptRecipe -> {
-                    Map<ResourceLocation, Recipe<?>> map = accessRecipeManager.getRecipes()
-                            .computeIfAbsent(CraftTweakerRegistries.RECIPE_TYPE_SCRIPTS, iRecipeType -> new HashMap<>());
-                    map.put(scriptRecipe.getId(), scriptRecipe);
-                });
-        feedbackConsumer.accept(MSG_RELOAD_COMPLETE);
-        if(scriptFiles.size() > 0 && !CraftTweakerAPI.NO_BRAND) {
-            Set<String> patronList = CraftTweakerCommon.getPatronList();
-            Optional<String> found = patronList.stream()
-                    .skip(patronList.isEmpty() ? 0 : new Random().nextInt(patronList.size()))
-                    .findFirst();
-            found.ifPresent(name -> CraftTweakerAPI.LOGGER.info("This reload was made possible by {} and more! Become a patron at https://patreon.com/jaredlll08?s=crtmod", name));
-        }
-        
+        CraftTweakerAPI.getAccessibleElementsProvider().recipeManager(manager);
     }
     
-    private String readContents(File file) {
+    private Pair<Path, List<Path>> gatherScripts() {
         
-        try(final BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-            return bufferedReader.lines().collect(Collectors.joining("\r\n"));
-        } catch(IOException e) {
-            e.printStackTrace();
+        final Path root = CraftTweakerAPI.getScriptsDirectory();
+        final List<Path> children = new ArrayList<>();
+        try {
+            Files.walkFileTree(root, new ScriptsDiscoverer(children::add));
+        } catch(final IOException e) {
+            CraftTweakerAPI.LOGGER.error("Unable to read script files! This is serious", e);
         }
-        return "";
+        return Pair.of(root, Collections.unmodifiableList(children));
     }
     
+    private IScriptRun prepareRun(final Pair<Path, List<Path>> scripts) {
+        
+        final ScriptRunConfiguration configuration = new ScriptRunConfiguration(
+                CraftTweakerConstants.DEFAULT_LOADER_NAME,
+                CraftTweakerConstants.RELOAD_LISTENER_SOURCE_ID,
+                ScriptRunConfiguration.RunKind.EXECUTE
+        );
+        return CraftTweakerAPI.getScriptRunManager()
+                .createScriptRun(scripts.getFirst(), scripts.getSecond(), configuration);
+    }
+    
+    private void storeScriptsInRecipes(final RecipeManager manager, final Pair<Path, List<Path>> scripts) {
+        
+        final Map<ResourceLocation, Recipe<?>> recipes = ((AccessRecipeManager) manager).getRecipes()
+                .computeIfAbsent(CraftTweakerRegistries.RECIPE_TYPE_SCRIPTS, it -> new HashMap<>());
+        final Path root = scripts.getFirst();
+        
+        scripts.getSecond().stream()
+                .map(it -> this.buildScriptRecipe(it, root))
+                .forEach(it -> recipes.put(it.getId(), it));
+    }
+    
+    private ScriptRecipe buildScriptRecipe(final Path file, final Path root) {
+        
+        final String fileName = root.relativize(file).toString().replace('\\', '/');
+        final String sanitizedFileName = fileName.toLowerCase(Locale.ENGLISH).replaceAll("[^a-z0-9_.-]", "_");
+        final ResourceLocation id = CraftTweakerConstants.rl(sanitizedFileName);
+        return new ScriptRecipe(id, fileName, this.readContents(file));
+    }
+    
+    private String readContents(final Path file) {
+        
+        try {
+            return String.join("\r\n", Files.readAllLines(file));
+        } catch(final IOException e) {
+            CraftTweakerAPI.LOGGER.info("Unable to read script file " + file, e);
+            return "";
+        }
+    }
+    
+    @SuppressWarnings("SpellCheckingInspection")
+    private void displayPatreonBranding() {
+        
+        final Collection<String> patronList = CraftTweakerCommon.getPatronList();
+        
+        patronList.stream()
+                .skip(patronList.isEmpty() ? 0 : RANDOM.nextInt(patronList.size()))
+                .findFirst()
+                .ifPresent(name -> CraftTweakerAPI.LOGGER.info("This reload was made possible by {} and more! Become a patron at https://patreon.com/jaredlll08?s=crtmod", name));
+    }
     
 }

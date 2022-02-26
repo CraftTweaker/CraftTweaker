@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.action.base;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
+import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.util.PositionUtil;
 import org.apache.logging.log4j.Logger;
 import org.openzen.zencode.shared.CodePosition;
@@ -90,9 +91,9 @@ public interface IAction {
      *
      * @return true if it is the correct loader.
      */
-    default boolean assertLoader(String loader) {
+    default boolean assertLoader(final IScriptLoader loader) {
         
-        String currentLoader = CraftTweakerAPI.getCurrentRun().getLoaderActions().getLoaderName();
+        final IScriptLoader currentLoader = CraftTweakerAPI.getScriptRunManager().currentRunInfo().loader();
         if(currentLoader.equals(loader)) {
             
             return true;
