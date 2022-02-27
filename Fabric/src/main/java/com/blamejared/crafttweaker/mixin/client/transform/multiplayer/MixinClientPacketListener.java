@@ -22,13 +22,13 @@ public class MixinClientPacketListener {
     @Inject(method = "handleUpdateRecipes", at = @At("RETURN"))
     private void handleUpdateRecipes(ClientboundUpdateRecipesPacket clientboundUpdateRecipesPacket, CallbackInfo ci) {
     
-        RecipeManagerScriptLoader.loadScriptsFromManager(recipeManager);
+        RecipeManagerScriptLoader.updateState(RecipeManagerScriptLoader.UpdatedState.RECIPES, () -> recipeManager);
     }
     
     @Inject(method = "handleUpdateTags", at = @At(value = "INVOKE", target = "Lnet/minecraft/tags/TagContainer;bindToGlobal()V"))
     private void handleUpdateTags(ClientboundUpdateTagsPacket packet, CallbackInfo ci) {
-        
-        RecipeManagerScriptLoader.loadScriptsFromManager(recipeManager);
+    
+        RecipeManagerScriptLoader.updateState(RecipeManagerScriptLoader.UpdatedState.TAGS, null);
     }
     
 }

@@ -11,12 +11,40 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class RecipeManagerScriptLoader {
+    
+    private static UpdatedState currentState = UpdatedState.NONE;
+    private static RecipeManager manager = null;
+    
+    public static void updateState(UpdatedState state, @Nullable Supplier<RecipeManager> managerSupplier) {
+    
+        // If we get here with at-least recipes, then something happened to cause an invalid state, just reset it.
+        if(currentState.hasAll()) {
+            currentState = UpdatedState.NONE;
+            manager = null;
+        }
+        currentState = currentState.merge(state);
+        if(managerSupplier != null) {
+            manager = managerSupplier.get();
+        }
+        if(currentState.hasAll()) {
+            if(manager == null) {
+                throw new RuntimeException("State is ready, but manager is null!");
+            }
+            loadScriptsFromManager(manager);
+            // At this point, both recipes and tags have been updated,
+            // so we can safely reset the state for the next update cycle
+            currentState = UpdatedState.NONE;
+            manager = null;
+        }
+    }
     
     //Maybe move this / rename the class
     public static void loadScriptsFromManager(final RecipeManager manager) {
@@ -65,6 +93,57 @@ public class RecipeManagerScriptLoader {
                 .replaceAll((k, v) -> new HashMap<>(accessRecipeManager.getRecipes().get(k)));
         accessRecipeManager.setByName(new HashMap<>(accessRecipeManager.getByName()));
         CraftTweakerAPI.getAccessibleElementsProvider().recipeManager(manager);
+    }
+    
+    public enum UpdatedState {
+        NONE(false, false),
+        RECIPES(true, false),
+        TAGS(false, true),
+        ALL(true, true);
+        
+        private final boolean hasRecipes;
+        private final boolean hasTags;
+        
+        UpdatedState(boolean hasRecipes, boolean hasTags) {
+            
+            this.hasRecipes = hasRecipes;
+            this.hasTags = hasTags;
+        }
+        
+        public boolean hasRecipes() {
+            
+            return hasRecipes;
+        }
+        
+        public boolean hasTags() {
+            
+            return hasTags;
+        }
+        
+        public boolean hasAll() {
+            
+            return hasRecipes && hasTags;
+        }
+        
+        public static UpdatedState of(boolean hasRecipes, boolean hasTags) {
+            
+            if(hasRecipes) {
+                
+                if(hasTags) {
+                    return ALL;
+                } else {
+                    return RECIPES;
+                }
+            } else if(hasTags) {
+                return TAGS;
+            }
+            return NONE;
+        }
+        
+        public UpdatedState merge(UpdatedState other) {
+            
+            return of(this.hasRecipes || other.hasRecipes, this.hasTags || other.hasTags);
+        }
     }
     
 }

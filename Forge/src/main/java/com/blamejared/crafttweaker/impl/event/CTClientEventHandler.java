@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.impl.event;
 
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
-import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
+import com.blamejared.crafttweaker.impl.script.RecipeManagerScriptLoader;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
@@ -15,14 +15,14 @@ public class CTClientEventHandler {
     
     @SubscribeEvent
     public static void onRecipesUpdated(RecipesUpdatedEvent event) {
-        
-        ScriptLoadingOptions.ClientScriptLoader.updateRecipes(event::getRecipeManager);
+    
+        RecipeManagerScriptLoader.updateState(RecipeManagerScriptLoader.UpdatedState.RECIPES, event::getRecipeManager);
     }
     
     @SubscribeEvent
     public static void onTagsUpdated(TagsUpdatedEvent event) {
-        
-        ScriptLoadingOptions.ClientScriptLoader.updateTags();
+    
+        RecipeManagerScriptLoader.updateState(RecipeManagerScriptLoader.UpdatedState.TAGS, null);
     }
     
     @SubscribeEvent
