@@ -229,12 +229,12 @@ public final class ZenClassRegistry implements IZenClassRegistry {
         
         private boolean knowsType(final String expansionTarget) {
             
+            if(expansionTarget.endsWith("[]")) { // Array
+                return this.knowsType(expansionTarget.substring(0, expansionTarget.length() - 2));
+            }
             if(expansionTarget.contains("<")) { // Generic
                 final String[] split = expansionTarget.split(Pattern.quote("<"), 2);
                 return this.knowsType(split[0]) && this.knowsType(split[1].substring(0, split[1].length() - 1));
-            }
-            if(expansionTarget.endsWith("[]")) { // Array
-                return this.knowsType(expansionTarget.substring(0, expansionTarget.length() - 2));
             }
             if(BUILTIN_TYPES.get().contains(expansionTarget)) {
                 return true;
