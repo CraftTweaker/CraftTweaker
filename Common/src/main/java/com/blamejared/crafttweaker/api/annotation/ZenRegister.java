@@ -21,7 +21,7 @@ public @interface ZenRegister {
      *
      * @return array of modids.
      */
-    String[] modDeps() default "";
+    String[] modDeps() default {};
     
     String[] loaders() default {CraftTweakerConstants.DEFAULT_LOADER_NAME};
     
