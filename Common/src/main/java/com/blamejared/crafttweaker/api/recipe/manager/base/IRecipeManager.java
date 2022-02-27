@@ -221,7 +221,8 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
      */
     default RecipeList<T> getRecipeList() {
         
-        return new RecipeList<>(getRecipeType(), getRecipes(), CraftTweakerAPI.getAccessibleRecipeManager()
+        return new RecipeList<>(getRecipeType(), getRecipes(), CraftTweakerAPI.getAccessibleElementsProvider()
+                .accessibleRecipeManager()
                 .getByName());
     }
     
