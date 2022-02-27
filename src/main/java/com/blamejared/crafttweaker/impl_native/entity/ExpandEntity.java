@@ -25,6 +25,30 @@ import java.util.Set;
 @NativeTypeRegistration(value = Entity.class, zenCodeName = "crafttweaker.api.entity.MCEntity")
 public class ExpandEntity {
     
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("rotationPitch")
+    public static float getRotationPitch(Entity internal) {
+        return internal.rotationPitch;
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("rotationPitch")
+    public static void setRotationPitch(Entity internal, float newPitch) {
+        internal.rotationPitch = newPitch;
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("rotationYaw")
+    public static float getRotationYaw(Entity internal) {
+        return internal.rotationYaw;
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("rotationYaw")
+    public static void setRotationYaw(Entity internal, float newYaw) {
+        internal.rotationYaw = newYaw;
+    }
+    
     /**
      * Removes the entity from the world.
      */
@@ -739,7 +763,9 @@ public class ExpandEntity {
     @ZenCodeType.Getter("facingDirections")
     public static MCDirection[] getFacingDirections(Entity internal) {
         
-        return Arrays.stream(Direction.getFacingDirections(internal)).map(MCDirection::get).toArray(MCDirection[]::new);
+        return Arrays.stream(Direction.getFacingDirections(internal))
+                .map(MCDirection::get)
+                .toArray(MCDirection[]::new);
     }
     
     /**
@@ -802,7 +828,8 @@ public class ExpandEntity {
     @ZenCodeType.Method
     public static void updateData(Entity internal, MapData data) {
         
-        internal.deserializeNBT(internal.serializeNBT().merge(data.getInternal()));
+        internal.deserializeNBT(internal.serializeNBT()
+                .merge(data.getInternal()));
     }
     
     /**
