@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl.preprocessor;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.Preprocessor;
+import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IMutableScriptRunInfo;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
@@ -13,6 +14,7 @@ import java.util.regex.Pattern;
 /**
  * {@code #replace toReplace replaceWith}
  */
+@ZenRegister
 @Preprocessor
 public final class ReplacePreprocessor implements IPreprocessor {
     

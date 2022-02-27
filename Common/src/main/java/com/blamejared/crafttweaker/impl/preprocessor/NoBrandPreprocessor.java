@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.preprocessor;
 
 import com.blamejared.crafttweaker.api.annotation.Preprocessor;
+import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IMutableScriptRunInfo;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
@@ -8,6 +9,7 @@ import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
 import javax.annotation.Nullable;
 import java.util.List;
 
+@ZenRegister
 @Preprocessor
 public final class NoBrandPreprocessor implements IPreprocessor {
     
