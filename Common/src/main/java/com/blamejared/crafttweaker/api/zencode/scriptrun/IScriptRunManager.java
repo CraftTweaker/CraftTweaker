@@ -10,6 +10,8 @@ public interface IScriptRunManager {
     
     IScriptRun createScriptRun(final ScriptRunConfiguration configuration);
     
+    IScriptRun createScriptRun(final Path root, final ScriptRunConfiguration configuration);
+    
     IScriptRun createScriptRun(final Path root, final List<Path> files, final ScriptRunConfiguration configuration);
     
     IScriptRun createScriptRun(final List<SourceFile> sources, final ScriptRunConfiguration configuration);

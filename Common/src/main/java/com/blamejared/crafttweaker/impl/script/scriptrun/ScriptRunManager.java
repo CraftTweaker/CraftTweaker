@@ -57,7 +57,13 @@ public final class ScriptRunManager implements IScriptRunManager {
     @Override
     public IScriptRun createScriptRun(final ScriptRunConfiguration configuration) {
         
-        return this.createScriptRun(CraftTweakerAPI.getScriptsDirectory(), this.lookupScriptFiles(), configuration);
+        return this.createScriptRun(CraftTweakerAPI.getScriptsDirectory(), configuration);
+    }
+    
+    @Override
+    public IScriptRun createScriptRun(final Path root, final ScriptRunConfiguration configuration) {
+        
+        return this.createScriptRun(root, this.lookupScriptFiles(root), configuration);
     }
     
     @Override
@@ -109,11 +115,11 @@ public final class ScriptRunManager implements IScriptRunManager {
         return new ScriptRun(sources, info, this::updateCurrentRunInfo, this.previousRunInfo::get);
     }
     
-    private List<Path> lookupScriptFiles() {
+    private List<Path> lookupScriptFiles(final Path root) {
         
         try {
             final ScriptRunGathererVisitor visitor = new ScriptRunGathererVisitor();
-            Files.walkFileTree(CraftTweakerAPI.getScriptsDirectory(), visitor);
+            Files.walkFileTree(root, visitor);
             return visitor.files();
         } catch(final IOException e) {
             throw new UncheckedIOException(e);
