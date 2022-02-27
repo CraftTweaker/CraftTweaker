@@ -1,6 +1,9 @@
 package com.blamejared.crafttweaker.impl.script.scriptrun;
 
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
+import com.blamejared.crafttweaker.impl.preprocessor.LoadFirstPreprocessor;
+import com.blamejared.crafttweaker.impl.preprocessor.LoadLastPreprocessor;
+import com.blamejared.crafttweaker.impl.preprocessor.PriorityPreprocessor;
 import org.openzen.zencode.shared.SourceFile;
 
 import java.io.Reader;
@@ -50,6 +53,21 @@ final class PreprocessedSourceFile implements SourceFile {
     Map<IPreprocessor, List<IPreprocessor.Match>> matches() {
         
         return this.matches;
+    }
+    
+    @Override
+    public int getOrder() {
+        
+        if(matches().containsKey(LoadFirstPreprocessor.INSTANCE)) {
+            return Integer.MAX_VALUE;
+        } else if(matches().containsKey(LoadLastPreprocessor.INSTANCE)) {
+            return Integer.MIN_VALUE;
+        }
+        
+        return Integer.parseInt(matches()
+                .get(PriorityPreprocessor.INSTANCE)
+                .get(0)
+                .content());
     }
     
 }
