@@ -151,6 +151,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
         Set<Class<?>> typesAnnotatedWith = REFLECTIONS.get().getTypesAnnotatedWith(annotationCls);
         typesAnnotatedWith.stream().map(this::getModsForClass).flatMap(Collection::stream).forEach(consumer);
         return typesAnnotatedWith.stream()
+                .filter(it -> it.isAnnotationPresent(annotationCls)) // Thank you reflections for giving classes without the annotation, very cool
                 .filter(it -> annotationFilter.test(Either.left(it.getAnnotation(annotationCls))));
     }
     
