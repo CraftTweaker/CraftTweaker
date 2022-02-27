@@ -66,17 +66,13 @@ final class ScriptFile implements IScriptFile {
         return new ScriptFile(name, data.getSecond(), data.getFirst(), info);
     }
     
-    static ScriptFile of(final Path file, final RunInfo info, final Collection<IPreprocessor> preprocessors) {
-        
-        return of(file.toString(), lines(file), info, preprocessors);
-    }
-    
     static ScriptFile of(final Path baseDirectory, final Path file, final RunInfo info, final Collection<IPreprocessor> preprocessors) {
         
         if(!verifyChild(baseDirectory, file)) {
             throw new IllegalArgumentException("File " + file + " is not contained within " + baseDirectory);
         }
-        return of(baseDirectory.toAbsolutePath().relativize(file.toAbsolutePath()), info, preprocessors);
+        final String name = baseDirectory.toAbsolutePath().relativize(file.toAbsolutePath()).toString();
+        return of(name, lines(file), info, preprocessors);
     }
     
     private static boolean verifyChild(final Path parent, final Path file) {
