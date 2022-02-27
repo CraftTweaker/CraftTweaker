@@ -16,6 +16,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zenscript.codemodel.Modifiers;
+import org.openzen.zenscript.codemodel.type.BasicTypeID;
 
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
@@ -31,6 +32,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -90,6 +92,10 @@ public final class ZenClassRegistry implements IZenClassRegistry {
     }
     
     private static final class LoaderSpecificZenClassRegistry {
+        
+        private static final Supplier<Set<String>> BUILTIN_TYPES = Suppliers.memoize(
+                () -> Arrays.stream(BasicTypeID.values()).map(Object::toString).collect(Collectors.toUnmodifiableSet())
+        );
         
         private final NativeTypeRegistry nativeTypeRegistry = new NativeTypeRegistry();
         private final ClassData data = new ClassData();
@@ -198,8 +204,8 @@ public final class ZenClassRegistry implements IZenClassRegistry {
         
         private void registerZenExpansion(final Class<?> clazz, final String expansionTarget) {
             
-            if(!this.data.classes().containsKey(expansionTarget)) {
-                throw new IllegalArgumentException("Unable to register expansion for '" + expansionTarget + "' as it does not exist");
+            if(!this.knowsType(expansionTarget)) {
+                CraftTweakerAPI.LOGGER.warn("Attempting to register expansion for unknown type '{}', carrying on anyways", expansionTarget);
             }
             this.data.expansions().put(expansionTarget, clazz);
             CraftTweakerAPI.LOGGER.debug("Registering expansion '{}' to '{}'", clazz.getName(), expansionTarget);
@@ -219,6 +225,21 @@ public final class ZenClassRegistry implements IZenClassRegistry {
             if(hasGlobals) {
                 this.data.globals().put(info.targetName(), clazz);
             }
+        }
+        
+        private boolean knowsType(final String expansionTarget) {
+            
+            if(expansionTarget.contains("<")) { // Generic
+                final String[] split = expansionTarget.split(Pattern.quote("<"), 2);
+                return this.knowsType(split[0]) && this.knowsType(split[1].substring(0, split[1].length() - 1));
+            }
+            if(expansionTarget.endsWith("[]")) { // Array
+                return this.knowsType(expansionTarget.substring(0, expansionTarget.length() - 2));
+            }
+            if(BUILTIN_TYPES.get().contains(expansionTarget)) {
+                return true;
+            }
+            return this.data.classes().containsKey(expansionTarget);
         }
         
         private void inheritFrom(final Collection<LoaderSpecificZenClassRegistry> registries) {
