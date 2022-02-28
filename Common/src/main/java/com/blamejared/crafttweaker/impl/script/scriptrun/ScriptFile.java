@@ -166,7 +166,9 @@ final class ScriptFile implements IScriptFile {
     @Override
     public List<IPreprocessor.Match> matchesFor(final IPreprocessor preprocessor) {
         
-        return Collections.unmodifiableList(this.matches.getOrDefault(preprocessor, List.of()));
+        return Optional.ofNullable(this.matches.get(preprocessor))
+                .map(Collections::unmodifiableList)
+                .orElseGet(Collections::emptyList);
     }
     
     private PreprocessedData preprocess() {
