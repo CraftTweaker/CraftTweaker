@@ -43,7 +43,8 @@ public final class BracketResolverRegistry {
         if(brackets.containsKey(name)) {
             throw new IllegalArgumentException("A bracket handler with the name '" + name + "' is already registered in loader '" + loader + "'");
         }
-        brackets.put(name, new BracketHandle(bracketCreator, new BracketDumperInfo(name, dumperData)));
+        final BracketDumperInfo info = dumperData == null ? null : new BracketDumperInfo(name, dumperData);
+        brackets.put(name, new BracketHandle(bracketCreator, info));
     }
     
     public void applyInheritanceRules() {
