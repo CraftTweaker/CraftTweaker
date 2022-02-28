@@ -68,6 +68,10 @@ final class BracketParserRegistrationHandler implements IBracketParserRegistrati
     
     private MethodHandle lookup(final Method method) {
         
+        if(method == null) {
+            return null;
+        }
+        
         try {
             return MethodHandles.publicLookup().unreflect(method);
         } catch(final IllegalAccessException e) {
