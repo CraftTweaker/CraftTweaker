@@ -91,11 +91,94 @@ public final class ZenClassRegistry implements IZenClassRegistry {
         
     }
     
-    private static final class LoaderSpecificZenClassRegistry {
+    private static final class TypeVerifier {
         
         private static final Supplier<Set<String>> BUILTIN_TYPES = Suppliers.memoize(
                 () -> Arrays.stream(BasicTypeID.values()).map(Object::toString).collect(Collectors.toUnmodifiableSet())
         );
+        private static final String ARRAY_OPEN = Pattern.quote("[");
+        private static final String GENERIC_OPEN = Pattern.quote("<");
+        
+        private TypeVerifier() {}
+        
+        boolean isTypeKnown(final String type, final Collection<String> additionalTypes) {
+            
+            if(type == null) {
+                return false;
+            }
+            
+            if(type.isEmpty()) {
+                return true;
+            }
+            
+            if(additionalTypes.contains(type)) {
+                return true;
+            }
+            
+            if(this.isBuiltin(type)) {
+                return true;
+            }
+            
+            if(this.isArray(type)) {
+                return this.isArrayKnown(type, additionalTypes);
+            }
+            
+            if(this.isAssociativeArray(type)) {
+                return this.isAssociativeArrayKnown(type, additionalTypes);
+            }
+            
+            if(this.isGeneric(type)) {
+                return this.isGenericKnown(type, additionalTypes);
+            }
+            
+            return false;
+        }
+        
+        private boolean isBuiltin(final String type) {
+            
+            return BUILTIN_TYPES.get().contains(type);
+        }
+        
+        private boolean isArray(final String type) {
+            
+            return type.endsWith("[]");
+        }
+        
+        private boolean isAssociativeArray(final String type) {
+            
+            return type.endsWith("]");
+        }
+        
+        private boolean isGeneric(final String type) {
+            
+            return type.endsWith(">");
+        }
+        
+        private boolean isArrayKnown(final String type, final Collection<String> additionalTypes) {
+            
+            final String notArrayType = type.substring(0, type.length() - 2);
+            return this.isTypeKnown(notArrayType, additionalTypes);
+        }
+        
+        private boolean isAssociativeArrayKnown(final String type, final Collection<String> additionalTypes) {
+            
+            final String[] parts = type.split(ARRAY_OPEN, 2);
+            final String keyType = parts[1].substring(0, parts[1].length() - 1);
+            return this.isTypeKnown(parts[0], additionalTypes) && this.isTypeKnown(keyType, additionalTypes);
+        }
+        
+        private boolean isGenericKnown(final String type, final Collection<String> additionalTypes) {
+            
+            final String[] parts = type.split(GENERIC_OPEN, 2);
+            final String innerType = parts[1].substring(0, parts[1].length() - 1);
+            return this.isTypeKnown(parts[0], additionalTypes) && this.isTypeKnown(innerType, additionalTypes);
+        }
+        
+    }
+    
+    private static final class LoaderSpecificZenClassRegistry {
+        
+        private static final TypeVerifier VERIFIER = new TypeVerifier();
         
         private final NativeTypeRegistry nativeTypeRegistry = new NativeTypeRegistry();
         private final ClassData data = new ClassData();
@@ -204,7 +287,7 @@ public final class ZenClassRegistry implements IZenClassRegistry {
         
         private void registerZenExpansion(final Class<?> clazz, final String expansionTarget) {
             
-            if(!this.knowsType(expansionTarget)) {
+            if(!VERIFIER.isTypeKnown(expansionTarget, this.data.classes().keySet())) {
                 CraftTweakerAPI.LOGGER.warn("Attempting to register expansion for unknown type '{}', carrying on anyways", expansionTarget);
             }
             this.data.expansions().put(expansionTarget, clazz);
@@ -225,21 +308,6 @@ public final class ZenClassRegistry implements IZenClassRegistry {
             if(hasGlobals) {
                 this.data.globals().put(info.targetName(), clazz);
             }
-        }
-        
-        private boolean knowsType(final String expansionTarget) {
-            
-            if(expansionTarget.endsWith("[]")) { // Array
-                return this.knowsType(expansionTarget.substring(0, expansionTarget.length() - 2));
-            }
-            if(expansionTarget.contains("<")) { // Generic
-                final String[] split = expansionTarget.split(Pattern.quote("<"), 2);
-                return this.knowsType(split[0]) && this.knowsType(split[1].substring(0, split[1].length() - 1));
-            }
-            if(BUILTIN_TYPES.get().contains(expansionTarget)) {
-                return true;
-            }
-            return this.data.classes().containsKey(expansionTarget);
         }
         
         private void inheritFrom(final Collection<LoaderSpecificZenClassRegistry> registries) {
