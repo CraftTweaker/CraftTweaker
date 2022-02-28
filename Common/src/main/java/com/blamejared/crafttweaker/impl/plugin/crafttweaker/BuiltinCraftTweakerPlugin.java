@@ -68,9 +68,11 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
     public void registerBracketParsers(final IBracketParserRegistrationHandler handler) {
         
         this.zenGatherer.onCandidates(candidate -> {
-            this.bracketParserRegistrationManager.attemptRegistration(candidate.clazz(), candidate.loader(), handler);
+            this.bracketParserRegistrationManager.addRegistrationCandidate(candidate.clazz(), candidate.loader());
             this.enumBracketParserRegistrationManager.attemptRegistration(candidate.clazz(), candidate.loader(), handler);
         });
+        
+        this.bracketParserRegistrationManager.attemptRegistration(handler);
     
         /*
          * THE FOLLOWING ONLY APPLIES TO THE "crafttweaker" LOADER!

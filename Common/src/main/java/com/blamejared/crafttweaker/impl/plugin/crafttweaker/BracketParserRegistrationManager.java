@@ -88,12 +88,23 @@ final class BracketParserRegistrationManager {
     
     private record FlattenedData(String loader, String name, BracketHandle handle) {}
     
-    public void attemptRegistration(final Class<?> clazz, final String loader, final IBracketParserRegistrationHandler handler) {
+    private final Map<String, BracketData> data;
+    
+    BracketParserRegistrationManager() {
         
-        final Map<String, BracketData> data = new HashMap<>();
-        Arrays.stream(clazz.getMethods()).forEach(it -> this.tryAddMethod(data, loader, it));
-        this.validateBrackets(data);
-        this.register(data, handler);
+        this.data = new HashMap<>();
+    }
+    
+    void addRegistrationCandidate(final Class<?> clazz, final String loader) {
+        
+        Arrays.stream(clazz.getMethods()).forEach(it -> this.tryAddMethod(this.data, loader, it));
+    }
+    
+    void attemptRegistration(final IBracketParserRegistrationHandler handler) {
+        
+        this.validateBrackets(this.data);
+        this.register(this.data, handler);
+        this.data.clear();
     }
     
     private void tryAddMethod(final Map<String, BracketData> data, final String loader, final Method method) {
@@ -242,6 +253,10 @@ final class BracketParserRegistrationManager {
     
     private IBracketParserRegistrationHandler.DumperData convert(final BracketDumpInfo info) {
         
+        if(info == null) {
+            
+            return null;
+        }
         return new IBracketParserRegistrationHandler.DumperData(
                 info.subCommandName(),
                 info.outputFileName(),
