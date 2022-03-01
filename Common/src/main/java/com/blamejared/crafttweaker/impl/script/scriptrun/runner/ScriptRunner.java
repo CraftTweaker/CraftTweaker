@@ -83,6 +83,13 @@ sealed public abstract class ScriptRunner permits ExecutingScriptRunner, Formatt
         modules.forEach(it -> it.registerBEP(parser));
         converterBuilder.reinitializeLazyHeaderValues();
         
+        modules.forEach(javaNativeModule -> {
+            try {
+                scriptingEngine.registerNativeProvided(javaNativeModule);
+            } catch(CompileException e) {
+                e.printStackTrace();
+            }
+        });
         return parser;
     }
     
