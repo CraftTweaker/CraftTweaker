@@ -65,7 +65,7 @@ public final class DefaultScriptRunModuleConfigurator implements IScriptRunModul
                 "",
                 builder,
                 dependencies.toArray(JavaNativeModule[]::new),
-                registry.getGlobalsInPackage(loader, ""),
+                List.of(),
                 registry.getClassData(loader).expansions().values()
         );
     }

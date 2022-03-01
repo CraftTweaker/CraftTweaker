@@ -78,10 +78,9 @@ sealed public abstract class ScriptRunner permits ExecutingScriptRunner, Formatt
         
         final CtJavaNativeConverterBuilder converterBuilder = new CtJavaNativeConverterBuilder(this.runInfo);
         final ICraftTweakerRegistry registry = CraftTweakerAPI.getRegistry();
-        final Collection<JavaNativeModule> modules = this.gatherModules(converterBuilder, registry);
-        final BracketExpressionParser parser = this.createParser(modules, registry);
+        final IgnorePrefixCasingBracketParser parser = this.createParser();
+        final Collection<JavaNativeModule> modules = this.gatherModules(converterBuilder, registry, parser);
         
-        modules.forEach(it -> it.registerBEP(parser));
         converterBuilder.reinitializeLazyHeaderValues();
         
         final AtomicReference<CompileException> thrown = new AtomicReference<>(null);
@@ -109,12 +108,12 @@ sealed public abstract class ScriptRunner permits ExecutingScriptRunner, Formatt
     
     protected abstract void executeRunAction(final SemanticModule module);
     
-    private Collection<JavaNativeModule> gatherModules(final JavaNativeConverterBuilder builder, final ICraftTweakerRegistry registry) throws CompileException {
+    private Collection<JavaNativeModule> gatherModules(final JavaNativeConverterBuilder builder, final ICraftTweakerRegistry registry, final IgnorePrefixCasingBracketParser parser) throws CompileException {
         
         final IScriptLoader loader = this.runInfo().loader();
         final IScriptRunModuleConfigurator configurator = registry.getConfiguratorFor(loader);
         return configurator.populateModules(builder, registry, this.runInfo()
-                .configuration(), this::createNativeModule);
+                .configuration(), (name, rootPackage, builder1, dependencies) -> createNativeModule(name, rootPackage, builder1, registry, parser, dependencies));
     }
     
     private void registerModule(final JavaNativeModule module, final AtomicReference<CompileException> ref) {
@@ -132,33 +131,31 @@ sealed public abstract class ScriptRunner permits ExecutingScriptRunner, Formatt
             final String name,
             final String rootPackage,
             final JavaNativeConverterBuilder builder,
+            final ICraftTweakerRegistry registry,
+            final IgnorePrefixCasingBracketParser parser,
             final JavaNativeModule... dependencies
     ) {
         
-        return this.engine().createNativeModule(name, rootPackage, dependencies, builder);
+        JavaNativeModule module = this.engine().createNativeModule(name, rootPackage, dependencies, builder);
+        this.getBracketsFor(module, registry).forEach(parser::register);
+        module.registerBEP(parser);
+        return module;
     }
     
-    private BracketExpressionParser createParser(final Collection<JavaNativeModule> modules, final ICraftTweakerRegistry registry) {
+    private IgnorePrefixCasingBracketParser createParser() {
         
-        final Map<String, BracketExpressionParser> brackets = this.gatherBracketsFrom(modules, registry);
-        return new IgnorePrefixCasingBracketParser(brackets);
+        return new IgnorePrefixCasingBracketParser();
     }
     
-    private Map<String, BracketExpressionParser> gatherBracketsFrom(final Collection<JavaNativeModule> modules, final ICraftTweakerRegistry registry) {
-        
-        // TODO("rootPackage is unused as of now; should it be that way?")
-        return modules.stream()
-                .map(it -> registry.getBracketHandlers(this.runInfo().loader(), null, this.engine(), it))
-                .flatMap(List::stream)
-                .collect(
-                        Collectors.toMap(
-                                Pair::getFirst,
-                                Pair::getSecond,
-                                (a, b) -> {
-                                    throw new IllegalStateException("Found two BEPs with the same name: " + a + " and " + b);
-                                }
-                        )
-                );
+    private Map<String, BracketExpressionParser> getBracketsFor(final JavaNativeModule module, final ICraftTweakerRegistry registry) {
+        // TODO This needs to use the root package to find brackets only in that package and register them for the module
+        return registry.getBracketHandlers(this.runInfo().loader(), null, this.engine(), module)
+                .stream()
+                .collect(Collectors.toMap(
+                        Pair::getFirst,
+                        Pair::getSecond, (a, b) -> {
+                            throw new IllegalStateException("Found two BEPs with the same name: " + a + " and " + b);
+                        }));
     }
     
     protected IScriptRunInfo runInfo() {
