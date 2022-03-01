@@ -36,37 +36,43 @@ public final class DefaultScriptRunModuleConfigurator implements IScriptRunModul
     ) {
         
         final IScriptLoader loader = configuration.loader();
-        final JavaNativeModule baseModule = this.createModule(creator, registry, loader, this.basePackage, this.basePackage, nativeConverterBuilder);
+        final IZenClassRegistry zenClassRegistry = registry.getZenClassRegistry();
+        final JavaNativeModule baseModule = this.createModule(creator, zenClassRegistry, loader, this.basePackage, this.basePackage, nativeConverterBuilder);
         
         final List<JavaNativeModule> otherModules = registry.getZenClassRegistry().getRootPackages(loader).stream()
                 .filter(it -> !it.equals(this.basePackage))
-                .map(it -> this.createModule(creator, registry, loader, it, it, nativeConverterBuilder, baseModule))
+                .map(it -> this.createModule(creator, zenClassRegistry, loader, it, it, nativeConverterBuilder, baseModule))
                 .toList();
         
         final List<JavaNativeModule> expansionDependencies = Stream.concat(Stream.of(baseModule), otherModules.stream())
                 .toList();
-        final JavaNativeModule expansions = this.createModule(creator, registry, loader, "expansions", "", nativeConverterBuilder, expansionDependencies);
+        final JavaNativeModule expansions = this.createExpansionModule(creator, zenClassRegistry, loader, nativeConverterBuilder, expansionDependencies);
         
         return Stream.concat(expansionDependencies.stream(), Stream.of(expansions)).toList();
     }
     
-    @SuppressWarnings("SameParameterValue")
-    private JavaNativeModule createModule(
+    private JavaNativeModule createExpansionModule(
             final ModuleCreator creator,
-            final ICraftTweakerRegistry registry,
+            final IZenClassRegistry registry,
             final IScriptLoader loader,
-            final String name,
-            final String rootPackage,
             final JavaNativeConverterBuilder builder,
             final List<JavaNativeModule> dependencies
     ) {
         
-        return this.createModule(creator, registry, loader, name, rootPackage, builder, dependencies.toArray(JavaNativeModule[]::new));
+        return this.createModule(
+                creator,
+                "expansions",
+                "",
+                builder,
+                dependencies.toArray(JavaNativeModule[]::new),
+                registry.getGlobalsInPackage(loader, ""),
+                registry.getClassData(loader).expansions().values()
+        );
     }
     
     private JavaNativeModule createModule(
             final ModuleCreator creator,
-            final ICraftTweakerRegistry registry,
+            final IZenClassRegistry registry,
             final IScriptLoader loader,
             final String name,
             final String rootPackage,
@@ -74,12 +80,30 @@ public final class DefaultScriptRunModuleConfigurator implements IScriptRunModul
             final JavaNativeModule... dependencies
     ) {
         
+        return this.createModule(
+                creator,
+                name,
+                rootPackage,
+                builder,
+                dependencies,
+                registry.getGlobalsInPackage(loader, rootPackage),
+                registry.getClassesInPackage(loader, rootPackage)
+        );
+    }
+    
+    private JavaNativeModule createModule(
+            final ModuleCreator creator,
+            final String name,
+            final String rootPackage,
+            final JavaNativeConverterBuilder builder,
+            final JavaNativeModule[] dependencies,
+            final Collection<Class<?>> globals,
+            final Collection<Class<?>> classes
+    ) {
+        
         final JavaNativeModule module = creator.createNativeModule(name, rootPackage, builder, dependencies);
-        final IZenClassRegistry zenRegistry = registry.getZenClassRegistry();
-        
-        zenRegistry.getGlobalsInPackage(loader, name).forEach(module::addGlobals);
-        zenRegistry.getClassesInPackage(loader, name).forEach(module::addClass);
-        
+        globals.forEach(module::addGlobals);
+        classes.forEach(module::addClass);
         return module;
     }
     
