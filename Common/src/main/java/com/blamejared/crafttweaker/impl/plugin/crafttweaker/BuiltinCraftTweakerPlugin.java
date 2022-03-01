@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.impl.plugin.crafttweaker;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
-import com.blamejared.crafttweaker.api.ICraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.bracket.custom.EnumConstantBracketHandler;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.bracket.custom.TagBracketHandler;
@@ -16,14 +15,10 @@ import com.blamejared.crafttweaker.api.plugin.ILoaderRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IRecipeHandlerRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IScriptLoadSourceRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IScriptRunModuleConfiguratorRegistrationHandler;
-import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.manager.TagManagerWrapper;
 import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistryData;
-import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
-
-import java.util.List;
 
 @CraftTweakerPlugin(CraftTweakerConstants.MOD_ID + ":builtin")
 @SuppressWarnings("unused") // Autowired
@@ -83,11 +78,7 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         
         this.bracketParserRegistrationManager.attemptRegistration(handler);
         
-        final ICraftTweakerRegistry registry = CraftTweakerAPI.getRegistry();
-        final IScriptLoader loader = registry.findLoader(CraftTweakerConstants.DEFAULT_LOADER_NAME);
-        final List<Class<? extends IRecipeManager>> recipeManagers = registry.getZenClassRegistry()
-                .getImplementationsOf(loader, IRecipeManager.class);
-        handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "recipetype", (engine, module) -> new RecipeTypeBracketHandler(recipeManagers), new IBracketParserRegistrationHandler.DumperData("recipetype", RecipeTypeBracketHandler.getDumperData()));
+        handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "recipetype", (engine, module) -> new RecipeTypeBracketHandler(), new IBracketParserRegistrationHandler.DumperData("recipetype", RecipeTypeBracketHandler.getDumperData()));
         handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "constant", (engine, module) -> new EnumConstantBracketHandler(), new IBracketParserRegistrationHandler.DumperData("constant", EnumConstantBracketHandler.getDumperData()));
         
         final TagManagerBracketHandler tagManagerBEP = new TagManagerBracketHandler(CrTTagRegistryData.INSTANCE);

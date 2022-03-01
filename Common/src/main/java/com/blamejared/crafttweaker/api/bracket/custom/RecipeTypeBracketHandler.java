@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.bracket.custom;
 
 import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.ICraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.recipe.manager.RecipeManagerWrapper;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
@@ -43,35 +44,47 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     
     // Using Lazy here allows us to reference scripts in the correct order without f-ing up classloading
     private static final Set<Supplier<RecipeType<?>>> FILTERED_TYPES = ImmutableSet.of(Suppliers.memoize(() -> CraftTweakerRegistries.RECIPE_TYPE_SCRIPTS));
+    private static final Object LOCK = new Object();
     
     private static final Map<RecipeType<Recipe<?>>, IRecipeManager<Recipe<?>>> registeredTypes = new HashMap<>();
     private static final Map<Class<? extends IRecipeManager<Recipe<?>>>, IRecipeManager<Recipe<?>>> managerInstances = new HashMap<>();
     
+    private static volatile Runnable enqueuedRegistration = null;
     
-    public RecipeTypeBracketHandler(List<Class<? extends IRecipeManager>> recipeManagers) {
+    @SuppressWarnings("unchecked")
+    public RecipeTypeBracketHandler() {
         
-        registeredTypes.clear();
-        recipeManagers.stream()
-                .filter(clazz -> !clazz.equals(RecipeManagerWrapper.class))
-                .map(clazz -> (Class<? extends IRecipeManager<Recipe<?>>>) clazz)
-                .forEach(this::registerRecipeManager);
+        enqueuedRegistration = () -> {
+            final ICraftTweakerRegistry registry = CraftTweakerAPI.getRegistry();
+            
+            registeredTypes.clear();
+            registry.getAllLoaders()
+                    .stream()
+                    .map(it -> CraftTweakerAPI.getRegistry()
+                            .getZenClassRegistry()
+                            .getImplementationsOf(it, IRecipeManager.class))
+                    .flatMap(List::stream)
+                    .filter(it -> RecipeManagerWrapper.class != it)
+                    .map(it -> (Class<? extends IRecipeManager<Recipe<?>>>) it)
+                    .forEach(this::registerRecipeManager);
+        };
     }
     
     @Deprecated
     public static boolean containsCustomManager(ResourceLocation location) {
         
-        return registeredTypes.containsKey(lookup(location));
+        return registeredTypes().containsKey(lookup(location));
     }
     
     @Deprecated
     public static IRecipeManager getCustomManager(ResourceLocation location) {
         
-        return registeredTypes.get(lookup(location));
+        return registeredTypes().get(lookup(location));
     }
     
     public static Collection<IRecipeManager<Recipe<?>>> getManagerInstances() {
         
-        return managerInstances.values();
+        return managerInstances().values();
     }
     
     public static IRecipeManager<Recipe<?>> getOrDefault(final ResourceLocation location) {
@@ -85,7 +98,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             return null;
         }
         
-        return registeredTypes.computeIfAbsent(type, RecipeManagerWrapper::makeOrNull);
+        return registeredTypes().computeIfAbsent(type, RecipeManagerWrapper::makeOrNull);
     }
     
     @ZenCodeType.Method
@@ -96,13 +109,41 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             throw new IllegalArgumentException("Unknown recipe type: " + location);
         }
         
-        return (T) registeredTypes.get(recipeType);
+        return (T) registeredTypes().get(recipeType);
+    }
+    
+    private static Map<RecipeType<Recipe<?>>, IRecipeManager<Recipe<?>>> registeredTypes() {
+        
+        if(enqueuedRegistration != null) {
+            synchronized(LOCK) {
+                if(enqueuedRegistration != null) {
+                    enqueuedRegistration.run();
+                    enqueuedRegistration = null;
+                }
+            }
+        }
+        
+        return registeredTypes;
+    }
+    
+    private static Map<Class<? extends IRecipeManager<Recipe<?>>>, IRecipeManager<Recipe<?>>> managerInstances() {
+        
+        if(enqueuedRegistration != null) {
+            synchronized(LOCK) {
+                if(enqueuedRegistration != null) {
+                    enqueuedRegistration.run();
+                    enqueuedRegistration = null;
+                }
+            }
+        }
+        
+        return managerInstances;
     }
     
     private void registerRecipeManager(Class<? extends IRecipeManager<Recipe<?>>> managerClass) {
         
-        if(managerInstances.containsKey(managerClass)) {
-            final IRecipeManager<Recipe<?>> manager = managerInstances.get(managerClass);
+        if(managerInstances().containsKey(managerClass)) {
+            final IRecipeManager<Recipe<?>> manager = managerInstances().get(managerClass);
             registerInstance(manager);
             return;
         }
@@ -113,7 +154,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             return;
         }
         
-        managerInstances.put(managerClass, manager);
+        managerInstances().put(managerClass, manager);
         registerInstance(manager);
     }
     
@@ -128,7 +169,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             return;
         }
         
-        registeredTypes.put(lookup(bracketResourceLocation), manager);
+        registeredTypes().put(lookup(bracketResourceLocation), manager);
     }
     
     @Override
@@ -140,8 +181,8 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             throw new ParseException(position, "Invalid ResourceLocation, expected: <recipetype:modid:location>");
         }
         
-        if(registeredTypes.containsKey(lookup(resourceLocation))) {
-            return getCall(name, registeredTypes.get(lookup(resourceLocation)), position);
+        if(registeredTypes().containsKey(lookup(resourceLocation))) {
+            return getCall(name, registeredTypes().get(lookup(resourceLocation)), position);
         }
         
         if(Services.REGISTRY.recipeTypes().keySet().contains(resourceLocation)) {
