@@ -15,7 +15,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import org.openzen.zencode.java.ZenCodeGlobals;
-import org.openzen.zenscript.codemodel.Modifiers;
 import org.openzen.zenscript.codemodel.type.BasicTypeID;
 
 import java.lang.reflect.Member;
@@ -303,7 +302,7 @@ public final class ZenClassRegistry implements IZenClassRegistry {
             boolean hasGlobals = Stream.concat(Arrays.stream(clazz.getDeclaredFields()), Arrays.stream(clazz.getDeclaredMethods()))
                     .filter(it -> it.isAnnotationPresent(ZenCodeGlobals.Global.class))
                     .mapToInt(Member::getModifiers)
-                    .anyMatch(it -> Modifiers.isPublic(it) && Modifiers.isStatic(it));
+                    .anyMatch(it -> Modifier.isPublic(it) && Modifier.isStatic(it));
             
             if(hasGlobals) {
                 this.data.globals().put(info.targetName(), clazz);
