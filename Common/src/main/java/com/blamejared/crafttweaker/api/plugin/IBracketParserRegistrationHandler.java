@@ -22,12 +22,7 @@ public interface IBracketParserRegistrationHandler {
         
         public DumperData(final String subCommandName, final Supplier<Stream<String>> data) {
             
-            this(subCommandName, null, data);
-        }
-        
-        public DumperData(final Supplier<Stream<String>> data) {
-            
-            this(null, data);
+            this(subCommandName, subCommandName, data);
         }
         
     }
