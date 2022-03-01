@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -83,13 +84,12 @@ sealed public abstract class ScriptRunner permits ExecutingScriptRunner, Formatt
         modules.forEach(it -> it.registerBEP(parser));
         converterBuilder.reinitializeLazyHeaderValues();
         
-        modules.forEach(javaNativeModule -> {
-            try {
-                scriptingEngine.registerNativeProvided(javaNativeModule);
-            } catch(CompileException e) {
-                e.printStackTrace();
-            }
-        });
+        final AtomicReference<CompileException> thrown = new AtomicReference<>(null);
+        modules.forEach(it -> this.registerModule(it, thrown));
+        if(thrown.get() != null) {
+            throw thrown.get();
+        }
+        
         return parser;
     }
     
@@ -99,7 +99,7 @@ sealed public abstract class ScriptRunner permits ExecutingScriptRunner, Formatt
         final SemanticModule module = this.engine()
                 .createScriptedModule("scripts", sources, parser, FunctionParameter.NONE);
         
-        if (!module.isValid()) {
+        if(!module.isValid()) {
             Stream.of(CraftTweakerAPI.LOGGER, CraftTweakerCommon.LOG).forEach(it -> it.error("Scripts are invalid!"));
             return;
         }
@@ -115,6 +115,17 @@ sealed public abstract class ScriptRunner permits ExecutingScriptRunner, Formatt
         final IScriptRunModuleConfigurator configurator = registry.getConfiguratorFor(loader);
         return configurator.populateModules(builder, registry, this.runInfo()
                 .configuration(), this::createNativeModule);
+    }
+    
+    private void registerModule(final JavaNativeModule module, final AtomicReference<CompileException> ref) {
+        
+        try {
+            this.engine().registerNativeProvided(module);
+        } catch(final CompileException e) {
+            if(!ref.compareAndSet(null, e)) {
+                ref.get().addSuppressed(e);
+            }
+        }
     }
     
     private JavaNativeModule createNativeModule(
