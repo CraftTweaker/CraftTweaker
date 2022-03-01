@@ -39,7 +39,7 @@ public final class DefaultScriptRunModuleConfigurator implements IScriptRunModul
         final JavaNativeModule baseModule = this.createModule(creator, registry, loader, this.basePackage, this.basePackage, nativeConverterBuilder);
         
         final List<JavaNativeModule> otherModules = registry.getZenClassRegistry().getRootPackages(loader).stream()
-                .filter(it -> it.equals(this.basePackage))
+                .filter(it -> !it.equals(this.basePackage))
                 .map(it -> this.createModule(creator, registry, loader, it, it, nativeConverterBuilder, baseModule))
                 .toList();
         
