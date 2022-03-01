@@ -211,6 +211,7 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
     mainFile.changelog = Utils.getFullChangelog(project)
     mainFile.releaseType = CFG_Contants.RELEASE_TYPE_RELEASE
     mainFile.addJavaVersion("Java $modJavaVersion")
+    mainFile.addRequirement("jeitweaker")
 
     doLast {
         project.ext.set("curse_file_url", "${curseHomepageLink}/files/${mainFile.curseFileId}")
