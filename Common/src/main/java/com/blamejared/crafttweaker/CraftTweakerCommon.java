@@ -44,10 +44,6 @@ public class CraftTweakerCommon {
         }
         CraftTweakerLogger.init();
         
-        //CraftTweakerAPI.LOGGER.info("Starting building internal Registries");
-        //CraftTweakerRegistry.addAdvancedBEPName("recipemanager");
-        //CraftTweakerRegistry.findClasses();
-        //CraftTweakerAPI.LOGGER.info("Completed building internal Registries");
         
         CraftTweakerRegistries.init();
         

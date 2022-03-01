@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.bracket.RecipeTypeBracketHandler")
@@ -45,6 +46,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     
     private static final Map<RecipeType<Recipe<?>>, IRecipeManager<Recipe<?>>> registeredTypes = new HashMap<>();
     private static final Map<Class<? extends IRecipeManager<Recipe<?>>>, IRecipeManager<Recipe<?>>> managerInstances = new HashMap<>();
+    
     
     public RecipeTypeBracketHandler(List<Class<? extends IRecipeManager>> recipeManagers) {
         
@@ -183,6 +185,15 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     private static RecipeType<Recipe<?>> lookup(final ResourceLocation location) {
         //TODO confirm this is fine
         return (RecipeType<Recipe<?>>) Services.REGISTRY.recipeTypes().get(location);
+    }
+    
+    public static Supplier<Stream<String>> getDumperData() {
+        
+        return () -> CraftTweakerAPI.getRegistry()
+                .getAllLoaders()
+                .stream()
+                .map(CraftTweakerAPI.getRegistry()::getAllEnumsForEnumBracket)
+                .flatMap(Collection::stream);
     }
     
 }

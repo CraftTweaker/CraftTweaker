@@ -1,11 +1,8 @@
 package com.blamejared.crafttweaker.api.bracket;
 
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.BracketDumper;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.tag.MCTag;
-import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistry;
 import com.blamejared.crafttweaker.natives.block.ExpandBlock;
 import com.blamejared.crafttweaker.natives.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.natives.entity.ExpandEntityType;
@@ -23,7 +20,6 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @ZenRegister
@@ -51,25 +47,13 @@ public class BracketDumpers {
     }
     
     @ZenCodeType.Method
-    @BracketDumper("blockmaterial")
-    public static Collection<String> getBlockMaterialDump() {
+    @BracketDumper("material")
+    public static Collection<String> getMaterialDump() {
         
         return ExpandMaterial.VANILLA_MATERIALS.values()
                 .stream()
                 .map(ExpandMaterial::getCommandString)
                 .collect(Collectors.toSet());
-    }
-    
-    @ZenCodeType.Method
-    @BracketDumper("constant")
-    public static Collection<String> getConstantDump() {
-        
-        return CraftTweakerAPI.getRegistry()
-                .getAllLoaders()
-                .stream()
-                .map(CraftTweakerAPI.getRegistry()::getAllEnumsForEnumBracket)
-                .flatMap(Collection::stream)
-                .toList();
     }
     
     @ZenCodeType.Method
@@ -93,7 +77,7 @@ public class BracketDumpers {
     }
     
     @ZenCodeType.Method
-    @BracketDumper("entityType")
+    @BracketDumper("entitytype")
     public static Collection<String> getEntityTypeDump() {
         
         return Services.REGISTRY.entityTypes()
@@ -122,27 +106,17 @@ public class BracketDumpers {
                 .collect(Collectors.toList());
     }
     
-    @ZenCodeType.Method
-    @BracketDumper("recipeType")
-    public static Collection<String> getRecipeTypeDump() {
-        
-        return Services.REGISTRY.recipeTypes()
-                .keyStream()
-                .filter(rl -> !rl.toString().equals("crafttweaker:scripts"))
-                .map(rl -> String.format(Locale.ENGLISH, "<recipetype:%s>", rl))
-                .collect(Collectors.toList());
-    }
     
-    @ZenCodeType.Method
-    @BracketDumper("tag")
-    public static Collection<String> getTagDump() {
-        
-        return CrTTagRegistry.INSTANCE.getAllManagers()
-                .stream()
-                .flatMap(tagManager -> tagManager.getAllTags().stream())
-                .map(MCTag::getCommandString)
-                .collect(Collectors.toSet());
-    }
+//    @ZenCodeType.Method
+//    @BracketDumper("tag")
+//    public static Collection<String> getTagDump() {
+//
+//        return CrTTagRegistry.INSTANCE.getAllManagers()
+//                .stream()
+//                .flatMap(tagManager -> tagManager.getAllTags().stream())
+//                .map(MCTag::getCommandString)
+//                .collect(Collectors.toSet());
+//    }
     
     @ZenCodeType.Method
     @BracketDumper("profession")
@@ -155,7 +129,7 @@ public class BracketDumpers {
     }
     
     @ZenCodeType.Method
-    @BracketDumper("damageSource")
+    @BracketDumper("damagesource")
     public static Collection<String> getDamageSourceDump() {
         
         return ExpandDamageSource.PRE_REGISTERED_DAMAGE_SOURCES.keySet()

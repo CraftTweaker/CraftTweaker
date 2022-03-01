@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.util.ParseUtil;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.natives.resource.ExpandResourceLocation;
+import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.resources.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.shared.CodePosition;
@@ -25,6 +26,9 @@ import org.openzen.zenscript.parser.type.IParsedType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.bracket.EnumConstantBracketHandler")
@@ -101,4 +105,11 @@ public class EnumConstantBracketHandler implements BracketExpressionParser {
         return new ParsedNewExpression(position, ParseUtil.readParsedType(ExpandResourceLocation.ZC_CLASS_NAME, position), newCallArguments);
     }
     
+    public static Supplier<Stream<String>> getDumperData() {
+        
+        return () -> Services.REGISTRY.recipeTypes()
+                .keyStream()
+                .filter(rl -> !rl.toString().equals("crafttweaker:scripts"))
+                .map(rl -> String.format(Locale.ENGLISH, "<recipetype:%s>", rl));
+    }
 }

@@ -313,7 +313,7 @@ public class ExpandBlock {
      *
      * @param material The new material of this Block.
      *
-     * @docParam material <blockmaterial:earth>
+     * @docParam material <material:earth>
      */
     @ZenCodeType.Method
     @ZenCodeType.Setter("material")
