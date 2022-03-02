@@ -7,9 +7,6 @@ import org.openzen.zencode.java.module.converters.JavaNativePackageInfo;
 import org.openzen.zencode.java.module.converters.JavaNativeTypeConverter;
 import org.openzen.zenscript.codemodel.FunctionParameter;
 import org.openzen.zenscript.codemodel.expression.Expression;
-import org.openzen.zenscript.codemodel.expression.InvalidAssignExpression;
-import org.openzen.zenscript.codemodel.expression.InvalidExpression;
-import org.openzen.zenscript.codemodel.expression.WrapOptionalExpression;
 import org.openzen.zenscript.codemodel.type.TypeID;
 
 import java.lang.reflect.Parameter;
@@ -39,24 +36,13 @@ final class CtJavaNativeHeaderConverter extends JavaNativeHeaderConverter {
     @Override
     public Expression getDefaultValue(final Parameter parameter, final TypeID type, final FunctionParameter functionParameter) {
         
-        final Expression defaultValue = super.getDefaultValue(parameter, type, functionParameter);
-        
-        //Null even if trying to parse => let's try again later
-        if(this.isInvalid(defaultValue) && parameter.isAnnotationPresent(ZenCodeType.Optional.class)) {
+        if(parameter.isAnnotationPresent(ZenCodeType.Optional.class)) {
             
             this.lazyValues.add(new DefaultedLazyValue(parameter, type, functionParameter));
+            return null;
         }
         
-        return defaultValue;
-    }
-    
-    private boolean isInvalid(final Expression expression) {
-        
-        if(expression instanceof WrapOptionalExpression wrapped) {
-            return this.isInvalid(wrapped.value);
-        }
-        
-        return expression == null || expression instanceof InvalidExpression || expression instanceof InvalidAssignExpression;
+        return super.getDefaultValue(parameter, type, functionParameter);
     }
     
     void reinitializeAllLazyValues() {
