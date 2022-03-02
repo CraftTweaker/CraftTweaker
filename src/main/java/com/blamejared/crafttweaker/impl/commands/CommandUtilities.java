@@ -91,7 +91,7 @@ public final class CommandUtilities {
         return base.setStyle(style);
     }
     
-    public static ITextComponent open(TextComponent base, String path) {
+    public static ITextComponent open(IFormattableTextComponent base, String path) {
         
         Style style = base.getStyle();
         style = style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new FormattedTextComponent("Click to open [%s]", color(path, TextFormatting.GOLD))));
