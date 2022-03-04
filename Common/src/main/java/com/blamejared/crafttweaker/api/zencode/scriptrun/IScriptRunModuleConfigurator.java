@@ -3,10 +3,11 @@ package com.blamejared.crafttweaker.api.zencode.scriptrun;
 import com.blamejared.crafttweaker.api.ICraftTweakerRegistry;
 import com.blamejared.crafttweaker.platform.Services;
 import org.openzen.zencode.java.module.JavaNativeModule;
-import org.openzen.zencode.java.module.converters.JavaNativeConverterBuilder;
 import org.openzen.zencode.shared.CompileException;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.function.Consumer;
 
 @FunctionalInterface
 public interface IScriptRunModuleConfigurator {
@@ -17,9 +18,9 @@ public interface IScriptRunModuleConfigurator {
         JavaNativeModule createNativeModule(
                 final String name,
                 final String rootPackage,
-                final JavaNativeConverterBuilder builder,
-                final JavaNativeModule... dependencies
-        );
+                final List<JavaNativeModule> dependencies,
+                final Consumer<JavaNativeModule> configurator
+        ) throws CompileException;
         
     }
     
@@ -29,7 +30,6 @@ public interface IScriptRunModuleConfigurator {
     }
     
     Collection<JavaNativeModule> populateModules(
-            final JavaNativeConverterBuilder nativeConverterBuilder,
             final ICraftTweakerRegistry registry,
             final ScriptRunConfiguration configuration,
             final ModuleCreator creator

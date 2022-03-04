@@ -26,7 +26,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -78,17 +78,10 @@ sealed public abstract class ScriptRunner permits ExecutingScriptRunner, Formatt
         
         final CtJavaNativeConverterBuilder converterBuilder = new CtJavaNativeConverterBuilder(this.runInfo);
         final ICraftTweakerRegistry registry = CraftTweakerAPI.getRegistry();
-        final IgnorePrefixCasingBracketParser parser = this.createParser();
-        final Collection<JavaNativeModule> modules = this.gatherModules(converterBuilder, registry, parser);
-        
+        final BracketExpressionParser parser = this.createParser(registry);
+        final Collection<DecoratedJavaNativeModule> modules = this.populateModules(converterBuilder, registry, parser);
+        CraftTweakerAPI.LOGGER.info("Successfully initialized modules {}", modules);
         converterBuilder.reinitializeLazyHeaderValues();
-        
-        final AtomicReference<CompileException> thrown = new AtomicReference<>(null);
-        modules.forEach(it -> this.registerModule(it, thrown));
-        if(thrown.get() != null) {
-            throw thrown.get();
-        }
-        
         return parser;
     }
     
@@ -108,52 +101,65 @@ sealed public abstract class ScriptRunner permits ExecutingScriptRunner, Formatt
     
     protected abstract void executeRunAction(final SemanticModule module);
     
-    private Collection<JavaNativeModule> gatherModules(final JavaNativeConverterBuilder builder, final ICraftTweakerRegistry registry, final IgnorePrefixCasingBracketParser parser) throws CompileException {
+    private Collection<DecoratedJavaNativeModule> populateModules(
+            final JavaNativeConverterBuilder builder,
+            final ICraftTweakerRegistry registry,
+            final BracketExpressionParser parser
+    ) throws CompileException {
+        
+        return this.gatherModules(builder, registry, parser)
+                .stream()
+                .map(DecoratedJavaNativeModule::new)
+                .toList();
+    }
+    
+    private Collection<JavaNativeModule> gatherModules(
+            final JavaNativeConverterBuilder builder,
+            final ICraftTweakerRegistry registry,
+            final BracketExpressionParser parser
+    ) throws CompileException {
         
         final IScriptLoader loader = this.runInfo().loader();
         final IScriptRunModuleConfigurator configurator = registry.getConfiguratorFor(loader);
-        return configurator.populateModules(builder, registry, this.runInfo()
-                .configuration(), (name, rootPackage, builder1, dependencies) -> createNativeModule(name, rootPackage, builder1, registry, parser, dependencies));
-    }
-    
-    private void registerModule(final JavaNativeModule module, final AtomicReference<CompileException> ref) {
-        
-        try {
-            this.engine().registerNativeProvided(module);
-        } catch(final CompileException e) {
-            if(!ref.compareAndSet(null, e)) {
-                ref.get().addSuppressed(e);
-            }
-        }
+        final ScriptRunConfiguration configuration = this.runInfo().configuration();
+        return configurator.populateModules(
+                registry,
+                configuration,
+                (name, root, dependencies, config) -> this.createNativeModule(name, root, builder, parser, dependencies, config)
+        );
     }
     
     private JavaNativeModule createNativeModule(
             final String name,
             final String rootPackage,
             final JavaNativeConverterBuilder builder,
-            final ICraftTweakerRegistry registry,
-            final IgnorePrefixCasingBracketParser parser,
-            final JavaNativeModule... dependencies
-    ) {
+            final BracketExpressionParser parser,
+            final List<JavaNativeModule> dependenciesList,
+            final Consumer<JavaNativeModule> configurator
+    ) throws CompileException {
         
-        JavaNativeModule module = this.engine().createNativeModule(name, rootPackage, dependencies, builder);
-        this.getBracketsFor(module, registry).forEach(parser::register);
+        final JavaNativeModule[] dependencies = dependenciesList.toArray(JavaNativeModule[]::new);
+        final JavaNativeModule module = this.engine().createNativeModule(name, rootPackage, dependencies, builder);
         module.registerBEP(parser);
+        configurator.accept(module);
+        this.engine().registerNativeProvided(module);
         return module;
     }
     
-    private IgnorePrefixCasingBracketParser createParser() {
+    private BracketExpressionParser createParser(final ICraftTweakerRegistry registry) {
         
-        return new IgnorePrefixCasingBracketParser();
+        return new IgnorePrefixCasingBracketParser(this.getBracketsFor(registry));
     }
     
-    private Map<String, BracketExpressionParser> getBracketsFor(final JavaNativeModule module, final ICraftTweakerRegistry registry) {
-        // TODO This needs to use the root package to find brackets only in that package and register them for the module
-        return registry.getBracketHandlers(this.runInfo().loader(), null, this.engine(), module)
+    private Map<String, BracketExpressionParser> getBracketsFor(final ICraftTweakerRegistry registry) {
+        
+        // TODO("Does this need the root package data?")
+        return registry.getBracketHandlers(this.runInfo().loader(), null)
                 .stream()
                 .collect(Collectors.toMap(
                         Pair::getFirst,
-                        Pair::getSecond, (a, b) -> {
+                        Pair::getSecond,
+                        (a, b) -> {
                             throw new IllegalStateException("Found two BEPs with the same name: " + a + " and " + b);
                         }));
     }

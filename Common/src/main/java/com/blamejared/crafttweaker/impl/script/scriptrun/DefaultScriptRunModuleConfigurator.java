@@ -6,10 +6,13 @@ import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import org.openzen.zencode.java.module.JavaNativeModule;
-import org.openzen.zencode.java.module.converters.JavaNativeConverterBuilder;
+import org.openzen.zencode.shared.CompileException;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 @SuppressWarnings("ClassCanBeRecord")
@@ -29,41 +32,64 @@ public final class DefaultScriptRunModuleConfigurator implements IScriptRunModul
     
     @Override
     public Collection<JavaNativeModule> populateModules(
-            final JavaNativeConverterBuilder nativeConverterBuilder,
             final ICraftTweakerRegistry registry,
             final ScriptRunConfiguration configuration,
             final ModuleCreator creator
-    ) {
+    ) throws CompileException {
         
         final IScriptLoader loader = configuration.loader();
         final IZenClassRegistry zenClassRegistry = registry.getZenClassRegistry();
-        final JavaNativeModule baseModule = this.createModule(creator, zenClassRegistry, loader, this.basePackage, this.basePackage, nativeConverterBuilder);
-        
-        final List<JavaNativeModule> otherModules = registry.getZenClassRegistry().getRootPackages(loader).stream()
-                .filter(it -> !it.equals(this.basePackage))
-                .map(it -> this.createModule(creator, zenClassRegistry, loader, it, it, nativeConverterBuilder, baseModule))
-                .toList();
+        final JavaNativeModule baseModule = this.createModule(creator, zenClassRegistry, loader, this.basePackage, this.basePackage);
+        final List<JavaNativeModule> otherModules = this.createOtherModules(creator, zenClassRegistry, loader, baseModule);
         
         final List<JavaNativeModule> expansionDependencies = Stream.concat(Stream.of(baseModule), otherModules.stream())
                 .toList();
-        final JavaNativeModule expansions = this.createExpansionModule(creator, zenClassRegistry, loader, nativeConverterBuilder, expansionDependencies);
+        final JavaNativeModule expansions = this.createExpansionModule(creator, zenClassRegistry, loader, expansionDependencies);
         
         return Stream.concat(expansionDependencies.stream(), Stream.of(expansions)).toList();
+    }
+    
+    private List<JavaNativeModule> createOtherModules(
+            final ModuleCreator creator,
+            final IZenClassRegistry registry,
+            final IScriptLoader loader,
+            final JavaNativeModule baseModule
+    ) throws CompileException {
+        
+        final AtomicReference<CompileException> exception = new AtomicReference<>(null);
+        final List<JavaNativeModule> otherModules = registry.getRootPackages(loader).stream()
+                .filter(it -> !it.equals(this.basePackage))
+                .map(it -> {
+                    try {
+                        return this.createModule(creator, registry, loader, it, it, baseModule);
+                    } catch(final CompileException e) {
+                        if(!exception.compareAndSet(null, e)) {
+                            exception.get().addSuppressed(e);
+                        }
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .toList();
+        
+        if(exception.get() != null) {
+            throw exception.get();
+        }
+        
+        return otherModules;
     }
     
     private JavaNativeModule createExpansionModule(
             final ModuleCreator creator,
             final IZenClassRegistry registry,
             final IScriptLoader loader,
-            final JavaNativeConverterBuilder builder,
             final List<JavaNativeModule> dependencies
-    ) {
+    ) throws CompileException {
         
         return this.createModule(
                 creator,
                 "expansions",
                 "",
-                builder,
                 dependencies.toArray(JavaNativeModule[]::new),
                 List.of(),
                 registry.getClassData(loader).expansions().values()
@@ -76,15 +102,13 @@ public final class DefaultScriptRunModuleConfigurator implements IScriptRunModul
             final IScriptLoader loader,
             final String name,
             final String rootPackage,
-            final JavaNativeConverterBuilder builder,
             final JavaNativeModule... dependencies
-    ) {
+    ) throws CompileException {
         
         return this.createModule(
                 creator,
                 name,
                 rootPackage,
-                builder,
                 dependencies,
                 registry.getGlobalsInPackage(loader, rootPackage),
                 registry.getClassesInPackage(loader, rootPackage)
@@ -95,16 +119,15 @@ public final class DefaultScriptRunModuleConfigurator implements IScriptRunModul
             final ModuleCreator creator,
             final String name,
             final String rootPackage,
-            final JavaNativeConverterBuilder builder,
             final JavaNativeModule[] dependencies,
             final Collection<Class<?>> globals,
             final Collection<Class<?>> classes
-    ) {
+    ) throws CompileException {
         
-        final JavaNativeModule module = creator.createNativeModule(name, rootPackage, builder, dependencies);
-        globals.forEach(module::addGlobals);
-        classes.forEach(module::addClass);
-        return module;
+        return creator.createNativeModule(name, rootPackage, Arrays.asList(dependencies), it -> {
+            globals.forEach(it::addGlobals);
+            classes.forEach(it::addClass);
+        });
     }
     
 }
