@@ -175,8 +175,8 @@ final class BracketParserRegistrationManager {
         
         final BracketDumper annotation = method.getAnnotation(BracketDumper.class);
         final String name = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, annotation.value());
-        final String subCommand = annotation.subCommandName();
-        final String fileName = annotation.fileName();
+        final String subCommand = annotation.subCommandName().isEmpty() ? null : annotation.subCommandName();
+        final String fileName = annotation.fileName().isEmpty() ? null : annotation.fileName();
         this.updateBracketHandle(targetMap, name, it -> it.dumper(subCommand, fileName, method));
     }
     
