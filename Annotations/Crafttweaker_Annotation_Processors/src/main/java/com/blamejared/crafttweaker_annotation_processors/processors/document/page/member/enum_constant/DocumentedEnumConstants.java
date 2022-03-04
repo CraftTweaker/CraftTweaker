@@ -41,7 +41,11 @@ public class DocumentedEnumConstants implements IFillMeta {
     private void writeConstant(EnumConstant constant, PageOutputWriter writer) {
         
         writeConstantComment(constant.getComment(), writer);
-        writer.printf("%s.%s%n", typeName.getSimpleName(), constant.getName());
+        if (constant.isBracket()) {
+            writer.println(constant.getName());
+        } else {
+            writer.println(typeName.getSimpleName() + "." + constant.getName());
+        }
     }
     
     private void writeConstantComment(DocumentationComment comment, PageOutputWriter writer) {
