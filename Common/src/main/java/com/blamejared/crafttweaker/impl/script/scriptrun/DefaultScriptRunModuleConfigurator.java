@@ -41,12 +41,8 @@ public final class DefaultScriptRunModuleConfigurator implements IScriptRunModul
         final IZenClassRegistry zenClassRegistry = registry.getZenClassRegistry();
         final JavaNativeModule baseModule = this.createModule(creator, zenClassRegistry, loader, this.basePackage, this.basePackage);
         final List<JavaNativeModule> otherModules = this.createOtherModules(creator, zenClassRegistry, loader, baseModule);
-        
-        final List<JavaNativeModule> expansionDependencies = Stream.concat(Stream.of(baseModule), otherModules.stream())
-                .toList();
-        final JavaNativeModule expansions = this.createExpansionModule(creator, zenClassRegistry, loader, expansionDependencies);
-        
-        return Stream.concat(expansionDependencies.stream(), Stream.of(expansions)).toList();
+        final JavaNativeModule expansions = this.createExpansionModule(creator, zenClassRegistry, loader, baseModule, otherModules);
+        return Stream.concat(otherModules.stream(), Stream.of(baseModule, expansions)).toList();
     }
     
     private List<JavaNativeModule> createOtherModules(
@@ -83,14 +79,15 @@ public final class DefaultScriptRunModuleConfigurator implements IScriptRunModul
             final ModuleCreator creator,
             final IZenClassRegistry registry,
             final IScriptLoader loader,
-            final List<JavaNativeModule> dependencies
+            final JavaNativeModule baseModule,
+            final List<JavaNativeModule> otherDependencies
     ) throws CompileException {
         
         return this.createModule(
                 creator,
                 "expansions",
                 "",
-                dependencies.toArray(JavaNativeModule[]::new),
+                Stream.concat(Stream.of(baseModule), otherDependencies.stream()).toArray(JavaNativeModule[]::new),
                 List.of(),
                 registry.getClassData(loader).expansions().values()
         );
