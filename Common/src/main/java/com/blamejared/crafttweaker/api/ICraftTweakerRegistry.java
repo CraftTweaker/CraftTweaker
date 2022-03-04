@@ -10,8 +10,6 @@ import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigu
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
-import org.openzen.zencode.java.ScriptingEngine;
-import org.openzen.zencode.java.module.JavaNativeModule;
 import org.openzen.zenscript.parser.BracketExpressionParser;
 
 import java.util.Collection;
@@ -35,7 +33,7 @@ public interface ICraftTweakerRegistry {
     Map<String, IBracketDumperInfo> getBracketDumpers(final IScriptLoader loader);
     
     // TODO("Better API")
-    List<Pair<String, BracketExpressionParser>> getBracketHandlers(final IScriptLoader loader, final String rootPackage, final ScriptingEngine engine, final JavaNativeModule ctModule);
+    List<Pair<String, BracketExpressionParser>> getBracketHandlers(final IScriptLoader loader, final String rootPackage);
     
     List<IPreprocessor> getPreprocessors();
     

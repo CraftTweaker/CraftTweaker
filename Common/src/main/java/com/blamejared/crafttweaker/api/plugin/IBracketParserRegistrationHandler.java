@@ -1,8 +1,6 @@
 package com.blamejared.crafttweaker.api.plugin;
 
 import net.minecraft.resources.ResourceLocation;
-import org.openzen.zencode.java.ScriptingEngine;
-import org.openzen.zencode.java.module.JavaNativeModule;
 import org.openzen.zenscript.parser.BracketExpressionParser;
 
 import java.lang.reflect.Method;
@@ -10,13 +8,6 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public interface IBracketParserRegistrationHandler {
-    
-    @FunctionalInterface
-    interface Creator {
-        
-        BracketExpressionParser createParser(final ScriptingEngine engine, final JavaNativeModule module);
-        
-    }
     
     record DumperData(String subCommandName, String outputFileName, Supplier<Stream<String>> data) {
         
@@ -27,11 +18,11 @@ public interface IBracketParserRegistrationHandler {
         
     }
     
-    void registerParserFor(final String loader, final String parserName, final Creator parserCreator, final DumperData parserDumper);
+    void registerParserFor(final String loader, final String parserName, final BracketExpressionParser parser, final DumperData parserDumper);
     
-    default void registerParserFor(final String loader, final String parserName, final Creator parserCreator) {
+    default void registerParserFor(final String loader, final String parserName, final BracketExpressionParser parser) {
         
-        this.registerParserFor(loader, parserName, parserCreator, null);
+        this.registerParserFor(loader, parserName, parser, null);
     }
     
     void registerParserFor(final String loader, final String parserName, final Method parser, final Method validator, final DumperData dumper);

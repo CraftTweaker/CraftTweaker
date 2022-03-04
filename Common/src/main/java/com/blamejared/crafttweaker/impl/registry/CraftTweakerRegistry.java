@@ -21,8 +21,6 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
-import org.openzen.zencode.java.ScriptingEngine;
-import org.openzen.zencode.java.module.JavaNativeModule;
 import org.openzen.zenscript.parser.BracketExpressionParser;
 
 import java.util.Arrays;
@@ -106,10 +104,10 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
     }
     
     @Override
-    public List<Pair<String, BracketExpressionParser>> getBracketHandlers(final IScriptLoader loader, final String rootPackage, final ScriptingEngine engine, final JavaNativeModule ctModule) {
+    public List<Pair<String, BracketExpressionParser>> getBracketHandlers(final IScriptLoader loader, final String rootPackage) {
         
-        return ImmutableList.copyOf(this.registries.bracketResolverRegistry()
-                .getBracketResolvers(loader, rootPackage, engine, ctModule));
+        // TODO("Is rootPackage really needed?")
+        return ImmutableList.copyOf(this.registries.bracketResolverRegistry().getBracketResolvers(loader));
     }
     
     @Override

@@ -7,7 +7,6 @@ import org.openzen.zenscript.lexer.ZSTokenType;
 import org.openzen.zenscript.parser.BracketExpressionParser;
 import org.openzen.zenscript.parser.expression.ParsedExpression;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -16,9 +15,9 @@ final class IgnorePrefixCasingBracketParser implements BracketExpressionParser {
     
     private final Map<String, BracketExpressionParser> parsers;
     
-    IgnorePrefixCasingBracketParser() {
+    IgnorePrefixCasingBracketParser(final Map<String, BracketExpressionParser> parsers) {
         
-        this.parsers = new HashMap<>();
+        this.parsers = Map.copyOf(parsers);
     }
     
     @Override
@@ -44,11 +43,6 @@ final class IgnorePrefixCasingBracketParser implements BracketExpressionParser {
     private BracketExpressionParser find(final String name) {
         
         return this.parsers.get(name.toLowerCase(Locale.ENGLISH));
-    }
-    
-    void register(final String name, final BracketExpressionParser parser) {
-        
-        parsers.put(name.toLowerCase(), parser);
     }
     
 }

@@ -1,54 +1,64 @@
 package com.blamejared.crafttweaker.impl.plugin.core;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
+import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
 import org.openzen.zencode.shared.CodePosition;
 import org.openzen.zencode.shared.CompileException;
 import org.openzen.zenscript.codemodel.OperatorType;
-import org.openzen.zenscript.codemodel.expression.CallArguments;
-import org.openzen.zenscript.codemodel.expression.CallStaticExpression;
-import org.openzen.zenscript.codemodel.expression.Expression;
-import org.openzen.zenscript.codemodel.member.ref.FunctionalMemberRef;
 import org.openzen.zenscript.codemodel.partial.IPartialExpression;
 import org.openzen.zenscript.codemodel.scope.ExpressionScope;
-import org.openzen.zenscript.codemodel.type.BasicTypeID;
-import org.openzen.zenscript.codemodel.type.DefinitionTypeID;
-import org.openzen.zenscript.codemodel.type.GlobalTypeRegistry;
 import org.openzen.zenscript.lexer.ParseException;
 import org.openzen.zenscript.lexer.ZSToken;
 import org.openzen.zenscript.lexer.ZSTokenParser;
 import org.openzen.zenscript.lexer.ZSTokenType;
 import org.openzen.zenscript.parser.BracketExpressionParser;
+import org.openzen.zenscript.parser.expression.ParsedCallArguments;
 import org.openzen.zenscript.parser.expression.ParsedExpression;
 import org.openzen.zenscript.parser.expression.ParsedExpressionBinary;
+import org.openzen.zenscript.parser.expression.ParsedExpressionCall;
+import org.openzen.zenscript.parser.expression.ParsedExpressionCast;
+import org.openzen.zenscript.parser.expression.ParsedExpressionMember;
 import org.openzen.zenscript.parser.expression.ParsedExpressionString;
+import org.openzen.zenscript.parser.expression.ParsedExpressionVariable;
+import org.openzen.zenscript.parser.type.ParsedTypeBasic;
 
 import java.lang.invoke.MethodHandle;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
+@SuppressWarnings("ClassCanBeRecord")
 final class ValidatedEscapableBracketParser implements BracketExpressionParser {
     
-    private static final class StaticMethodCallExpression extends ParsedExpression {
+    private static final class BracketResolverCallExpression extends ParsedExpression {
         
-        private final DefinitionTypeID id;
-        private final FunctionalMemberRef targetMethod;
+        private static final String PACKAGE_SEPARATOR = Pattern.quote(".");
+        
+        private final Method resolver;
         private final ParsedExpression call;
         
-        public StaticMethodCallExpression(final CodePosition position, final DefinitionTypeID id, final FunctionalMemberRef targetMethod, final List<ParsedExpression> expressions) {
+        BracketResolverCallExpression(
+                final CodePosition position,
+                final Method resolver,
+                final List<ParsedExpression> arguments
+        ) {
             
             super(position);
-            this.id = id;
-            this.targetMethod = targetMethod;
-            this.call = expressions.stream()
+            this.resolver = resolver;
+            this.call = arguments.stream()
                     .skip(1L)
-                    .reduce(expressions.get(0), (a, b) -> new ParsedExpressionBinary(b.position, a, b, OperatorType.ADD));
+                    .reduce(arguments.get(0), (a, b) -> new ParsedExpressionBinary(b.position, a, b, OperatorType.ADD));
         }
         
         @Override
-        public IPartialExpression compile(ExpressionScope scope) throws CompileException {
+        public IPartialExpression compile(final ExpressionScope scope) throws CompileException {
             
-            final Expression methodCall = this.call.compile(scope.withHint(BasicTypeID.STRING)).eval();
-            final CallArguments arguments = new CallArguments(methodCall);
-            return new CallStaticExpression(this.position, this.id, this.targetMethod, this.targetMethod.getHeader(), arguments);
+            final ParsedExpression classCall = this.compileClassCall(this.resolver.getDeclaringClass());
+            final ParsedExpression methodReference = this.compileMethodReference(classCall, this.resolver);
+            return this.generateCall(methodReference, this.call).compile(scope);
         }
         
         @Override
@@ -57,28 +67,50 @@ final class ValidatedEscapableBracketParser implements BracketExpressionParser {
             return true;
         }
         
+        private ParsedExpression compileClassCall(final Class<?> owner) {
+            
+            final IScriptLoader loader = CraftTweakerAPI.getScriptRunManager().currentRunInfo().loader();
+            final IZenClassRegistry registry = CraftTweakerAPI.getRegistry().getZenClassRegistry();
+            final String ownerName = registry.getNameFor(loader, owner).orElseThrow();
+            final String[] packages = ownerName.split(PACKAGE_SEPARATOR);
+            
+            return Arrays.stream(packages)
+                    .skip(1L)
+                    .reduce(
+                            (ParsedExpression) new ParsedExpressionVariable(this.position, packages[0], null),
+                            (prev, next) -> new ParsedExpressionMember(this.position, prev, next, null),
+                            (a, b) -> {throw new UnsupportedOperationException("Never called");}
+                    );
+        }
+        
+        private ParsedExpression compileMethodReference(final ParsedExpression classCall, final Method target) {
+            
+            final String targetName = target.getName();
+            return new ParsedExpressionMember(this.position, classCall, targetName, null);
+        }
+        
+        private ParsedExpression generateCall(final ParsedExpression method, final ParsedExpression argument) {
+            
+            final ParsedExpression castedArgument = new ParsedExpressionCast(this.position, argument, ParsedTypeBasic.STRING, false);
+            final ParsedCallArguments parsedArguments = new ParsedCallArguments(null, List.of(castedArgument));
+            return new ParsedExpressionCall(this.position, method, parsedArguments);
+        }
+        
     }
     
-    private final FunctionalMemberRef method;
-    private final MethodHandle validationMethod;
     private final String name;
-    private final DefinitionTypeID targetType;
+    private final Method resolver;
+    private final MethodHandle validator;
     
-    ValidatedEscapableBracketParser(final String name, final FunctionalMemberRef parserMethod, final MethodHandle validationMethod, final GlobalTypeRegistry registry) {
+    ValidatedEscapableBracketParser(final String name, final Method resolver, final MethodHandle validator) {
         
-        this.method = parserMethod;
-        this.validationMethod = validationMethod;
         this.name = name;
-        this.targetType = registry.getForDefinition(parserMethod.getTarget().definition);
-    }
-    
-    public String getName() {
-        
-        return this.name;
+        this.resolver = resolver;
+        this.validator = validator;
     }
     
     @Override
-    public ParsedExpression parse(CodePosition position, ZSTokenParser tokens) throws ParseException {
+    public ParsedExpression parse(final CodePosition position, final ZSTokenParser tokens) throws ParseException {
         
         StringBuilder string = new StringBuilder();
         
@@ -132,11 +164,11 @@ final class ValidatedEscapableBracketParser implements BracketExpressionParser {
         
         if(expressionList.size() == 1) {
             final ParsedExpression parsedExpression = expressionList.get(0);
-            if(this.validationMethod != null && parsedExpression instanceof ParsedExpressionString stringExpression) {
+            if(this.validator != null && parsedExpression instanceof ParsedExpressionString stringExpression) {
                 final String value = stringExpression.value;
                 boolean valid;
                 try {
-                    valid = (boolean) this.validationMethod.invokeExact(value);
+                    valid = (boolean) this.validator.invokeExact(value);
                 } catch(final Throwable e) {
                     final String message = String.format("Invalid parameters to BEP %s: '<%s:%s>", this.name, this.name, value);
                     throw new ParseException(position, message, e);
@@ -149,7 +181,7 @@ final class ValidatedEscapableBracketParser implements BracketExpressionParser {
             }
         }
         
-        return new StaticMethodCallExpression(position, this.targetType, this.method, expressionList);
+        return new BracketResolverCallExpression(position, this.resolver, expressionList);
     }
     
 }

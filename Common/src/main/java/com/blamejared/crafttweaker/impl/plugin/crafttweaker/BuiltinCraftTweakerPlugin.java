@@ -78,12 +78,12 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         
         this.bracketParserRegistrationManager.attemptRegistration(handler);
         
-        handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "recipetype", (engine, module) -> new RecipeTypeBracketHandler(), new IBracketParserRegistrationHandler.DumperData("recipetype", RecipeTypeBracketHandler.getDumperData()));
-        handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "constant", (engine, module) -> new EnumConstantBracketHandler(), new IBracketParserRegistrationHandler.DumperData("constant", EnumConstantBracketHandler.getDumperData()));
+        handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "recipetype", new RecipeTypeBracketHandler(), new IBracketParserRegistrationHandler.DumperData("recipetype", RecipeTypeBracketHandler.getDumperData()));
+        handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "constant", new EnumConstantBracketHandler(), new IBracketParserRegistrationHandler.DumperData("constant", EnumConstantBracketHandler.getDumperData()));
         
         final TagManagerBracketHandler tagManagerBEP = new TagManagerBracketHandler(CrTTagRegistryData.INSTANCE);
-        handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "tagmanager", (engine, module) -> tagManagerBEP);
-        handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "tag", (engine, module) -> new TagBracketHandler(tagManagerBEP));
+        handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "tagmanager", tagManagerBEP);
+        handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "tag", new TagBracketHandler(tagManagerBEP));
     }
     
     @Override

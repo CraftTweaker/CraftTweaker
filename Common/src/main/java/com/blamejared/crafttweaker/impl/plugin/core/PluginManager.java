@@ -231,7 +231,7 @@ public final class PluginManager {
         this.verifying(
                 "registering BEPs",
                 () -> handler.bracketRequests().forEach(it ->
-                        access.registerBracket(loaderFinder.apply(it.loader()), it.parserName(), it.parserCreator(), it.parserDumper())
+                        access.registerBracket(loaderFinder.apply(it.loader()), it.parserName(), it.parser(), it.parserDumper())
                 )
         );
         this.verifying(

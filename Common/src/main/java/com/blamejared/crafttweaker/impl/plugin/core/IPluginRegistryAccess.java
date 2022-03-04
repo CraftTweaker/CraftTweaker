@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.api.zencode.ZenTypeInfo;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
+import org.openzen.zenscript.parser.BracketExpressionParser;
 
 import java.util.Collection;
 
@@ -30,7 +31,7 @@ public interface IPluginRegistryAccess {
     void registerBracket(
             final IScriptLoader loader,
             final String name,
-            final IBracketParserRegistrationHandler.Creator bracketCreator,
+            final BracketExpressionParser bracketParser,
             final IBracketParserRegistrationHandler.DumperData dumperData
     );
     

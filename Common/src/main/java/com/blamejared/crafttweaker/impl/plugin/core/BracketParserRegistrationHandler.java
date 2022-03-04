@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl.plugin.core;
 
 import com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler;
 import net.minecraft.resources.ResourceLocation;
+import org.openzen.zenscript.parser.BracketExpressionParser;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -13,7 +14,7 @@ import java.util.function.Consumer;
 
 final class BracketParserRegistrationHandler implements IBracketParserRegistrationHandler {
     
-    record BracketData(String loader, String parserName, Creator parserCreator, DumperData parserDumper) {}
+    record BracketData(String loader, String parserName, BracketExpressionParser parser, DumperData parserDumper) {}
     
     record EnumData(String loader, ResourceLocation id, Class<? extends Enum<?>> enumClass) {}
     
@@ -34,9 +35,9 @@ final class BracketParserRegistrationHandler implements IBracketParserRegistrati
     }
     
     @Override
-    public void registerParserFor(final String loader, final String parserName, final Creator parserCreator, final DumperData parserDumper) {
+    public void registerParserFor(final String loader, final String parserName, final BracketExpressionParser parser, final DumperData parserDumper) {
         
-        this.bracketRequests.add(new BracketData(loader, parserName, parserCreator, parserDumper));
+        this.bracketRequests.add(new BracketData(loader, parserName, parser, parserDumper));
     }
     
     @Override
@@ -45,7 +46,7 @@ final class BracketParserRegistrationHandler implements IBracketParserRegistrati
         this.registerParserFor(
                 loader,
                 parserName,
-                (engine, module) -> new ValidatedEscapableBracketParser(parserName, module.loadStaticMethod(parser), this.lookup(validator), engine.registry),
+                new ValidatedEscapableBracketParser(parserName, parser, this.lookup(validator)),
                 dumper
         );
     }

@@ -11,6 +11,7 @@ import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigu
 import com.blamejared.crafttweaker.impl.plugin.core.IPluginRegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
+import org.openzen.zenscript.parser.BracketExpressionParser;
 
 import java.util.Collection;
 
@@ -65,11 +66,11 @@ final class PluginRegistryAccess implements IPluginRegistryAccess {
     public void registerBracket(
             final IScriptLoader loader,
             final String name,
-            final IBracketParserRegistrationHandler.Creator bracketCreator,
+            final BracketExpressionParser bracketParser,
             final IBracketParserRegistrationHandler.DumperData dumperData
     ) {
         
-        this.registries.bracketResolverRegistry().registerBracket(loader, name, bracketCreator, dumperData);
+        this.registries.bracketResolverRegistry().registerBracket(loader, name, bracketParser, dumperData);
     }
     
     @Override
