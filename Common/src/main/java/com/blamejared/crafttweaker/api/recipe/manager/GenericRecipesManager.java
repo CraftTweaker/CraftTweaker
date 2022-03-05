@@ -131,10 +131,26 @@ public enum GenericRecipesManager {
      *
      * @param output The recipe result
      *
+     * @deprecated use remove(IIngredient output)
+     *
+     * @docParam output <item:minecraft:iron_ingot>
+     */
+    @Deprecated(forRemoval = true)
+    @ZenCodeType.Method
+    public void removeRecipe(IIngredient output) {
+        
+        remove(output);
+    }
+    
+    /**
+     * Removes recipes by output
+     *
+     * @param output The recipe result
+     *
      * @docParam output <item:minecraft:iron_ingot>
      */
     @ZenCodeType.Method
-    public void removeRecipe(IIngredient output) {
+    public void remove(IIngredient output) {
         
         CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByOutput(output));
     }
