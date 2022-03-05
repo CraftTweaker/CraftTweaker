@@ -24,6 +24,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.pag
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.page.TypePage;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.TypePageTypeInfo;
+import com.blamejared.crafttweaker_annotations.annotations.BracketEnum;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 
 import javax.annotation.Nonnull;
@@ -179,7 +180,7 @@ public class NativeRegistrationConverter extends DocumentConverter {
     
     private void convertNativeEnumMembers(TypeElement typeElement, DocumentedEnumConstants documentedEnumConstants) {
         
-        enumConstantConverter.convertAndAddTo(getNativeType(typeElement), documentedEnumConstants);
+        enumConstantConverter.convertAndAddTo(getNativeType(typeElement), documentedEnumConstants, typeElement.getAnnotation(BracketEnum.class));
     }
     
     private List<DocumentedGenericParameter> convertGenericParameters(TypeElement typeElement) {

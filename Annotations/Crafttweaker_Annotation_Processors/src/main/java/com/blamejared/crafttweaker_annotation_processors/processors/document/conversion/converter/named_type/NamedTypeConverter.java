@@ -19,6 +19,7 @@ import com.blamejared.crafttweaker_annotation_processors.processors.document.pag
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.page.EnumTypePage;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.page.TypePage;
 import com.blamejared.crafttweaker_annotation_processors.processors.document.page.type.AbstractTypeInfo;
+import com.blamejared.crafttweaker_annotations.annotations.BracketEnum;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nonnull;
@@ -95,7 +96,7 @@ public class NamedTypeConverter extends DocumentConverter {
         
         if(isEnum(typeElement)) {
             DocumentedEnumConstants enumConstants = new DocumentedEnumConstants(getName(typeElement));
-            enumConstantConverter.convertAndAddTo(typeElement, enumConstants);
+            enumConstantConverter.convertAndAddTo(typeElement, enumConstants, typeElement.getAnnotation(BracketEnum.class));
             return new EnumTypePage(typePageInfo, virtualMembers, superType, implementations, staticMembers, genericParameters, enumConstants);
         } else {
             return new TypePage(typePageInfo, virtualMembers, superType, implementations, staticMembers, genericParameters);

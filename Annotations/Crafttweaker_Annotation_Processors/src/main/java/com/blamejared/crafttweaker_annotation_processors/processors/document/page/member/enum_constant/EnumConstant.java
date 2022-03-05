@@ -8,11 +8,13 @@ public class EnumConstant implements IFillMeta {
     
     private final String name;
     private final DocumentationComment comment;
+    private final boolean isBracket;
     
-    public EnumConstant(String name, DocumentationComment comment) {
+    public EnumConstant(String name, DocumentationComment comment, boolean isBracket) {
         
         this.name = name;
         this.comment = comment;
+        this.isBracket = isBracket;
     }
     
     public String getName() {
@@ -24,7 +26,11 @@ public class EnumConstant implements IFillMeta {
         
         return comment;
     }
-    
+
+    public boolean isBracket() {
+        return isBracket;
+    }
+
     @Override
     public void fillMeta(DocumentMeta meta) {
         
