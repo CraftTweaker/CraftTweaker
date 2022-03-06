@@ -4,13 +4,14 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.UUID;
 
-public class CraftTweakerConstants {
+public final class CraftTweakerConstants {
     
     public static final String MOD_ID = "crafttweaker";
     public static final String MOD_NAME = "CraftTweaker";
     public static final String SCRIPTS_DIRECTORY = "./scripts";
     public static final String LOG_PATH = "logs/crafttweaker.log";
     
+    public static final String ALL_LOADERS_MARKER = "*";
     public static final String INIT_LOADER_NAME = "initialize";
     public static final String DEFAULT_LOADER_NAME = "crafttweaker";
     

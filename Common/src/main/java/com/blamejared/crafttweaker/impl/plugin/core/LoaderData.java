@@ -9,7 +9,7 @@ record LoaderData(String name, Collection<IScriptLoader> inheritedLoaders) imple
     @Override
     public String toString() {
         
-        return "%s <- %s".formatted(this.name(), this.inheritedLoaders());
+        return "%s <- %s".formatted(this.name(), this.inheritedLoaders().stream().map(IScriptLoader::name).toList());
     }
     
 }

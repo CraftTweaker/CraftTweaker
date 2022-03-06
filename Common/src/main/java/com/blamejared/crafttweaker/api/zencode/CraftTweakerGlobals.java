@@ -9,7 +9,7 @@ import com.blamejared.crafttweaker.api.mod.Mods;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
-@ZenRegister(loaders = {CraftTweakerConstants.DEFAULT_LOADER_NAME, CraftTweakerConstants.INIT_LOADER_NAME})
+@ZenRegister(loaders = CraftTweakerConstants.ALL_LOADERS_MARKER)
 @ZenCodeType.Name("crafttweaker.api.Globals")
 public final class CraftTweakerGlobals {
     

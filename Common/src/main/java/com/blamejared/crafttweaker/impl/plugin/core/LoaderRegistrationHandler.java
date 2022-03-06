@@ -4,17 +4,19 @@ import com.blamejared.crafttweaker.api.plugin.ILoaderRegistrationHandler;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.google.common.collect.ImmutableMap;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 final class LoaderRegistrationHandler implements ILoaderRegistrationHandler {
     
-    private record LoaderRequest(String name, List<String> inheritedLoaders) {}
+    private record LoaderRequest(String name, Set<String> inheritedLoaders) {}
     
     private final Map<String, LoaderRequest> requests;
     
@@ -26,6 +28,7 @@ final class LoaderRegistrationHandler implements ILoaderRegistrationHandler {
     static Map<String, IScriptLoader> gather(final Consumer<ILoaderRegistrationHandler> populatingConsumer) {
         
         final LoaderRegistrationHandler handler = new LoaderRegistrationHandler();
+        handler.requests.put("*", new LoaderRequest("*", Collections.emptySet()));
         populatingConsumer.accept(handler);
         return handler.build();
     }
@@ -38,7 +41,8 @@ final class LoaderRegistrationHandler implements ILoaderRegistrationHandler {
             throw new IllegalArgumentException("Loader '" + name + "' was already registered");
         }
         
-        this.requests.put(name, new LoaderRequest(name, List.of(inheritedLoaders)));
+        final Stream<String> loaders = Stream.concat(Stream.of("*"), Arrays.stream(inheritedLoaders));
+        this.requests.put(name, new LoaderRequest(name, loaders.collect(Collectors.toUnmodifiableSet())));
     }
     
     Map<String, IScriptLoader> build() {
