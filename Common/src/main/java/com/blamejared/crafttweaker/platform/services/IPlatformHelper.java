@@ -75,6 +75,15 @@ public interface IPlatformHelper {
         return this.getPathFromGameDirectory(Path.of(path));
     }
     
+    default Path getRelativePathFromGameDirectory(final Path path) {
+        
+        return this.getGameDirectory().toAbsolutePath().relativize(path.toAbsolutePath());
+    }
+    
+    default Path getRelativePathFromGameDirectory(final String path) {
+        
+        return this.getRelativePathFromGameDirectory(Path.of(path));
+    }
     /**
      * Finds classes with the given annotation
      *

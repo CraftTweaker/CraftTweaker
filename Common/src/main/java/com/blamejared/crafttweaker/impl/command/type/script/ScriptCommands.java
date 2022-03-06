@@ -21,7 +21,7 @@ public final class ScriptCommands {
         CTCommands.registerCommand(new CommandImpl("log", new TranslatableComponent("crafttweaker.command.description.log"), builder -> {
             builder.executes(context -> {
                 ServerPlayer player = context.getSource().getPlayerOrException();
-                CommandUtilities.open(player, Services.PLATFORM.getPathFromGameDirectory(CraftTweakerConstants.LOG_PATH));
+                CommandUtilities.open(player, Services.PLATFORM.getRelativePathFromGameDirectory(CraftTweakerConstants.LOG_PATH));
                 return Command.SINGLE_SUCCESS;
             });
         }));
@@ -29,7 +29,7 @@ public final class ScriptCommands {
         CTCommands.registerCommand(new CommandImpl("scripts", new TranslatableComponent("crafttweaker.command.description.script"), builder -> {
             builder.executes(context -> {
                 ServerPlayer player = context.getSource().getPlayerOrException();
-                CommandUtilities.open(player, CraftTweakerAPI.getScriptsDirectory());
+                CommandUtilities.open(player, Services.PLATFORM.getRelativePathFromGameDirectory(CraftTweakerConstants.SCRIPTS_DIRECTORY));
                 return Command.SINGLE_SUCCESS;
             });
         }));
