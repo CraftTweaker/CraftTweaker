@@ -13,6 +13,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -90,6 +91,17 @@ public class ListData implements ICollectionData {
     public IData getAt(int index) {
         
         return NBTConverter.convert(getInternal().get(index));
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Nullable
+    public <T extends IData> T getData(Class<T> clazz, int index) {
+    
+        try {
+            return NBTConverter.convertTo(getInternal().get(index), clazz);
+        } catch(NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException("Unable to convert IData to " + clazz, e);
+        }
     }
     
     @Override

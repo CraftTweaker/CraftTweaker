@@ -26,6 +26,8 @@ import net.minecraft.nbt.LongNBT;
 import net.minecraft.nbt.ShortNBT;
 import net.minecraft.nbt.StringNBT;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class NBTConverter {
     
     public static IData convert(INBT nbt) {
@@ -61,6 +63,19 @@ public class NBTConverter {
             default:
                 return null;
         }
+    }
+    
+    public static <T extends IData> T convertTo(INBT nbt, Class<T> clazz) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        
+        if(nbt == null) {
+            return null;
+        }
+        
+        if(clazz == null) {
+            return (T) convert(nbt);
+        }
+        
+        return clazz.getConstructor(nbt.getClass()).newInstance(nbt);
     }
     
 }

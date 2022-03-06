@@ -12,6 +12,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -140,6 +141,20 @@ public class MapData implements IData {
         return NBTConverter.convert(getInternal().get(key));
     }
     
+    @ZenCodeType.Method
+    @ZenCodeType.Nullable
+    public <T extends IData> T getData(Class<T> clazz, String key) {
+        
+        if((clazz == null || clazz.equals(BoolData.class)) && boolDataKeys.contains(key)) {
+            return (T) new BoolData(getInternal().getByte(key) == 1);
+        }
+        try {
+            return NBTConverter.convertTo(getInternal().get(key), clazz);
+        } catch(NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException("Unable to convert IData to " + clazz, e);
+        }
+    }
+    
     /**
      * Checks if the Map contains the given key.
      *
@@ -237,7 +252,8 @@ public class MapData implements IData {
         for(Map.Entry<String, IData> dataEntry : dataMap.entrySet()) {
             if(!this.getInternal().contains(dataEntry.getKey())) {
                 return false;
-            } else if(!NBTConverter.convert(this.getInternal().get(dataEntry.getKey()))
+            } else if(!NBTConverter.convert(this.getInternal()
+                            .get(dataEntry.getKey()))
                     .contains(dataEntry.getValue())) {
                 return false;
             }
@@ -263,7 +279,9 @@ public class MapData implements IData {
             if(isValidIdentifier(key)) {
                 result.append(ZenKeywordUtil.sanitize(key));
             } else {
-                result.append("\"").append(ZenKeywordUtil.sanitize(key)).append("\"");
+                result.append("\"")
+                        .append(ZenKeywordUtil.sanitize(key))
+                        .append("\"");
             }
             
             result.append(": ");
@@ -305,7 +323,8 @@ public class MapData implements IData {
             }
             
             if(!indentation.isEmpty()) {
-                component.appendString("\n").appendString(Strings.repeat(indentation, indentDepth));
+                component.appendString("\n")
+                        .appendString(Strings.repeat(indentation, indentDepth));
             }
             
             component.appendString("}");
@@ -346,7 +365,7 @@ public class MapData implements IData {
     
     @Override
     public boolean equals(Object o) {
-    
+        
         if(this == o) {
             return true;
         }
