@@ -73,18 +73,18 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     @Deprecated
     public static boolean containsCustomManager(ResourceLocation location) {
         
-        return registeredTypes().containsKey(lookup(location));
+        return registeredTypes.containsKey(lookup(location));
     }
     
     @Deprecated
     public static IRecipeManager getCustomManager(ResourceLocation location) {
         
-        return registeredTypes().get(lookup(location));
+        return registeredTypes.get(lookup(location));
     }
     
     public static Collection<IRecipeManager<Recipe<?>>> getManagerInstances() {
         
-        return managerInstances().values();
+        return managerInstances.values();
     }
     
     public static IRecipeManager<Recipe<?>> getOrDefault(final ResourceLocation location) {
@@ -98,7 +98,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             return null;
         }
         
-        return registeredTypes().computeIfAbsent(type, RecipeManagerWrapper::makeOrNull);
+        return registeredTypes.computeIfAbsent(type, RecipeManagerWrapper::makeOrNull);
     }
     
     @ZenCodeType.Method
@@ -109,7 +109,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             throw new IllegalArgumentException("Unknown recipe type: " + location);
         }
         
-        return (T) registeredTypes().get(recipeType);
+        return (T) registeredTypes.get(recipeType);
     }
     
     private static Map<RecipeType<Recipe<?>>, IRecipeManager<Recipe<?>>> registeredTypes() {
@@ -142,8 +142,8 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     
     private void registerRecipeManager(Class<? extends IRecipeManager<Recipe<?>>> managerClass) {
         
-        if(managerInstances().containsKey(managerClass)) {
-            final IRecipeManager<Recipe<?>> manager = managerInstances().get(managerClass);
+        if(managerInstances.containsKey(managerClass)) {
+            final IRecipeManager<Recipe<?>> manager = managerInstances.get(managerClass);
             registerInstance(manager);
             return;
         }
@@ -153,8 +153,8 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             CraftTweakerAPI.LOGGER.error("Could not add RecipeManager for {}, please report to the author", managerClass);
             return;
         }
-        
-        managerInstances().put(managerClass, manager);
+    
+        managerInstances.put(managerClass, manager);
         registerInstance(manager);
     }
     
@@ -168,8 +168,8 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             CraftTweakerAPI.LOGGER.warn("No Name Annotation found on manager '{}', it will not be registered!", canonicalName);
             return;
         }
-        
-        registeredTypes().put(lookup(bracketResourceLocation), manager);
+    
+        registeredTypes.put(lookup(bracketResourceLocation), manager);
     }
     
     @Override
@@ -181,8 +181,8 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             throw new ParseException(position, "Invalid ResourceLocation, expected: <recipetype:modid:location>");
         }
         
-        if(registeredTypes().containsKey(lookup(resourceLocation))) {
-            return getCall(name, registeredTypes().get(lookup(resourceLocation)), position);
+        if(registeredTypes.containsKey(lookup(resourceLocation))) {
+            return getCall(name, registeredTypes.get(lookup(resourceLocation)), position);
         }
         
         if(Services.REGISTRY.recipeTypes().keySet().contains(resourceLocation)) {
