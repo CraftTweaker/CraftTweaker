@@ -74,6 +74,10 @@ public class CraftTweakerCommon {
         PLUGIN_MANAGER.get().broadcastEnd();
     }
     
+    public static PluginManager getPluginManager(){
+        return PLUGIN_MANAGER.get();
+    }
+    
     public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, Commands.CommandSelection environment) {
         
         CTCommands.init(dispatcher, environment);

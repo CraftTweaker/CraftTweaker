@@ -16,4 +16,6 @@ public interface ICraftTweakerPlugin {
     
     default void registerListeners(final IListenerRegistrationHandler handler) {}
     
+    default void registerVillagerTradeConverters(final IVillagerTradeRegistrationHandler handler) {}
+    
 }

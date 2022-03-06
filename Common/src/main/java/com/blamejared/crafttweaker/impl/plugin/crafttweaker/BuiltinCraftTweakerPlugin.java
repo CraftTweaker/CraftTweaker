@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.bracket.custom.EnumConstantBracketHandler
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.bracket.custom.TagBracketHandler;
 import com.blamejared.crafttweaker.api.bracket.custom.TagManagerBracketHandler;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.plugin.CraftTweakerPlugin;
 import com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin;
@@ -15,10 +16,22 @@ import com.blamejared.crafttweaker.api.plugin.ILoaderRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IRecipeHandlerRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IScriptLoadSourceRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IScriptRunModuleConfiguratorRegistrationHandler;
+import com.blamejared.crafttweaker.api.plugin.IVillagerTradeRegistrationHandler;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.manager.TagManagerWrapper;
 import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistryData;
+import com.blamejared.crafttweaker.api.villager.CTTradeObject;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
+import com.blamejared.crafttweaker.mixin.common.access.villager.AccessDyedArmorForEmeralds;
+import com.blamejared.crafttweaker.mixin.common.access.villager.AccessEmeraldForItems;
+import com.blamejared.crafttweaker.mixin.common.access.villager.AccessEnchantedItemForEmeralds;
+import com.blamejared.crafttweaker.mixin.common.access.villager.AccessItemsAndEmeraldsToItems;
+import com.blamejared.crafttweaker.mixin.common.access.villager.AccessItemsForEmeralds;
+import com.blamejared.crafttweaker.mixin.common.access.villager.AccessTippedArrowForItemsAndEmeralds;
+import com.blamejared.crafttweaker.platform.Services;
+import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 @CraftTweakerPlugin(CraftTweakerConstants.MOD_ID + ":builtin")
 @SuppressWarnings("unused") // Autowired
@@ -105,6 +118,63 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
                         .forEach(CrTTagRegistryData.INSTANCE::addTagImplementationClass);
             });
         });
+    }
+    
+    
+    @Override
+    public void registerVillagerTradeConverters(IVillagerTradeRegistrationHandler handler) {
+        
+        final IItemStack emerald = Services.PLATFORM.createMCItemStackMutable(new ItemStack(Items.EMERALD));
+        final IItemStack compass = Services.PLATFORM.createMCItemStackMutable(new ItemStack(Items.COMPASS));
+        final IItemStack book = Services.PLATFORM.createMCItemStackMutable(new ItemStack(Items.BOOK));
+        final IItemStack enchantedBook = Services.PLATFORM.createMCItemStackMutable(new ItemStack(Items.ENCHANTED_BOOK));
+        final IItemStack filledMap = Services.PLATFORM.createMCItemStackMutable(new ItemStack(Items.FILLED_MAP));
+        final IItemStack suspiciousStew = Services.PLATFORM.createMCItemStackMutable(new ItemStack(Items.SUSPICIOUS_STEW));
+        handler.registerTradeConverter(VillagerTrades.DyedArmorForEmeralds.class, trade -> new CTTradeObject(
+                emerald,
+                Services.PLATFORM.getEmptyIItemStack(),
+                Services.PLATFORM.createMCItemStackMutable(((AccessDyedArmorForEmeralds) trade).getItem()
+                        .getDefaultInstance())));
+        handler.registerTradeConverter(VillagerTrades.EmeraldForItems.class, trade -> new CTTradeObject(
+                Services.PLATFORM.createMCItemStackMutable(((AccessEmeraldForItems) trade).getItem()
+                        .getDefaultInstance()),
+                Services.PLATFORM.getEmptyIItemStack(),
+                emerald));
+        handler.registerTradeConverter(VillagerTrades.TreasureMapForEmeralds.class, trade -> new CTTradeObject(
+                emerald,
+                compass,
+                filledMap));
+        handler.registerTradeConverter(VillagerTrades.EmeraldsForVillagerTypeItem.class, trade -> new CTTradeObject(
+                // This trade has random inputs, there isn't a good way to get them, so just going to use air.
+                Services.PLATFORM.getEmptyIItemStack(),
+                Services.PLATFORM.getEmptyIItemStack(),
+                emerald));
+        handler.registerTradeConverter(VillagerTrades.EnchantBookForEmeralds.class, trade -> new CTTradeObject(
+                emerald,
+                book,
+                enchantedBook));
+        handler.registerTradeConverter(VillagerTrades.EnchantedItemForEmeralds.class, trade -> new CTTradeObject(
+                emerald,
+                Services.PLATFORM.getEmptyIItemStack(),
+                Services.PLATFORM.createMCItemStackMutable(((AccessEnchantedItemForEmeralds) trade).getItemStack())));
+        handler.registerTradeConverter(VillagerTrades.TippedArrowForItemsAndEmeralds.class, trade -> new CTTradeObject(
+                emerald,
+                Services.PLATFORM.createMCItemStackMutable(((AccessTippedArrowForItemsAndEmeralds) trade).getFromItem()
+                        .getDefaultInstance()),
+                Services.PLATFORM.createMCItemStackMutable(((AccessTippedArrowForItemsAndEmeralds) trade).getToItem())));
+        handler.registerTradeConverter(VillagerTrades.ItemsAndEmeraldsToItems.class, trade -> new CTTradeObject(
+                emerald,
+                Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) trade).getFromItem()),
+                Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) trade).getToItem())));
+        handler.registerTradeConverter(VillagerTrades.EnchantBookForEmeralds.class, trade -> new CTTradeObject(
+                emerald,
+                Services.PLATFORM.getEmptyIItemStack(),
+                Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) trade).getItemStack())));
+        handler.registerTradeConverter(VillagerTrades.SuspiciousStewForEmerald.class, trade -> new CTTradeObject(
+                emerald,
+                Services.PLATFORM.getEmptyIItemStack(),
+                suspiciousStew));
+        
     }
     
 }
