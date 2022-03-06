@@ -118,7 +118,8 @@ public final class CrTTagRegistryData {
             throw new IllegalArgumentException("Could not find registry for name " + tagFolder);
         }
         
-        final IScriptLoader loader = null;
+        
+        final IScriptLoader loader = CraftTweakerAPI.getScriptRunManager().currentRunInfo().loader();
         final Class<?> elementClass = allInstances.get(tagFolder).getElementClass();
         final Optional<String> s = CraftTweakerAPI.getRegistry().getZenClassRegistry().getNameFor(loader, elementClass);
         return s.orElseThrow(() -> new IllegalArgumentException("Cannot find ZC type for name " + tagFolder));

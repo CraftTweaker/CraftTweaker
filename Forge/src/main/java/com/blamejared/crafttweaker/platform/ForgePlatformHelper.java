@@ -14,7 +14,6 @@ import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistryData;
 import com.blamejared.crafttweaker.api.util.HandleHelper;
 import com.blamejared.crafttweaker.api.util.StringUtils;
 import com.blamejared.crafttweaker.api.villager.CTTradeObject;
-import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.impl.loot.CraftTweakerPrivilegedLootModifierMap;
 import com.blamejared.crafttweaker.impl.loot.ForgeLootModifierMapAdapter;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
@@ -261,12 +260,8 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @SuppressWarnings({"rawtypes"})
     public void registerTagManagerFromRegistry(ResourceLocation name, ForgeRegistry<?> registry, String tagFolder) {
         
-        final IScriptLoader loader = null;
         final Class<?> registrySuperType = registry.getRegistrySuperType();
-        final Optional<String> s = CraftTweakerAPI.getRegistry()
-                .getZenClassRegistry()
-                .getNameFor(loader, registrySuperType);
-        if(s.isEmpty()) {
+        if(CraftTweakerAPI.getRegistry().getAllLoaders().stream().map(loader -> CraftTweakerAPI.getRegistry().getZenClassRegistry().getNameFor(loader, registrySuperType)).allMatch(Optional::isEmpty)) {
             CraftTweakerAPI.LOGGER.debug("Could not register tag manager for " + tagFolder);
             return;
         }

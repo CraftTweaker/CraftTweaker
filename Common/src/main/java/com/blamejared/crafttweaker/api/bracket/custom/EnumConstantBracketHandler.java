@@ -62,7 +62,7 @@ public class EnumConstantBracketHandler implements BracketExpressionParser {
             throw new ParseException(position, "Invalid ResourceLocation, expected: <constant:modid:location>");
         }
         
-        return CraftTweakerAPI.getRegistry().getEnumBracketFor(null, type) // TODO("Loader")
+        return CraftTweakerAPI.getRegistry().getEnumBracketFor(CraftTweakerAPI.getScriptRunManager().currentRunInfo().loader(), type)
                 .map(it -> this.getCall(contents, it, type, name, position))
                 .orElseThrow(() -> new ParseException(position, String.format("Unknown enum type <constant:%s:%s>", type, name)));
     }
@@ -75,7 +75,7 @@ public class EnumConstantBracketHandler implements BracketExpressionParser {
         final ParsedExpressionMember enumConstantBracketHandler = new ParsedExpressionMember(position, bracket, "EnumConstantBracketHandler", Collections.emptyList());
         final ParsedExpressionMember getRecipeManager = new ParsedExpressionMember(position, enumConstantBracketHandler, "getEnum", Collections.emptyList());
         
-        final IScriptLoader loader = null; // TODO("")
+        final IScriptLoader loader = CraftTweakerAPI.getScriptRunManager().currentRunInfo().loader();
         final String nameContent = CraftTweakerAPI.getRegistry()
                 .getZenClassRegistry()
                 .getNameFor(loader, bracketEnum)
