@@ -39,7 +39,7 @@ final class EnumBracketParserRegistrationManager {
             return;
         }
         
-        this.tryRegistration(clazz, loader, clazz.getAnnotation(BracketEnum.class).value(), handler);
+        this.tryRegistration(nativeType, loader, clazz.getAnnotation(BracketEnum.class).value(), handler);
     }
     
     private void tryRegistration(final Class<?> clazz, final String loader, final String value, final IBracketParserRegistrationHandler handler) {
