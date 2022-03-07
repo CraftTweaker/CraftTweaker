@@ -5,8 +5,10 @@ import org.openzen.zencode.java.module.JavaNativeTypeConversionContext;
 import org.openzen.zencode.java.module.converters.JavaNativeHeaderConverter;
 import org.openzen.zencode.java.module.converters.JavaNativePackageInfo;
 import org.openzen.zencode.java.module.converters.JavaNativeTypeConverter;
+import org.openzen.zencode.shared.CodePosition;
 import org.openzen.zenscript.codemodel.FunctionParameter;
 import org.openzen.zenscript.codemodel.expression.Expression;
+import org.openzen.zenscript.codemodel.expression.NullExpression;
 import org.openzen.zenscript.codemodel.type.TypeID;
 
 import java.lang.reflect.Parameter;
@@ -39,7 +41,7 @@ final class CtJavaNativeHeaderConverter extends JavaNativeHeaderConverter {
         if(parameter.isAnnotationPresent(ZenCodeType.Optional.class)) {
             
             this.lazyValues.add(new DefaultedLazyValue(parameter, type, functionParameter));
-            return null;
+            return new NullExpression(CodePosition.BUILTIN);
         }
         
         return super.getDefaultValue(parameter, type, functionParameter);
