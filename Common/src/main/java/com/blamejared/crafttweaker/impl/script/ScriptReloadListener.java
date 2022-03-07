@@ -19,9 +19,11 @@ import net.minecraft.world.item.crafting.RecipeManager;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
@@ -39,7 +41,9 @@ import java.util.function.Supplier;
 public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
     
     private static final class ScriptsDiscoverer extends SimpleFileVisitor<Path> {
-        
+    
+        private static final PathMatcher scriptFileMatcher = FileSystems.getDefault().getPathMatcher("glob:*.zs");
+    
         private final Consumer<Path> adder;
         
         ScriptsDiscoverer(final Consumer<Path> adder) {
@@ -51,7 +55,7 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
         public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
             
             super.visitFile(file, attrs);
-            if(attrs.isRegularFile()) {
+            if(attrs.isRegularFile()&& scriptFileMatcher.matches(file)) {
                 this.adder.accept(file);
             }
             return FileVisitResult.CONTINUE;
