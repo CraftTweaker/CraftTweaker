@@ -17,7 +17,7 @@ public class ExpandICapabilityProvider {
     @ZenCodeType.Method
     public static <T> T getCapability(ICapabilityProvider internal, Class<T> clazz, Capability<T> cap, @ZenCodeType.Nullable MCDirection side) {
         
-        return internal.getCapability(cap, side.getInternal()).resolve().orElse(null);
+        return internal.getCapability(cap, side == null ? null : side.getInternal()).resolve().orElse(null);
     }
     
     @ZenCodeType.Nullable
