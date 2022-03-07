@@ -27,13 +27,13 @@ public class ExpandIItemHandler {
     }
     
     @ZenCodeType.Method
-    public static IItemStack insertItem(IItemHandler internal, int slot, IItemStack stack, boolean simulate) {
+    public static IItemStack insertItem(IItemHandler internal, int slot, IItemStack stack, @ZenCodeType.OptionalBoolean boolean simulate) {
         
         return new MCItemStack(internal.insertItem(slot, stack.getInternal(), simulate));
     }
     
     @ZenCodeType.Method
-    public static IItemStack extractItem(IItemHandler internal, int slot, int amount, boolean simulate) {
+    public static IItemStack extractItem(IItemHandler internal, int slot, int amount, @ZenCodeType.OptionalBoolean boolean simulate) {
         
         return new MCItemStack(internal.extractItem(slot, amount, simulate));
     }
