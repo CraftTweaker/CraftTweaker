@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRun;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
+import com.blamejared.crafttweaker.impl.helper.FileGathererHelper;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.chat.MutableComponent;
@@ -19,13 +20,9 @@ import net.minecraft.world.item.crafting.RecipeManager;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,29 +36,6 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
-    
-    private static final class ScriptsDiscoverer extends SimpleFileVisitor<Path> {
-    
-        private static final PathMatcher scriptFileMatcher = FileSystems.getDefault().getPathMatcher("glob:*.zs");
-    
-        private final Consumer<Path> adder;
-        
-        ScriptsDiscoverer(final Consumer<Path> adder) {
-            
-            this.adder = adder;
-        }
-        
-        @Override
-        public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
-            
-            super.visitFile(file, attrs);
-            if(attrs.isRegularFile()&& scriptFileMatcher.matches(file)) {
-                this.adder.accept(file);
-            }
-            return FileVisitResult.CONTINUE;
-        }
-        
-    }
     
     private static final MutableComponent MSG_RELOAD_STARTING = new TranslatableComponent("crafttweaker.reload.start");
     private static final MutableComponent MSG_RELOAD_COMPLETE = new TranslatableComponent("crafttweaker.reload.complete");
@@ -124,9 +98,10 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
     private Pair<Path, List<Path>> gatherScripts() {
         
         final Path root = CraftTweakerAPI.getScriptsDirectory();
+        final PathMatcher matcher = root.getFileSystem().getPathMatcher("glob:**.zs");
         final List<Path> children = new ArrayList<>();
         try {
-            Files.walkFileTree(root, new ScriptsDiscoverer(children::add));
+            Files.walkFileTree(root, FileGathererHelper.of(matcher, children::add));
         } catch(final IOException e) {
             CraftTweakerAPI.LOGGER.error("Unable to read script files! This is serious", e);
         }

@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRun;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunInfo;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunManager;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
+import com.blamejared.crafttweaker.impl.helper.FileGathererHelper;
 import com.google.common.base.Suppliers;
 import org.openzen.zencode.shared.SourceFile;
 
@@ -17,6 +18,8 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -118,9 +121,10 @@ public final class ScriptRunManager implements IScriptRunManager {
     private List<Path> lookupScriptFiles(final Path root) {
         
         try {
-            final ScriptRunGathererVisitor visitor = new ScriptRunGathererVisitor();
-            Files.walkFileTree(root, visitor);
-            return visitor.files();
+            final List<Path> files = new ArrayList<>();
+            final PathMatcher matcher = root.getFileSystem().getPathMatcher("glob:**.zs");
+            Files.walkFileTree(root, FileGathererHelper.of(matcher, files::add));
+            return files;
         } catch(final IOException e) {
             throw new UncheckedIOException(e);
         }
