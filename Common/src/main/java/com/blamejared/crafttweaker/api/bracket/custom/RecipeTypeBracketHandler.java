@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -70,18 +71,6 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
         };
     }
     
-    @Deprecated
-    public static boolean containsCustomManager(ResourceLocation location) {
-        
-        return registeredTypes.containsKey(lookup(location));
-    }
-    
-    @Deprecated
-    public static IRecipeManager getCustomManager(ResourceLocation location) {
-        
-        return registeredTypes.get(lookup(location));
-    }
-    
     public static Collection<IRecipeManager<Recipe<?>>> getManagerInstances() {
         
         return managerInstances.values();
@@ -98,7 +87,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             return null;
         }
         
-        return registeredTypes.computeIfAbsent(type, RecipeManagerWrapper::makeOrNull);
+        return registeredTypes().computeIfAbsent(type, RecipeManagerWrapper::makeOrNull);
     }
     
     @ZenCodeType.Method
@@ -109,7 +98,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             throw new IllegalArgumentException("Unknown recipe type: " + location);
         }
         
-        return (T) registeredTypes.get(recipeType);
+        return (T) registeredTypes().get(recipeType);
     }
     
     private static Map<RecipeType<Recipe<?>>, IRecipeManager<Recipe<?>>> registeredTypes() {
@@ -153,7 +142,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             CraftTweakerAPI.LOGGER.error("Could not add RecipeManager for {}, please report to the author", managerClass);
             return;
         }
-    
+        
         managerInstances.put(managerClass, manager);
         registerInstance(manager);
     }
@@ -168,7 +157,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             CraftTweakerAPI.LOGGER.warn("No Name Annotation found on manager '{}', it will not be registered!", canonicalName);
             return;
         }
-    
+        
         registeredTypes.put(lookup(bracketResourceLocation), manager);
     }
     
@@ -181,8 +170,8 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             throw new ParseException(position, "Invalid ResourceLocation, expected: <recipetype:modid:location>");
         }
         
-        if(registeredTypes.containsKey(lookup(resourceLocation))) {
-            return getCall(name, registeredTypes.get(lookup(resourceLocation)), position);
+        if(registeredTypes().containsKey(lookup(resourceLocation))) {
+            return getCall(name, registeredTypes().get(lookup(resourceLocation)), position);
         }
         
         if(Services.REGISTRY.recipeTypes().keySet().contains(resourceLocation)) {
@@ -224,17 +213,16 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     }
     
     private static RecipeType<Recipe<?>> lookup(final ResourceLocation location) {
-        //TODO confirm this is fine
+        
         return (RecipeType<Recipe<?>>) Services.REGISTRY.recipeTypes().get(location);
     }
     
     public static Supplier<Stream<String>> getDumperData() {
         
-        return () -> CraftTweakerAPI.getRegistry()
-                .getAllLoaders()
-                .stream()
-                .map(CraftTweakerAPI.getRegistry()::getAllEnumsForEnumBracket)
-                .flatMap(Collection::stream);
+        return () -> Services.REGISTRY.recipeTypes()
+                .keyStream()
+                .filter(rl -> !rl.toString().equals("crafttweaker:scripts"))
+                .map(rl -> String.format(Locale.ENGLISH, "<recipetype:%s>", rl));
     }
     
 }
