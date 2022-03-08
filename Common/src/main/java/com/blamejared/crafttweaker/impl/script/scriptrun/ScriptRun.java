@@ -70,10 +70,10 @@ final class ScriptRun implements IScriptRun {
         }
         
         CraftTweakerAPI.LOGGER.info("Undoing previous actions");
-        this.info.appliedActions()
+        info.appliedActions()
                 .stream()
                 .filter(IUndoableAction.class::isInstance)
-                .filter(it -> it.shouldApplyOn(this.info.loadSource()))
+                .filter(it -> it.shouldApplyOn(info.loadSource()))
                 .map(IUndoableAction.class::cast)
                 .peek(it -> CraftTweakerAPI.LOGGER.info(it.describeUndo()))
                 .forEach(IUndoableAction::undo);
