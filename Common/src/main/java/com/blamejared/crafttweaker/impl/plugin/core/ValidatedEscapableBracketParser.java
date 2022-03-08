@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.plugin.core;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.util.ParseUtil;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
 import org.openzen.zencode.shared.CodePosition;
@@ -20,13 +21,11 @@ import org.openzen.zenscript.parser.expression.ParsedExpressionCall;
 import org.openzen.zenscript.parser.expression.ParsedExpressionCast;
 import org.openzen.zenscript.parser.expression.ParsedExpressionMember;
 import org.openzen.zenscript.parser.expression.ParsedExpressionString;
-import org.openzen.zenscript.parser.expression.ParsedExpressionVariable;
 import org.openzen.zenscript.parser.type.ParsedTypeBasic;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -74,13 +73,7 @@ final class ValidatedEscapableBracketParser implements BracketExpressionParser {
             final String ownerName = registry.getNameFor(loader, owner).orElseThrow();
             final String[] packages = ownerName.split(PACKAGE_SEPARATOR);
             
-            return Arrays.stream(packages)
-                    .skip(1L)
-                    .reduce(
-                            (ParsedExpression) new ParsedExpressionVariable(this.position, packages[0], null),
-                            (prev, next) -> new ParsedExpressionMember(this.position, prev, next, null),
-                            (a, b) -> {throw new UnsupportedOperationException("Never called");}
-                    );
+            return ParseUtil.explode(this.position,ownerName);
         }
         
         private ParsedExpression compileMethodReference(final ParsedExpression classCall, final Method target) {
