@@ -171,7 +171,7 @@ public final class DumpCommands {
                             .map(level -> levelToTrades.getOrDefault(level, new VillagerTrades.ItemListing[0]))
                             .flatMap(Arrays::stream)
                             .forEach(iTrade -> {
-                                String tradeStr = "Unable to display trade.";
+                                String tradeStr = " - Unable to display trade.";
                                 if(CTVillagerTrades.TRADE_CONVERTER.containsKey(iTrade.getClass())) {
                                     tradeStr = CTVillagerTrades.TRADE_CONVERTER.get(iTrade.getClass())
                                             .apply(iTrade)
@@ -198,7 +198,7 @@ public final class DumpCommands {
                         .map(level -> VillagerTrades.WANDERING_TRADER_TRADES.getOrDefault(level, new VillagerTrades.ItemListing[0]))
                         .flatMap(Arrays::stream)
                         .forEach(iTrade -> {
-                            String tradeStr = "Unable to display trade.";
+                            String tradeStr = " - Unable to display trade.";
                             if(CTVillagerTrades.TRADE_CONVERTER.containsKey(iTrade.getClass())) {
                                 tradeStr = CTVillagerTrades.TRADE_CONVERTER.get(iTrade.getClass())
                                         .apply(iTrade)
