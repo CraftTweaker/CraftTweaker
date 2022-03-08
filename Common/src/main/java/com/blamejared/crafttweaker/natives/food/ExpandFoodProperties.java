@@ -45,7 +45,7 @@ public class ExpandFoodProperties {
     
     @ZenCodeType.Method
     @ZenCodeType.Setter("saturationModifier")
-    public static FoodProperties setNutrition(FoodProperties internal, float saturationModifier) {
+    public static FoodProperties setSaturationModifier(FoodProperties internal, float saturationModifier) {
         
         return getbuilder(internal).saturationMod(saturationModifier).build();
     }
