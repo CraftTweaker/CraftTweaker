@@ -43,9 +43,23 @@ public class ExpandFoodProperties {
         return internal.getSaturationModifier();
     }
     
+    /**
+     * Replaced by `setSaturationModifier`, use that method instead of this.
+     *
+     * @param saturationModifier the new saturation modifier
+     *
+     * @return this object for chaining
+     */
+    @Deprecated(forRemoval = true)
+    @ZenCodeType.Method
+    public static FoodProperties setNutrition(FoodProperties internal, float saturationModifier) {
+        
+        return getbuilder(internal).saturationMod(saturationModifier).build();
+    }
+    
     @ZenCodeType.Method
     @ZenCodeType.Setter("saturationModifier")
-    public static FoodProperties setNutrition(FoodProperties internal, float saturationModifier) {
+    public static FoodProperties setSaturationModifier(FoodProperties internal, float saturationModifier) {
         
         return getbuilder(internal).saturationMod(saturationModifier).build();
     }
