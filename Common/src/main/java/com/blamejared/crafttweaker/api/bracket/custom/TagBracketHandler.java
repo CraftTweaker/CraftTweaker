@@ -1,5 +1,7 @@
 package com.blamejared.crafttweaker.api.bracket.custom;
 
+import com.blamejared.crafttweaker.api.tag.MCTag;
+import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistry;
 import com.blamejared.crafttweaker.api.util.ParseUtil;
 import com.blamejared.crafttweaker.natives.resource.ExpandResourceLocation;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +20,8 @@ import org.openzen.zenscript.parser.expression.ParsedNewExpression;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class TagBracketHandler implements BracketExpressionParser {
     
@@ -66,6 +70,15 @@ public class TagBracketHandler implements BracketExpressionParser {
         arguments.add(new ParsedExpressionString(position, location.getPath(), false));
         final ParsedCallArguments newCallArguments = new ParsedCallArguments(null, arguments);
         return new ParsedNewExpression(position, ParseUtil.readParsedType(ExpandResourceLocation.ZC_CLASS_NAME, position), newCallArguments);
+    }
+    
+    public static Supplier<Stream<String>> getDumperData() {
+        
+        return () -> CrTTagRegistry.INSTANCE.getAllManagers()
+                .stream()
+                .flatMap(tagManager -> tagManager.getAllTags().stream())
+                .map(MCTag::getCommandString)
+                .distinct();
     }
     
 }

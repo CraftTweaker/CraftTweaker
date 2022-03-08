@@ -106,18 +106,6 @@ public class BracketDumpers {
                 .collect(Collectors.toList());
     }
     
-    
-//    @ZenCodeType.Method
-//    @BracketDumper("tag")
-//    public static Collection<String> getTagDump() {
-//
-//        return CrTTagRegistry.INSTANCE.getAllManagers()
-//                .stream()
-//                .flatMap(tagManager -> tagManager.getAllTags().stream())
-//                .map(MCTag::getCommandString)
-//                .collect(Collectors.toSet());
-//    }
-    
     @ZenCodeType.Method
     @BracketDumper("profession")
     public static Collection<String> getProfessionDump() {

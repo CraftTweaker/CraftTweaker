@@ -96,7 +96,7 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         
         final TagManagerBracketHandler tagManagerBEP = new TagManagerBracketHandler(CrTTagRegistryData.INSTANCE);
         handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "tagmanager", tagManagerBEP);
-        handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "tag", new TagBracketHandler(tagManagerBEP));
+        handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "tag", new TagBracketHandler(tagManagerBEP), new IBracketParserRegistrationHandler.DumperData("tag", TagBracketHandler.getDumperData()));
     }
     
     @Override
