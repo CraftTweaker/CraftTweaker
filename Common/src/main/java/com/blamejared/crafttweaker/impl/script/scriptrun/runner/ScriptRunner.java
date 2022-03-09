@@ -81,7 +81,6 @@ sealed public abstract class ScriptRunner permits ExecutingScriptRunner, Formatt
         final BracketExpressionParser parser = this.createParser(registry);
         final Collection<DecoratedJavaNativeModule> modules = this.populateModules(converterBuilder, registry, parser);
         CraftTweakerAPI.LOGGER.info("Successfully initialized modules {}", modules);
-        converterBuilder.reinitializeLazyHeaderValues();
         return parser;
     }
     
@@ -143,6 +142,10 @@ sealed public abstract class ScriptRunner permits ExecutingScriptRunner, Formatt
         module.registerBEP(parser);
         configurator.accept(module);
         this.engine().registerNativeProvided(module);
+        
+        if(builder instanceof CtJavaNativeConverterBuilder ctBuilder){
+            ctBuilder.reinitializeLazyHeaderValues();
+        }
         return module;
     }
     
