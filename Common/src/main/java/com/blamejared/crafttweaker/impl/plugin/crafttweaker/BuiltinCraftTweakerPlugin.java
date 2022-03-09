@@ -166,7 +166,7 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
                 emerald,
                 Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) trade).getFromItem()),
                 Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) trade).getToItem())));
-        handler.registerTradeConverter(VillagerTrades.EnchantBookForEmeralds.class, trade -> new CTTradeObject(
+        handler.registerTradeConverter(VillagerTrades.ItemsForEmeralds.class, trade -> new CTTradeObject(
                 emerald,
                 Services.PLATFORM.getEmptyIItemStack(),
                 Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) trade).getItemStack())));
