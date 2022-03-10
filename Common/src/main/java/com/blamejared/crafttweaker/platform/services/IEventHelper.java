@@ -46,8 +46,6 @@ public interface IEventHelper {
     
     Map<IIngredient, List<Consumer<ItemAttributeModifierBase>>> ATTRIBUTE_MODIFIERS = new HashMap<>();
     
-    void fireCTCommandRegisterEvent();
-    
     IGatherReplacementExclusionEvent fireGatherReplacementExclusionEvent(final IRecipeManager manager);
     
     void setBurnTime(IIngredient ingredient, int burnTime);

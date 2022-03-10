@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.plugin.core;
 
 import com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler;
+import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin;
 import com.blamejared.crafttweaker.api.plugin.IJavaNativeIntegrationRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IListenerRegistrationHandler;
@@ -16,55 +17,61 @@ record DecoratedCraftTweakerPlugin(ResourceLocation id, ICraftTweakerPlugin plug
     @Override
     public void registerLoaders(final ILoaderRegistrationHandler handler) {
         
-        this.plugin.registerLoaders(handler);
+        this.plugin().registerLoaders(handler);
     }
     
     @Override
     public void registerLoadSource(final IScriptLoadSourceRegistrationHandler handler) {
         
-        this.plugin.registerLoadSource(handler);
+        this.plugin().registerLoadSource(handler);
     }
     
     @Override
     public void registerModuleConfigurators(final IScriptRunModuleConfiguratorRegistrationHandler handler) {
         
-        this.plugin.registerModuleConfigurators(handler);
+        this.plugin().registerModuleConfigurators(handler);
     }
     
     @Override
     public void registerBracketParsers(final IBracketParserRegistrationHandler handler) {
         
-        this.plugin.registerBracketParsers(handler);
+        this.plugin().registerBracketParsers(handler);
     }
     
     @Override
     public void registerRecipeHandlers(final IRecipeHandlerRegistrationHandler handler) {
         
-        this.plugin.registerRecipeHandlers(handler);
+        this.plugin().registerRecipeHandlers(handler);
     }
     
     @Override
     public void manageJavaNativeIntegration(final IJavaNativeIntegrationRegistrationHandler handler) {
         
-        this.plugin.manageJavaNativeIntegration(handler);
+        this.plugin().manageJavaNativeIntegration(handler);
     }
     
     @Override
     public void registerListeners(final IListenerRegistrationHandler handler) {
         
-        this.plugin.registerListeners(handler);
+        this.plugin().registerListeners(handler);
     }
     
     @Override
-    public void registerVillagerTradeConverters(IVillagerTradeRegistrationHandler handler) {
+    public void registerVillagerTradeConverters(final IVillagerTradeRegistrationHandler handler) {
         
-        this.plugin.registerVillagerTradeConverters(handler);
+        this.plugin().registerVillagerTradeConverters(handler);
+    }
+    
+    @Override
+    public void registerCommands(final ICommandRegistrationHandler handler) {
+        
+        this.plugin().registerCommands(handler);
     }
     
     @Override
     public String toString() {
         
-        return this.id.toString();
+        return this.id().toString();
     }
     
 }

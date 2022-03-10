@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.api.bracket.custom.TagManagerBracketHandler;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.plugin.CraftTweakerPlugin;
 import com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler;
+import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin;
 import com.blamejared.crafttweaker.api.plugin.IJavaNativeIntegrationRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IListenerRegistrationHandler;
@@ -22,6 +23,15 @@ import com.blamejared.crafttweaker.api.tag.manager.TagManagerWrapper;
 import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistryData;
 import com.blamejared.crafttweaker.api.villager.CTTradeObject;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
+import com.blamejared.crafttweaker.impl.command.type.DumpCommands;
+import com.blamejared.crafttweaker.impl.command.type.HandCommands;
+import com.blamejared.crafttweaker.impl.command.type.InventoryCommands;
+import com.blamejared.crafttweaker.impl.command.type.MiscCommands;
+import com.blamejared.crafttweaker.impl.command.type.ModCommands;
+import com.blamejared.crafttweaker.impl.command.type.RecipeCommands;
+import com.blamejared.crafttweaker.impl.command.type.conflict.ConflictCommand;
+import com.blamejared.crafttweaker.impl.command.type.script.ScriptCommands;
+import com.blamejared.crafttweaker.impl.command.type.script.example.ExamplesCommand;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessDyedArmorForEmeralds;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessEmeraldForItems;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessEnchantedItemForEmeralds;
@@ -175,6 +185,22 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
                 Services.PLATFORM.getEmptyIItemStack(),
                 suspiciousStew));
         
+    }
+    
+    @Override
+    public void registerCommands(final ICommandRegistrationHandler handler) {
+        
+        //TODO("Determine what permission to use")
+        ConflictCommand.registerCommands(handler);
+        DumpCommands.registerCommands(handler);
+        InventoryCommands.registerCommands(handler);
+        HandCommands.registerCommands(handler);
+        ScriptCommands.registerCommands(handler);
+        MiscCommands.registerCommands(handler);
+        ModCommands.registerCommands(handler);
+        RecipeCommands.registerCommands(handler);
+        ExamplesCommand.registerCommand(handler);
+        DumpCommands.registerDumpers(handler);
     }
     
 }

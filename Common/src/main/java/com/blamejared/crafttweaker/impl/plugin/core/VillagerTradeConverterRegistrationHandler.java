@@ -8,7 +8,15 @@ import net.minecraft.world.entity.npc.VillagerTrades;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public final class VillagerTradeConverterRegistrationHandler implements IVillagerTradeRegistrationHandler {
+final class VillagerTradeConverterRegistrationHandler implements IVillagerTradeRegistrationHandler {
+    
+    private VillagerTradeConverterRegistrationHandler() {}
+    
+    static void gather(final Consumer<IVillagerTradeRegistrationHandler> consumer) {
+        
+        final VillagerTradeConverterRegistrationHandler handler = new VillagerTradeConverterRegistrationHandler();
+        consumer.accept(handler);
+    }
     
     @Override
     @SuppressWarnings("unchecked")
@@ -16,12 +24,6 @@ public final class VillagerTradeConverterRegistrationHandler implements IVillage
         
         // TODO("1.19: Verify if this needs a registry or something else")
         CTVillagerTrades.TRADE_CONVERTER.put((Class<VillagerTrades.ItemListing>) tradeClass, (Function<VillagerTrades.ItemListing, CTTradeObject>) tradeConverter);
-    }
-    
-    static void gather(final Consumer<IVillagerTradeRegistrationHandler> consumer) {
-        
-        final VillagerTradeConverterRegistrationHandler handler = new VillagerTradeConverterRegistrationHandler();
-        consumer.accept(handler);
     }
     
 }

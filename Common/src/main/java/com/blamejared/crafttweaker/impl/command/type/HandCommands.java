@@ -1,14 +1,13 @@
 package com.blamejared.crafttweaker.impl.command.type;
 
 import com.blamejared.crafttweaker.api.command.CommandUtilities;
-import com.blamejared.crafttweaker.api.command.boilerplate.CommandImpl;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.base.visitor.DataToTextComponentVisitor;
+import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.manager.TagManagerBlock;
 import com.blamejared.crafttweaker.api.tag.manager.TagManagerItem;
-import com.blamejared.crafttweaker.impl.command.CTCommands;
 import com.blamejared.crafttweaker.natives.block.ExpandBlock;
 import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
 import com.blamejared.crafttweaker.natives.entity.attribute.ExpandAttribute;
@@ -47,131 +46,157 @@ public final class HandCommands {
     
     private HandCommands() {}
     
-    public static void registerCommands() {
+    public static void registerCommands(final ICommandRegistrationHandler handler) {
         
-        CTCommands.registerCommand(new CommandImpl("hand", new TranslatableComponent("crafttweaker.command.description.hand"), builder -> builder.executes(context -> {
-            ServerPlayer player = context.getSource().getPlayerOrException();
-            ItemStack stack = player.getMainHandItem();
-            final Item item = stack.getItem();
-            
-            sendBasicItemInformation(player, stack);
-            
-            if(item instanceof BlockItem) {
-                sendBlockInformation(player, (BlockItem) stack.getItem());
-            }
-            
-            if(item instanceof BucketItem && Services.PLATFORM.getBucketContent(((BucketItem) item)) != Fluids.EMPTY) {
-                sendBucketInformation(player, (BucketItem) stack.getItem());
-            }
-            // TODO forge fluid handlers
-            //                stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
-            //                        .ifPresent(iFluidHandlerItem -> sendFluidInformation(player, iFluidHandlerItem));
-            
-            sendTagsInformation(player, item);
-            return Command.SINGLE_SUCCESS;
-        })));
-        
-        CTCommands.registerCommand("hand", new CommandImpl("registry_name", new TranslatableComponent("crafttweaker.command.description.hand.registryname"), builder -> builder.executes(context -> {
-            ItemStack mainHandItem = context.getSource()
-                    .getPlayerOrException()
-                    .getMainHandItem();
-            sendCopyingHand(context.getSource()
-                    .getPlayerOrException(), new TranslatableComponent("crafttweaker.command.misc.item"), Services.REGISTRY.getRegistryKey(mainHandItem.getItem())
-                    .toString());
-            return Command.SINGLE_SUCCESS;
-        })));
-        
-        CTCommands.registerCommand("hand", new CommandImpl("data", new TranslatableComponent("crafttweaker.command.description.hand.data"), builder -> builder.executes(context -> {
-            ServerPlayer player = context.getSource()
-                    .getPlayerOrException();
-            ItemStack stack = player.getMainHandItem();
-            if(!stack.hasTag()) {
-                CommandUtilities.send(new TranslatableComponent("crafttweaker.command.hand.no.data"), player);
-                return 0;
-            }
-            
-            sendCopyingHand(player, new TranslatableComponent("crafttweaker.command.misc.data"), new MapData(stack.getTag()).accept(new DataToTextComponentVisitor(" ", 0))
-                    .getString());
-            return Command.SINGLE_SUCCESS;
-        })));
-        
-        CTCommands.registerCommand("hand", new CommandImpl("tags", new TranslatableComponent("crafttweaker.command.description.hand.tags"), builder -> builder.executes(context -> {
-            ServerPlayer player = context.getSource()
-                    .getPlayerOrException();
-            ItemStack stack = player.getMainHandItem();
-            final Collection<String> tags = sendTagsInformation(player, stack.getItem());
-            
-            if(tags.isEmpty()) {
-                CommandUtilities.send(new TranslatableComponent("crafttweaker.command.hand.no.tags"), player);
-                return Command.SINGLE_SUCCESS;
-            }
-            
-            tags.stream()
-                    .findFirst()
-                    .ifPresent(it -> CommandUtilities.copy(player, it));
-            return Command.SINGLE_SUCCESS;
-        })));
-        
-        
-        CTCommands.registerCommand("hand", new CommandImpl("vanilla", new TranslatableComponent("crafttweaker.command.description.hand.vanilla"), builder -> builder.executes(context -> {
-            ServerPlayer player = context.getSource()
-                    .getPlayerOrException();
-            ItemStack stack = player.getMainHandItem();
-            
-            final Item item = stack.getItem();
-            
-            sendBasicVanillaItemInformation(player, stack);
-            
-            if(stack.hasTag()) {
-                sendVanillaDataInformation(player, Objects.requireNonNull(stack.getTag()));
-            }
-            
-            if(item instanceof BucketItem && Services.PLATFORM.getBucketContent(((BucketItem) item)) != Fluids.EMPTY) {
-                sendVanillaBucketInformation(player, (BucketItem) stack.getItem());
-            }
-            
-            sendVanillaTagsInformation(player, item);
-            return Command.SINGLE_SUCCESS;
-        })));
-        
-        CTCommands.registerCommand("hand", new CommandImpl("attributes", new TranslatableComponent("crafttweaker.command.description.hand.attributes"), builder -> builder.executes(context -> {
-            ServerPlayer player = context.getSource()
-                    .getPlayerOrException();
-            ItemStack stack = player.getMainHandItem();
-            
-            
-            for(EquipmentSlot slot : EquipmentSlot.values()) {
-                Map<Attribute, Collection<AttributeModifier>> modifiers = stack.getAttributeModifiers(slot)
-                        .asMap();
-                if(modifiers.isEmpty()) {
-                    continue;
-                }
-                String equipmentCS = ExpandEquipmentSlot.getCommandString(slot);
-                CommandUtilities.sendCopying(new TranslatableComponent("crafttweaker.command.hand.header.attributes").append(": ")
-                        .append(new TextComponent(equipmentCS).withStyle(ChatFormatting.GREEN))
-                        .withStyle(ChatFormatting.DARK_AQUA), equipmentCS, player);
-                
-                modifiers.forEach((attribute, attributeModifiers) -> {
-                    String attributeCS = ExpandAttribute.getCommandString(attribute);
-                    CommandUtilities.sendCopying(new TextComponent("- ").withStyle(ChatFormatting.YELLOW)
-                            .append(new TextComponent(attributeCS).withStyle(ChatFormatting.GREEN)), attributeCS, player);
+        handler.registerRootCommand(
+                "hand",
+                new TranslatableComponent("crafttweaker.command.description.hand"),
+                builder -> builder.executes(context -> {
+                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    final ItemStack stack = player.getMainHandItem();
+                    final Item item = stack.getItem();
                     
-                    attributeModifiers.forEach(attributeModifier -> {
+                    sendBasicItemInformation(player, stack);
+                    
+                    if(item instanceof BlockItem) {
+                        sendBlockInformation(player, (BlockItem) stack.getItem());
+                    }
+                    
+                    if(item instanceof BucketItem && Services.PLATFORM.getBucketContent(((BucketItem) item)) != Fluids.EMPTY) {
+                        sendBucketInformation(player, (BucketItem) stack.getItem());
+                    }
+                    // TODO forge fluid handlers
+                    //                stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
+                    //                        .ifPresent(iFluidHandlerItem -> sendFluidInformation(player, iFluidHandlerItem));
+                    
+                    sendTagsInformation(player, item);
+                    return Command.SINGLE_SUCCESS;
+                })
+        );
+        
+        handler.registerSubCommand(
+                "hand",
+                "registry_name",
+                new TranslatableComponent("crafttweaker.command.description.hand.registryname"),
+                builder -> builder.executes(context -> {
+                    final ItemStack mainHandItem = context.getSource()
+                            .getPlayerOrException()
+                            .getMainHandItem();
+                    sendCopyingHand(context.getSource()
+                            .getPlayerOrException(), new TranslatableComponent("crafttweaker.command.misc.item"), Services.REGISTRY.getRegistryKey(mainHandItem.getItem())
+                            .toString());
+                    return Command.SINGLE_SUCCESS;
+                })
+        );
+        
+        handler.registerSubCommand(
+                "hand",
+                "data",
+                new TranslatableComponent("crafttweaker.command.description.hand.data"),
+                builder -> builder.executes(context -> {
+                    final ServerPlayer player = context.getSource()
+                            .getPlayerOrException();
+                    final ItemStack stack = player.getMainHandItem();
+                    if(!stack.hasTag()) {
+                        CommandUtilities.send(new TranslatableComponent("crafttweaker.command.hand.no.data"), player);
+                        return 0;
+                    }
+                    
+                    sendCopyingHand(player, new TranslatableComponent("crafttweaker.command.misc.data"), new MapData(stack.getTag()).accept(new DataToTextComponentVisitor(" ", 0))
+                            .getString());
+                    return Command.SINGLE_SUCCESS;
+                })
+        );
+        
+        handler.registerSubCommand(
+                "hand",
+                "tags",
+                new TranslatableComponent("crafttweaker.command.description.hand.tags"),
+                builder -> builder.executes(context -> {
+                    final ServerPlayer player = context.getSource()
+                            .getPlayerOrException();
+                    final ItemStack stack = player.getMainHandItem();
+                    final Collection<String> tags = sendTagsInformation(player, stack.getItem());
+                    
+                    if(tags.isEmpty()) {
+                        CommandUtilities.send(new TranslatableComponent("crafttweaker.command.hand.no.tags"), player);
+                        return Command.SINGLE_SUCCESS;
+                    }
+                    
+                    tags.stream()
+                            .findFirst()
+                            .ifPresent(it -> CommandUtilities.copy(player, it));
+                    return Command.SINGLE_SUCCESS;
+                })
+        );
+        
+        handler.registerSubCommand(
+                "hand",
+                "vanilla",
+                new TranslatableComponent("crafttweaker.command.description.hand.vanilla"),
+                builder -> builder.executes(context -> {
+                    final ServerPlayer player = context.getSource()
+                            .getPlayerOrException();
+                    final ItemStack stack = player.getMainHandItem();
+                    final Item item = stack.getItem();
+                    
+                    sendBasicVanillaItemInformation(player, stack);
+                    
+                    if(stack.hasTag()) {
+                        sendVanillaDataInformation(player, Objects.requireNonNull(stack.getTag()));
+                    }
+                    
+                    if(item instanceof BucketItem && Services.PLATFORM.getBucketContent(((BucketItem) item)) != Fluids.EMPTY) {
+                        sendVanillaBucketInformation(player, (BucketItem) stack.getItem());
+                    }
+                    
+                    sendVanillaTagsInformation(player, item);
+                    return Command.SINGLE_SUCCESS;
+                })
+        );
+        
+        handler.registerSubCommand(
+                "hand",
+                "attributes",
+                new TranslatableComponent("crafttweaker.command.description.hand.attributes"),
+                builder -> builder.executes(context -> {
+                    final ServerPlayer player = context.getSource()
+                            .getPlayerOrException();
+                    final ItemStack stack = player.getMainHandItem();
+                    
+                    for(final EquipmentSlot slot : EquipmentSlot.values()) {
+                        final Map<Attribute, Collection<AttributeModifier>> modifiers = stack.getAttributeModifiers(slot)
+                                .asMap();
+                        if(modifiers.isEmpty()) {
+                            continue;
+                        }
+                        final String equipmentCS = ExpandEquipmentSlot.getCommandString(slot);
+                        CommandUtilities.sendCopying(new TranslatableComponent("crafttweaker.command.hand.header.attributes").append(": ")
+                                .append(new TextComponent(equipmentCS).withStyle(ChatFormatting.GREEN))
+                                .withStyle(ChatFormatting.DARK_AQUA), equipmentCS, player);
                         
-                        sendAttributePropertyInformation(player, "Name", attributeModifier.getName());
-                        sendAttributePropertyInformation(player, "ID", attributeModifier.getId()
-                                .toString());
-                        sendAttributePropertyInformation(player, "Operation", attributeModifier.getOperation()
-                                .name());
-                        sendAttributePropertyInformation(player, "Amount", attributeModifier.getAmount() + "");
-                        sendAttributePropertyInformation(player, "IData", new MapData(attributeModifier.save()).asString());
-                    });
-                });
-            }
-            sendCopyingHand(player, new TranslatableComponent("crafttweaker.command.misc.item"), Services.REGISTRY.getRegistryKey(stack.getItem())
-                    .toString());
-            return Command.SINGLE_SUCCESS;
-        })));
+                        modifiers.forEach((attribute, attributeModifiers) -> {
+                            final String attributeCS = ExpandAttribute.getCommandString(attribute);
+                            CommandUtilities.sendCopying(new TextComponent("- ").withStyle(ChatFormatting.YELLOW)
+                                    .append(new TextComponent(attributeCS).withStyle(ChatFormatting.GREEN)), attributeCS, player);
+                            
+                            attributeModifiers.forEach(attributeModifier -> {
+                                
+                                sendAttributePropertyInformation(player, "Name", attributeModifier.getName());
+                                sendAttributePropertyInformation(player, "ID", attributeModifier.getId()
+                                        .toString());
+                                sendAttributePropertyInformation(player, "Operation", attributeModifier.getOperation()
+                                        .name());
+                                sendAttributePropertyInformation(player, "Amount", attributeModifier.getAmount() + "");
+                                sendAttributePropertyInformation(player, "IData", new MapData(attributeModifier.save()).asString());
+                            });
+                        });
+                    }
+                    sendCopyingHand(player, new TranslatableComponent("crafttweaker.command.misc.item"), Services.REGISTRY.getRegistryKey(stack.getItem())
+                            .toString());
+                    return Command.SINGLE_SUCCESS;
+                })
+        );
     }
     
     

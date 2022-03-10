@@ -11,12 +11,6 @@ import net.fabricmc.fabric.api.registry.FuelRegistry;
 public class FabricEventHelper implements IEventHelper {
     
     @Override
-    public void fireCTCommandRegisterEvent() {
-        
-        CraftTweakerEvents.COMMAND_REGISTER_EVENT.invoker().accept(new CTCommandRegisterEvent());
-    }
-    
-    @Override
     public IGatherReplacementExclusionEvent fireGatherReplacementExclusionEvent(final IRecipeManager manager) {
         
         GatherReplacementExclusionEvent event = new GatherReplacementExclusionEvent(manager);

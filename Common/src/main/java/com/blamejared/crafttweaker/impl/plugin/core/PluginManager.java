@@ -200,6 +200,11 @@ public final class PluginManager {
                 "registering villager trade converters",
                 () -> VillagerTradeConverterRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerVillagerTradeConverters))
         );
+        
+        this.verifying(
+                "registering commands",
+                () -> CommandRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerCommands))
+        );
     }
     
     private void manageZenRegistration(final IPluginRegistryAccess access, final JavaNativeIntegrationRegistrationHandler handler, final Function<String, IScriptLoader> loaderGetter) {

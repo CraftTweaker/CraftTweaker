@@ -3,12 +3,11 @@ package com.blamejared.crafttweaker.impl.command.type;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.command.CommandUtilities;
-import com.blamejared.crafttweaker.api.command.boilerplate.CommandImpl;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
-import com.blamejared.crafttweaker.impl.command.CTCommands;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.brigadier.Command;
@@ -31,17 +30,26 @@ public final class RecipeCommands {
     
     private RecipeCommands() {}
     
-    public static void registerCommands() {
+    public static void registerCommands(final ICommandRegistrationHandler handler) {
         
-        CTCommands.registerCommand(new CommandImpl("recipes", new TranslatableComponent("crafttweaker.command.description.recipes"), builder -> builder.executes(context -> {
-            ServerPlayer player = context.getSource().getPlayerOrException();
-            return dumpRecipes(player);
-        })));
-        CTCommands.registerCommand("recipes", new CommandImpl("hand", new TranslatableComponent("crafttweaker.command.description.recipes.hand"), builder -> builder.executes(context -> {
-            ServerPlayer player = context.getSource().getPlayerOrException();
-            
-            return RecipeCommands.dumpHand(player, player.getMainHandItem());
-        })));
+        handler.registerRootCommand(
+                "recipes",
+                new TranslatableComponent("crafttweaker.command.description.recipes"),
+                builder -> builder.executes(context -> {
+                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    return dumpRecipes(player);
+                })
+        );
+        handler.registerSubCommand(
+                "recipes",
+                "hand",
+                new TranslatableComponent("crafttweaker.command.description.recipes.hand"),
+                builder -> builder.executes(context -> {
+                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    
+                    return RecipeCommands.dumpHand(player, player.getMainHandItem());
+                })
+        );
     }
     
     private static int dumpRecipes(final Player player) {

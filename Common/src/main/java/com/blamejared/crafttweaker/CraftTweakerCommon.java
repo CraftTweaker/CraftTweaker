@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker.api.command.argument.IItemStackArgument;
 import com.blamejared.crafttweaker.api.command.argument.RecipeTypeArgument;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
-import com.blamejared.crafttweaker.impl.command.CTCommands;
+import com.blamejared.crafttweaker.impl.command.CtCommands;
 import com.blamejared.crafttweaker.impl.plugin.core.PluginManager;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
@@ -23,6 +23,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -65,13 +66,15 @@ public class CraftTweakerCommon {
     
     public static PluginManager getPluginManager() {
         
-        PLUGIN_MANAGER.compareAndSet(null, PluginManager.of());
-        return PLUGIN_MANAGER.getAcquire();
+        if(PLUGIN_MANAGER.getAcquire() == null) {
+            PLUGIN_MANAGER.compareAndSet(null, PluginManager.of());
+        }
+        return Objects.requireNonNull(PLUGIN_MANAGER.getAcquire());
     }
     
     public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, Commands.CommandSelection environment) {
         
-        CTCommands.init(dispatcher, environment);
+        CtCommands.get().registerCommandsTo(dispatcher, environment);
     }
     
     public static void registerCommandArguments() {

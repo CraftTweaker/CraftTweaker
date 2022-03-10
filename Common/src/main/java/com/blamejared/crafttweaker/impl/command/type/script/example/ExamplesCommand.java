@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker.impl.command.type.script.example;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.command.CommandUtilities;
-import com.blamejared.crafttweaker.api.command.boilerplate.CommandImpl;
+import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.mixin.common.access.server.AccessMinecraftServer;
 import com.mojang.brigadier.Command;
 import net.minecraft.ChatFormatting;
@@ -22,19 +22,20 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public final class ExamplesCommand extends CommandImpl {
+public final class ExamplesCommand {
     
-    public ExamplesCommand() {
+    private ExamplesCommand() {}
+    
+    public static void registerCommand(final ICommandRegistrationHandler handler) {
         
-        super("examples", new TranslatableComponent("crafttweaker.command.description.examples"), commandSourceStackLiteralArgumentBuilder -> {
-            commandSourceStackLiteralArgumentBuilder.executes(context -> {
-                ServerPlayer player = context.getSource().getPlayerOrException();
-                return execute(player);
-            });
-        });
+        handler.registerRootCommand(
+                "examples",
+                new TranslatableComponent("crafttweaker.command.description.examples"),
+                builder -> builder.executes(ctx -> execute(ctx.getSource().getPlayerOrException()))
+        );
     }
     
-    private static int execute(ServerPlayer player) {
+    private static int execute(final ServerPlayer player) {
         
         final MinecraftServer server = player.server;
         final ServerResources dataPackRegistries = ((AccessMinecraftServer) server).getResources();
