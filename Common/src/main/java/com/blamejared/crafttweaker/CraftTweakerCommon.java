@@ -63,19 +63,10 @@ public class CraftTweakerCommon {
         }).start();
     }
     
-    public static void handlePlugins() {
+    public static PluginManager getPluginManager() {
         
-        PLUGIN_MANAGER.set(PluginManager.of());
-        PLUGIN_MANAGER.get().loadPlugins();
-    }
-    
-    public static void handleFullSetupEnd() {
-        
-        PLUGIN_MANAGER.get().broadcastEnd();
-    }
-    
-    public static PluginManager getPluginManager(){
-        return PLUGIN_MANAGER.get();
+        PLUGIN_MANAGER.compareAndSet(null, PluginManager.of());
+        return PLUGIN_MANAGER.getAcquire();
     }
     
     public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, Commands.CommandSelection environment) {

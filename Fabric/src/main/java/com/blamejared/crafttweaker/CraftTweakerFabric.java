@@ -17,7 +17,7 @@ public class CraftTweakerFabric implements ModInitializer {
     public void onInitialize() {
         
         CraftTweakerCommon.init();
-        CraftTweakerCommon.handlePlugins();
+        CraftTweakerCommon.getPluginManager().loadPlugins();
         
         // TODO("Will be removed")
         CraftTweakerCommon.registerCommandArguments();
@@ -42,7 +42,7 @@ public class CraftTweakerFabric implements ModInitializer {
         
         Services.PLATFORM.registerCustomTags();
         
-        CraftTweakerCommon.handleFullSetupEnd(); // TODO("Another place?")
+        CraftTweakerCommon.getPluginManager().broadcastSetupEnd(); // TODO("Another place?")
         
         CraftTweakerCommon.loadInitScripts();
     }

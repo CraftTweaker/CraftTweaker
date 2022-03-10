@@ -120,10 +120,10 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         });
     }
     
-    
     @Override
-    public void registerVillagerTradeConverters(IVillagerTradeRegistrationHandler handler) {
+    public void registerVillagerTradeConverters(final IVillagerTradeRegistrationHandler handler) {
         
+        // TODO("Decouple IItemStack lookup from service (i.e. hide service call in API)")
         final IItemStack emerald = Services.PLATFORM.createMCItemStackMutable(new ItemStack(Items.EMERALD));
         final IItemStack compass = Services.PLATFORM.createMCItemStackMutable(new ItemStack(Items.COMPASS));
         final IItemStack book = Services.PLATFORM.createMCItemStackMutable(new ItemStack(Items.BOOK));

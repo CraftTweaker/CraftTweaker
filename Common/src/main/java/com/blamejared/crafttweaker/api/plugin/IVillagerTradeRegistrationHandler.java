@@ -7,6 +7,6 @@ import java.util.function.Function;
 
 public interface IVillagerTradeRegistrationHandler {
     
-    <T extends VillagerTrades.ItemListing> void registerTradeConverter(Class<T> tradeClass, Function<T, CTTradeObject> tradeConverter);
+    <T extends VillagerTrades.ItemListing> void registerTradeConverter(final Class<T> tradeClass, final Function<T, CTTradeObject> tradeConverter);
     
 }

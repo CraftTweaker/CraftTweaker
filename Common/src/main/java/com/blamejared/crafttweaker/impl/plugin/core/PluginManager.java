@@ -122,7 +122,7 @@ public final class PluginManager {
         this.verifyProperRegistration(pluginRegistryAccess);
     }
     
-    public void broadcastEnd() {
+    public void broadcastSetupEnd() {
         
         this.callListeners("initialization end", this.listeners.endListeners());
     }
@@ -195,7 +195,7 @@ public final class PluginManager {
                 () -> RecipeHandlerRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerRecipeHandlers))
                         .forEach(it -> access.registerHandler(this.uncheck(it.recipeClass()), it.handler()))
         );
-    
+        
         this.verifying(
                 "registering villager trade converters",
                 () -> VillagerTradeConverterRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerVillagerTradeConverters))

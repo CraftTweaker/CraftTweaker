@@ -13,14 +13,14 @@ public class CraftTweakerForge {
     public CraftTweakerForge() {
         
         CraftTweakerCommon.init();
-        CraftTweakerCommon.handlePlugins();
+        CraftTweakerCommon.getPluginManager().loadPlugins();
         
         PacketHandler.init();
         
         final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(this::setup);
         
-        CraftTweakerCommon.handleFullSetupEnd(); // TODO("Another place?")
+        CraftTweakerCommon.getPluginManager().broadcastSetupEnd(); // TODO("Another place?")
     }
     
     private void setup(final FMLCommonSetupEvent event) {
