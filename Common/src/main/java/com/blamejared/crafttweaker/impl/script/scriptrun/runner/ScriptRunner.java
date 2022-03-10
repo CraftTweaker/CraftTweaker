@@ -14,7 +14,6 @@ import net.minecraft.Util;
 import org.openzen.zencode.java.ScriptingEngine;
 import org.openzen.zencode.java.logger.ScriptingEngineLogger;
 import org.openzen.zencode.java.module.JavaNativeModule;
-import org.openzen.zencode.java.module.converters.JavaNativeConverterBuilder;
 import org.openzen.zencode.shared.CompileException;
 import org.openzen.zencode.shared.SourceFile;
 import org.openzen.zenscript.codemodel.FunctionParameter;
@@ -101,7 +100,7 @@ sealed public abstract class ScriptRunner permits ExecutingScriptRunner, Formatt
     protected abstract void executeRunAction(final SemanticModule module);
     
     private Collection<DecoratedJavaNativeModule> populateModules(
-            final JavaNativeConverterBuilder builder,
+            final CtJavaNativeConverterBuilder builder,
             final ICraftTweakerRegistry registry,
             final BracketExpressionParser parser
     ) throws CompileException {
@@ -113,7 +112,7 @@ sealed public abstract class ScriptRunner permits ExecutingScriptRunner, Formatt
     }
     
     private Collection<JavaNativeModule> gatherModules(
-            final JavaNativeConverterBuilder builder,
+            final CtJavaNativeConverterBuilder builder,
             final ICraftTweakerRegistry registry,
             final BracketExpressionParser parser
     ) throws CompileException {
@@ -131,7 +130,7 @@ sealed public abstract class ScriptRunner permits ExecutingScriptRunner, Formatt
     private JavaNativeModule createNativeModule(
             final String name,
             final String rootPackage,
-            final JavaNativeConverterBuilder builder,
+            final CtJavaNativeConverterBuilder builder,
             final BracketExpressionParser parser,
             final List<JavaNativeModule> dependenciesList,
             final Consumer<JavaNativeModule> configurator
@@ -142,10 +141,7 @@ sealed public abstract class ScriptRunner permits ExecutingScriptRunner, Formatt
         module.registerBEP(parser);
         configurator.accept(module);
         this.engine().registerNativeProvided(module);
-        
-        if(builder instanceof CtJavaNativeConverterBuilder ctBuilder){
-            ctBuilder.reinitializeLazyHeaderValues();
-        }
+        builder.reinitializeLazyHeaderValues();
         return module;
     }
     
