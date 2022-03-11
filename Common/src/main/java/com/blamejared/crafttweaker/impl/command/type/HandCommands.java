@@ -22,6 +22,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagCollection;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -65,9 +66,10 @@ public final class HandCommands {
                     if(item instanceof BucketItem && Services.PLATFORM.getBucketContent(((BucketItem) item)) != Fluids.EMPTY) {
                         sendBucketInformation(player, (BucketItem) stack.getItem());
                     }
-                    // TODO forge fluid handlers
-                    //                stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
-                    //                        .ifPresent(iFluidHandlerItem -> sendFluidInformation(player, iFluidHandlerItem));
+    
+                    for(MutableComponent component : Services.PLATFORM.getFluidsForDump(stack, player, InteractionHand.MAIN_HAND)) {
+                        sendHand(player, new TranslatableComponent("crafttweaker.command.misc.fluid"), component.getString());
+                    }
                     
                     sendTagsInformation(player, item);
                     return Command.SINGLE_SUCCESS;
@@ -228,34 +230,6 @@ public final class HandCommands {
                 .defaultFluidState()
                 .createLegacyBlock()));
     }
-    
-    //    private static void sendFluidInformation(final Player player, final IFluidHandlerItem item) {
-    //
-    //        final int tanks = item.getTanks();
-    //        if(tanks <= 0) {
-    //            return;
-    //        }
-    //
-    //        if(item.getTanks() == 1) {
-    //            sendSingleFluidInformation(player, item.getFluidInTank(0), -1);
-    //            return;
-    //        }
-    //
-    //        sendMultipleFluidInformation(player, item, tanks);
-    //    }
-    
-    //    private static void sendMultipleFluidInformation(final Player player, final IFluidHandlerItem item, final int tanks) {
-    //
-    //        IntStream.range(0, tanks)
-    //                .mapToObj(it -> new AbstractInt2ObjectMap.BasicEntry<>(it, item.getFluidInTank(it)))
-    //                .filter(it -> !it.getValue().isEmpty())
-    //                .forEach(it -> sendSingleFluidInformation(player, it.getValue(), it.getIntKey()));
-    //    }
-    
-    //    private static void sendSingleFluidInformation(final Player player, final FluidStack stack, final int id) {
-    //
-    //        sendHand(player, id < 0 ? "Fluid" : "Fluid #" + id, new MCFluidStackMutable(stack).getCommandString());
-    //    }
     
     private static Collection<String> sendTagsInformation(final Player player, final Item item) {
         

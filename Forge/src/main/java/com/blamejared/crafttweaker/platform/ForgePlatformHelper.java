@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.platform;
 
 import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.fluid.MCFluidStack;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.MCItemStack;
 import com.blamejared.crafttweaker.api.item.MCItemStackMutable;
@@ -25,11 +26,14 @@ import com.blamejared.crafttweaker.platform.services.IPlatformHelper;
 import com.google.common.base.Suppliers;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.Util;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.SerializationTags;
 import net.minecraft.tags.StaticTagHelper;
 import net.minecraft.tags.StaticTags;
 import net.minecraft.tags.TagCollection;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
@@ -42,6 +46,9 @@ import net.minecraftforge.common.ForgeInternalHandler;
 import net.minecraftforge.common.ForgeTagHandler;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifierManager;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -62,10 +69,12 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -261,7 +270,13 @@ public class ForgePlatformHelper implements IPlatformHelper {
     public void registerTagManagerFromRegistry(ResourceLocation name, ForgeRegistry<?> registry, String tagFolder) {
         
         final Class<?> registrySuperType = registry.getRegistrySuperType();
-        if(CraftTweakerAPI.getRegistry().getAllLoaders().stream().map(loader -> CraftTweakerAPI.getRegistry().getZenClassRegistry().getNameFor(loader, registrySuperType)).allMatch(Optional::isEmpty)) {
+        if(CraftTweakerAPI.getRegistry()
+                .getAllLoaders()
+                .stream()
+                .map(loader -> CraftTweakerAPI.getRegistry()
+                        .getZenClassRegistry()
+                        .getNameFor(loader, registrySuperType))
+                .allMatch(Optional::isEmpty)) {
             CraftTweakerAPI.LOGGER.debug("Could not register tag manager for " + tagFolder);
             return;
         }
@@ -330,6 +345,23 @@ public class ForgePlatformHelper implements IPlatformHelper {
     public boolean doCraftingTableRecipesConflict(IRecipeManager manager, Recipe<?> first, Recipe<?> second) {
         
         return CraftingTableRecipeConflictChecker.checkConflicts(manager, first, second);
+    }
+    
+    @Override
+    public Set<MutableComponent> getFluidsForDump(ItemStack stack, Player player, InteractionHand hand) {
+        
+        LazyOptional<IFluidHandlerItem> cap = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+        if(!cap.isPresent()) {
+            return Set.of();
+        }
+        Set<MutableComponent> components = new HashSet<>();
+        cap.ifPresent(handler -> {
+            int tanks = handler.getTanks();
+            for(int i = 0; i < tanks; i++) {
+                components.add(new TextComponent(new MCFluidStack(handler.getFluidInTank(i)).getCommandString()));
+            }
+        });
+        return components;
     }
     
     private static Class<?> getClassFromType(Type type) {

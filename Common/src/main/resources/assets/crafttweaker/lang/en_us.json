@@ -71,6 +71,7 @@
   "crafttweaker.command.misc.blockstate": "BlockState",
   "crafttweaker.command.misc.ctgui": "CT GUI was limiting and very buggy and has since been removed. It is now recommended to learn ZenScript instead - you can browse the wiki for reference (/ct wiki) or ask for help on the Discord server (/ct discord).",
   "crafttweaker.command.misc.data": "Data",
+  "crafttweaker.command.misc.fluid": "Fluid",
   "crafttweaker.command.misc.fluidblockstate": "Fluid BlockState",
   "crafttweaker.command.misc.inventory.list": "Inventory List",
   "crafttweaker.command.misc.inventory.list.tag": "Inventory Tag List",

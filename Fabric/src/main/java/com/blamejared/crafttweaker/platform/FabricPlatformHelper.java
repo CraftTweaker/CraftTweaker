@@ -22,16 +22,25 @@ import com.blamejared.crafttweaker.platform.helper.world.inventory.TAInventoryWr
 import com.blamejared.crafttweaker.platform.services.IPlatformHelper;
 import com.google.common.base.Suppliers;
 import com.mojang.datafixers.util.Either;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.impl.tag.extension.TagFactoryImpl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.StaticTagHelper;
 import net.minecraft.tags.TagCollection;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
@@ -50,6 +59,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -260,6 +270,28 @@ public class FabricPlatformHelper implements IPlatformHelper {
     public Map<ResourceLocation, ILootModifier> getLootModifiersMap() {
         
         return LootModifierManager.INSTANCE.modifiers();
+    }
+    
+    
+    @SuppressWarnings("UnstableApiUsage")
+    @Override
+    public Set<MutableComponent> getFluidsForDump(ItemStack stack, Player player, InteractionHand hand) {
+        
+        Storage<FluidVariant> storage = FluidStorage.ITEM.find(stack, ContainerItemContext.ofPlayerHand(player, InteractionHand.MAIN_HAND));
+        if(storage == null) {
+            return Set.of();
+        }
+        Set<MutableComponent> components = new HashSet<>();
+        try(Transaction transaction = Transaction.openOuter()) {
+            for(StorageView<FluidVariant> view : storage.iterable(transaction)) {
+                if(!view.isResourceBlank()) {
+                    components.add(new TextComponent(Services.REGISTRY.getRegistryKey(view.getResource()
+                            .getFluid()) + " * " + view.getAmount()));
+                }
+            }
+        }
+        
+        return components;
     }
     
 }

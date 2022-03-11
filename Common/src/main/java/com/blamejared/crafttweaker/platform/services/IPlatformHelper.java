@@ -8,9 +8,11 @@ import com.blamejared.crafttweaker.api.villager.CTTradeObject;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
 import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
 import com.mojang.datafixers.util.Either;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.StaticTagHelper;
 import net.minecraft.tags.TagCollection;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
@@ -28,6 +30,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -154,7 +157,7 @@ public interface IPlatformHelper {
         return (!first.hasTag() || first.getTag().equals(second.getTag()));
     }
     
-    
     boolean doCraftingTableRecipesConflict(final IRecipeManager manager, final Recipe<?> first, final Recipe<?> second);
     
+    Set<MutableComponent> getFluidsForDump(ItemStack stack, Player player, InteractionHand hand);
 }
