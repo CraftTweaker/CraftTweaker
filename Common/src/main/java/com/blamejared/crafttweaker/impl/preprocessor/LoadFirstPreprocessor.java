@@ -15,6 +15,8 @@ public final class LoadFirstPreprocessor implements IPreprocessor {
     
     public static final LoadFirstPreprocessor INSTANCE = new LoadFirstPreprocessor();
     
+    private LoadFirstPreprocessor() {}
+    
     @Override
     public String name() {
         

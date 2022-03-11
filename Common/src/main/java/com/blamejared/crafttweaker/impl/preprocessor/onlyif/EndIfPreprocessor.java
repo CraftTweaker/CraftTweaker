@@ -15,6 +15,8 @@ public final class EndIfPreprocessor implements IPreprocessor {
     
     public static final EndIfPreprocessor INSTANCE = new EndIfPreprocessor();
     
+    private EndIfPreprocessor() {}
+    
     @Override
     public String name() {
         

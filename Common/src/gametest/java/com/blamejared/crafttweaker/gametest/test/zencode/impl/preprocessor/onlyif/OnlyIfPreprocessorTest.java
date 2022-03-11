@@ -1,37 +1,34 @@
 package com.blamejared.crafttweaker.gametest.test.zencode.impl.preprocessor.onlyif;
 
-import com.blamejared.crafttweaker.impl.preprocessor.onlyif.EndIfPreprocessor;
-import com.blamejared.crafttweaker.impl.preprocessor.onlyif.OnlyIfPreprocessor;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
 import com.blamejared.crafttweaker.gametest.CraftTweakerGameTest;
 import com.blamejared.crafttweaker.gametest.CraftTweakerGameTestHolder;
 import com.blamejared.crafttweaker.gametest.TestModifier;
+import com.blamejared.crafttweaker.impl.preprocessor.onlyif.EndIfPreprocessor;
+import com.blamejared.crafttweaker.impl.preprocessor.onlyif.OnlyIfPreprocessor;
+import com.blamejared.crafttweaker.impl.script.scriptrun.GameTestScriptRunner;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 
-import java.io.StringReader;
 import java.util.List;
 import java.util.StringJoiner;
 
 @CraftTweakerGameTestHolder
 public class OnlyIfPreprocessorTest implements CraftTweakerGameTest {
     
-    public final OnlyIfPreprocessor preprocessorUnderTest = new OnlyIfPreprocessor();
-    public final EndIfPreprocessor preprocessorUnderTestEnder = new EndIfPreprocessor();
-    
-    
     @GameTest(template = "crafttweaker:empty")
     @TestModifier(implicitSuccession = true)
     public void nameIsOnlyIf(GameTestHelper helper) {
         
-        assertThat(preprocessorUnderTest.getName()).isEqualTo("onlyif");
+        assertThat(OnlyIfPreprocessor.INSTANCE.name()).isEqualTo("onlyif");
     }
     
     @GameTest(template = "crafttweaker:empty")
     @TestModifier(implicitSuccession = true)
     public void removedContentIsNoLongerInFileSingleLine(GameTestHelper helper) {
         
-        final FileAccessSingle file = getFile("#onlyif false HelloWorld #endif");
-        final List<String> fileContents = file.getFileContents();
+        final IScriptFile file = getFile("#onlyif false HelloWorld #endif");
+        final List<String> fileContents = file.preprocessedContents();
         assertWithMessage("File contents should remain one line").that(fileContents.size()).isEqualTo(1);
         assertThat(fileContents.get(0)).isEqualTo("                               ");
     }
@@ -45,8 +42,8 @@ public class OnlyIfPreprocessorTest implements CraftTweakerGameTest {
         stringJoiner.add("Hello World");
         stringJoiner.add("#endif");
         
-        final FileAccessSingle file = getFile(stringJoiner.toString());
-        final List<String> fileContents = file.getFileContents();
+        final IScriptFile file = getFile(stringJoiner.toString());
+        final List<String> fileContents = file.preprocessedContents();
         
         assertWithMessage("File must remain the same structure").that(fileContents.size()).isEqualTo(3);
         assertThat(fileContents.get(0)).isEqualTo("             ");
@@ -58,8 +55,8 @@ public class OnlyIfPreprocessorTest implements CraftTweakerGameTest {
     @TestModifier(implicitSuccession = true)
     public void onlyRemoveIfItShouldBeRemovedSingleLine(GameTestHelper helper) {
         
-        final FileAccessSingle file = getFile("#onlyif true HelloWorld #endif");
-        final List<String> fileContents = file.getFileContents();
+        final IScriptFile file = getFile("#onlyif true HelloWorld #endif");
+        final List<String> fileContents = file.preprocessedContents();
         assertWithMessage("File content should remain one line").that(fileContents.size()).isEqualTo(1);
         assertThat(fileContents.get(0)).isEqualTo("             HelloWorld       ");
     }
@@ -73,8 +70,8 @@ public class OnlyIfPreprocessorTest implements CraftTweakerGameTest {
         stringJoiner.add("Hello World");
         stringJoiner.add("#endif");
         
-        final FileAccessSingle file = getFile(stringJoiner.toString());
-        final List<String> fileContents = file.getFileContents();
+        final IScriptFile file = getFile(stringJoiner.toString());
+        final List<String> fileContents = file.preprocessedContents();
         
         assertWithMessage("File must remain the same structure").that(fileContents.size()).isEqualTo(3);
         assertThat(fileContents.get(0)).isEqualTo("            ");
@@ -94,8 +91,8 @@ public class OnlyIfPreprocessorTest implements CraftTweakerGameTest {
         stringJoiner.add("#endif");
         stringJoiner.add("#endif");
         
-        final FileAccessSingle file = getFile(stringJoiner.toString());
-        final List<String> fileContents = file.getFileContents();
+        final IScriptFile file = getFile(stringJoiner.toString());
+        final List<String> fileContents = file.preprocessedContents();
         
         assertWithMessage("File must remain the same structure").that(fileContents.size()).isEqualTo(6);
         assertThat(fileContents.get(0)).isEqualTo("            ");
@@ -120,8 +117,8 @@ public class OnlyIfPreprocessorTest implements CraftTweakerGameTest {
         stringJoiner.add("#endif");
         stringJoiner.add("#endif");
         
-        final FileAccessSingle file = getFile(stringJoiner.toString());
-        final List<String> fileContents = file.getFileContents();
+        final IScriptFile file = getFile(stringJoiner.toString());
+        final List<String> fileContents = file.preprocessedContents();
         
         assertWithMessage("File must remain the same structure").that(fileContents.size()).isEqualTo(8);
         assertWithMessage("Line 0").that(fileContents.get(0)).isEqualTo("            ");
@@ -134,11 +131,10 @@ public class OnlyIfPreprocessorTest implements CraftTweakerGameTest {
         assertWithMessage("Line 7").that(fileContents.get(7)).isEqualTo("      ");
     }
     
-    private FileAccessSingle getFile(String content) {
+    private IScriptFile getFile(String contents) {
         
-        return new FileAccessSingle("test.zs", new StringReader(content), new ScriptLoadingOptions()
-                .execute()
-                .setLoaderName("crafttweaker"), List.of(preprocessorUnderTest, preprocessorUnderTestEnder));
+        return GameTestScriptRunner.getFile(contents, List.of(OnlyIfPreprocessor.INSTANCE, EndIfPreprocessor.INSTANCE));
     }
+    
     
 }

@@ -36,7 +36,7 @@ public final class OnlyIfPreprocessor implements IPreprocessor {
     private final Map<String, OnlyIfParameter> knownParameters = new HashMap<>();
     private OnlyIfMatch currentMatch;
     
-    public OnlyIfPreprocessor() {
+    private OnlyIfPreprocessor() {
         //Replace this with something from the CrT registry at some point?
         //That would allow other mods to add their own parameters as well :thinking:
         this.addParameter(new OnlyIfParameterTrue());

@@ -15,6 +15,8 @@ public final class LoadLastPreprocessor implements IPreprocessor {
     
     public static final LoadLastPreprocessor INSTANCE = new LoadLastPreprocessor();
     
+    private LoadLastPreprocessor() {}
+    
     @Override
     public String name() {
         
