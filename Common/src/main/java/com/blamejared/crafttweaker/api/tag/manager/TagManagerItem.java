@@ -60,7 +60,7 @@ public class TagManagerItem implements ITagManager<Item> {
         
         final Tag<Item> internal = getInternal(to);
         if(internal == null) {
-            final SetTag<Item> tagFromContents = AccessSetTag.init(Sets.newHashSet(toAdd), Item.class);
+            final SetTag<Item> tagFromContents = AccessSetTag.crafttweaker$init(Sets.newHashSet(toAdd), Item.class);
             CraftTweakerAPI.apply(new ActionTagCreate<>(getTagCollection(), tagFromContents, to));
         } else {
             CraftTweakerAPI.apply(new ActionTagAdd<>(internal, toAdd, to));

@@ -223,7 +223,7 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
         
         return new RecipeList<>(getRecipeType(), getRecipes(), CraftTweakerAPI.getAccessibleElementsProvider()
                 .accessibleRecipeManager()
-                .getByName());
+                .crafttweaker$getByName());
     }
     
     /**
@@ -239,7 +239,7 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
         
         return (Map<ResourceLocation, T>) CraftTweakerAPI.getAccessibleElementsProvider()
                 .accessibleRecipeManager()
-                .getRecipes()
+                .crafttweaker$getRecipes()
                 .computeIfAbsent(getRecipeType(), key -> new HashMap<>());
     }
     

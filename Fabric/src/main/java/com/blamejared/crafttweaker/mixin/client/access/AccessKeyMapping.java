@@ -9,6 +9,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface AccessKeyMapping {
     
     @Accessor("key")
-    InputConstants.Key getKey();
+    InputConstants.Key crafttweaker$getKey();
     
 }

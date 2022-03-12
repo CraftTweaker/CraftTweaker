@@ -61,7 +61,7 @@ public class TagManagerFluid implements ITagManager<Fluid> {
         
         final Tag<Fluid> internal = getInternal(to);
         if(internal == null) {
-            final SetTag<Fluid> tagFromContents = AccessSetTag.init(Sets.newHashSet(toAdd), Fluid.class);
+            final SetTag<Fluid> tagFromContents = AccessSetTag.crafttweaker$init(Sets.newHashSet(toAdd), Fluid.class);
             CraftTweakerAPI.apply(new ActionTagCreate<>(getTagCollection(), tagFromContents, to));
         } else {
             CraftTweakerAPI.apply(new ActionTagAdd<>(internal, toAdd, to));

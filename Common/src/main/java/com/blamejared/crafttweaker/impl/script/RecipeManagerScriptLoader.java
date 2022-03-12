@@ -56,7 +56,7 @@ public class RecipeManagerScriptLoader {
         
         fixRecipeManager(manager);
         
-        final Map<ResourceLocation, Recipe<?>> recipes = ((AccessRecipeManager) manager).getRecipes()
+        final Map<ResourceLocation, Recipe<?>> recipes = ((AccessRecipeManager) manager).crafttweaker$getRecipes()
                 .getOrDefault(CraftTweakerRegistries.RECIPE_TYPE_SCRIPTS, Collections.emptyMap());
         
         if(recipes.isEmpty()) {
@@ -88,10 +88,10 @@ public class RecipeManagerScriptLoader {
         
         //ImmutableMap of ImmutableMaps. Nice.
         final AccessRecipeManager accessRecipeManager = (AccessRecipeManager) manager;
-        accessRecipeManager.setRecipes(new HashMap<>(accessRecipeManager.getRecipes()));
-        accessRecipeManager.getRecipes()
-                .replaceAll((k, v) -> new HashMap<>(accessRecipeManager.getRecipes().get(k)));
-        accessRecipeManager.setByName(new HashMap<>(accessRecipeManager.getByName()));
+        accessRecipeManager.crafttweaker$setRecipes(new HashMap<>(accessRecipeManager.crafttweaker$getRecipes()));
+        accessRecipeManager.crafttweaker$getRecipes()
+                .replaceAll((k, v) -> new HashMap<>(accessRecipeManager.crafttweaker$getRecipes().get(k)));
+        accessRecipeManager.crafttweaker$setByName(new HashMap<>(accessRecipeManager.crafttweaker$getByName()));
         CraftTweakerAPI.getAccessibleElementsProvider().recipeManager(manager);
     }
     

@@ -10,6 +10,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface AccessIngredientTagValue {
     
     @Accessor("tag")
-    Tag<Item> getTag();
+    Tag<Item> crafttweaker$getTag();
     
 }

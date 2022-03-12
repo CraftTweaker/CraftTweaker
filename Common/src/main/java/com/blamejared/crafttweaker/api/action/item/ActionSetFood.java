@@ -23,7 +23,7 @@ public class ActionSetFood implements IUndoableAction {
     public void apply() {
         
         ((AccessItem) this.stack.getInternal()
-                .getItem()).setFoodProperties(newFood);
+                .getItem()).crafttweaker$setFoodProperties(newFood);
     }
     
     @Override
@@ -38,7 +38,7 @@ public class ActionSetFood implements IUndoableAction {
     public void undo() {
         
         ((AccessItem) this.stack.getInternal()
-                .getItem()).setFoodProperties(oldFood);
+                .getItem()).crafttweaker$setFoodProperties(oldFood);
     }
     
     @Override

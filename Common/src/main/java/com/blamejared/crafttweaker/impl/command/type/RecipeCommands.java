@@ -56,7 +56,7 @@ public final class RecipeCommands {
         
         CraftTweakerAPI.LOGGER.info("Dumping all recipes!");
         
-        ((AccessRecipeManager) player.level.getRecipeManager()).getRecipes()
+        ((AccessRecipeManager) player.level.getRecipeManager()).crafttweaker$getRecipes()
                 .forEach((recipeType, map) -> dumpRecipe(recipeType, map.values(), it -> true, false));
         
         CommandUtilities.send(CommandUtilities.openingLogFile(new TranslatableComponent("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(new TranslatableComponent("crafttweaker.command.misc.recipes.list")), CommandUtilities.getFormattedLogFile()).withStyle(ChatFormatting.GREEN)), player);
@@ -75,7 +75,7 @@ public final class RecipeCommands {
         
         CraftTweakerAPI.LOGGER.info("Dumping all recipes that output {}!", ItemStackUtil.getCommandString(workingStack.getInternal()));
         
-        ((AccessRecipeManager) player.level.getRecipeManager()).getRecipes().forEach((recipeType, map) ->
+        ((AccessRecipeManager) player.level.getRecipeManager()).crafttweaker$getRecipes().forEach((recipeType, map) ->
                 dumpRecipe(recipeType, map.values(), it -> workingStack.matches(Services.PLATFORM.createMCItemStack(it.getResultItem())), true));
         
         CommandUtilities.send(CommandUtilities.openingLogFile(new TranslatableComponent("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(new TranslatableComponent("crafttweaker.command.misc.recipes.list")), CommandUtilities.getFormattedLogFile()).withStyle(ChatFormatting.GREEN)), player);

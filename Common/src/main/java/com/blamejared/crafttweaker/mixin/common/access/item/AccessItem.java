@@ -13,30 +13,30 @@ import java.util.UUID;
 public interface AccessItem {
     
     @Accessor("BASE_ATTACK_DAMAGE_UUID")
-    static UUID getBASE_ATTACK_DAMAGE_UUID() {throw new UnsupportedOperationException();}
+    static UUID crafttweaker$getBASE_ATTACK_DAMAGE_UUID() {throw new UnsupportedOperationException();}
     
     @Accessor("BASE_ATTACK_SPEED_UUID")
-    static UUID getBASE_ATTACK_SPEED_UUID() {throw new UnsupportedOperationException();}
+    static UUID crafttweaker$getBASE_ATTACK_SPEED_UUID() {throw new UnsupportedOperationException();}
     
     @Mutable
     @Accessor("maxStackSize")
-    void setMaxStackSize(int newSize);
+    void crafttweaker$setMaxStackSize(int newSize);
     
     @Mutable
     @Accessor("rarity")
-    void setRarity(Rarity newRarity);
+    void crafttweaker$setRarity(Rarity newRarity);
     
     @Mutable
     @Accessor("maxDamage")
-    void setMaxDamage(int newMaxDamage);
+    void crafttweaker$setMaxDamage(int newMaxDamage);
     
     @Mutable
     @Accessor("isFireResistant")
-    void setFireResistant(boolean isFireResistant);
+    void crafttweaker$setFireResistant(boolean isFireResistant);
     
     @Mutable
     @Accessor("foodProperties")
-    void setFoodProperties(FoodProperties newFood);
+    void crafttweaker$setFoodProperties(FoodProperties newFood);
     
     
 }

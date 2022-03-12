@@ -13,9 +13,9 @@ import java.util.Set;
 public interface AccessStaticTags {
     
     @Accessor("HELPERS_IDS")
-    static Set<ResourceKey<?>> getHELPERS_IDS() {throw new UnsupportedOperationException();}
+    static Set<ResourceKey<?>> crafttweaker$getHELPERS_IDS() {throw new UnsupportedOperationException();}
     
     @Accessor("HELPERS")
-    static List<StaticTagHelper<?>> getHELPERS() {throw new UnsupportedOperationException();}
+    static List<StaticTagHelper<?>> crafttweaker$getHELPERS() {throw new UnsupportedOperationException();}
     
 }

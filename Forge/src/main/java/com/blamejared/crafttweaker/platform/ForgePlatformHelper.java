@@ -234,7 +234,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public Collection<StaticTagHelper<?>> getStaticTagHelpers() {
         
-        return AccessStaticTags.getHELPERS();
+        return AccessStaticTags.crafttweaker$getHELPERS();
     }
     
     public void registerCustomTags() {
@@ -291,9 +291,9 @@ public class ForgePlatformHelper implements IPlatformHelper {
         classFunctionMap.put(BasicItemListing.class, iTrade -> {
             if(iTrade instanceof BasicItemListing) {
                 return new CTTradeObject(
-                        createMCItemStackMutable(((AccessBasicTrade) iTrade).getPrice()),
-                        createMCItemStackMutable(((AccessBasicTrade) iTrade).getPrice2()),
-                        createMCItemStackMutable(((AccessBasicTrade) iTrade).getForSale()));
+                        createMCItemStackMutable(((AccessBasicTrade) iTrade).crafttweaker$getPrice()),
+                        createMCItemStackMutable(((AccessBasicTrade) iTrade).crafttweaker$getPrice2()),
+                        createMCItemStackMutable(((AccessBasicTrade) iTrade).crafttweaker$getForSale()));
             }
             throw new IllegalArgumentException("Invalid trade passed to trade function! Given: " + iTrade.getClass());
         });

@@ -32,7 +32,7 @@ public abstract class ActionWholeRegistryBase implements IRuntimeAction {
     protected Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> getRecipesByType() {
         
         final AccessRecipeManager manager = CraftTweakerAPI.getAccessibleElementsProvider().accessibleRecipeManager();
-        final HashMap<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> result = new HashMap<>(manager.getRecipes());
+        final HashMap<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> result = new HashMap<>(manager.crafttweaker$getRecipes());
         result.remove(CraftTweakerRegistries.RECIPE_TYPE_SCRIPTS);
         return result;
     }

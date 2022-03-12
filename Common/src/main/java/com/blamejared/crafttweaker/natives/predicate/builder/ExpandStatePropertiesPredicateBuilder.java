@@ -47,7 +47,7 @@ public final class ExpandStatePropertiesPredicateBuilder {
     
     private static StatePropertiesPredicate.Builder matching(final StatePropertiesPredicate.Builder internal, final StatePropertiesPredicate.PropertyMatcher matcher) {
         
-        ((AccessStatePropertiesPredicateBuilder) internal).getMatchers().add(matcher);
+        ((AccessStatePropertiesPredicateBuilder) internal).crafttweaker$getMatchers().add(matcher);
         return internal;
     }
     

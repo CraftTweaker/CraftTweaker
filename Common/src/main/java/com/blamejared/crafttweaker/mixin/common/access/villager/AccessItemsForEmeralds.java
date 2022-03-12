@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(VillagerTrades.ItemsForEmeralds.class)
 public interface AccessItemsForEmeralds {
     
-    @Accessor
-    ItemStack getItemStack();
+    @Accessor("itemStack")
+    ItemStack crafttweaker$getItemStack();
     
 }

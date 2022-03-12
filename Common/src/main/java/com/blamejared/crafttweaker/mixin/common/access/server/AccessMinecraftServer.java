@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(MinecraftServer.class)
 public interface AccessMinecraftServer {
     
-    @Accessor
-    ServerResources getResources();
+    @Accessor("resources")
+    ServerResources crafttweaker$getResources();
     
 }

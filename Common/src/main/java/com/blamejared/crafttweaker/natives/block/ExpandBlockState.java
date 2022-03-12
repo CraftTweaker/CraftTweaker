@@ -249,7 +249,7 @@ public class ExpandBlockState {
     @ZenCodeType.Getter("destroySpeed")
     public static float getDestroySpeed(BlockState internal) {
         
-        return ((AccessBlockStateBase) internal).getDestroySpeed();
+        return ((AccessBlockStateBase) internal).crafttweaker$getDestroySpeed();
     }
     
     /**
@@ -263,7 +263,7 @@ public class ExpandBlockState {
     @ZenCodeType.Setter("destroySpeed")
     public static void setHardness(BlockState internal, float destroySpeed) {
         
-        CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Destroy Speed", destroySpeed, ((AccessBlockStateBase) internal).getDestroySpeed(), value -> ((AccessBlockStateBase) internal).setDestroySpeed(value)));
+        CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Destroy Speed", destroySpeed, ((AccessBlockStateBase) internal).crafttweaker$getDestroySpeed(), value -> ((AccessBlockStateBase) internal).crafttweaker$setDestroySpeed(value)));
     }
     
     /**

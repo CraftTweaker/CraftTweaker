@@ -13,18 +13,18 @@ import java.util.List;
 public interface AccessPotionBrewing {
     
     @Accessor("POTION_MIXES")
-    static List<PotionBrewing.Mix<Potion>> getPOTION_MIXES() {
+    static List<PotionBrewing.Mix<Potion>> crafttweaker$getPOTION_MIXES() {
         
         throw new UnsupportedOperationException();
     }
     
     @Accessor("CONTAINER_MIXES")
-    static List<PotionBrewing.Mix<Item>> getCONTAINER_MIXES() {
+    static List<PotionBrewing.Mix<Item>> crafttweaker$getCONTAINER_MIXES() {
         
         throw new UnsupportedOperationException();
     }
     
     @Invoker("addMix")
-    static void callAddMix(Potion pPotionEntry, Item pPotionIngredient, Potion pPotionResult) {throw new UnsupportedOperationException();}
+    static void crafttweaker$callAddMix(Potion pPotionEntry, Item pPotionIngredient, Potion pPotionResult) {throw new UnsupportedOperationException();}
     
 }

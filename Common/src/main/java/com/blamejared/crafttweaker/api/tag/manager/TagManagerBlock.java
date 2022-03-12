@@ -63,7 +63,7 @@ public class TagManagerBlock implements ITagManager<Block> {
         
         if(internal == null) {
             
-            final SetTag<Block> tag = AccessSetTag.init(Sets.newHashSet(toAdd), Block.class);
+            final SetTag<Block> tag = AccessSetTag.crafttweaker$init(Sets.newHashSet(toAdd), Block.class);
             CraftTweakerAPI.apply(new ActionTagCreate<>(getTagCollection(), tag, to));
         } else {
             CraftTweakerAPI.apply(new ActionTagAdd<>(internal, toAdd, to));

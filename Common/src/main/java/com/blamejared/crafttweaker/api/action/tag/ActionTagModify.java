@@ -7,11 +7,7 @@ import net.minecraft.tags.SetTag;
 import net.minecraft.tags.Tag;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class ActionTagModify<T> extends ActionTag<T> {
@@ -29,12 +25,12 @@ public abstract class ActionTagModify<T> extends ActionTag<T> {
         
         if(tag instanceof SetTag setTag) {
             
-            List<T> list = new ArrayList<>(((AccessSetTag) setTag).getValuesList());
-            Set<T> set = new HashSet<>(((AccessSetTag) setTag).getValues());
+            List<T> list = new ArrayList<>(((AccessSetTag) setTag).crafttweaker$getValuesList());
+            Set<T> set = new HashSet<>(((AccessSetTag) setTag).crafttweaker$getValues());
             applyTo(list, set);
-            ((AccessSetTag) setTag).setValuesList(ImmutableList.copyOf(list));
-            ((AccessSetTag) setTag).setValues(set);
-            ((AccessSetTag) setTag).setClosestCommonSuperType(AccessSetTag.findCommonSuperClass(set));
+            ((AccessSetTag) setTag).crafttweaker$setValuesList(ImmutableList.copyOf(list));
+            ((AccessSetTag) setTag).crafttweaker$setValues(set);
+            ((AccessSetTag) setTag).crafttweaker$setClosestCommonSuperType(AccessSetTag.crafttweaker$findCommonSuperClass(set));
         } else {
             throw new RuntimeException("Only SetTag's are supported right now, can't act on: " + tag);
         }

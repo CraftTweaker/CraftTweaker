@@ -95,7 +95,7 @@ public class TagManagerWrapper<T> implements ITagManager<T> {
         
         final Tag<?> internal = getInternal(to);
         if(internal == null) {
-            final SetTag<?> tagFromContents = AccessSetTag.init(Sets.newHashSet(toAdd), getElementClass());
+            final SetTag<?> tagFromContents = AccessSetTag.crafttweaker$init(Sets.newHashSet(toAdd), getElementClass());
             CraftTweakerAPI.apply(new ActionTagCreate(getTagCollection(), tagFromContents, to));
         } else {
             CraftTweakerAPI.apply(new ActionTagAdd(internal, toAdd, to));

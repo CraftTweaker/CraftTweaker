@@ -10,46 +10,46 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface AccessBlockBehaviour {
     
     @Accessor("friction")
-    float getFriction();
+    float crafttweaker$getFriction();
     
     @Mutable
     @Accessor("friction")
-    void setFriction(float value);
+    void crafttweaker$setFriction(float value);
     
     @Accessor("speedFactor")
-    float getSpeedFactor();
+    float crafttweaker$getSpeedFactor();
     
     @Mutable
     @Accessor("speedFactor")
-    void setSpeedFactor(float value);
+    void crafttweaker$setSpeedFactor(float value);
     
     @Accessor("jumpFactor")
-    float getJumpFactor();
+    float crafttweaker$getJumpFactor();
     
     @Mutable
     @Accessor("jumpFactor")
-    void setJumpFactor(float value);
+    void crafttweaker$setJumpFactor(float value);
     
     @Accessor("hasCollision")
-    boolean getHasCollision();
+    boolean crafttweaker$getHasCollision();
     
     @Mutable
     @Accessor("hasCollision")
-    void setHasCollision(boolean value);
+    void crafttweaker$setHasCollision(boolean value);
     
     @Accessor("explosionResistance")
-    float getExplosionResistance();
+    float crafttweaker$getExplosionResistance();
     
     @Mutable
     @Accessor("explosionResistance")
-    void setExplosionResistance(float value);
+    void crafttweaker$setExplosionResistance(float value);
     
     @Accessor("material")
-    Material getMaterial();
+    Material crafttweaker$getMaterial();
     
     @Mutable
     @Accessor("material")
-    void setMaterial(Material value);
+    void crafttweaker$setMaterial(Material value);
     
 }
 

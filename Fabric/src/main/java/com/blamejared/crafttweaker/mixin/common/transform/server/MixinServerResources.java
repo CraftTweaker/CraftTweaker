@@ -25,7 +25,7 @@ public abstract class MixinServerResources {
     public abstract RecipeManager getRecipeManager();
     
     @Inject(method = "<init>", at = @At(value = "TAIL"))
-    private void ct$init$injectScriptsListener(RegistryAccess registryAccess, Commands.CommandSelection commandSelection, int i, CallbackInfo ci) {
+    private void crafttweaker$init$injectScriptsListener(RegistryAccess registryAccess, Commands.CommandSelection commandSelection, int i, CallbackInfo ci) {
         
         this.resources.registerReloadListener(new LootModifierManagerReloadListener());
         this.resources.registerReloadListener(new ScriptReloadListenerAdapter(this::getRecipeManager));

@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(value = net.minecraftforge.registries.RegistryManager.class, remap = false)
 public interface AccessRegistryManager {
     
-    @Accessor
-    BiMap<ResourceLocation, ForgeRegistry<? extends IForgeRegistryEntry<?>>> getRegistries();
+    @Accessor("registries")
+    BiMap<ResourceLocation, ForgeRegistry<? extends IForgeRegistryEntry<?>>> crafttweaker$getRegistries();
     
 }

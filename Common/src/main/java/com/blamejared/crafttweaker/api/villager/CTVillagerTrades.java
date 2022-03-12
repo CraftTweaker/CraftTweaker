@@ -1,12 +1,21 @@
 package com.blamejared.crafttweaker.api.villager;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.action.villager.*;
+import com.blamejared.crafttweaker.api.action.villager.ActionAddTrade;
+import com.blamejared.crafttweaker.api.action.villager.ActionAddWanderingTrade;
+import com.blamejared.crafttweaker.api.action.villager.ActionRemoveTrade;
+import com.blamejared.crafttweaker.api.action.villager.ActionRemoveWanderingTrade;
+import com.blamejared.crafttweaker.api.action.villager.ActionTradeBase;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.plugin.IVillagerTradeRegistrationHandler;
-import com.blamejared.crafttweaker.mixin.common.access.villager.*;
+import com.blamejared.crafttweaker.mixin.common.access.villager.AccessDyedArmorForEmeralds;
+import com.blamejared.crafttweaker.mixin.common.access.villager.AccessEmeraldForItems;
+import com.blamejared.crafttweaker.mixin.common.access.villager.AccessEnchantedItemForEmeralds;
+import com.blamejared.crafttweaker.mixin.common.access.villager.AccessItemsAndEmeraldsToItems;
+import com.blamejared.crafttweaker.mixin.common.access.villager.AccessItemsForEmeralds;
+import com.blamejared.crafttweaker.mixin.common.access.villager.AccessTippedArrowForItemsAndEmeralds;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.world.entity.Entity;
@@ -18,7 +27,11 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -192,7 +205,7 @@ public class CTVillagerTrades {
         
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.EmeraldForItems) {
-                return ((AccessEmeraldForItems) trade).getItem() == tradeFor;
+                return ((AccessEmeraldForItems) trade).crafttweaker$getItem() == tradeFor;
             } else if(trade instanceof IBasicItemListing basicTrade) {
                 return basicTrade.getForSale().getItem() == tradeFor;
             }
@@ -216,7 +229,7 @@ public class CTVillagerTrades {
         
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.ItemsForEmeralds) {
-                return sellingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) trade).getItemStack()));
+                return sellingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) trade).crafttweaker$getItemStack()));
             } else if(trade instanceof IBasicItemListing basicTrade) {
                 return Services.PLATFORM.createMCItemStackMutable(basicTrade.getPrice())
                         .matches(sellingItem);
@@ -243,8 +256,8 @@ public class CTVillagerTrades {
         
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.ItemsAndEmeraldsToItems) {
-                if(sellingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) trade).getToItem()))) {
-                    return buyingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) trade).getFromItem()));
+                if(sellingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) trade).crafttweaker$getToItem()))) {
+                    return buyingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) trade).crafttweaker$getFromItem()));
                 }
             } else if(trade instanceof IBasicItemListing basicTrade) {
                 if(sellingItem.matches(Services.PLATFORM.createMCItemStackMutable(basicTrade.getPrice()))) {
@@ -273,8 +286,8 @@ public class CTVillagerTrades {
         
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.TippedArrowForItemsAndEmeralds) {
-                if(potionStack.matches(Services.PLATFORM.createMCItemStackMutable(((AccessTippedArrowForItemsAndEmeralds) trade).getToItem()))) {
-                    return sellingItem == ((AccessTippedArrowForItemsAndEmeralds) trade).getFromItem();
+                if(potionStack.matches(Services.PLATFORM.createMCItemStackMutable(((AccessTippedArrowForItemsAndEmeralds) trade).crafttweaker$getToItem()))) {
+                    return sellingItem == ((AccessTippedArrowForItemsAndEmeralds) trade).crafttweaker$getFromItem();
                 }
             }
             return false;
@@ -297,7 +310,7 @@ public class CTVillagerTrades {
         
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.DyedArmorForEmeralds) {
-                return ((AccessDyedArmorForEmeralds) trade).getItem() == buyingItem;
+                return ((AccessDyedArmorForEmeralds) trade).crafttweaker$getItem() == buyingItem;
             }
             return false;
         });
@@ -349,7 +362,7 @@ public class CTVillagerTrades {
         
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.EnchantedItemForEmeralds) {
-                return buyingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessEnchantedItemForEmeralds) trade).getItemStack()));
+                return buyingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessEnchantedItemForEmeralds) trade).crafttweaker$getItemStack()));
             }
             return false;
         });
@@ -556,7 +569,7 @@ public class CTVillagerTrades {
         
         removeWanderingTradeInternal(rarity, trade -> {
             if(trade instanceof VillagerTrades.ItemsForEmeralds) {
-                return tradeFor.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) trade).getItemStack()));
+                return tradeFor.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) trade).crafttweaker$getItemStack()));
             } else if(trade instanceof IBasicItemListing basicTrade) {
                 return tradeFor.matches(Services.PLATFORM.createMCItemStackMutable(basicTrade.getForSale()));
             }
@@ -578,7 +591,7 @@ public class CTVillagerTrades {
         
         removeWanderingTradeInternal(rarity, trade -> {
             if(trade instanceof VillagerTrades.ItemsForEmeralds) {
-                return tradeFor.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) trade).getItemStack()));
+                return tradeFor.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) trade).crafttweaker$getItemStack()));
             } else if(trade instanceof IBasicItemListing basicTrade) {
                 return tradeFor.matches(Services.PLATFORM.createMCItemStackMutable(basicTrade.getForSale()));
             }

@@ -8,10 +8,10 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(UpgradeRecipe.class)
 public interface AccessUpgradeRecipe {
     
-    @Accessor
-    Ingredient getBase();
+    @Accessor("base")
+    Ingredient crafttweaker$getBase();
     
-    @Accessor
-    Ingredient getAddition();
+    @Accessor("addition")
+    Ingredient crafttweaker$getAddition();
     
 }

@@ -88,10 +88,10 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
         
         //ImmutableMap of ImmutableMaps. Nice.
         final AccessRecipeManager accessRecipeManager = (AccessRecipeManager) manager;
-        accessRecipeManager.setRecipes(new HashMap<>(accessRecipeManager.getRecipes()));
-        accessRecipeManager.getRecipes()
-                .replaceAll((k, v) -> new HashMap<>(accessRecipeManager.getRecipes().get(k)));
-        accessRecipeManager.setByName(new HashMap<>(accessRecipeManager.getByName()));
+        accessRecipeManager.crafttweaker$setRecipes(new HashMap<>(accessRecipeManager.crafttweaker$getRecipes()));
+        accessRecipeManager.crafttweaker$getRecipes()
+                .replaceAll((k, v) -> new HashMap<>(accessRecipeManager.crafttweaker$getRecipes().get(k)));
+        accessRecipeManager.crafttweaker$setByName(new HashMap<>(accessRecipeManager.crafttweaker$getByName()));
         CraftTweakerAPI.getAccessibleElementsProvider().recipeManager(manager);
     }
     
@@ -121,7 +121,7 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
     
     private void storeScriptsInRecipes(final RecipeManager manager, final Pair<Path, List<Path>> scripts) {
         
-        final Map<ResourceLocation, Recipe<?>> recipes = ((AccessRecipeManager) manager).getRecipes()
+        final Map<ResourceLocation, Recipe<?>> recipes = ((AccessRecipeManager) manager).crafttweaker$getRecipes()
                 .computeIfAbsent(CraftTweakerRegistries.RECIPE_TYPE_SCRIPTS, it -> new HashMap<>());
         final Path root = scripts.getFirst();
         

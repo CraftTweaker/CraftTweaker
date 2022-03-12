@@ -146,7 +146,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
     @Override
     public Fluid getBucketContent(BucketItem item) {
         
-        return ((AccessBucketItem) item).getContent();
+        return ((AccessBucketItem) item).crafttweaker$getContent();
     }
     
     @Override
@@ -244,7 +244,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
     @Override
     public Collection<StaticTagHelper<?>> getStaticTagHelpers() {
         
-        return AccessStaticTags.getHELPERS();
+        return AccessStaticTags.crafttweaker$getHELPERS();
     }
     
     @Override

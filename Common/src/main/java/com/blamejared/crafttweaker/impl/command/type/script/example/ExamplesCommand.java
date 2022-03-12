@@ -38,7 +38,7 @@ public final class ExamplesCommand {
     private static int execute(final ServerPlayer player) {
         
         final MinecraftServer server = player.server;
-        final ServerResources dataPackRegistries = ((AccessMinecraftServer) server).getResources();
+        final ServerResources dataPackRegistries = ((AccessMinecraftServer) server).crafttweaker$getResources();
         final ResourceManager resourceManager = dataPackRegistries.getResourceManager();
         
         //Collect all scripts that are in the scripts data pack folder and write them to the example scripts folder

@@ -24,7 +24,7 @@ public class ExpandLightningBolt {
     @ZenCodeType.Getter("visualOnly")
     public static boolean isVisualOnly(LightningBolt internal) {
         
-        return ((AccessLightningBolt) internal).isVisualOnly();
+        return ((AccessLightningBolt) internal).crafttweaker$isVisualOnly();
     }
     
     @ZenCodeType.Nullable

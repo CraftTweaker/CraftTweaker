@@ -11,7 +11,7 @@ import java.util.List;
 public interface AccessBrewingRecipeRegistry {
     
     @Accessor(value = "recipes", remap = false)
-    static List<IBrewingRecipe> getRecipes() {
+    static List<IBrewingRecipe> crafttweaker$getRecipes() {
         
         throw new UnsupportedOperationException();
     }

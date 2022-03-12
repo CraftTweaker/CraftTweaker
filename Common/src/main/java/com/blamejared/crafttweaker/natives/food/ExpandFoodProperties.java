@@ -62,7 +62,7 @@ public class ExpandFoodProperties {
     public static FoodProperties setIsMeat(FoodProperties internal, boolean isMeat) {
         
         FoodProperties.Builder builder = getbuilder(internal);
-        ((AccessFoodPropertiesBuilder) builder).setIsMeat(isMeat);
+        ((AccessFoodPropertiesBuilder) builder).crafttweaker$setIsMeat(isMeat);
         return builder.build();
     }
     
@@ -78,7 +78,7 @@ public class ExpandFoodProperties {
     public static FoodProperties setCanAlwaysEat(FoodProperties internal, boolean canAlwaysEat) {
         
         FoodProperties.Builder builder = getbuilder(internal);
-        ((AccessFoodPropertiesBuilder) builder).setCanAlwaysEat(canAlwaysEat);
+        ((AccessFoodPropertiesBuilder) builder).crafttweaker$setCanAlwaysEat(canAlwaysEat);
         return builder.build();
     }
     
@@ -94,7 +94,7 @@ public class ExpandFoodProperties {
     public static FoodProperties setIsFastFood(FoodProperties internal, boolean fastFood) {
         
         FoodProperties.Builder builder = getbuilder(internal);
-        ((AccessFoodPropertiesBuilder) builder).setFastFood(fastFood);
+        ((AccessFoodPropertiesBuilder) builder).crafttweaker$setFastFood(fastFood);
         return builder.build();
     }
     
@@ -109,7 +109,7 @@ public class ExpandFoodProperties {
     public static FoodProperties addEffect(FoodProperties internal, MobEffectInstance effect, float probability) {
         
         FoodProperties.Builder builder = getbuilder(internal);
-        ((AccessFoodPropertiesBuilder) builder).getEffects().add(Pair.of(effect, probability));
+        ((AccessFoodPropertiesBuilder) builder).crafttweaker$getEffects().add(Pair.of(effect, probability));
         return builder.build();
     }
     
@@ -117,7 +117,7 @@ public class ExpandFoodProperties {
     public static FoodProperties removeEffect(FoodProperties internal, MobEffectInstance effect) {
         
         FoodProperties.Builder builder = getbuilder(internal);
-        ((AccessFoodPropertiesBuilder) builder).getEffects().removeIf(pair -> pair.getFirst().equals(effect));
+        ((AccessFoodPropertiesBuilder) builder).crafttweaker$getEffects().removeIf(pair -> pair.getFirst().equals(effect));
         return builder.build();
     }
     

@@ -17,13 +17,13 @@ import java.util.function.Consumer;
 public abstract class MixinLootTable {
     
     @ModifyVariable(method = "getRandomItems(Lnet/minecraft/world/level/storage/loot/LootContext;Ljava/util/function/Consumer;)V", at = @At("HEAD"), argsOnly = true)
-    private Consumer<ItemStack> ct$getRandomItems$injectCapturingConsumer(final Consumer<ItemStack> original) {
+    private Consumer<ItemStack> crafttweaker$getRandomItems$injectCapturingConsumer(final Consumer<ItemStack> original) {
         
         return LootCapturingConsumer.of(original);
     }
     
     @Inject(method = "getRandomItems(Lnet/minecraft/world/level/storage/loot/LootContext;Ljava/util/function/Consumer;)V", at = @At("TAIL"))
-    private void ct$getRandomItems$runLootModifiers(final LootContext contextData, final Consumer<ItemStack> stacksOut, final CallbackInfo ci) {
+    private void crafttweaker$getRandomItems$runLootModifiers(final LootContext contextData, final Consumer<ItemStack> stacksOut, final CallbackInfo ci) {
         
         ((LootCapturingConsumer) stacksOut).release(loot -> LootModifierManager.INSTANCE.applyModifiers(loot, contextData));
     }

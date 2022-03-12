@@ -143,10 +143,10 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         handler.registerTradeConverter(VillagerTrades.DyedArmorForEmeralds.class, trade -> new CTTradeObject(
                 emerald,
                 Services.PLATFORM.getEmptyIItemStack(),
-                Services.PLATFORM.createMCItemStackMutable(((AccessDyedArmorForEmeralds) trade).getItem()
+                Services.PLATFORM.createMCItemStackMutable(((AccessDyedArmorForEmeralds) trade).crafttweaker$getItem()
                         .getDefaultInstance())));
         handler.registerTradeConverter(VillagerTrades.EmeraldForItems.class, trade -> new CTTradeObject(
-                Services.PLATFORM.createMCItemStackMutable(((AccessEmeraldForItems) trade).getItem()
+                Services.PLATFORM.createMCItemStackMutable(((AccessEmeraldForItems) trade).crafttweaker$getItem()
                         .getDefaultInstance()),
                 Services.PLATFORM.getEmptyIItemStack(),
                 emerald));
@@ -166,20 +166,20 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         handler.registerTradeConverter(VillagerTrades.EnchantedItemForEmeralds.class, trade -> new CTTradeObject(
                 emerald,
                 Services.PLATFORM.getEmptyIItemStack(),
-                Services.PLATFORM.createMCItemStackMutable(((AccessEnchantedItemForEmeralds) trade).getItemStack())));
+                Services.PLATFORM.createMCItemStackMutable(((AccessEnchantedItemForEmeralds) trade).crafttweaker$getItemStack())));
         handler.registerTradeConverter(VillagerTrades.TippedArrowForItemsAndEmeralds.class, trade -> new CTTradeObject(
                 emerald,
-                Services.PLATFORM.createMCItemStackMutable(((AccessTippedArrowForItemsAndEmeralds) trade).getFromItem()
+                Services.PLATFORM.createMCItemStackMutable(((AccessTippedArrowForItemsAndEmeralds) trade).crafttweaker$getFromItem()
                         .getDefaultInstance()),
-                Services.PLATFORM.createMCItemStackMutable(((AccessTippedArrowForItemsAndEmeralds) trade).getToItem())));
+                Services.PLATFORM.createMCItemStackMutable(((AccessTippedArrowForItemsAndEmeralds) trade).crafttweaker$getToItem())));
         handler.registerTradeConverter(VillagerTrades.ItemsAndEmeraldsToItems.class, trade -> new CTTradeObject(
                 emerald,
-                Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) trade).getFromItem()),
-                Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) trade).getToItem())));
+                Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) trade).crafttweaker$getFromItem()),
+                Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) trade).crafttweaker$getToItem())));
         handler.registerTradeConverter(VillagerTrades.ItemsForEmeralds.class, trade -> new CTTradeObject(
                 emerald,
                 Services.PLATFORM.getEmptyIItemStack(),
-                Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) trade).getItemStack())));
+                Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) trade).crafttweaker$getItemStack())));
         handler.registerTradeConverter(VillagerTrades.SuspiciousStewForEmerald.class, trade -> new CTTradeObject(
                 emerald,
                 Services.PLATFORM.getEmptyIItemStack(),

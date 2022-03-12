@@ -101,7 +101,7 @@ public final class ConflictCommand {
         
         // Cloning the map to avoid /reload messing up with CMEs when looping on it from off-thread
         // Also, this deep copies only the two maps: the recipe type, RL, and recipe objects are not also deep copied
-        final Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> recipes = deepCopy(((AccessRecipeManager) manager).getRecipes(), filter);
+        final Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> recipes = deepCopy(((AccessRecipeManager) manager).crafttweaker$getRecipes(), filter);
         CompletableFuture.supplyAsync(() -> computeConflicts(recipes), OFF_THREAD_SERVICE)
                 .thenAcceptAsync(message -> dispatchCompletionTo(message, player), OFF_THREAD_SERVICE)
                 .exceptionallyAsync(exception -> dispatchExceptionTo(exception, player), OFF_THREAD_SERVICE);

@@ -36,7 +36,7 @@ public class IngredientConverter {
             return empty();
         }
         
-        return fromIItemLists(((AccessIngredient) (Object) ingredient).getValues());
+        return fromIItemLists(((AccessIngredient) (Object) ingredient).crafttweaker$getValues());
     }
     
     private static IIngredient fromIItemLists(Ingredient.Value... itemLists) {
@@ -72,7 +72,7 @@ public class IngredientConverter {
     private static IIngredient fromTagList(Ingredient.TagValue value) {
         
         final ResourceLocation location = TagManagerItem.INSTANCE.getTagCollection()
-                .getId(((AccessIngredientTagValue) value).getTag());
+                .getId(((AccessIngredientTagValue) value).crafttweaker$getTag());
         final MCTag<Item> itemMCTag = new MCTag<>(location, TagManagerItem.INSTANCE);
         return ExpandItemTag.asIIngredient(itemMCTag);
     }

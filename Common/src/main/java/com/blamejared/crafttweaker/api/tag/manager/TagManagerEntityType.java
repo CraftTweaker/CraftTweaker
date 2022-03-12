@@ -58,7 +58,7 @@ public class TagManagerEntityType implements ITagManager<EntityType> {
         
         final Tag<EntityType> internal = getInternal(to);
         if(internal == null) {
-            final Tag<EntityType> tagFromContents = AccessSetTag.init(Sets.newHashSet(toAdd), EntityType.class);
+            final Tag<EntityType> tagFromContents = AccessSetTag.crafttweaker$init(Sets.newHashSet(toAdd), EntityType.class);
             CraftTweakerAPI.apply(new ActionTagCreate<>(getTagCollection(), tagFromContents, to));
         } else {
             CraftTweakerAPI.apply(new ActionTagAdd<>(internal, toAdd, to));

@@ -13,32 +13,31 @@ import java.util.Set;
 public interface AccessSetTag {
     
     @Accessor("valuesList")
-    <T> ImmutableList<T> getValuesList();
+    <T> ImmutableList<T> crafttweaker$getValuesList();
     
     @Mutable
     @Accessor("valuesList")
-    <T> void setValuesList(ImmutableList<T> valuesList);
+    <T> void crafttweaker$setValuesList(ImmutableList<T> valuesList);
     
     @Accessor("values")
-    <T> Set<T> getValues();
+    <T> Set<T> crafttweaker$getValues();
     
     @Mutable
     @Accessor("values")
-    <T> void setValues(Set<T> valuesList);
+    <T> void crafttweaker$setValues(Set<T> valuesList);
     
     @Mutable
     @Accessor("closestCommonSuperType")
-    <T> void setClosestCommonSuperType(Class<?> valuesList);
+    <T> void crafttweaker$setClosestCommonSuperType(Class<?> valuesList);
     
     @Invoker("<init>")
-    static <T> SetTag<T> init(Set<T> set, Class<?> clazz) {
+    static <T> SetTag<T> crafttweaker$init(Set<T> set, Class<?> clazz) {
         
         throw new AssertionError();
     }
     
-    
     @Invoker("findCommonSuperClass")
-    static <T> Class<?> findCommonSuperClass(Set<T> values) {
+    static <T> Class<?> crafttweaker$findCommonSuperClass(Set<T> values) {
         
         throw new AssertionError();
     }

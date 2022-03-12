@@ -29,7 +29,7 @@ public class ActionRemoveBrewingRecipeByPotionOutput extends ActionBrewingBase {
     @Override
     public void apply() {
         
-        Iterator<PotionBrewing.Mix<Potion>> iterator = AccessPotionBrewing.getPOTION_MIXES().iterator();
+        Iterator<PotionBrewing.Mix<Potion>> iterator = AccessPotionBrewing.crafttweaker$getPOTION_MIXES().iterator();
         while(iterator.hasNext()) {
             PotionBrewing.Mix<Potion> mix = iterator.next();
             
@@ -55,7 +55,7 @@ public class ActionRemoveBrewingRecipeByPotionOutput extends ActionBrewingBase {
                 continue;
             }
             
-            AccessPotionBrewing.callAddMix(potionInput.get(), itemReagent.getItems()[0].getItem(), potionOutput.get());
+            AccessPotionBrewing.crafttweaker$callAddMix(potionInput.get(), itemReagent.getItems()[0].getItem(), potionOutput.get());
         }
     }
     

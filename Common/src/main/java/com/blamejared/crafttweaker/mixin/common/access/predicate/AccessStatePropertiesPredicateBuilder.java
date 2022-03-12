@@ -9,7 +9,7 @@ import java.util.List;
 @Mixin(StatePropertiesPredicate.Builder.class)
 public interface AccessStatePropertiesPredicateBuilder {
     
-    @Accessor
-    List<Object> getMatchers();
+    @Accessor("matchers")
+    List<Object> crafttweaker$getMatchers();
     
 }
