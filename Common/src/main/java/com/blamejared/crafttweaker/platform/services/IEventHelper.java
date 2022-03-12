@@ -14,6 +14,7 @@ import com.blamejared.crafttweaker.natives.entity.ExpandEntityType;
 import com.blamejared.crafttweaker.natives.entity.type.player.ExpandPlayer;
 import com.blamejared.crafttweaker.natives.world.ExpandLevel;
 import com.blamejared.crafttweaker.platform.Services;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -24,10 +25,12 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,7 +41,7 @@ import java.util.function.Consumer;
 
 public interface IEventHelper {
     
-    Map<IIngredient, Integer> BURN_TIMES = new HashMap<>();
+    Map<RecipeType<?>, List<Pair<IIngredient,Integer>>> BURN_TIMES = new HashMap<>();
     
     //TODO when there is persistent data, store a tag on the player instead of this list
     Set<Player> BLOCK_INFO_PLAYERS = new HashSet<>();
@@ -46,13 +49,16 @@ public interface IEventHelper {
     
     Map<IIngredient, List<Consumer<ItemAttributeModifierBase>>> ATTRIBUTE_MODIFIERS = new HashMap<>();
     
-    IGatherReplacementExclusionEvent fireGatherReplacementExclusionEvent(final IRecipeManager manager);
+    IGatherReplacementExclusionEvent fireGatherReplacementExclusionEvent(final IRecipeManager<?> manager);
     
-    void setBurnTime(IIngredient ingredient, int burnTime);
+    default void setBurnTime(IIngredient ingredient, int burnTime, RecipeType<?> type) {
+    
+        getBurnTimes().computeIfAbsent(type, recipeType -> new ArrayList<>()).add(Pair.of(ingredient, burnTime));
+    }
     
     int getBurnTime(IItemStack stack);
     
-    default Map<IIngredient, Integer> getBurnTimes() {
+    default Map<RecipeType<?>, List<Pair<IIngredient,Integer>>> getBurnTimes() {
         
         return BURN_TIMES;
     }
@@ -103,12 +109,10 @@ public interface IEventHelper {
                 if(!state.getProperties().isEmpty()) {
                     
                     sendAndLog(player, new TranslatableComponent("crafttweaker.command.info.block.properties"));
-                    state.getProperties().forEach(property -> {
-                        sendAndLog(player, new TextComponent(property.getName()).withStyle(ChatFormatting.YELLOW)
-                                .append(new TextComponent(": ").withStyle(ChatFormatting.WHITE))
-                                .append(new TextComponent(state.getValue(property)
-                                        .toString()).withStyle(ChatFormatting.AQUA)));
-                    });
+                    state.getProperties().forEach(property -> sendAndLog(player, new TextComponent(property.getName()).withStyle(ChatFormatting.YELLOW)
+                            .append(new TextComponent(": ").withStyle(ChatFormatting.WHITE))
+                            .append(new TextComponent(state.getValue(property)
+                                    .toString()).withStyle(ChatFormatting.AQUA))));
                 }
                 MapData tileData = ExpandLevel.getBlockEntityData(world, pos);
                 if(!tileData.isEmpty()) {

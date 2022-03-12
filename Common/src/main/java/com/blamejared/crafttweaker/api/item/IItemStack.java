@@ -669,7 +669,6 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         return getInternal().isEdible();
     }
     
-    //TODO Forge specific getBurnTime for a recipe type? Could make it common and just have the fabric one always returning the same value?
     @ZenCodeType.Getter("burnTime")
     default int getBurnTime() {
         

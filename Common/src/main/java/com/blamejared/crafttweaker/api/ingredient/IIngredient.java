@@ -146,6 +146,7 @@ public interface IIngredient extends CommandStringDisplayable {
      *
      * @docParam time 500
      */
+    @ZenCodeType.Method
     @ZenCodeType.Setter("burnTime")
     default void setBurnTime(int time) {
         
