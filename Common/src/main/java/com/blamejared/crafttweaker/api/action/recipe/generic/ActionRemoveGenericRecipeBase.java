@@ -16,9 +16,9 @@ public abstract class ActionRemoveGenericRecipeBase extends ActionWholeRegistryB
         
         final Map<String, Integer> numberOfRemovedRecipesByType = new TreeMap<>();
         int numberOfRemovedRecipes = 0;
-    
-        Map<RecipeType<?>, RecipeList<?>> recipeLists = getRecipeLists();
-        for(RecipeType recipeType : recipeLists.keySet()) {
+        
+        Map<RecipeType<Recipe<?>>, RecipeList<?>> recipeLists = getRecipeLists();
+        for(RecipeType<Recipe<?>> recipeType : recipeLists.keySet()) {
             int removedRecipes = applyToRegistry(recipeLists.get(recipeType));
             if(removedRecipes > 0) {
                 final String commandString = new RecipeManagerWrapper(recipeType).getCommandString();

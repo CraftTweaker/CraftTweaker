@@ -24,9 +24,12 @@ public abstract class ActionWholeRegistryBase implements IRuntimeAction {
         return CraftTweakerAPI.getAccessibleElementsProvider().recipeManager();
     }
     
-    protected Map<RecipeType<?>, RecipeList<?>> getRecipeLists() {
-    
-        return RecipeTypeBracketHandler.getManagerInstances().stream().map(IRecipeManager::getRecipeList).collect(Collectors.toMap(RecipeList::getRecipeType, Function.identity()));
+    protected Map<RecipeType<Recipe<?>>, RecipeList<?>> getRecipeLists() {
+        
+        return RecipeTypeBracketHandler.getManagerInstances()
+                .stream()
+                .map(IRecipeManager::getRecipeList)
+                .collect(Collectors.toMap(RecipeList::getRecipeType, Function.identity()));
     }
     
     protected Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> getRecipesByType() {

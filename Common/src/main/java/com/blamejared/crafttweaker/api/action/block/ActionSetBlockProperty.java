@@ -18,8 +18,8 @@ public class ActionSetBlockProperty<T> implements IUndoableAction {
     private final T newValue;
     private final T oldValue;
     private final Consumer<T> valueSetter;
-    private Function<T, String> valueNameGetter;
-    private BlockState blockState;
+    private final Function<T, String> valueNameGetter;
+    private final BlockState blockState;
     
     public ActionSetBlockProperty(Block block, String propertyName, T newValue, T oldValue, Consumer<T> valueSetter) {
         
@@ -29,6 +29,7 @@ public class ActionSetBlockProperty<T> implements IUndoableAction {
         this.oldValue = oldValue;
         this.valueSetter = valueSetter;
         this.valueNameGetter = Object::toString;
+        this.blockState = null;
     }
     
     public ActionSetBlockProperty(Block block, String propertyName, T newValue, T oldValue, Consumer<T> valueSetter, Function<T, String> valueNameGetter) {
@@ -39,6 +40,7 @@ public class ActionSetBlockProperty<T> implements IUndoableAction {
         this.oldValue = oldValue;
         this.valueSetter = valueSetter;
         this.valueNameGetter = valueNameGetter;
+        this.blockState = null;
     }
     
     public ActionSetBlockProperty(BlockState blockState, String propertyName, T newValue, T oldValue, Consumer<T> valueSetter, Function<T, String> valueNameGetter) {
