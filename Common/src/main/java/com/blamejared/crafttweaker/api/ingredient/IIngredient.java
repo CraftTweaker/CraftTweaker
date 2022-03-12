@@ -153,9 +153,9 @@ public interface IIngredient extends CommandStringDisplayable {
     }
     
     @ZenCodeType.Method
-    default void clearTooltip() {
+    default void clearTooltip(@ZenCodeType.OptionalBoolean() boolean leaveName) {
         
-        CraftTweakerAPI.apply(new ActionClearTooltip(this));
+        CraftTweakerAPI.apply(new ActionClearTooltip(this, leaveName));
     }
     
     @ZenCodeType.Method
