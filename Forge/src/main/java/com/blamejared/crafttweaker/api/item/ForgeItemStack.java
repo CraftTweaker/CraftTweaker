@@ -17,6 +17,13 @@ public interface ForgeItemStack extends IItemStack {
         return ForgeHooks.getBurnTime(getInternal(), null);
     }
     
+    
+    @Override
+    default IItemStack getRemainingItem(IItemStack stack) {
+        
+        return Services.PLATFORM.createMCItemStack(stack.getInternal().getContainerItem());
+    }
+    
     /**
      * Checks if this item can perform the given ToolAction.
      *
