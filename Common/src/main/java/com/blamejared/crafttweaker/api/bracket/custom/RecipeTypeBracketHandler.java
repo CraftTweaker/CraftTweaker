@@ -52,7 +52,6 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     
     private static volatile Runnable enqueuedRegistration = null;
     
-    @SuppressWarnings("unchecked")
     public RecipeTypeBracketHandler() {
         
         enqueuedRegistration = () -> {
@@ -164,7 +163,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     @Override
     public ParsedExpression parse(CodePosition position, ZSTokenParser tokens) throws ParseException {
         
-        final String name = ParseUtil.readContent(tokens);
+        final String name = ParseUtil.readContent(position, tokens);
         final ResourceLocation resourceLocation = ResourceLocation.tryParse(name);
         if(resourceLocation == null) {
             throw new ParseException(position, "Invalid ResourceLocation, expected: <recipetype:modid:location>");
