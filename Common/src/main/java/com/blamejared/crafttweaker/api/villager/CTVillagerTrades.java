@@ -1,34 +1,25 @@
 package com.blamejared.crafttweaker.api.villager;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.action.villager.ActionAddTrade;
-import com.blamejared.crafttweaker.api.action.villager.ActionAddWanderingTrade;
-import com.blamejared.crafttweaker.api.action.villager.ActionRemoveTrade;
-import com.blamejared.crafttweaker.api.action.villager.ActionRemoveWanderingTrade;
-import com.blamejared.crafttweaker.api.action.villager.ActionTradeBase;
+import com.blamejared.crafttweaker.api.action.villager.*;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.plugin.IVillagerTradeRegistrationHandler;
-import com.blamejared.crafttweaker.mixin.common.access.villager.AccessDyedArmorForEmeralds;
-import com.blamejared.crafttweaker.mixin.common.access.villager.AccessEmeraldForItems;
-import com.blamejared.crafttweaker.mixin.common.access.villager.AccessEnchantedItemForEmeralds;
-import com.blamejared.crafttweaker.mixin.common.access.villager.AccessItemsAndEmeraldsToItems;
-import com.blamejared.crafttweaker.mixin.common.access.villager.AccessItemsForEmeralds;
-import com.blamejared.crafttweaker.mixin.common.access.villager.AccessTippedArrowForItemsAndEmeralds;
+import com.blamejared.crafttweaker.mixin.common.access.villager.*;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.trading.MerchantOffer;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -43,13 +34,34 @@ public class CTVillagerTrades {
     public static final CTVillagerTrades INSTANCE = new CTVillagerTrades();
     public static final List<ActionTradeBase> ACTIONS_VILLAGER_TRADES = new ArrayList<>();
     public static final List<ActionTradeBase> ACTION_WANDERING_TRADES = new ArrayList<>();
-    // The event only fires once, so we use this to make sure we don't constantly add to the above lists
-    public static boolean RAN_EVENTS = false;
-    
     /**
      * Use {@link com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin#registerVillagerTradeConverters(IVillagerTradeRegistrationHandler)} to register custom trades to this list
      */
     public static final Map<Class<VillagerTrades.ItemListing>, Function<VillagerTrades.ItemListing, CTTradeObject>> TRADE_CONVERTER = new HashMap<>();
+    // The event only fires once, so we use this to make sure we don't constantly add to the above lists
+    public static boolean RAN_EVENTS = false;
+    
+    /**
+     * Adds a new custom trade with the selling and buying items determined by the custom MerchantOffer generator.
+     *
+     * The function will only run when the villager resolves the trade.
+     *
+     * @param profession     What profession this trade should be for.
+     * @param villagerLevel  The level the Villager needs to be.
+     * @param offerGenerator A generator method to make a new MerchantOffer.
+     *
+     * @docParam profession <profession:minecraft:farmer>
+     * @docParam villagerLevel 1
+     * @docParam offerGenerator (entity, random) => {
+     * return new MerchantOffer(<item:minecraft:dirt>, <item:minecraft:diamond>, 0, 5);
+     * }
+     */
+    @ZenCodeType.Method
+    public void addTrade(VillagerProfession profession, int villagerLevel, BiFunction<Entity, Random, @ZenCodeType.Nullable MerchantOffer> offerGenerator) {
+        
+        CustomTradeListing trade = new CustomTradeListing(offerGenerator);
+        addTradeInternal(profession, villagerLevel, trade);
+    }
     
     /**
      * Adds a Villager Trade for emeralds for an Item. An example being, giving a villager 2 emeralds for an arrow.
