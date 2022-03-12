@@ -64,8 +64,8 @@ public class Game {
         return Services.REGISTRY.items()
                 .stream()
                 .map(Item::getDefaultInstance)
-                .map(Services.PLATFORM::createMCItemStack)
                 .filter(stack -> !stack.isEmpty())
+                .map(Services.PLATFORM::createMCItemStack)
                 .toList();
     }
     

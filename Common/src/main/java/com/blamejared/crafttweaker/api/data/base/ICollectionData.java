@@ -23,10 +23,8 @@ import java.util.Arrays;
 @Document("vanilla/api/data/ICollectionData")
 public interface ICollectionData extends IData {
     
-    
     @Override
     ICollectionData copy();
-    
     
     @Override
     ICollectionData copyInternal();
