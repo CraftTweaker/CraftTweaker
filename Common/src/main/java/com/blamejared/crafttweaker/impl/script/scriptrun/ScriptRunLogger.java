@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.script.scriptrun;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import org.apache.logging.log4j.Level;
 import org.openzen.zencode.java.logger.ScriptingEngineLogger;
 import org.openzen.zencode.shared.CompileException;
 import org.openzen.zencode.shared.SourceFile;
@@ -57,13 +58,13 @@ final class ScriptRunLogger implements ScriptingEngineLogger {
     @Override
     public void throwingErr(final String message, final Throwable throwable) {
         
-        CraftTweakerAPI.LOGGER.error(message, throwable);
+        CraftTweakerAPI.LOGGER.throwing(Level.ERROR, throwable);
     }
     
     @Override
     public void throwingWarn(final String message, final Throwable throwable) {
         
-        CraftTweakerAPI.LOGGER.warn(message, throwable);
+        CraftTweakerAPI.LOGGER.throwing(Level.WARN, throwable);
     }
     
     @Override
