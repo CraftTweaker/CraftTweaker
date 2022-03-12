@@ -150,7 +150,7 @@ public class BracketValidators {
     
     @ZenCodeType.Method
     @BracketValidator("creativemodetab")
-    public static boolean validateItemGroupBracket(String tokens) {
+    public static boolean validateCreativeModeTabBracket(String tokens) {
     
         return Arrays.stream(CreativeModeTab.TABS).anyMatch(group -> group.getRecipeFolderName().equals(tokens));
     }

@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.bracket;
 
 import com.blamejared.crafttweaker.api.annotation.BracketDumper;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.natives.block.ExpandBlock;
 import com.blamejared.crafttweaker.natives.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.natives.entity.ExpandEntityType;
@@ -16,6 +17,7 @@ import com.blamejared.crafttweaker.natives.world.damage.ExpandDamageSource;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
@@ -31,7 +33,8 @@ public class BracketDumpers {
     @BracketDumper("attribute")
     public static Collection<String> getAttributeDump() {
         
-        return Services.REGISTRY.attributes().stream()
+        return Services.REGISTRY.attributes()
+                .stream()
                 .map(ExpandAttribute::getCommandString)
                 .collect(Collectors.toSet());
     }
@@ -91,8 +94,9 @@ public class BracketDumpers {
     public static Collection<String> getItemBracketDump() {
         
         return Services.REGISTRY.items()
-                .keyStream()
-                .map("<item:%s>"::formatted)
+                .stream()
+                .map(Item::getDefaultInstance)
+                .map(ItemStackUtil::getCommandString)
                 .collect(Collectors.toSet());
     }
     
@@ -122,13 +126,13 @@ public class BracketDumpers {
         
         return ExpandDamageSource.PRE_REGISTERED_DAMAGE_SOURCES.keySet()
                 .stream()
-                .map(name -> "<damagesource:" + name + ">")
+                .map("<damagesource:%s>"::formatted)
                 .collect(Collectors.toList());
     }
     
     @ZenCodeType.Method
     @BracketDumper("creativemodetab")
-    public static Collection<String> getItemGroupBracketDump() {
+    public static Collection<String> getCreativeModeTabBracketDump() {
         
         return Arrays.stream(CreativeModeTab.TABS)
                 .map(ExpandCreativeModeTab::getCommandString)
