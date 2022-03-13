@@ -10,7 +10,7 @@ import java.lang.invoke.WrongMethodTypeException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-public final class HandleHelper {
+public final class HandleUtil {
     
     public static final class UnableToLinkHandleException extends RuntimeException {
         
@@ -44,7 +44,7 @@ public final class HandleHelper {
     
     private static final MethodHandles.Lookup LOOKUP = findLookup();
     
-    private HandleHelper() {}
+    private HandleUtil() {}
     
     public static MethodHandle linkMethod(final Class<?> type, final String methodName, final Class<?> returnType, final Class<?>... arguments) {
         
@@ -53,7 +53,7 @@ public final class HandleHelper {
             
             return LOOKUP.unreflect(target);
         } catch(final IllegalAccessException e) {
-            throw new UnableToLinkHandleException("Unable to access method " + StringUtils.quoteAndEscape(methodName), e);
+            throw new UnableToLinkHandleException("Unable to access method " + StringUtil.quoteAndEscape(methodName), e);
         }
     }
     
@@ -64,7 +64,7 @@ public final class HandleHelper {
             
             return LOOKUP.unreflectVarHandle(target);
         } catch(final IllegalAccessException e) {
-            throw new UnableToLinkHandleException("Unable to access field " + StringUtils.quoteAndEscape(fieldName), e);
+            throw new UnableToLinkHandleException("Unable to access field " + StringUtil.quoteAndEscape(fieldName), e);
         }
     }
     

@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.api.action.tag;
 
 import com.blamejared.crafttweaker.api.tag.MCTag;
-import com.blamejared.crafttweaker.api.util.HandleHelper;
+import com.blamejared.crafttweaker.api.util.HandleUtil;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableBiMap;
@@ -35,7 +35,7 @@ public class ActionTagCreate<T> extends ActionTag<T> {
             return Arrays.stream(type.getDeclaredFields())
                     .filter(it -> BiMap.class.isAssignableFrom(it.getType()))
                     .findFirst()
-                    .map(it -> HandleHelper.linkField(type, it.getName(), it.getType().descriptorString()))
+                    .map(it -> HandleUtil.linkField(type, it.getName(), it.getType().descriptorString()))
                     .orElseThrow(NoSuchFieldException::new);
         } catch(final ReflectiveOperationException e) {
             throw new RuntimeException("Unable to identify field to link to", e);

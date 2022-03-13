@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker.api.recipe.handler.IReplacementRule;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.IngredientUtil;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
-import com.blamejared.crafttweaker.api.util.StringUtils;
+import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
@@ -52,7 +52,7 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
         return String.format(
                 "%s.addRecipe(%s, %s, %s, %s, %s);",
                 LOOKUP.get(recipe.getType()).getFirst(),
-                StringUtils.quoteAndEscape(recipe.getId()),
+                StringUtil.quoteAndEscape(recipe.getId()),
                 ItemStackUtil.getCommandString(recipe.getResultItem()),
                 IIngredient.fromIngredient(recipe.getIngredients().get(0)).getCommandString(),
                 recipe.getExperience(),

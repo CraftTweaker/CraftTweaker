@@ -16,7 +16,7 @@ import com.blamejared.crafttweaker.api.data.StringData;
 import com.blamejared.crafttweaker.api.data.base.ICollectionData;
 import com.blamejared.crafttweaker.api.data.base.IData;
 import com.blamejared.crafttweaker.api.data.base.INumberData;
-import com.blamejared.crafttweaker.api.util.StringUtils;
+import com.blamejared.crafttweaker.api.util.StringUtil;
 
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
@@ -117,7 +117,7 @@ public enum DataToJsonStringVisitor implements DataVisitor<String> {
     @Override
     public String visitString(StringData data) {
         
-        return StringUtils.quoteAndEscape(data.getInternal().getAsString());
+        return StringUtil.quoteAndEscape(data.getInternal().getAsString());
     }
     
 }

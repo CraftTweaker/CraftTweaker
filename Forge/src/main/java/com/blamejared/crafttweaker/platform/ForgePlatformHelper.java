@@ -12,8 +12,8 @@ import com.blamejared.crafttweaker.api.recipe.handler.helper.CraftingTableRecipe
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.tag.manager.TagManagerWrapper;
 import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistryData;
-import com.blamejared.crafttweaker.api.util.HandleHelper;
-import com.blamejared.crafttweaker.api.util.StringUtils;
+import com.blamejared.crafttweaker.api.util.HandleUtil;
+import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.api.villager.CTTradeObject;
 import com.blamejared.crafttweaker.impl.loot.CraftTweakerPrivilegedLootModifierMap;
 import com.blamejared.crafttweaker.impl.loot.ForgeLootModifierMapAdapter;
@@ -85,8 +85,8 @@ public class ForgePlatformHelper implements IPlatformHelper {
     
     private static final class Handles {
         
-        private static final MethodHandle LMM_GETTER = HandleHelper.linkMethod(ForgeInternalHandler.class, "getLootModifierManager", LootModifierManager.class);
-        private static final VarHandle LMM_MAP = HandleHelper.linkField(LootModifierManager.class, "registeredLootModifiers", "()Ljava/util/Map;");
+        private static final MethodHandle LMM_GETTER = HandleUtil.linkMethod(ForgeInternalHandler.class, "getLootModifierManager", LootModifierManager.class);
+        private static final VarHandle LMM_MAP = HandleUtil.linkField(LootModifierManager.class, "registeredLootModifiers", "()Ljava/util/Map;");
         
     }
     
@@ -203,7 +203,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
         try {
             return ObfuscationReflectionHelper.findMethod(type, methodName, arguments);
         } catch(final ObfuscationReflectionHelper.UnableToFindMethodException e) {
-            throw new HandleHelper.UnableToLinkHandleException("Method %s was not found inside class %s".formatted(StringUtils.quoteAndEscape(methodName), type.getName()), e);
+            throw new HandleUtil.UnableToLinkHandleException("Method %s was not found inside class %s".formatted(StringUtil.quoteAndEscape(methodName), type.getName()), e);
         }
     }
     
@@ -213,7 +213,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
         try {
             return ObfuscationReflectionHelper.findField(castToSuperExplicitly(clazz), fieldName);
         } catch(final ObfuscationReflectionHelper.UnableToFindFieldException e) {
-            throw new HandleHelper.UnableToLinkHandleException("Field %s was not found inside class %s".formatted(StringUtils.quoteAndEscape(fieldName), clazz.getName()), e);
+            throw new HandleUtil.UnableToLinkHandleException("Field %s was not found inside class %s".formatted(StringUtil.quoteAndEscape(fieldName), clazz.getName()), e);
         }
     }
     
@@ -303,7 +303,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
     public Map<ResourceLocation, ILootModifier> getLootModifiersMap() {
         
         try {
-            LootModifierManager manager = HandleHelper.invoke(() -> (LootModifierManager) Handles.LMM_GETTER.invokeExact());
+            LootModifierManager manager = HandleUtil.invoke(() -> (LootModifierManager) Handles.LMM_GETTER.invokeExact());
             @SuppressWarnings("unchecked")
             Map<ResourceLocation, IGlobalLootModifier> map = (Map<ResourceLocation, IGlobalLootModifier>) Handles.LMM_MAP.get(manager);
             

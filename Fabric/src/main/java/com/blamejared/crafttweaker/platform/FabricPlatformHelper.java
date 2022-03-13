@@ -11,8 +11,8 @@ import com.blamejared.crafttweaker.api.recipe.handler.helper.CraftingTableRecipe
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.tag.manager.TagManagerWrapper;
 import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistryData;
-import com.blamejared.crafttweaker.api.util.HandleHelper;
-import com.blamejared.crafttweaker.api.util.StringUtils;
+import com.blamejared.crafttweaker.api.util.HandleUtil;
+import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
 import com.blamejared.crafttweaker.impl.script.ScriptSerializer;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessBucketItem;
@@ -203,7 +203,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
             method.setAccessible(true);
             return method;
         } catch(NoSuchMethodException e) {
-            throw new HandleHelper.UnableToLinkHandleException("Method %s was not found inside class %s".formatted(StringUtils.quoteAndEscape(methodName), clazz.getName()), e);
+            throw new HandleUtil.UnableToLinkHandleException("Method %s was not found inside class %s".formatted(StringUtil.quoteAndEscape(methodName), clazz.getName()), e);
         }
     }
     
@@ -221,7 +221,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
             field.setAccessible(true);
             return field;
         } catch(NoSuchFieldException e) {
-            throw new HandleHelper.UnableToLinkHandleException("Field %s was not found inside class %s".formatted(StringUtils.quoteAndEscape(fieldName), clazz.getName()), e);
+            throw new HandleUtil.UnableToLinkHandleException("Field %s was not found inside class %s".formatted(StringUtil.quoteAndEscape(fieldName), clazz.getName()), e);
         }
     }
     

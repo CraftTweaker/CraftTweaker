@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  */
 @ZenRegister
 @ZenCodeType.Expansion("string")
-public class StringUtils {
+public class StringUtil {
     
     /**
      * Checks if the given string matches the given regular expression
