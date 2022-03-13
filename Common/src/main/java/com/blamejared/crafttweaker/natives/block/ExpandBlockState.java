@@ -77,7 +77,7 @@ public class ExpandBlockState {
      * @return True if this BlockState can provide Redstone Power. False otherwise.
      */
     @ZenCodeType.Method
-    @ZenCodeType.Getter("signalSource")
+    @ZenCodeType.Getter("isSignalSource")
     public static boolean isSignalSource(BlockState internal) {
         
         return internal.isSignalSource();
@@ -101,7 +101,7 @@ public class ExpandBlockState {
      * @return True if this BlockState ticks randomly. False otherwise.
      */
     @ZenCodeType.Method
-    @ZenCodeType.Getter("randomlyTicking")
+    @ZenCodeType.Getter("isRandomlyTicking")
     public static boolean isRandomlyTicking(BlockState internal) {
         
         return internal.isRandomlyTicking();
@@ -209,6 +209,7 @@ public class ExpandBlockState {
      * @return a Map of the properties on this BlockState.
      */
     @ZenCodeType.Method
+    @ZenCodeType.Getter("properties")
     public static Map<String, String> getProperties(BlockState internal) {
         
         Map<String, String> props = new HashMap<>();
@@ -234,9 +235,8 @@ public class ExpandBlockState {
         return prop != null;
     }
     
-    @ZenCodeType.Caster
+    @ZenCodeType.Method
     public static String asString(BlockState internal) {
-        
         return internal.toString();
     }
     
@@ -261,7 +261,7 @@ public class ExpandBlockState {
      */
     @ZenCodeType.Method
     @ZenCodeType.Setter("destroySpeed")
-    public static void setHardness(BlockState internal, float destroySpeed) {
+    public static void setDestroySpeed(BlockState internal, float destroySpeed) {
         
         CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Destroy Speed", destroySpeed, ((AccessBlockStateBase) internal).crafttweaker$getDestroySpeed(), value -> ((AccessBlockStateBase) internal).crafttweaker$setDestroySpeed(value)));
     }
@@ -278,6 +278,7 @@ public class ExpandBlockState {
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("commandString")
+    @ZenCodeType.Caster
     public static String getCommandString(BlockState internal) {
         
         StringBuilder builder = new StringBuilder("<blockstate:");

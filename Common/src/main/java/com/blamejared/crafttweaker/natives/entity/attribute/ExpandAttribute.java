@@ -63,6 +63,7 @@ public class ExpandAttribute {
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("commandString")
+    @ZenCodeType.Caster
     public static String getCommandString(Attribute internal) {
         
         return "<attribute:" + Services.REGISTRY.getRegistryKey(internal) + ">";

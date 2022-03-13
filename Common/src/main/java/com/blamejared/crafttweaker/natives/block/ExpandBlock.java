@@ -72,6 +72,7 @@ public class ExpandBlock {
      * @return True if an entity can be spawned in this Block. False Otherwise.
      */
     @ZenCodeType.Method
+    @ZenCodeType.Getter("isPossibleToRespawnInThis")
     public static boolean isPossibleToRespawnInThis(Block internal) {
         
         return internal.isPossibleToRespawnInThis();
@@ -83,7 +84,7 @@ public class ExpandBlock {
      * @return The unlocalized name of this block.
      */
     @ZenCodeType.Method
-    @ZenCodeType.Getter("translationKey")
+    @ZenCodeType.Getter("getDescriptionId")
     public static String getDescriptionId(Block internal) {
         
         return internal.getDescriptionId();
@@ -113,7 +114,7 @@ public class ExpandBlock {
      * @return A list of valid {@link BlockState}s for this Block.
      */
     @ZenCodeType.Method
-    @ZenCodeType.Getter("validStates")
+    @ZenCodeType.Getter("possibleStates")
     public static List<BlockState> getPossibleStates(Block internal) {
         
         return internal.getStateDefinition().getPossibleStates();
@@ -154,9 +155,9 @@ public class ExpandBlock {
      */
     @ZenCodeType.Method
     @ZenCodeType.Setter("friction")
-    public static void setSlipperiness(Block internal, float friction) {
+    public static void setFriction(Block internal, float friction) {
         
-        CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Slipperiness",
+        CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Friction",
                 friction, ((AccessBlockBehaviour) internal).crafttweaker$getFriction(), ((AccessBlockBehaviour) internal)::crafttweaker$setFriction));
     }
     
@@ -262,7 +263,7 @@ public class ExpandBlock {
      * @docParam canCollide true
      */
     @ZenCodeType.Method
-    @ZenCodeType.Setter("canCollide")
+    @ZenCodeType.Setter("hasCollision")
     public static void setHasCollision(Block internal, boolean canCollide) {
         
         CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Has Collision",
