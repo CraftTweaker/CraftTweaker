@@ -231,7 +231,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      *
      * @return ItemStack repair cost or 0 if no repair is set.
      */
-    @ZenCodeType.Getter("getBaseRepairCost")
+    @ZenCodeType.Getter("baseRepairCost")
     default int getBaseRepairCost() {
         
         return getInternal().getBaseRepairCost();
@@ -572,7 +572,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      *
      * @return MapData of the ItemStack NBT Tag, empty tag if it doesn't exist.
      */
-    @ZenCodeType.Getter("getOrCreate")
+    @ZenCodeType.Method
     default MapData getOrCreateTag() {
         
         if(getInternal().getTag() == null) {

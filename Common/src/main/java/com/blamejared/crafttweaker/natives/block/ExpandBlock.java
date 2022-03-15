@@ -84,7 +84,7 @@ public class ExpandBlock {
      * @return The unlocalized name of this block.
      */
     @ZenCodeType.Method
-    @ZenCodeType.Getter("getDescriptionId")
+    @ZenCodeType.Getter("descriptionId")
     public static String getDescriptionId(Block internal) {
         
         return internal.getDescriptionId();
