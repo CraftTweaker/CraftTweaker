@@ -10,11 +10,14 @@ import org.openzen.zenscript.parser.expression.ParsedExpressionVariable;
 import org.openzen.zenscript.parser.type.IParsedType;
 import org.openzen.zenscript.parser.type.ParsedNamedType;
 
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class ParseUtil {
+    
+    private static final Pattern typeArgumentPattern = Pattern.compile("(.*)<(.*)>");
     
     private ParseUtil() {
     
@@ -35,11 +38,28 @@ public final class ParseUtil {
     
     public static IParsedType readParsedType(String name, CodePosition position) {
         
-        final List<ParsedNamedType.ParsedNamePart> collect = Arrays.stream(name.split("[.]"))
-                .map(s -> new ParsedNamedType.ParsedNamePart(s, null))
-                .collect(Collectors.toList());
+        List<ParsedNamedType.ParsedNamePart> parsedParts = new LinkedList<>();
+        while(!name.isBlank()) {
+            int end = name.length();
+            if(name.contains(".")) {
+                end = name.indexOf(".");
+            }
+            String namePart = name.substring(0, end);
+            if(namePart.contains("<") && name.contains(">")) {
+                end = name.indexOf(">") + 1;
+                namePart = name.substring(0, name.indexOf(">")+1);
+            }
+            name = name.substring(Math.min(name.length(), end + 1));
+            
+            Matcher matcher = typeArgumentPattern.matcher(namePart);
+            if(matcher.matches()) {
+                parsedParts.add(new ParsedNamedType.ParsedNamePart(matcher.group(1), List.of(readParsedType(matcher.group(2), position))));
+            } else {
+                parsedParts.add(new ParsedNamedType.ParsedNamePart(namePart, null));
+            }
+        }
         
-        return new ParsedNamedType(position, collect);
+        return new ParsedNamedType(position, parsedParts);
     }
     
     public static String readBracketContent(CodePosition position, ZSTokenParser tokens) throws ParseException {
