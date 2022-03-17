@@ -80,7 +80,7 @@ public final class MiscCommands {
             });
         }));
         
-        CTCommands.registerCommand(new CommandImpl("ctgui", new TranslatableComponent("crafttweaker.command.description.docs"), builder -> {
+        CTCommands.registerCommand(new CommandImpl("ctgui", new TranslatableComponent("crafttweaker.command.description.ctgui"), builder -> {
             builder.executes(context -> {
                 ServerPlayer player = context.getSource().getPlayerOrException();
                 CommandUtilities.send(new TranslatableComponent("crafttweaker.command.misc.ctgui"), player);
