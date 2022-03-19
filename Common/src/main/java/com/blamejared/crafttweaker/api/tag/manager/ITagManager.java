@@ -13,11 +13,15 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagManager;
-import org.jetbrains.annotations.NotNull;
 import org.openzen.zencode.java.ZenCodeType;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @ZenRegister
@@ -129,7 +133,7 @@ public interface ITagManager<T> extends CommandStringDisplayable, Iterable<MCTag
         return "<tagmanager:" + tagFolder() + ">";
     }
 
-    @NotNull
+    @Nonnull
     @Override
     default Iterator<MCTag<T>> iterator() {
 

@@ -39,9 +39,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.material.Fluid;
-import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -178,7 +178,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
     
     @Override
-    public Method findMethod(@NotNull Class<?> clazz, @NotNull String methodName, final Class<?> returnType, @NotNull Class<?>... parameterTypes) {
+    public Method findMethod(@Nonnull Class<?> clazz, @Nonnull String methodName, final Class<?> returnType, @Nonnull Class<?>... parameterTypes) {
         
         // This is untested, so anyone running into issues using findMethod, yes the issue is probably here.
         
@@ -199,7 +199,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
     
     @Override
-    public <T> Field findField(@NotNull Class<? super T> clazz, @NotNull String fieldName, @NotNull final String fieldDescription) {
+    public <T> Field findField(@Nonnull Class<? super T> clazz, @Nonnull String fieldName, @Nonnull final String fieldDescription) {
         
         final String mappedName = FabricLoader.getInstance()
                 .getMappingResolver()
