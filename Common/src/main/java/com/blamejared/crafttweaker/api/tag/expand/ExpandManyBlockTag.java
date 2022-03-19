@@ -1,8 +1,10 @@
 package com.blamejared.crafttweaker.api.tag.expand;
 
+import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.block.CTBlockIngredient;
 import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.api.util.Many;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.world.level.block.Block;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -15,9 +17,9 @@ import java.util.List;
  * <p>
  * Only downside is that if you want to use Ingredient Transformers, you will need to call `asIIngredient()` first.
  */
-//@ZenRegister
-//@Document("vanilla/api/tag/ExpandManyBlockTag")
-//@ZenCodeType.Expansion("crafttweaker.api.util.Many<crafttweaker.api.tag.MCTag<crafttweaker.api.block.Block>>")
+@ZenRegister
+@Document("vanilla/api/tag/ExpandManyBlockTag")
+@ZenCodeType.Expansion("crafttweaker.api.util.Many<crafttweaker.api.tag.MCTag<crafttweaker.api.block.Block>>")
 public class ExpandManyBlockTag {
     
     @ZenCodeType.Method
