@@ -311,7 +311,8 @@ public class CTVillagerTrades {
             if(trade instanceof VillagerTrades.EmeraldForItemsTrade) {
                 return ((VillagerTrades.EmeraldForItemsTrade) trade).tradeItem == tradeFor;
             } else if(trade instanceof BasicTrade) {
-                return BasicTradeExposer.getForSale(trade).getItem() == tradeFor;
+                return BasicTradeExposer.getForSale(trade)
+                        .getItem() == tradeFor;
             }
             return false;
         });
@@ -707,6 +708,7 @@ public class CTVillagerTrades {
      *
      * @param rarity The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
      *
+     * @docParam rarity 1
      * @deprecated Scheduled for removal next breaking change: use {@link #removeAllWanderingTrades(int)} instead.
      */
     @Deprecated
@@ -720,6 +722,8 @@ public class CTVillagerTrades {
      * Removes all wandering trades of the given rarity
      *
      * @param rarity The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
+     *
+     * @docParam rarity 1
      */
     @Deprecated
     @ZenCodeType.Method
