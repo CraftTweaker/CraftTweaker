@@ -163,6 +163,24 @@ tasks.withType<JavaCompile> {
     }
 }
 
+tasks.withType<Javadoc> {
+    source(project(":Common").sourceSets.main.get().allJava)
+    source(project(":Crafttweaker_Annotations").sourceSets.main.get().allJava)
+
+    (project.ext["zenCodeDeps"] as Set<*>).forEach {
+        source(project(it.toString()).sourceSets.main.get().allJava)
+    }
+}
+
+tasks.named<Jar>("sourcesJar") {
+    from(project(":Common").sourceSets.main.get().allSource)
+    from(project(":Crafttweaker_Annotations").sourceSets.main.get().allSource)
+
+    (project.ext["zenCodeDeps"] as Set<*>).forEach {
+        from(project(it.toString()).sourceSets.main.get().allSource)
+    }
+}
+
 tasks.processResources {
     outputs.upToDateWhen { false }
     from(project(":Common").sourceSets.main.get().resources)
