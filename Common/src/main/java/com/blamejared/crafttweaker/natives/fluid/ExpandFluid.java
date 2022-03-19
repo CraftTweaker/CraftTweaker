@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 import org.openzen.zencode.java.ZenCodeType;
@@ -12,6 +13,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @Document("vanilla/api/fluid/Fluid")
 @NativeTypeRegistration(value = Fluid.class, zenCodeName = "crafttweaker.api.fluid.Fluid")
+@TaggableElement("minecraft:fluid")
 public class ExpandFluid {
     
     @ZenCodeType.Method
@@ -30,8 +32,8 @@ public class ExpandFluid {
     
     @ZenCodeType.Method
     public static boolean isIn(Fluid internal, MCTag<Fluid> tag) {
-        
-        return internal.is(tag.getInternal());
+
+        return internal.is(tag.getTagKey());
     }
     
     @ZenCodeType.Getter("commandString")

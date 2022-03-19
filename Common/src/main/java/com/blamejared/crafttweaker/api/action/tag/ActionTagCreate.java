@@ -1,64 +1,37 @@
 package com.blamejared.crafttweaker.api.action.tag;
 
 import com.blamejared.crafttweaker.api.tag.MCTag;
-import com.blamejared.crafttweaker.api.util.HandleUtil;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.ImmutableBiMap;
-import com.google.common.collect.ImmutableMap;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Holder;
 import net.minecraft.tags.Tag;
-import net.minecraft.tags.TagCollection;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.invoke.VarHandle;
-import java.util.Arrays;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ActionTagCreate<T> extends ActionTag<T> {
     
-    private static final VarHandle ID_TAG_MAP = link();
+    private final List<T> contents;
     
-    private final TagCollection<T> collection;
-    
-    public ActionTagCreate(TagCollection<T> collection, Tag<T> tag, MCTag<?> theTag) {
+    public ActionTagCreate(MCTag<T> theTag, List<T> contents) {
         
-        super(tag, theTag);
-        this.collection = collection;
-    }
-    
-    private static VarHandle link() {
-        
-        try {
-            final Class<?> type = Class.forName(TagCollection.class.getName() + "$1");
-            
-            return Arrays.stream(type.getDeclaredFields())
-                    .filter(it -> BiMap.class.isAssignableFrom(it.getType()))
-                    .findFirst()
-                    .map(it -> HandleUtil.linkField(type, it.getName(), it.getType().descriptorString()))
-                    .orElseThrow(NoSuchFieldException::new);
-        } catch(final ReflectiveOperationException e) {
-            throw new RuntimeException("Unable to identify field to link to", e);
-        }
+        super(theTag);
+        this.contents = contents;
     }
     
     @Override
     public void apply() {
-        
-        getIdTagMap(collection).put(getId(), tag);
+    
+        Tag<Holder<T>> tag = new Tag<>(new ArrayList<>());
+        manager().addTag(mcTag().id(), tag);
+        tag().getValues().addAll(contents.stream().map(this::makeHolder).toList());
+        manager().addTag(id(), tag());
     }
     
     @Override
     public boolean validate(Logger logger) {
         
-        if(collection.getTag(getId()) != null) {
-            logger.error(getType() + " Tag: " + mcTag + " already exists!");
-            return false;
-        }
-        if(getIdTagMap(collection) instanceof ImmutableMap) {
-            logger.error(getType() + " Tag Internal error: TagMap is " + collection.getAllTags()
-                    .getClass()
-                    .getCanonicalName());
+        if(manager().exists(id())) {
+            logger.error(getType() + " Tag: " + mcTag() + " already exists!");
             return false;
         }
         
@@ -68,18 +41,7 @@ public class ActionTagCreate<T> extends ActionTag<T> {
     @Override
     public String describe() {
         
-        return "Registering new " + getType() + " tag with name " + mcTag;
-    }
-    
-    private Map<ResourceLocation, Tag<T>> getIdTagMap(final TagCollection<T> collection) {
-        
-        Map<ResourceLocation, Tag<T>> map = collection.getAllTags();
-        if(map instanceof ImmutableBiMap<?, ?>) {
-            final BiMap<ResourceLocation, Tag<T>> newMap = HashBiMap.create(map);
-            map = newMap;
-            ID_TAG_MAP.set(collection, newMap);
-        }
-        return map;
+        return "Registering new " + getType() + " tag with name " + mcTag();
     }
     
 }

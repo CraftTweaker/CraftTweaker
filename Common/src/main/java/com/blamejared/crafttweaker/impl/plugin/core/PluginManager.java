@@ -175,6 +175,12 @@ public final class PluginManager {
         );
         this.manageBracketRegistration(access, bracketHandler, loaderFinder);
         
+        final TaggableElementsRegistrationHandler taggableElementsHandler = this.verifying(
+                "gathering taggable elements",
+                () -> TaggableElementsRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::registerTaggableElements))
+        );
+        manageTaggableElementRegistration(access, taggableElementsHandler, loaderFinder);
+        
         this.callListeners("ZenCode registration end", this.listeners.zenListeners());
     }
     
@@ -235,6 +241,23 @@ public final class PluginManager {
         );
         
     }
+    
+    private void manageTaggableElementRegistration(final IPluginRegistryAccess access, final TaggableElementsRegistrationHandler handler, final Function<String, IScriptLoader> loaderFinder) {
+        
+        this.verifying(
+                "registering taggable elements",
+                () -> handler.elementRequests().forEach(it ->
+                        access.registerTaggableElement(loaderFinder.apply(it.loader()), it.key(), this.uncheck(it.elementClass()))
+                )
+        );
+        this.verifying(
+                "registering taggable element managers",
+                () -> handler.managerRequests().forEach(it ->
+                        access.registerTaggableElementManager(loaderFinder.apply(it.loader()), it.key(), this.uncheck(it.factory()))
+                )
+        );
+    }
+    
     
     private void manageBracketRegistration(final IPluginRegistryAccess access, final BracketParserRegistrationHandler handler, final Function<String, IScriptLoader> loaderFinder) {
         

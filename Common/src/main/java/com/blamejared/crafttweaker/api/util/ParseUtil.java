@@ -1,15 +1,21 @@
 package com.blamejared.crafttweaker.api.util;
 
+import com.blamejared.crafttweaker.natives.resource.ExpandResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import org.openzen.zencode.shared.CodePosition;
 import org.openzen.zenscript.lexer.ParseException;
 import org.openzen.zenscript.lexer.ZSTokenParser;
 import org.openzen.zenscript.lexer.ZSTokenType;
+import org.openzen.zenscript.parser.expression.ParsedCallArguments;
 import org.openzen.zenscript.parser.expression.ParsedExpression;
 import org.openzen.zenscript.parser.expression.ParsedExpressionMember;
+import org.openzen.zenscript.parser.expression.ParsedExpressionString;
 import org.openzen.zenscript.parser.expression.ParsedExpressionVariable;
+import org.openzen.zenscript.parser.expression.ParsedNewExpression;
 import org.openzen.zenscript.parser.type.IParsedType;
 import org.openzen.zenscript.parser.type.ParsedNamedType;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -46,8 +52,8 @@ public final class ParseUtil {
             }
             String namePart = name.substring(0, end);
             if(namePart.contains("<") && name.contains(">")) {
-                end = name.indexOf(">") + 1;
-                namePart = name.substring(0, name.indexOf(">")+1);
+                end = name.lastIndexOf(">") + 1;
+                namePart = name.substring(0, name.lastIndexOf(">") + 1);
             }
             name = name.substring(Math.min(name.length(), end + 1));
             
@@ -64,12 +70,17 @@ public final class ParseUtil {
     
     public static String readBracketContent(CodePosition position, ZSTokenParser tokens) throws ParseException {
         
+        return readContent(position, tokens, ZSTokenType.T_GREATER);
+    }
+    
+    public static String readContent(CodePosition position, ZSTokenParser tokens, ZSTokenType endType) throws ParseException {
+        
         StringBuilder builder = new StringBuilder();
         
-        while(tokens.optional(ZSTokenType.T_GREATER) == null) {
+        while(tokens.optional(endType) == null) {
             ZSTokenType peekType = tokens.peek().getType();
             if(peekType == ZSTokenType.EOF) {
-                throw new ParseException(position, "Reached EOF, BEP is missing a closing >");
+                throw new ParseException(position, "Reached EOF, BEP is missing a closing " + endType.flyweight.content);
             }
             if(tokens.getLastWhitespace().contains("\n")) {
                 throw new ParseException(position, "BEPs cannot contain new lines!");
@@ -78,6 +89,15 @@ public final class ParseUtil {
             builder.append(tokens.getLastWhitespace());
         }
         return builder.toString();
+    }
+    
+    public static ParsedNewExpression createResourceLocationArgument(CodePosition position, ResourceLocation location) {
+        
+        final List<ParsedExpression> arguments = new ArrayList<>(2);
+        arguments.add(new ParsedExpressionString(position, location.getNamespace(), false));
+        arguments.add(new ParsedExpressionString(position, location.getPath(), false));
+        final ParsedCallArguments newCallArguments = new ParsedCallArguments(null, arguments);
+        return new ParsedNewExpression(position, ParseUtil.readParsedType(ExpandResourceLocation.ZC_CLASS_NAME, position), newCallArguments);
     }
     
 }

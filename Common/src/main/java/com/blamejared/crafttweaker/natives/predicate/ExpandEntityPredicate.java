@@ -34,8 +34,8 @@ public final class ExpandEntityPredicate {
     
     @ZenCodeType.StaticExpansionMethod
     public static EntityPredicate.Builder create(final MCTag<EntityType<?>> entityTag) {
-        
-        return create().of(entityTag.getInternal());
+
+        return create().of(entityTag.getTagKey());
     }
     
     @ZenCodeType.StaticExpansionMethod

@@ -1,4 +1,5 @@
 accessWidener   v1      named
+accessible      class   net/minecraft/server/MinecraftServer$ReloadableResources
 accessible      class   net/minecraft/world/item/crafting/Ingredient$Value
 
 accessible      class   net/minecraft/world/item/crafting/Ingredient$TagValue

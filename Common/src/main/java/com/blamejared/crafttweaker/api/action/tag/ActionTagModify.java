@@ -1,44 +1,29 @@
 package com.blamejared.crafttweaker.api.action.tag;
 
 import com.blamejared.crafttweaker.api.tag.MCTag;
-import com.blamejared.crafttweaker.mixin.common.access.tag.AccessSetTag;
-import com.google.common.collect.ImmutableList;
-import net.minecraft.tags.SetTag;
-import net.minecraft.tags.Tag;
+import net.minecraft.core.Holder;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class ActionTagModify<T> extends ActionTag<T> {
     
-    protected final List<T> values;
+    private final List<T> values;
     
-    public ActionTagModify(Tag<T> tag, List<T> values, MCTag<?> mcTag) {
+    public ActionTagModify(MCTag<T> mcTag, List<T> values) {
         
-        super(tag, mcTag);
+        super(mcTag);
         this.values = values;
     }
     
-    @Override
-    public void apply() {
+    protected List<Holder<T>> holderValues() {
         
-        if(tag instanceof SetTag setTag) {
-            
-            List<T> list = new ArrayList<>(((AccessSetTag) setTag).crafttweaker$getValuesList());
-            Set<T> set = new HashSet<>(((AccessSetTag) setTag).crafttweaker$getValues());
-            applyTo(list, set);
-            ((AccessSetTag) setTag).crafttweaker$setValuesList(ImmutableList.copyOf(list));
-            ((AccessSetTag) setTag).crafttweaker$setValues(set);
-            ((AccessSetTag) setTag).crafttweaker$setClosestCommonSuperType(AccessSetTag.crafttweaker$findCommonSuperClass(set));
-        } else {
-            throw new RuntimeException("Only SetTag's are supported right now, can't act on: " + tag);
-        }
+        return values().stream().map(this::makeHolder).collect(Collectors.toList());
     }
     
-    protected abstract void applyTo(List<T> immutableContents, Set<T> contents);
-    
-    public List<T> getValues() {
+    public List<T> values() {
         
         return values;
     }
@@ -46,11 +31,11 @@ public abstract class ActionTagModify<T> extends ActionTag<T> {
     @Override
     public boolean validate(Logger logger) {
         
-        if(getValues() == null) {
+        if(values() == null) {
             logger.error("Tag entries cannot be null!", new NullPointerException("Tag entries cannot be null!"));
             return false;
         }
-        if(getValues().size() == 0) {
+        if(values().size() == 0) {
             logger.error("Tag entries cannot be empty!", new IndexOutOfBoundsException("Tag entries cannot be empty!"));
         }
         return super.validate(logger);
@@ -58,7 +43,7 @@ public abstract class ActionTagModify<T> extends ActionTag<T> {
     
     public String describeValues() {
         
-        return getValues().stream().map(Objects::toString).collect(Collectors.joining(",", "[", "]"));
+        return values().stream().map(Objects::toString).collect(Collectors.joining(",", "[", "]"));
     }
     
 }

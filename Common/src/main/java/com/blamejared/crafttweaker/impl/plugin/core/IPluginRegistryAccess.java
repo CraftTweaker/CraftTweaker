@@ -3,11 +3,14 @@ package com.blamejared.crafttweaker.impl.plugin.core;
 import com.blamejared.crafttweaker.api.natives.NativeTypeInfo;
 import com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
+import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
+import com.blamejared.crafttweaker.api.tag.manager.TagManagerFactory;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.ZenTypeInfo;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import org.openzen.zenscript.parser.BracketExpressionParser;
@@ -36,6 +39,10 @@ public interface IPluginRegistryAccess {
     );
     
     <T extends Enum<T>> void registerEnum(final IScriptLoader loader, final ResourceLocation id, final Class<T> enumClass);
+    
+    <T> void registerTaggableElement(final IScriptLoader loader, final ResourceKey<T> key, final Class<T> elementClass);
+    
+    <T, U extends ITagManager<T>> void registerTaggableElementManager(final IScriptLoader loader, final ResourceKey<T> key, final TagManagerFactory<T, U> factory);
     
     <T extends Recipe<?>> void registerHandler(final Class<? extends T> clazz, final IRecipeHandler<T> handler);
     

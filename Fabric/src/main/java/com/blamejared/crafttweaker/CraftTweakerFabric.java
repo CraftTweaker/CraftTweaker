@@ -40,8 +40,6 @@ public class CraftTweakerFabric implements ModInitializer {
         
         CraftTweakerEvents.GATHER_REPLACEMENT_EXCLUSION_EVENT.register(DefaultExclusionReplacements::handleDefaultExclusions);
         
-        Services.PLATFORM.registerCustomTags();
-        
         CraftTweakerCommon.getPluginManager().broadcastSetupEnd(); // TODO("Another place?")
         
         CraftTweakerCommon.loadInitScripts();

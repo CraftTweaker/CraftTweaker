@@ -51,7 +51,7 @@ dependencies {
         implementation(project(it.toString()))
     }
 
-    implementation(fg.deobf("mezz.jei:jei-1.18.2:9.5.0.132"))
+    implementation(fg.deobf("mezz.jei:jei-1.18.2:9.5.2.133"))
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
 
 }

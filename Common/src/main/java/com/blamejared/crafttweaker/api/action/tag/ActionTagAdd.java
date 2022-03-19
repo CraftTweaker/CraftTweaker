@@ -1,29 +1,26 @@
 package com.blamejared.crafttweaker.api.action.tag;
 
 import com.blamejared.crafttweaker.api.tag.MCTag;
-import net.minecraft.tags.Tag;
 
 import java.util.List;
-import java.util.Set;
 
 public class ActionTagAdd<T> extends ActionTagModify<T> {
     
-    public ActionTagAdd(Tag<T> tag, List<T> values, MCTag<?> mcTag) {
+    public ActionTagAdd(MCTag<T> mcTag, List<T> values) {
         
-        super(tag, values, mcTag);
+        super(mcTag, values);
     }
     
     @Override
-    protected void applyTo(List<T> immutableContents, Set<T> contents) {
+    public void apply() {
         
-        immutableContents.addAll(values);
-        contents.addAll(values);
+        tag().getValues().addAll(holderValues());
     }
     
     @Override
     public String describe() {
         
-        return "Adding: " + describeValues() + " to tag: " + mcTag;
+        return "Adding: " + describeValues() + " to tag: " + mcTag();
     }
     
 }

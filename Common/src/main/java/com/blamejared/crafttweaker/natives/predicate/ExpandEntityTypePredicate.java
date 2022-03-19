@@ -24,11 +24,10 @@ public final class ExpandEntityTypePredicate {
         
         return EntityTypePredicate.of(type);
     }
-    
     @ZenCodeType.StaticExpansionMethod
     public static EntityTypePredicate create(final MCTag<EntityType<?>> type) {
-        
-        return EntityTypePredicate.of(type.getInternal());
+
+        return EntityTypePredicate.of(type.getTagKey());
     }
     
 }

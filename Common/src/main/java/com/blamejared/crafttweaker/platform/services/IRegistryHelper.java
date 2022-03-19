@@ -2,6 +2,8 @@ package com.blamejared.crafttweaker.platform.services;
 
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
+import com.blamejared.crafttweaker.api.ingredient.condition.serializer.IIngredientConditionSerializer;
+import com.blamejared.crafttweaker.api.ingredient.transform.serializer.IIngredientTransformerSerializer;
 import com.blamejared.crafttweaker.api.ingredient.type.IIngredientConditioned;
 import com.blamejared.crafttweaker.api.ingredient.type.IIngredientTransformed;
 import com.blamejared.crafttweaker.api.item.IItemStack;
@@ -14,8 +16,13 @@ import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipeBase;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipeBase;
 import com.blamejared.crafttweaker.platform.registry.RegistryWrapper;
 import com.blamejared.crafttweaker.platform.registry.VanillaRegistryWrapper;
+import com.mojang.serialization.Lifecycle;
+import net.minecraft.core.Holder;
+import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
+import net.minecraft.core.WritableRegistry;
 import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
@@ -31,14 +38,34 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
 public interface IRegistryHelper {
     
-    void initRegistries();
+    default void registerSerializer(MappedRegistry<IIngredientTransformerSerializer<?>> registry, IIngredientTransformerSerializer<?> serializer) {
+        
+        registry.register(ResourceKey.create(registry.key(), serializer.getType()), serializer, Lifecycle.stable());
+    }
+    
+    default void registerSerializer(MappedRegistry<IIngredientConditionSerializer<?>> registry, IIngredientConditionSerializer<?> serializer) {
+        
+        registry.register(ResourceKey.create(registry.key(), serializer.getType()), serializer, Lifecycle.stable());
+    }
+    
+    default <T> MappedRegistry<T> registerVanillaRegistry(ResourceLocation location) {
+        
+        WritableRegistry registry = (WritableRegistry) Registry.REGISTRY;
+        ResourceKey<Registry<T>> regKey = ResourceKey.createRegistryKey(location);
+        Lifecycle stable = Lifecycle.stable();
+        MappedRegistry<T> mappedReg = new MappedRegistry<>(regKey, stable, null);
+        registry.register(regKey, mappedReg, stable);
+        return mappedReg;
+    }
+    
+    void init();
     
     ICTShapedRecipeBaseSerializer getCTShapedRecipeSerializer();
     
@@ -73,25 +100,25 @@ public interface IRegistryHelper {
             return Optional.of(getRegistryKey(obj));
         } else if(object instanceof Potion obj) {
             return Optional.of(getRegistryKey(obj));
-        }else if(object instanceof EntityType<?> obj) {
+        } else if(object instanceof EntityType<?> obj) {
             return Optional.of(getRegistryKey(obj));
-        }else if(object instanceof RecipeType<?> obj) {
+        } else if(object instanceof RecipeType<?> obj) {
             return Optional.of(getRegistryKey(obj));
-        }else if(object instanceof RecipeSerializer<?> obj) {
+        } else if(object instanceof RecipeSerializer<?> obj) {
             return Optional.of(getRegistryKey(obj));
-        }else if(object instanceof Attribute obj) {
+        } else if(object instanceof Attribute obj) {
             return Optional.of(getRegistryKey(obj));
-        }else if(object instanceof Fluid obj) {
+        } else if(object instanceof Fluid obj) {
             return Optional.of(getRegistryKey(obj));
-        }else if(object instanceof Enchantment obj) {
+        } else if(object instanceof Enchantment obj) {
             return Optional.of(getRegistryKey(obj));
-        }else if(object instanceof Block obj) {
+        } else if(object instanceof Block obj) {
             return Optional.of(getRegistryKey(obj));
-        }else if(object instanceof MobEffect obj) {
+        } else if(object instanceof MobEffect obj) {
             return Optional.of(getRegistryKey(obj));
-        }else if(object instanceof VillagerProfession obj) {
+        } else if(object instanceof VillagerProfession obj) {
             return Optional.of(getRegistryKey(obj));
-        }else if(object instanceof Biome obj) {
+        } else if(object instanceof Biome obj) {
             return Optional.of(getRegistryKey(obj));
         }
         
@@ -222,6 +249,14 @@ public interface IRegistryHelper {
     default RegistryWrapper<EntityType<?>> entityTypes() {
         
         return wrap(Registry.ENTITY_TYPE);
+    }
+    
+    default <T> Holder<T> makeHolder(ResourceKey<?> resourceKey, T object) {
+        
+        Registry<T> registry = (Registry<T>) Registry.REGISTRY.get(resourceKey.location());
+        return registry.getResourceKey(object)
+                .flatMap(registry::getHolder)
+                .orElseThrow(() -> new RuntimeException("Unable to make holder for registry: " + registry + " and object: " + object));
     }
     
 }

@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.zencode.expand.IDataRewrites;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunManager;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker.platform.helper.IAccessibleElementsProvider;
+import com.blamejared.crafttweaker.platform.helper.IAccessibleServerElementsProvider;
 import com.google.common.base.Suppliers;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +24,8 @@ import java.util.function.Supplier;
 public final class CraftTweakerAPI {
     
     private static final Supplier<IAccessibleElementsProvider> ACCESSIBLE_ELEMENTS = Suppliers.memoize(Services.BRIDGE::accessibleElementsProvider);
+    private static final Supplier<IAccessibleServerElementsProvider> ACCESSIBLE_SERVER_ELEMENTS = Suppliers.memoize(Services.BRIDGE::accessibleServerElementsProvider);
+    
     private static final Supplier<ICraftTweakerRegistry> REGISTRY = Suppliers.memoize(Services.BRIDGE::registry);
     private static final Supplier<IScriptRunManager> SCRIPT_RUN_MANAGER = Suppliers.memoize(Services.BRIDGE::scriptRunManager);
     private static final Supplier<Path> SCRIPTS_DIRECTORY = Suppliers.memoize(() -> Services.PLATFORM.getPathFromGameDirectory(CraftTweakerConstants.SCRIPTS_DIRECTORY));
@@ -52,6 +55,11 @@ public final class CraftTweakerAPI {
     public static IAccessibleElementsProvider getAccessibleElementsProvider() {
         
         return ACCESSIBLE_ELEMENTS.get();
+    }
+    
+    public static IAccessibleServerElementsProvider getAccessibleServerElementsProvider() {
+        
+        return ACCESSIBLE_SERVER_ELEMENTS.get();
     }
     
     /**

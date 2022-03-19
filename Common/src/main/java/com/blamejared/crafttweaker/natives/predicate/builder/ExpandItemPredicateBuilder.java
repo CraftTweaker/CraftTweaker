@@ -39,10 +39,10 @@ public final class ExpandItemPredicateBuilder {
     
     @ZenCodeType.Method
     public static ItemPredicate.Builder tag(final ItemPredicate.Builder internal, final MCTag<Item> tag) {
-        
-        return internal.of(tag.getInternal());
+
+        return internal.of(tag.getTagKey());
     }
-    
+
     @ZenCodeType.Method
     public static ItemPredicate.Builder amount(final ItemPredicate.Builder internal, final MinMaxBounds.Ints amount) {
         

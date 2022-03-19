@@ -8,10 +8,9 @@
         "common.access.brewing.AccessBrewingRecipeRegistry",
         "common.access.brewing.AccessPotionBrewing",
         "common.access.registry.AccessRegistryManager",
-        "common.access.tag.AccessStaticTags",
         "common.access.villager.AccessBasicTrade",
         "common.transform.item.attribute.MixinItemAttributeModifierEvent",
-        "common.transform.villager.MixinBasicTrade"
+        "common.transform.villager.MixinBasicTrade",
     ],
     "client": [
     ],

@@ -2,12 +2,16 @@ package com.blamejared.crafttweaker.api;
 
 import com.blamejared.crafttweaker.api.command.type.IBracketDumperInfo;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
+import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
+import com.blamejared.crafttweaker.api.tag.manager.TagManagerFactory;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import org.openzen.zenscript.parser.BracketExpressionParser;
@@ -174,6 +178,10 @@ public interface ICraftTweakerRegistry {
      * @since 9.1.0
      */
     <T extends Enum<T>> Optional<Class<T>> getEnumBracketFor(final IScriptLoader loader, final ResourceLocation type);
+    
+    <T> Optional<Class<T>> getTaggableElementFor(final ResourceKey<T> key);
+    
+    <T> TagManagerFactory<T, ? extends ITagManager<T>> getTaggableElementFactory(ResourceKey<Registry<T>> resourceKey);
     
     /**
      * Gets all bracket handler possibilities that can be queried under the given {@link IScriptLoader}.

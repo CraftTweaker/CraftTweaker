@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker.api.command.CommandUtilities;
 import com.blamejared.crafttweaker.api.loot.LootManager;
 import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
-import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistry;
+import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
 import com.blamejared.crafttweaker.api.villager.CTVillagerTrades;
 import com.blamejared.crafttweaker.impl.command.CtCommands;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
@@ -227,18 +227,23 @@ public final class DumpCommands {
                 new TranslatableComponent("crafttweaker.command.description.dump.tag.contents"),
                 builder -> builder.executes(context -> {
                     final ServerPlayer player = context.getSource().getPlayerOrException();
-                    CraftTweakerAPI.LOGGER.info("All Tag Contents");
-                    CrTTagRegistry.INSTANCE.getAllManagers()
-                            .stream()
-                            .sorted(Comparator.comparing(ITagManager::getTagFolder))
-                            .peek(manager -> CraftTweakerAPI.LOGGER.info("Contents of '{}' tags:", manager.getTagFolder()))
-                            .flatMap(tagManager -> tagManager.getAllTags().stream())
-                            .peek(mcTag -> CraftTweakerAPI.LOGGER.info(mcTag.getCommandString()))
-                            .flatMap(mcTag -> mcTag.getElements().stream())
-                            .forEach(o -> CraftTweakerAPI.LOGGER.info("\t- {}", Services.REGISTRY.maybeGetRegistryKey(o)
-                                    .map(ResourceLocation::toString)
-                                    .orElse(o.toString())));
                     
+                    CraftTweakerAPI.LOGGER.info("All Tag Contents");
+                    CraftTweakerTagRegistry.INSTANCE.managers()
+                            .stream()
+                            .sorted(Comparator.comparing(ITagManager::tagFolder))
+                            .peek(it -> CraftTweakerAPI.LOGGER.info("Contents of '{}' tags:", it.tagFolder()))
+                            .flatMap(it -> it.tags().stream())
+                            .peek(it -> CraftTweakerAPI.LOGGER.info(it.getCommandString()))
+                            .flatMap(it -> it.elements()
+                                    .stream()
+                                    .map(o -> player.server.registryAccess().registry(it.manager().resourceKey())
+                                            .map(objects -> objects.getKey(o))
+                                            .map(ResourceLocation::toString)
+                                            .orElse(o.toString())))
+                            .forEach(it -> {
+                                CraftTweakerAPI.LOGGER.info("\t- {}", it);
+                            });
                     
                     CommandUtilities.send(CommandUtilities.openingLogFile(new TranslatableComponent("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(new TranslatableComponent("crafttweaker.command.misc.tag.contents")), CommandUtilities.getFormattedLogFile()).withStyle(ChatFormatting.GREEN)), player);
                     return Command.SINGLE_SUCCESS;

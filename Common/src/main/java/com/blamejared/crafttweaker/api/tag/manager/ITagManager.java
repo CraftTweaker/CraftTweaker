@@ -1,187 +1,154 @@
 package com.blamejared.crafttweaker.api.tag.manager;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.action.tag.ActionTagAdd;
+import com.blamejared.crafttweaker.api.action.tag.ActionTagCreate;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.Tag;
-import net.minecraft.tags.TagCollection;
+import net.minecraft.tags.TagManager;
+import org.jetbrains.annotations.NotNull;
 import org.openzen.zencode.java.ZenCodeType;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * TagManagers are used to handle the different types of Tags within the game.
- * They can be retrieved directly with the ITagManager BEP, and are also used indirectly when creating a tag with the Tag BEP.
- *
- * @param <T> The element types of this tag.
- */
 @ZenRegister
-@Document("vanilla/api/tag/ITagManager")
-@ZenCodeType.Name("crafttweaker.api.tag.ITagManager")
-public interface ITagManager<T> extends CommandStringDisplayable {
-    
-    @Nonnull
-    Class<T> getElementClass();
-    
-    /**
-     * Retrieves a tag by its name.
-     * Will also be called by the BEP.
-     * <p>
-     * Note that this method does _not_ yet create the tag if it does not exist.
-     * Adding something to the object created by this tag will create it for the game.
-     *
-     * @param name The Resource location of the tag
-     *
-     * @return A Tag object.
-     */
+@Document("vanilla/api/tag/manager/ITagManager")
+@ZenCodeType.Name("crafttweaker.api.tag.manager.ITagManager")
+public interface ITagManager<T> extends CommandStringDisplayable, Iterable<MCTag<T>> {
+
     @ZenCodeType.Method
-    default MCTag<T> getTag(String name) {
-        
-        return getTag(new ResourceLocation(name));
+    @ZenCodeType.Getter("tagFolder")
+    default String tagFolder() {
+
+        String tagDir = TagManager.getTagDir(resourceKey());
+
+        // Really not ideal, but I don't see a better way, lets just hope that other mods don't be dumb and add their tags to other folders.
+        if (tagDir.startsWith("tags/")) {
+            tagDir = tagDir.substring("tags/".length());
+        }
+        return tagDir;
     }
-    
-    /**
-     * Retrieves a tag by its name.
-     * Will also be called by the BEP.
-     * <p>
-     * Note that this method does _not_ yet create the tag if it does not exist.
-     * Adding something to the object created by this tag will create it for the game.
-     *
-     * @param location The Resource location of the tag
-     *
-     * @return A Tag object.
-     */
+
     @ZenCodeType.Method
-    default MCTag<T> getTag(ResourceLocation location) {
-        
-        return new MCTag<>(location, this);
+    default MCTag<T> tag(String id) {
+
+        ResourceLocation rl = ResourceLocation.tryParse(id);
+        Objects.requireNonNull(rl, "Invalid Resource Location passed! Given: '" + id + "'");
+        return tag(rl);
     }
-    
-    /**
-     * Checks if a tag already exists. Does the same as calling `.exists` on a tag directly
-     *
-     * @param name The resource location to check for
-     *
-     * @return Whether or not this tag already exists
-     */
+
+    @ZenCodeType.Method
+    default MCTag<T> tag(ResourceLocation id) {
+
+        return tagMap().getOrDefault(id, new MCTag<>(id, this));
+    }
+
+
+    @ZenCodeType.Method
+    default void addElements(MCTag<T> to, T... values) {
+
+        if (!exists(to)) {
+            CraftTweakerAPI.apply(new ActionTagCreate<>(to, List.of(values)));
+        } else {
+            CraftTweakerAPI.apply(new ActionTagAdd<>(to, List.of(values)));
+        }
+        recalculate();
+    }
+
+    @ZenCodeType.Method
+    default void removeElements(MCTag<T> from, T... values) {
+
+        if (!exists(from)) {
+            throw new IllegalArgumentException("Cannot remove elements from empty tag: " + from);
+        }
+        CraftTweakerAPI.apply(new ActionTagAdd<>(from, List.of(values)));
+        recalculate();
+    }
+
+    @ZenCodeType.Method
+    default List<T> elements(MCTag<T> of) {
+
+        if (!exists(of)) {
+            return List.of();
+        }
+        return getInternal(of).getValues().stream().map(Holder::value).collect(Collectors.toList());
+    }
+
     @ZenCodeType.Method
     @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
-    default boolean exists(String name) {
-        
-        return exists(new ResourceLocation(name));
+    default boolean exists(String id) {
+
+        ResourceLocation rl = ResourceLocation.tryParse(id);
+        Objects.requireNonNull(rl, "Invalid Resource Location passed! Given: '" + id + "'");
+        return exists(rl);
     }
-    
-    /**
-     * Checks if a tag already exists. Does the same as calling `.exists` on a tag directly
-     *
-     * @param location The resource location to check for
-     *
-     * @return Whether this tag already exists
-     */
+
     @ZenCodeType.Method
     @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
-    default boolean exists(ResourceLocation location) {
-        
-        return getTagCollection().getAllTags().containsKey(location);
+    default boolean exists(ResourceLocation id) {
+
+        return tagMap().containsKey(id);
     }
-    
-    /**
-     * Retrieves a list of all tags currently registered.
-     */
+
     @ZenCodeType.Method
-    @ZenCodeType.Getter("all")
-    default List<MCTag<T>> getAllTags() {
-        
-        return getTagCollection().getAllTags()
-                .keySet()
-                .stream()
-                .map(tagLocation -> new MCTag<>(tagLocation, this))
-                .collect(Collectors.toList());
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
+    default boolean exists(MCTag<T> tag) {
+
+        return exists(tag.id());
     }
-    
-    /**
-     * Retrieves all tags contain the provided element
-     *
-     * @param element The element whose tags should be returned
-     */
+
     @ZenCodeType.Method
-    default List<MCTag<T>> getAllTagsFor(T element) {
-        //While this is a working implementation, using TagCollection#getOwningTags would probably be more efficient ^^
-        //Therefore the CrT TagManagers override this impl
-        return getAllTags().stream()
-                .filter(tag -> tag.contains(element))
-                .collect(Collectors.toList());
+    @ZenCodeType.Getter("tagMap")
+    Map<ResourceLocation, MCTag<T>> tagMap();
+
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("tags")
+    default List<MCTag<T>> tags() {
+
+        return new ArrayList<>(tagMap().values());
     }
-    
-    /**
-     * Get the tag type. In a Bracket call, this will used to determine which ITagManager to use.
-     * <p>
-     * {@code <tag:{tag_type}:tag_location:tag_name>} <br>
-     * {@code <tagManager:{tag_type}>}
-     */
+
     @ZenCodeType.Method
-    @ZenCodeType.Getter("tagType")
-    String getTagFolder();
-    
-    /**
-     * Just so you won't have to implement that yourself ^^
-     */
+    default List<MCTag<T>> getTagsFor(T element) {
+
+        return tags().stream().filter(tag -> tag.contains(element)).toList();
+    }
+
     @Override
     default String getCommandString() {
-        
-        return "<tagmanager:" + getTagFolder() + ">";
+
+        return "<tagmanager:" + tagFolder() + ">";
     }
-    
-    /**
-     * Use this method to add elements to your tag.
-     * Create a new tag if it does not already exist!
-     * <p>
-     * An easy way to do this is to create and apply a new {@link com.blamejared.crafttweaker.api.action.tag.ActionTagAdd}
-     *
-     * @param to    The tag to add these elements to
-     * @param toAdd The items to add
-     */
-    void addElements(MCTag<T> to, List<T> toAdd);
-    
-    /**
-     * Use this method to remove elements from your tag
-     * Will be called by MCTag.
-     *
-     * @param from     The tag from which to remove
-     * @param toRemove The elements to remove
-     */
-    void removeElements(MCTag<T> from, List<T> toRemove);
-    
-    /**
-     * Use this method to get all elements within the given Tag.
-     * Will log a warning and return an empty list, if the tag does not exist.
-     *
-     * @param theTag The tag whose elements should be retrieved
-     *
-     * @return The Elements in this tag, or an empty list
-     */
-    List<T> getElementsInTag(MCTag<T> theTag);
-    
-    /**
-     * Return the tag object of this element.
-     * It is also recommended to replace the ? with the actual type in implementations ^^
-     *
-     * @return The MC tag type, or null if it does not exist
-     */
+
+    @NotNull
+    @Override
+    default Iterator<MCTag<T>> iterator() {
+
+        return tagMap().values().iterator();
+    }
+
+    void addTag(ResourceLocation id, Tag<Holder<T>> tag);
+
+    Map<ResourceLocation, Tag<Holder<T>>> internalTags();
+
     @Nullable
-    default Tag<T> getInternal(MCTag<T> theTag) {
-        
-        return getTagCollection().getTag(theTag.id());
-    }
-    
-    /**
-     * Returns the tag collection for this manager
-     */
-    TagCollection<T> getTagCollection();
-    
+    Tag<Holder<T>> getInternal(MCTag<T> tag);
+
+    void bind(TagManager.LoadResult<?> result);
+
+    Class<T> elementClass();
+
+    ResourceKey<? extends Registry<T>> resourceKey();
+
+    void recalculate();
+
 }

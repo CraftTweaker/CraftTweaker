@@ -43,8 +43,8 @@ public final class ExpandItemPredicate {
     
     @ZenCodeType.StaticExpansionMethod
     public static ItemPredicate.Builder create(final MCTag<Item> tag) {
-        
-        return create().of(tag.getInternal());
+
+        return create().of(tag.getTagKey());
     }
     
 }

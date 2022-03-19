@@ -4,10 +4,9 @@ import com.blamejared.crafttweaker.api.command.CommandUtilities;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.base.visitor.DataToTextComponentVisitor;
 import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
-import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
-import com.blamejared.crafttweaker.api.tag.manager.TagManagerBlock;
-import com.blamejared.crafttweaker.api.tag.manager.TagManagerItem;
+import com.blamejared.crafttweaker.api.tag.MCTag;
+import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
 import com.blamejared.crafttweaker.natives.block.ExpandBlock;
 import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
 import com.blamejared.crafttweaker.natives.entity.attribute.ExpandAttribute;
@@ -15,13 +14,13 @@ import com.blamejared.crafttweaker.natives.entity.equipment.ExpandEquipmentSlot;
 import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.brigadier.Command;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.TagCollection;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -37,11 +36,9 @@ import org.apache.logging.log4j.util.TriConsumer;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public final class HandCommands {
     
@@ -66,7 +63,7 @@ public final class HandCommands {
                     if(item instanceof BucketItem && Services.PLATFORM.getBucketContent(((BucketItem) item)) != Fluids.EMPTY) {
                         sendBucketInformation(player, (BucketItem) stack.getItem());
                     }
-    
+                    
                     for(MutableComponent component : Services.PLATFORM.getFluidsForDump(stack, player, InteractionHand.MAIN_HAND)) {
                         sendHand(player, new TranslatableComponent("crafttweaker.command.misc.fluid"), component.getString());
                     }
@@ -242,29 +239,29 @@ public final class HandCommands {
     
     private static Collection<String> sendItemTagsInformation(final Player player, final Item item) {
         
-        return sendTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.item"), TagManagerItem.INSTANCE, TagManagerItem.INSTANCE.getTagCollection(), item);
+        return sendTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.item"), CraftTweakerTagRegistry.INSTANCE.tagManager(Registry.ITEM_REGISTRY), item);
     }
     
     private static Collection<String> sendBlockTagsInformation(final Player player, final BlockItem item) {
         
-        return sendTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.block"), TagManagerBlock.INSTANCE, TagManagerBlock.INSTANCE.getTagCollection(), item
-                .getBlock());
+        return sendTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.block"), CraftTweakerTagRegistry.INSTANCE.tagManager(Registry.BLOCK_REGISTRY), item.getBlock());
     }
     
-    private static <T> Collection<String> sendTagsInformation(final Player player, final MutableComponent header, final ITagManager<T> manager,
-                                                              final TagCollection<T> tagCollection, final T target) {
+    private static <T> Collection<String> sendTagsInformation(final Player player, final MutableComponent header, final ITagManager<T> manager, final T target) {
         
-        final Collection<ResourceLocation> tags = tagCollection.getMatchingTags(target);
-        if(tags.isEmpty()) {
-            return Collections.emptyList();
+        Holder<T> tHolder = Services.REGISTRY.makeHolder(manager.resourceKey(), target);
+        
+        if(tHolder.tags().findAny().isEmpty()) {
+            return List.of();
         }
         
         CommandUtilities.send(header.withStyle(ChatFormatting.DARK_AQUA), player);
-        return tags.stream()
-                .map(id -> new MCTag<>(id, manager))
+        
+        return tHolder.tags()
+                .map(tTagKey -> new MCTag<>(tTagKey.location(), manager))
                 .map(MCTag::getCommandString)
                 .peek(it -> sendTagHand(player, it))
-                .collect(Collectors.toList());
+                .toList();
     }
     // </editor-fold>
     
@@ -300,25 +297,24 @@ public final class HandCommands {
     
     private static void sendVanillaItemTagsInformation(final Player player, final Item item) {
         
-        sendVanillaTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.item"), TagManagerItem.INSTANCE.getTagCollection(), item);
+        sendVanillaTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.item"), CraftTweakerTagRegistry.INSTANCE.tagManager(Registry.ITEM_REGISTRY), item);
     }
     
     private static void sendVanillaBlockTagsInformation(final Player player, final BlockItem item) {
         
-        sendVanillaTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.block"), TagManagerBlock.INSTANCE.getTagCollection(), item.getBlock());
+        sendVanillaTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.block"), CraftTweakerTagRegistry.INSTANCE.tagManager(Registry.BLOCK_REGISTRY), item.getBlock());
     }
     
-    private static <T> void sendVanillaTagsInformation(final Player player, final MutableComponent header, final TagCollection<T> tagCollection, final T target) {
+    private static <T> void sendVanillaTagsInformation(final Player player, final MutableComponent header, final ITagManager<T> manager, final T target) {
         
-        final Collection<ResourceLocation> tags = tagCollection.getMatchingTags(target);
-        if(tags.isEmpty()) {
+        Holder<T> tHolder = Services.REGISTRY.makeHolder(manager.resourceKey(), target);
+        
+        if(tHolder.tags().findAny().isEmpty()) {
             return;
         }
         
         CommandUtilities.send(header.withStyle(ChatFormatting.DARK_AQUA), player);
-        tags.stream()
-                .map(id -> "#" + id)
-                .forEach(it -> sendTagHand(player, it));
+        tHolder.tags().map(tTagKey -> "#" + tTagKey.location()).forEach(it -> sendTagHand(player, it));
     }
     
     private static void sendAttributePropertyInformation(final Player player, final String propertyName, final String value) {

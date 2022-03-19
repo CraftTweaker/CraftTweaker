@@ -12,7 +12,6 @@ import com.blamejared.crafttweaker.api.ingredient.transform.serializer.Transform
 import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformReplaceSerializer;
 import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformerReuseSerializer;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
-import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
@@ -29,7 +28,6 @@ public class CraftTweakerRegistries {
     
     public static void init() {
         
-        Services.REGISTRY.initRegistries();
         RECIPE_TYPE_SCRIPTS = RecipeType.register(CraftTweakerConstants.rl("scripts").toString());
         
         ResourceLocation transformerSerializerRL = CraftTweakerConstants.rl("transformer_serializer");
@@ -42,7 +40,7 @@ public class CraftTweakerRegistries {
         registerSerializer(REGISTRY_TRANSFORMER_SERIALIZER, TransformDamageSerializer.INSTANCE);
         registerSerializer(REGISTRY_TRANSFORMER_SERIALIZER, TransformCustomSerializer.INSTANCE);
         registerSerializer(REGISTRY_TRANSFORMER_SERIALIZER, TransformerReuseSerializer.INSTANCE);
-        
+
         registerSerializer(REGISTRY_CONDITIONER_SERIALIZER, ConditionDamagedSerializer.INSTANCE);
         registerSerializer(REGISTRY_CONDITIONER_SERIALIZER, ConditionAnyDamagedSerializer.INSTANCE);
         registerSerializer(REGISTRY_CONDITIONER_SERIALIZER, ConditionCustomSerializer.INSTANCE);
@@ -54,7 +52,9 @@ public class CraftTweakerRegistries {
         WritableRegistry registry = (WritableRegistry) Registry.REGISTRY;
         ResourceKey<Registry<T>> regKey = ResourceKey.createRegistryKey(location);
         Lifecycle stable = Lifecycle.stable();
-        return (MappedRegistry<T>) registry.register(regKey, new MappedRegistry<>(regKey, stable), stable);
+        MappedRegistry<T> mappedReg = new MappedRegistry<>(regKey, stable, null);
+        registry.register(regKey, mappedReg, stable);
+        return mappedReg;
     }
     
     private static void registerSerializer(MappedRegistry<IIngredientTransformerSerializer<?>> registry, IIngredientTransformerSerializer<?> serializer) {

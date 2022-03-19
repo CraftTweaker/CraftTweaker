@@ -109,4 +109,6 @@ public interface ICraftTweakerPlugin {
      */
     default void registerCommands(final ICommandRegistrationHandler handler) {}
     
+    default void registerTaggableElements(final ITaggableElementRegistrationHandler handler) {}
+    
 }

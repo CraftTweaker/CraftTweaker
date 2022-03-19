@@ -7,7 +7,7 @@ import com.blamejared.crafttweaker.api.util.Many;
 import com.blamejared.crafttweaker.natives.block.ExpandBlock;
 import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.openzen.zencode.java.ZenCodeType;
@@ -28,7 +28,7 @@ public abstract class CTBlockIngredient implements CommandStringDisplayable {
     
     public abstract <T> T mapTo(Function<Block, T> blockMapper,
                                 Function<BlockState, T> blockStateMapper,
-                                BiFunction<Tag<Block>, Integer, T> tagMapper,
+                                BiFunction<TagKey<Block>, Integer, T> tagMapper,
                                 Function<Stream<T>, T> compoundMapper);
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)
@@ -68,7 +68,7 @@ public abstract class CTBlockIngredient implements CommandStringDisplayable {
         }
         
         @Override
-        public <T> T mapTo(Function<Block, T> blockMapper, Function<BlockState, T> blockStateMapper, BiFunction<Tag<Block>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
+        public <T> T mapTo(Function<Block, T> blockMapper, Function<BlockState, T> blockStateMapper, BiFunction<TagKey<Block>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
             
             return blockMapper.apply(block);
         }
@@ -91,7 +91,7 @@ public abstract class CTBlockIngredient implements CommandStringDisplayable {
         }
         
         @Override
-        public <T> T mapTo(Function<Block, T> blockMapper, Function<BlockState, T> blockStateMapper, BiFunction<Tag<Block>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
+        public <T> T mapTo(Function<Block, T> blockMapper, Function<BlockState, T> blockStateMapper, BiFunction<TagKey<Block>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
             
             return blockStateMapper.apply(blockState);
         }
@@ -114,9 +114,9 @@ public abstract class CTBlockIngredient implements CommandStringDisplayable {
         }
         
         @Override
-        public <T> T mapTo(Function<Block, T> blockMapper, Function<BlockState, T> blockStateMapper, BiFunction<Tag<Block>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
+        public <T> T mapTo(Function<Block, T> blockMapper, Function<BlockState, T> blockStateMapper, BiFunction<TagKey<Block>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
             
-            return tagMapper.apply(tag.getData().getInternal(), tag.getAmount());
+            return tagMapper.apply(tag.getData().getTagKey(), tag.getAmount());
         }
         
     }
@@ -137,7 +137,7 @@ public abstract class CTBlockIngredient implements CommandStringDisplayable {
         }
         
         @Override
-        public <T> T mapTo(Function<Block, T> blockMapper, Function<BlockState, T> blockStateMapper, BiFunction<Tag<Block>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
+        public <T> T mapTo(Function<Block, T> blockMapper, Function<BlockState, T> blockStateMapper, BiFunction<TagKey<Block>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
             
             Stream<T> stream = elements.stream()
                     .map(element -> element.mapTo(blockMapper, blockStateMapper, tagMapper, compoundMapper));

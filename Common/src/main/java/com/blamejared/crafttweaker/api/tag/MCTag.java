@@ -5,138 +5,67 @@ import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.util.Many;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
-/**
- * A reference to a Tag object.
- * Note that this tag may not exist in the game already, such as when you create new tags.
- * See the {@link MCTag#exists()} Method on whether this tag already exists.
- * <p>
- * A tag will be created as soon as you add
- *
- * @docParam this <tag:items:forge:gems>
- */
+
 @ZenRegister
 @Document("vanilla/api/tag/MCTag")
 @ZenCodeType.Name("crafttweaker.api.tag.MCTag")
-public final class MCTag<T> implements CommandStringDisplayable, Iterable<T> {
+@SuppressWarnings("ClassCanBeRecord")
+public class MCTag<T> implements CommandStringDisplayable, Iterable<T>, Comparable<MCTag<T>> {
     
+    @Nonnull
     private final ResourceLocation id;
+    @Nonnull
     private final ITagManager<T> manager;
     
-    public MCTag(ResourceLocation id, ITagManager<T> manager) {
+    public MCTag(@Nonnull ResourceLocation id, @Nonnull ITagManager<T> manager) {
         
         this.id = id;
         this.manager = manager;
     }
     
-    /**
-     * Adds the given items to the tag. Creates the tag if it does not exist.
-     *
-     * @param items The items to add. Can be one or more items.
-     *
-     * @docParam items <item:minecraft:bedrock>
-     * @docParam items <item:minecraft:iron_ingot>, <item:minecraft:gold_ingot>
-     * @docParam items [<item:minecraft:iron_ingot>, <item:minecraft:gold_ingot>]
-     */
     @SafeVarargs
     @ZenCodeType.Method
-    public final void add(T... items) {
+    public final void add(T... elements) {
         
-        add(Arrays.asList(items));
-    }
-    
-    /**
-     * Adds the given items to the tag. Creates the tag if it does not exist.
-     *
-     * @param items The items to add. Provided as list.
-     */
-    @ZenCodeType.Method
-    public void add(List<T> items) {
-        
-        manager.addElements(this, items);
-    }
-    
-    /**
-     * Adds the given tag to this tag. Creates the tag if it does not exist.
-     *
-     * @param tag The tag to add.
-     *
-     * @docParam tag <tag:items:forge:rods>
-     */
-    @ZenCodeType.Method
-    public void add(MCTag<T> tag) {
-        
-        add(tag.getElements());
-    }
-    
-    /**
-     * Adds the given tags to this tag. Creates the tag if it does not exist.
-     *
-     * @param tags The tags to add.
-     *
-     * @docParam tags <tag:items:forge:rods>
-     */
-    @ZenCodeType.Method
-    public void addTags(List<MCTag<T>> tags) {
-        
-        add(tags.stream()
-                .flatMap(tag -> tag.getElements().stream())
-                .collect(Collectors.toList()));
+        manager().addElements(this, elements);
     }
     
     @SafeVarargs
     @ZenCodeType.Method
-    public final void remove(T... items) {
+    public final void remove(T... elements) {
         
-        remove(Arrays.asList(items));
-    }
-    
-    @ZenCodeType.Method
-    public void remove(List<T> items) {
-        
-        manager.removeElements(this, items);
-    }
-    
-    @ZenCodeType.Method
-    public void remove(MCTag<T> tag) {
-        
-        remove(tag.getElements());
+        manager().removeElements(this, elements);
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("exists")
     public boolean exists() {
         
-        return manager.exists(id.toString());
+        return manager().exists(this);
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("elements")
-    public List<T> getElements() {
+    public List<T> elements() {
         
-        return manager.getElementsInTag(this);
+        return manager().elements(this);
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
     public boolean contains(T element) {
         
-        return getElements().contains(element);
-    }
-    
-    @Override
-    public String getCommandString() {
-        
-        return "<tag:" + manager.getTagFolder() + ":" + id + ">";
+        return elements().contains(element);
     }
     
     @ZenCodeType.Method
@@ -153,6 +82,7 @@ public final class MCTag<T> implements CommandStringDisplayable, Iterable<T> {
         return manager;
     }
     
+    @ZenCodeType.Method
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
     public boolean equals(MCTag<T> other) {
         
@@ -173,28 +103,34 @@ public final class MCTag<T> implements CommandStringDisplayable, Iterable<T> {
         return withAmount(1);
     }
     
-    /**
-     * Use the manager directly if possible, as then you can work typed.
-     */
-    public Tag<T> getInternal() {
-        
-        return manager.getInternal(this);
-    }
-    
-    /**
-     * Only used to make it easier if for some reason you cannot work typed, to not always have to cast to Raw.
-     */
-    @SuppressWarnings({"rawtypes", "unused"})
-    public Tag getInternalRaw() {
-        
-        return getInternal();
-    }
-    
     @Override
     @ZenCodeType.Caster(implicit = true)
     public String toString() {
         
         return getCommandString();
+    }
+    
+    @Override
+    public String getCommandString() {
+        
+        return "<tag:" + manager().tagFolder() + ":" + id() + ">";
+    }
+    
+    public Tag<Holder<T>> getInternal() {
+        
+        return manager.getInternal(this);
+    }
+    
+    public TagKey<T> getTagKey() {
+        
+        return TagKey.create(manager().resourceKey(), this.id());
+    }
+    
+    @Nonnull
+    @Override
+    public Iterator<T> iterator() {
+        
+        return elements().iterator();
     }
     
     @Override
@@ -223,11 +159,11 @@ public final class MCTag<T> implements CommandStringDisplayable, Iterable<T> {
         return result;
     }
     
-    @Nonnull
+    
     @Override
-    public Iterator<T> iterator() {
+    public int compareTo(@Nonnull MCTag<T> o) {
         
-        return getElements().iterator();
+        return this.id().compareTo(o.id());
     }
     
 }

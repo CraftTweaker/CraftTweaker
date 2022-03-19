@@ -19,13 +19,13 @@ public final class LootModifierManagerReloadListener extends SimplePreparableRel
     }
     
     @Override
-    protected Void prepare(final ResourceManager resourceManager, final ProfilerFiller profiler) {
+    protected Void prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
         
         return null;
     }
     
     @Override
-    protected void apply(final Void object, final ResourceManager resourceManager, final ProfilerFiller profiler) {
+    protected void apply(Void object, ResourceManager resourceManager, ProfilerFiller profiler) {
         
         LootModifierManager.INSTANCE.modifiers().clear();
     }

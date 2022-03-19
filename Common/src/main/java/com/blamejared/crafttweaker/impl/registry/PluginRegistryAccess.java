@@ -3,12 +3,15 @@ package com.blamejared.crafttweaker.impl.registry;
 import com.blamejared.crafttweaker.api.natives.NativeTypeInfo;
 import com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
+import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
+import com.blamejared.crafttweaker.api.tag.manager.TagManagerFactory;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.ZenTypeInfo;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
 import com.blamejared.crafttweaker.impl.plugin.core.IPluginRegistryAccess;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import org.openzen.zenscript.parser.BracketExpressionParser;
@@ -79,6 +82,18 @@ final class PluginRegistryAccess implements IPluginRegistryAccess {
     public <T extends Enum<T>> void registerEnum(final IScriptLoader loader, final ResourceLocation id, final Class<T> enumClass) {
         
         this.registries.enumBracketRegistry().register(loader, id, enumClass);
+    }
+    
+    @Override
+    public <T> void registerTaggableElement(IScriptLoader loader, ResourceKey<T> key, Class<T> elementClass) {
+        
+        this.registries.taggableElementRegistry().registerElement(loader, key, elementClass);
+    }
+    
+    @Override
+    public <T, U extends ITagManager<T>> void registerTaggableElementManager(IScriptLoader loader, ResourceKey<T> key, TagManagerFactory<T, U> factory) {
+        
+        this.registries.taggableElementRegistry().registerManager(loader, key, factory);
     }
     
     @Override

@@ -21,11 +21,10 @@ public class ExpandBlockPredicateBuilder {
         
         return internal.of(blocks);
     }
-    
     @ZenCodeType.Method
     public static BlockPredicate.Builder tag(final BlockPredicate.Builder internal, final MCTag<Block> tag) {
-        
-        return internal.of(tag.getInternal());
+
+        return internal.of(tag.getTagKey());
     }
     
     @ZenCodeType.Method

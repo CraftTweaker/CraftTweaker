@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.platform;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.MCItemStack;
 import com.blamejared.crafttweaker.api.item.MCItemStackMutable;
@@ -9,14 +8,11 @@ import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
 import com.blamejared.crafttweaker.api.mod.Mod;
 import com.blamejared.crafttweaker.api.recipe.handler.helper.CraftingTableRecipeConflictChecker;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
-import com.blamejared.crafttweaker.api.tag.manager.TagManagerWrapper;
-import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistryData;
 import com.blamejared.crafttweaker.api.util.HandleUtil;
 import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
 import com.blamejared.crafttweaker.impl.script.ScriptSerializer;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessBucketItem;
-import com.blamejared.crafttweaker.mixin.common.access.tag.AccessStaticTags;
 import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
 import com.blamejared.crafttweaker.platform.helper.world.inventory.TAInventoryWrapper;
 import com.blamejared.crafttweaker.platform.services.IPlatformHelper;
@@ -29,24 +25,19 @@ import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.fabricmc.fabric.impl.tag.extension.TagFactoryImpl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.Util;
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.StaticTagHelper;
-import net.minecraft.tags.TagCollection;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
@@ -225,28 +216,6 @@ public class FabricPlatformHelper implements IPlatformHelper {
         }
     }
     
-    public Map<ResourceLocation, TagCollection<?>> getCustomTags() {
-        
-        return TagFactoryImpl.TAG_LISTS.values()
-                .stream()
-                .collect(Collectors.toMap(helper -> new ResourceLocation(removeTagsDirectory(helper.getDirectory())), StaticTagHelper::getAllTags));
-    }
-    
-    private String removeTagsDirectory(String directory) {
-        
-        if(directory.startsWith("tags/")) {
-            return directory.substring("tags/".length());
-        }
-        CraftTweakerAPI.LOGGER.warn("Custom tag directory does not start with 'tags/'! Please report this to the CraftTweaker issue tracker!");
-        return directory;
-    }
-    
-    @Override
-    public Collection<StaticTagHelper<?>> getStaticTagHelpers() {
-        
-        return AccessStaticTags.crafttweaker$getHELPERS();
-    }
-    
     @Override
     public IInventoryWrapper getPlayerInventory(Player player) {
         
@@ -260,18 +229,10 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
     
     @Override
-    public void registerCustomTags() {
-        
-        // Fabric's tag system doesn't let us get the type...
-        CrTTagRegistryData.INSTANCE.register(new TagManagerWrapper<>(Biome.class, Registry.BIOME_REGISTRY.location(), "biomes"));
-    }
-    
-    @Override
     public Map<ResourceLocation, ILootModifier> getLootModifiersMap() {
         
         return LootModifierManager.INSTANCE.modifiers();
     }
-    
     
     @SuppressWarnings("UnstableApiUsage")
     @Override

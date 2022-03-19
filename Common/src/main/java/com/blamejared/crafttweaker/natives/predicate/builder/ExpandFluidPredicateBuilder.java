@@ -22,8 +22,8 @@ public class ExpandFluidPredicateBuilder {
     
     @ZenCodeType.Method
     public static FluidPredicate.Builder tag(final FluidPredicate.Builder internal, final MCTag<Fluid> tag) {
-        
-        return internal.of(tag.getInternal());
+
+        return internal.of(tag.getTagKey());
     }
     
     @ZenCodeType.Method

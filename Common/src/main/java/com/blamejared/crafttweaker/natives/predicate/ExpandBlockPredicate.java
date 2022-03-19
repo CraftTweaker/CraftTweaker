@@ -33,8 +33,8 @@ public final class ExpandBlockPredicate {
     
     @ZenCodeType.StaticExpansionMethod
     public static BlockPredicate.Builder create(final MCTag<Block> tag) {
-        
-        return create().of(tag.getInternal());
+
+        return create().of(tag.getTagKey());
     }
     
 }

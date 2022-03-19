@@ -51,7 +51,6 @@ public final class EnumBracketRegistry {
         this.data.putAll(inherited);
     }
     
-    @SuppressWarnings("unchecked")
     public <T extends Enum<T>> Optional<Class<T>> getEnum(final IScriptLoader loader, final ResourceLocation type) {
         
         return Optional.ofNullable(this.data.get(loader))

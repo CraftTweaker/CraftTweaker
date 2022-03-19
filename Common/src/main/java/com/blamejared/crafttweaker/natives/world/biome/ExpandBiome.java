@@ -1,9 +1,11 @@
 package com.blamejared.crafttweaker.natives.world.biome;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.mixin.common.access.world.biome.AccessBiome;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -13,6 +15,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @Document("vanilla/api/world/biome/Biome")
 @NativeTypeRegistration(value = Biome.class, zenCodeName = "crafttweaker.api.world.biome.Biome")
+@TaggableElement("minecraft:worldgen/biome")
 public class ExpandBiome {
     
     @ZenCodeType.Getter("waterColor")
@@ -39,13 +42,11 @@ public class ExpandBiome {
         return internal.isHumid();
     }
     
-    
     @ZenCodeType.Getter("biomeCategory")
     public static String getBiomeCategory(Biome internal) {
         
-        return internal.getBiomeCategory().getName().toLowerCase();
+        return ((AccessBiome) (Object) internal).crafttwaeker$callGetBiomeCategory().getName().toLowerCase();
     }
-    
     
     @ZenCodeType.Getter("doesRain")
     public static boolean doesRain(Biome internal) {

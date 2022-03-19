@@ -27,14 +27,14 @@ public final class ExpandFluidPredicate {
     
     @ZenCodeType.StaticExpansionMethod
     public static FluidPredicate.Builder create(final Fluid fluid) {
-        
+
         return create().of(fluid);
     }
     
     @ZenCodeType.StaticExpansionMethod
     public static FluidPredicate.Builder create(final MCTag<Fluid> tag) {
-        
-        return create().of(tag.getInternal());
+
+        return create().of(tag.getTagKey());
     }
     
 }

@@ -3,21 +3,19 @@ package com.blamejared.crafttweaker.api.tag.expand;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.base.IData;
-import com.blamejared.crafttweaker.api.ingredient.type.IIngredientEmpty;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.IIngredientWithAmount;
-import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.ingredient.type.IIngredientEmpty;
 import com.blamejared.crafttweaker.api.ingredient.type.WrappingIIngredient;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.tag.MCTag;
-import com.blamejared.crafttweaker.api.tag.manager.TagManagerItem;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * This expansion specifically targets itemTags.
@@ -34,7 +32,7 @@ public class ExpandItemTag {
     @ZenCodeType.Caster(implicit = true)
     public static IIngredient asIIngredient(MCTag<Item> internal) {
         
-        final Tag<Item> internalTag = TagManagerItem.INSTANCE.getInternal(internal);
+        final TagKey<Item> internalTag = internal.getTagKey();
         if(internalTag == null) {
             CraftTweakerAPI.LOGGER.warn("Tag '{}' does not exist, replacing with empty IIngredient", internal.getCommandString());
             return IIngredientEmpty.INSTANCE;
@@ -53,7 +51,9 @@ public class ExpandItemTag {
     @ZenCodeType.Method
     public static void add(MCTag<Item> internal, List<IItemStack> items) {
         
-        internal.add(items.stream().map(IItemStack::getDefinition).collect(Collectors.toList()));
+        internal.add(items.stream()
+                .map(IItemStack::getDefinition)
+                .toArray(Item[]::new));
     }
     
     @ZenCodeType.Method

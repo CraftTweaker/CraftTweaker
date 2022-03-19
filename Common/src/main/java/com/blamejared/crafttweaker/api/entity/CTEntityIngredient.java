@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.api.util.Many;
 import com.blamejared.crafttweaker.natives.entity.ExpandEntityType;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -31,7 +31,7 @@ public abstract class CTEntityIngredient implements CommandStringDisplayable {
     public abstract String getCommandString();
     
     public abstract <T> T mapTo(Function<EntityType<?>, T> typeMapper,
-                                BiFunction<Tag<EntityType<?>>, Integer, T> tagMapper,
+                                BiFunction<TagKey<EntityType<?>>, Integer, T> tagMapper,
                                 Function<Stream<T>, T> compoundMapper);
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)
@@ -70,7 +70,7 @@ public abstract class CTEntityIngredient implements CommandStringDisplayable {
         }
         
         @Override
-        public <T> T mapTo(Function<EntityType<?>, T> typeMapper, BiFunction<Tag<EntityType<?>>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
+        public <T> T mapTo(Function<EntityType<?>, T> typeMapper, BiFunction<TagKey<EntityType<?>>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
             
             return typeMapper.apply(entityType);
         }
@@ -93,9 +93,9 @@ public abstract class CTEntityIngredient implements CommandStringDisplayable {
         }
         
         @Override
-        public <T> T mapTo(Function<EntityType<?>, T> typeMapper, BiFunction<Tag<EntityType<?>>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
+        public <T> T mapTo(Function<EntityType<?>, T> typeMapper, BiFunction<TagKey<EntityType<?>>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
             
-            return tagMapper.apply(tag.getData().getInternal(), tag.getAmount());
+            return tagMapper.apply(tag.getData().getTagKey(), tag.getAmount());
         }
         
     }
@@ -116,7 +116,7 @@ public abstract class CTEntityIngredient implements CommandStringDisplayable {
         }
         
         @Override
-        public <T> T mapTo(Function<EntityType<?>, T> typeMapper, BiFunction<Tag<EntityType<?>>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
+        public <T> T mapTo(Function<EntityType<?>, T> typeMapper, BiFunction<TagKey<EntityType<?>>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
             
             Stream<T> stream = elements.stream()
                     .map(element -> element.mapTo(typeMapper, tagMapper, compoundMapper));

@@ -1,12 +1,20 @@
 package com.blamejared.crafttweaker.platform;
 
+import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
+import com.blamejared.crafttweaker.api.ingredient.condition.serializer.ConditionAnyDamagedSerializer;
+import com.blamejared.crafttweaker.api.ingredient.condition.serializer.ConditionCustomSerializer;
+import com.blamejared.crafttweaker.api.ingredient.condition.serializer.ConditionDamagedSerializer;
 import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientAnySerializer;
 import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientConditionedSerializer;
 import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientListSerializer;
 import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientPartialTagSerializer;
 import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientTransformedSerializer;
+import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformCustomSerializer;
+import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformDamageSerializer;
+import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformReplaceSerializer;
+import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformerReuseSerializer;
 import com.blamejared.crafttweaker.api.ingredient.type.IIngredientConditioned;
 import com.blamejared.crafttweaker.api.ingredient.type.IIngredientTransformed;
 import com.blamejared.crafttweaker.api.ingredient.type.IngredientAny;
@@ -34,32 +42,65 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import net.minecraftforge.registries.NewRegistryEvent;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class ForgeRegistryHelper implements IRegistryHelper {
     
+
+    
     @Override
-    public void initRegistries() {
+    public void init() {
         
-        ForgeRegistries.RECIPE_SERIALIZERS.register(CTShapelessRecipeSerializer.INSTANCE);
-        ForgeRegistries.RECIPE_SERIALIZERS.register(CTShapedRecipeSerializer.INSTANCE);
-        ForgeRegistries.RECIPE_SERIALIZERS.register(ScriptSerializer.INSTANCE);
+        FMLJavaModLoadingContext.get()
+                .getModEventBus()
+                .addListener((Consumer<NewRegistryEvent>) newRegistry -> {
+                    CraftTweakerRegistries.REGISTRY_TRANSFORMER_SERIALIZER = registerVanillaRegistry(CraftTweakerConstants.rl("transformer_serializer"));
+                    CraftTweakerRegistries.REGISTRY_CONDITIONER_SERIALIZER = registerVanillaRegistry(CraftTweakerConstants.rl("condition_serializer"));
+                    
+                    registerSerializer(CraftTweakerRegistries.REGISTRY_TRANSFORMER_SERIALIZER, TransformReplaceSerializer.INSTANCE);
+                    registerSerializer(CraftTweakerRegistries.REGISTRY_TRANSFORMER_SERIALIZER, TransformDamageSerializer.INSTANCE);
+                    registerSerializer(CraftTweakerRegistries.REGISTRY_TRANSFORMER_SERIALIZER, TransformCustomSerializer.INSTANCE);
+                    registerSerializer(CraftTweakerRegistries.REGISTRY_TRANSFORMER_SERIALIZER, TransformerReuseSerializer.INSTANCE);
+                    
+                    registerSerializer(CraftTweakerRegistries.REGISTRY_CONDITIONER_SERIALIZER, ConditionDamagedSerializer.INSTANCE);
+                    registerSerializer(CraftTweakerRegistries.REGISTRY_CONDITIONER_SERIALIZER, ConditionAnyDamagedSerializer.INSTANCE);
+                    registerSerializer(CraftTweakerRegistries.REGISTRY_CONDITIONER_SERIALIZER, ConditionCustomSerializer.INSTANCE);
+                });
         
-        Registry.register(
-                Registry.LOOT_CONDITION_TYPE,
-                new ResourceLocation(CraftTweakerConstants.MOD_ID, "loot_table_id_regex"),
-                LootTableIdRegexCondition.LOOT_TABLE_ID_REGEX
-        );
+        // No registry type for loot conditions, so we gotta use block.
+        FMLJavaModLoadingContext.get()
+                .getModEventBus()
+                .addGenericListener(Block.class, (Consumer<RegistryEvent.Register<Block>>) blockRegister -> Registry.register(
+                        Registry.LOOT_CONDITION_TYPE,
+                        new ResourceLocation(CraftTweakerConstants.MOD_ID, "loot_table_id_regex"),
+                        LootTableIdRegexCondition.LOOT_TABLE_ID_REGEX
+                ));
+        
+        FMLJavaModLoadingContext.get()
+                .getModEventBus()
+                .addGenericListener(RecipeSerializer.class, (Consumer<RegistryEvent.Register<RecipeSerializer<?>>>) register -> {
+                    CraftTweakerRegistries.RECIPE_TYPE_SCRIPTS = RecipeType.register(CraftTweakerConstants.rl("scripts")
+                            .toString());
+                    register.getRegistry().register(CTShapelessRecipeSerializer.INSTANCE);
+                    register.getRegistry().register(CTShapedRecipeSerializer.INSTANCE);
+                    register.getRegistry().register(ScriptSerializer.INSTANCE);
+                });
+        
         
         CraftingHelper.register(CraftTweakerConstants.rl("any"), IngredientAnySerializer.INSTANCE);
         CraftingHelper.register(CraftTweakerConstants.rl("list"), IngredientListSerializer.INSTANCE);

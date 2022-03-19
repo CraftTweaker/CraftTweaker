@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.api.util.Many;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import org.openzen.zencode.java.ZenCodeType;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * FluidIngredient that facilitates accepting either a single, or multiple {@link IFluidStack}s, {@link com.blamejared.crafttweaker.api.tag.MCTag<Fluid>}s
+ * FluidIngredient that facilitates accepting either a single, or multiple {@link IFluidStack}s, {@link MCTag<Fluid>}s
  * or {@link Many<MCTag><Fluid>}s.
  */
 @ZenRegister
@@ -31,7 +31,7 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
     public abstract String getCommandString();
     
     public abstract <T> T mapTo(Function<FluidStack, T> fluidMapper,
-                                BiFunction<Tag<Fluid>, Integer, T> tagMapper,
+                                BiFunction<TagKey<Fluid>, Integer, T> tagMapper,
                                 Function<Stream<T>, T> compoundMapper);
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)
@@ -70,7 +70,7 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
         }
         
         @Override
-        public <T> T mapTo(Function<FluidStack, T> fluidMapper, BiFunction<Tag<Fluid>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
+        public <T> T mapTo(Function<FluidStack, T> fluidMapper, BiFunction<TagKey<Fluid>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
             
             return fluidMapper.apply(fluidStack.getImmutableInternal());
         }
@@ -93,9 +93,9 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
         }
         
         @Override
-        public <T> T mapTo(Function<FluidStack, T> fluidMapper, BiFunction<Tag<Fluid>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
+        public <T> T mapTo(Function<FluidStack, T> fluidMapper, BiFunction<TagKey<Fluid>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
             
-            return tagMapper.apply(tag.getData().getInternal(), tag.getAmount());
+            return tagMapper.apply(tag.getData().getTagKey(), tag.getAmount());
         }
         
     }
@@ -116,7 +116,7 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
         }
         
         @Override
-        public <T> T mapTo(Function<FluidStack, T> fluidMapper, BiFunction<Tag<Fluid>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
+        public <T> T mapTo(Function<FluidStack, T> fluidMapper, BiFunction<TagKey<Fluid>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
             
             Stream<T> stream = elements.stream()
                     .map(element -> element.mapTo(fluidMapper, tagMapper, compoundMapper));

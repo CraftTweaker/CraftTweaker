@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -19,6 +20,7 @@ import java.util.Map;
 @ZenRegister
 @Document("vanilla/api/item/enchantment/Enchantment")
 @NativeTypeRegistration(value = Enchantment.class, zenCodeName = "crafttweaker.api.item.enchantment.Enchantment")
+@TaggableElement("minecraft:enchantment")
 public class ExpandEnchantment {
     
     @ZenCodeType.Method

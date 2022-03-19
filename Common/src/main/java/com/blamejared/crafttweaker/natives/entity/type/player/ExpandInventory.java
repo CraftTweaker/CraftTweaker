@@ -121,7 +121,7 @@ public class ExpandInventory {
     @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
     public static boolean contains(Inventory internal, MCTag<Item> tag) {
         
-        return internal.contains(tag.getInternal());
+        return internal.contains(tag.getTagKey());
     }
     
 }

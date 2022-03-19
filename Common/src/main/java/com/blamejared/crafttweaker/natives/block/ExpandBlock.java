@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.natives.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -26,6 +27,7 @@ import java.util.List;
 @ZenRegister
 @Document("vanilla/api/block/Block")
 @NativeTypeRegistration(value = Block.class, zenCodeName = "crafttweaker.api.block.Block")
+@TaggableElement("minecraft:block")
 public class ExpandBlock {
     
     /**

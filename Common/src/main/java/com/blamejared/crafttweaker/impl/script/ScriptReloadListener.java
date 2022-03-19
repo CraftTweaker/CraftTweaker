@@ -4,21 +4,23 @@ import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
+import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRun;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.helper.FileGathererHelper;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
+import com.blamejared.crafttweaker.platform.helper.IAccessibleServerElementsProvider;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,7 +35,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
     
@@ -41,27 +42,30 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
     private static final MutableComponent MSG_RELOAD_COMPLETE = new TranslatableComponent("crafttweaker.reload.complete");
     private static final Random RANDOM = ThreadLocalRandom.current();
     
-    private final Supplier<RecipeManager> managerSupplier;
+    private final ReloadableServerResources resources;
     private final Consumer<MutableComponent> feedbackConsumer;
     
-    public ScriptReloadListener(final Supplier<RecipeManager> managerSupplier, final Consumer<MutableComponent> feedbackConsumer) {
+    public ScriptReloadListener(final ReloadableServerResources managerSupplier, final Consumer<MutableComponent> feedbackConsumer) {
         
-        this.managerSupplier = managerSupplier;
+        this.resources = managerSupplier;
         this.feedbackConsumer = feedbackConsumer;
     }
     
+    
     @Override
-    @SuppressWarnings("NullableProblems")
-    protected Void prepare(final ResourceManager resourceManager, final ProfilerFiller profiler) {
+    protected Void prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
         
         return null;
     }
     
     @Override
-    @ParametersAreNonnullByDefault
-    protected void apply(final Void objectIn, final ResourceManager resourceManagerIn, final ProfilerFiller profilerIn) {
+    protected void apply(Void object, ResourceManager resourceManager, ProfilerFiller profiler) {
         
-        final RecipeManager manager = this.managerSupplier.get();
+        IAccessibleServerElementsProvider asep = CraftTweakerAPI.getAccessibleServerElementsProvider();
+        asep.resources(this.resources);
+        CraftTweakerTagRegistry.INSTANCE.bind(asep.accessibleResources().crafttweaker$getTagManager());
+        
+        final RecipeManager manager = this.resources.getRecipeManager();
         
         this.feedbackConsumer.accept(MSG_RELOAD_STARTING);
         this.fixRecipeManager(manager);

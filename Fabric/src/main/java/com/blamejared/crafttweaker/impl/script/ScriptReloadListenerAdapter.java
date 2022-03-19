@@ -12,21 +12,20 @@ import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.item.crafting.RecipeManager;
 
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.function.Supplier;
 
 public final class ScriptReloadListenerAdapter implements IdentifiableResourceReloadListener {
     
     private final ScriptReloadListener listener;
     
-    public ScriptReloadListenerAdapter(final Supplier<RecipeManager> managerGetter) {
+    public ScriptReloadListenerAdapter(final ReloadableServerResources managerGetter) {
         
         this.listener = new ScriptReloadListener(managerGetter, this::giveFeedback);
     }

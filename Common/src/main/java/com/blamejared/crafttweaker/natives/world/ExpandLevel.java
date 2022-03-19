@@ -289,8 +289,8 @@ public class ExpandLevel {
      */
     @ZenCodeType.Method
     public static Biome getBiome(Level internal, BlockPos pos) {
-        
-        return internal.getBiome(pos);
+
+        return internal.getBiome(pos).value();
     }
     
     /**
