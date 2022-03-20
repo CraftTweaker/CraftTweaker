@@ -42,7 +42,7 @@ public abstract class MixinServerResources {
     }
     
     @Inject(method = "loadResources", at = @At(value = "TAIL"))
-    private static void crafttweaker$destroyCurrentResources(ResourceManager resourceManager, RegistryAccess.Frozen frozen, Commands.CommandSelection commandSelection, int i, Executor executor, Executor executor2, CallbackInfoReturnable<CompletableFuture<ReloadableServerResources>> cir) {
+    private static void crafttweaker$disposeCurrentResources(ResourceManager resourceManager, RegistryAccess.Frozen frozen, Commands.CommandSelection commandSelection, int i, Executor executor, Executor executor2, CallbackInfoReturnable<CompletableFuture<ReloadableServerResources>> cir) {
         
         crafttweaker$currentResources = null;
     }
