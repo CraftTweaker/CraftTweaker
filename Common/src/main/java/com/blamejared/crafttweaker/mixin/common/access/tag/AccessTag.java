@@ -11,10 +11,10 @@ import java.util.List;
 public interface AccessTag {
     
     @Accessor("elements")
-    List crafttweaker$getElements();
+    <T> List<T> crafttweaker$getElements();
     
     @Mutable
     @Accessor("elements")
-    void crafttweaker$setElements(List elements);
+    <T> void crafttweaker$setElements(List<T> elements);
     
 }
