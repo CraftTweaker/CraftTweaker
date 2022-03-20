@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
 import com.blamejared.crafttweaker.api.mod.Mod;
 import com.blamejared.crafttweaker.api.recipe.handler.helper.CraftingTableRecipeConflictChecker;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.HandleUtil;
 import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.api.villager.CTTradeObject;
@@ -198,7 +199,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
     public <T> Field findField(@NotNull final Class<? super T> clazz, @NotNull final String fieldName, @NotNull final String fieldDescription) {
         
         try {
-            return ObfuscationReflectionHelper.findField(castToSuperExplicitly(clazz), fieldName);
+            return ObfuscationReflectionHelper.findField(GenericUtil.castToSuperExplicitly(clazz), fieldName);
         } catch(final ObfuscationReflectionHelper.UnableToFindFieldException e) {
             throw new HandleUtil.UnableToLinkHandleException("Field %s was not found inside class %s".formatted(StringUtil.quoteAndEscape(fieldName), clazz.getName()), e);
         }

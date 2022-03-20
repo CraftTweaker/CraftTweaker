@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.plugin.crafttweaker;
 import com.blamejared.crafttweaker.api.plugin.ITaggableElementRegistrationHandler;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.manager.TagManagerFactory;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.InstantiationUtil;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
@@ -48,7 +49,7 @@ final class TaggableElementsRegistrationManager {
         try {
             final ResourceLocation id = new ResourceLocation(data.value());
             final ResourceKey<Registry<Object>> registryKey = ResourceKey.createRegistryKey(id);
-            handler.registerTaggableElement(loader, registryKey, this.uncheck(clazz));
+            handler.registerTaggableElement(loader, registryKey, GenericUtil.uncheck(clazz));
             Class<?> managerFactoryClass = data.managerFactoryClass();
             if(!managerFactoryClass.equals(Object.class)) {
                 if(!TagManagerFactory.class.isAssignableFrom(managerFactoryClass)) {
@@ -59,11 +60,6 @@ final class TaggableElementsRegistrationManager {
         } catch(final ResourceLocationException e) {
             throw new IllegalArgumentException("Provided resource location '" + data.value() + "' for taggable element " + clazz.getName() + " is invalid", e);
         }
-    }
-    
-    private <T, U> T uncheck(final U u) {
-        
-        return (T) u;
     }
     
 }

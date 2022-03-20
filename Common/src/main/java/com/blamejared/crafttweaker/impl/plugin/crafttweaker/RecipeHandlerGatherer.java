@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl.plugin.crafttweaker;
 
 import com.blamejared.crafttweaker.api.plugin.IRecipeHandlerRegistrationHandler;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.InstantiationUtil;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.world.item.crafting.Recipe;
@@ -40,13 +41,8 @@ final class RecipeHandlerGatherer {
                 .map(IRecipeHandler.For::value)
                 .map(it -> (Class<?>) it)
                 .filter(it -> it != Recipe.class)
-                .forEach(it -> handler.registerRecipeHandler(this.uncheck(it), (IRecipeHandler<?>) InstantiationUtil.getOrCreateInstance(clazz)));
+                .forEach(it -> handler.registerRecipeHandler(GenericUtil.uncheck(it), (IRecipeHandler<?>) InstantiationUtil.getOrCreateInstance(clazz)));
     }
     
-    @SuppressWarnings("unchecked")
-    private <T, U> T uncheck(final U u) {
-        
-        return (T) u;
-    }
     
 }

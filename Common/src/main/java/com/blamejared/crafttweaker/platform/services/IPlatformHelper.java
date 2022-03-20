@@ -125,12 +125,6 @@ public interface IPlatformHelper {
     
     <T> Field findField(@Nonnull final Class<? super T> clazz, @Nonnull final String fieldName, @Nonnull final String fieldDescription);
     
-    // Don't ask, this makes the compiler shut up
-    default <T> Class<? super T> castToSuperExplicitly(final Class<T> t) {
-        
-        return t;
-    }
-    
     default void registerCustomTradeConverters(Map<Class<? extends VillagerTrades.ItemListing>, Function<VillagerTrades.ItemListing, CTTradeObject>> classFunctionMap) {
         // no-op
     }

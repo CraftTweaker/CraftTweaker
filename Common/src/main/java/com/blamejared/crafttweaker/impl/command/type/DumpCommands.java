@@ -4,8 +4,10 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.command.CommandUtilities;
 import com.blamejared.crafttweaker.api.loot.LootManager;
 import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
-import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
+import com.blamejared.crafttweaker.api.tag.MCTag;
+import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.villager.CTVillagerTrades;
 import com.blamejared.crafttweaker.impl.command.CtCommands;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
@@ -237,10 +239,7 @@ public final class DumpCommands {
                             .peek(it -> CraftTweakerAPI.LOGGER.info(it.getCommandString()))
                             .flatMap(it -> it.elements()
                                     .stream()
-                                    .map(o -> player.server.registryAccess().registry(it.manager().resourceKey())
-                                            .map(objects -> objects.getKey(o))
-                                            .map(ResourceLocation::toString)
-                                            .orElse(o.toString())))
+                                    .map(o -> getTagAsString(player,it, o)))
                             .forEach(it -> {
                                 CraftTweakerAPI.LOGGER.info("\t- {}", it);
                             });
@@ -250,6 +249,16 @@ public final class DumpCommands {
                 })
         );
     }
+    
+    private static String getTagAsString(ServerPlayer player, MCTag<?> tag, Object o){
+    
+        return player.server.registryAccess().registry(tag.manager().resourceKey())
+                .map(objects -> objects.getKey(GenericUtil.uncheck(o)))
+                .map(ResourceLocation::toString)
+                .orElse(o.toString());
+    }
+    
+
     
     private static void doFullBracketsDump(final CommandContext<CommandSourceStack> context) {
         

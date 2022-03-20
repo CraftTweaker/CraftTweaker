@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.plugin.core;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.plugin.CraftTweakerPlugin;
 import com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.impl.registry.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.platform.Services;
@@ -199,7 +200,7 @@ public final class PluginManager {
         this.verifying(
                 "registering recipe handlers",
                 () -> RecipeHandlerRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerRecipeHandlers))
-                        .forEach(it -> access.registerHandler(this.uncheck(it.recipeClass()), it.handler()))
+                        .forEach(it -> access.registerHandler(GenericUtil.uncheck(it.recipeClass()), it.handler()))
         );
         
         this.verifying(
@@ -247,13 +248,13 @@ public final class PluginManager {
         this.verifying(
                 "registering taggable elements",
                 () -> handler.elementRequests().forEach(it ->
-                        access.registerTaggableElement(loaderFinder.apply(it.loader()), it.key(), this.uncheck(it.elementClass()))
+                        access.registerTaggableElement(loaderFinder.apply(it.loader()), it.key(), GenericUtil.uncheck(it.elementClass()))
                 )
         );
         this.verifying(
                 "registering taggable element managers",
                 () -> handler.managerRequests().forEach(it ->
-                        access.registerTaggableElementManager(loaderFinder.apply(it.loader()), it.key(), this.uncheck(it.factory()))
+                        access.registerTaggableElementManager(loaderFinder.apply(it.loader()), it.key(), GenericUtil.uncheck(it.factory()))
                 )
         );
     }
@@ -270,7 +271,7 @@ public final class PluginManager {
         this.verifying(
                 "registering enum brackets",
                 () -> handler.enumRequests().forEach(it ->
-                        access.registerEnum(loaderFinder.apply(it.loader()), it.id(), this.uncheck(it.enumClass()))
+                        access.registerEnum(loaderFinder.apply(it.loader()), it.id(), GenericUtil.uncheck(it.enumClass()))
                 )
         );
     }
@@ -306,12 +307,6 @@ public final class PluginManager {
     private void callListeners(final String type, final Collection<Runnable> listeners) {
         
         listeners.forEach(it -> this.verifying("calling " + type + " listener", it));
-    }
-    
-    @SuppressWarnings("unchecked")
-    private <T, U> T uncheck(final U u) {
-        
-        return (T) u;
     }
     
 }
