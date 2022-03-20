@@ -8,6 +8,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface AccessBiome {
     
     @Invoker("getBiomeCategory")
-    Biome.BiomeCategory crafttwaeker$callGetBiomeCategory();
+    Biome.BiomeCategory crafttweaker$callGetBiomeCategory();
     
 }

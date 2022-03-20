@@ -45,7 +45,7 @@ public class ExpandBiome {
     @ZenCodeType.Getter("biomeCategory")
     public static String getBiomeCategory(Biome internal) {
         
-        return ((AccessBiome) (Object) internal).crafttwaeker$callGetBiomeCategory().getName().toLowerCase();
+        return ((AccessBiome) (Object) internal).crafttweaker$callGetBiomeCategory().getName().toLowerCase();
     }
     
     @ZenCodeType.Getter("doesRain")
