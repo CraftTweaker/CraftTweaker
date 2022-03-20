@@ -12,12 +12,12 @@ import java.util.function.Consumer;
 
 final class TaggableElementsRegistrationHandler implements ITaggableElementRegistrationHandler {
     
-    record Elementdata(String loader, ResourceKey<?> key, Class<?> elementClass) {}
+    record ElementData(String loader, ResourceKey<?> key, Class<?> elementClass) {}
     
-    record Managerdata(String loader, ResourceKey<?> key, TagManagerFactory<?, ?> factory) {}
+    record ManagerData(String loader, ResourceKey<?> key, TagManagerFactory<?, ?> factory) {}
     
-    private final List<TaggableElementsRegistrationHandler.Elementdata> elementRequests;
-    private final List<TaggableElementsRegistrationHandler.Managerdata> managerRequests;
+    private final List<ElementData> elementRequests;
+    private final List<ManagerData> managerRequests;
     
     
     private TaggableElementsRegistrationHandler() {
@@ -36,21 +36,21 @@ final class TaggableElementsRegistrationHandler implements ITaggableElementRegis
     @Override
     public <T> void registerTaggableElement(String loader, ResourceKey<T> key, Class<T> elementClass) {
         
-        this.elementRequests.add(new Elementdata(loader, key, elementClass));
+        this.elementRequests.add(new ElementData(loader, key, elementClass));
     }
     
     @Override
     public <T, U extends ITagManager<T>> void registerManager(String loader, ResourceKey<T> key, TagManagerFactory<T, U> factory) {
         
-        this.managerRequests.add(new Managerdata(loader, key, factory));
+        this.managerRequests.add(new ManagerData(loader, key, factory));
     }
     
-    List<TaggableElementsRegistrationHandler.Elementdata> elementRequests() {
+    List<ElementData> elementRequests() {
         
         return Collections.unmodifiableList(this.elementRequests);
     }
     
-    List<TaggableElementsRegistrationHandler.Managerdata> managerRequests() {
+    List<ManagerData> managerRequests() {
         
         return Collections.unmodifiableList(this.managerRequests);
     }
