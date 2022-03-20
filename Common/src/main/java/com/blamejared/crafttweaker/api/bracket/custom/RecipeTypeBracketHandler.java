@@ -192,7 +192,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
                 .emptyList(), Collections.singletonList(new ParsedExpressionString(position, location, false))));
     }
     
-    private ParsedExpression getCall(String location, IRecipeManager<?> manager, CodePosition position) {
+    private ParsedExpression getCall(String location, IRecipeManager<?> manager, CodePosition position) throws ParseException {
         //Map to
         //crafttweaker.api.bracket.RecipeTypeBracketHandler.getRecipeManager<type>(location)
         final ParsedExpressionVariable crafttweaker = new ParsedExpressionVariable(position, "crafttweaker", null);

@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.util;
 import com.blamejared.crafttweaker.natives.resource.ExpandResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import org.openzen.zencode.shared.CodePosition;
+import org.openzen.zencode.shared.LiteralSourceFile;
 import org.openzen.zenscript.lexer.ParseException;
 import org.openzen.zenscript.lexer.ZSTokenParser;
 import org.openzen.zenscript.lexer.ZSTokenType;
@@ -13,12 +14,11 @@ import org.openzen.zenscript.parser.expression.ParsedExpressionString;
 import org.openzen.zenscript.parser.expression.ParsedExpressionVariable;
 import org.openzen.zenscript.parser.expression.ParsedNewExpression;
 import org.openzen.zenscript.parser.type.IParsedType;
-import org.openzen.zenscript.parser.type.ParsedNamedType;
+import org.openzen.zenscript.parser.type.ParsedTypeBasic;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class ParseUtil {
@@ -42,30 +42,14 @@ public final class ParseUtil {
         return expression;
     }
     
-    public static IParsedType readParsedType(String name, CodePosition position) {
+    public static IParsedType readParsedType(String name, CodePosition position) throws ParseException {
         
-        List<ParsedNamedType.ParsedNamePart> parsedParts = new LinkedList<>();
-        while(!name.isBlank()) {
-            int end = name.length();
-            if(name.contains(".")) {
-                end = name.indexOf(".");
-            }
-            String namePart = name.substring(0, end);
-            if(namePart.contains("<") && name.contains(">")) {
-                end = name.lastIndexOf(">") + 1;
-                namePart = name.substring(0, name.lastIndexOf(">") + 1);
-            }
-            name = name.substring(Math.min(name.length(), end + 1));
-            
-            Matcher matcher = typeArgumentPattern.matcher(namePart);
-            if(matcher.matches()) {
-                parsedParts.add(new ParsedNamedType.ParsedNamePart(matcher.group(1), List.of(readParsedType(matcher.group(2), position))));
-            } else {
-                parsedParts.add(new ParsedNamedType.ParsedNamePart(namePart, null));
-            }
+        try {
+            return IParsedType.tryParse(ZSTokenParser.create(new LiteralSourceFile("type reading: " + name, name), null));
+        } catch(IOException e) {
+            e.printStackTrace();
         }
-        
-        return new ParsedNamedType(position, parsedParts);
+        return ParsedTypeBasic.UNDETERMINED;
     }
     
     public static String readBracketContent(CodePosition position, ZSTokenParser tokens) throws ParseException {
@@ -91,7 +75,7 @@ public final class ParseUtil {
         return builder.toString();
     }
     
-    public static ParsedNewExpression createResourceLocationArgument(CodePosition position, ResourceLocation location) {
+    public static ParsedNewExpression createResourceLocationArgument(CodePosition position, ResourceLocation location) throws ParseException {
         
         final List<ParsedExpression> arguments = new ArrayList<>(2);
         arguments.add(new ParsedExpressionString(position, location.getNamespace(), false));
