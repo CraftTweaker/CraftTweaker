@@ -4,7 +4,6 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.entity.CTEntityIngredient;
 import com.blamejared.crafttweaker.api.tag.MCTag;
-import com.blamejared.crafttweaker.api.tag.manager.factory.EntityTypeTagFactory;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
@@ -29,7 +28,7 @@ import java.util.List;
 @ZenRegister
 @Document("vanilla/api/entity/EntityType")
 @NativeTypeRegistration(value = EntityType.class, zenCodeName = "crafttweaker.api.entity.EntityType")
-@TaggableElement(value = "minecraft:entity_type", managerFactoryClass = EntityTypeTagFactory.class)
+@TaggableElement(value = "minecraft:entity_type")
 public class ExpandEntityType {
     
     @ZenCodeType.Method
