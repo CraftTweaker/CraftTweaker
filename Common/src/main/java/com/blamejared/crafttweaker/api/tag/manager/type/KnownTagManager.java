@@ -62,18 +62,6 @@ public class KnownTagManager<T> implements ITagManager<T> {
     }
     
     @Override
-    public String tagFolder() {
-        
-        String tagDir = TagManager.getTagDir(resourceKey);
-        
-        // Really not ideal, but I don't see a better way, lets just hope that other mods don't be dumb and add their tags to other folders.
-        if(tagDir.startsWith("tags/")) {
-            tagDir = tagDir.substring("tags/".length());
-        }
-        return tagDir;
-    }
-    
-    @Override
     public Map<ResourceLocation, MCTag<T>> tagMap() {
         
         if(this.tagCache.isEmpty()) {

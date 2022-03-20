@@ -1,10 +1,11 @@
 package com.blamejared.crafttweaker.api.bracket.custom;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
+import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.util.ParseUtil;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
+import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
 import org.openzen.zencode.shared.CodePosition;
 import org.openzen.zenscript.lexer.ParseException;
@@ -106,13 +107,14 @@ public class TagManagerBracketHandler implements BracketExpressionParser {
     
     static void confirmTagFolderExists(String tagFolder, CodePosition position) throws ParseException {
         
-        ResourceLocation location = ResourceLocation.tryParse(tagFolder);
-        if(location == null) {
-            throw new ParseException(position, "Invalid ResourceLocation '" + tagFolder + "'");
-        }
-        
-        if(CraftTweakerTagRegistry.INSTANCE.tagManagerFromFolder(location).isEmpty()) {
-            throw new ParseException(position, "Could not find tag manager with folder '" + tagFolder + "'. Make sure it exists!");
+        try {
+            ResourceLocation location = new ResourceLocation(tagFolder);
+            
+            if(CraftTweakerTagRegistry.INSTANCE.tagManagerFromFolder(location).isEmpty()) {
+                throw new ParseException(position, "Could not find tag manager with folder '" + tagFolder + "'. Make sure it exists!");
+            }
+        } catch(ResourceLocationException e) {
+            throw new ParseException(position, "Invalid ResourceLocation '" + tagFolder + "'", e);
         }
     }
     

@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @ZenRegister
@@ -45,9 +44,7 @@ public interface ITagManager<T> extends CommandStringDisplayable, Iterable<MCTag
     @ZenCodeType.Method
     default MCTag<T> tag(String id) {
 
-        ResourceLocation rl = ResourceLocation.tryParse(id);
-        Objects.requireNonNull(rl, "Invalid Resource Location passed! Given: '" + id + "'");
-        return tag(rl);
+        return tag(new ResourceLocation(id));
     }
 
     @ZenCodeType.Method
@@ -91,9 +88,7 @@ public interface ITagManager<T> extends CommandStringDisplayable, Iterable<MCTag
     @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
     default boolean exists(String id) {
 
-        ResourceLocation rl = ResourceLocation.tryParse(id);
-        Objects.requireNonNull(rl, "Invalid Resource Location passed! Given: '" + id + "'");
-        return exists(rl);
+        return exists(new ResourceLocation(id));
     }
 
     @ZenCodeType.Method

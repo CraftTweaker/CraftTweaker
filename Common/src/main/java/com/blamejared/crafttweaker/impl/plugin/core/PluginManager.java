@@ -179,7 +179,7 @@ public final class PluginManager {
                 "gathering taggable elements",
                 () -> TaggableElementsRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::registerTaggableElements))
         );
-        manageTaggableElementRegistration(access, taggableElementsHandler, loaderFinder);
+        this.manageTaggableElementRegistration(access, taggableElementsHandler, loaderFinder);
         
         this.callListeners("ZenCode registration end", this.listeners.zenListeners());
     }

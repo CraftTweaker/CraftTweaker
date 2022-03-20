@@ -10,13 +10,13 @@ import java.lang.annotation.Target;
 public @interface TaggableElement {
     
     /**
-     * The ResourceKey location of the registry of this element
+     * The name of the registry that holds this element.
      *
      * Examples:
      * - "minecraft:item" for Item
      * - "minecraft:worldgen/biome" for Biome
      *
-     * @return The ResourceKey location of the registry of this element.
+     * @return The name of the registry that holds this element.
      */
     String value();
     

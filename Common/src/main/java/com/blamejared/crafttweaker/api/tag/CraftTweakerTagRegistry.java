@@ -35,11 +35,12 @@ public final class CraftTweakerTagRegistry {
     
     private final Map<ResourceKey<? extends Registry<?>>, ITagManager<?>> registeredManagers = new HashMap<>();
     private final Set<ResourceKey<? extends Registry<?>>> customManagers = new HashSet<>();
+    private final Set<ResourceKey<? extends Registry<?>>> customManagersView = Collections.unmodifiableSet(customManagers);
     
     public <T> ITagManager<T> addManager(Class<? extends ITagManager<T>> cls) {
         
         ITagManager<T> manager = InstantiationUtil.getOrCreateInstance(cls);
-        Objects.requireNonNull(manager);
+        Objects.requireNonNull(manager, "Error while creating tag manager from class: '" + cls + "'! Make sure it has a default constructor or a public static INSTANCE field!");
         return addManager(manager);
     }
     
@@ -59,7 +60,7 @@ public final class CraftTweakerTagRegistry {
     
     public Set<ResourceKey<? extends Registry<?>>> customManagers() {
         
-        return Collections.unmodifiableSet(customManagers);
+        return customManagersView;
     }
     
     public <T> Optional<ITagManager<T>> findManager(ResourceKey<? extends Registry<T>> key) {

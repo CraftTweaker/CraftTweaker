@@ -32,19 +32,19 @@ public class MutableLoadResult<T> {
     
     public ResourceKey<? extends Registry<T>> key() {
         
-        Objects.requireNonNull(result);
+        Objects.requireNonNull(result, "Cannot get key before the result has been bound!");
         return result.key();
     }
     
     public Map<ResourceLocation, Tag<Holder<T>>> tagMap() {
         
-        Objects.requireNonNull(result);
+        Objects.requireNonNull(result, "Cannot get tagMap before the result has been bound!");
         return result.tags();
     }
     
     public TagManager.LoadResult<T> result() {
         
-        Objects.requireNonNull(result);
+        Objects.requireNonNull(result, "Cannot get result before it has been bound!");
         return result;
     }
     
