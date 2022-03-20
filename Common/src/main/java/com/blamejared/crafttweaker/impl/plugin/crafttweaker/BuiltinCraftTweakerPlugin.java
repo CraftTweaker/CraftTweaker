@@ -89,6 +89,7 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         
         this.zenGatherer.listProviders();
         this.zenGatherer.onCandidates(candidate -> this.zenClassRegistrationManager.attemptRegistration(candidate.loader(), candidate.clazz(), handler));
+        this.zenClassRegistrationManager.attemptDeferredRegistration(handler);
     }
     
     @Override
