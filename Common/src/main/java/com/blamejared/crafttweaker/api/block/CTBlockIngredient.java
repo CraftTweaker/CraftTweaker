@@ -2,7 +2,7 @@ package com.blamejared.crafttweaker.api.block;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
-import com.blamejared.crafttweaker.api.tag.MCTag;
+import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker.api.util.Many;
 import com.blamejared.crafttweaker.natives.block.ExpandBlock;
 import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
@@ -100,9 +100,9 @@ public abstract class CTBlockIngredient implements CommandStringDisplayable {
     
     public final static class BlockTagWithAmountIngredient extends CTBlockIngredient {
         
-        final Many<MCTag<Block>> tag;
+        final Many<KnownTag<Block>> tag;
         
-        public BlockTagWithAmountIngredient(Many<MCTag<Block>> tag) {
+        public BlockTagWithAmountIngredient(Many<KnownTag<Block>> tag) {
             
             this.tag = tag;
         }

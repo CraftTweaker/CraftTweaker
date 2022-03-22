@@ -4,8 +4,8 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.command.CommandUtilities;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
-import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
+import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
@@ -57,7 +57,7 @@ public final class InventoryCommands {
                     final String inventoryContents = IntStream.range(0, inventory.getContainerSize())
                             .mapToObj(inventory::getItem)
                             .filter(it -> !it.isEmpty())
-                            .map(it -> Pair.of(ItemStackUtil.getCommandString(it), CraftTweakerTagRegistry.INSTANCE.tagManager(Registry.ITEM_REGISTRY).getTagsFor(it.getItem())))
+                            .map(it -> Pair.of(ItemStackUtil.getCommandString(it), CraftTweakerTagRegistry.INSTANCE.knownTagManager(Registry.ITEM_REGISTRY).getTagsFor(it.getItem())))
                             .map(it -> it.getFirst() + '\n' + stringify(it.getSecond()))
                             .collect(Collectors.joining("\n", "Inventory item tags\n", ""));
 
@@ -69,14 +69,14 @@ public final class InventoryCommands {
         );
     }
     
-    private static String stringify(final Collection<MCTag<Item>> tags) {
+    private static String stringify(final Collection<KnownTag<Item>> tags) {
         
         if(tags.isEmpty()) {
             return "- No tags";
         }
         
         return tags.stream()
-                .map(MCTag::getCommandString)
+                .map(KnownTag::getCommandString)
                 .map(it -> String.format("- %s", it))
                 .collect(Collectors.joining("\n"));
     }

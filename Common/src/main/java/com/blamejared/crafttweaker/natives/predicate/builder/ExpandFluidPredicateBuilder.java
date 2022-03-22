@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.natives.predicate.builder;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.tag.MCTag;
+import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.critereon.FluidPredicate;
@@ -21,7 +21,7 @@ public class ExpandFluidPredicateBuilder {
     }
     
     @ZenCodeType.Method
-    public static FluidPredicate.Builder tag(final FluidPredicate.Builder internal, final MCTag<Fluid> tag) {
+    public static FluidPredicate.Builder tag(final FluidPredicate.Builder internal, final KnownTag<Fluid> tag) {
 
         return internal.of(tag.getTagKey());
     }

@@ -239,7 +239,7 @@ public final class DumpCommands {
                             .peek(it -> CraftTweakerAPI.LOGGER.info(it.getCommandString()))
                             .flatMap(it -> it.elements()
                                     .stream()
-                                    .map(o -> getTagAsString(player,it, o)))
+                                    .map(o -> getTagAsString(player, it, o)))
                             .forEach(it -> {
                                 CraftTweakerAPI.LOGGER.info("\t- {}", it);
                             });
@@ -250,7 +250,7 @@ public final class DumpCommands {
         );
     }
     
-    private static String getTagAsString(ServerPlayer player, MCTag<?> tag, Object o){
+    private static String getTagAsString(ServerPlayer player, MCTag tag, Object o) {
     
         return player.server.registryAccess().registry(tag.manager().resourceKey())
                 .map(objects -> objects.getKey(GenericUtil.uncheck(o)))
@@ -258,7 +258,6 @@ public final class DumpCommands {
                 .orElse(o.toString());
     }
     
-
     
     private static void doFullBracketsDump(final CommandContext<CommandSourceStack> context) {
         

@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.manager.type.KnownTagManager;
+import com.blamejared.crafttweaker.api.tag.manager.type.UnknownTagManager;
 import com.blamejared.crafttweaker.api.util.InstantiationUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -37,14 +38,14 @@ public final class CraftTweakerTagRegistry {
     private final Set<ResourceKey<? extends Registry<?>>> customManagers = new HashSet<>();
     private final Set<ResourceKey<? extends Registry<?>>> customManagersView = Collections.unmodifiableSet(customManagers);
     
-    public <T> ITagManager<T> addManager(Class<? extends ITagManager<T>> cls) {
+    public <T> ITagManager<?> addManager(Class<? extends ITagManager<?>> cls) {
         
-        ITagManager<T> manager = InstantiationUtil.getOrCreateInstance(cls);
+        ITagManager<?> manager = InstantiationUtil.getOrCreateInstance(cls);
         Objects.requireNonNull(manager, "Error while creating tag manager from class: '" + cls + "'! Make sure it has a default constructor or a public static INSTANCE field!");
         return addManager(manager);
     }
     
-    public <T> ITagManager<T> addManager(ITagManager<T> manager) {
+    public <T> ITagManager<?> addManager(ITagManager<?> manager) {
         
         registeredManagers.put(manager.resourceKey(), manager);
         if(!manager.getClass().equals(KnownTagManager.class)) {
@@ -63,9 +64,15 @@ public final class CraftTweakerTagRegistry {
         return customManagersView;
     }
     
-    public <T> Optional<ITagManager<T>> findManager(ResourceKey<? extends Registry<T>> key) {
+    public <T> Optional<ITagManager<?>> findManager(ResourceKey<? extends Registry<T>> key) {
         
-        return Optional.ofNullable((ITagManager<T>) registeredManagers.get(key));
+        return Optional.ofNullable(registeredManagers.get(key));
+    }
+    
+    public <T> Optional<KnownTagManager<T>> findKnownManager(ResourceKey<? extends Registry<T>> key) {
+        
+        return Optional.ofNullable(registeredManagers.get(key))
+                .map(it -> it instanceof KnownTagManager ? (KnownTagManager<T>) it : null);
     }
     
     public <T> Optional<? extends ITagManager<?>> tagManagerFromFolder(ResourceLocation tagFolder) {
@@ -87,9 +94,14 @@ public final class CraftTweakerTagRegistry {
         return tagManagerFromFolder(tagFolder).map(manager -> isCustomManager(manager.resourceKey())).orElse(false);
     }
     
-    public <T> ITagManager<T> tagManager(ResourceKey<? extends Registry<T>> key) {
+    public <T> ITagManager<?> tagManager(ResourceKey<? extends Registry<T>> key) {
         
         return findManager(key).orElseThrow(() -> new RuntimeException("No tag manager found for given key: " + key));
+    }
+    
+    public <T> KnownTagManager<T> knownTagManager(ResourceKey<? extends Registry<T>> key) {
+        
+        return findKnownManager(key).orElseThrow(() -> new RuntimeException("No tag manager found for given key: " + key));
     }
     
     @ZenCodeType.Method
@@ -105,9 +117,12 @@ public final class CraftTweakerTagRegistry {
             Optional<? extends Class<?>> taggableElement = CraftTweakerAPI.getRegistry()
                     .getTaggableElementFor(loadResult.key());
             
-            taggableElement.ifPresent(it -> this.addManager(CraftTweakerAPI.getRegistry()
+            taggableElement.ifPresentOrElse(it -> this.addManager(CraftTweakerAPI.getRegistry()
                     .getTaggableElementFactory(loadResult.key())
-                    .apply(loadResult.key(), it)).bind(loadResult));
+                    .apply(loadResult.key(), it)).bind(loadResult), () -> {
+                
+                this.addManager(new UnknownTagManager(loadResult.key())).bind(loadResult);
+            });
         }
     }
     

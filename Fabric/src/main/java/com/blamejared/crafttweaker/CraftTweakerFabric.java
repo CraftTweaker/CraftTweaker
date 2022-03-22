@@ -12,7 +12,6 @@ import net.minecraft.world.InteractionResult;
 
 public class CraftTweakerFabric implements ModInitializer {
     
-    
     @Override
     public void onInitialize() {
         

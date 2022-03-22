@@ -2,7 +2,7 @@ package com.blamejared.crafttweaker.api.fluid;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
-import com.blamejared.crafttweaker.api.tag.MCTag;
+import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker.api.util.Many;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.tags.TagKey;
@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * FluidIngredient that facilitates accepting either a single, or multiple {@link IFluidStack}s, {@link MCTag<Fluid>}s
- * or {@link Many<MCTag><Fluid>}s.
+ * FluidIngredient that facilitates accepting either a single, or multiple {@link IFluidStack}s, {@link KnownTag <Fluid>}s
+ * or {@link Many< KnownTag ><Fluid>}s.
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.fluid.FluidIngredient")
@@ -79,9 +79,9 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
     
     public final static class FluidTagWithAmountIngredient extends CTFluidIngredient {
         
-        final Many<MCTag<Fluid>> tag;
+        final Many<KnownTag<Fluid>> tag;
         
-        public FluidTagWithAmountIngredient(Many<MCTag<Fluid>> tag) {
+        public FluidTagWithAmountIngredient(Many<KnownTag<Fluid>> tag) {
             
             this.tag = tag;
         }

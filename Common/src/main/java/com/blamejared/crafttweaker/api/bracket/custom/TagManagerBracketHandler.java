@@ -22,6 +22,7 @@ import org.openzen.zenscript.parser.type.IParsedType;
 import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -68,11 +69,6 @@ public class TagManagerBracketHandler implements BracketExpressionParser {
                 .getNameFor(loader, manager.getClass())
                 .orElseThrow(() -> new ParseException(position, "Unable to make tag for unknown class!"));
         
-        String elementName = CraftTweakerAPI.getRegistry()
-                .getZenClassRegistry()
-                .getNameFor(loader, manager.elementClass())
-                .orElseThrow(() -> new ParseException(position, "Unable to make tag for unknown class!"));
-        
         final List<IParsedType> typeArguments = Collections.singletonList(ParseUtil.readParsedType(managerZCName, position));
         final ParsedCallArguments arguments = new ParsedCallArguments(typeArguments, List.of(ParseUtil.createResourceLocationArgument(position, manager.resourceKey()
                 .location())));
@@ -93,12 +89,17 @@ public class TagManagerBracketHandler implements BracketExpressionParser {
                 .getNameFor(loader, manager.getClass())
                 .orElseThrow(() -> new ParseException(position, "Unable to make tag for unknown class!"));
         
-        String elementName = CraftTweakerAPI.getRegistry()
-                .getZenClassRegistry()
-                .getNameFor(loader, manager.elementClass())
-                .orElseThrow(() -> new ParseException(position, "Unable to make tag for unknown class!"));
+        Optional<Class<?>> elementClass = manager.elementClass();
+        if(elementClass.isPresent()) {
+            String elementName = CraftTweakerAPI.getRegistry()
+                    .getZenClassRegistry()
+                    .getNameFor(loader, elementClass.get())
+                    .orElseThrow(() -> new ParseException(position, "Unable to make tag for unknown class!"));
+            managerZCName += "<" + elementName + ">";
+        }
         
-        final List<IParsedType> typeArguments = Collections.singletonList(ParseUtil.readParsedType(managerZCName + "<" + elementName + ">", position));
+        
+        final List<IParsedType> typeArguments = Collections.singletonList(ParseUtil.readParsedType(managerZCName, position));
         final ParsedCallArguments arguments = new ParsedCallArguments(typeArguments, List.of(ParseUtil.createResourceLocationArgument(position, manager.resourceKey()
                 .location())));
         

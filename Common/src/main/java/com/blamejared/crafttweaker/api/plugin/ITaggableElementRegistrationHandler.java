@@ -8,7 +8,7 @@ public interface ITaggableElementRegistrationHandler {
     
     <T> void registerTaggableElement(final String loader, final ResourceKey<T> key, final Class<T> elementClass);
     
-    <T, U extends ITagManager<T>> void registerManager(final String loader, final ResourceKey<T> key, final TagManagerFactory<T, U> factory);
+    <T, U extends ITagManager<?>> void registerManager(final String loader, final ResourceKey<T> key, final TagManagerFactory<T, U> factory);
     
     
 }

@@ -16,7 +16,7 @@ public class TaggableElementRegistry {
     private final Map<ResourceKey<?>, TagManagerFactory<?, ?>> managerData = new HashMap<>();
     private final Map<ResourceKey<?>, Class<?>> elementData = new HashMap<>();
     
-    public <T, U extends ITagManager<T>> void registerManager(final IScriptLoader loader, final ResourceKey<T> id, TagManagerFactory<T, U> factory) {
+    public <T, U extends ITagManager<?>> void registerManager(final IScriptLoader loader, final ResourceKey<T> id, TagManagerFactory<T, U> factory) {
         
         TagManagerFactory<?, ?> old = this.managerData.get(id);
         if(old != null) {
@@ -44,9 +44,9 @@ public class TaggableElementRegistry {
         return ImmutableMap.copyOf(this.elementData);
     }
     
-    public <T> Optional<TagManagerFactory<T, ? extends ITagManager<T>>> getManager(final ResourceKey<Registry<T>> key) {
+    public <T> Optional<TagManagerFactory<T, ? extends ITagManager>> getManagerFactory(final ResourceKey<Registry<T>> key) {
         
-        return Optional.ofNullable(managerData.get(key)).map(it -> (TagManagerFactory<T, ? extends ITagManager<T>>) it);
+        return Optional.ofNullable(managerData.get(key)).map(it -> (TagManagerFactory<T, ? extends ITagManager>) it);
     }
     
     public Map<ResourceKey<?>, TagManagerFactory<?, ?>> getManagers() {

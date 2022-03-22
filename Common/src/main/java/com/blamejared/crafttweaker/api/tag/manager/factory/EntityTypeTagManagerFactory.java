@@ -11,7 +11,7 @@ import net.minecraft.world.entity.EntityType;
 
 @ZenRegister
 @TaggableElementManagerFactory("minecraft:entity_type")
-public class EntityTypeTagFactory implements TagManagerFactory<EntityType<Entity>, EntityTypeTagManager> {
+public class EntityTypeTagManagerFactory implements TagManagerFactory<EntityType<Entity>, EntityTypeTagManager> {
     
     @Override
     public EntityTypeTagManager apply(ResourceKey<? extends Registry<EntityType<Entity>>> resourceKey, Class<EntityType<Entity>> entityTypeClass) {

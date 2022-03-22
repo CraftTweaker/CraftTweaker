@@ -68,7 +68,7 @@ final class TaggableElementsRegistrationManager {
             final ResourceLocation id = new ResourceLocation(data.value());
             final ResourceKey<Registry<Object>> registryKey = ResourceKey.createRegistryKey(id);
             
-            handler.registerManager(loader, registryKey, InstantiationUtil.getOrCreateInstance((Class<? extends TagManagerFactory<Registry<Object>, ITagManager<Registry<Object>>>>) clazz));
+            handler.registerManager(loader, registryKey, InstantiationUtil.getOrCreateInstance((Class<? extends TagManagerFactory<Registry<Object>, ITagManager<?>>>) clazz));
         } catch(final ResourceLocationException e) {
             throw new IllegalArgumentException("Provided resource location '" + data.value() + "' for taggable element " + clazz.getName() + " is invalid", e);
         }

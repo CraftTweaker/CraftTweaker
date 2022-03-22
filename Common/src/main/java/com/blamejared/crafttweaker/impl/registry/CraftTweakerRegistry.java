@@ -4,8 +4,9 @@ import com.blamejared.crafttweaker.api.ICraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.command.type.IBracketDumperInfo;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
-import com.blamejared.crafttweaker.api.tag.manager.type.KnownTagManager;
 import com.blamejared.crafttweaker.api.tag.manager.TagManagerFactory;
+import com.blamejared.crafttweaker.api.tag.manager.type.KnownTagManager;
+import com.blamejared.crafttweaker.api.tag.manager.type.UnknownTagManager;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
@@ -151,11 +152,15 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
         return this.registries.taggableElementRegistry().getTaggableElement(key);
     }
     
-    public <T> TagManagerFactory<T, ? extends ITagManager<T>> getTaggableElementFactory(ResourceKey<Registry<T>> resourceKey) {
-    
-        return this.registries.taggableElementRegistry()
-                .getManager(resourceKey)
-                .orElseGet(() -> KnownTagManager::new);
+    public <T> TagManagerFactory<T, ? extends ITagManager<?>> getTaggableElementFactory(ResourceKey<Registry<T>> resourceKey) {
+        
+        if(this.registries.taggableElementRegistry().getTaggableElement(resourceKey).isPresent()) {
+            return this.registries.taggableElementRegistry()
+                    .getManagerFactory(resourceKey)
+                    .orElseGet(() -> KnownTagManager::new);
+        }
+        
+        return (resourceKey1, tClass) -> new UnknownTagManager(resourceKey1);
     }
     
     @Override

@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.natives.predicate;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.tag.MCTag;
+import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.critereon.EntityTypePredicate;
@@ -25,7 +25,7 @@ public final class ExpandEntityTypePredicate {
         return EntityTypePredicate.of(type);
     }
     @ZenCodeType.StaticExpansionMethod
-    public static EntityTypePredicate create(final MCTag<EntityType<?>> type) {
+    public static EntityTypePredicate create(final KnownTag<EntityType<?>> type) {
 
         return EntityTypePredicate.of(type.getTagKey());
     }

@@ -2,7 +2,7 @@ package com.blamejared.crafttweaker.api.entity;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
-import com.blamejared.crafttweaker.api.tag.MCTag;
+import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker.api.util.Many;
 import com.blamejared.crafttweaker.natives.entity.ExpandEntityType;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * EntityIngredient that facilitates accepting either a single, or multiple {@link EntityType}s, {@link MCTag<EntityType>}s
- * or {@link Many<MCTag<EntityType>>}s.
+ * EntityIngredient that facilitates accepting either a single, or multiple {@link EntityType}s, {@link KnownTag <EntityType>}s
+ * or {@link Many< KnownTag <EntityType>>}s.
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.entity.EntityIngredient")
@@ -79,9 +79,9 @@ public abstract class CTEntityIngredient implements CommandStringDisplayable {
     
     public final static class EntityTagWithAmountIngredient extends CTEntityIngredient {
         
-        final Many<MCTag<EntityType<?>>> tag;
+        final Many<KnownTag<EntityType<?>>> tag;
         
-        public EntityTagWithAmountIngredient(Many<MCTag<EntityType<?>>> tag) {
+        public EntityTagWithAmountIngredient(Many<KnownTag<EntityType<?>>> tag) {
             
             this.tag = tag;
         }

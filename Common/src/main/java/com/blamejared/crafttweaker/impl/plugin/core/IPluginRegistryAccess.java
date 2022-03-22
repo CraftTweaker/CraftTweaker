@@ -42,7 +42,7 @@ public interface IPluginRegistryAccess {
     
     <T> void registerTaggableElement(final IScriptLoader loader, final ResourceKey<T> key, final Class<T> elementClass);
     
-    <T, U extends ITagManager<T>> void registerTaggableElementManager(final IScriptLoader loader, final ResourceKey<T> key, final TagManagerFactory<T, U> factory);
+    <T, U extends ITagManager<?>> void registerTaggableElementManager(final IScriptLoader loader, final ResourceKey<T> key, final TagManagerFactory<T, U> factory);
     
     <T extends Recipe<?>> void registerHandler(final Class<? extends T> clazz, final IRecipeHandler<T> handler);
     

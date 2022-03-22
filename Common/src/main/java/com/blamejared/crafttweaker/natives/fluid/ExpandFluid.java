@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.natives.fluid;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.tag.MCTag;
+import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
@@ -31,7 +31,7 @@ public class ExpandFluid {
     }
     
     @ZenCodeType.Method
-    public static boolean isIn(Fluid internal, MCTag<Fluid> tag) {
+    public static boolean isIn(Fluid internal, KnownTag<Fluid> tag) {
 
         return internal.is(tag.getTagKey());
     }

@@ -16,6 +16,7 @@ import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipeBase;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipeBase;
 import com.blamejared.crafttweaker.platform.registry.RegistryWrapper;
 import com.blamejared.crafttweaker.platform.registry.VanillaRegistryWrapper;
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.core.Holder;
 import net.minecraft.core.MappedRegistry;
@@ -251,12 +252,28 @@ public interface IRegistryHelper {
         return wrap(Registry.ENTITY_TYPE);
     }
     
+    default <T> Holder<T> makeHolder(ResourceKey<?> resourceKey, Either<T, ResourceLocation> objectOrKey) {
+        
+        return objectOrKey.map(t -> makeHolder(resourceKey, t), key -> makeHolder(resourceKey, key));
+    }
+    
     default <T> Holder<T> makeHolder(ResourceKey<?> resourceKey, T object) {
         
         Registry<T> registry = (Registry<T>) Registry.REGISTRY.get(resourceKey.location());
         return registry.getResourceKey(object)
                 .flatMap(registry::getHolder)
                 .orElseThrow(() -> new RuntimeException("Unable to make holder for registry: " + registry + " and object: " + object));
+    }
+    
+    default <T> Holder<T> makeHolder(ResourceKey<?> resourceKey, ResourceLocation key) {
+        
+        Registry<T> registry = (Registry<T>) Registry.REGISTRY.get(resourceKey.location());
+        
+        if(!registry.containsKey(key)) {
+            throw new IllegalArgumentException("Registry does not contain key: '" + key + "'");
+        }
+        return registry.getHolder(ResourceKey.create(registry.key(), key))
+                .orElseThrow(() -> new RuntimeException("Unable to make holder for registry: " + registry + " and id: " + key));
     }
     
 }

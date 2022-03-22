@@ -1,12 +1,12 @@
 package com.blamejared.crafttweaker.api.tag.manager.type;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.action.tag.known.ActionKnownTagAdd;
-import com.blamejared.crafttweaker.api.action.tag.known.ActionKnownTagCreate;
+import com.blamejared.crafttweaker.api.action.tag.unknown.ActionUnknownTagAdd;
+import com.blamejared.crafttweaker.api.action.tag.unknown.ActionUnknownTagCreate;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.tag.MutableLoadResult;
+import com.blamejared.crafttweaker.api.tag.type.UnknownTag;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
-import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.mixin.common.access.tag.AccessTag;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -29,76 +29,73 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ZenRegister
-@Document("vanilla/api/tag/manager/type/KnownTagManager")
-@ZenCodeType.Name("crafttweaker.api.tag.manager.type.KnownTagManager")
-public class KnownTagManager<T> implements ITagManager<KnownTag<T>>, Iterable<KnownTag<T>> {
+@Document("vanilla/api/tag/manager/type/UnknownTagManager")
+@ZenCodeType.Name("crafttweaker.api.tag.manager.type.UnknownTagManager")
+public class UnknownTagManager implements ITagManager<UnknownTag> {
     
-    private final ResourceKey<? extends Registry<T>> resourceKey;
-    private final Class<T> elementClass;
-    private final MutableLoadResult<T> backingResult;
-    private Map<ResourceLocation, KnownTag<T>> tagCache;
+    private final ResourceKey<? extends Registry<?>> resourceKey;
+    private final MutableLoadResult<?> backingResult;
+    private Map<ResourceLocation, UnknownTag> tagCache;
     
-    public KnownTagManager(ResourceKey<? extends Registry<T>> resourceKey, Class<T> elementClass) {
+    public UnknownTagManager(ResourceKey<? extends Registry<?>> resourceKey) {
         
         this.resourceKey = resourceKey;
-        this.elementClass = elementClass;
         this.backingResult = new MutableLoadResult<>();
         this.tagCache = new HashMap<>();
     }
     
-    public Optional<Class<?>> elementClass() {
-        
-        return Optional.of(elementClass);
-    }
-    
     @Override
-    public ResourceKey<? extends Registry<T>> resourceKey() {
+    public ResourceKey<? extends Registry<?>> resourceKey() {
         
         return resourceKey;
     }
     
-    @SafeVarargs
     @ZenCodeType.Method
-    public final void addElements(KnownTag<T> to, T... values) {
+    public final void addElements(UnknownTag to, ResourceLocation... values) {
         
         if(!exists(to)) {
-            CraftTweakerAPI.apply(new ActionKnownTagCreate<>(to, List.of(values)));
+            CraftTweakerAPI.apply(new ActionUnknownTagCreate(to, List.of(values)));
         } else {
-            CraftTweakerAPI.apply(new ActionKnownTagAdd<>(to, List.of(values)));
+            CraftTweakerAPI.apply(new ActionUnknownTagAdd(to, List.of(values)));
         }
         recalculate();
     }
     
     @ZenCodeType.Method
-    public List<T> elements(KnownTag<T> of) {
+    public List<ResourceLocation> elements(UnknownTag of) {
         
         if(!exists(of)) {
             return List.of();
         }
-        return getInternal(of).getValues().stream().map(Holder::value).collect(Collectors.toList());
+        return getInternal(of).getValues()
+                .stream()
+                .map(Holder::unwrapKey)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(ResourceKey::location)
+                .collect(Collectors.toList());
     }
     
-    @SafeVarargs
     @ZenCodeType.Method
-    public final void removeElements(KnownTag<T> from, T... values) {
+    public final void removeElements(UnknownTag from, ResourceLocation... values) {
         
         if(!exists(from)) {
             throw new IllegalArgumentException("Cannot remove elements from empty tag: " + from);
         }
-        CraftTweakerAPI.apply(new ActionKnownTagAdd<>(from, List.of(values)));
+        CraftTweakerAPI.apply(new ActionUnknownTagAdd(from, List.of(values)));
         recalculate();
     }
     
     @ZenCodeType.Method
-    public KnownTag<T> tag(String id) {
+    public UnknownTag tag(String id) {
         
         return tag(new ResourceLocation(id));
     }
     
     @ZenCodeType.Method
-    public KnownTag<T> tag(ResourceLocation id) {
+    public UnknownTag tag(ResourceLocation id) {
         
-        return tagMap().getOrDefault(id, new KnownTag<>(id, this));
+        return tagMap().getOrDefault(id, new UnknownTag(id, this));
     }
     
     @Override
@@ -107,13 +104,13 @@ public class KnownTagManager<T> implements ITagManager<KnownTag<T>>, Iterable<Kn
         this.tagCache = backingResult.tagMap()
                 .keySet()
                 .stream()
-                .map(id -> Pair.of(id, new KnownTag<>(id, this)))
+                .map(id -> Pair.of(id, new UnknownTag(id, this)))
                 .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("tagMap")
-    public Map<ResourceLocation, KnownTag<T>> tagMap() {
+    public Map<ResourceLocation, UnknownTag> tagMap() {
         
         if(this.tagCache.isEmpty()) {
             this.recalculate();
@@ -127,9 +124,9 @@ public class KnownTagManager<T> implements ITagManager<KnownTag<T>>, Iterable<Kn
     }
     
     @Nullable
-    public Tag<Holder<T>> getInternal(KnownTag<T> tag) {
+    public Tag<Holder<?>> getInternal(UnknownTag tag) {
         
-        return backingResult.tagMap().get(tag.id());
+        return GenericUtil.uncheck(backingResult.tagMap().get(tag.id()));
     }
     
     @Override
@@ -150,24 +147,18 @@ public class KnownTagManager<T> implements ITagManager<KnownTag<T>>, Iterable<Kn
     @Override
     public void bind(TagManager.LoadResult<?> result) {
         
-        this.backingResult.bind((TagManager.LoadResult<T>) result);
+        this.backingResult.bind(GenericUtil.uncheck(result));
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("tags")
-    public List<KnownTag<T>> tags() {
+    public List<UnknownTag> tags() {
         
         return new ArrayList<>(tagMap().values());
     }
     
-    @Override
-    public List<KnownTag<T>> getTagsFor(ResourceLocation element) {
-        
-        return tags().stream().filter(tag -> tag.contains(element)).toList();
-    }
-    
     @ZenCodeType.Method
-    public List<KnownTag<T>> getTagsFor(T element) {
+    public List<UnknownTag> getTagsFor(ResourceLocation element) {
         
         return tags().stream().filter(tag -> tag.contains(element)).toList();
     }

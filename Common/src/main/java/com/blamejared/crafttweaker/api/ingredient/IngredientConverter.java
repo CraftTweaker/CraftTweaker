@@ -5,8 +5,8 @@ import com.blamejared.crafttweaker.api.ingredient.type.IIngredientList;
 import com.blamejared.crafttweaker.api.ingredient.type.IngredientCraftTweakerBase;
 import com.blamejared.crafttweaker.api.ingredient.type.IngredientSingleton;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.api.tag.expand.ExpandItemTag;
 import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
+import com.blamejared.crafttweaker.api.tag.expand.ExpandItemTag;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessIngredient;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessIngredientTagValue;
 import com.blamejared.crafttweaker.platform.Services;
@@ -71,7 +71,7 @@ public class IngredientConverter {
     private static IIngredient fromTagList(Ingredient.TagValue value) {
         
         final ResourceLocation location = ((AccessIngredientTagValue) value).crafttweaker$getTag().location();
-        return CraftTweakerTagRegistry.INSTANCE.findManager(Registry.ITEM_REGISTRY)
+        return CraftTweakerTagRegistry.INSTANCE.findKnownManager(Registry.ITEM_REGISTRY)
                 .map(mcTags -> mcTags.tag(location))
                 .map(ExpandItemTag::asIIngredient)
                 .orElseThrow(() -> new RuntimeException("Error while converting ingredient: '" + value + "' to an IIngredient!"));

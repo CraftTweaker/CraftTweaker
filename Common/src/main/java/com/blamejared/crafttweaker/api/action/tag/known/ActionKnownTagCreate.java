@@ -1,6 +1,7 @@
-package com.blamejared.crafttweaker.api.action.tag;
+package com.blamejared.crafttweaker.api.action.tag.known;
 
-import com.blamejared.crafttweaker.api.tag.MCTag;
+import com.blamejared.crafttweaker.api.tag.type.KnownTag;
+import com.mojang.datafixers.util.Either;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.Tag;
 import org.apache.logging.log4j.Logger;
@@ -8,11 +9,11 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActionTagCreate<T> extends ActionTag<T> {
+public class ActionKnownTagCreate<T> extends ActionKnownTag<T> {
     
     private final List<T> contents;
     
-    public ActionTagCreate(MCTag<T> theTag, List<T> contents) {
+    public ActionKnownTagCreate(KnownTag<T> theTag, List<T> contents) {
         
         super(theTag);
         this.contents = contents;
@@ -23,7 +24,7 @@ public class ActionTagCreate<T> extends ActionTag<T> {
     
         Tag<Holder<T>> tag = new Tag<>(new ArrayList<>());
         manager().addTag(mcTag().id(), tag);
-        tag().getValues().addAll(contents.stream().map(this::makeHolder).toList());
+        tag().getValues().addAll(contents.stream().map(t -> makeHolder(Either.left(t))).toList());
         manager().addTag(id(), tag());
     }
     

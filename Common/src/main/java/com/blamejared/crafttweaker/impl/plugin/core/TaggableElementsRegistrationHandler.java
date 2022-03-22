@@ -40,7 +40,7 @@ final class TaggableElementsRegistrationHandler implements ITaggableElementRegis
     }
     
     @Override
-    public <T, U extends ITagManager<T>> void registerManager(String loader, ResourceKey<T> key, TagManagerFactory<T, U> factory) {
+    public <T, U extends ITagManager<?>> void registerManager(String loader, ResourceKey<T> key, TagManagerFactory<T, U> factory) {
         
         this.managerRequests.add(new ManagerData(loader, key, factory));
     }

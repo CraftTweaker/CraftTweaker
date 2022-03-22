@@ -1,12 +1,13 @@
-package com.blamejared.crafttweaker.api.action.tag;
+package com.blamejared.crafttweaker.api.action.tag.unknown;
 
-import com.blamejared.crafttweaker.api.tag.MCTag;
+import com.blamejared.crafttweaker.api.tag.type.UnknownTag;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
-public class ActionTagRemove<T> extends ActionTagModify<T> {
+public class ActionUnknownTagRemove extends ActionUnknownTagModify {
     
-    public ActionTagRemove(MCTag<T> mcTag, List<T> values) {
+    public ActionUnknownTagRemove(UnknownTag mcTag, List<ResourceLocation> values) {
         
         super(mcTag, values);
     }

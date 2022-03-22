@@ -1,8 +1,8 @@
 package com.blamejared.crafttweaker.api.bracket.custom;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
+import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.api.util.ParseUtil;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import net.minecraft.resources.ResourceLocation;
