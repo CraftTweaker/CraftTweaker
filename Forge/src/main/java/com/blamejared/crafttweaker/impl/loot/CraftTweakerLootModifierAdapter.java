@@ -20,7 +20,7 @@ final class CraftTweakerLootModifierAdapter implements IGlobalLootModifier {
     
     static IGlobalLootModifier adapt(final ILootModifier modifier) {
         
-        return new CraftTweakerLootModifierAdapter(modifier);
+        return modifier == null ? null : new CraftTweakerLootModifierAdapter(modifier);
     }
     
     @Nonnull

@@ -22,7 +22,7 @@ final class ForgeLootModifierAdapter implements ILootModifier {
     
     static ILootModifier adapt(final IGlobalLootModifier modifier) {
         
-        return new ForgeLootModifierAdapter(modifier);
+        return modifier == null ? null : new ForgeLootModifierAdapter(modifier);
     }
     
     @Override
