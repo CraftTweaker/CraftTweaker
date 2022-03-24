@@ -22,7 +22,17 @@ public final class NativeTypeRegistry implements INativeTypeRegistry {
     
     private static Class<?>[] convertConstructorToClassArray(final NativeTypeInfo.Constructor constructorInfo) {
         
-        return Arrays.stream(constructorInfo.parameters())
+        return convertParametersToClassArray(constructorInfo.parameters());
+    }
+    
+    private static Class<?>[] convertMethodToClassArray(final NativeTypeInfo.Method methodInfo) {
+        
+        return convertParametersToClassArray(methodInfo.parameters());
+    }
+    
+    private static Class<?>[] convertParametersToClassArray(final NativeTypeInfo.Parameter... parametersInfo) {
+        
+        return Arrays.stream(parametersInfo)
                 .map(NativeTypeInfo.Parameter::type)
                 .toArray(Class<?>[]::new);
     }
@@ -70,7 +80,7 @@ public final class NativeTypeRegistry implements INativeTypeRegistry {
         
         Arrays.stream(info.methods()).forEach(it -> {
             result.computeIfAbsent(it.name(), i -> new ExecutableReferenceGroupInfo())
-                    .getOrCreateFor(it.parameters(), cons -> {
+                    .getOrCreateFor(convertMethodToClassArray(it), cons -> {
                         cons.appendGetterAnnotation(it.getter());
                         cons.appendSetterAnnotation(it.setter());
                         cons.appendMethodAnnotation();

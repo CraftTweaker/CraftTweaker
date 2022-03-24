@@ -22,14 +22,14 @@ public record NativeTypeInfo(String name, Class<?> targetedType, Constructor[] c
         
     }
     
-    public record Method(String name, String getter, String setter, Class<?>... parameters) {
+    public record Method(String name, String getter, String setter, Parameter... parameters) {
         
-        public Method(String name, String getter, Class<?>... parameters) {
+        public Method(String name, String getter, Parameter... parameters) {
             
             this(name, getter, "", parameters);
         }
         
-        public Method(String name, Class<?>... parameters) {
+        public Method(String name, Parameter... parameters) {
             
             this(name, "", parameters);
         }

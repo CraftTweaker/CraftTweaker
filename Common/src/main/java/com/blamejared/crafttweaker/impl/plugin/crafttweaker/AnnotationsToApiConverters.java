@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
 final class AnnotationsToApiConverters {
     
@@ -68,7 +69,26 @@ final class AnnotationsToApiConverters {
     
     private NativeTypeInfo.Method toNativeMethod(final NativeMethod method) {
         
-        return new NativeTypeInfo.Method(method.name(), method.getterName(), method.setterName(), method.parameters());
+        return new NativeTypeInfo.Method(
+                method.name(),
+                method.getterName(),
+                method.setterName(),
+                this.toNativeParameters(method.parameters())
+        );
+    }
+    
+    // TODO("Change API to allow specification of parameter names")
+    private NativeTypeInfo.Parameter[] toNativeParameters(final Class<?>... parameterTypes) {
+        
+        final AtomicInteger counter = new AtomicInteger(0);
+        return Arrays.stream(parameterTypes)
+                .map(it -> this.toNativeParameter(it, counter.getAndIncrement()))
+                .toArray(NativeTypeInfo.Parameter[]::new);
+    }
+    
+    private NativeTypeInfo.Parameter toNativeParameter(final Class<?> parameterType, final int counter) {
+        
+        return new NativeTypeInfo.Parameter(parameterType, "$$" + counter);
     }
     
 }
