@@ -4,7 +4,6 @@ import com.blamejared.crafttweaker.api.ICraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunManager;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
 import com.blamejared.crafttweaker.platform.helper.IAccessibleElementsProvider;
-import com.blamejared.crafttweaker.platform.helper.IAccessibleServerElementsProvider;
 
 public interface IBridgeService {
     
@@ -15,7 +14,5 @@ public interface IBridgeService {
     IScriptRunModuleConfigurator defaultScriptRunModuleConfigurator(final String basePackage);
     
     IAccessibleElementsProvider accessibleElementsProvider();
-    
-    IAccessibleServerElementsProvider accessibleServerElementsProvider();
     
 }

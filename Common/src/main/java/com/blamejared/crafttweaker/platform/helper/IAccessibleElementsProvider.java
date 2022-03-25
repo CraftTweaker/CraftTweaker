@@ -12,4 +12,9 @@ public interface IAccessibleElementsProvider {
     
     void recipeManager(final RecipeManager manager);
     
+    IAccessibleClientElementsProvider client();
+    
+    IAccessibleServerElementsProvider server();
+    
+    
 }

@@ -61,7 +61,7 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
     @Override
     protected void apply(Void object, ResourceManager resourceManager, ProfilerFiller profiler) {
         
-        IAccessibleServerElementsProvider asep = CraftTweakerAPI.getAccessibleServerElementsProvider();
+        IAccessibleServerElementsProvider asep = CraftTweakerAPI.getAccessibleElementsProvider().server();
         asep.resources(this.resources);
         CraftTweakerTagRegistry.INSTANCE.bind(asep.accessibleResources().crafttweaker$getTagManager());
         

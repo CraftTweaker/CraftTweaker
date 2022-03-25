@@ -49,11 +49,11 @@ public class TagManagerBracketHandler implements BracketExpressionParser {
     
     static ParsedExpression createTagManagerCall(CodePosition position, String tagFolder, IScriptLoader loader) throws ParseException {
         
-        if(CraftTweakerTagRegistry.INSTANCE.isCustomManager(ResourceLocation.tryParse(tagFolder))) {
-            return createCustomTagManagerCall(position, tagFolder, loader);
+        if(CraftTweakerTagRegistry.INSTANCE.isKnownManager(ResourceLocation.tryParse(tagFolder))) {
+            return createKnownTagManagerCall(position, tagFolder, loader);
         }
         
-        return createKnownTagManagerCall(position, tagFolder, loader);
+        return createCustomTagManagerCall(position, tagFolder, loader);
     }
     
     @Nonnull
@@ -110,10 +110,13 @@ public class TagManagerBracketHandler implements BracketExpressionParser {
         
         try {
             ResourceLocation location = new ResourceLocation(tagFolder);
-            
             if(CraftTweakerTagRegistry.INSTANCE.tagManagerFromFolder(location).isEmpty()) {
+                if(CraftTweakerTagRegistry.INSTANCE.isServerOnly(location)) {
+                    throw new ParseException(position, "Unable to access tag manager '" + tagFolder + "' as it is only available on the server! Put your code into an '#onlyif side server ... #endif' expression to make it only load on the server!");
+                }
                 throw new ParseException(position, "Could not find tag manager with folder '" + tagFolder + "'. Make sure it exists!");
             }
+            
         } catch(ResourceLocationException e) {
             throw new ParseException(position, "Invalid ResourceLocation '" + tagFolder + "'", e);
         }

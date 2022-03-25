@@ -21,6 +21,7 @@ import com.mojang.serialization.Lifecycle;
 import net.minecraft.core.Holder;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceKey;
@@ -41,10 +42,23 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 
 import javax.annotation.Nullable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public interface IRegistryHelper {
+    
+    default Set<ResourceKey<?>> serverOnlyRegistries() {
+        
+        Iterator<RegistryAccess.RegistryData<?>> iterator = RegistryAccess.knownRegistries().iterator();
+        return StreamSupport.stream(RegistryAccess.knownRegistries().spliterator(), false)
+                .filter(registryData -> !registryData.sendToClient())
+                .map(RegistryAccess.RegistryData::key)
+                .collect(Collectors.toSet());
+    }
     
     default void registerSerializer(MappedRegistry<IIngredientTransformerSerializer<?>> registry, IIngredientTransformerSerializer<?> serializer) {
         

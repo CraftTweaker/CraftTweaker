@@ -68,9 +68,9 @@ public class KnownTag<T> implements MCTag, Iterable<T> {
         return elements().contains(element);
     }
     
-    public boolean contains(ResourceLocation element) {
+    public boolean contains(ResourceLocation id) {
     
-        Holder<T> holder = Services.REGISTRY.makeHolder(manager().resourceKey(), element);
+        Holder<T> holder = Services.REGISTRY.makeHolder(manager().resourceKey(), id);
         return elements().contains(holder.value());
     }
     

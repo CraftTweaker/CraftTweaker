@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.event;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.impl.script.RecipeManagerScriptLoader;
 import com.blamejared.crafttweaker.platform.Services;
@@ -22,8 +23,9 @@ public class CTClientEventHandler {
     @SubscribeEvent
     public static void onTagsUpdated(TagsUpdatedEvent event) {
     
+        CraftTweakerAPI.getAccessibleElementsProvider().client().registryAccess(event.getTagManager());
         RecipeManagerScriptLoader.updateState(RecipeManagerScriptLoader.UpdatedState.TAGS, null);
-    }
+    } 
     
     @SubscribeEvent
     public static void handleTooltips(ItemTooltipEvent e) {

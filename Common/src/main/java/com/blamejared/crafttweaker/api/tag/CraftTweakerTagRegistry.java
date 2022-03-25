@@ -5,11 +5,16 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.manager.type.KnownTagManager;
 import com.blamejared.crafttweaker.api.tag.manager.type.UnknownTagManager;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.InstantiationUtil;
+import com.blamejared.crafttweaker.platform.Services;
+import com.google.common.base.Suppliers;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagManager;
+import net.minecraft.tags.TagNetworkSerialization;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -22,10 +27,20 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.tag.TagManager")
 public final class CraftTweakerTagRegistry {
+    
+    
+    private static final Supplier<Set<String>> SERVER_ONLY_FOLDERS = Suppliers.memoize(() -> Services.REGISTRY.serverOnlyRegistries()
+            .stream()
+            .map(resourceKey -> TagManager.getTagDir(GenericUtil.uncheck(resourceKey)))
+            .map(ResourceLocation::tryParse)
+            .map(ResourceLocation::toString)
+            .collect(Collectors.toSet()));
     
     public static final String GLOBAL_NAME = "tags";
     
@@ -35,9 +50,16 @@ public final class CraftTweakerTagRegistry {
     private CraftTweakerTagRegistry() {}
     
     private final Map<ResourceKey<? extends Registry<?>>, ITagManager<?>> registeredManagers = new HashMap<>();
-    private final Set<ResourceKey<? extends Registry<?>>> customManagers = new HashSet<>();
-    private final Set<ResourceKey<? extends Registry<?>>> customManagersView = Collections.unmodifiableSet(customManagers);
+    private final Set<ResourceKey<? extends Registry<?>>> knownManagers = new HashSet<>();
+    private final Set<ResourceKey<? extends Registry<?>>> knownManagersView = Collections.unmodifiableSet(knownManagers);
     
+    /**
+     * Adds a new {@link ITagManager} to the registry.
+     *
+     * @param cls The class of the {@link ITagManager} to add.
+     *
+     * @return The {@link ITagManager} that was added.
+     */
     public <T> ITagManager<?> addManager(Class<? extends ITagManager<?>> cls) {
         
         ITagManager<?> manager = InstantiationUtil.getOrCreateInstance(cls);
@@ -45,36 +67,74 @@ public final class CraftTweakerTagRegistry {
         return addManager(manager);
     }
     
+    /**
+     * Adds a new {@link ITagManager} to the registry.
+     *
+     * @param manager The {@link ITagManager} to add.
+     *
+     * @return The {@link ITagManager} that was added.
+     */
     public <T> ITagManager<?> addManager(ITagManager<?> manager) {
         
         registeredManagers.put(manager.resourceKey(), manager);
-        if(!manager.getClass().equals(KnownTagManager.class)) {
-            customManagers.add(manager.resourceKey());
+        if(manager.getClass().equals(KnownTagManager.class)) {
+            knownManagers.add(manager.resourceKey());
         }
         return manager;
     }
     
+    /**
+     * Gets all registered {@link ITagManager}'s
+     *
+     * @return All registered {@link ITagManager}'s
+     */
     public List<ITagManager<?>> managers() {
         
         return new ArrayList<>(registeredManagers.values());
     }
     
-    public Set<ResourceKey<? extends Registry<?>>> customManagers() {
+    /**
+     * Gets all {@link KnownTagManager}'s
+     *
+     * @return All registered {@link KnownTagManager}
+     */
+    public Set<ResourceKey<? extends Registry<?>>> knownManagers() {
         
-        return customManagersView;
+        return knownManagersView;
     }
     
+    /**
+     * Finds a {@link  ITagManager} for the given {@link ResourceKey}
+     *
+     * @param key The key to find.
+     *
+     * @return An optional {@link ITagManager} if found, an empty optional otherwise.
+     */
     public <T> Optional<ITagManager<?>> findManager(ResourceKey<? extends Registry<T>> key) {
         
         return Optional.ofNullable(registeredManagers.get(key));
     }
     
+    /**
+     * Finds a {@link  KnownTagManager} for the given {@link ResourceKey}
+     *
+     * @param key The key to find.
+     *
+     * @return An optional {@link KnownTagManager} if found, an empty optional otherwise.
+     */
     public <T> Optional<KnownTagManager<T>> findKnownManager(ResourceKey<? extends Registry<T>> key) {
         
         return Optional.ofNullable(registeredManagers.get(key))
                 .map(it -> it instanceof KnownTagManager ? (KnownTagManager<T>) it : null);
     }
     
+    /**
+     * Tries to get a {@link ITagManager} from the given tag folder.
+     *
+     * @param tagFolder The tag folder to get the manager of.
+     *
+     * @return An optional {@link ITagManager} if found, an empty optional otherwise.
+     */
     public <T> Optional<? extends ITagManager<?>> tagManagerFromFolder(ResourceLocation tagFolder) {
         
         return this.registeredManagers.values()
@@ -84,36 +144,120 @@ public final class CraftTweakerTagRegistry {
                 .findFirst();
     }
     
-    public boolean isCustomManager(ResourceKey<? extends Registry<?>> key) {
+    public boolean isServerOnly(ResourceLocation tagFolder) {
         
-        return customManagers.contains(key);
+        return SERVER_ONLY_FOLDERS.get().contains(tagFolder);
     }
     
-    public boolean isCustomManager(ResourceLocation tagFolder) {
+    /**
+     * Checks if the given {@link ResourceKey} is a {@link KnownTagManager}
+     *
+     * @param key The key of the manager to look for.
+     *
+     * @return True if there is a {@link KnownTagManager} for the given key.
+     */
+    public boolean isKnownManager(ResourceKey<? extends Registry<?>> key) {
         
-        return tagManagerFromFolder(tagFolder).map(manager -> isCustomManager(manager.resourceKey())).orElse(false);
+        return knownManagers.contains(key);
     }
     
+    /**
+     * Checks if the given tagFolder corresponds to a {@link KnownTagManager}
+     *
+     * @param tagFolder The tag folder of the manager to look for.
+     *
+     * @return True if there is a {@link KnownTagManager} for the given folder.
+     */
+    public boolean isKnownManager(ResourceLocation tagFolder) {
+        
+        return tagManagerFromFolder(tagFolder).map(manager -> isKnownManager(manager.resourceKey())).orElse(false);
+    }
+    
+    /**
+     * Gets the {@link ITagManager} corresponding to the given {@link ResourceKey}
+     *
+     * @param key The key to look for.
+     *
+     * @return The {@link ITagManager} for the given key.
+     */
     public <T> ITagManager<?> tagManager(ResourceKey<? extends Registry<T>> key) {
         
         return findManager(key).orElseThrow(() -> new RuntimeException("No tag manager found for given key: " + key));
     }
     
+    /**
+     * Gets the {@link KnownTagManager} corresponding to the given {@link ResourceKey}
+     *
+     * @param key The key to look for.
+     *
+     * @return The {@link KnownTagManager} for the given key.
+     */
     public <T> KnownTagManager<T> knownTagManager(ResourceKey<? extends Registry<T>> key) {
         
-        return findKnownManager(key).orElseThrow(() -> new RuntimeException("No tag manager found for given key: " + key));
+        return findKnownManager(key).orElseThrow(() -> new RuntimeException("No known tag manager found for given key: " + key));
     }
     
+    /**
+     * Gets the {@link ITagManager} corresponding to the given {@link ResourceLocation}
+     *
+     * @param registryLocation The location to look for.
+     *
+     * @return The {@link ITagManager} for the given location.
+     */
     @ZenCodeType.Method
     public <T extends ITagManager<?>> T tagManager(ResourceLocation registryLocation) {
         
         return (T) findManager(ResourceKey.createRegistryKey(registryLocation)).orElseThrow(() -> new RuntimeException("No tag manager found for given location: " + registryLocation));
     }
     
+    /**
+     * Binds the given {@link TagManager} to the registry.
+     *
+     * Note:
+     * This will clear all registered managers.
+     *
+     * @param tagManager The {@link TagManager} to bind.
+     */
     public void bind(TagManager tagManager) {
         
+        this.bind(tagManager.getResult());
+    }
+    
+    
+    public void bind(Map<ResourceKey<? extends Registry<?>>, TagNetworkSerialization.NetworkPayload> tags) {
+        
+        List<TagManager.LoadResult<?>> results = new ArrayList<>();
+        Set<ResourceKey<?>> knownKeys = new HashSet<>();
+        tags.forEach((resourceKey, networkPayload) -> {
+            knownKeys.add(resourceKey);
+            HashMap<Object, Object> resultMap = new HashMap<>();
+            TagManager.LoadResult<?> tLoadResult = new TagManager.LoadResult(resourceKey, resultMap);
+            TagNetworkSerialization.deserializeTagsFromNetwork(GenericUtil.uncheck(resourceKey), CraftTweakerAPI.getAccessibleElementsProvider()
+                    .client()
+                    .registryAccess()
+                    .registryOrThrow(resourceKey), networkPayload, (TagNetworkSerialization.TagOutput) (key, holders) -> resultMap.put(key.location(), new Tag<>(holders)));
+            
+            results.add(tLoadResult);
+            
+        });
+        CraftTweakerAPI.getAccessibleElementsProvider()
+                .client()
+                .registryAccess()
+                .networkSafeRegistries()
+                .forEach(registryEntry -> {
+                    if(knownKeys.contains(registryEntry.key())) {
+                        return;
+                    }
+                    results.add(new TagManager.LoadResult<>(registryEntry.key(), new HashMap<>()));
+                });
+        bind(results);
+    }
+    
+    public void bind(List<TagManager.LoadResult<?>> results) {
+        
         this.registeredManagers.clear();
-        for(TagManager.LoadResult loadResult : tagManager.getResult()) {
+        this.knownManagers.clear();
+        for(TagManager.LoadResult loadResult : results) {
             Optional<? extends Class<?>> taggableElement = CraftTweakerAPI.getRegistry()
                     .getTaggableElementFor(loadResult.key());
             

@@ -19,7 +19,7 @@ public final class AccessibleServerElementsProvider implements IAccessibleServer
         this.resources = null;
     }
     
-    public static IAccessibleServerElementsProvider get() {
+    static IAccessibleServerElementsProvider get() {
         
         return INSTANCE.get();
     }

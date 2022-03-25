@@ -110,8 +110,6 @@ subprojects {
         tasks.withType<JavaCompile> {
             options.encoding = "UTF-8"
         }
-
-
     }
     // </editor-fold>
     // <editor-fold desc="Modloader projects">

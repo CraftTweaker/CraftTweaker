@@ -59,9 +59,9 @@ public class UnknownTag implements MCTag, Iterable<ResourceLocation>{
         return manager().elements(this);
     }
     
-    public boolean contains(ResourceLocation element) {
+    public boolean contains(ResourceLocation id) {
         
-        return elements().contains(element);
+        return elements().contains(id);
     }
     
     @ZenCodeType.Method
