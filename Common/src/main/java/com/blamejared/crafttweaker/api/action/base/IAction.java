@@ -11,57 +11,79 @@ import org.openzen.zencode.shared.CodePosition;
 import javax.annotation.Nonnull;
 
 /**
- * Any and all {@link org.openzen.zencode.java.ZenCodeType.Method} methods should create an instance of this class or one of it's subclasses, this is to make reloading actually work without breaking everything.
- * <p>
- * <p>
- * If an action should be reloadable, use {@link IUndoableAction} instead of this class, if a class does not implement {@link IUndoableAction} in any way, it will NOT be reloaded.
+ * Represents an action that is to be executed through a ZenCode script.
+ *
+ * <p>All methods that are exposed to ZenCode should use classes that implement this interface or one of its
+ * sub-interfaces as required by semantics to ensure proper logging and rollback if necessary.</p>
+ *
+ * <p>If an action should be executed on every game reload and not only during the first run of a
+ * {@linkplain IScriptLoader loader}, refer to {@link IRuntimeAction} instead. If the action requires some additional
+ * code to be run to correctly rollback changes, refer to {@link IUndoableAction}.</p>
+ *
+ * <!-- TODO("Add documentation for IStagedAction") -->
+ *
+ * @since 9.1.0
  */
+// TODO("IStagedAction")
 public interface IAction {
     
     /**
-     * Executes what the action is supposed to do.
+     * Applies the action, executing all code necessary.
+     *
+     * @since 9.1.0
      */
     void apply();
     
     /**
-     * Describes, in a single human-readable sentence, what this specific action
-     * is doing. Used in logging messages, lists, ...
-     * <p>
-     * Try to be as descriptive as possible without being too verbose.
-     * <p>
-     * Example:
-     * Removing a recipe for Iron Ore
+     * Gets a human-readable description of the action.
      *
-     * @return the description of this action
+     * <p>This message is used for logging and to surface information to the user when something goes wrong. It is thus
+     * customary to describe the action as accurately as possible without being too verbose.</p>
+     *
+     * <p>It is not allowed to return a {@code null} or otherwise empty description for the action: doing so will raise
+     * an error at runtime.</p>
+     *
+     * @return A description of the current action.
+     *
+     * @since 9.1.0
      */
     String describe();
     
     /**
-     * Used to validate the state of the action. This is called before the action is applied, and allows you to properly handle errors when things are not proper. For example if an input is null, or an ID does not exist.
-     * <p>
-     * Return false if the action is not in a valid state. This will prevent the apply method from being invoked and will allow the script to continue execution. It is essential that you log errors using the provided logger, this will help the end user diagnose issues with their scripts.
+     * Validates the action, ensuring no erroneous information is present.
      *
-     * @param logger ILogger object to log errors or warnings with.
+     * <p>Implementations should validate all action information and log errors using the provided {@link Logger} if
+     * anything is incorrect. It is highly suggested to specify exactly what is wrong in the most precise yet brief way
+     * possible, to ensure script writers know why their actions are not being applied.</p>
      *
-     * @return true if the action should run, false otherwise.
+     * <p>If validation fails for whatever reason, {@link #apply()} will not be called.</p>
+     *
+     * @param logger Logger object on which to log errors or warnings.
+     *
+     * @return Whether the action is valid ({@code true}) or not ({@code false}).
+     *
+     * @implSpec The default implementation assumes that the action is always valid, and logs no errors or warnings.
+     * @since 9.1.0
      */
-    default boolean validate(Logger logger) {
+    default boolean validate(final Logger logger) {
         
         return true;
     }
     
     /**
-     * Determines if an action should be applied.
+     * Determines whether an action should be applied for scripts loading in the given {@link IScriptLoadSource}.
      *
-     * By default, actions will only be applied if the script was loaded in a reload-listener.
-     * This ensures that scripts are only loaded on the server thread.
+     * @param source The {@link IScriptLoadSource} responsible for loading the scripts.
      *
-     * If you need an action to apply when joining a server, you can reference a load source with the ID of
-     * {@link CraftTweakerConstants#CLIENT_RECIPES_UPDATED_SOURCE_ID}.
+     * @return If the action should be applied.
      *
-     * @param source The current {@link IScriptLoadSource}.
-     *
-     * @return True if the action should be applied. False otherwise.
+     * @apiNote CraftTweaker provides two load sources by default:
+     * {@link CraftTweakerConstants#RELOAD_LISTENER_SOURCE_ID} allows to identify scripts being loaded on the server
+     * thread, {@link CraftTweakerConstants#CLIENT_RECIPES_UPDATED_SOURCE_ID} allows identification of scripts loaded on
+     * the client thread when joining a server.
+     * @implSpec By default, scripts are applied if the load source's ID matches
+     * {@link CraftTweakerConstants#RELOAD_LISTENER_SOURCE_ID}.
+     * @since 9.1.0
      */
     default boolean shouldApplyOn(final IScriptLoadSource source) {
         
@@ -69,12 +91,18 @@ public interface IAction {
     }
     
     /**
-     * Used to retrieve the script file an line that this action was created on.
-     * Uses the Stacktrace, so will not work if the action is staged an this method is called from another context.
+     * Retrieves the position in the script file where the action was created.
      *
-     * The created CodePosition's file will always be a virtual one, so its content cannot be accessed!
+     * <p>The created {@link CodePosition} will always be a virtual position, meaning that its contents cannot be
+     * accessed.</p>
      *
-     * @return The found CodePosition, or {@link CodePosition#UNKNOWN}, never {@code null}.
+     * @return The {@link CodePosition} where the action was created on, or {@link CodePosition#UNKNOWN} if the
+     * information cannot be retrieved.
+     *
+     * @implNote The method inspects the stacktrace to identify the target position. This means that by default, any
+     * staged actions or out-of-context action creation might lead to invalid positions being returned. Staged actions
+     * should thus consider overriding this method to report an accurate position.
+     * @since 9.1.0
      */
     @Nonnull
     default CodePosition getDeclaredScriptPosition() {
@@ -83,13 +111,20 @@ public interface IAction {
     }
     
     /**
-     * Ensures that an action is only applied on a certain loader. This should be used in {@link IAction#shouldApplyOn(IScriptLoadSource)}.
+     * Ensures that an action is only applied on a certain loader.
      *
-     * Will return true if the action should run, otherwise will log a warning of where the actions failed (if it can find it in the script, see {@link IAction#getDeclaredScriptPosition()}) and what loader it is meant to be used on, as well as the current loader.
+     * <p>This method is <strong>not meant to be overridden</strong>, but rather used as an additional check in
+     * {@link IAction#shouldApplyOn(IScriptLoadSource)} if needed.</p>
      *
-     * @param loader the name of the loader this action should run on.
+     * <p>If the check fails, this method will also log a warning stating the script position where the error occurred
+     * if possible (see {@link #getDeclaredScriptPosition()}) and which loader is the one the action is supposed to be
+     * ran on.</p>
      *
-     * @return true if it is the correct loader.
+     * @param loader THe {@link IScriptLoader} the action should be only applied on.
+     *
+     * @return If this loader matches the one specified as a parameter.
+     *
+     * @since 9.1.0
      */
     default boolean assertLoader(final IScriptLoader loader) {
         
@@ -99,9 +134,13 @@ public interface IAction {
             return true;
         }
         
-        CraftTweakerAPI.LOGGER.warn("Action '{}' ({}) can only be invoked on loader '{}'. You tried to run it on loader '{}'.", this
-                .getClass()
-                .getName(), getDeclaredScriptPosition().toString(), loader, currentLoader);
+        CraftTweakerAPI.LOGGER.warn(
+                "Action '{}' ({}) can only be invoked on loader '{}'. You tried to run it on loader '{}'.",
+                this.getClass().getName(),
+                this.getDeclaredScriptPosition(),
+                loader,
+                currentLoader
+        );
         return false;
     }
     
