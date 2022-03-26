@@ -16,6 +16,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Collection;
@@ -26,6 +27,9 @@ import java.util.stream.Collectors;
 @ZenCodeType.Name("crafttweaker.api.game.Game")
 @Document("vanilla/api/game/Game")
 public class Game {
+    
+    @ZenCodeGlobals.Global("game")
+    public static final Game GAME = new Game();
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("effects")

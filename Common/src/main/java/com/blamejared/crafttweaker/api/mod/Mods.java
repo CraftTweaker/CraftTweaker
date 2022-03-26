@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.mod;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
@@ -17,6 +18,9 @@ import java.util.List;
 @ZenCodeType.Name("crafttweaker.api.mod.Mods")
 @Document("vanilla/api/mod/Mods")
 public class Mods {
+    
+    @ZenCodeGlobals.Global("loadedMods")
+    public static final Mods MODS = new Mods();
     
     /**
      * Gets a list of all mods in the game

@@ -10,21 +10,21 @@ import java.nio.file.Path;
 import java.util.List;
 
 final class SyntaxCheckScriptRunner extends ScriptRunner {
-
+    
     SyntaxCheckScriptRunner(final IScriptRunInfo runInfo, final List<SourceFile> sources, final ScriptingEngineLogger logger) {
-
+        
         super(runInfo, sources, logger);
     }
-
+    
     @Override
     protected void executeRunAction(final SemanticModule module) {
-
-        if (!this.runInfo().dumpClasses()) {
+        
+        if(!this.runInfo().dumpClasses()) {
             return;
         }
-
+        
         final Path classes = Services.PLATFORM.getPathFromGameDirectory("classes");
         this.engine().createRunUnit().dump(classes.toFile());
     }
-
+    
 }

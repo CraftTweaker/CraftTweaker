@@ -89,7 +89,7 @@ public final class DefaultScriptRunModuleConfigurator implements IScriptRunModul
                 "",
                 Stream.concat(Stream.of(baseModule), otherDependencies.stream()).toArray(JavaNativeModule[]::new),
                 List.of(),
-                registry.getClassData(loader).expansions().values()
+                registry.getClassData(loader).expansions().values() // TODO("Move away from IClassData access")
         );
     }
     

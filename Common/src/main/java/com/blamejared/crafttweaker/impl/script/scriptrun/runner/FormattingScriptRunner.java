@@ -25,13 +25,13 @@ final class FormattingScriptRunner extends ScriptRunner {
     
     @Override
     protected void executeRunAction(final SemanticModule module) {
-    
+        
         this.format(module);
         
-        if (!this.runInfo().dumpClasses()) {
+        if(!this.runInfo().dumpClasses()) {
             return;
         }
-    
+        
         final Path classes = Services.PLATFORM.getPathFromGameDirectory("classes");
         this.engine().createRunUnit().dump(classes.toFile());
     }
@@ -48,15 +48,15 @@ final class FormattingScriptRunner extends ScriptRunner {
             final Path file = formattedScriptsDirectory.resolve(block.file.getFilename());
             final Path parent = file.getParent();
             
-            if (!Files.isDirectory(parent)) {
+            if(!Files.isDirectory(parent)) {
                 try {
                     Files.createDirectories(parent);
-                } catch (final IOException e) {
+                } catch(final IOException e) {
                     CraftTweakerAPI.LOGGER.error("Unable to create directory {}, aborting", file.getParent());
                     return;
                 }
             }
-    
+            
             try {
                 Files.write(file, Arrays.asList(format.split(System.lineSeparator())));
             } catch(final IOException e) {
@@ -64,4 +64,5 @@ final class FormattingScriptRunner extends ScriptRunner {
             }
         });
     }
+    
 }
