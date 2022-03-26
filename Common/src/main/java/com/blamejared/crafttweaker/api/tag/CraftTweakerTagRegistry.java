@@ -223,7 +223,14 @@ public final class CraftTweakerTagRegistry {
         this.bind(tagManager.getResult());
     }
     
-    
+    /**
+     * Binds the given map to the registry.
+     *
+     * Note:
+     * This will clear all registered managers.
+     *
+     * @param tags The map to bind.
+     */
     public void bind(Map<ResourceKey<? extends Registry<?>>, TagNetworkSerialization.NetworkPayload> tags) {
         
         List<TagManager.LoadResult<?>> results = new ArrayList<>();
@@ -253,6 +260,14 @@ public final class CraftTweakerTagRegistry {
         bind(results);
     }
     
+    /**
+     * Binds the given results to the registry.
+     *
+     * Note:
+     * This will clear all registered managers.
+     *
+     * @param results The results to bind.
+     */
     public void bind(List<TagManager.LoadResult<?>> results) {
         
         this.registeredManagers.clear();
