@@ -55,10 +55,9 @@ public class UnknownTagManager implements ITagManager<UnknownTag> {
     public final void addElements(UnknownTag to, ResourceLocation... values) {
         
         if(!exists(to)) {
-            CraftTweakerAPI.apply(new ActionUnknownTagCreate(to, List.of(values)));
-        } else {
-            CraftTweakerAPI.apply(new ActionUnknownTagAdd(to, List.of(values)));
+            CraftTweakerAPI.apply(new ActionUnknownTagCreate(to));
         }
+        CraftTweakerAPI.apply(new ActionUnknownTagAdd(to, List.of(values)));
         recalculate();
     }
     

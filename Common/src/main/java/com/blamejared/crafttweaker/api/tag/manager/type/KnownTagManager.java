@@ -63,10 +63,9 @@ public class KnownTagManager<T> implements ITagManager<KnownTag<T>>, Iterable<Kn
     public final void addElements(KnownTag<T> to, T... values) {
         
         if(!exists(to)) {
-            CraftTweakerAPI.apply(new ActionKnownTagCreate<>(to, List.of(values)));
-        } else {
-            CraftTweakerAPI.apply(new ActionKnownTagAdd<>(to, List.of(values)));
+            CraftTweakerAPI.apply(new ActionKnownTagCreate<>(to));
         }
+        CraftTweakerAPI.apply(new ActionKnownTagAdd<>(to, List.of(values)));
         recalculate();
     }
     
