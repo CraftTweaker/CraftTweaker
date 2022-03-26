@@ -18,18 +18,20 @@ final class RunInfo implements IScriptRunInfo {
             this(new ArrayList<>(), new ArrayList<>());
         }
         
-        @SuppressWarnings("CopyConstructorMissesField")
-            // Still not a copy constructor
-        Actions(final Actions other) {
+    }
+    
+    private record ActionsView(List<IAction> validActions, List<IAction> invalidActions) {
+        
+        ActionsView(final Actions view) {
             
-            this(Collections.unmodifiableList(other.validActions()), Collections.unmodifiableList(other.invalidActions()));
+            this(Collections.unmodifiableList(view.validActions()), Collections.unmodifiableList(view.invalidActions()));
         }
         
     }
     
     private final ScriptRunConfiguration configuration;
     private final Actions actions;
-    private final Actions view;
+    private final ActionsView view;
     private boolean displayBranding;
     private boolean dumpClasses;
     private Boolean firstRun;
@@ -38,7 +40,7 @@ final class RunInfo implements IScriptRunInfo {
         
         this.configuration = configuration;
         this.actions = new Actions();
-        this.view = new Actions(this.actions);
+        this.view = new ActionsView(this.actions);
         this.displayBranding = true;
         this.dumpClasses = false;
         this.firstRun = null;
