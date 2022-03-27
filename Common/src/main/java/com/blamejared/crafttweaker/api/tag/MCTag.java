@@ -57,9 +57,9 @@ public interface MCTag extends CommandStringDisplayable, Comparable<MCTag> {
     /**
      * Gets the elements in this tag.
      *
-     * If this is a {@link KnownTag}, then the elements will be of that tag's type (e.g. Item, Block).
+     * <p>If this is a {@link KnownTag}, then the elements will be of that tag's type (e.g. Item, Block).</p>
      *
-     * If this is a {@link UnknownTag}, then the elements will be the {@link ResourceLocation} of the elements.
+     * <p>If this is a {@link UnknownTag}, then the elements will be the {@link ResourceLocation} of the elements.</p>
      *
      * @return The elements in this tag.
      *
@@ -101,7 +101,7 @@ public interface MCTag extends CommandStringDisplayable, Comparable<MCTag> {
     /**
      * Gets the internal {@link Tag} of this tag.
      *
-     * This should only be used if the values of the tag is needed, other usecases should use {@link #getTagKey()} instead.
+     * <p>This should only be used if the values of the tag is needed, other usecases should use {@link #getTagKey()} instead.</p>
      *
      * @return The internal {@link Tag} of this tag.
      */

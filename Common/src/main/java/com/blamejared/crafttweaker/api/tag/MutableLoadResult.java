@@ -28,7 +28,7 @@ public class MutableLoadResult<T> {
     /**
      * Adds a tag to the {@link net.minecraft.tags.TagManager.LoadResult}
      *
-     * @param id  The Id of the tag to add.
+     * @param id  The id of the tag to add.
      * @param tag The tag to add.
      */
     public void addTag(ResourceLocation id, Tag<Holder<T>> tag) {
@@ -72,7 +72,7 @@ public class MutableLoadResult<T> {
     /**
      * Binds the given {@link net.minecraft.tags.TagManager.LoadResult} to this object.
      *
-     * This will also make the elements of all tags in this result mutable.
+     * <p>This will also make the elements of all tags in this result mutable.</p>
      *
      * @param result The {@link net.minecraft.tags.TagManager.LoadResult} to bind.
      */

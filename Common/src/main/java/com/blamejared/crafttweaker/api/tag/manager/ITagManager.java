@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.tag.manager;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
+import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
 import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.Holder;
@@ -29,12 +30,12 @@ public interface ITagManager<T extends MCTag> extends CommandStringDisplayable, 
     /**
      * Gets the tagFolder of this manager.
      *
-     * The tag folder is usually the folder on disk without the `tags/` prefix.
+     * <p>The tag folder is usually the folder on disk without the `tags/` prefix.</p>
      *
-     * Examples:
-     * `tags/items` turns into `items`
-     * `tags/potion` turns into `potion`
-     * `tags/worldgen/biome` turns into `worldgen/biome`
+     * <p>Examples:</p>
+     * <li>`tags/items` turns into `items`</li>
+     * <li>`tags/potion` turns into `potion`</li>
+     * <li>`tags/worldgen/biome` turns into `worldgen/biome`</li>
      *
      * @return The tag folder of this manager.
      */
@@ -164,8 +165,8 @@ public interface ITagManager<T extends MCTag> extends CommandStringDisplayable, 
     /**
      * Binds this manager to the given load result.
      *
-     * This is usually storing the given {@link net.minecraft.tags.TagManager.LoadResult} into a {@link com.blamejared.crafttweaker.api.tag.MutableLoadResult}
-     * which allows for easy mutation.
+     * <p>This is usually storing the given {@link net.minecraft.tags.TagManager.LoadResult} into a {@link com.blamejared.crafttweaker.api.tag.MutableLoadResult}
+     * which allows for easy mutation.</p>
      *
      * @param result The result to bind to.
      */
@@ -174,7 +175,7 @@ public interface ITagManager<T extends MCTag> extends CommandStringDisplayable, 
     /**
      * Gets the element type that this tag manager handles.
      *
-     * This is only used to fill in type parameters, if your custom ITagManager does not have a type paremeter, you can return an empty optional.
+     * <p>This is only used to fill in type parameters, if your custom ITagManager does not have a type paremeter, you can return an empty optional.</p>
      *
      * @return An optional class of the type of elements that this manager deals with.
      */
