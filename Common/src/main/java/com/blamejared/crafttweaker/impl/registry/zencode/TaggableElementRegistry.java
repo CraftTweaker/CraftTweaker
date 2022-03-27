@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.impl.registry.zencode;
 
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.manager.TagManagerFactory;
-import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -16,7 +15,7 @@ public class TaggableElementRegistry {
     private final Map<ResourceKey<?>, TagManagerFactory<?, ?>> managerData = new HashMap<>();
     private final Map<ResourceKey<?>, Class<?>> elementData = new HashMap<>();
     
-    public <T, U extends ITagManager<?>> void registerManager(final IScriptLoader loader, final ResourceKey<T> id, TagManagerFactory<T, U> factory) {
+    public <T, U extends ITagManager<?>> void registerManager(final ResourceKey<T> id, TagManagerFactory<T, U> factory) {
         
         TagManagerFactory<?, ?> old = this.managerData.get(id);
         if(old != null) {
@@ -25,7 +24,7 @@ public class TaggableElementRegistry {
         this.managerData.put(id, factory);
     }
     
-    public <T> void registerElement(final IScriptLoader loader, final ResourceKey<T> id, final Class<T> clazz) {
+    public <T> void registerElement(final ResourceKey<T> id, final Class<T> clazz) {
         
         final Class<?> old = this.elementData.get(id);
         if(old != null) {

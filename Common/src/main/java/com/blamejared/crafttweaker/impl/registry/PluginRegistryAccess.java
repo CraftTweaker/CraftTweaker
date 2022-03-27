@@ -85,15 +85,15 @@ final class PluginRegistryAccess implements IPluginRegistryAccess {
     }
     
     @Override
-    public <T> void registerTaggableElement(IScriptLoader loader, ResourceKey<T> key, Class<T> elementClass) {
+    public <T> void registerTaggableElement(ResourceKey<T> key, Class<T> elementClass) {
         
-        this.registries.taggableElementRegistry().registerElement(loader, key, elementClass);
+        this.registries.taggableElementRegistry().registerElement(key, elementClass);
     }
     
     @Override
-    public <T, U extends ITagManager<?>> void registerTaggableElementManager(IScriptLoader loader, ResourceKey<T> key, TagManagerFactory<T, U> factory) {
+    public <T, U extends ITagManager<?>> void registerTaggableElementManager(ResourceKey<T> key, TagManagerFactory<T, U> factory) {
         
-        this.registries.taggableElementRegistry().registerManager(loader, key, factory);
+        this.registries.taggableElementRegistry().registerManager(key, factory);
     }
     
     @Override

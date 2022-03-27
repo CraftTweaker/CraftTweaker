@@ -248,13 +248,13 @@ public final class PluginManager {
         this.verifying(
                 "registering taggable elements",
                 () -> handler.elementRequests().forEach(it ->
-                        access.registerTaggableElement(loaderFinder.apply(it.loader()), it.key(), GenericUtil.uncheck(it.elementClass()))
+                        access.registerTaggableElement(it.key(), GenericUtil.uncheck(it.elementClass()))
                 )
         );
         this.verifying(
                 "registering taggable element managers",
                 () -> handler.managerRequests().forEach(it ->
-                        access.registerTaggableElementManager(loaderFinder.apply(it.loader()), it.key(), GenericUtil.uncheck(it.factory()))
+                        access.registerTaggableElementManager(it.key(), GenericUtil.uncheck(it.factory()))
                 )
         );
     }

@@ -15,31 +15,31 @@ import net.minecraft.resources.ResourceLocation;
 
 final class TaggableElementsRegistrationManager {
     
-    void attemptRegistration(final Class<?> clazz, final String loader, final ITaggableElementRegistrationHandler handler) {
+    void attemptRegistration(final Class<?> clazz, final ITaggableElementRegistrationHandler handler) {
         
         if(clazz.isAnnotationPresent(NativeTypeRegistration.class)) {
-            this.tryNativeRegistration(clazz, loader, handler);
+            this.tryNativeRegistration(clazz, handler);
         } else {
-            this.tryClassRegistration(clazz, loader, handler);
+            this.tryClassRegistration(clazz, handler);
         }
     }
     
-    private void tryClassRegistration(final Class<?> clazz, final String loader, final ITaggableElementRegistrationHandler handler) {
+    private void tryClassRegistration(final Class<?> clazz, final ITaggableElementRegistrationHandler handler) {
         
         if(clazz.isAnnotationPresent(TaggableElement.class)) {
-            this.tryElementRegistration(clazz, loader, clazz.getAnnotation(TaggableElement.class), handler);
+            this.tryElementRegistration(clazz, clazz.getAnnotation(TaggableElement.class), handler);
         }
         
         if(clazz.isAnnotationPresent(TaggableElementManagerFactory.class)) {
             if(!TagManagerFactory.class.isAssignableFrom(clazz)) {
                 throw new IllegalArgumentException("Provided manager factory class: '" + clazz + "' is not an instance of TagManagerFactory!");
             }
-            this.tryManagerRegistration(clazz, loader, clazz.getAnnotation(TaggableElementManagerFactory.class), handler);
+            this.tryManagerRegistration(clazz, clazz.getAnnotation(TaggableElementManagerFactory.class), handler);
         }
         
     }
     
-    private void tryNativeRegistration(final Class<?> clazz, final String loader, final ITaggableElementRegistrationHandler handler) {
+    private void tryNativeRegistration(final Class<?> clazz, final ITaggableElementRegistrationHandler handler) {
         
         if(!clazz.isAnnotationPresent(TaggableElement.class)) {
             return;
@@ -48,27 +48,27 @@ final class TaggableElementsRegistrationManager {
         final NativeTypeRegistration ntr = clazz.getAnnotation(NativeTypeRegistration.class);
         final Class<?> nativeType = ntr.value();
         
-        this.tryElementRegistration(nativeType, loader, clazz.getAnnotation(TaggableElement.class), handler);
+        this.tryElementRegistration(nativeType, clazz.getAnnotation(TaggableElement.class), handler);
     }
     
-    private void tryElementRegistration(final Class<?> clazz, final String loader, final TaggableElement data, final ITaggableElementRegistrationHandler handler) {
+    private void tryElementRegistration(final Class<?> clazz, final TaggableElement data, final ITaggableElementRegistrationHandler handler) {
         
         try {
             final ResourceLocation id = new ResourceLocation(data.value());
             final ResourceKey<Registry<Object>> registryKey = ResourceKey.createRegistryKey(id);
-            handler.registerTaggableElement(loader, registryKey, GenericUtil.uncheck(clazz));
+            handler.registerTaggableElement(registryKey, GenericUtil.uncheck(clazz));
         } catch(final ResourceLocationException e) {
             throw new IllegalArgumentException("Provided resource location '" + data.value() + "' for taggable element " + clazz.getName() + " is invalid", e);
         }
     }
     
-    private void tryManagerRegistration(final Class<?> clazz, final String loader, final TaggableElementManagerFactory data, final ITaggableElementRegistrationHandler handler) {
+    private void tryManagerRegistration(final Class<?> clazz, final TaggableElementManagerFactory data, final ITaggableElementRegistrationHandler handler) {
         
         try {
             final ResourceLocation id = new ResourceLocation(data.value());
             final ResourceKey<Registry<Object>> registryKey = ResourceKey.createRegistryKey(id);
             
-            handler.registerManager(loader, registryKey, InstantiationUtil.getOrCreateInstance((Class<? extends TagManagerFactory<Registry<Object>, ITagManager<?>>>) clazz));
+            handler.registerManager(registryKey, InstantiationUtil.getOrCreateInstance((Class<? extends TagManagerFactory<Registry<Object>, ITagManager<?>>>) clazz));
         } catch(final ResourceLocationException e) {
             throw new IllegalArgumentException("Provided resource location '" + data.value() + "' for taggable element " + clazz.getName() + " is invalid", e);
         }

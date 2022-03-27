@@ -104,7 +104,7 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "recipetype", new RecipeTypeBracketHandler(), new IBracketParserRegistrationHandler.DumperData("recipetype", RecipeTypeBracketHandler.getDumperData()));
         handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "tag", new TagBracketHandler(), new IBracketParserRegistrationHandler.DumperData("tag", TagBracketHandler.getDumperData()));
         handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "tagmanager", new TagManagerBracketHandler(), new IBracketParserRegistrationHandler.DumperData("tagmanager", TagManagerBracketHandler.getDumperData()));
-    
+        
     }
     
     @Override
@@ -190,7 +190,7 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
     public void registerTaggableElements(ITaggableElementRegistrationHandler handler) {
         
         this.zenGatherer.onCandidates(candidate -> {
-            this.taggableElementsRegistrationManager.attemptRegistration(candidate.clazz(), candidate.loader(), handler);
+            this.taggableElementsRegistrationManager.attemptRegistration(candidate.clazz(), handler);
         });
     }
     

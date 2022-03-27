@@ -40,9 +40,9 @@ public interface IPluginRegistryAccess {
     
     <T extends Enum<T>> void registerEnum(final IScriptLoader loader, final ResourceLocation id, final Class<T> enumClass);
     
-    <T> void registerTaggableElement(final IScriptLoader loader, final ResourceKey<T> key, final Class<T> elementClass);
+    <T> void registerTaggableElement(final ResourceKey<T> key, final Class<T> elementClass);
     
-    <T, U extends ITagManager<?>> void registerTaggableElementManager(final IScriptLoader loader, final ResourceKey<T> key, final TagManagerFactory<T, U> factory);
+    <T, U extends ITagManager<?>> void registerTaggableElementManager(final ResourceKey<T> key, final TagManagerFactory<T, U> factory);
     
     <T extends Recipe<?>> void registerHandler(final Class<? extends T> clazz, final IRecipeHandler<T> handler);
     

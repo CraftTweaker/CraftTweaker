@@ -12,9 +12,9 @@ import java.util.function.Consumer;
 
 final class TaggableElementsRegistrationHandler implements ITaggableElementRegistrationHandler {
     
-    record ElementData(String loader, ResourceKey<?> key, Class<?> elementClass) {}
+    record ElementData(ResourceKey<?> key, Class<?> elementClass) {}
     
-    record ManagerData(String loader, ResourceKey<?> key, TagManagerFactory<?, ?> factory) {}
+    record ManagerData(ResourceKey<?> key, TagManagerFactory<?, ?> factory) {}
     
     private final List<ElementData> elementRequests;
     private final List<ManagerData> managerRequests;
@@ -34,15 +34,15 @@ final class TaggableElementsRegistrationHandler implements ITaggableElementRegis
     }
     
     @Override
-    public <T> void registerTaggableElement(String loader, ResourceKey<T> key, Class<T> elementClass) {
+    public <T> void registerTaggableElement(ResourceKey<T> key, Class<T> elementClass) {
         
-        this.elementRequests.add(new ElementData(loader, key, elementClass));
+        this.elementRequests.add(new ElementData(key, elementClass));
     }
     
     @Override
-    public <T, U extends ITagManager<?>> void registerManager(String loader, ResourceKey<T> key, TagManagerFactory<T, U> factory) {
+    public <T, U extends ITagManager<?>> void registerManager(ResourceKey<T> key, TagManagerFactory<T, U> factory) {
         
-        this.managerRequests.add(new ManagerData(loader, key, factory));
+        this.managerRequests.add(new ManagerData(key, factory));
     }
     
     List<ElementData> elementRequests() {
