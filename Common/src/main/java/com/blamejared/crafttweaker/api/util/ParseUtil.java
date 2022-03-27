@@ -45,9 +45,8 @@ public final class ParseUtil {
     public static IParsedType readParsedType(String name, CodePosition position) throws ParseException {
         
         try {
-            return IParsedType.tryParse(ZSTokenParser.create(new LiteralSourceFile("type reading: " + name, name), null));
-        } catch(IOException e) {
-            e.printStackTrace();
+            return IParsedType.parse(ZSTokenParser.create(new LiteralSourceFile("type reading: " + name, name), null));
+        } catch(IOException ignored) {
         }
         return ParsedTypeBasic.UNDETERMINED;
     }
