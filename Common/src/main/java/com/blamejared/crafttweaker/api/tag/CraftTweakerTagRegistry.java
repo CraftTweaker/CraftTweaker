@@ -39,6 +39,7 @@ public final class CraftTweakerTagRegistry {
             .stream()
             .map(resourceKey -> TagManager.getTagDir(GenericUtil.uncheck(resourceKey)))
             .map(ResourceLocation::tryParse)
+            .filter(Objects::nonNull)
             .map(ResourceLocation::toString)
             .collect(Collectors.toSet()));
     
