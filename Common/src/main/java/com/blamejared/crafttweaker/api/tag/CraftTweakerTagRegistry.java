@@ -34,10 +34,9 @@ import java.util.stream.Collectors;
 @ZenCodeType.Name("crafttweaker.api.tag.TagManager")
 public final class CraftTweakerTagRegistry {
     
-    
     private static final Supplier<Set<String>> SERVER_ONLY_FOLDERS = Suppliers.memoize(() -> Services.REGISTRY.serverOnlyRegistries()
             .stream()
-            .map(resourceKey -> TagManager.getTagDir(GenericUtil.uncheck(resourceKey)))
+            .map(CraftTweakerTagRegistry.INSTANCE::makeTagFolder)
             .map(ResourceLocation::tryParse)
             .filter(Objects::nonNull)
             .map(ResourceLocation::toString)
@@ -147,7 +146,7 @@ public final class CraftTweakerTagRegistry {
     
     public boolean isServerOnly(ResourceLocation tagFolder) {
         
-        return SERVER_ONLY_FOLDERS.get().contains(tagFolder);
+        return SERVER_ONLY_FOLDERS.get().contains(tagFolder.toString());
     }
     
     /**
@@ -284,6 +283,17 @@ public final class CraftTweakerTagRegistry {
                 this.addManager(new UnknownTagManager(loadResult.key())).bind(loadResult);
             });
         }
+    }
+    
+    public String makeTagFolder(ResourceKey<?> key) {
+        
+        String tagDir = TagManager.getTagDir(GenericUtil.uncheck(key));
+        
+        // Really not ideal, but I don't see a better way, lets just hope that other mods don't be dumb and add their tags to other folders.
+        if(tagDir.startsWith("tags/")) {
+            tagDir = tagDir.substring("tags/".length());
+        }
+        return tagDir;
     }
     
 }

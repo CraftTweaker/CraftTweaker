@@ -42,13 +42,7 @@ public interface ITagManager<T extends MCTag> extends CommandStringDisplayable, 
     @ZenCodeType.Getter("tagFolder")
     default String tagFolder() {
         
-        String tagDir = TagManager.getTagDir(resourceKey());
-        
-        // Really not ideal, but I don't see a better way, lets just hope that other mods don't be dumb and add their tags to other folders.
-        if(tagDir.startsWith("tags/")) {
-            tagDir = tagDir.substring("tags/".length());
-        }
-        return tagDir;
+        return CraftTweakerTagRegistry.INSTANCE.makeTagFolder(resourceKey());
     }
     
     /**
