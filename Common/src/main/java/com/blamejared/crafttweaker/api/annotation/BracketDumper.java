@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
  *
  * <p>It is not necessary for a mod to manually register a method annotated with this annotation through a plugin's
  * {@link com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler}: using the annotation as described
- * above is sufficient for CraftTweaker to handle registration manually.</p>
+ * above is sufficient for CraftTweaker to handle registration automatically.</p>
  *
  * @since 9.1.0
  */
@@ -37,7 +37,7 @@ public @interface BracketDumper {
     String value();
     
     /**
-     * Gets the name of the sub command used in {@code ct dump} to invoke this dumper.
+     * Gets the name of the sub command used in {@code /ct dump} to invoke this dumper.
      *
      * <p>If no value or an empty string is specified, then CraftTweaker will attempt to pluralize the string returned
      * by {@link #value()}.</p>

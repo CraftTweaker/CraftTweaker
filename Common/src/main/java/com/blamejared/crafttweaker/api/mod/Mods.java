@@ -20,7 +20,9 @@ import java.util.List;
 public class Mods {
     
     @ZenCodeGlobals.Global("loadedMods")
-    public static final Mods MODS = new Mods();
+    public static final Mods INSTANCE = new Mods();
+    
+    private Mods() {}
     
     /**
      * Gets a list of all mods in the game

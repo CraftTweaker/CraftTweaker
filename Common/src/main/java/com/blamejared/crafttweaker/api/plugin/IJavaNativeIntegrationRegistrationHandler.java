@@ -17,7 +17,7 @@ public interface IJavaNativeIntegrationRegistrationHandler {
     /**
      * Registers the specified class as a native type for ZenCode.
      *
-     * <p>A native type is a class that belongs that has not been written with ZenCode scripts in mind, but that is
+     * <p>A native type is a pre-existing class that has not been written with ZenCode scripts in mind, but that is
      * being exposed to scripts regardless to allow for easier usage. An example of such a class might be
      * {@code net.minecraft.world.level.block.Block}.</p>
      *

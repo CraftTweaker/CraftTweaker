@@ -11,7 +11,7 @@ import java.util.function.Consumer;
  *
  * <p>All "root" and "sub" terms are re-defined in this context not to consider {@code /ct} as the actual root. In other
  * words, registering a root command named {@code foo} will actually register a sub-command accessible through
- * {@code /ct foo}; whereas registering a sub-command {@code bar} for the command {@code bar} leads to the sub-command
+ * {@code /ct foo}; whereas registering a sub-command {@code bar} for the command {@code baz} leads to the sub-command
  * being accessible through {@code /ct baz bar}.</p>
  *
  * @since 9.1.0

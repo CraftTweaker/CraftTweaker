@@ -110,7 +110,7 @@ public interface ICraftTweakerRegistry {
      * the {@code rootPackage}.
      *
      * <p>The concept of package used in this method corresponds to the ZenCode concept instead of the Java concept.
-     * This means that also bracket handlers in the various sub-packages will be queried.</p>
+     * This means that also bracket handlers in the various sub-packages will also be queried.</p>
      *
      * @param loader      The {@link IScriptLoader} for which bracket handlers should be queried.
      * @param rootPackage The root package under which the bracket handlers should reside.

@@ -29,7 +29,9 @@ import java.util.stream.Collectors;
 public class Game {
     
     @ZenCodeGlobals.Global("game")
-    public static final Game GAME = new Game();
+    public static final Game INSTANCE = new Game();
+    
+    private Game() {}
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("effects")
