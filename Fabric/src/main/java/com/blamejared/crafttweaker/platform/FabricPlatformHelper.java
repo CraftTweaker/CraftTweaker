@@ -176,8 +176,8 @@ public class FabricPlatformHelper implements IPlatformHelper {
                 .stream()
                 .filter(modContainer -> modContainer.getOrigin().getKind() == ModOrigin.Kind.PATH)
                 .forEach(modContainer -> {
-                    for(Path rootPath : modContainer.getOrigin().getPaths()) {
-                        if(rootPath.toFile().equals(classFile)) {
+                    for(Path path : modContainer.getOrigin().getPaths()) {
+                        if(path.toFile().equals(classFile)) {
                             mods.add(new Mod(modContainer.getMetadata().getId(), modContainer.getMetadata()
                                     .getName(), modContainer.getMetadata().getVersion().getFriendlyString()));
                         }
