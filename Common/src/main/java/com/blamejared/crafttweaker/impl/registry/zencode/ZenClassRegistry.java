@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class ZenClassRegistry implements IZenClassRegistry {
     
@@ -97,17 +99,10 @@ public final class ZenClassRegistry implements IZenClassRegistry {
     
     public void applyInheritanceRules() {
         
-        this.registryMap.forEach((loader, loaderData) -> {
-            try {
-                final Collection<LoaderSpecificZenClassRegistry> inheritedData = loader.allInheritedLoaders()
-                        .stream()
-                        .map(this::get)
-                        .toList();
-                loaderData.inheritFrom(inheritedData);
-            } catch(final Exception e) {
-                throw new IllegalStateException("Unable to apply inheritance rules for loader " + loader.name(), e);
-            }
-        });
+        final Map<IScriptLoader, LoaderSpecificZenClassRegistry> snapshot = this.createSnapshot();
+        final Map<IScriptLoader, LoaderSpecificZenClassRegistry> inherited = this.applyInheritanceRules(snapshot);
+        this.registryMap.clear();
+        this.registryMap.putAll(inherited);
     }
     
     private LoaderSpecificZenClassRegistry get(final IScriptLoader loader) {
@@ -141,6 +136,40 @@ public final class ZenClassRegistry implements IZenClassRegistry {
             );
             return true;
         }
+    }
+    
+    private Map<IScriptLoader, LoaderSpecificZenClassRegistry> createSnapshot() {
+        
+        return this.registryMap.entrySet()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, it -> it.getValue().createSnapshot()));
+    }
+    
+    private Map<IScriptLoader, LoaderSpecificZenClassRegistry> applyInheritanceRules(final Map<IScriptLoader, LoaderSpecificZenClassRegistry> snapshot) {
+        
+        return snapshot.entrySet()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, it -> this.applyInheritanceRules(it.getKey(), snapshot)));
+    }
+    
+    private LoaderSpecificZenClassRegistry applyInheritanceRules(final IScriptLoader loader, final Map<IScriptLoader, LoaderSpecificZenClassRegistry> snapshot) {
+        
+        try {
+            final LoaderSpecificZenClassRegistry inheritedRegistry = new LoaderSpecificZenClassRegistry();
+            final Collection<LoaderSpecificZenClassRegistry> inheritanceData = this.computeInheritanceData(loader, snapshot);
+            inheritedRegistry.inheritFrom(inheritanceData);
+            return inheritedRegistry;
+        } catch(final Exception e) {
+            throw new IllegalStateException("Unable to apply inheritance rules for loader " + loader.name(), e);
+        }
+    }
+    
+    private Collection<LoaderSpecificZenClassRegistry> computeInheritanceData(final IScriptLoader loader, final Map<IScriptLoader, LoaderSpecificZenClassRegistry> snapshot) {
+        
+        return Stream.concat(loader.allInheritedLoaders().stream(), Stream.of(loader))
+                .map(snapshot::get)
+                .filter(Objects::nonNull)
+                .toList();
     }
     
 }

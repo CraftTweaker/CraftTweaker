@@ -291,6 +291,13 @@ final class LoaderSpecificZenClassRegistry {
         registries.forEach(this::inheritFrom);
     }
     
+    LoaderSpecificZenClassRegistry createSnapshot() {
+        
+        final LoaderSpecificZenClassRegistry snapshot = new LoaderSpecificZenClassRegistry();
+        snapshot.inheritFrom(this);
+        return snapshot;
+    }
+    
     private void registerZenClass(final Class<?> clazz, final String name) {
         
         final Class<?> other = this.data.classes().get(name);
