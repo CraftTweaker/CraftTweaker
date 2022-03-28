@@ -73,7 +73,7 @@ final class ValidatedEscapableBracketParser implements BracketExpressionParser {
             final String ownerName = registry.getNameFor(loader, owner).orElseThrow();
             final String[] packages = ownerName.split(PACKAGE_SEPARATOR);
             
-            return ParseUtil.explode(this.position, ownerName);
+            return ParseUtil.staticMemberExpression(this.position, ownerName);
         }
         
         private ParsedExpression compileMethodReference(final ParsedExpression classCall, final Method target) {

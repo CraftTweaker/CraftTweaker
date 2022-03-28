@@ -70,7 +70,7 @@ public class EnumConstantBracketHandler implements BracketExpressionParser {
                 .getNameFor(CraftTweakerAPI.getScriptRunManager().currentRunInfo().loader(), bracketEnum)
                 .orElseThrow(() -> new ParseException(position, "No class found for bracket enum: " + bracketEnum));
         
-        final ParsedExpression enumClass = ParseUtil.explode(position, name);
+        final ParsedExpression enumClass = ParseUtil.staticMemberExpression(position, name);
         return new ParsedExpressionMember(position, enumClass, value.toUpperCase(Locale.ENGLISH), List.of());
     }
     

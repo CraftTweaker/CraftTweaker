@@ -19,7 +19,7 @@ public final class ParseUtil {
     private ParseUtil() {
     }
 
-    public static ParsedExpression explode(CodePosition position, String name) {
+    public static ParsedExpression staticMemberExpression(CodePosition position, String name) {
 
         String[] strExpressions = name.split("\\.");
         ParsedExpression expression = new ParsedExpressionVariable(position, strExpressions[0], null);
