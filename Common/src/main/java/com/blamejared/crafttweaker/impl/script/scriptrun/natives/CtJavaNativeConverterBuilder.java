@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker.impl.script.scriptrun.natives;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunInfo;
 import org.openzen.zencode.java.module.JavaNativeTypeConversionContext;
 import org.openzen.zencode.java.module.converters.JavaNativeClassConverter;
@@ -19,11 +19,13 @@ import java.util.Objects;
 public final class CtJavaNativeConverterBuilder extends JavaNativeConverterBuilder {
     
     private final IScriptRunInfo runInfo;
+    private final IZenClassRegistry registry;
     private CtJavaNativeHeaderConverter headerConverter;
     
-    public CtJavaNativeConverterBuilder(final IScriptRunInfo info) {
+    public CtJavaNativeConverterBuilder(final IScriptRunInfo info, final IZenClassRegistry registry) {
         
         this.runInfo = info;
+        this.registry = registry;
     }
     
     @Override
@@ -41,7 +43,7 @@ public final class CtJavaNativeConverterBuilder extends JavaNativeConverterBuild
                 typeConverter,
                 headerConverter,
                 memberConverter,
-                CraftTweakerAPI.getRegistry().getZenClassRegistry(),
+                this.registry,
                 this.runInfo
         );
     }
@@ -62,7 +64,9 @@ public final class CtJavaNativeConverterBuilder extends JavaNativeConverterBuild
                 packageInfo,
                 memberConverter,
                 typeConversionContext,
-                headerConverter
+                headerConverter,
+                this.runInfo,
+                this.registry
         );
     }
     

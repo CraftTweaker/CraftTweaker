@@ -72,8 +72,8 @@ sealed public abstract class ScriptRunner permits ExecutingScriptRunner, Formatt
     
     private BracketExpressionParser initializeEngine() throws CompileException {
         
-        final CtJavaNativeConverterBuilder converterBuilder = new CtJavaNativeConverterBuilder(this.runInfo);
         final ICraftTweakerRegistry registry = CraftTweakerAPI.getRegistry();
+        final CtJavaNativeConverterBuilder converterBuilder = new CtJavaNativeConverterBuilder(this.runInfo, registry.getZenClassRegistry());
         final BracketExpressionParser parser = this.createParser(registry);
         final Collection<DecoratedJavaNativeModule> modules = this.populateModules(converterBuilder, registry, parser);
         CraftTweakerAPI.LOGGER.info("Successfully initialized modules {}", modules);

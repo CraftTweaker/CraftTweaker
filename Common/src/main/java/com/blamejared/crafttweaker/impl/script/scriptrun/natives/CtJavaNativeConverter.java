@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl.script.scriptrun.natives;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import com.blamejared.crafttweaker_annotations.annotations.TypedExpansion;
 import org.openzen.zencode.java.module.JavaNativeTypeConversionContext;
 import org.openzen.zencode.java.module.converters.JavaNativeClassConverter;
 import org.openzen.zencode.java.module.converters.JavaNativeConverter;
@@ -32,6 +33,9 @@ final class CtJavaNativeConverter extends JavaNativeConverter {
         
         try {
             if(cls.isAnnotationPresent(NativeTypeRegistration.class)) {
+                return this.expansionConverter.convertExpansion(cls);
+            }
+            if(cls.isAnnotationPresent(TypedExpansion.class)) {
                 return this.expansionConverter.convertExpansion(cls);
             }
             
