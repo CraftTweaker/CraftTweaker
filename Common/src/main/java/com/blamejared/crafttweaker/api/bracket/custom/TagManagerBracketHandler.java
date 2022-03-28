@@ -39,7 +39,7 @@ public class TagManagerBracketHandler implements BracketExpressionParser {
             throw new ParseException(position, "Invalid Bracket handler, expected tagFolder here");
         }
         IScriptLoader loader = CraftTweakerAPI.getScriptRunManager().currentRunInfo().loader();
-        final String tagFolder = ParseUtil.readContent(position, tokens);
+        final String tagFolder = ParseUtil.readBracketContent(position, tokens);
         confirmTagFolderExists(tagFolder, position);
         
         

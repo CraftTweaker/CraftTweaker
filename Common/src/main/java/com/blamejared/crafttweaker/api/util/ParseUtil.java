@@ -19,11 +19,8 @@ import org.openzen.zenscript.parser.type.ParsedTypeBasic;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public final class ParseUtil {
-    
-    private static final Pattern typeArgumentPattern = Pattern.compile("(.*)<(.*)>");
     
     private ParseUtil() {
     
