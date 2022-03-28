@@ -10,7 +10,6 @@ import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.script.scriptrun.natives.CtJavaNativeConverterBuilder;
 import com.google.common.base.Suppliers;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.Util;
 import org.openzen.zencode.java.ScriptingEngine;
 import org.openzen.zencode.java.logger.ScriptingEngineLogger;
 import org.openzen.zencode.java.module.JavaNativeModule;
@@ -54,10 +53,8 @@ sealed public abstract class ScriptRunner permits ExecutingScriptRunner, Formatt
         
         this.runInfo = runInfo;
         this.sources = List.copyOf(sources);
-        this.scriptingEngine = Util.make(
-                new ScriptingEngine(logger, ScriptRunner.class::getResourceAsStream),
-                it -> it.debug = runInfo.dumpClasses()
-        );
+        this.scriptingEngine = new ScriptingEngine(logger, ScriptRunner.class::getResourceAsStream);
+        this.scriptingEngine.debug = runInfo.dumpClasses();
     }
     
     public static ScriptRunner of(final IScriptRunInfo info, final List<SourceFile> sources, final ScriptingEngineLogger logger) {

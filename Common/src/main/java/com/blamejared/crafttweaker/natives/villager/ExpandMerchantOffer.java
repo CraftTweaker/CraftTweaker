@@ -152,7 +152,7 @@ public class ExpandMerchantOffer {
     }
     
     @ZenCodeType.Method
-    @ZenCodeType.Getter("priceMutiplier")
+    @ZenCodeType.Getter("priceMultiplier")
     public static float getPriceMultiplier(MerchantOffer internal) {
         
         return internal.getPriceMultiplier();

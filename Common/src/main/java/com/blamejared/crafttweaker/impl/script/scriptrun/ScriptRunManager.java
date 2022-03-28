@@ -151,7 +151,7 @@ public final class ScriptRunManager implements IScriptRunManager {
     private void attemptRunStop() {
         
         if(this.currentRunInfo == null) {
-            throw new IllegalStateException("Unable to terminate a never-started script run");
+            throw new IllegalStateException("Unable to terminate a script run that never started");
         }
         
         this.previousRunInfo.put(this.currentRunInfo.loader(), this.currentRunInfo);

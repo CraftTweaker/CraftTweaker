@@ -20,9 +20,9 @@ public class ExpandAbstractVillager {
     
     @ZenCodeType.Method
     @ZenCodeType.Setter("unhappyCounter")
-    public static void setUnhappyCounter(AbstractVillager internal, int $$0) {
+    public static void setUnhappyCounter(AbstractVillager internal, int unhappyCounter) {
         
-        internal.setUnhappyCounter($$0);
+        internal.setUnhappyCounter(unhappyCounter);
     }
     
     @ZenCodeType.Method

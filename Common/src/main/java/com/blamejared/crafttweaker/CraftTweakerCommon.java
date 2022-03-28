@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.command.CtCommands;
 import com.blamejared.crafttweaker.impl.plugin.core.PluginManager;
+import com.google.common.base.Suppliers;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -23,9 +24,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class CraftTweakerCommon {
@@ -33,7 +33,7 @@ public class CraftTweakerCommon {
     public static final Logger LOG = LogManager.getLogger(CraftTweakerConstants.MOD_NAME);
     private static Set<String> PATRON_LIST = new HashSet<>();
     
-    private static final AtomicReference<PluginManager> PLUGIN_MANAGER = new AtomicReference<>(null);
+    private static final Supplier<PluginManager> PLUGIN_MANAGER = Suppliers.memoize(PluginManager::of);
     
     public static void init() {
         
@@ -66,10 +66,7 @@ public class CraftTweakerCommon {
     
     public static PluginManager getPluginManager() {
         
-        if(PLUGIN_MANAGER.getAcquire() == null) {
-            PLUGIN_MANAGER.compareAndSet(null, PluginManager.of());
-        }
-        return Objects.requireNonNull(PLUGIN_MANAGER.getAcquire());
+        return PLUGIN_MANAGER.get();
     }
     
     public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, Commands.CommandSelection environment) {

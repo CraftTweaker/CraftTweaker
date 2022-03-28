@@ -37,12 +37,12 @@ public final class BracketResolverRegistry {
     ) {
         
         final BracketData data = this.brackets.computeIfAbsent(loader, it -> new BracketData());
-        final Map<String, BracketHandle> brackets = data.brackets();
-        if(brackets.containsKey(name)) {
+        final Map<String, BracketHandle> loaderBrackets = data.brackets();
+        if(loaderBrackets.containsKey(name)) {
             throw new IllegalArgumentException("A bracket handler with the name '" + name + "' is already registered in loader '" + loader + "'");
         }
         final BracketDumperInfo info = dumperData == null ? null : new BracketDumperInfo(name, dumperData);
-        brackets.put(name, new BracketHandle(bracketParser, info));
+        loaderBrackets.put(name, new BracketHandle(bracketParser, info));
     }
     
     public void applyInheritanceRules() {

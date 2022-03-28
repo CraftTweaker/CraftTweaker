@@ -39,7 +39,7 @@ public final class EnumBracketRegistry {
             try {
                 this.applyInheritanceRules(it);
             } catch(final Exception e) {
-                throw new IllegalStateException("Unable to apply inheritance rules for " + it.name());
+                throw new IllegalStateException("Unable to apply inheritance rules for " + it.name(), e);
             }
         });
     }

@@ -141,7 +141,7 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
     private String readContents(final Path file) {
         
         try {
-            return String.join("\r\n", Files.readAllLines(file));
+            return String.join(System.lineSeparator(), Files.readAllLines(file));
         } catch(final IOException e) {
             CraftTweakerAPI.LOGGER.info("Unable to read script file " + file, e);
             return "";

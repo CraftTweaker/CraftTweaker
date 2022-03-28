@@ -98,7 +98,7 @@ final class LoaderSpecificZenClassRegistry {
     private static final class TypeVerifier {
         
         private static final Supplier<Set<String>> BUILTIN_TYPES = Suppliers.memoize(
-                () -> Arrays.stream(BasicTypeID.values()).map(Object::toString).collect(Collectors.toUnmodifiableSet())
+                () -> Arrays.stream(BasicTypeID.values()).map(it -> it.name).collect(Collectors.toUnmodifiableSet())
         );
         private static final String ARRAY_OPEN = Pattern.quote("[");
         private static final String GENERIC_OPEN = Pattern.quote("<");

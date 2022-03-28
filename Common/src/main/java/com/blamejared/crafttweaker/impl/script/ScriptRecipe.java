@@ -28,13 +28,13 @@ public class ScriptRecipe implements Recipe<Container> {
     }
     
     @Override
-    public boolean matches(Container dummyInventory, Level level) {
+    public boolean matches(Container container, Level level) {
         
         return false;
     }
     
     @Override
-    public ItemStack assemble(Container dummyInventory) {
+    public ItemStack assemble(Container container) {
         
         return ItemStack.EMPTY;
     }
