@@ -31,7 +31,7 @@ public class TagManagerBracketHandler implements BracketExpressionParser {
     @Override
     public ParsedExpression parse(CodePosition position, ZSTokenParser tokens) throws ParseException {
         
-        final String tagFolder = ParseUtil.readContent(position, tokens);
+        final String tagFolder = ParseUtil.readBracketContent(position, tokens);
         return getParsedExpression(position, tagFolder);
     }
     

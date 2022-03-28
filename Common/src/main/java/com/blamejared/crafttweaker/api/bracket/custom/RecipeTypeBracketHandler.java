@@ -163,7 +163,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     @Override
     public ParsedExpression parse(CodePosition position, ZSTokenParser tokens) throws ParseException {
         
-        final String name = ParseUtil.readContent(position, tokens);
+        final String name = ParseUtil.readBracketContent(position, tokens);
         final ResourceLocation resourceLocation = ResourceLocation.tryParse(name);
         if(resourceLocation == null) {
             throw new ParseException(position, "Invalid ResourceLocation, expected: <recipetype:modid:location>");

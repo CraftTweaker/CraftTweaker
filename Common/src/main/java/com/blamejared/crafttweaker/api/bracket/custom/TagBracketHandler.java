@@ -43,7 +43,7 @@ public class TagBracketHandler implements BracketExpressionParser {
         
         tokens.required(ZSTokenType.T_COLON, "Expected ':', followed by Tag Name");
         
-        final String tagName = ParseUtil.readContent(position, tokens);
+        final String tagName = ParseUtil.readBracketContent(position, tokens);
         final ResourceLocation resourceLocation = ResourceLocation.tryParse(tagName);
         if(resourceLocation == null) {
             throw new ParseException(position, "Invalid Tag Name '" + tagName + "', must be a valid resource location");

@@ -32,7 +32,7 @@ public class EnumConstantBracketHandler implements BracketExpressionParser {
     @Override
     public ParsedExpression parse(CodePosition position, ZSTokenParser tokens) throws ParseException {
         
-        final String contents = ParseUtil.readContent(position, tokens);
+        final String contents = ParseUtil.readBracketContent(position, tokens);
         String typeStr = contents.substring(0, contents.lastIndexOf(":"));
         String name = contents.substring(typeStr.length() + 1);
         ResourceLocation type = ResourceLocation.tryParse(typeStr);
