@@ -12,7 +12,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 
 import java.util.List;
@@ -47,7 +46,6 @@ public final class HelpCommand {
     private static int executeHelp(final Map<String, CommandImpl> commands, final CommandContext<CommandSourceStack> context, int currentPage) throws CommandSyntaxException {
         
         final CommandSourceStack source = context.getSource();
-        @SuppressWarnings("unused") final ServerPlayer player = source.getPlayerOrException();
         
         final List<String> allowedToUseCommands = commands.keySet()
                 .stream()
