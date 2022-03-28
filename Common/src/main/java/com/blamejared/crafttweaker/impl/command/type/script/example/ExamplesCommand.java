@@ -13,10 +13,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerResources;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.ReaderInputStream;
 import org.openzen.zencode.shared.SourceFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -67,8 +68,8 @@ public final class ExamplesCommand {
             }
         }
         
-        try(final Reader reader = sourceFile.open()) {
-            Files.copy(IOUtils.toInputStream(IOUtils.toString(reader), StandardCharsets.UTF_8), file);
+        try(final Reader reader = sourceFile.open(); final InputStream stream = new ReaderInputStream(reader, StandardCharsets.UTF_8)) {
+            Files.copy(stream, file);
         } catch(final IOException e) {
             CraftTweakerAPI.LOGGER.warn("Could not write script example: ", e);
         }
