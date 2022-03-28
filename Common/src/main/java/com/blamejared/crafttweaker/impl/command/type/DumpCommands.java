@@ -7,7 +7,6 @@ import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
 import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
-import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.villager.CTVillagerTrades;
 import com.blamejared.crafttweaker.impl.command.CtCommands;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
@@ -17,6 +16,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Optional;
 
 public final class DumpCommands {
     
@@ -251,11 +252,22 @@ public final class DumpCommands {
     }
     
     private static String getTagAsString(ServerPlayer player, MCTag tag, Object o) {
-    
-        return player.server.registryAccess().registry(tag.manager().resourceKey())
-                .map(objects -> objects.getKey(GenericUtil.uncheck(o)))
-                .map(ResourceLocation::toString)
-                .orElse(o.toString());
+        
+        if(o instanceof ResourceLocation) {
+            return o.toString();
+        } else {
+            Optional<? extends Registry<Object>> foundRegistry = player.server.registryAccess()
+                    .registry(tag.manager().resourceKey());
+            if(foundRegistry.isPresent()) {
+                return foundRegistry
+                        .map(objects -> objects.getKey(o))
+                        .map(ResourceLocation::toString)
+                        .orElse(o.toString());
+            }
+            
+        }
+        
+        return o.toString();
     }
     
     
