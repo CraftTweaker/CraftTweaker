@@ -97,16 +97,15 @@ public final class ZenClassRegistry implements IZenClassRegistry {
     
     public void applyInheritanceRules() {
         
-        List.copyOf(this.registryMap.keySet()).forEach(loader -> {
+        this.registryMap.forEach((loader, loaderData) -> {
             try {
-                final LoaderSpecificZenClassRegistry loaderData = this.get(loader);
-                final Collection<LoaderSpecificZenClassRegistry> inheritedData = loader.inheritedLoaders()
+                final Collection<LoaderSpecificZenClassRegistry> inheritedData = loader.allInheritedLoaders()
                         .stream()
                         .map(this::get)
                         .toList();
                 loaderData.inheritFrom(inheritedData);
             } catch(final Exception e) {
-                throw new IllegalStateException("Unable to apply inheritance rules for loader " + loader.name());
+                throw new IllegalStateException("Unable to apply inheritance rules for loader " + loader.name(), e);
             }
         });
     }

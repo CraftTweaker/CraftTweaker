@@ -2,7 +2,10 @@ package com.blamejared.crafttweaker.api.zencode;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 
+import java.util.ArrayDeque;
 import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Queue;
 
 /**
  * Identifies a script loader.
@@ -50,12 +53,34 @@ public interface IScriptLoader {
     String name();
     
     /**
+     * Gets a {@link Collection} of the loaders from which this loader inherits directly.
+     *
+     * @return All direct parents of this loader.
+     *
+     * @since 9.1.0
+     */
+    Collection<IScriptLoader> inheritedLoaders();
+    
+    /**
      * Gets a {@link Collection} of all loaders from which this loader inherits from.
      *
      * @return All parents of this loader.
      *
      * @since 9.1.0
      */
-    Collection<IScriptLoader> inheritedLoaders();
+    default Collection<IScriptLoader> allInheritedLoaders() {
+        
+        final Collection<IScriptLoader> flattened = new LinkedHashSet<>();
+        final Queue<IScriptLoader> workingQueue = new ArrayDeque<>();
+        this.inheritedLoaders().forEach(workingQueue::offer);
+        
+        while(!workingQueue.isEmpty()) {
+            final IScriptLoader loader = workingQueue.poll();
+            flattened.add(loader);
+            loader.inheritedLoaders().forEach(workingQueue::offer);
+        }
+        
+        return flattened;
+    }
     
 }
