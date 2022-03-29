@@ -2,11 +2,9 @@ package com.blamejared.crafttweaker.api.bracket.custom;
 
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.util.ParseUtil;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import net.minecraft.resources.ResourceLocation;
-import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.shared.CodePosition;
 import org.openzen.zenscript.lexer.ParseException;
 import org.openzen.zenscript.lexer.ZSTokenParser;
@@ -21,8 +19,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-@ZenRegister
-@ZenCodeType.Name("crafttweaker.api.bracket.EnumConstantBracketHandler")
 public class EnumConstantBracketHandler implements BracketExpressionParser {
     
     public EnumConstantBracketHandler() {
@@ -67,7 +63,7 @@ public class EnumConstantBracketHandler implements BracketExpressionParser {
         final IScriptLoader loader = CraftTweakerAPI.getScriptRunManager().currentRunInfo().loader();
         String name = CraftTweakerAPI.getRegistry()
                 .getZenClassRegistry()
-                .getNameFor(CraftTweakerAPI.getScriptRunManager().currentRunInfo().loader(), bracketEnum)
+                .getNameFor(loader, bracketEnum)
                 .orElseThrow(() -> new ParseException(position, "No class found for bracket enum: " + bracketEnum));
         
         final ParsedExpression enumClass = ParseUtil.staticMemberExpression(position, name);
