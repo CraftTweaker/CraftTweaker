@@ -17,6 +17,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.tags.TagManager;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -96,6 +97,12 @@ public class UnknownTagManager implements ITagManager<UnknownTag> {
     public UnknownTag tag(ResourceLocation id) {
         
         return tagMap().getOrDefault(id, new UnknownTag(id, this));
+    }
+    
+    @Override
+    public UnknownTag tag(TagKey<?> key) {
+        
+        return tag(key.location());
     }
     
     @Override

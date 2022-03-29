@@ -17,6 +17,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.tags.TagManager;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -99,6 +100,12 @@ public class KnownTagManager<T> implements ITagManager<KnownTag<T>>, Iterable<Kn
     public KnownTag<T> tag(ResourceLocation id) {
         
         return tagMap().getOrDefault(id, new KnownTag<>(id, this));
+    }
+    
+    @Override
+    public KnownTag<T> tag(TagKey<?> key) {
+        
+        return tag(key.location());
     }
     
     @Override
