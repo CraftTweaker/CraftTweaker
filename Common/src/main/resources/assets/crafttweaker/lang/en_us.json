@@ -89,5 +89,7 @@
   "crafttweaker.command.recipes.hand.empty": "Cannot get recipes for an empty ItemStack!",
   "crafttweaker.reload.complete": "CraftTweaker reload complete!",
   "crafttweaker.reload.start": "CraftTweaker reload starting!",
-  "crafttweaker.script.load.start": "Starting loading scripts for loader '%s'"
+  "crafttweaker.script.load.start": "Starting loading scripts for loader '%s'",
+  "crafttweaker.script.load.end.error": "An error occurred while loading scripts: please check the log",
+  "crafttweaker.script.load.end.noerror": "Loading completed without errors"
 }

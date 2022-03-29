@@ -52,8 +52,10 @@ public final class ScriptCommands {
                             .forEach(it -> {
                                 try {
                                     it.execute();
+                                    CommandUtilities.send(new TranslatableComponent("crafttweaker.script.load.end.noerror"), player);
                                 } catch(final Throwable e) {
                                     CraftTweakerAPI.LOGGER.error("Unable to check for syntax due to an error", e);
+                                    CommandUtilities.send(new TranslatableComponent("crafttweaker.script.load.end.error"), player);
                                 }
                             });
                     
