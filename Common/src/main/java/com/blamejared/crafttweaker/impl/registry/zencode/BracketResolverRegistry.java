@@ -6,10 +6,13 @@ import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.mojang.datafixers.util.Pair;
 import org.openzen.zenscript.parser.BracketExpressionParser;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Contains all info on Bracket resolvers, validators and dumpers
@@ -47,13 +50,10 @@ public final class BracketResolverRegistry {
     
     public void applyInheritanceRules() {
         
-        List.copyOf(this.brackets.keySet()).forEach(it -> {
-            try {
-                this.applyInheritanceRules(it);
-            } catch(final Exception e) {
-                throw new IllegalStateException("Unable to apply inheritance rules for " + it.name());
-            }
-        });
+        final Map<IScriptLoader, BracketData> snapshot = this.createSnapshot();
+        final Map<IScriptLoader, BracketData> inherited = this.applyInheritanceRules(snapshot);
+        this.brackets.clear();
+        this.brackets.putAll(inherited);
     }
     
     public Map<String, IBracketDumperInfo> getBracketDumpers(final IScriptLoader loader) {
@@ -77,16 +77,46 @@ public final class BracketResolverRegistry {
                 .toList();
     }
     
-    private void applyInheritanceRules(final IScriptLoader loader) {
+    private Map<IScriptLoader, BracketData> createSnapshot() {
         
-        final Map<String, BracketHandle> loaderData = this.brackets.get(loader).brackets();
-        loader.inheritedLoaders().forEach(it -> {
+        return this.brackets.entrySet()
+                .stream()
+                .collect(
+                        Collectors.toMap(
+                                Map.Entry::getKey,
+                                it -> new BracketData(new HashMap<>(it.getValue().brackets()))
+                        )
+                );
+    }
+    
+    private Map<IScriptLoader, BracketData> applyInheritanceRules(final Map<IScriptLoader, BracketData> snapshot) {
+        
+        return snapshot.entrySet()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, it -> this.applyInheritanceRules(it.getKey(), snapshot)));
+    }
+    
+    private BracketData applyInheritanceRules(final IScriptLoader loader, final Map<IScriptLoader, BracketData> snapshot) {
+        
+        final Map<String, BracketHandle> inheritedData = new HashMap<>();
+        final Collection<Map<String, BracketHandle>> inheritanceData = this.computeInheritanceData(loader, snapshot);
+        inheritanceData.forEach(it -> {
             try {
-                this.tryMerge(loaderData, this.brackets.getOrDefault(it, new BracketData()).brackets());
+                this.tryMerge(inheritedData, it);
             } catch(final Exception e) {
-                throw new IllegalStateException("Unable to inherit from " + it.name());
+                throw new IllegalStateException("Unable to apply inheritance rules for " + loader.name(), e);
             }
         });
+        return new BracketData(inheritedData);
+    }
+    
+    private Collection<Map<String, BracketHandle>> computeInheritanceData(final IScriptLoader loader, final Map<IScriptLoader, BracketData> snapshot) {
+        
+        return Stream.concat(loader.allInheritedLoaders().stream(), Stream.of(loader))
+                .map(snapshot::get)
+                .filter(Objects::nonNull)
+                .map(BracketData::brackets)
+                .toList();
     }
     
     private void tryMerge(final Map<String, BracketHandle> loaderData, final Map<String, BracketHandle> inheritedData) {

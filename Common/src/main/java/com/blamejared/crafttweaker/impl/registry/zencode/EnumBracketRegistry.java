@@ -4,10 +4,13 @@ import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class EnumBracketRegistry {
     
@@ -35,13 +38,10 @@ public final class EnumBracketRegistry {
     
     public void applyInheritanceRules() {
         
-        List.copyOf(this.data.keySet()).forEach(it -> {
-            try {
-                this.applyInheritanceRules(it);
-            } catch(final Exception e) {
-                throw new IllegalStateException("Unable to apply inheritance rules for " + it.name(), e);
-            }
-        });
+        final Map<IScriptLoader, EnumData> snapshot = this.createSnapshot();
+        final Map<IScriptLoader, EnumData> inherited = this.applyInheritanceRules(snapshot);
+        this.data.clear();
+        this.data.putAll(inherited);
     }
     
     @SuppressWarnings("unchecked")
@@ -52,22 +52,51 @@ public final class EnumBracketRegistry {
                 .map(it -> (Class<T>) it);
     }
     
-    
     public Map<ResourceLocation, Class<? extends Enum<?>>> getEnums(final IScriptLoader loader) {
         
         return ImmutableMap.copyOf(this.data.getOrDefault(loader, new EnumData()).enums());
     }
     
-    private void applyInheritanceRules(final IScriptLoader loader) {
+    private Map<IScriptLoader, EnumData> createSnapshot() {
         
-        final Map<ResourceLocation, Class<? extends Enum<?>>> loaderData = this.data.get(loader).enums();
-        loader.inheritedLoaders().forEach(it -> {
+        return this.data.entrySet()
+                .stream()
+                .collect(
+                        Collectors.toMap(
+                                Map.Entry::getKey,
+                                it -> new EnumData(new HashMap<>(it.getValue().enums()))
+                        )
+                );
+    }
+    
+    private Map<IScriptLoader, EnumData> applyInheritanceRules(final Map<IScriptLoader, EnumData> snapshot) {
+        
+        return snapshot.entrySet()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, it -> this.applyInheritanceRules(it.getKey(), snapshot)));
+    }
+    
+    private EnumData applyInheritanceRules(final IScriptLoader loader, final Map<IScriptLoader, EnumData> snapshot) {
+        
+        final Map<ResourceLocation, Class<? extends Enum<?>>> inheritedData = new HashMap<>();
+        final Collection<Map<ResourceLocation, Class<? extends Enum<?>>>> inheritanceData = this.computeInheritanceData(loader, snapshot);
+        inheritanceData.forEach(it -> {
             try {
-                this.tryMerge(loaderData, this.data.getOrDefault(it, new EnumData()).enums());
+                this.tryMerge(inheritedData, it);
             } catch(final Exception e) {
-                throw new IllegalStateException("Unable to inherit from " + it.name());
+                throw new IllegalStateException("Unable to apply inheritance rules for " + loader.name(), e);
             }
         });
+        return new EnumData(inheritedData);
+    }
+    
+    private Collection<Map<ResourceLocation, Class<? extends Enum<?>>>> computeInheritanceData(final IScriptLoader loader, final Map<IScriptLoader, EnumData> snapshot) {
+        
+        return Stream.concat(loader.allInheritedLoaders().stream(), Stream.of(loader))
+                .map(snapshot::get)
+                .filter(Objects::nonNull)
+                .map(EnumData::enums)
+                .toList();
     }
     
     private void tryMerge(final Map<ResourceLocation, Class<? extends Enum<?>>> loaderEnums, final Map<ResourceLocation, Class<? extends Enum<?>>> inheritedEnums) {
