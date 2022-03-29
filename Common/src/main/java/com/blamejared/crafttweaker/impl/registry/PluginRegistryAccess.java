@@ -29,6 +29,8 @@ final class PluginRegistryAccess implements IPluginRegistryAccess {
     public void registerLoaders(final Collection<IScriptLoader> loader) {
         
         this.registries.loaderRegistry().registerLoaders(loader);
+        this.registries.bracketResolverRegistry().fillLoaderData(loader);
+        this.registries.enumBracketRegistry().fillLoaderData(loader);
         this.registries.zenClassRegistry().fillLoaderData(loader);
     }
     

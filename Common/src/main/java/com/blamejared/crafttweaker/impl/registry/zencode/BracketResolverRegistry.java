@@ -39,13 +39,20 @@ public final class BracketResolverRegistry {
             final IBracketParserRegistrationHandler.DumperData dumperData
     ) {
         
-        final BracketData data = this.brackets.computeIfAbsent(loader, it -> new BracketData());
+        final BracketData data = this.brackets.computeIfAbsent(loader, it -> {
+            throw new IllegalStateException("No data for loader " + loader + ": this cannot happen");
+        });
         final Map<String, BracketHandle> loaderBrackets = data.brackets();
         if(loaderBrackets.containsKey(name)) {
             throw new IllegalArgumentException("A bracket handler with the name '" + name + "' is already registered in loader '" + loader + "'");
         }
         final BracketDumperInfo info = dumperData == null ? null : new BracketDumperInfo(name, dumperData);
         loaderBrackets.put(name, new BracketHandle(bracketParser, info));
+    }
+    
+    public void fillLoaderData(final Collection<IScriptLoader> loader) {
+        
+        loader.forEach(it -> this.brackets.put(it, new BracketData()));
     }
     
     public void applyInheritanceRules() {

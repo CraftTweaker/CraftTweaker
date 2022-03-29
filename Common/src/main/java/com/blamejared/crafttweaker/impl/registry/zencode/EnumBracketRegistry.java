@@ -27,13 +27,20 @@ public final class EnumBracketRegistry {
     
     public <T extends Enum<T>> void register(final IScriptLoader loader, final ResourceLocation id, final Class<T> clazz) {
         
-        final EnumData data = this.data.computeIfAbsent(loader, it -> new EnumData());
+        final EnumData data = this.data.computeIfAbsent(loader, it -> {
+            throw new IllegalStateException("No data for loader " + loader + ": this cannot happen");
+        });
         final Map<ResourceLocation, Class<? extends Enum<?>>> enums = data.enums();
         final Class<? extends Enum<?>> old = enums.get(id);
         if(old != null) {
             throw new IllegalArgumentException("Attempted enum overriding on id " + id + ": old " + old.getName() + ", new " + clazz.getName());
         }
         enums.put(id, clazz);
+    }
+    
+    public void fillLoaderData(final Collection<IScriptLoader> loader) {
+        
+        loader.forEach(it -> this.data.put(it, new EnumData()));
     }
     
     public void applyInheritanceRules() {

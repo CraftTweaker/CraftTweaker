@@ -78,6 +78,7 @@ public final class DumpCommands {
                 .map(CraftTweakerAPI.getRegistry()::getBracketDumpers)
                 .map(Map::values)
                 .flatMap(Collection::stream)
+                .distinct()
                 .forEach(it -> {
                     final String subCommandName = it.subCommandName();
                     handler.registerDump(subCommandName, it.description(), builder -> builder.executes(it));
