@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.plugin.core;
 import com.blamejared.crafttweaker.api.plugin.ITaggableElementRegistrationHandler;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.manager.TagManagerFactory;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
 import java.util.ArrayList;
@@ -34,13 +35,13 @@ final class TaggableElementsRegistrationHandler implements ITaggableElementRegis
     }
     
     @Override
-    public <T> void registerTaggableElement(ResourceKey<T> key, Class<T> elementClass) {
+    public <T> void registerTaggableElement(ResourceKey<Registry<T>> key, Class<T> elementClass) {
         
         this.elementRequests.add(new ElementData(key, elementClass));
     }
     
     @Override
-    public <T, U extends ITagManager<?>> void registerManager(ResourceKey<T> key, TagManagerFactory<T, U> factory) {
+    public <T, U extends ITagManager<?>> void registerManager(ResourceKey<Registry<T>> key, TagManagerFactory<T, U> factory) {
         
         this.managerRequests.add(new ManagerData(key, factory));
     }
