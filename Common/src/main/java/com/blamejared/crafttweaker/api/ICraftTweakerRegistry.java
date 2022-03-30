@@ -9,7 +9,6 @@ import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -110,7 +109,7 @@ public interface ICraftTweakerRegistry {
     Map<String, IBracketDumperInfo> getBracketDumpers(final IScriptLoader loader);
     
     /**
-     * Obtains a {@link List} containing all known bracket handlers for the given {@link IScriptLoader} residing in
+     * Obtains a {@link Map} containing all known bracket handlers for the given {@link IScriptLoader} residing in
      * the {@code rootPackage}.
      *
      * <p>The concept of package used in this method corresponds to the ZenCode concept instead of the Java concept.
@@ -119,7 +118,7 @@ public interface ICraftTweakerRegistry {
      * @param loader      The {@link IScriptLoader} for which bracket handlers should be queried.
      * @param rootPackage The root package under which the bracket handlers should reside.
      *
-     * @return A {@link List} of {@link Pair}s whose first element represents the name of the bracket and the second the
+     * @return A {@link Map} whose key represents the name of the bracket and the value the
      * {@link BracketExpressionParser} responsible for resolution.
      *
      * @apiNote The value of {@code rootPackage} is currently ignored as bracket expressions are not tied to ZenCode
@@ -127,7 +126,7 @@ public interface ICraftTweakerRegistry {
      * @since 9.1.0
      */
     // TODO("Better API")
-    List<Pair<String, BracketExpressionParser>> getBracketHandlers(final IScriptLoader loader, final String rootPackage);
+    Map<String, BracketExpressionParser> getBracketHandlers(final IScriptLoader loader, final String rootPackage);
     
     /**
      * Gets a read-only {@link List} of all known {@linkplain IPreprocessor preprocessors}.

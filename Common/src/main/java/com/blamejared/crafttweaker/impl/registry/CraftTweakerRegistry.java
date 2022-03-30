@@ -112,10 +112,10 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
     }
     
     @Override
-    public List<Pair<String, BracketExpressionParser>> getBracketHandlers(final IScriptLoader loader, final String rootPackage) {
+    public Map<String, BracketExpressionParser> getBracketHandlers(final IScriptLoader loader, final String rootPackage) {
         
         // TODO("Is rootPackage really needed?")
-        return ImmutableList.copyOf(this.registries.bracketResolverRegistry().getBracketResolvers(loader));
+        return ImmutableMap.copyOf(this.registries.bracketResolverRegistry().getBracketResolvers(loader));
     }
     
     @Override
