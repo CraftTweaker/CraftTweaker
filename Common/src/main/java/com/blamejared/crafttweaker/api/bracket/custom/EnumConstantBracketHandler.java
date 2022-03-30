@@ -75,7 +75,7 @@ public class EnumConstantBracketHandler implements BracketExpressionParser {
         return () -> CraftTweakerAPI.getRegistry()
                 .getAllLoaders()
                 .stream()
-                .map(CraftTweakerAPI.getRegistry()::getAllEnumsForEnumBracket)
+                .map(CraftTweakerAPI.getRegistry()::getAllEnumStringsForEnumBracket)
                 .flatMap(Collection::stream)
                 .distinct();
     }

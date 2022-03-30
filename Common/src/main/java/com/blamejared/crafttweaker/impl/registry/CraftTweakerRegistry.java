@@ -164,7 +164,7 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
     }
     
     @Override
-    public Set<String> getAllEnumsForEnumBracket(final IScriptLoader loader) {
+    public Set<String> getAllEnumStringsForEnumBracket(final IScriptLoader loader) {
         
         return this.registries.enumBracketRegistry()
                 .getEnums(loader)

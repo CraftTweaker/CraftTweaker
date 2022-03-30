@@ -197,6 +197,6 @@ public interface ICraftTweakerRegistry {
      *
      * @since 9.1.0
      */
-    Set<String> getAllEnumsForEnumBracket(final IScriptLoader loader);
+    Set<String> getAllEnumStringsForEnumBracket(final IScriptLoader loader);
     
 }
