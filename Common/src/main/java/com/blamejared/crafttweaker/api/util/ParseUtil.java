@@ -30,10 +30,8 @@ public final class ParseUtil {
         
         String[] strExpressions = name.split("\\.");
         ParsedExpression expression = new ParsedExpressionVariable(position, strExpressions[0], null);
-        if(strExpressions.length > 1) {
-            for(int i = 1; i < strExpressions.length; i++) {
-                expression = new ParsedExpressionMember(position, expression, strExpressions[i], List.of());
-            }
+        for(int i = 1; i < strExpressions.length; i++) {
+            expression = new ParsedExpressionMember(position, expression, strExpressions[i], List.of());
         }
         
         return expression;
