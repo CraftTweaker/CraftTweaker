@@ -181,7 +181,7 @@ public interface ICraftTweakerRegistry {
     
     <T> Optional<Class<T>> getTaggableElementFor(final ResourceKey<T> key);
     
-    <T> TagManagerFactory<T, ? extends ITagManager> getTaggableElementFactory(ResourceKey<Registry<T>> resourceKey);
+    <T> TagManagerFactory<T, ? extends ITagManager<?>> getTaggableElementFactory(ResourceKey<Registry<T>> resourceKey);
     
     /**
      * Gets all bracket handler possibilities that can be queried under the given {@link IScriptLoader}.

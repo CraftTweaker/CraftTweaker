@@ -5,10 +5,10 @@ import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.base.visitor.DataToTextComponentVisitor;
 import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
-import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.manager.type.KnownTagManager;
+import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker.natives.block.ExpandBlock;
 import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
 import com.blamejared.crafttweaker.natives.entity.attribute.ExpandAttribute;
@@ -307,7 +307,7 @@ public final class HandCommands {
         sendVanillaTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.block"), CraftTweakerTagRegistry.INSTANCE.tagManager(Registry.BLOCK_REGISTRY), item.getBlock());
     }
     
-    private static <T> void sendVanillaTagsInformation(final Player player, final MutableComponent header, final ITagManager manager, final T target) {
+    private static <T> void sendVanillaTagsInformation(final Player player, final MutableComponent header, final ITagManager<?> manager, final T target) {
         
         Holder<T> tHolder = Services.REGISTRY.makeHolder(manager.resourceKey(), target);
         

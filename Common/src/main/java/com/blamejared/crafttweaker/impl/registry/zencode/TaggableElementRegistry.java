@@ -43,9 +43,9 @@ public class TaggableElementRegistry {
         return ImmutableMap.copyOf(this.elementData);
     }
     
-    public <T> Optional<TagManagerFactory<T, ? extends ITagManager>> getManagerFactory(final ResourceKey<Registry<T>> key) {
+    public <T> Optional<TagManagerFactory<T, ? extends ITagManager<?>>> getManagerFactory(final ResourceKey<Registry<T>> key) {
         
-        return Optional.ofNullable(managerData.get(key)).map(it -> (TagManagerFactory<T, ? extends ITagManager>) it);
+        return Optional.ofNullable(managerData.get(key)).map(it -> (TagManagerFactory<T, ? extends ITagManager<?>>) it);
     }
     
     public Map<ResourceKey<?>, TagManagerFactory<?, ?>> getManagers() {
