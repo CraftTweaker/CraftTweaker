@@ -178,9 +178,28 @@ public interface ICraftTweakerRegistry {
      */
     <T extends Enum<T>> Optional<Class<T>> getEnumBracketFor(final IScriptLoader loader, final ResourceLocation type);
     
+    /**
+     * Tries to find a taggable element for the given {@link ResourceKey}.
+     *
+     * @param key The {@link ResourceKey} to get the element for.
+     * @param <T> The type of element to find.
+     *
+     * @return An {@link Optional} wrapping the {@link Class} of the taggable element if it can be found, an {@linkplain Optional#empty() empty optional} otherwise.
+     */
     <T> Optional<Class<T>> getTaggableElementFor(final ResourceKey<T> key);
     
-    <T> TagManagerFactory<T, ? extends ITagManager<?>> getTaggableElementFactory(ResourceKey<Registry<T>> resourceKey);
+    /**
+     * Gets a {@link TagManagerFactory} for the given {@link ResourceKey}.
+     *
+     * <p>Note: If an element is known but does not have an explicit {@link TagManagerFactory}, then a factory for a {@link com.blamejared.crafttweaker.api.tag.manager.type.KnownTagManager} is returned.
+     * If an element is not known, then a factory for an {@link com.blamejared.crafttweaker.api.tag.manager.type.UnknownTagManager} is returned. </p>
+     *
+     * @param key The {@link ResourceKey} to get the element factory for.
+     * @param <T> The type of element the factory deals with.
+     *
+     * @return A {@link TagManagerFactory} for the given {@link ResourceKey}.
+     */
+    <T> TagManagerFactory<T, ? extends ITagManager<?>> getTaggableElementFactory(ResourceKey<Registry<T>> key);
     
     /**
      * Gets all bracket handler possibilities that can be queried under the given {@link IScriptLoader}.

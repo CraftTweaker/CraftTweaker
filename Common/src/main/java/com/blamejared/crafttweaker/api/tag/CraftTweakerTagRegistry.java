@@ -213,8 +213,7 @@ public final class CraftTweakerTagRegistry {
     /**
      * Binds the given {@link TagManager} to the registry.
      *
-     * <p>Note:</p>
-     * <p>This will clear all registered managers.</p>
+     * <p>Note: This will clear all registered managers.</p>
      *
      * @param tagManager The {@link TagManager} to bind.
      */
@@ -226,8 +225,7 @@ public final class CraftTweakerTagRegistry {
     /**
      * Binds the given map to the registry.
      *
-     * <p>Note:</p>
-     * <p>This will clear all registered managers.</p>
+     * <p>Note: This will clear all registered managers.</p>
      *
      * @param tags The map to bind.
      */
@@ -263,8 +261,7 @@ public final class CraftTweakerTagRegistry {
     /**
      * Binds the given results to the registry.
      *
-     * <p>Note:</p>
-     * <p>This will clear all registered managers.</p>
+     * <p>Note: This will clear all registered managers.</p>
      *
      * @param results The results to bind.
      */

@@ -18,7 +18,6 @@ public interface ITaggableElementRegistrationHandler {
     
     /**
      * Registers a new taggable element with the given {@link ResourceKey} of the {@link Registry} that holds the given element class.
-     * Registers a registry key of the Registry that holds the given element class.
      *
      * <p>The key is used to map {@code <}{@code tag:>} calls to the specific element.</p>
      *

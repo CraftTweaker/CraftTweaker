@@ -152,11 +152,11 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
         return this.registries.taggableElementRegistry().getTaggableElement(key);
     }
     
-    public <T> TagManagerFactory<T, ? extends ITagManager<?>> getTaggableElementFactory(ResourceKey<Registry<T>> resourceKey) {
+    public <T> TagManagerFactory<T, ? extends ITagManager<?>> getTaggableElementFactory(ResourceKey<Registry<T>> key) {
         
-        if(this.registries.taggableElementRegistry().getTaggableElement(resourceKey).isPresent()) {
+        if(this.registries.taggableElementRegistry().getTaggableElement(key).isPresent()) {
             return this.registries.taggableElementRegistry()
-                    .getManagerFactory(resourceKey)
+                    .getManagerFactory(key)
                     .orElseGet(() -> KnownTagManager::new);
         }
         

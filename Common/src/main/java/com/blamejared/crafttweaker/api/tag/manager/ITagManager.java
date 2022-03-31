@@ -34,10 +34,11 @@ public interface ITagManager<T extends MCTag> extends CommandStringDisplayable, 
      * <p>The tag folder is usually the folder on disk without the `tags/` prefix.</p>
      *
      * <p>Examples:</p>
+     * <ul>
      * <li>`tags/items` turns into `items`</li>
      * <li>`tags/potion` turns into `potion`</li>
      * <li>`tags/worldgen/biome` turns into `worldgen/biome`</li>
-     *
+     * </ul>
      * @return The tag folder of this manager.
      */
     @ZenCodeType.Method

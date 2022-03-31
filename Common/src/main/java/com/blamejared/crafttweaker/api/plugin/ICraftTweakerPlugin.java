@@ -110,7 +110,7 @@ public interface ICraftTweakerPlugin {
     default void registerCommands(final ICommandRegistrationHandler handler) {}
     
     /**
-     * Manages the regisrtation of taggable elements and their managers used for Tags.
+     * Manages the registration of taggable elements and their tag managers.
      * @param handler The handler responsible for registration.
      * @since 9.1.0
      * @see ITaggableElementRegistrationHandler

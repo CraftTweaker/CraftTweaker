@@ -3,6 +3,12 @@ package com.blamejared.crafttweaker.api.tag.manager;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
+/**
+ * A TagManagerFactory is used to create custom {@link ITagManager}s instead of using the default managers ({@link com.blamejared.crafttweaker.api.tag.manager.type.KnownTagManager} or {@link com.blamejared.crafttweaker.api.tag.manager.type.UnknownTagManager})
+ *
+ * @param <T> The type of element that the TagManager deals with.
+ * @param <U> The {@link ITagManager} type that this creates.
+ */
 @FunctionalInterface
 public interface TagManagerFactory<T, U extends ITagManager<?>> {
     
