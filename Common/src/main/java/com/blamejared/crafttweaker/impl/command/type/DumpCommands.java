@@ -278,12 +278,14 @@ public final class DumpCommands {
             Files.createDirectories(directory);
         } catch(final IOException e) {
             CraftTweakerAPI.LOGGER.error("Could not create output folder '{}'", directory);
+            return;
         }
         CraftTweakerAPI.getRegistry().getAllLoaders()
                 .stream()
                 .map(CraftTweakerAPI.getRegistry()::getBracketDumpers)
                 .map(Map::values)
                 .flatMap(Collection::stream)
+                .distinct()
                 .forEach(it -> {
                     final String dumpedFileName = it.dumpedFileName() + ".txt";
                     final Iterable<String> iterable = () -> it.values().sorted().iterator();
