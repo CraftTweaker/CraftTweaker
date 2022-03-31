@@ -84,13 +84,10 @@ public final class PluginManager {
         final ResourceLocation id;
         try {
             final String targetId = Objects.requireNonNull(clazz.getAnnotation(CraftTweakerPlugin.class)).value();
-            if(!targetId.contains(":")) {
-                throw new ResourceLocationException("Not within a namespace");
-            }
-            if(targetId.startsWith("minecraft:")) {
+            id = new ResourceLocation(targetId);
+            if(id.getNamespace().equals("minecraft")) {
                 throw new ResourceLocationException("Illegal namespace 'minecraft'");
             }
-            id = new ResourceLocation(targetId);
         } catch(final ResourceLocationException e) {
             throw new IllegalArgumentException("Invalid plugin class ID: not a valid resource location", e);
         }
