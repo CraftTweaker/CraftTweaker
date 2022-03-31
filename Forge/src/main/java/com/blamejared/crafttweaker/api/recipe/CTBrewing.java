@@ -22,7 +22,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * @docParam this brewing
  */
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.recipe/Brewing")
+@ZenCodeType.Name("crafttweaker.api.recipe.Brewing")
 @Document("forge/api/recipe/brewing/Brewing")
 public final class CTBrewing {
     

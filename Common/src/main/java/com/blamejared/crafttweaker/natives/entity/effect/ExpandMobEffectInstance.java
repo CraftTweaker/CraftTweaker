@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.natives.entity.effect;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.NativeConstructor;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -11,7 +12,44 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @Document("vanilla/api/entity/effect/MobEffectInstance")
-@NativeTypeRegistration(value = MobEffectInstance.class, zenCodeName = "crafttweaker.api.entity.effect.MobEffectInstance")
+@NativeTypeRegistration(value = MobEffectInstance.class, zenCodeName = "crafttweaker.api.entity.effect.MobEffectInstance", constructors = {
+        @NativeConstructor({
+                @NativeConstructor.ConstructorParameter(type = MobEffect.class, name = "mobEffect", examples = "<mobeffect:minecraft:haste>")
+        }),
+        @NativeConstructor({
+                @NativeConstructor.ConstructorParameter(type = MobEffect.class, name = "mobEffect", examples = "<mobeffect:minecraft:haste>"),
+                @NativeConstructor.ConstructorParameter(type = int.class, name = "duration", examples = "100"),
+        }),
+        @NativeConstructor({
+                @NativeConstructor.ConstructorParameter(type = MobEffect.class, name = "mobEffect", examples = "<mobeffect:minecraft:haste>"),
+                @NativeConstructor.ConstructorParameter(type = int.class, name = "duration", examples = "100"),
+                @NativeConstructor.ConstructorParameter(type = int.class, name = "amplifier", examples = "2"),
+        }),
+        @NativeConstructor({
+                @NativeConstructor.ConstructorParameter(type = MobEffect.class, name = "mobEffect", examples = "<mobeffect:minecraft:haste>"),
+                @NativeConstructor.ConstructorParameter(type = int.class, name = "duration", examples = "100"),
+                @NativeConstructor.ConstructorParameter(type = int.class, name = "amplifier", examples = "2"),
+                @NativeConstructor.ConstructorParameter(type = boolean.class, name = "ambient", examples = "true"),
+                @NativeConstructor.ConstructorParameter(type = boolean.class, name = "visible", examples = "false"),
+        }),
+        @NativeConstructor({
+                @NativeConstructor.ConstructorParameter(type = MobEffect.class, name = "mobEffect", examples = "<mobeffect:minecraft:haste>"),
+                @NativeConstructor.ConstructorParameter(type = int.class, name = "duration", examples = "100"),
+                @NativeConstructor.ConstructorParameter(type = int.class, name = "amplifier", examples = "2"),
+                @NativeConstructor.ConstructorParameter(type = boolean.class, name = "ambient", examples = "true"),
+                @NativeConstructor.ConstructorParameter(type = boolean.class, name = "visible", examples = "false"),
+                @NativeConstructor.ConstructorParameter(type = boolean.class, name = "showIcon", examples = "false"),
+        }),
+        @NativeConstructor({
+                @NativeConstructor.ConstructorParameter(type = MobEffect.class, name = "mobEffect", examples = "<mobeffect:minecraft:haste>"),
+                @NativeConstructor.ConstructorParameter(type = int.class, name = "duration", examples = "100"),
+                @NativeConstructor.ConstructorParameter(type = int.class, name = "amplifier", examples = "2"),
+                @NativeConstructor.ConstructorParameter(type = boolean.class, name = "ambient", examples = "true"),
+                @NativeConstructor.ConstructorParameter(type = boolean.class, name = "visible", examples = "false"),
+                @NativeConstructor.ConstructorParameter(type = boolean.class, name = "showIcon", examples = "false"),
+                @NativeConstructor.ConstructorParameter(type = MobEffectInstance.class, name = "hiddenEffect", examples = "new MobEffectInstance(<mobeffect:minecraft:haste>, 200, 3)"),
+        })
+})
 public class ExpandMobEffectInstance {
     
     @ZenCodeType.Method
