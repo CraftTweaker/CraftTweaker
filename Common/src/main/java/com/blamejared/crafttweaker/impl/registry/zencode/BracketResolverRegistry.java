@@ -73,7 +73,6 @@ public final class BracketResolverRegistry {
     
     public Map<String, BracketExpressionParser> getBracketResolvers(final IScriptLoader loader) {
         
-        // TODO("rootPackage is unused: are you actually needed?")
         return this.brackets.getOrDefault(loader, new BracketData())
                 .brackets()
                 .entrySet()

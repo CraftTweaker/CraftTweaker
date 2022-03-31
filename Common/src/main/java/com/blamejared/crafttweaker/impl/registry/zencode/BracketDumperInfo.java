@@ -42,9 +42,7 @@ final class BracketDumperInfo implements IBracketDumperInfo {
     
     private static String makePlural(final String s) {
         
-        if(s.endsWith("s")) {
-            return s;
-        } else if(s.endsWith("x")) {
+        if(s.endsWith("s") || s.endsWith("x")) {
             return s;
         } else {
             return s + "s";
