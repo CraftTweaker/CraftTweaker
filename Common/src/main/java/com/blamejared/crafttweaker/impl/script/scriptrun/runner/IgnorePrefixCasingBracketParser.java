@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.script.scriptrun.runner;
 
+import com.blamejared.crafttweaker.api.util.ParseUtil;
 import org.openzen.zencode.shared.CodePosition;
 import org.openzen.zenscript.lexer.ParseException;
 import org.openzen.zenscript.lexer.ZSTokenParser;
@@ -23,16 +24,12 @@ final class IgnorePrefixCasingBracketParser implements BracketExpressionParser {
     @Override
     public ParsedExpression parse(final CodePosition position, final ZSTokenParser tokens) throws ParseException {
         
-        final StringBuilder name = new StringBuilder();
-        while(tokens.peek().getType() != ZSTokenType.T_COLON) {
-            name.append(tokens.next().getContent());
-        }
+        final String name = ParseUtil.readContent(position, tokens, ZSTokenType.T_COLON);
         if(name.isEmpty()) {
             throw new ParseException(position.withLength(tokens.peek().getContent().length()), "identifier expected");
         }
-        tokens.required(ZSTokenType.T_COLON, ": expected");
         
-        final BracketExpressionParser parser = this.find(name.toString());
+        final BracketExpressionParser parser = this.find(name);
         if(parser == null) {
             throw new ParseException(position, "Invalid bracket expression: no prefix " + name);
         }
