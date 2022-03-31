@@ -33,7 +33,7 @@ public final class PluginManager {
         private Req() {
             
             if(X.get()) {
-                throw new RuntimeException();
+                throw new RuntimeException("Unable to make multiple instances of PluginManager!");
             }
             X.set(true);
         }
