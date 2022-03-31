@@ -134,10 +134,9 @@ final class ExecutableReferenceInfo implements IExecutableReferenceInfo {
     }
     
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends Annotation> Optional<T> getAnnotation(final Class<T> annotationClass) {
         
-        return Optional.ofNullable(this.presentAnnotationTypes.get(annotationClass)).map(it -> (T) it);
+        return Optional.ofNullable(this.presentAnnotationTypes.get(annotationClass)).map(annotationClass::cast);
     }
     
     List<Class<?>> arguments() {
