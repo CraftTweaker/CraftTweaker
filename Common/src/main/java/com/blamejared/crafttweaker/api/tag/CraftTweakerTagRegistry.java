@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.api.util.InstantiationUtil;
 import com.blamejared.crafttweaker.platform.Services;
 import com.google.common.base.Suppliers;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.Tag;
@@ -24,6 +25,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -34,12 +36,11 @@ import java.util.stream.Collectors;
 @ZenCodeType.Name("crafttweaker.api.tag.TagManager")
 public final class CraftTweakerTagRegistry {
     
-    private static final Supplier<Set<String>> SERVER_ONLY_FOLDERS = Suppliers.memoize(() -> Services.REGISTRY.serverOnlyRegistries()
+    private static final Supplier<Set<ResourceLocation>> SERVER_ONLY_FOLDERS = Suppliers.memoize(() -> Services.REGISTRY.serverOnlyRegistries()
             .stream()
             .map(CraftTweakerTagRegistry.INSTANCE::makeTagFolder)
             .map(ResourceLocation::tryParse)
             .filter(Objects::nonNull)
-            .map(ResourceLocation::toString)
             .collect(Collectors.toSet()));
     
     public static final String GLOBAL_NAME = "tags";
@@ -139,14 +140,14 @@ public final class CraftTweakerTagRegistry {
         
         return this.registeredManagers.values()
                 .stream()
-                .filter(iTagManager -> tagFolder.toString()
-                        .equals(ResourceLocation.tryParse(iTagManager.tagFolder()).toString()))
+                .filter(iTagManager -> tagFolder
+                        .equals(ResourceLocation.tryParse(iTagManager.tagFolder())))
                 .findFirst();
     }
     
     public boolean isServerOnly(ResourceLocation tagFolder) {
         
-        return SERVER_ONLY_FOLDERS.get().contains(tagFolder.toString());
+        return SERVER_ONLY_FOLDERS.get().contains(tagFolder);
     }
     
     /**
@@ -182,7 +183,7 @@ public final class CraftTweakerTagRegistry {
      */
     public <T> ITagManager<?> tagManager(ResourceKey<? extends Registry<T>> key) {
         
-        return findManager(key).orElseThrow(() -> new RuntimeException("No tag manager found for given key: " + key));
+        return findManager(key).orElseThrow(() -> new NoSuchElementException("No tag manager found for given key: " + key));
     }
     
     /**
@@ -194,7 +195,7 @@ public final class CraftTweakerTagRegistry {
      */
     public <T> KnownTagManager<T> knownTagManager(ResourceKey<? extends Registry<T>> key) {
         
-        return findKnownManager(key).orElseThrow(() -> new RuntimeException("No known tag manager found for given key: " + key));
+        return findKnownManager(key).orElseThrow(() -> new NoSuchElementException("No known tag manager found for given key: " + key));
     }
     
     /**
@@ -207,7 +208,7 @@ public final class CraftTweakerTagRegistry {
     @ZenCodeType.Method
     public <T extends ITagManager<?>> T tagManager(ResourceLocation registryLocation) {
         
-        return (T) findManager(ResourceKey.createRegistryKey(registryLocation)).orElseThrow(() -> new RuntimeException("No tag manager found for given location: " + registryLocation));
+        return (T) findManager(ResourceKey.createRegistryKey(registryLocation)).orElseThrow(() -> new NoSuchElementException("No tag manager found for given location: " + registryLocation));
     }
     
     /**
@@ -229,25 +230,26 @@ public final class CraftTweakerTagRegistry {
      *
      * @param tags The map to bind.
      */
+    @SuppressWarnings("rawtypes")
     public void bind(Map<ResourceKey<? extends Registry<?>>, TagNetworkSerialization.NetworkPayload> tags) {
         
         List<TagManager.LoadResult<?>> results = new ArrayList<>();
         Set<ResourceKey<?>> knownKeys = new HashSet<>();
+        RegistryAccess registryAccess = CraftTweakerAPI.getAccessibleElementsProvider()
+                .client()
+                .registryAccess();
+        
         tags.forEach((resourceKey, networkPayload) -> {
             knownKeys.add(resourceKey);
             HashMap<Object, Object> resultMap = new HashMap<>();
-            TagManager.LoadResult<?> tLoadResult = new TagManager.LoadResult(resourceKey, resultMap);
-            TagNetworkSerialization.deserializeTagsFromNetwork(GenericUtil.uncheck(resourceKey), CraftTweakerAPI.getAccessibleElementsProvider()
-                    .client()
-                    .registryAccess()
-                    .registryOrThrow(resourceKey), networkPayload, (TagNetworkSerialization.TagOutput) (key, holders) -> resultMap.put(key.location(), new Tag<>(holders)));
             
-            results.add(tLoadResult);
+            Registry<Object> registry = registryAccess.registryOrThrow(resourceKey);
+            TagNetworkSerialization.deserializeTagsFromNetwork(GenericUtil.uncheck(resourceKey), registry, networkPayload, (TagNetworkSerialization.TagOutput) (key, holders) -> resultMap.put(key.location(), new Tag<>(holders)));
+            
+            results.add(new TagManager.LoadResult(resourceKey, resultMap));
             
         });
-        CraftTweakerAPI.getAccessibleElementsProvider()
-                .client()
-                .registryAccess()
+        registryAccess
                 .networkSafeRegistries()
                 .forEach(registryEntry -> {
                     if(knownKeys.contains(registryEntry.key())) {
@@ -265,6 +267,7 @@ public final class CraftTweakerTagRegistry {
      *
      * @param results The results to bind.
      */
+    @SuppressWarnings("rawtypes")
     public void bind(List<TagManager.LoadResult<?>> results) {
         
         this.registeredManagers.clear();
@@ -274,11 +277,10 @@ public final class CraftTweakerTagRegistry {
                     .getTaggableElementFor(loadResult.key());
             
             taggableElement.ifPresentOrElse(it -> this.addManager(CraftTweakerAPI.getRegistry()
-                    .getTaggableElementFactory(loadResult.key())
-                    .apply(loadResult.key(), it)).bind(loadResult), () -> {
-                
-                this.addManager(new UnknownTagManager(loadResult.key())).bind(loadResult);
-            });
+                            .getTaggableElementFactory(loadResult.key())
+                            .apply(loadResult.key(), it))
+                    .bind(loadResult), () -> this.addManager(new UnknownTagManager(loadResult.key()))
+                    .bind(loadResult));
         }
     }
     

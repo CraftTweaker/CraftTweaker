@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @ZenRegister
 @Document("vanilla/api/tag/manager/type/KnownTagManager")
 @ZenCodeType.Name("crafttweaker.api.tag.manager.type.KnownTagManager")
-public class KnownTagManager<T> implements ITagManager<KnownTag<T>>, Iterable<KnownTag<T>> {
+public class KnownTagManager<T> implements ITagManager<KnownTag<T>> {
     
     private final ResourceKey<? extends Registry<T>> resourceKey;
     private final Class<T> elementClass;

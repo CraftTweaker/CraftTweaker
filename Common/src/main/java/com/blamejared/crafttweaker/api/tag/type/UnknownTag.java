@@ -20,7 +20,7 @@ import java.util.List;
 @Document("vanilla/api/tag/type/UnknownTag")
 @ZenCodeType.Name("crafttweaker.api.tag.type.UnknownTag")
 @SuppressWarnings("ClassCanBeRecord")
-public class UnknownTag implements MCTag, Iterable<ResourceLocation>{
+public class UnknownTag implements MCTag, Iterable<ResourceLocation> {
     
     @Nonnull
     private final ResourceLocation id;

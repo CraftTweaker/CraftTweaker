@@ -28,7 +28,7 @@ public class TaggableElementRegistry {
         
         final Class<?> old = this.elementData.get(id);
         if(old != null) {
-            throw new IllegalArgumentException("Attempted taggable element overriding on id " + id + ": old " + old.getName() + ", new " + clazz.getName());
+            throw new IllegalArgumentException("Attempted taggable element overriding on id " + id + ": old " + old.getCanonicalName() + ", new " + clazz.getCanonicalName());
         }
         this.elementData.put(id, clazz);
     }

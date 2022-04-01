@@ -78,6 +78,9 @@ public class MutableLoadResult<T> {
      */
     public void bind(TagManager.LoadResult<T> result) {
         
+        if(this.result != null) {
+            throw new IllegalStateException("Unable to bind a MutableLoadResult twice!");
+        }
         this.result = result;
         for(Tag<Holder<T>> tag : this.tagMap().values()) {
             AccessTag accessTag = (AccessTag) tag;

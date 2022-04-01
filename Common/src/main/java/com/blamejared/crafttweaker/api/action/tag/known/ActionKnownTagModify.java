@@ -38,13 +38,14 @@ public abstract class ActionKnownTagModify<T> extends ActionKnownTag<T> {
         }
         if(values().size() == 0) {
             logger.error("Tag entries cannot be empty!", new IndexOutOfBoundsException("Tag entries cannot be empty!"));
+            return false;
         }
         return super.validate(logger);
     }
     
     public String describeValues() {
         
-        return values().stream().map(Objects::toString).collect(Collectors.joining(",", "[", "]"));
+        return values().stream().map(Objects::toString).collect(Collectors.joining(", ", "[", "]"));
     }
     
 }

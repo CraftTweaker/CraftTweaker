@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
 public @interface TaggableElement {
     
     /**
+     *
      * The name of the registry that holds this element.
      *
      * Examples:
