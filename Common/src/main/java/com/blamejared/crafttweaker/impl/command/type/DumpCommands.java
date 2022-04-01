@@ -238,7 +238,7 @@ public final class DumpCommands {
                             .peek(it -> CraftTweakerAPI.LOGGER.info("Contents of '{}' tags:", it.tagFolder()))
                             .flatMap(it -> it.tags().stream())
                             .peek(it -> CraftTweakerAPI.LOGGER.info(it.getCommandString()))
-                            .flatMap(it -> it.elements()
+                            .flatMap(it -> it.idElements()
                                     .stream()
                                     .map(o -> getTagAsString(player, it, o)))
                             .forEach(it -> {

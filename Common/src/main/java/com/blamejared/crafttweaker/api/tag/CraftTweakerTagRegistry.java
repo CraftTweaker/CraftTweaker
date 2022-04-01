@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.tag;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
+import com.blamejared.crafttweaker.api.tag.manager.TagManagerFactory;
 import com.blamejared.crafttweaker.api.tag.manager.type.KnownTagManager;
 import com.blamejared.crafttweaker.api.tag.manager.type.UnknownTagManager;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
@@ -276,11 +277,10 @@ public final class CraftTweakerTagRegistry {
             Optional<? extends Class<?>> taggableElement = CraftTweakerAPI.getRegistry()
                     .getTaggableElementFor(loadResult.key());
             
-            taggableElement.ifPresentOrElse(it -> this.addManager(CraftTweakerAPI.getRegistry()
-                            .getTaggableElementFactory(loadResult.key())
-                            .apply(loadResult.key(), it))
-                    .bind(loadResult), () -> this.addManager(new UnknownTagManager(loadResult.key()))
-                    .bind(loadResult));
+            TagManagerFactory taggableElementFactory = CraftTweakerAPI.getRegistry()
+                    .getTaggableElementFactory(loadResult.key());
+            taggableElement.ifPresentOrElse(it -> this.addManager(taggableElementFactory.apply(loadResult.key(), it)).bind(loadResult),
+                    () -> this.addManager(new UnknownTagManager(loadResult.key())).bind(loadResult));
         }
     }
     

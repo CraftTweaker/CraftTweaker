@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -24,7 +25,7 @@ public class ExpandBlockPredicateBuilder {
     @ZenCodeType.Method
     public static BlockPredicate.Builder tag(final BlockPredicate.Builder internal, final KnownTag<Block> tag) {
 
-        return internal.of(tag.getTagKey());
+        return internal.of((TagKey<Block>) tag.getTagKey());
     }
     
     @ZenCodeType.Method

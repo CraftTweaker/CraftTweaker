@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.mixin.common.access.tag.AccessTag;
+import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Holder;
@@ -17,12 +18,12 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.Tag;
-import net.minecraft.tags.TagKey;
 import net.minecraft.tags.TagManager;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +71,46 @@ public class KnownTagManager<T> implements ITagManager<KnownTag<T>> {
         recalculate();
     }
     
+    @Override
+    public void addId(KnownTag<T> to, ResourceLocation... values) {
+        
+        if(!exists(to)) {
+            CraftTweakerAPI.apply(new ActionKnownTagCreate<>(to));
+        }
+        List<T> actualValues = Arrays.stream(values)
+                .map(resourceLocation -> Services.REGISTRY.makeHolder(resourceKey(), resourceLocation))
+                .map(Holder::value)
+                .map(o -> (T) o)
+                .toList();
+        CraftTweakerAPI.apply(new ActionKnownTagAdd<>(to, actualValues));
+        recalculate();
+    }
+    
+    @ZenCodeType.Method
+    public final void removeId(KnownTag<T> from, ResourceLocation... values) {
+        
+        if(!exists(from)) {
+            throw new IllegalArgumentException("Cannot remove elements from empty tag: " + from);
+        }
+        List<T> actualValues = Arrays.stream(values)
+                .map(resourceLocation -> Services.REGISTRY.makeHolder(resourceKey(), resourceLocation))
+                .map(Holder::value)
+                .map(o -> (T) o)
+                .toList();
+        
+        CraftTweakerAPI.apply(new ActionKnownTagAdd<>(from, actualValues));
+        recalculate();
+    }
+    
+    /**
+     * Gets the elements of the given tag.
+     *
+     * @param of The tag to get the elements of.
+     *
+     * @return The list of elements in the tag.
+     *
+     * @docParam of <tag:items:minecraft:dirt>
+     */
     @ZenCodeType.Method
     public List<T> elements(KnownTag<T> of) {
         
@@ -103,12 +144,6 @@ public class KnownTagManager<T> implements ITagManager<KnownTag<T>> {
     }
     
     @Override
-    public KnownTag<T> tag(TagKey<?> key) {
-        
-        return tag(key.location());
-    }
-    
-    @Override
     public void recalculate() {
         
         this.tagCache = backingResult.tagMap()
@@ -139,6 +174,13 @@ public class KnownTagManager<T> implements ITagManager<KnownTag<T>> {
         return backingResult.tagMap().get(tag.id());
     }
     
+    @Nullable
+    @Override
+    public Tag<Holder<?>> getInternalRaw(KnownTag<T> tag) {
+        
+        return GenericUtil.uncheck(getInternal(tag));
+    }
+    
     @Override
     public List<ResourceLocation> tagKeys() {
         
@@ -158,19 +200,6 @@ public class KnownTagManager<T> implements ITagManager<KnownTag<T>> {
     public void bind(TagManager.LoadResult<?> result) {
         
         this.backingResult.bind((TagManager.LoadResult<T>) result);
-    }
-    
-    @ZenCodeType.Method
-    @ZenCodeType.Getter("tags")
-    public List<KnownTag<T>> tags() {
-        
-        return new ArrayList<>(tagMap().values());
-    }
-    
-    @Override
-    public List<KnownTag<T>> getTagsFor(ResourceLocation element) {
-        
-        return tags().stream().filter(tag -> tag.contains(element)).toList();
     }
     
     @ZenCodeType.Method

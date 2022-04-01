@@ -15,10 +15,13 @@ import net.minecraft.tags.TagManager;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @docParam this <tagmanager:items>
@@ -39,6 +42,7 @@ public interface ITagManager<T extends MCTag> extends CommandStringDisplayable, 
      * <li>`tags/potion` turns into `potion`</li>
      * <li>`tags/worldgen/biome` turns into `worldgen/biome`</li>
      * </ul>
+     *
      * @return The tag folder of this manager.
      */
     @ZenCodeType.Method
@@ -187,16 +191,64 @@ public interface ITagManager<T extends MCTag> extends CommandStringDisplayable, 
     }
     
     /**
-     * Gets the elements of the given tag.
+     * Adds the elements that correspond to the given {@link ResourceLocation} to the given tag.
+     *
+     * @param to     The tag to add to.
+     * @param values The registry key of the elements to add.
+     *
+     * @docParam to <tag:items:minecraft:wool>
+     * @docParam values <resource:minecraft:diamond>
+     */
+    @ZenCodeType.Method
+    void addId(T to, ResourceLocation... values);
+    
+    /**
+     * Removes the elements that correspond to the given {@link ResourceLocation} from the given tag.
+     *
+     * @param from   The tag to remove from.
+     * @param values The registry key of the elements to remove.
+     *
+     * @docParam from <tag:items:minecraft:wool>
+     * @docParam values <resource:minecraft:diamond>
+     */
+    @ZenCodeType.Method
+    void removeId(T from, ResourceLocation... values);
+    
+    /**
+     * Gets the {@link ResourceLocation} ids of the elements in the given tag.
      *
      * @param of The tag to get the elements of.
      *
-     * @return The list of elements in the tag.
+     * @return A List of {@link ResourceLocation} ids of the elements in the given tag.
      *
-     * @implNote This method needs to be overriden with a covariant return type and exposed to ZenCode.
-     * @docParam of <tag:items:minecraft:dirt>
+     * @docParam of <tag:items:minecraft:wool>
      */
-    List<?> elements(T of);
+    @ZenCodeType.Method
+    default List<ResourceLocation> idElements(T of) {
+        
+        if(!exists(of)) {
+            return List.of();
+        }
+        return getInternalRaw(of).getValues()
+                .stream()
+                .map(Holder::unwrapKey)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(ResourceKey::location)
+                .collect(Collectors.toList());
+    }
+    
+    /**
+     * Gets the internal {@link Tag}<{@link Holder}> of the given tag.
+     *
+     * <p>This method should only be used when you do not have access to the more specific version of this method in {@link com.blamejared.crafttweaker.api.tag.manager.type.KnownTagManager}</p>
+     *
+     * @param tag The tag to get the internal value of.
+     *
+     * @return The internal {@link Tag}<{@link Holder}> of the given tag.
+     */
+    @Nullable
+    Tag<Holder<?>> getInternalRaw(T tag);
     
     /**
      * Ges the tags that this manager knows about.
@@ -205,7 +257,12 @@ public interface ITagManager<T extends MCTag> extends CommandStringDisplayable, 
      *
      * @implNote This method needs to be overriden with a covariant return type and exposed to ZenCode.
      */
-    List<T> tags();
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("tags")
+    default List<T> tags() {
+        
+        return new ArrayList<>(tagMap().values());
+    }
     
     /**
      * Ges the tags that contain the given element.
@@ -215,7 +272,10 @@ public interface ITagManager<T extends MCTag> extends CommandStringDisplayable, 
      * @implNote This method needs to be overriden with a covariant return type and exposed to ZenCode.
      */
     @ZenCodeType.Method
-    List<T> getTagsFor(ResourceLocation element);
+    default List<T> getTagsFor(ResourceLocation element) {
+        
+        return tags().stream().filter(tag -> tag.contains(element)).toList();
+    }
     
     /**
      * Gets the resource key of the registry that this manager deals with.
@@ -229,7 +289,17 @@ public interface ITagManager<T extends MCTag> extends CommandStringDisplayable, 
      */
     void recalculate();
     
-    T tag(TagKey<?> key);
+    /**
+     * Gets a tag from the given {@link TagKey}.
+     *
+     * @param key The key to get the tag of.
+     *
+     * @return a new tag from the given {@link TagKey}.
+     */
+    default T tag(TagKey<?> key) {
+        
+        return tag(key.location());
+    }
     
     @Nonnull
     @Override

@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker.api.tag.type.UnknownTag;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
@@ -30,7 +31,10 @@ public interface MCTag extends CommandStringDisplayable, Comparable<MCTag> {
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("exists")
-    boolean exists();
+    default boolean exists() {
+        
+        return manager().exists(id());
+    }
     
     /**
      * Gets the id of this tag.
@@ -40,6 +44,32 @@ public interface MCTag extends CommandStringDisplayable, Comparable<MCTag> {
     @ZenCodeType.Method
     @ZenCodeType.Getter("id")
     ResourceLocation id();
+    
+    /**
+     * Adds the elements that correspond to the given {@link ResourceLocation} to this tag..
+     *
+     * @param elements The registry key of the elements to add.
+     *
+     * @docParam elements <resource:minecraft:diamond>
+     */
+    @ZenCodeType.Method
+    default void addId(ResourceLocation... elements) {
+        
+        manager().addId(GenericUtil.uncheck(this), elements);
+    }
+    
+    /**
+     * Removes the elements that correspond to the given {@link ResourceLocation} from this tag.
+     *
+     * @param elements The registry key of the elements to remove.
+     *
+     * @docParam elements <resource:minecraft:diamond>
+     */
+    @ZenCodeType.Method
+    default void removeId(ResourceLocation... elements) {
+        
+        manager().removeId(GenericUtil.uncheck(this), elements);
+    }
     
     /**
      * Checks if this tag contains an element with the given id
@@ -52,23 +82,22 @@ public interface MCTag extends CommandStringDisplayable, Comparable<MCTag> {
      */
     @ZenCodeType.Method
     @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
-    boolean contains(ResourceLocation id);
+    default boolean contains(ResourceLocation id) {
+        
+        return idElements().contains(id);
+    }
     
     /**
-     * Gets the elements in this tag.
+     * Gets the id's of the elements in this tag.
      *
-     * <p>If this is a {@link KnownTag}, then the elements will be of that tag's type (e.g. Item, Block).</p>
-     *
-     * <p>If this is a {@link UnknownTag}, then the elements will be the {@link ResourceLocation} of the elements.</p>
-     *
-     * @return The elements in this tag.
-     *
-     * @implNote This method needs to be registered to ZC in the implemented class,
-     * with the return type of this method narrowed through the use of covariant return types.
-     *
-     * If you aren't sure how to implement this, look at {@link KnownTag#elements()} and {@link UnknownTag#elements()} for implementations.
+     * @return The id's elements in this tag.
      */
-    List<?> elements();
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("isElements")
+    default List<ResourceLocation> idElements() {
+        
+        return manager().idElements(GenericUtil.uncheck(this));
+    }
     
     /**
      * Gets the {@link ITagManager} for this tag.
@@ -105,19 +134,30 @@ public interface MCTag extends CommandStringDisplayable, Comparable<MCTag> {
      *
      * @return The internal {@link Tag} of this tag.
      */
-    <T extends Tag<Holder<?>>> T getInternal();
+    default <T extends Tag<Holder<?>>> T getInternal() {
+        
+        return (T) manager().getInternalRaw(GenericUtil.uncheck(this));
+    }
     
     /**
      * Gets the {@link TagKey} of this tag.
      *
      * @return The {@link TagKey} of this tag.
      */
-    <T extends TagKey<?>> T getTagKey();
+    default <T extends TagKey<?>> T getTagKey() {
+        
+        return (T) TagKey.create(GenericUtil.uncheck(manager().resourceKey()), this.id());
+    }
     
     @Override
     default int compareTo(@Nonnull MCTag o) {
         
         return this.id().compareTo(o.id());
+    }
+    
+    default String getCommandString() {
+        
+        return "<tag:" + manager().tagFolder() + ":" + id() + ">";
     }
     
 }

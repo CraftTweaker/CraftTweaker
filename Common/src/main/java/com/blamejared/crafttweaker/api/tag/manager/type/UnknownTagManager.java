@@ -17,7 +17,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.Tag;
-import net.minecraft.tags.TagKey;
 import net.minecraft.tags.TagManager;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -27,7 +26,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ZenRegister
@@ -53,7 +51,7 @@ public class UnknownTagManager implements ITagManager<UnknownTag> {
     }
     
     @ZenCodeType.Method
-    public final void addElements(UnknownTag to, ResourceLocation... values) {
+    public final void addId(UnknownTag to, ResourceLocation... values) {
         
         if(!exists(to)) {
             CraftTweakerAPI.apply(new ActionUnknownTagCreate(to));
@@ -63,22 +61,7 @@ public class UnknownTagManager implements ITagManager<UnknownTag> {
     }
     
     @ZenCodeType.Method
-    public List<ResourceLocation> elements(UnknownTag of) {
-        
-        if(!exists(of)) {
-            return List.of();
-        }
-        return getInternal(of).getValues()
-                .stream()
-                .map(Holder::unwrapKey)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(ResourceKey::location)
-                .collect(Collectors.toList());
-    }
-    
-    @ZenCodeType.Method
-    public final void removeElements(UnknownTag from, ResourceLocation... values) {
+    public final void removeId(UnknownTag from, ResourceLocation... values) {
         
         if(!exists(from)) {
             throw new IllegalArgumentException("Cannot remove elements from empty tag: " + from);
@@ -97,12 +80,6 @@ public class UnknownTagManager implements ITagManager<UnknownTag> {
     public UnknownTag tag(ResourceLocation id) {
         
         return tagMap().getOrDefault(id, new UnknownTag(id, this));
-    }
-    
-    @Override
-    public UnknownTag tag(TagKey<?> key) {
-        
-        return tag(key.location());
     }
     
     @Override
@@ -131,7 +108,8 @@ public class UnknownTagManager implements ITagManager<UnknownTag> {
     }
     
     @Nullable
-    public Tag<Holder<?>> getInternal(UnknownTag tag) {
+    @Override
+    public Tag<Holder<?>> getInternalRaw(UnknownTag tag) {
         
         return GenericUtil.uncheck(backingResult.tagMap().get(tag.id()));
     }
@@ -155,19 +133,6 @@ public class UnknownTagManager implements ITagManager<UnknownTag> {
     public void bind(TagManager.LoadResult<?> result) {
         
         this.backingResult.bind(GenericUtil.uncheck(result));
-    }
-    
-    @ZenCodeType.Method
-    @ZenCodeType.Getter("tags")
-    public List<UnknownTag> tags() {
-        
-        return new ArrayList<>(tagMap().values());
-    }
-    
-    @ZenCodeType.Method
-    public List<UnknownTag> getTagsFor(ResourceLocation element) {
-        
-        return tags().stream().filter(tag -> tag.contains(element)).toList();
     }
     
 }

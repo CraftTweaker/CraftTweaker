@@ -3,23 +3,28 @@ package com.blamejared.crafttweaker.api.tag.type;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.api.tag.manager.type.KnownTagManager;
-import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.Many;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.Tag;
-import net.minecraft.tags.TagKey;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * A known tag is a tag whose element is known and has been registered as Taggable.
+ *
+ * <p>Known tags let you use the actual element to interact with the tag instead of using the registry key of the element</p>
+ *
+ * @param <T> The type of element this tag holds.
+ */
 @ZenRegister
 @Document("vanilla/api/tag/type/KnownTag")
 @ZenCodeType.Name("crafttweaker.api.tag.type.KnownTag")
+@SuppressWarnings("ClassCanBeRecord")
 public class KnownTag<T> implements MCTag, Iterable<T> {
     
     @Nonnull
@@ -31,6 +36,12 @@ public class KnownTag<T> implements MCTag, Iterable<T> {
         
         this.id = id;
         this.manager = manager;
+    }
+    
+    @Override
+    public Tag<Holder<T>> getInternal() {
+        
+        return manager().getInternal(this);
     }
     
     @SafeVarargs
@@ -48,13 +59,6 @@ public class KnownTag<T> implements MCTag, Iterable<T> {
     }
     
     @ZenCodeType.Method
-    @ZenCodeType.Getter("exists")
-    public boolean exists() {
-        
-        return manager().exists(this);
-    }
-    
-    @ZenCodeType.Method
     @ZenCodeType.Getter("elements")
     public List<T> elements() {
         
@@ -66,12 +70,6 @@ public class KnownTag<T> implements MCTag, Iterable<T> {
     public boolean contains(T element) {
         
         return elements().contains(element);
-    }
-    
-    public boolean contains(ResourceLocation id) {
-    
-        Holder<T> holder = Services.REGISTRY.makeHolder(manager().resourceKey(), id);
-        return elements().contains(holder.value());
     }
     
     @ZenCodeType.Method
@@ -88,41 +86,11 @@ public class KnownTag<T> implements MCTag, Iterable<T> {
         return manager;
     }
     
-    @ZenCodeType.Method
-    @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
-    public Many<KnownTag<T>> withAmount(int amount) {
-        
-        return new Many<>(this, amount, ts -> ts.getCommandString() + " * " + amount);
-    }
-    
-    @ZenCodeType.Method
-    @ZenCodeType.Caster(implicit = true)
-    public Many<KnownTag<T>> asTagWithAmount() {
-        
-        return withAmount(1);
-    }
-    
     @Override
     @ZenCodeType.Caster(implicit = true)
     public String toString() {
         
         return getCommandString();
-    }
-    
-    @Override
-    public String getCommandString() {
-        
-        return "<tag:" + manager().tagFolder() + ":" + id() + ">";
-    }
-    
-    public Tag<Holder<T>> getInternal() {
-        
-        return manager.getInternal(this);
-    }
-    
-    public TagKey<T> getTagKey() {
-        
-        return TagKey.create(GenericUtil.uncheck(manager().resourceKey()), this.id());
     }
     
     @Nonnull
@@ -156,6 +124,20 @@ public class KnownTag<T> implements MCTag, Iterable<T> {
         int result = id.hashCode();
         result = 31 * result + manager.hashCode();
         return result;
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
+    public Many<KnownTag<T>> withAmount(int amount) {
+        
+        return new Many<>(this, amount, ts -> ts.getCommandString() + " * " + amount);
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Caster(implicit = true)
+    public Many<KnownTag<T>> asTagWithAmount() {
+        
+        return withAmount(1);
     }
     
 }
