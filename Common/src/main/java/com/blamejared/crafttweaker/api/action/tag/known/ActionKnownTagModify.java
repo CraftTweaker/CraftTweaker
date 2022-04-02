@@ -6,7 +6,6 @@ import net.minecraft.core.Holder;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class ActionKnownTagModify<T> extends ActionKnownTag<T> {
@@ -45,7 +44,7 @@ public abstract class ActionKnownTagModify<T> extends ActionKnownTag<T> {
     
     public String describeValues() {
         
-        return values().stream().map(Objects::toString).collect(Collectors.joining(", ", "[", "]"));
+        return values().stream().map(Object::toString).collect(Collectors.joining(", ", "[", "]"));
     }
     
 }

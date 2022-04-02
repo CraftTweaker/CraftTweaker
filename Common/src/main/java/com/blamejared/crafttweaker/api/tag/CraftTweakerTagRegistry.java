@@ -21,6 +21,7 @@ import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -90,9 +91,9 @@ public final class CraftTweakerTagRegistry {
      *
      * @return All registered {@link ITagManager}'s
      */
-    public List<ITagManager<?>> managers() {
+    public Collection<ITagManager<?>> managers() {
         
-        return new ArrayList<>(registeredManagers.values());
+        return Collections.unmodifiableCollection(registeredManagers.values());
     }
     
     /**
@@ -100,7 +101,7 @@ public final class CraftTweakerTagRegistry {
      *
      * @return All registered {@link KnownTagManager}
      */
-    public Set<ResourceKey<? extends Registry<?>>> knownManagers() {
+    public Collection<ResourceKey<? extends Registry<?>>> knownManagers() {
         
         return knownManagersView;
     }

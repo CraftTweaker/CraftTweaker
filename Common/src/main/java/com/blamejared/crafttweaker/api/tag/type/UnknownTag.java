@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 /**
  * An unknown tag is a tag whose element is not known or has not been registered as Taggable.
  *
- * @implNote <p>Modders should not use this as a parameter type, instead of {@link MCTag} as that will not cause issues if the element is registered as Taggable.</p>
+ * @implNote Modders should use {@link MCTag} instead of this class for parameters as a previously unknown tag could become a known tag in the future..
  */
 @ZenRegister
 @Document("vanilla/api/tag/type/UnknownTag")
