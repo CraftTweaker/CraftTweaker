@@ -63,9 +63,6 @@ import stdlib.List;
 // Adds Skeletons to <tag:entity_types:minecraft:axolotl_always_hostiles>, making Axolotl attack skeletons.
 <tag:entity_types:minecraft:axolotl_always_hostiles>.add(<entitytype:minecraft:skeleton>);
 
-// Adds Water to <tag:fluids:minecraft:lava>, allowing Striders to walk on water.
-<tag:fluids:minecraft:lava>.addId(<resource:minecraft:water>);
-
 
 // Removing from existing Tags
 
