@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.helper;
 import com.blamejared.crafttweaker.mixin.common.access.server.AccessReloadableServerResources;
 import com.blamejared.crafttweaker.platform.helper.IAccessibleServerElementsProvider;
 import com.google.common.base.Suppliers;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.ReloadableServerResources;
 
 import java.util.Objects;
@@ -13,6 +14,7 @@ public final class AccessibleServerElementsProvider implements IAccessibleServer
     private static final Supplier<AccessibleServerElementsProvider> INSTANCE = Suppliers.memoize(AccessibleServerElementsProvider::new);
     
     private ReloadableServerResources resources;
+    private RegistryAccess registryAccess;
     
     private AccessibleServerElementsProvider() {
         
@@ -40,6 +42,24 @@ public final class AccessibleServerElementsProvider implements IAccessibleServer
     public void resources(final ReloadableServerResources resources) {
         
         this.resources = resources;
+    }
+    
+    @Override
+    public RegistryAccess registryAccess() {
+        
+        return this.registryAccess;
+    }
+    
+    @Override
+    public void registryAccess(RegistryAccess registryAccess) {
+        
+        this.registryAccess = registryAccess;
+    }
+    
+    @Override
+    public boolean hasRegistryAccess() {
+        
+        return this.registryAccess != null;
     }
     
 }

@@ -35,4 +35,10 @@ public final class AccessibleClientElementsProvider implements IAccessibleClient
         this.registryAccess = registryAccess;
     }
     
+    @Override
+    public boolean hasRegistryAccess() {
+        
+        return this.registryAccess != null;
+    }
+    
 }

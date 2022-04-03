@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRun;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.helper.FileGathererHelper;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
+import com.blamejared.crafttweaker.mixin.common.access.tag.AccessTagManager;
 import com.blamejared.crafttweaker.platform.helper.IAccessibleServerElementsProvider;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.chat.MutableComponent;
@@ -17,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.tags.TagManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -63,7 +65,9 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
         
         IAccessibleServerElementsProvider asep = CraftTweakerAPI.getAccessibleElementsProvider().server();
         asep.resources(this.resources);
-        CraftTweakerTagRegistry.INSTANCE.bind(asep.accessibleResources().crafttweaker$getTagManager());
+        TagManager tagmanager = asep.accessibleResources().crafttweaker$getTagManager();
+        asep.registryAccess(((AccessTagManager) tagmanager).crafttweaker$getRegistryAccess());
+        CraftTweakerTagRegistry.INSTANCE.bind(tagmanager);
         
         final RecipeManager manager = this.resources.getRecipeManager();
         

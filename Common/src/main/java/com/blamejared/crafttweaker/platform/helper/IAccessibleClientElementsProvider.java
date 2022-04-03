@@ -9,4 +9,6 @@ public interface IAccessibleClientElementsProvider {
     
     void registryAccess(final RegistryAccess registryAccess);
     
+    boolean hasRegistryAccess();
+    
 }

@@ -19,6 +19,7 @@
         "common.access.server.AccessMinecraftServer",
         "common.access.server.AccessReloadableServerResources",
         "common.access.tag.AccessTag",
+        "common.access.tag.AccessTagManager",
         "common.access.villager.AccessDyedArmorForEmeralds",
         "common.access.villager.AccessEmeraldForItems",
         "common.access.villager.AccessEnchantedItemForEmeralds",
