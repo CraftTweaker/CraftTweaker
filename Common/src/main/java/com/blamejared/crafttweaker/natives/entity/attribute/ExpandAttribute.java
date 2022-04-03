@@ -4,12 +4,14 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @Document("vanilla/api/entity/attribute/Attribute")
 @NativeTypeRegistration(value = Attribute.class, zenCodeName = "crafttweaker.api.entity.attribute.Attribute")
+@TaggableElement("minecraft:attribute")
 public class ExpandAttribute {
     
     /**

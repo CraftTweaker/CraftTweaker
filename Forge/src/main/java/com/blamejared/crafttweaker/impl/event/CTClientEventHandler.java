@@ -5,7 +5,6 @@ import com.blamejared.crafttweaker.impl.script.RecipeManagerScriptLoader;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
-import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -17,12 +16,6 @@ public class CTClientEventHandler {
     public static void onRecipesUpdated(RecipesUpdatedEvent event) {
     
         RecipeManagerScriptLoader.updateState(RecipeManagerScriptLoader.UpdatedState.RECIPES, event::getRecipeManager);
-    }
-    
-    @SubscribeEvent
-    public static void onTagsUpdated(TagsUpdatedEvent event) {
-    
-        RecipeManagerScriptLoader.updateState(RecipeManagerScriptLoader.UpdatedState.TAGS, null);
     }
     
     @SubscribeEvent

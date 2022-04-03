@@ -5,14 +5,13 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "common.access.item.AccessBucketItem",
-    "common.access.tag.AccessStaticTags",
     "common.transform.item.MixinItemStackAttributes",
     "common.transform.loot.MixinLootTable",
     "common.transform.server.MixinServerResources"
   ],
   "client": [
     "client.access.AccessKeyMapping",
-    "client.transform.multiplayer.MixinClientPacketListener",
+      "client.transform.multiplayer.MixinClientPacketListenerFabric"
   ],
   "server": [
   ],

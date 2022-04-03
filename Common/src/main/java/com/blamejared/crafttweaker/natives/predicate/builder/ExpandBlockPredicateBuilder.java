@@ -3,11 +3,12 @@ package com.blamejared.crafttweaker.natives.predicate.builder;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.base.IData;
-import com.blamejared.crafttweaker.api.tag.MCTag;
+import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -21,11 +22,10 @@ public class ExpandBlockPredicateBuilder {
         
         return internal.of(blocks);
     }
-    
     @ZenCodeType.Method
-    public static BlockPredicate.Builder tag(final BlockPredicate.Builder internal, final MCTag<Block> tag) {
-        
-        return internal.of(tag.getInternal());
+    public static BlockPredicate.Builder tag(final BlockPredicate.Builder internal, final KnownTag<Block> tag) {
+
+        return internal.of((TagKey<Block>) tag.getTagKey());
     }
     
     @ZenCodeType.Method

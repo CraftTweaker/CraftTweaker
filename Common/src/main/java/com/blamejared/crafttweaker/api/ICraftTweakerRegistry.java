@@ -2,12 +2,15 @@ package com.blamejared.crafttweaker.api;
 
 import com.blamejared.crafttweaker.api.command.type.IBracketDumperInfo;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
+import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
+import com.blamejared.crafttweaker.api.tag.manager.TagManagerFactory;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
-import com.mojang.datafixers.util.Pair;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import org.openzen.zenscript.parser.BracketExpressionParser;
@@ -106,7 +109,7 @@ public interface ICraftTweakerRegistry {
     Map<String, IBracketDumperInfo> getBracketDumpers(final IScriptLoader loader);
     
     /**
-     * Obtains a {@link List} containing all known bracket handlers for the given {@link IScriptLoader} residing in
+     * Obtains a {@link Map} containing all known bracket handlers for the given {@link IScriptLoader} residing in
      * the {@code rootPackage}.
      *
      * <p>The concept of package used in this method corresponds to the ZenCode concept instead of the Java concept.
@@ -115,7 +118,7 @@ public interface ICraftTweakerRegistry {
      * @param loader      The {@link IScriptLoader} for which bracket handlers should be queried.
      * @param rootPackage The root package under which the bracket handlers should reside.
      *
-     * @return A {@link List} of {@link Pair}s whose first element represents the name of the bracket and the second the
+     * @return A {@link Map} whose key represents the name of the bracket and the value the
      * {@link BracketExpressionParser} responsible for resolution.
      *
      * @apiNote The value of {@code rootPackage} is currently ignored as bracket expressions are not tied to ZenCode
@@ -123,7 +126,7 @@ public interface ICraftTweakerRegistry {
      * @since 9.1.0
      */
     // TODO("Better API")
-    List<Pair<String, BracketExpressionParser>> getBracketHandlers(final IScriptLoader loader, final String rootPackage);
+    Map<String, BracketExpressionParser> getBracketHandlers(final IScriptLoader loader, final String rootPackage);
     
     /**
      * Gets a read-only {@link List} of all known {@linkplain IPreprocessor preprocessors}.
@@ -176,6 +179,29 @@ public interface ICraftTweakerRegistry {
     <T extends Enum<T>> Optional<Class<T>> getEnumBracketFor(final IScriptLoader loader, final ResourceLocation type);
     
     /**
+     * Tries to find a taggable element for the given {@link ResourceKey}.
+     *
+     * @param key The {@link ResourceKey} to get the element for.
+     * @param <T> The type of element to find.
+     *
+     * @return An {@link Optional} wrapping the {@link Class} of the taggable element if it can be found, an {@linkplain Optional#empty() empty optional} otherwise.
+     */
+    <T> Optional<Class<T>> getTaggableElementFor(final ResourceKey<T> key);
+    
+    /**
+     * Gets a {@link TagManagerFactory} for the given {@link ResourceKey}.
+     *
+     * <p>Note: If an element is known but does not have an explicit {@link TagManagerFactory}, then a factory for a {@link com.blamejared.crafttweaker.api.tag.manager.type.KnownTagManager} is returned.
+     * If an element is not known, then a factory for an {@link com.blamejared.crafttweaker.api.tag.manager.type.UnknownTagManager} is returned. </p>
+     *
+     * @param key The {@link ResourceKey} to get the element factory for.
+     * @param <T> The type of element the factory deals with.
+     *
+     * @return A {@link TagManagerFactory} for the given {@link ResourceKey}.
+     */
+    <T> TagManagerFactory<T, ? extends ITagManager<?>> getTaggableElementFactory(ResourceKey<Registry<T>> key);
+    
+    /**
      * Gets all bracket handler possibilities that can be queried under the given {@link IScriptLoader}.
      *
      * <p>The data of the returned set corresponds to strings of the form
@@ -189,6 +215,6 @@ public interface ICraftTweakerRegistry {
      *
      * @since 9.1.0
      */
-    Set<String> getAllEnumsForEnumBracket(final IScriptLoader loader);
+    Set<String> getAllEnumStringsForEnumBracket(final IScriptLoader loader);
     
 }

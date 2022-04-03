@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.plugin.crafttweaker;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.bracket.custom.EnumConstantBracketHandler;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
@@ -12,15 +11,12 @@ import com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin;
 import com.blamejared.crafttweaker.api.plugin.IJavaNativeIntegrationRegistrationHandler;
-import com.blamejared.crafttweaker.api.plugin.IListenerRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ILoaderRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IRecipeHandlerRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IScriptLoadSourceRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IScriptRunModuleConfiguratorRegistrationHandler;
+import com.blamejared.crafttweaker.api.plugin.ITaggableElementRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IVillagerTradeRegistrationHandler;
-import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
-import com.blamejared.crafttweaker.api.tag.manager.TagManagerWrapper;
-import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistryData;
 import com.blamejared.crafttweaker.api.villager.CTTradeObject;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
 import com.blamejared.crafttweaker.impl.command.type.DumpCommands;
@@ -50,6 +46,7 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
     private final BracketParserRegistrationManager bracketParserRegistrationManager;
     private final EnumBracketParserRegistrationManager enumBracketParserRegistrationManager;
     private final RecipeHandlerGatherer handlerGatherer;
+    private final TaggableElementsRegistrationManager taggableElementsRegistrationManager;
     private final ZenClassGatherer zenGatherer;
     private final ZenClassRegistrationManager zenClassRegistrationManager;
     
@@ -58,6 +55,7 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         this.bracketParserRegistrationManager = new BracketParserRegistrationManager();
         this.enumBracketParserRegistrationManager = new EnumBracketParserRegistrationManager();
         this.handlerGatherer = new RecipeHandlerGatherer();
+        this.taggableElementsRegistrationManager = new TaggableElementsRegistrationManager();
         this.zenGatherer = new ZenClassGatherer();
         this.zenClassRegistrationManager = new ZenClassRegistrationManager();
     }
@@ -104,31 +102,15 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         
         handler.registerParserFor(CraftTweakerConstants.ALL_LOADERS_MARKER, "constant", new EnumConstantBracketHandler(), new IBracketParserRegistrationHandler.DumperData("constant", EnumConstantBracketHandler.getDumperData()));
         handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "recipetype", new RecipeTypeBracketHandler(), new IBracketParserRegistrationHandler.DumperData("recipetype", RecipeTypeBracketHandler.getDumperData()));
+        handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "tag", new TagBracketHandler(), new IBracketParserRegistrationHandler.DumperData("tag", TagBracketHandler.getDumperData()));
+        handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "tagmanager", new TagManagerBracketHandler(), new IBracketParserRegistrationHandler.DumperData("tagmanager", TagManagerBracketHandler.getDumperData()));
         
-        final TagManagerBracketHandler tagManagerBEP = new TagManagerBracketHandler(CrTTagRegistryData.INSTANCE);
-        handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "tagmanager", tagManagerBEP);
-        handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "tag", new TagBracketHandler(tagManagerBEP), new IBracketParserRegistrationHandler.DumperData("tag", TagBracketHandler.getDumperData()));
     }
     
     @Override
     public void registerRecipeHandlers(final IRecipeHandlerRegistrationHandler handler) {
         
         this.handlerGatherer.gatherAndRegisterHandlers(handler);
-    }
-    
-    @Override
-    @SuppressWarnings("CodeBlock2Expr")
-    public void registerListeners(final IListenerRegistrationHandler handler) {
-        
-        handler.onZenDataRegistrationCompletion(() -> {
-            // TODO("Per-loader API")
-            CraftTweakerAPI.getRegistry().getAllLoaders().forEach(loader -> {
-                CraftTweakerAPI.getRegistry().getZenClassRegistry().getImplementationsOf(loader, ITagManager.class)
-                        .stream()
-                        .filter(it -> !it.equals(TagManagerWrapper.class))
-                        .forEach(CrTTagRegistryData.INSTANCE::addTagImplementationClass);
-            });
-        });
     }
     
     @Override
@@ -202,6 +184,14 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         RecipeCommands.registerCommands(handler);
         ExamplesCommand.registerCommand(handler);
         DumpCommands.registerDumpers(handler);
+    }
+    
+    @Override
+    public void registerTaggableElements(ITaggableElementRegistrationHandler handler) {
+        
+        this.zenGatherer.onCandidates(candidate -> {
+            this.taggableElementsRegistrationManager.attemptRegistration(candidate.clazz(), handler);
+        });
     }
     
 }

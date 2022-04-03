@@ -128,7 +128,7 @@ public class CTCommonEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void resourceReload(AddReloadListenerEvent event) {
         
-        event.addListener(new ScriptReloadListener(event.getDataPackRegistries()::getRecipeManager, CTCommonEventHandler::giveFeedback));
+        event.addListener(new ScriptReloadListener(event.getServerResources(), CTCommonEventHandler::giveFeedback));
     }
     
     private static void giveFeedback(MutableComponent msg) {

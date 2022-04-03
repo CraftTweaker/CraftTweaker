@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.plugin.core;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.plugin.CraftTweakerPlugin;
 import com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.impl.registry.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.platform.Services;
@@ -32,7 +33,7 @@ public final class PluginManager {
         private Req() {
             
             if(X.get()) {
-                throw new RuntimeException();
+                throw new RuntimeException("Unable to make multiple instances of PluginManager!");
             }
             X.set(true);
         }
@@ -83,13 +84,10 @@ public final class PluginManager {
         final ResourceLocation id;
         try {
             final String targetId = Objects.requireNonNull(clazz.getAnnotation(CraftTweakerPlugin.class)).value();
-            if(!targetId.contains(":")) {
-                throw new ResourceLocationException("Not within a namespace");
-            }
-            if(targetId.startsWith("minecraft:")) {
+            id = new ResourceLocation(targetId);
+            if(id.getNamespace().equals("minecraft")) {
                 throw new ResourceLocationException("Illegal namespace 'minecraft'");
             }
-            id = new ResourceLocation(targetId);
         } catch(final ResourceLocationException e) {
             throw new IllegalArgumentException("Invalid plugin class ID: not a valid resource location", e);
         }
@@ -175,6 +173,12 @@ public final class PluginManager {
         );
         this.manageBracketRegistration(access, bracketHandler, loaderFinder);
         
+        final TaggableElementsRegistrationHandler taggableElementsHandler = this.verifying(
+                "gathering taggable elements",
+                () -> TaggableElementsRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::registerTaggableElements))
+        );
+        this.manageTaggableElementRegistration(access, taggableElementsHandler, loaderFinder);
+        
         this.callListeners("ZenCode registration end", this.listeners.zenListeners());
     }
     
@@ -193,7 +197,7 @@ public final class PluginManager {
         this.verifying(
                 "registering recipe handlers",
                 () -> RecipeHandlerRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerRecipeHandlers))
-                        .forEach(it -> access.registerHandler(this.uncheck(it.recipeClass()), it.handler()))
+                        .forEach(it -> access.registerHandler(GenericUtil.uncheck(it.recipeClass()), it.handler()))
         );
         
         this.verifying(
@@ -236,6 +240,23 @@ public final class PluginManager {
         
     }
     
+    private void manageTaggableElementRegistration(final IPluginRegistryAccess access, final TaggableElementsRegistrationHandler handler, final Function<String, IScriptLoader> loaderFinder) {
+        
+        this.verifying(
+                "registering taggable elements",
+                () -> handler.elementRequests().forEach(it ->
+                        access.registerTaggableElement(it.key(), GenericUtil.uncheck(it.elementClass()))
+                )
+        );
+        this.verifying(
+                "registering taggable element managers",
+                () -> handler.managerRequests().forEach(it ->
+                        access.registerTaggableElementManager(it.key(), GenericUtil.uncheck(it.factory()))
+                )
+        );
+    }
+    
+    
     private void manageBracketRegistration(final IPluginRegistryAccess access, final BracketParserRegistrationHandler handler, final Function<String, IScriptLoader> loaderFinder) {
         
         this.verifying(
@@ -247,7 +268,7 @@ public final class PluginManager {
         this.verifying(
                 "registering enum brackets",
                 () -> handler.enumRequests().forEach(it ->
-                        access.registerEnum(loaderFinder.apply(it.loader()), it.id(), this.uncheck(it.enumClass()))
+                        access.registerEnum(loaderFinder.apply(it.loader()), it.id(), GenericUtil.uncheck(it.enumClass()))
                 )
         );
     }
@@ -283,12 +304,6 @@ public final class PluginManager {
     private void callListeners(final String type, final Collection<Runnable> listeners) {
         
         listeners.forEach(it -> this.verifying("calling " + type + " listener", it));
-    }
-    
-    @SuppressWarnings("unchecked")
-    private <T, U> T uncheck(final U u) {
-        
-        return (T) u;
     }
     
 }

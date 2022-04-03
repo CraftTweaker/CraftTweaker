@@ -10,7 +10,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.ServerResources;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.apache.commons.io.input.ReaderInputStream;
@@ -39,8 +38,8 @@ public final class ExamplesCommand {
     private static int execute(final ServerPlayer player) {
         
         final MinecraftServer server = player.server;
-        final ServerResources dataPackRegistries = ((AccessMinecraftServer) server).crafttweaker$getResources();
-        final ResourceManager resourceManager = dataPackRegistries.getResourceManager();
+        final MinecraftServer.ReloadableResources reloadableResources = ((AccessMinecraftServer) server).crafttweaker$getResources();
+        final ResourceManager resourceManager = reloadableResources.resourceManager();
         
         //Collect all scripts that are in the scripts data pack folder and write them to the example scripts folder
         for(ResourceLocation file : resourceManager.listResources("scripts", n -> n.endsWith(".zs"))) {

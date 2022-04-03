@@ -19,7 +19,6 @@ final class VillagerTradeConverterRegistrationHandler implements IVillagerTradeR
     }
     
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends VillagerTrades.ItemListing> void registerTradeConverter(final Class<T> tradeClass, final Function<T, CTTradeObject> tradeConverter) {
         
         // TODO("1.19: Verify if this needs a registry or something else")

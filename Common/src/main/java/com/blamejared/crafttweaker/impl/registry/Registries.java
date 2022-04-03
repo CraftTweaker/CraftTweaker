@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.impl.registry.recipe.RecipeHandlerRegistry;
 import com.blamejared.crafttweaker.impl.registry.zencode.BracketResolverRegistry;
 import com.blamejared.crafttweaker.impl.registry.zencode.EnumBracketRegistry;
 import com.blamejared.crafttweaker.impl.registry.zencode.PreprocessorRegistry;
+import com.blamejared.crafttweaker.impl.registry.zencode.TaggableElementRegistry;
 import com.blamejared.crafttweaker.impl.registry.zencode.ZenClassRegistry;
 
 record Registries(
@@ -14,5 +15,6 @@ record Registries(
         PreprocessorRegistry preprocessorRegistry,
         RecipeHandlerRegistry recipeHandlerRegistry,
         ScriptRunModuleConfiguratorRegistry scriptRunModuleConfiguratorRegistry,
+        TaggableElementRegistry taggableElementRegistry,
         ZenClassRegistry zenClassRegistry
 ) {}

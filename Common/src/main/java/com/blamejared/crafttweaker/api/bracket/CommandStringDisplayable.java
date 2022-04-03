@@ -17,6 +17,7 @@ public interface CommandStringDisplayable {
     /**
      * Returns the BEP to get this thingy
      */
+    @ZenCodeType.Method
     @ZenCodeType.Getter("commandString")
     String getCommandString();
     

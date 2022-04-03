@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.plugin.crafttweaker;
 
 import com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker_annotations.annotations.BracketEnum;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.ResourceLocationException;
@@ -51,13 +52,8 @@ final class EnumBracketParserRegistrationManager {
             throw new IllegalArgumentException("Provided resource location '" + value + "' for enum " + clazz.getName() + " is invalid", e);
         }
         
-        handler.registerEnumForBracket(loader, id, this.uncheck(clazz));
+        handler.registerEnumForBracket(loader, id, GenericUtil.uncheck(clazz));
     }
     
-    @SuppressWarnings("unchecked")
-    private <T, U> T uncheck(final U u) {
-        
-        return (T) u;
-    }
     
 }

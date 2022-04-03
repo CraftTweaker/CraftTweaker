@@ -24,11 +24,12 @@ public class RecipeManagerScriptLoader {
     private static RecipeManager manager = null;
     
     public static void updateState(UpdatedState state, @Nullable Supplier<RecipeManager> managerSupplier) {
-    
+        
         // If we get here with at-least recipes, then something happened to cause an invalid state, just reset it.
         if(currentState.hasAll()) {
             currentState = UpdatedState.NONE;
             manager = null;
+            throw new IllegalArgumentException("Invalid state found in RecipeManagerScriptLoader!");
         }
         currentState = currentState.merge(state);
         if(managerSupplier != null) {

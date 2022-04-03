@@ -4,14 +4,15 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.command.CommandUtilities;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
-import com.blamejared.crafttweaker.api.tag.MCTag;
-import com.blamejared.crafttweaker.api.tag.manager.TagManagerItem;
+import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
+import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
 import com.mojang.brigadier.Command;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
@@ -45,7 +46,7 @@ public final class InventoryCommands {
                     return Command.SINGLE_SUCCESS;
                 })
         );
-        
+    
         handler.registerSubCommand(
                 "inventory",
                 "tags",
@@ -56,26 +57,26 @@ public final class InventoryCommands {
                     final String inventoryContents = IntStream.range(0, inventory.getContainerSize())
                             .mapToObj(inventory::getItem)
                             .filter(it -> !it.isEmpty())
-                            .map(it -> Pair.of(ItemStackUtil.getCommandString(it), TagManagerItem.INSTANCE.getAllTagsFor(it.getItem())))
+                            .map(it -> Pair.of(ItemStackUtil.getCommandString(it), CraftTweakerTagRegistry.INSTANCE.knownTagManager(Registry.ITEM_REGISTRY).getTagsFor(it.getItem())))
                             .map(it -> it.getFirst() + '\n' + stringify(it.getSecond()))
                             .collect(Collectors.joining("\n", "Inventory item tags\n", ""));
-                    
+
                     CraftTweakerAPI.LOGGER.info(inventoryContents);
                     CommandUtilities.send(CommandUtilities.openingLogFile(new TranslatableComponent("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(new TranslatableComponent("crafttweaker.command.misc.inventory.list.tag")), CommandUtilities.getFormattedLogFile()).withStyle(ChatFormatting.GREEN)), player);
-                    
+
                     return Command.SINGLE_SUCCESS;
                 })
         );
     }
     
-    private static String stringify(final Collection<MCTag<Item>> tags) {
+    private static String stringify(final Collection<KnownTag<Item>> tags) {
         
         if(tags.isEmpty()) {
             return "- No tags";
         }
         
         return tags.stream()
-                .map(MCTag::getCommandString)
+                .map(KnownTag::getCommandString)
                 .map(it -> String.format("- %s", it))
                 .collect(Collectors.joining("\n"));
     }

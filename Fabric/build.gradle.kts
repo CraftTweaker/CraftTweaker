@@ -35,7 +35,7 @@ dependencies {
     minecraft("com.mojang:minecraft:${minecraftVersion}")
     mappings(loom.layered {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.18.1:2021.12.19@zip")
+        parchment("org.parchmentmc.data:parchment-1.18.2:2022.03.13@zip")
     })
     modImplementation("net.fabricmc:fabric-loader:${fabricLoaderVersion}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
@@ -54,7 +54,7 @@ dependencies {
     implementation("org.javassist:javassist:3.28.0-GA")?.let { include(it) } // required for reflections
 
 
-    modImplementation("com.faux.ingredientextension:IngredientExtensionAPI-fabric-1.18.1:2.0.1")
+    modImplementation("com.faux.ingredientextension:IngredientExtensionAPI-fabric-1.18.2:2.0.5")
 
     gametestCompileOnly(files(project(":Common").dependencyProject.sourceSets.gametest.get().java.srcDirs))
     (project.ext["zenCodeTestDeps"] as Set<*>).forEach {
@@ -130,12 +130,31 @@ tasks.processResources {
         expand("refmap_target" to "$baseArchiveName-")
     }
 }
+
 tasks.withType<JavaCompile> {
     source(project(":Common").sourceSets.main.get().allSource)
     source(project(":Crafttweaker_Annotations").sourceSets.main.get().allSource)
 
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         source(project(it.toString()).sourceSets.main.get().allSource)
+    }
+}
+
+tasks.withType<Javadoc> {
+    source(project(":Common").sourceSets.main.get().allJava)
+    source(project(":Crafttweaker_Annotations").sourceSets.main.get().allJava)
+
+    (project.ext["zenCodeDeps"] as Set<*>).forEach {
+        source(project(it.toString()).sourceSets.main.get().allJava)
+    }
+}
+
+tasks.named<Jar>("sourcesJar") {
+    from(project(":Common").sourceSets.main.get().allSource)
+    from(project(":Crafttweaker_Annotations").sourceSets.main.get().allSource)
+
+    (project.ext["zenCodeDeps"] as Set<*>).forEach {
+        from(project(it.toString()).sourceSets.main.get().allSource)
     }
 }
 

@@ -3,6 +3,10 @@ package com.blamejared.crafttweaker.impl.registry;
 import com.blamejared.crafttweaker.api.ICraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.command.type.IBracketDumperInfo;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
+import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
+import com.blamejared.crafttweaker.api.tag.manager.TagManagerFactory;
+import com.blamejared.crafttweaker.api.tag.manager.type.KnownTagManager;
+import com.blamejared.crafttweaker.api.tag.manager.type.UnknownTagManager;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
@@ -14,11 +18,14 @@ import com.blamejared.crafttweaker.impl.registry.recipe.RecipeHandlerRegistry;
 import com.blamejared.crafttweaker.impl.registry.zencode.BracketResolverRegistry;
 import com.blamejared.crafttweaker.impl.registry.zencode.EnumBracketRegistry;
 import com.blamejared.crafttweaker.impl.registry.zencode.PreprocessorRegistry;
+import com.blamejared.crafttweaker.impl.registry.zencode.TaggableElementRegistry;
 import com.blamejared.crafttweaker.impl.registry.zencode.ZenClassRegistry;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import org.openzen.zenscript.parser.BracketExpressionParser;
@@ -51,6 +58,7 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
                 new PreprocessorRegistry(),
                 new RecipeHandlerRegistry(),
                 new ScriptRunModuleConfiguratorRegistry(),
+                new TaggableElementRegistry(),
                 new ZenClassRegistry()
         );
         this.access = new PluginRegistryAccess(this.registries);
@@ -104,10 +112,10 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
     }
     
     @Override
-    public List<Pair<String, BracketExpressionParser>> getBracketHandlers(final IScriptLoader loader, final String rootPackage) {
+    public Map<String, BracketExpressionParser> getBracketHandlers(final IScriptLoader loader, final String rootPackage) {
         
         // TODO("Is rootPackage really needed?")
-        return ImmutableList.copyOf(this.registries.bracketResolverRegistry().getBracketResolvers(loader));
+        return ImmutableMap.copyOf(this.registries.bracketResolverRegistry().getBracketResolvers(loader));
     }
     
     @Override
@@ -139,7 +147,24 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
     }
     
     @Override
-    public Set<String> getAllEnumsForEnumBracket(final IScriptLoader loader) {
+    public <T> Optional<Class<T>> getTaggableElementFor(ResourceKey<T> key) {
+        
+        return this.registries.taggableElementRegistry().getTaggableElement(key);
+    }
+    
+    public <T> TagManagerFactory<T, ? extends ITagManager<?>> getTaggableElementFactory(ResourceKey<Registry<T>> key) {
+        
+        if(this.registries.taggableElementRegistry().getTaggableElement(key).isPresent()) {
+            return this.registries.taggableElementRegistry()
+                    .getManagerFactory(key)
+                    .orElseGet(() -> KnownTagManager::new);
+        }
+        
+        return (resourceKey1, tClass) -> new UnknownTagManager(resourceKey1);
+    }
+    
+    @Override
+    public Set<String> getAllEnumStringsForEnumBracket(final IScriptLoader loader) {
         
         return this.registries.enumBracketRegistry()
                 .getEnums(loader)

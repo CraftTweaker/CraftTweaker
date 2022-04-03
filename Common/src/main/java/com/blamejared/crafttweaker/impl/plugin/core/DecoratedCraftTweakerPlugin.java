@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.api.plugin.ILoaderRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IRecipeHandlerRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IScriptLoadSourceRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IScriptRunModuleConfiguratorRegistrationHandler;
+import com.blamejared.crafttweaker.api.plugin.ITaggableElementRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IVillagerTradeRegistrationHandler;
 import net.minecraft.resources.ResourceLocation;
 
@@ -66,6 +67,12 @@ record DecoratedCraftTweakerPlugin(ResourceLocation id, ICraftTweakerPlugin plug
     public void registerCommands(final ICommandRegistrationHandler handler) {
         
         this.plugin().registerCommands(handler);
+    }
+    
+    @Override
+    public void registerTaggableElements(ITaggableElementRegistrationHandler handler) {
+        
+        this.plugin.registerTaggableElements(handler);
     }
     
     @Override

@@ -3,12 +3,10 @@ package com.blamejared.crafttweaker.impl.registry.zencode;
 import com.blamejared.crafttweaker.api.command.type.IBracketDumperInfo;
 import com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
-import com.mojang.datafixers.util.Pair;
 import org.openzen.zenscript.parser.BracketExpressionParser;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -73,15 +71,13 @@ public final class BracketResolverRegistry {
                 .collect(Collectors.toMap(Map.Entry::getKey, it -> it.getValue().dumperInfo()));
     }
     
-    public List<Pair<String, BracketExpressionParser>> getBracketResolvers(final IScriptLoader loader) {
+    public Map<String, BracketExpressionParser> getBracketResolvers(final IScriptLoader loader) {
         
-        // TODO("rootPackage is unused: are you actually needed?")
         return this.brackets.getOrDefault(loader, new BracketData())
                 .brackets()
                 .entrySet()
                 .stream()
-                .map(it -> Pair.of(it.getKey(), it.getValue().parser()))
-                .toList();
+                .collect(Collectors.toMap(Map.Entry::getKey, it -> it.getValue().parser()));
     }
     
     private Map<IScriptLoader, BracketData> createSnapshot() {

@@ -67,6 +67,22 @@ tasks.withType<JavaCompile> {
     }
 }
 
+tasks.withType<Javadoc> {
+    source(project(":Crafttweaker_Annotations").sourceSets.main.get().allJava)
+
+    (project.ext["zenCodeDeps"] as Set<*>).forEach {
+        source(project(it.toString()).sourceSets.main.get().allJava)
+    }
+}
+
+tasks.named<Jar>("sourcesJar") {
+    from(project(":Crafttweaker_Annotations").sourceSets.main.get().allSource)
+
+    (project.ext["zenCodeDeps"] as Set<*>).forEach {
+        from(project(it.toString()).sourceSets.main.get().allSource)
+    }
+}
+
 publishing {
     publications {
         register("mavenJava", MavenPublication::class) {

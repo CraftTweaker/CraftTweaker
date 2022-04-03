@@ -57,20 +57,4 @@ public record ScriptRunConfiguration(IScriptLoader loader, IScriptLoadSource loa
         this(IScriptLoader.find(loader), IScriptLoadSource.find(loadSource), runKind);
     }
     
-    /**
-     * Creates a {@link ScriptRunConfiguration} with the given info, performing lookups if necessary.
-     *
-     * @param loader     The name of the loader that will be used to execute the run.
-     * @param loadSource The name of the load source responsible for creating the run.
-     * @param runKind    The {@linkplain RunKind kind of run} that will be executed.
-     *
-     * @throws IllegalArgumentException                If the loader or the load source are not registered.
-     * @throws net.minecraft.ResourceLocationException If the load source name is not a valid {@link ResourceLocation}.
-     * @since 9.1.0
-     */
-    public ScriptRunConfiguration(final String loader, final String loadSource, final RunKind runKind) {
-        
-        this(loader, new ResourceLocation(loadSource), runKind);
-    }
-    
 }

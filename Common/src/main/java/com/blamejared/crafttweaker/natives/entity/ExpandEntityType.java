@@ -3,10 +3,11 @@ package com.blamejared.crafttweaker.natives.entity;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.entity.CTEntityIngredient;
-import com.blamejared.crafttweaker.api.tag.MCTag;
+import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -27,6 +28,7 @@ import java.util.List;
 @ZenRegister
 @Document("vanilla/api/entity/EntityType")
 @NativeTypeRegistration(value = EntityType.class, zenCodeName = "crafttweaker.api.entity.EntityType")
+@TaggableElement(value = "minecraft:entity_type")
 public class ExpandEntityType {
     
     @ZenCodeType.Method
@@ -134,12 +136,11 @@ public class ExpandEntityType {
         return internal.getDimensions();
     }
     
-    
-    @ZenCodeType.Method
-    public static boolean isIn(EntityType internal, MCTag<EntityType> tag) {
-        
-        return internal.is(tag.getInternal());
-    }
+        @ZenCodeType.Method
+        public static boolean isIn(EntityType internal, KnownTag<EntityType<Entity>> tag) {
+
+            return internal.is(tag.getTagKey());
+        }
     
     @ZenCodeType.Getter("commandString")
     public static String getCommandString(EntityType internal) {

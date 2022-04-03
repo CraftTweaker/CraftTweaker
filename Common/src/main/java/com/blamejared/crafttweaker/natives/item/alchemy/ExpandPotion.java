@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
 import org.openzen.zencode.java.ZenCodeType;
@@ -13,6 +14,7 @@ import java.util.List;
 @ZenRegister
 @Document("vanilla/api/item/alchemy/Potion")
 @NativeTypeRegistration(value = Potion.class, zenCodeName = "crafttweaker.api.item.alchemy.Potion")
+@TaggableElement("minecraft:potion")
 public class ExpandPotion {
     
     @ZenCodeType.Method

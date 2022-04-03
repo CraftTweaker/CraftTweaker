@@ -9,7 +9,6 @@ import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigu
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.script.scriptrun.natives.CtJavaNativeConverterBuilder;
 import com.google.common.base.Suppliers;
-import com.mojang.datafixers.util.Pair;
 import org.openzen.zencode.java.ScriptingEngine;
 import org.openzen.zencode.java.logger.ScriptingEngineLogger;
 import org.openzen.zencode.java.module.JavaNativeModule;
@@ -26,7 +25,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 sealed public abstract class ScriptRunner permits ExecutingScriptRunner, FormattingScriptRunner, SyntaxCheckScriptRunner {
@@ -150,14 +148,7 @@ sealed public abstract class ScriptRunner permits ExecutingScriptRunner, Formatt
     private Map<String, BracketExpressionParser> getBracketsFor(final ICraftTweakerRegistry registry) {
         
         // TODO("Does this need the root package data?")
-        return registry.getBracketHandlers(this.runInfo().loader(), null)
-                .stream()
-                .collect(Collectors.toMap(
-                        Pair::getFirst,
-                        Pair::getSecond,
-                        (a, b) -> {
-                            throw new IllegalStateException("Found two BEPs with the same name: " + a + " and " + b);
-                        }));
+        return registry.getBracketHandlers(this.runInfo().loader(), null);
     }
     
     protected IScriptRunInfo runInfo() {

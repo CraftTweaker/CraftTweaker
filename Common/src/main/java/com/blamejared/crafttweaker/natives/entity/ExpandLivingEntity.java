@@ -482,10 +482,11 @@ public class ExpandLivingEntity {
         return internal.getJumpBoostPower();
     }
     
+    //TODO When we have FluidState, make this use FluidState
     @ZenCodeType.Method
     public static boolean canStandOnFluid(LivingEntity internal, Fluid fluid) {
-        
-        return internal.canStandOnFluid(fluid);
+
+        return internal.canStandOnFluid(fluid.defaultFluidState());
     }
     
     @ZenCodeType.Method
@@ -518,12 +519,6 @@ public class ExpandLivingEntity {
     public static boolean isSensitiveToWater(LivingEntity internal) {
         
         return internal.isSensitiveToWater();
-    }
-    
-    @ZenCodeType.Method
-    public static void startAutoSpinAttack(LivingEntity internal, int ticks) {
-        
-        internal.startAutoSpinAttack(ticks);
     }
     
     @ZenCodeType.Method
