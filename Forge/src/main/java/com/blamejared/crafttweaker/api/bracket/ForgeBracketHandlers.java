@@ -20,7 +20,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("forge/api/BracketHandlers")
 public final class ForgeBracketHandlers {
     
-    @ZenCodeType.StaticExpansionMethod
+    @ZenCodeType.Method
     @BracketResolver("toolaction")
     public static ToolAction getToolType(String tokens) {
         
@@ -37,7 +37,7 @@ public final class ForgeBracketHandlers {
      *
      * @docParam tokens "minecraft:water"
      */
-    @ZenCodeType.StaticExpansionMethod
+    @ZenCodeType.Method
     @BracketResolver("fluid")
     public static IFluidStack getFluidStack(String tokens) {
         
