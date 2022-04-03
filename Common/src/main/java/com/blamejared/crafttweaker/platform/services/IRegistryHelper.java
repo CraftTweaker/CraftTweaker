@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.platform.services;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.condition.serializer.IIngredientConditionSerializer;
@@ -14,6 +15,7 @@ import com.blamejared.crafttweaker.api.recipe.serializer.ICTShapedRecipeBaseSeri
 import com.blamejared.crafttweaker.api.recipe.serializer.ICTShapelessRecipeBaseSerializer;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipeBase;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipeBase;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.platform.registry.RegistryWrapper;
 import com.blamejared.crafttweaker.platform.registry.VanillaRegistryWrapper;
 import com.mojang.datafixers.util.Either;
@@ -272,8 +274,10 @@ public interface IRegistryHelper {
     }
     
     default <T> Holder<T> makeHolder(ResourceKey<?> resourceKey, T object) {
-        
-        Registry<T> registry = (Registry<T>) Registry.REGISTRY.get(resourceKey.location());
+    
+        Registry<T> registry = CraftTweakerAPI.getAccessibleElementsProvider()
+                .registryAccess()
+                .registryOrThrow(GenericUtil.uncheck(resourceKey));
         return registry.getResourceKey(object)
                 .flatMap(registry::getHolder)
                 .orElseThrow(() -> new RuntimeException("Unable to make holder for registry: " + registry + " and object: " + object));
@@ -281,7 +285,9 @@ public interface IRegistryHelper {
     
     default <T> Holder<T> makeHolder(ResourceKey<?> resourceKey, ResourceLocation key) {
         
-        Registry<T> registry = (Registry<T>) Registry.REGISTRY.get(resourceKey.location());
+        Registry<T> registry = CraftTweakerAPI.getAccessibleElementsProvider()
+                .registryAccess()
+                .registryOrThrow(GenericUtil.uncheck(resourceKey));
         
         if(!registry.containsKey(key)) {
             throw new IllegalArgumentException("Registry does not contain key: '" + key + "'");
