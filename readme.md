@@ -66,35 +66,35 @@ repositories {
 
 Then, depending on what modloader you are using, you can use the following snippets, just replace `[VERSION]` with the latest version for each artifact.
 
-### Fabric [![Maven](https://img.shields.io/maven-metadata/v?color=C71A36&label=Latest%20version&logo=Latest%20version&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fblamejared%2Fcrafttweaker%2FCraftTweaker-fabric-1.18.1%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/blamejared/crafttweaker/CraftTweaker-fabric-1.18.1/)
+### Fabric [![Maven](https://img.shields.io/maven-metadata/v?color=C71A36&label=Latest%20version&logo=Latest%20version&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fblamejared%2Fcrafttweaker%2FCraftTweaker-fabric-1.18.2%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/blamejared/crafttweaker/CraftTweaker-fabric-1.18.2/)
 
 ```groovy
 dependencies {
-    modCompileOnly('com.blamejared.crafttweaker:CraftTweaker-fabric-1.18.1:[VERSION]')
+    modCompileOnly('com.blamejared.crafttweaker:CraftTweaker-fabric-1.18.2:[VERSION]')
     // Example:
-    // modCompileOnly('com.blamejared.crafttweaker:CraftTweaker-fabric-1.18.1:9.0.0+24')
+    // modCompileOnly('com.blamejared.crafttweaker:CraftTweaker-fabric-1.18.2:9.1.83')
 }
 ```
 
-### Forge [![Maven](https://img.shields.io/maven-metadata/v?color=C71A36&label=Latest%20version&logo=Latest%20version&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fblamejared%2Fcrafttweaker%2FCraftTweaker-forge-1.18.1%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/blamejared/crafttweaker/CraftTweaker-forge-1.18.1/)
+### Forge [![Maven](https://img.shields.io/maven-metadata/v?color=C71A36&label=Latest%20version&logo=Latest%20version&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fblamejared%2Fcrafttweaker%2FCraftTweaker-forge-1.18.2%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/blamejared/crafttweaker/CraftTweaker-forge-1.18.2/)
 
 
 ```groovy
 dependencies {
-    compileOnly(fg.deobf('com.blamejared.crafttweaker:CraftTweaker-forge-1.18.1:[VERSION]'))
+    compileOnly(fg.deobf('com.blamejared.crafttweaker:CraftTweaker-forge-1.18.2:[VERSION]'))
     // Example:
-    // compileOnly(fg.deobf('com.blamejared.crafttweaker:CraftTweaker-forge-1.18.1:9.0.0+24'))
+    // compileOnly(fg.deobf('com.blamejared.crafttweaker:CraftTweaker-forge-1.18.2:9.1.83'))
 }
 ```
 
-### Common [![Maven](https://img.shields.io/maven-metadata/v?color=C71A36&label=Latest%20version&logo=Latest%20version&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fblamejared%2Fcrafttweaker%2FCraftTweaker-common-1.18.1%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/blamejared/crafttweaker/CraftTweaker-common-1.18.1/)
+### Common [![Maven](https://img.shields.io/maven-metadata/v?color=C71A36&label=Latest%20version&logo=Latest%20version&metadataUrl=https%3A%2F%2Fmaven.blamejared.com%2Fcom%2Fblamejared%2Fcrafttweaker%2FCraftTweaker-common-1.18.2%2Fmaven-metadata.xml&style=flat-square)](https://maven.blamejared.com/com/blamejared/crafttweaker/CraftTweaker-common-1.18.2/)
 
 If you are in a multi-modloader environment (Such as [MultiLoader](https://github.com/jaredlll08/MultiLoader-Template)), you can bring the Common artifact (code that does not depend on any specific mod loader but rather just the vanilla game) into your Common project like so:
 
 ```groovy
 dependencies {
-    compileOnly('com.blamejared.crafttweaker:CraftTweaker-common-1.18.1:[VERSION]')
+    compileOnly('com.blamejared.crafttweaker:CraftTweaker-common-1.18.2:[VERSION]')
     // Example:
-    // compileOnly('com.blamejared.crafttweaker:CraftTweaker-common-1.18.1:9.0.0+24')
+    // compileOnly('com.blamejared.crafttweaker:CraftTweaker-common-1.18.2:9.1.83')
 }
 ```

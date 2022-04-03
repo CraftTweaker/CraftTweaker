@@ -8,7 +8,7 @@ plugins {
 group = "com.blamejared.crafttweaker"
 version = "2.0.0" + (if (System.getenv().containsKey("BUILD_NUMBER")) ".${System.getenv("BUILD_NUMBER")}" else "")
 
-val baseArchiveName = "Crafttweaker_Annotation-1.18.1"
+val baseArchiveName = "Crafttweaker_Annotation-1.18.2"
 
 base {
     archivesName.set(baseArchiveName)

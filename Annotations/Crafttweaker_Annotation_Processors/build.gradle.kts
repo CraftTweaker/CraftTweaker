@@ -9,7 +9,7 @@ group = "com.blamejared.crafttweaker"
 version = "2.0.0" + (if (System.getenv().containsKey("BUILD_NUMBER")) ".${System.getenv("BUILD_NUMBER")}" else "")
 
 val projectDeps = setOf(":Crafttweaker_Annotations", ":JavaAnnotations")
-val baseArchiveName = "Crafttweaker_Annotation_Processors-1.18.1"
+val baseArchiveName = "Crafttweaker_Annotation_Processors-1.18.2"
 
 base {
     archivesName.set(baseArchiveName)
