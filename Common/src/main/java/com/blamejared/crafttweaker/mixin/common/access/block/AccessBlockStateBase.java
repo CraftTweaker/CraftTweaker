@@ -10,60 +10,60 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public interface AccessBlockStateBase {
     
-    @Accessor
-    int getLightEmission();
+    @Accessor("lightEmission")
+    int crafttweaker$getLightEmission();
     
     @Mutable
-    @Accessor
-    void setLightEmission(int lightEmission);
+    @Accessor("lightEmission")
+    void crafttweaker$setLightEmission(int lightEmission);
     
-    @Accessor
-    boolean isUseShapeForLightOcclusion();
-    
-    @Mutable
-    @Accessor
-    void setUseShapeForLightOcclusion(boolean useShapeForLightOcclusion);
-    
-    @Accessor
-    boolean isIsAir();
+    @Accessor("useShapeForLightOcclusion")
+    boolean crafttweaker$isUseShapeForLightOcclusion();
     
     @Mutable
-    @Accessor
-    void setIsAir(boolean isAir);
+    @Accessor("useShapeForLightOcclusion")
+    void crafttweaker$setUseShapeForLightOcclusion(boolean useShapeForLightOcclusion);
     
-    @Accessor
-    Material getMaterial();
-    
-    @Mutable
-    @Accessor
-    void setMaterial(Material material);
-    
-    @Accessor
-    MaterialColor getMaterialColor();
+    @Accessor("isAir")
+    boolean crafttweaker$isIsAir();
     
     @Mutable
-    @Accessor
-    void setMaterialColor(MaterialColor materialColor);
+    @Accessor("isAir")
+    void crafttweaker$setIsAir(boolean isAir);
     
-    @Accessor
-    float getDestroySpeed();
-    
-    @Mutable
-    @Accessor
-    void setDestroySpeed(float destroySpeed);
-    
-    @Accessor
-    boolean isRequiresCorrectToolForDrops();
+    @Accessor("material")
+    Material crafttweaker$getMaterial();
     
     @Mutable
-    @Accessor
-    void setRequiresCorrectToolForDrops(boolean requiresCorrectToolForDrops);
+    @Accessor("material")
+    void crafttweaker$setMaterial(Material material);
     
-    @Accessor
-    boolean isCanOcclude();
+    @Accessor("materialColor")
+    MaterialColor crafttweaker$getMaterialColor();
     
     @Mutable
-    @Accessor
-    void setCanOcclude(boolean canOcclude);
+    @Accessor("materialColor")
+    void crafttweaker$setMaterialColor(MaterialColor materialColor);
+    
+    @Accessor("destroySpeed")
+    float crafttweaker$getDestroySpeed();
+    
+    @Mutable
+    @Accessor("destroySpeed")
+    void crafttweaker$setDestroySpeed(float destroySpeed);
+    
+    @Accessor("requiresCorrectToolForDrops")
+    boolean crafttweaker$isRequiresCorrectToolForDrops();
+    
+    @Mutable
+    @Accessor("requiresCorrectToolForDrops")
+    void crafttweaker$setRequiresCorrectToolForDrops(boolean requiresCorrectToolForDrops);
+    
+    @Accessor("canOcclude")
+    boolean crafttweaker$isCanOcclude();
+    
+    @Mutable
+    @Accessor("canOcclude")
+    void crafttweaker$setCanOcclude(boolean canOcclude);
     
 }

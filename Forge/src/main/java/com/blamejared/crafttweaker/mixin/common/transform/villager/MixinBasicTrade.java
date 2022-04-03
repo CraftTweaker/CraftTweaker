@@ -7,5 +7,4 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(BasicItemListing.class)
 public abstract class MixinBasicTrade implements IBasicItemListing {
     
-
 }

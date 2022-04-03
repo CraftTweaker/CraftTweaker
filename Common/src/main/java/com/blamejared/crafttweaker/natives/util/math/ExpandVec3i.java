@@ -173,33 +173,21 @@ public class ExpandVec3i {
     }
     
     @ZenCodeType.Method
-    public static boolean closerThan(Vec3i internal, Position position, double maxDistance) {
-        
-        return internal.closerThan(position, maxDistance);
-    }
-    
-    @ZenCodeType.Method
     public static double distSqr(Vec3i internal, Vec3i other) {
         
         return internal.distSqr(other);
     }
     
     @ZenCodeType.Method
-    public static double distSqr(Vec3i internal, Position position, boolean other) {
+    public static double distToCenterSqr(Vec3i internal, Position position) {
         
-        return internal.distSqr(position, other);
+        return internal.distToCenterSqr(position);
     }
     
     @ZenCodeType.Method
-    public static double distSqr(Vec3i internal, Vec3i other, boolean useCenter) {
+    public static double distToCenterSqr(Vec3i internal, double x, double y, double z) {
         
-        return internal.distSqr(other, useCenter);
-    }
-    
-    @ZenCodeType.Method
-    public static double distSqr(Vec3i internal, double x, double y, double z, boolean useCenter) {
-        
-        return internal.distSqr(x, y, z, useCenter);
+        return internal.distToCenterSqr(x, y, z);
     }
     
     @ZenCodeType.Method

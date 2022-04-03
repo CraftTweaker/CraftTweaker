@@ -26,7 +26,6 @@ public class Percentaged<T> implements CommandStringDisplayable {
         this.commandStringFunc = commandStringFunc;
     }
     
-    
     public T getData() {
         
         return data;

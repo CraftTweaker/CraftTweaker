@@ -1,10 +1,10 @@
 package com.blamejared.crafttweaker.api.action.recipe.replace;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
+import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.recipe.handler.IReplacementRule;
 import com.blamejared.crafttweaker.api.recipe.handler.ITargetingRule;
 import com.blamejared.crafttweaker.api.recipe.manager.GenericRecipesManager;
@@ -144,7 +144,7 @@ public final class ReplacerAction implements IRuntimeAction {
     private <T extends Container, U extends Recipe<T>> Optional<ActionReplaceRecipe<?>> execute(final IRecipeManager<?> manager, final U recipe, final List<IReplacementRule> rules) {
         
         try {
-            final IRecipeHandler<U> handler = CraftTweakerRegistry.getHandlerFor(recipe);
+            final IRecipeHandler<U> handler = IRecipeHandlerRegistry.getHandlerFor(recipe);
             final Optional<Function<ResourceLocation, U>> newRecipeMaybe = handler.replaceIngredients(manager, recipe, rules);
             
             if(newRecipeMaybe.isPresent()) {

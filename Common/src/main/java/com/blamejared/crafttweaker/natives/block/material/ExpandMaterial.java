@@ -133,7 +133,7 @@ public class ExpandMaterial {
     /**
      * Gets the bracket syntax for this Material
      *
-     * @return The {@code <blockmaterial>} Bracket Syntax for this material
+     * @return The {@code <material>} Bracket Syntax for this material
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("commandString")

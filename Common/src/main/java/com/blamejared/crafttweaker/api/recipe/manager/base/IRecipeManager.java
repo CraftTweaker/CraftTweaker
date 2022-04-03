@@ -17,7 +17,7 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.RecipeList;
 import com.blamejared.crafttweaker.api.util.NameUtil;
-import com.blamejared.crafttweaker.api.zencode.impl.util.PositionUtil;
+import com.blamejared.crafttweaker.api.zencode.util.PositionUtil;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.gson.Gson;
@@ -221,8 +221,9 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
      */
     default RecipeList<T> getRecipeList() {
         
-        return new RecipeList<>(getRecipeType(), getRecipes(), CraftTweakerAPI.getAccessibleRecipeManager()
-                .getByName());
+        return new RecipeList<>(getRecipeType(), getRecipes(), CraftTweakerAPI.getAccessibleElementsProvider()
+                .accessibleRecipeManager()
+                .crafttweaker$getByName());
     }
     
     /**
@@ -236,8 +237,9 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
      */
     default Map<ResourceLocation, T> getRecipes() {
         
-        return (Map<ResourceLocation, T>) CraftTweakerAPI.getAccessibleRecipeManager()
-                .getRecipes()
+        return (Map<ResourceLocation, T>) CraftTweakerAPI.getAccessibleElementsProvider()
+                .accessibleRecipeManager()
+                .crafttweaker$getRecipes()
                 .computeIfAbsent(getRecipeType(), key -> new HashMap<>());
     }
     

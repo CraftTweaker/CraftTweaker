@@ -62,7 +62,7 @@ public final class ExpandLocationPredicate {
     @ZenCodeType.StaticExpansionMethod
     public static LocationPredicate inFeature(final ResourceLocation feature) {
         
-        return LocationPredicate.inFeature(Registry.STRUCTURE_FEATURE.getOrThrow(ResourceKey.create(Registry.STRUCTURE_FEATURE_REGISTRY, feature)));
+        return LocationPredicate.inFeature(ResourceKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, feature));
     }
     
     @ZenCodeType.StaticExpansionMethod

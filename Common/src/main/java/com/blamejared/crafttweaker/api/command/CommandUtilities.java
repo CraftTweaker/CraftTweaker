@@ -17,7 +17,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-import java.io.File;
+import java.nio.file.Path;
 
 public final class CommandUtilities {
     
@@ -53,11 +53,11 @@ public final class CommandUtilities {
         }
     }
     
-    public static void open(final Player player, final File file) {
+    public static void open(final Player player, final Path path) {
     
-        MutableComponent component = new TranslatableComponent("crafttweaker.command.click.open", new TextComponent(file.getPath()).withStyle(ChatFormatting.GOLD));
+        MutableComponent component = new TranslatableComponent("crafttweaker.command.click.open", new TextComponent(path.toString()).withStyle(ChatFormatting.GOLD));
         send(component.withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, component.copy()))
-                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file.getPath()))), player);
+                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, path.toString()))), player);
     }
     
     public static String stripNewLine(String string) {

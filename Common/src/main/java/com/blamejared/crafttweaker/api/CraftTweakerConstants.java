@@ -2,17 +2,17 @@ package com.blamejared.crafttweaker.api;
 
 import net.minecraft.resources.ResourceLocation;
 
-import java.io.File;
 import java.util.UUID;
 
-public class CraftTweakerConstants {
+public final class CraftTweakerConstants {
     
     public static final String MOD_ID = "crafttweaker";
     public static final String MOD_NAME = "CraftTweaker";
-    public static final UUID CRAFTTWEAKER_UUID = UUID.nameUUIDFromBytes(MOD_ID.getBytes());
-    public static final File SCRIPT_DIR = new File("scripts");
+    public static final String SCRIPTS_DIRECTORY = "./scripts";
     public static final String LOG_PATH = "logs/crafttweaker.log";
     
+    public static final String ALL_LOADERS_MARKER = "*";
+    public static final String INIT_LOADER_NAME = "initialize";
     public static final String DEFAULT_LOADER_NAME = "crafttweaker";
     
     /**
@@ -20,6 +20,10 @@ public class CraftTweakerConstants {
      */
     public static final String NETWORK_VERSION = "1.0.0";
     
+    public static final UUID CRAFTTWEAKER_UUID = UUID.nameUUIDFromBytes(MOD_ID.getBytes());
+    
+    public static final ResourceLocation RELOAD_LISTENER_SOURCE_ID = CraftTweakerConstants.rl("reload_listener");
+    public static final ResourceLocation CLIENT_RECIPES_UPDATED_SOURCE_ID = CraftTweakerConstants.rl("client_recipes_updated");
     
     public static ResourceLocation rl(String path) {
         

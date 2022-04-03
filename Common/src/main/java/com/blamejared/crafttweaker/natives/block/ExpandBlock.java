@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.natives.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -26,6 +27,7 @@ import java.util.List;
 @ZenRegister
 @Document("vanilla/api/block/Block")
 @NativeTypeRegistration(value = Block.class, zenCodeName = "crafttweaker.api.block.Block")
+@TaggableElement("minecraft:block")
 public class ExpandBlock {
     
     /**
@@ -72,6 +74,7 @@ public class ExpandBlock {
      * @return True if an entity can be spawned in this Block. False Otherwise.
      */
     @ZenCodeType.Method
+    @ZenCodeType.Getter("isPossibleToRespawnInThis")
     public static boolean isPossibleToRespawnInThis(Block internal) {
         
         return internal.isPossibleToRespawnInThis();
@@ -83,7 +86,7 @@ public class ExpandBlock {
      * @return The unlocalized name of this block.
      */
     @ZenCodeType.Method
-    @ZenCodeType.Getter("translationKey")
+    @ZenCodeType.Getter("descriptionId")
     public static String getDescriptionId(Block internal) {
         
         return internal.getDescriptionId();
@@ -113,7 +116,7 @@ public class ExpandBlock {
      * @return A list of valid {@link BlockState}s for this Block.
      */
     @ZenCodeType.Method
-    @ZenCodeType.Getter("validStates")
+    @ZenCodeType.Getter("possibleStates")
     public static List<BlockState> getPossibleStates(Block internal) {
         
         return internal.getStateDefinition().getPossibleStates();
@@ -142,7 +145,7 @@ public class ExpandBlock {
     @ZenCodeType.Getter("friction")
     public static float getFriction(Block internal) {
         
-        return ((AccessBlockBehaviour) internal).getFriction();
+        return ((AccessBlockBehaviour) internal).crafttweaker$getFriction();
     }
     
     /**
@@ -154,10 +157,10 @@ public class ExpandBlock {
      */
     @ZenCodeType.Method
     @ZenCodeType.Setter("friction")
-    public static void setSlipperiness(Block internal, float friction) {
+    public static void setFriction(Block internal, float friction) {
         
-        CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Slipperiness",
-                friction, ((AccessBlockBehaviour) internal).getFriction(), ((AccessBlockBehaviour) internal)::setFriction));
+        CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Friction",
+                friction, ((AccessBlockBehaviour) internal).crafttweaker$getFriction(), ((AccessBlockBehaviour) internal)::crafttweaker$setFriction));
     }
     
     /**
@@ -184,7 +187,7 @@ public class ExpandBlock {
     public static void setSpeedFactor(Block internal, float speedFactor) {
         
         CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Speed Factor",
-                speedFactor, ((AccessBlockBehaviour) internal).getSpeedFactor(), ((AccessBlockBehaviour) internal)::setSpeedFactor));
+                speedFactor, ((AccessBlockBehaviour) internal).crafttweaker$getSpeedFactor(), ((AccessBlockBehaviour) internal)::crafttweaker$setSpeedFactor));
     }
     
     /**
@@ -211,7 +214,7 @@ public class ExpandBlock {
     public static void setJumpFactor(Block internal, float jumpFactor) {
         
         CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Jump Factor",
-                jumpFactor, ((AccessBlockBehaviour) internal).getJumpFactor(), ((AccessBlockBehaviour) internal)::setJumpFactor));
+                jumpFactor, ((AccessBlockBehaviour) internal).crafttweaker$getJumpFactor(), ((AccessBlockBehaviour) internal)::crafttweaker$setJumpFactor));
     }
     
     
@@ -251,7 +254,7 @@ public class ExpandBlock {
     @ZenCodeType.Getter("hasCollision")
     public static boolean hasCollision(Block internal) {
         
-        return ((AccessBlockBehaviour) internal).getHasCollision();
+        return ((AccessBlockBehaviour) internal).crafttweaker$getHasCollision();
     }
     
     /**
@@ -262,11 +265,11 @@ public class ExpandBlock {
      * @docParam canCollide true
      */
     @ZenCodeType.Method
-    @ZenCodeType.Setter("canCollide")
+    @ZenCodeType.Setter("hasCollision")
     public static void setHasCollision(Block internal, boolean canCollide) {
         
         CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Has Collision",
-                canCollide, ((AccessBlockBehaviour) internal).getHasCollision(), ((AccessBlockBehaviour) internal)::setHasCollision));
+                canCollide, ((AccessBlockBehaviour) internal).crafttweaker$getHasCollision(), ((AccessBlockBehaviour) internal)::crafttweaker$setHasCollision));
     }
     
     /**
@@ -278,7 +281,7 @@ public class ExpandBlock {
     @ZenCodeType.Getter("explosionResistance")
     public static float getExplosionResistance(Block internal) {
         
-        return ((AccessBlockBehaviour) internal).getExplosionResistance();
+        return ((AccessBlockBehaviour) internal).crafttweaker$getExplosionResistance();
     }
     
     /**
@@ -293,7 +296,7 @@ public class ExpandBlock {
     public static void setExplosionResistance(Block internal, float resistance) {
         
         CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Explosion Resistance",
-                resistance, ((AccessBlockBehaviour) internal).getExplosionResistance(), ((AccessBlockBehaviour) internal)::setExplosionResistance));
+                resistance, ((AccessBlockBehaviour) internal).crafttweaker$getExplosionResistance(), ((AccessBlockBehaviour) internal)::crafttweaker$setExplosionResistance));
     }
     
     /**
@@ -305,7 +308,7 @@ public class ExpandBlock {
     @ZenCodeType.Getter("material")
     public static Material getMaterial(Block internal) {
         
-        return ((AccessBlockBehaviour) internal).getMaterial();
+        return ((AccessBlockBehaviour) internal).crafttweaker$getMaterial();
     }
     
     /**
@@ -313,15 +316,15 @@ public class ExpandBlock {
      *
      * @param material The new material of this Block.
      *
-     * @docParam material <blockmaterial:earth>
+     * @docParam material <material:earth>
      */
     @ZenCodeType.Method
     @ZenCodeType.Setter("material")
     public static void setMaterial(Block internal, Material material) {
         
         CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal,
-                "Material", material, ((AccessBlockBehaviour) internal).getMaterial(),
-                ((AccessBlockBehaviour) internal)::setMaterial, ExpandMaterial::getCommandString));
+                "Material", material, ((AccessBlockBehaviour) internal).crafttweaker$getMaterial(),
+                ((AccessBlockBehaviour) internal)::crafttweaker$setMaterial, ExpandMaterial::getCommandString));
     }
     
     @ZenCodeType.Caster(implicit = true)

@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.api.action.villager.ActionTradeBase;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.plugin.IVillagerTradeRegistrationHandler;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessDyedArmorForEmeralds;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessEmeraldForItems;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessEnchantedItemForEmeralds;
@@ -17,12 +18,12 @@ import com.blamejared.crafttweaker.mixin.common.access.villager.AccessItemsForEm
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessTippedArrowForItemsAndEmeralds;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.Util;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.trading.MerchantOffer;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -30,6 +31,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -44,96 +47,34 @@ public class CTVillagerTrades {
     public static final CTVillagerTrades INSTANCE = new CTVillagerTrades();
     public static final List<ActionTradeBase> ACTIONS_VILLAGER_TRADES = new ArrayList<>();
     public static final List<ActionTradeBase> ACTION_WANDERING_TRADES = new ArrayList<>();
+    /**
+     * Use {@link com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin#registerVillagerTradeConverters(IVillagerTradeRegistrationHandler)} to register custom trades to this list
+     */
+    public static final Map<Class<VillagerTrades.ItemListing>, Function<VillagerTrades.ItemListing, CTTradeObject>> TRADE_CONVERTER = new HashMap<>();
     // The event only fires once, so we use this to make sure we don't constantly add to the above lists
     public static boolean RAN_EVENTS = false;
     
-    // If you are a modder looking at this map and wondering how you can add your own trade type here,
-    // make a GitHub issue! We are super open to making a whole system to register
-    // your custom trade types but don't want to waste time if there is no interest.
-    // The system we add would be similar to IRecipeHandler, with an annotation based loading system.
-    public static final Map<Class<? extends VillagerTrades.ItemListing>, Function<VillagerTrades.ItemListing, CTTradeObject>> TRADE_CONVERTER = Util.make(new HashMap<>(), classFunctionMap -> {
-        final IItemStack emerald = Services.PLATFORM.createMCItemStackMutable(new ItemStack(Items.EMERALD));
-        final IItemStack compass = Services.PLATFORM.createMCItemStackMutable(new ItemStack(Items.COMPASS));
-        final IItemStack book = Services.PLATFORM.createMCItemStackMutable(new ItemStack(Items.BOOK));
-        final IItemStack enchantedBook = Services.PLATFORM.createMCItemStackMutable(new ItemStack(Items.ENCHANTED_BOOK));
-        final IItemStack filledMap = Services.PLATFORM.createMCItemStackMutable(new ItemStack(Items.FILLED_MAP));
-        final IItemStack suspiciousStew = Services.PLATFORM.createMCItemStackMutable(new ItemStack(Items.SUSPICIOUS_STEW));
+    /**
+     * Adds a new custom trade with the selling and buying items determined by the custom MerchantOffer generator.
+     *
+     * The function will only run when the villager resolves the trade.
+     *
+     * @param profession     What profession this trade should be for.
+     * @param villagerLevel  The level the Villager needs to be.
+     * @param offerGenerator A generator method to make a new MerchantOffer.
+     *
+     * @docParam profession <profession:minecraft:farmer>
+     * @docParam villagerLevel 1
+     * @docParam offerGenerator (entity, random) => {
+     * return new MerchantOffer(<item:minecraft:dirt>, <item:minecraft:diamond>, 0, 5);
+     * }
+     */
+    @ZenCodeType.Method
+    public void addTrade(VillagerProfession profession, int villagerLevel, BiFunction<Entity, Random, @ZenCodeType.Nullable MerchantOffer> offerGenerator) {
         
-        classFunctionMap.put(VillagerTrades.DyedArmorForEmeralds.class, iTrade -> {
-            if(iTrade instanceof VillagerTrades.DyedArmorForEmeralds) {
-                return new CTTradeObject(
-                        emerald,
-                        Services.PLATFORM.getEmptyIItemStack(),
-                        Services.PLATFORM.createMCItemStackMutable(((AccessDyedArmorForEmeralds) iTrade).getItem()
-                                .getDefaultInstance()));
-            }
-            throw new IllegalArgumentException("Invalid trade passed to trade function! Given: " + iTrade.getClass());
-        });
-        classFunctionMap.put(VillagerTrades.EmeraldForItems.class, iTrade -> {
-            if(iTrade instanceof VillagerTrades.EmeraldForItems) {
-                return new CTTradeObject(
-                        Services.PLATFORM.createMCItemStackMutable(((AccessEmeraldForItems) iTrade).getItem()
-                                .getDefaultInstance()),
-                        Services.PLATFORM.getEmptyIItemStack(),
-                        emerald);
-            }
-            throw new IllegalArgumentException("Invalid trade passed to trade function! Given: " + iTrade.getClass());
-        });
-        classFunctionMap.put(VillagerTrades.TreasureMapForEmeralds.class, iTrade -> new CTTradeObject(
-                emerald,
-                compass,
-                filledMap));
-        classFunctionMap.put(VillagerTrades.EmeraldsForVillagerTypeItem.class, iTrade -> new CTTradeObject(
-                // This trade has random inputs, there isn't a good way to get them, so just going to use air.
-                Services.PLATFORM.getEmptyIItemStack(),
-                Services.PLATFORM.getEmptyIItemStack(),
-                emerald));
-        classFunctionMap.put(VillagerTrades.EnchantBookForEmeralds.class, iTrade -> new CTTradeObject(
-                emerald,
-                book,
-                enchantedBook));
-        classFunctionMap.put(VillagerTrades.EnchantedItemForEmeralds.class, iTrade -> {
-            if(iTrade instanceof VillagerTrades.EnchantedItemForEmeralds) {
-                return new CTTradeObject(
-                        emerald,
-                        Services.PLATFORM.getEmptyIItemStack(),
-                        Services.PLATFORM.createMCItemStackMutable(((AccessEnchantedItemForEmeralds) iTrade).getItemStack()));
-            }
-            throw new IllegalArgumentException("Invalid trade passed to trade function! Given: " + iTrade.getClass());
-        });
-        classFunctionMap.put(VillagerTrades.TippedArrowForItemsAndEmeralds.class, iTrade -> {
-            if(iTrade instanceof VillagerTrades.TippedArrowForItemsAndEmeralds) {
-                return new CTTradeObject(
-                        emerald,
-                        Services.PLATFORM.createMCItemStackMutable(((AccessTippedArrowForItemsAndEmeralds) iTrade).getFromItem()
-                                .getDefaultInstance()),
-                        Services.PLATFORM.createMCItemStackMutable(((AccessTippedArrowForItemsAndEmeralds) iTrade).getToItem()));
-            }
-            throw new IllegalArgumentException("Invalid trade passed to trade function! Given: " + iTrade.getClass());
-        });
-        classFunctionMap.put(VillagerTrades.ItemsAndEmeraldsToItems.class, iTrade -> {
-            if(iTrade instanceof VillagerTrades.ItemsAndEmeraldsToItems) {
-                return new CTTradeObject(
-                        emerald,
-                        Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) iTrade).getFromItem()),
-                        Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) iTrade).getToItem()));
-            }
-            throw new IllegalArgumentException("Invalid trade passed to trade function! Given: " + iTrade.getClass());
-        });
-        classFunctionMap.put(VillagerTrades.ItemsForEmeralds.class, iTrade -> {
-            if(iTrade instanceof VillagerTrades.ItemsForEmeralds) {
-                return new CTTradeObject(
-                        emerald,
-                        Services.PLATFORM.getEmptyIItemStack(),
-                        Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) iTrade).getItemStack()));
-            }
-            throw new IllegalArgumentException("Invalid trade passed to trade function! Given: " + iTrade.getClass());
-        });
-        classFunctionMap.put(VillagerTrades.SuspiciousStewForEmerald.class, iTrade -> new CTTradeObject(
-                emerald,
-                Services.PLATFORM.getEmptyIItemStack(),
-                suspiciousStew));
-    });
+        CustomTradeListing trade = new CustomTradeListing(offerGenerator);
+        addTradeInternal(profession, villagerLevel, trade);
+    }
     
     /**
      * Adds a Villager Trade for emeralds for an Item. An example being, giving a villager 2 emeralds for an arrow.
@@ -264,7 +205,7 @@ public class CTVillagerTrades {
         
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.EmeraldForItems) {
-                return ((AccessEmeraldForItems) trade).getItem() == tradeFor;
+                return ((AccessEmeraldForItems) trade).crafttweaker$getItem() == tradeFor;
             } else if(trade instanceof IBasicItemListing basicTrade) {
                 return basicTrade.getForSale().getItem() == tradeFor;
             }
@@ -288,7 +229,7 @@ public class CTVillagerTrades {
         
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.ItemsForEmeralds) {
-                return sellingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) trade).getItemStack()));
+                return sellingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) trade).crafttweaker$getItemStack()));
             } else if(trade instanceof IBasicItemListing basicTrade) {
                 return Services.PLATFORM.createMCItemStackMutable(basicTrade.getPrice())
                         .matches(sellingItem);
@@ -315,8 +256,8 @@ public class CTVillagerTrades {
         
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.ItemsAndEmeraldsToItems) {
-                if(sellingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) trade).getToItem()))) {
-                    return buyingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) trade).getFromItem()));
+                if(sellingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) trade).crafttweaker$getToItem()))) {
+                    return buyingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) trade).crafttweaker$getFromItem()));
                 }
             } else if(trade instanceof IBasicItemListing basicTrade) {
                 if(sellingItem.matches(Services.PLATFORM.createMCItemStackMutable(basicTrade.getPrice()))) {
@@ -345,8 +286,8 @@ public class CTVillagerTrades {
         
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.TippedArrowForItemsAndEmeralds) {
-                if(potionStack.matches(Services.PLATFORM.createMCItemStackMutable(((AccessTippedArrowForItemsAndEmeralds) trade).getToItem()))) {
-                    return sellingItem == ((AccessTippedArrowForItemsAndEmeralds) trade).getFromItem();
+                if(potionStack.matches(Services.PLATFORM.createMCItemStackMutable(((AccessTippedArrowForItemsAndEmeralds) trade).crafttweaker$getToItem()))) {
+                    return sellingItem == ((AccessTippedArrowForItemsAndEmeralds) trade).crafttweaker$getFromItem();
                 }
             }
             return false;
@@ -369,7 +310,7 @@ public class CTVillagerTrades {
         
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.DyedArmorForEmeralds) {
-                return ((AccessDyedArmorForEmeralds) trade).getItem() == buyingItem;
+                return ((AccessDyedArmorForEmeralds) trade).crafttweaker$getItem() == buyingItem;
             }
             return false;
         });
@@ -421,7 +362,7 @@ public class CTVillagerTrades {
         
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.EnchantedItemForEmeralds) {
-                return buyingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessEnchantedItemForEmeralds) trade).getItemStack()));
+                return buyingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessEnchantedItemForEmeralds) trade).crafttweaker$getItemStack()));
             }
             return false;
         });
@@ -628,7 +569,7 @@ public class CTVillagerTrades {
         
         removeWanderingTradeInternal(rarity, trade -> {
             if(trade instanceof VillagerTrades.ItemsForEmeralds) {
-                return tradeFor.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) trade).getItemStack()));
+                return tradeFor.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) trade).crafttweaker$getItemStack()));
             } else if(trade instanceof IBasicItemListing basicTrade) {
                 return tradeFor.matches(Services.PLATFORM.createMCItemStackMutable(basicTrade.getForSale()));
             }
@@ -650,7 +591,7 @@ public class CTVillagerTrades {
         
         removeWanderingTradeInternal(rarity, trade -> {
             if(trade instanceof VillagerTrades.ItemsForEmeralds) {
-                return tradeFor.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) trade).getItemStack()));
+                return tradeFor.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) trade).crafttweaker$getItemStack()));
             } else if(trade instanceof IBasicItemListing basicTrade) {
                 return tradeFor.matches(Services.PLATFORM.createMCItemStackMutable(basicTrade.getForSale()));
             }

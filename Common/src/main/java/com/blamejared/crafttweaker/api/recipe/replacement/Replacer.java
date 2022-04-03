@@ -25,7 +25,7 @@ import com.blamejared.crafttweaker.api.recipe.replacement.rule.SpecificRecipesTa
 import com.blamejared.crafttweaker.api.recipe.replacement.rule.StackTargetingReplacementRule;
 import com.blamejared.crafttweaker.api.recipe.replacement.rule.ZenTargetingRule;
 import com.blamejared.crafttweaker.api.util.NameUtil;
-import com.blamejared.crafttweaker.api.zencode.impl.util.PositionUtil;
+import com.blamejared.crafttweaker.api.zencode.util.PositionUtil;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.common.base.Suppliers;

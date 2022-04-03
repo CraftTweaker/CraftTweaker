@@ -12,11 +12,13 @@ import net.minecraft.world.InteractionResult;
 
 public class CraftTweakerFabric implements ModInitializer {
     
-    
     @Override
     public void onInitialize() {
         
         CraftTweakerCommon.init();
+        CraftTweakerCommon.getPluginManager().loadPlugins();
+        
+        // TODO("Will be removed")
         CraftTweakerCommon.registerCommandArguments();
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
             CraftTweakerCommon.registerCommands(dispatcher, dedicated ? Commands.CommandSelection.DEDICATED : Commands.CommandSelection.INTEGRATED);
@@ -37,7 +39,7 @@ public class CraftTweakerFabric implements ModInitializer {
         
         CraftTweakerEvents.GATHER_REPLACEMENT_EXCLUSION_EVENT.register(DefaultExclusionReplacements::handleDefaultExclusions);
         
-        Services.PLATFORM.registerCustomTags();
+        CraftTweakerCommon.getPluginManager().broadcastSetupEnd(); // TODO("Another place?")
         
         CraftTweakerCommon.loadInitScripts();
     }

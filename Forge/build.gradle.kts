@@ -51,13 +51,13 @@ dependencies {
         implementation(project(it.toString()))
     }
 
-    implementation(fg.deobf("mezz.jei:jei-1.18.1:9.1.2.68"))
+    implementation(fg.deobf("mezz.jei:jei-1.18.2:9.5.2.133"))
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
 
 }
 
 minecraft {
-    mappings("parchment", "2021.12.19-1.18.1")
+    mappings("parchment", "2022.03.13-1.18.2")
 
     if (forgeAtsEnabled.toBoolean()) {
         accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg"))
@@ -160,6 +160,24 @@ tasks.withType<JavaCompile> {
 
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         source(project(it.toString()).sourceSets.main.get().allSource)
+    }
+}
+
+tasks.withType<Javadoc> {
+    source(project(":Common").sourceSets.main.get().allJava)
+    source(project(":Crafttweaker_Annotations").sourceSets.main.get().allJava)
+
+    (project.ext["zenCodeDeps"] as Set<*>).forEach {
+        source(project(it.toString()).sourceSets.main.get().allJava)
+    }
+}
+
+tasks.named<Jar>("sourcesJar") {
+    from(project(":Common").sourceSets.main.get().allSource)
+    from(project(":Crafttweaker_Annotations").sourceSets.main.get().allSource)
+
+    (project.ext["zenCodeDeps"] as Set<*>).forEach {
+        from(project(it.toString()).sourceSets.main.get().allSource)
     }
 }
 

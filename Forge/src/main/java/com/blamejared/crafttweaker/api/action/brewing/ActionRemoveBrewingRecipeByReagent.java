@@ -30,7 +30,7 @@ public class ActionRemoveBrewingRecipeByReagent extends ActionBrewingBase {
     @Override
     public void apply() {
         
-        Iterator<PotionBrewing.Mix<Potion>> vanillaIterator = AccessPotionBrewing.getPOTION_MIXES().iterator();
+        Iterator<PotionBrewing.Mix<Potion>> vanillaIterator = AccessPotionBrewing.crafttweaker$getPOTION_MIXES().iterator();
         while(vanillaIterator.hasNext()) {
             PotionBrewing.Mix<Potion> mix = vanillaIterator.next();
             
@@ -65,7 +65,7 @@ public class ActionRemoveBrewingRecipeByReagent extends ActionBrewingBase {
                 CraftTweakerAPI.LOGGER.error("Error getting mix entries! potionInput: {}, itemReagent: {}, potionOutput: {}", potionInput, itemReagent, potionOutput);
                 continue;
             }
-            AccessPotionBrewing.callAddMix(potionInput.get(), itemReagent.getItems()[0].getItem(), potionOutput.get());
+            AccessPotionBrewing.crafttweaker$callAddMix(potionInput.get(), itemReagent.getItems()[0].getItem(), potionOutput.get());
         }
         removedRecipes.forEach(BrewingRecipeRegistry::addRecipe);
     }

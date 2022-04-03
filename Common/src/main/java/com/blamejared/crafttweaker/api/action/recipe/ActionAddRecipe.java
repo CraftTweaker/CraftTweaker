@@ -42,7 +42,7 @@ public class ActionAddRecipe<T extends Recipe<?>> extends ActionRecipeBase<T> {
     
     private String getSubTypeDescription() {
         
-        if(subType != null && !subType.trim().isEmpty()) {
+        if(subType != null && !subType.isBlank()) {
             return ", of type: \"" + subType + "\"";
         } else {
             return "";

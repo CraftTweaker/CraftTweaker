@@ -1,8 +1,8 @@
 package com.blamejared.crafttweaker.api.action.item;
 
-import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessItem;
 import net.minecraft.world.food.FoodProperties;
 
@@ -22,8 +22,7 @@ public class ActionSetFood implements IUndoableAction {
     @Override
     public void apply() {
         
-        ((AccessItem) this.stack.getInternal()
-                .getItem()).setFoodProperties(newFood);
+        ((AccessItem) this.stack.getInternal().getItem()).crafttweaker$setFoodProperties(newFood);
     }
     
     @Override
@@ -37,8 +36,7 @@ public class ActionSetFood implements IUndoableAction {
     @Override
     public void undo() {
         
-        ((AccessItem) this.stack.getInternal()
-                .getItem()).setFoodProperties(oldFood);
+        ((AccessItem) this.stack.getInternal().getItem()).crafttweaker$setFoodProperties(oldFood);
     }
     
     @Override
@@ -48,7 +46,7 @@ public class ActionSetFood implements IUndoableAction {
     }
     
     @Override
-    public boolean shouldApplyOn(ScriptLoadingOptions.ScriptLoadSource source) {
+    public boolean shouldApplyOn(final IScriptLoadSource source) {
         
         return true;
     }

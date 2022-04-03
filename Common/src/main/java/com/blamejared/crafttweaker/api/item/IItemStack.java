@@ -45,10 +45,10 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     String CRAFTTWEAKER_DATA_KEY = "CraftTweakerData";
     
     @ZenCodeType.Field
-    UUID BASE_ATTACK_DAMAGE_UUID = AccessItem.getBASE_ATTACK_DAMAGE_UUID();
+    UUID BASE_ATTACK_DAMAGE_UUID = AccessItem.crafttweaker$getBASE_ATTACK_DAMAGE_UUID();
     
     @ZenCodeType.Field
-    UUID BASE_ATTACK_SPEED_UUID = AccessItem.getBASE_ATTACK_SPEED_UUID();
+    UUID BASE_ATTACK_SPEED_UUID = AccessItem.crafttweaker$getBASE_ATTACK_SPEED_UUID();
     
     /**
      * Creates a copy
@@ -114,7 +114,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         
         CraftTweakerAPI.apply(new ActionSetItemProperty<>(this, "Max Stack Size", newMaxStackSize, this.getInternal()
                 .getItem().getMaxStackSize(), ((AccessItem) this.getInternal()
-                .getItem())::setMaxStackSize));
+                .getItem())::crafttweaker$setMaxStackSize));
     }
     
     /**
@@ -142,7 +142,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         
         CraftTweakerAPI.apply(new ActionSetItemProperty<>(this, "Rarity", newRarity, this.getInternal()
                 .getRarity(), ((AccessItem) this.getInternal()
-                .getItem())::setRarity));
+                .getItem())::crafttweaker$setRarity));
     }
     
     
@@ -231,7 +231,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      *
      * @return ItemStack repair cost or 0 if no repair is set.
      */
-    @ZenCodeType.Getter("getBaseRepairCost")
+    @ZenCodeType.Getter("baseRepairCost")
     default int getBaseRepairCost() {
         
         return getInternal().getBaseRepairCost();
@@ -503,7 +503,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         
         CraftTweakerAPI.apply(new ActionSetItemProperty<>(this, "Max Damage", newMaxDamage, this.getInternal()
                 .getMaxDamage(), ((AccessItem) this.getInternal()
-                .getItem())::setMaxDamage));
+                .getItem())::crafttweaker$setMaxDamage));
     }
     
     /**
@@ -572,7 +572,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      *
      * @return MapData of the ItemStack NBT Tag, empty tag if it doesn't exist.
      */
-    @ZenCodeType.Getter("getOrCreate")
+    @ZenCodeType.Method
     default MapData getOrCreateTag() {
         
         if(getInternal().getTag() == null) {
@@ -669,7 +669,6 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         return getInternal().isEdible();
     }
     
-    //TODO Forge specific getBurnTime for a recipe type? Could make it common and just have the fabric one always returning the same value?
     @ZenCodeType.Getter("burnTime")
     default int getBurnTime() {
         
@@ -703,7 +702,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         
         CraftTweakerAPI.apply(new ActionSetItemProperty<>(this, "Fire Resistant", fireResistant, this.getInternal()
                 .getItem().isFireResistant(), ((AccessItem) this.getInternal()
-                .getItem())::setFireResistant));
+                .getItem())::crafttweaker$setFireResistant));
     }
     
     @ZenCodeType.Method

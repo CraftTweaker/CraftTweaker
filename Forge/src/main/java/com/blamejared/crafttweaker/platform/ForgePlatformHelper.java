@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.platform;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
+import com.blamejared.crafttweaker.CraftTweakerCommon;
+import com.blamejared.crafttweaker.api.fluid.MCFluidStack;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.MCItemStack;
 import com.blamejared.crafttweaker.api.item.MCItemStackMutable;
@@ -9,27 +9,24 @@ import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
 import com.blamejared.crafttweaker.api.mod.Mod;
 import com.blamejared.crafttweaker.api.recipe.handler.helper.CraftingTableRecipeConflictChecker;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
-import com.blamejared.crafttweaker.api.tag.manager.TagManagerWrapper;
-import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistryData;
-import com.blamejared.crafttweaker.api.util.HandleHelper;
-import com.blamejared.crafttweaker.api.util.StringUtils;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
+import com.blamejared.crafttweaker.api.util.HandleUtil;
+import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.api.villager.CTTradeObject;
 import com.blamejared.crafttweaker.impl.loot.CraftTweakerPrivilegedLootModifierMap;
 import com.blamejared.crafttweaker.impl.loot.ForgeLootModifierMapAdapter;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
 import com.blamejared.crafttweaker.impl.script.ScriptSerializer;
-import com.blamejared.crafttweaker.mixin.common.access.tag.AccessStaticTags;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessBasicTrade;
 import com.blamejared.crafttweaker.platform.helper.inventory.IItemHandlerWrapper;
 import com.blamejared.crafttweaker.platform.services.IPlatformHelper;
 import com.google.common.base.Suppliers;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.Util;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.SerializationTags;
-import net.minecraft.tags.StaticTagHelper;
-import net.minecraft.tags.StaticTags;
-import net.minecraft.tags.TagCollection;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
@@ -39,16 +36,17 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.BasicItemListing;
 import net.minecraftforge.common.ForgeInternalHandler;
-import net.minecraftforge.common.ForgeTagHandler;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifierManager;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.forgespi.language.ModFileScanData;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.registries.ForgeRegistry;
-import net.minecraftforge.registries.RegistryManager;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.objectweb.asm.Type;
 
@@ -57,13 +55,14 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Collection;
+import java.nio.file.Path;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -74,8 +73,8 @@ public class ForgePlatformHelper implements IPlatformHelper {
     
     private static final class Handles {
         
-        private static final MethodHandle LMM_GETTER = HandleHelper.linkMethod(ForgeInternalHandler.class, "getLootModifierManager", LootModifierManager.class);
-        private static final VarHandle LMM_MAP = HandleHelper.linkField(LootModifierManager.class, "registeredLootModifiers", "()Ljava/util/Map;");
+        private static final MethodHandle LMM_GETTER = HandleUtil.linkMethod(ForgeInternalHandler.class, "getLootModifierManager", LootModifierManager.class);
+        private static final VarHandle LMM_MAP = HandleUtil.linkField(LootModifierManager.class, "registeredLootModifiers", "()Ljava/util/Map;");
         
     }
     
@@ -158,6 +157,11 @@ public class ForgePlatformHelper implements IPlatformHelper {
         return item.getFluid();
     }
     
+    @Override
+    public Path getGameDirectory() {
+        
+        return FMLPaths.GAMEDIR.get();
+    }
     
     @Override
     public <T extends Annotation> Stream<? extends Class<?>> findClassesWithAnnotation(Class<T> annotationCls, Consumer<Mod> consumer, Predicate<Either<T, Map<String, Object>>> annotationFilter) {
@@ -177,7 +181,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
                                 .map(iModInfo -> new Mod(iModInfo.getModId(), iModInfo.getDisplayName(), iModInfo.getVersion()
                                         .toString())).forEach(consumer))
                         .map(ModFileScanData.AnnotationData::clazz))
-                .map(CraftTweakerRegistry::getClassFromType)
+                .map(ForgePlatformHelper::getClassFromType)
                 .filter(Objects::nonNull);
     }
     
@@ -187,7 +191,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
         try {
             return ObfuscationReflectionHelper.findMethod(type, methodName, arguments);
         } catch(final ObfuscationReflectionHelper.UnableToFindMethodException e) {
-            throw new HandleHelper.UnableToLinkHandleException("Method %s was not found inside class %s".formatted(StringUtils.quoteAndEscape(methodName), type.getName()), e);
+            throw new HandleUtil.UnableToLinkHandleException("Method %s was not found inside class %s".formatted(StringUtil.quoteAndEscape(methodName), type.getName()), e);
         }
     }
     
@@ -195,74 +199,11 @@ public class ForgePlatformHelper implements IPlatformHelper {
     public <T> Field findField(@NotNull final Class<? super T> clazz, @NotNull final String fieldName, @NotNull final String fieldDescription) {
         
         try {
-            return ObfuscationReflectionHelper.findField(castToSuperExplicitly(clazz), fieldName);
+            return ObfuscationReflectionHelper.findField(GenericUtil.castToSuperExplicitly(clazz), fieldName);
         } catch(final ObfuscationReflectionHelper.UnableToFindFieldException e) {
-            throw new HandleHelper.UnableToLinkHandleException("Field %s was not found inside class %s".formatted(StringUtils.quoteAndEscape(fieldName), clazz.getName()), e);
+            throw new HandleUtil.UnableToLinkHandleException("Field %s was not found inside class %s".formatted(StringUtil.quoteAndEscape(fieldName), clazz.getName()), e);
         }
     }
-    
-    @Override
-    public Map<ResourceLocation, TagCollection<?>> getCustomTags() {
-        
-        Map<ResourceLocation, TagCollection<?>> customTags = new HashMap<>();
-        for(ResourceLocation customTagTypeName : ForgeTagHandler.getCustomTagTypeNames()) {
-            StaticTagHelper<?> helper = StaticTags.get(customTagTypeName);
-            if(helper != null) {
-                customTags.put(customTagTypeName, SerializationTags.getInstance().getOrEmpty(helper.getKey()));
-            }
-        }
-        
-        return customTags;
-    }
-    
-    @Override
-    public Collection<StaticTagHelper<?>> getStaticTagHelpers() {
-        
-        return AccessStaticTags.getHELPERS();
-    }
-    
-    public void registerCustomTags() {
-        
-        final RegistryManager registryManager = RegistryManager.ACTIVE;
-        for(final ResourceLocation key : ForgeTagHandler.getCustomTagTypeNames()) {
-            if(registryManager.getRegistry(key) == null) {
-                CraftTweakerAPI.LOGGER.warn("Unsupported TagCollection without registry: " + key);
-                continue;
-            }
-            
-            final ForgeRegistry<?> registry = registryManager.getRegistry(key);
-            String tagFolder = registry.getTagFolder();
-            if(tagFolder == null) {
-                if(key.getNamespace().equals("minecraft")) {
-                    tagFolder = key.getPath();
-                } else {
-                    CraftTweakerAPI.LOGGER.warn("Could not find tagFolder for registry '{}'", key);
-                    continue;
-                }
-            }
-            
-            if(CrTTagRegistryData.INSTANCE.hasTagManager(tagFolder)) {
-                //We already have a custom ITagManager for this.
-                continue;
-            }
-            CraftTweakerAPI.LOGGER.debug("Creating Wrapper ITagManager for type '{}' with tag folder '{}'", key, tagFolder);
-            registerTagManagerFromRegistry(key, registry, tagFolder);
-        }
-    }
-    
-    @SuppressWarnings({"rawtypes"})
-    public void registerTagManagerFromRegistry(ResourceLocation name, ForgeRegistry<?> registry, String tagFolder) {
-        
-        final Class<?> registrySuperType = registry.getRegistrySuperType();
-        final Optional<String> s = CraftTweakerRegistry.tryGetZenClassNameFor(registrySuperType);
-        if(s.isEmpty()) {
-            CraftTweakerAPI.LOGGER.debug("Could not register tag manager for " + tagFolder);
-            return;
-        }
-        
-        CrTTagRegistryData.INSTANCE.register(new TagManagerWrapper(registrySuperType, name, tagFolder));
-    }
-    
     
     @Override
     public void registerCustomTradeConverters(Map<Class<? extends VillagerTrades.ItemListing>, Function<VillagerTrades.ItemListing, CTTradeObject>> classFunctionMap) {
@@ -270,9 +211,9 @@ public class ForgePlatformHelper implements IPlatformHelper {
         classFunctionMap.put(BasicItemListing.class, iTrade -> {
             if(iTrade instanceof BasicItemListing) {
                 return new CTTradeObject(
-                        createMCItemStackMutable(((AccessBasicTrade) iTrade).getPrice()),
-                        createMCItemStackMutable(((AccessBasicTrade) iTrade).getPrice2()),
-                        createMCItemStackMutable(((AccessBasicTrade) iTrade).getForSale()));
+                        createMCItemStackMutable(((AccessBasicTrade) iTrade).crafttweaker$getPrice()),
+                        createMCItemStackMutable(((AccessBasicTrade) iTrade).crafttweaker$getPrice2()),
+                        createMCItemStackMutable(((AccessBasicTrade) iTrade).crafttweaker$getForSale()));
             }
             throw new IllegalArgumentException("Invalid trade passed to trade function! Given: " + iTrade.getClass());
         });
@@ -282,7 +223,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
     public Map<ResourceLocation, ILootModifier> getLootModifiersMap() {
         
         try {
-            LootModifierManager manager = HandleHelper.invoke(() -> (LootModifierManager) Handles.LMM_GETTER.invokeExact());
+            LootModifierManager manager = HandleUtil.invoke(() -> (LootModifierManager) Handles.LMM_GETTER.invokeExact());
             @SuppressWarnings("unchecked")
             Map<ResourceLocation, IGlobalLootModifier> map = (Map<ResourceLocation, IGlobalLootModifier>) Handles.LMM_MAP.get(manager);
             
@@ -326,5 +267,31 @@ public class ForgePlatformHelper implements IPlatformHelper {
         return CraftingTableRecipeConflictChecker.checkConflicts(manager, first, second);
     }
     
+    @Override
+    public Set<MutableComponent> getFluidsForDump(ItemStack stack, Player player, InteractionHand hand) {
+        
+        LazyOptional<IFluidHandlerItem> cap = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+        if(!cap.isPresent()) {
+            return Set.of();
+        }
+        Set<MutableComponent> components = new HashSet<>();
+        cap.ifPresent(handler -> {
+            int tanks = handler.getTanks();
+            for(int i = 0; i < tanks; i++) {
+                components.add(new TextComponent(new MCFluidStack(handler.getFluidInTank(i)).getCommandString()));
+            }
+        });
+        return components;
+    }
+    
+    private static Class<?> getClassFromType(Type type) {
+        
+        try {
+            return Class.forName(type.getClassName(), false, CraftTweakerCommon.class.getClassLoader());
+        } catch(ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     
 }

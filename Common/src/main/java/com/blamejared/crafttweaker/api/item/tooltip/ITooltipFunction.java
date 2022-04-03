@@ -16,6 +16,6 @@ import java.util.List;
 public interface ITooltipFunction {
     
     @ZenCodeType.Method
-    void apply(IItemStack stack, List<Component> tooltip, TooltipFlag isAdvanced);
+    void apply(IItemStack stack, List<Component> tooltip, TooltipFlag flag);
     
 }

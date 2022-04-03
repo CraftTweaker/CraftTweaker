@@ -8,9 +8,9 @@ import com.blamejared.crafttweaker.api.villager.CTTradeObject;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
 import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
 import com.mojang.datafixers.util.Either;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.StaticTagHelper;
-import net.minecraft.tags.TagCollection;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
@@ -23,10 +23,11 @@ import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Collection;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -62,7 +63,27 @@ public interface IPlatformHelper {
     
     Fluid getBucketContent(BucketItem item);
     
+    Path getGameDirectory();
     
+    default Path getPathFromGameDirectory(final Path path) {
+        
+        return this.getGameDirectory().resolve(path);
+    }
+    
+    default Path getPathFromGameDirectory(final String path) {
+        
+        return this.getPathFromGameDirectory(Path.of(path));
+    }
+    
+    default Path getRelativePathFromGameDirectory(final Path path) {
+        
+        return this.getGameDirectory().toAbsolutePath().relativize(path.toAbsolutePath());
+    }
+    
+    default Path getRelativePathFromGameDirectory(final String path) {
+        
+        return this.getRelativePathFromGameDirectory(Path.of(path));
+    }
     /**
      * Finds classes with the given annotation
      *
@@ -104,18 +125,6 @@ public interface IPlatformHelper {
     
     <T> Field findField(@Nonnull final Class<? super T> clazz, @Nonnull final String fieldName, @Nonnull final String fieldDescription);
     
-    // Don't ask, this makes the compiler shut up
-    default <T> Class<? super T> castToSuperExplicitly(final Class<T> t) {
-        
-        return t;
-    }
-    
-    Map<ResourceLocation, TagCollection<?>> getCustomTags();
-    
-    Collection<StaticTagHelper<?>> getStaticTagHelpers();
-    
-    void registerCustomTags();
-    
     default void registerCustomTradeConverters(Map<Class<? extends VillagerTrades.ItemListing>, Function<VillagerTrades.ItemListing, CTTradeObject>> classFunctionMap) {
         // no-op
     }
@@ -133,6 +142,7 @@ public interface IPlatformHelper {
         return (!first.hasTag() || first.getTag().equals(second.getTag()));
     }
     
-    
     boolean doCraftingTableRecipesConflict(final IRecipeManager manager, final Recipe<?> first, final Recipe<?> second);
+    
+    Set<MutableComponent> getFluidsForDump(ItemStack stack, Player player, InteractionHand hand);
 }

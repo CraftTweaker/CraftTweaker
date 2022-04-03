@@ -392,7 +392,7 @@ public class BracketHandlers {
      */
     @ZenCodeType.Method
     @BracketResolver("creativemodetab")
-    public static CreativeModeTab getItemGroup(String tokens) {
+    public static CreativeModeTab getCreativeModeTab(String tokens) {
         
         return Arrays.stream(CreativeModeTab.TABS)
                 .filter(g -> g.getRecipeFolderName().equals(tokens))

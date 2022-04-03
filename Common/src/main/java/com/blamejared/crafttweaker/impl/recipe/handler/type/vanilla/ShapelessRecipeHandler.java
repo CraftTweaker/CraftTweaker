@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker.api.recipe.handler.IReplacementRule;
 import com.blamejared.crafttweaker.api.recipe.handler.helper.ReplacementHandlerHelper;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
-import com.blamejared.crafttweaker.api.util.StringUtils;
+import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -26,7 +26,7 @@ public final class ShapelessRecipeHandler implements IRecipeHandler<ShapelessRec
         
         return String.format(
                 "craftingTable.addShapeless(%s, %s, %s);",
-                StringUtils.quoteAndEscape(recipe.getId()),
+                StringUtil.quoteAndEscape(recipe.getId()),
                 ItemStackUtil.getCommandString(recipe.getResultItem()),
                 recipe.getIngredients().stream()
                         .map(IIngredient::fromIngredient)

@@ -8,22 +8,22 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(value = BasicItemListing.class, remap = false)
 public interface AccessBasicTrade {
     
-    @Accessor
-    ItemStack getPrice();
+    @Accessor("price")
+    ItemStack crafttweaker$getPrice();
     
-    @Accessor
-    ItemStack getPrice2();
+    @Accessor("price2")
+    ItemStack crafttweaker$getPrice2();
     
-    @Accessor
-    ItemStack getForSale();
+    @Accessor("forSale")
+    ItemStack crafttweaker$getForSale();
     
-    @Accessor
-    int getMaxTrades();
+    @Accessor("maxTrades")
+    int crafttweaker$getMaxTrades();
     
-    @Accessor
-    int getXp();
+    @Accessor("xp")
+    int crafttweaker$getXp();
     
-    @Accessor
-    float getPriceMult();
+    @Accessor("priceMult")
+    float crafttweaker$getPriceMult();
     
 }

@@ -11,16 +11,16 @@ import java.util.List;
 @Mixin(FoodProperties.Builder.class)
 public interface AccessFoodPropertiesBuilder {
     
-    @Accessor
-    void setIsMeat(boolean isMeat);
+    @Accessor("isMeat")
+    void crafttweaker$setIsMeat(boolean isMeat);
     
-    @Accessor
-    void setCanAlwaysEat(boolean canAlwaysEat);
+    @Accessor("canAlwaysEat")
+    void crafttweaker$setCanAlwaysEat(boolean canAlwaysEat);
     
-    @Accessor
-    void setFastFood(boolean fastFood);
+    @Accessor("fastFood")
+    void crafttweaker$setFastFood(boolean fastFood);
     
-    @Accessor
-    List<Pair<MobEffectInstance, Float>> getEffects();
+    @Accessor("effects")
+    List<Pair<MobEffectInstance, Float>> crafttweaker$getEffects();
     
 }

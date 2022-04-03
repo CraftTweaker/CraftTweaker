@@ -35,7 +35,7 @@ public final class ExpandLightningBoltPredicate {
     @ZenCodeType.StaticExpansionMethod
     public static LighthingBoltPredicate create(final MinMaxBounds.Ints blocksSetOnFire, final EntityPredicate struckEntity) {
         
-        return AccessLightningBoltPredicate.of(blocksSetOnFire, struckEntity);
+        return AccessLightningBoltPredicate.crafttweaker$of(blocksSetOnFire, struckEntity);
     }
     
     @ZenCodeType.StaticExpansionMethod

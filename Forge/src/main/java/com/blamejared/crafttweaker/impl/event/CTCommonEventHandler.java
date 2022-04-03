@@ -98,11 +98,12 @@ public class CTCommonEventHandler {
     @SubscribeEvent
     public static void burnTimeTweaker(FurnaceFuelBurnTimeEvent e) {
         
-        Services.EVENT.getBurnTimes().keySet()
+        Services.EVENT.getBurnTimes()
+                .getOrDefault(e.getRecipeType(), List.of())
                 .stream()
-                .filter(ingredient -> ingredient.matches(Services.PLATFORM.createMCItemStackMutable(e.getItemStack())))
-                .findFirst()
-                .ifPresent(ingredient -> e.setBurnTime(Services.EVENT.getBurnTimes().get(ingredient)));
+                .filter(pair -> pair.getFirst().matches(Services.PLATFORM.createMCItemStack(e.getItemStack())))
+                // This should use the burn time of the last matching ingredient
+                .forEach(pair -> e.setBurnTime(pair.getSecond()));
     }
     
     @SubscribeEvent
@@ -127,7 +128,7 @@ public class CTCommonEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void resourceReload(AddReloadListenerEvent event) {
         
-        event.addListener(new ScriptReloadListener(event.getDataPackRegistries()::getRecipeManager, CTCommonEventHandler::giveFeedback));
+        event.addListener(new ScriptReloadListener(event.getServerResources(), CTCommonEventHandler::giveFeedback));
     }
     
     private static void giveFeedback(MutableComponent msg) {

@@ -43,20 +43,6 @@ public class ExpandFoodProperties {
         return internal.getSaturationModifier();
     }
     
-    /**
-     * Replaced by `setSaturationModifier`, use that method instead of this.
-     *
-     * @param saturationModifier the new saturation modifier
-     *
-     * @return this object for chaining
-     */
-    @Deprecated(forRemoval = true)
-    @ZenCodeType.Method
-    public static FoodProperties setNutrition(FoodProperties internal, float saturationModifier) {
-        
-        return getbuilder(internal).saturationMod(saturationModifier).build();
-    }
-    
     @ZenCodeType.Method
     @ZenCodeType.Setter("saturationModifier")
     public static FoodProperties setSaturationModifier(FoodProperties internal, float saturationModifier) {
@@ -76,7 +62,7 @@ public class ExpandFoodProperties {
     public static FoodProperties setIsMeat(FoodProperties internal, boolean isMeat) {
         
         FoodProperties.Builder builder = getbuilder(internal);
-        ((AccessFoodPropertiesBuilder) builder).setIsMeat(isMeat);
+        ((AccessFoodPropertiesBuilder) builder).crafttweaker$setIsMeat(isMeat);
         return builder.build();
     }
     
@@ -92,7 +78,7 @@ public class ExpandFoodProperties {
     public static FoodProperties setCanAlwaysEat(FoodProperties internal, boolean canAlwaysEat) {
         
         FoodProperties.Builder builder = getbuilder(internal);
-        ((AccessFoodPropertiesBuilder) builder).setCanAlwaysEat(canAlwaysEat);
+        ((AccessFoodPropertiesBuilder) builder).crafttweaker$setCanAlwaysEat(canAlwaysEat);
         return builder.build();
     }
     
@@ -108,7 +94,7 @@ public class ExpandFoodProperties {
     public static FoodProperties setIsFastFood(FoodProperties internal, boolean fastFood) {
         
         FoodProperties.Builder builder = getbuilder(internal);
-        ((AccessFoodPropertiesBuilder) builder).setFastFood(fastFood);
+        ((AccessFoodPropertiesBuilder) builder).crafttweaker$setFastFood(fastFood);
         return builder.build();
     }
     
@@ -123,7 +109,7 @@ public class ExpandFoodProperties {
     public static FoodProperties addEffect(FoodProperties internal, MobEffectInstance effect, float probability) {
         
         FoodProperties.Builder builder = getbuilder(internal);
-        ((AccessFoodPropertiesBuilder) builder).getEffects().add(Pair.of(effect, probability));
+        ((AccessFoodPropertiesBuilder) builder).crafttweaker$getEffects().add(Pair.of(effect, probability));
         return builder.build();
     }
     
@@ -131,7 +117,7 @@ public class ExpandFoodProperties {
     public static FoodProperties removeEffect(FoodProperties internal, MobEffectInstance effect) {
         
         FoodProperties.Builder builder = getbuilder(internal);
-        ((AccessFoodPropertiesBuilder) builder).getEffects().removeIf(pair -> pair.getFirst().equals(effect));
+        ((AccessFoodPropertiesBuilder) builder).crafttweaker$getEffects().removeIf(pair -> pair.getFirst().equals(effect));
         return builder.build();
     }
     

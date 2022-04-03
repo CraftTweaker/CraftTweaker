@@ -49,7 +49,7 @@ public final class CTBrewing {
         
         BrewingRecipe recipe = new BrewingRecipe(input.asVanillaIngredient(), reagent.asVanillaIngredient(), output
                 .getInternal());
-        CraftTweakerAPI.apply(new ActionAddBrewingRecipe(AccessBrewingRecipeRegistry.getRecipes(), recipe));
+        CraftTweakerAPI.apply(new ActionAddBrewingRecipe(AccessBrewingRecipeRegistry.crafttweaker$getRecipes(), recipe));
     }
     
     /**
@@ -66,7 +66,7 @@ public final class CTBrewing {
     @ZenCodeType.Method
     public void removeRecipe(Potion output, IItemStack reagent, Potion input) {
         
-        CraftTweakerAPI.apply(new ActionRemovePotionBrewingRecipe(AccessBrewingRecipeRegistry.getRecipes(), output, reagent, input));
+        CraftTweakerAPI.apply(new ActionRemovePotionBrewingRecipe(AccessBrewingRecipeRegistry.crafttweaker$getRecipes(), output, reagent, input));
     }
     
     /**
@@ -83,7 +83,7 @@ public final class CTBrewing {
     @ZenCodeType.Method
     public void removeRecipe(IItemStack output, IItemStack reagent, IItemStack input) {
         
-        CraftTweakerAPI.apply(new ActionRemoveBrewingRecipe(AccessBrewingRecipeRegistry.getRecipes(), output, reagent, input));
+        CraftTweakerAPI.apply(new ActionRemoveBrewingRecipe(AccessBrewingRecipeRegistry.crafttweaker$getRecipes(), output, reagent, input));
     }
     
     /**
@@ -96,7 +96,7 @@ public final class CTBrewing {
     @ZenCodeType.Method
     public void removeRecipeByReagent(IItemStack reagent) {
         
-        CraftTweakerAPI.apply(new ActionRemoveBrewingRecipeByReagent(AccessBrewingRecipeRegistry.getRecipes(), reagent));
+        CraftTweakerAPI.apply(new ActionRemoveBrewingRecipeByReagent(AccessBrewingRecipeRegistry.crafttweaker$getRecipes(), reagent));
     }
     
     /**
@@ -109,7 +109,7 @@ public final class CTBrewing {
     @ZenCodeType.Method
     public void removeRecipeByInput(IItemStack input) {
         
-        CraftTweakerAPI.apply(new ActionRemoveBrewingRecipeByInput(AccessBrewingRecipeRegistry.getRecipes(), input));
+        CraftTweakerAPI.apply(new ActionRemoveBrewingRecipeByInput(AccessBrewingRecipeRegistry.crafttweaker$getRecipes(), input));
     }
     
     /**
@@ -122,7 +122,7 @@ public final class CTBrewing {
     @ZenCodeType.Method
     public void removeRecipeByOutputPotion(Potion output) {
         
-        CraftTweakerAPI.apply(new ActionRemoveBrewingRecipeByPotionOutput(AccessBrewingRecipeRegistry.getRecipes(), output));
+        CraftTweakerAPI.apply(new ActionRemoveBrewingRecipeByPotionOutput(AccessBrewingRecipeRegistry.crafttweaker$getRecipes(), output));
     }
     
     /**
@@ -136,7 +136,7 @@ public final class CTBrewing {
     @ZenCodeType.Method
     public void removeRecipeByInputPotion(Potion input) {
         
-        CraftTweakerAPI.apply(new ActionRemoveBrewingRecipeByPotionInput(AccessBrewingRecipeRegistry.getRecipes(), input));
+        CraftTweakerAPI.apply(new ActionRemoveBrewingRecipeByPotionInput(AccessBrewingRecipeRegistry.crafttweaker$getRecipes(), input));
     }
     
 }

@@ -2,7 +2,7 @@ package com.blamejared.crafttweaker.natives.predicate;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.api.tag.MCTag;
+import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.critereon.ItemPredicate;
@@ -42,9 +42,9 @@ public final class ExpandItemPredicate {
     }
     
     @ZenCodeType.StaticExpansionMethod
-    public static ItemPredicate.Builder create(final MCTag<Item> tag) {
-        
-        return create().of(tag.getInternal());
+    public static ItemPredicate.Builder create(final KnownTag<Item> tag) {
+
+        return create().of(tag.getTagKey());
     }
     
 }

@@ -1,9 +1,9 @@
 package com.blamejared.crafttweaker.api.action.item.tooltip;
 
-import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
+import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.platform.Services;
 
 import java.util.LinkedList;
@@ -23,7 +23,7 @@ public abstract class ActionTooltipBase implements IUndoableAction {
     }
     
     @Override
-    public boolean shouldApplyOn(ScriptLoadingOptions.ScriptLoadSource source) {
+    public boolean shouldApplyOn(final IScriptLoadSource source) {
         
         return Services.DISTRIBUTION.isClient();
     }

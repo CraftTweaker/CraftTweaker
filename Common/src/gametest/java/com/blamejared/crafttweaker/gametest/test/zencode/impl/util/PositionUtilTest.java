@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker.gametest.test.zencode.impl.util;
 
-import com.blamejared.crafttweaker.api.zencode.impl.util.PositionUtil;
+import com.blamejared.crafttweaker.api.zencode.util.PositionUtil;
 import com.blamejared.crafttweaker.gametest.CraftTweakerGameTest;
 import com.blamejared.crafttweaker.gametest.CraftTweakerGameTestHolder;
 import com.blamejared.crafttweaker.gametest.TestModifier;

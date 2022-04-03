@@ -67,7 +67,7 @@ public class IngredientList extends IngredientExtendable {
         return children.stream()
                 .filter(Objects::nonNull) // stops AccessIngredient::getValues from giving a warning
                 .map(ingredient -> (AccessIngredient) (Object) ingredient)
-                .map(AccessIngredient::getValues)
+                .map(AccessIngredient::crafttweaker$getValues)
                 .flatMap(Arrays::stream);
     }
     

@@ -13,16 +13,15 @@ import java.util.Map;
 public interface AccessRecipeManager {
     
     @Accessor("recipes")
-    Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> getRecipes();
+    Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> crafttweaker$getRecipes();
     
     @Accessor("recipes")
-    void setRecipes(Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> recipeMap);
-    
-    
-    @Accessor("byName")
-    Map<ResourceLocation, Recipe<?>> getByName();
+    void crafttweaker$setRecipes(Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> recipeMap);
     
     @Accessor("byName")
-    void setByName(Map<ResourceLocation, Recipe<?>> byName);
+    Map<ResourceLocation, Recipe<?>> crafttweaker$getByName();
+    
+    @Accessor("byName")
+    void crafttweaker$setByName(Map<ResourceLocation, Recipe<?>> byName);
     
 }

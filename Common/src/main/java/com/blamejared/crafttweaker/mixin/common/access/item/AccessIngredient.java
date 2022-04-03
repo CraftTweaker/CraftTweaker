@@ -10,10 +10,10 @@ import java.util.stream.Stream;
 @Mixin(Ingredient.class)
 public interface AccessIngredient {
     
-    @Invoker
-    static Ingredient callFromValues(Stream<? extends Ingredient.Value> param0) {throw new UnsupportedOperationException();}
+    @Invoker("fromValues")
+    static Ingredient crafttweaker$callFromValues(Stream<? extends Ingredient.Value> param0) {throw new UnsupportedOperationException();}
     
     @Accessor("values")
-    Ingredient.Value[] getValues();
+    Ingredient.Value[] crafttweaker$getValues();
     
 }

@@ -71,6 +71,7 @@
   "crafttweaker.command.misc.blockstate": "BlockState",
   "crafttweaker.command.misc.ctgui": "CT GUI was limiting and very buggy and has since been removed. It is now recommended to learn ZenScript instead - you can browse the wiki for reference (/ct wiki) or ask for help on the Discord server (/ct discord).",
   "crafttweaker.command.misc.data": "Data",
+  "crafttweaker.command.misc.fluid": "Fluid",
   "crafttweaker.command.misc.fluidblockstate": "Fluid BlockState",
   "crafttweaker.command.misc.inventory.list": "Inventory List",
   "crafttweaker.command.misc.inventory.list.tag": "Inventory Tag List",
@@ -88,5 +89,7 @@
   "crafttweaker.command.recipes.hand.empty": "Cannot get recipes for an empty ItemStack!",
   "crafttweaker.reload.complete": "CraftTweaker reload complete!",
   "crafttweaker.reload.start": "CraftTweaker reload starting!",
-  "crafttweaker.script.load.start": "Starting loading scripts for loader '%s'"
+  "crafttweaker.script.load.start": "Starting loading scripts for loader '%s'",
+  "crafttweaker.script.load.end.error": "An error occurred while loading scripts: please check the log",
+  "crafttweaker.script.load.end.noerror": "Loading completed without errors"
 }

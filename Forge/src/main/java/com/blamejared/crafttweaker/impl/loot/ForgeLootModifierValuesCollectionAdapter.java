@@ -71,7 +71,7 @@ final class ForgeLootModifierValuesCollectionAdapter extends AbstractCollection<
         
         if(o instanceof final ForgeLootModifierAdapter wrapper) {
             
-            return this.wrapped.contains(wrapper.modifier());
+            return this.wrapped.remove(wrapper.modifier());
         }
         
         return super.remove(o);

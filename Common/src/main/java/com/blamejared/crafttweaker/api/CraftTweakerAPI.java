@@ -1,73 +1,42 @@
 package com.blamejared.crafttweaker.api;
 
-import com.blamejared.crafttweaker.CraftTweakerRegistries;
-import com.blamejared.crafttweaker.api.action.base.ActionApplier;
 import com.blamejared.crafttweaker.api.action.base.IAction;
-import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
-import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.game.Game;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
-import com.blamejared.crafttweaker.api.mod.Mods;
 import com.blamejared.crafttweaker.api.zencode.expand.IDataRewrites;
-import com.blamejared.crafttweaker.api.zencode.impl.FileAccessSingle;
-import com.blamejared.crafttweaker.api.zencode.impl.loader.LoaderActions;
-import com.blamejared.crafttweaker.api.zencode.impl.loader.ScriptRun;
-import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
-import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeManager;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunManager;
+import com.blamejared.crafttweaker.platform.Services;
+import com.blamejared.crafttweaker.platform.helper.IAccessibleElementsProvider;
+import com.google.common.base.Suppliers;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openzen.zencode.java.ScriptingEngine;
-import org.openzen.zencode.java.ZenCodeGlobals;
-import org.openzen.zencode.java.ZenCodeType;
-import org.openzen.zencode.shared.SourceFile;
 import org.openzen.zenscript.parser.expression.ParsedExpressionArray;
 import org.openzen.zenscript.parser.expression.ParsedExpressionMap;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.Path;
+import java.util.function.Supplier;
 
-@ZenRegister
-@ZenCodeType.Name("crafttweaker.api.CraftTweakerAPI")
-public class CraftTweakerAPI {
+/**
+ * Provides access to the main CraftTweaker API.
+ *
+ * @since 9.1.0
+ */
+public final class CraftTweakerAPI {
+    
+    private static final Supplier<IAccessibleElementsProvider> ACCESSIBLE_ELEMENTS = Suppliers.memoize(Services.BRIDGE::accessibleElementsProvider);
+    
+    private static final Supplier<ICraftTweakerRegistry> REGISTRY = Suppliers.memoize(Services.BRIDGE::registry);
+    private static final Supplier<IScriptRunManager> SCRIPT_RUN_MANAGER = Suppliers.memoize(Services.BRIDGE::scriptRunManager);
+    private static final Supplier<Path> SCRIPTS_DIRECTORY = Suppliers.memoize(() -> Services.PLATFORM.getPathFromGameDirectory(CraftTweakerConstants.SCRIPTS_DIRECTORY));
     
     // Do we want to make a log4j wrapper and expose it to a script...? 😬
+    /**
+     * Logger used to log CraftTweaker specific messages.
+     *
+     * <p>This logger is also wired to the {@code crafttweaker.log} file.</p>
+     *
+     * @since 9.1.0
+     */
     public static final Logger LOGGER = LogManager.getLogger(CraftTweakerLogger.LOGGER_NAME);
-    
-    public static boolean DEBUG_MODE = false;
-    public static boolean NO_BRAND = false;
-    
-    private static RecipeManager recipeManager;
-    
-    @ZenCodeGlobals.Global("game")
-    public static final Game GAME = new Game();
-    
-    @ZenCodeGlobals.Global("loadedMods")
-    public static final Mods MODS = new Mods();
-    
-    /**
-     * This field is effectively final, it should never change in normal gameplay, but it is changed during testing,
-     * which means that it cannot have the final modifier.
-     */
-    private static ActionApplier ACTION_APPLIER = CraftTweakerAPI::applyActionInternal;
-    
-    /**
-     * The last ScriptRun that was executed is regarded as "current" run.
-     */
-    private static ScriptRun currentRun;
     
     static {
         ParsedExpressionMap.compileOverrides.add(IDataRewrites::rewriteMap);
@@ -75,191 +44,64 @@ public class CraftTweakerAPI {
     }
     
     /**
-     * Loads the scripts with the given loadingOptions.
-     * Will check CraftTweaker's default scripts directory for scripts.
+     * Provides access to the {@link IAccessibleElementsProvider}, allowing for more internal access.
      *
-     * @param scriptLoadingOptions The options with which to load
+     * @return The {@link IAccessibleElementsProvider}.
+     *
+     * @since 9.1.0
      */
-    public static void loadScripts(ScriptLoadingOptions scriptLoadingOptions) {
+    public static IAccessibleElementsProvider getAccessibleElementsProvider() {
         
-        NO_BRAND = false;
-        final List<File> fileList = getScriptFiles();
-        
-        final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
-        SourceFile[] sourceFiles = fileList.stream()
-                .map(file -> new FileAccessSingle(CraftTweakerConstants.SCRIPT_DIR, file, scriptLoadingOptions, CraftTweakerRegistry
-                        .getPreprocessors()))
-                .filter(FileAccessSingle::shouldBeLoaded)
-                .sorted(comparator)
-                .map(FileAccessSingle::getSourceFile)
-                .toArray(SourceFile[]::new);
-        
-        loadScripts(sourceFiles, scriptLoadingOptions);
+        return ACCESSIBLE_ELEMENTS.get();
     }
     
     /**
-     * Loads the given sourceFiles with the given loadingOptions.
-     * It is recommended to use {@link #loadScripts(ScriptLoadingOptions)} instead, unless you know what you're doing.
+     * Provides access to the main CraftTweaker set of registries.
      *
-     * @param sourceFiles          The sourceFiles.
-     * @param scriptLoadingOptions The options with which to load.
+     * @return An instance of {@link ICraftTweakerRegistry}.
+     *
+     * @since 9.1.0
      */
-    public static void loadScripts(SourceFile[] sourceFiles, ScriptLoadingOptions scriptLoadingOptions) {
+    public static ICraftTweakerRegistry getRegistry() {
         
-        currentRun = new ScriptRun(scriptLoadingOptions, sourceFiles);
-        LOGGER.info("Started loading Scripts for Loader '{}'!", scriptLoadingOptions.getLoaderName());
-        
-        try {
-            currentRun.reload();
-            currentRun.run();
-        } catch(Exception e) {
-            e.printStackTrace();
-            LOGGER.error("Error running scripts", e);
-        }
-        LOGGER.info("Finished loading Scripts!");
-    }
-    
-    public static void apply(IAction action) {
-        
-        ACTION_APPLIER.apply(action);
-    }
-    
-    public static List<File> getScriptFiles() {
-        
-        List<File> fileList = new ArrayList<>();
-        findScriptFiles(CraftTweakerConstants.SCRIPT_DIR, fileList);
-        return fileList;
-    }
-    
-    public static ScriptingEngine getEngine() {
-        //I don't see why one would want an engine without a run being present
-        return getCurrentRun().getEngine();
-    }
-    
-    public static ScriptRun getCurrentRun() {
-        
-        if(currentRun == null) {
-            throw new IllegalStateException("Invalid current run!");
-        }
-        return currentRun;
-    }
-    
-    public static List<IAction> getActionList() {
-        
-        final LoaderActions loaderActions = getCurrentRun().getLoaderActions();
-        return ImmutableList.copyOf(loaderActions.getActionList());
-    }
-    
-    public static List<IAction> getActionListInvalid() {
-        
-        final LoaderActions loaderActions = getCurrentRun().getLoaderActions();
-        return ImmutableList.copyOf(loaderActions.getActionListInvalid());
-    }
-    
-    private static void applyActionInternal(IAction action) {
-        
-        final ScriptRun currentRun = getCurrentRun();
-        if(!(action instanceof IRuntimeAction) && !currentRun.isFirstRun()) {
-            return;
-        }
-        
-        final LoaderActions currentLoaderActions = currentRun.getLoaderActions();
-        try {
-            if(!action.shouldApplyOn(currentRun.getScriptLoadSource())) {
-                return;
-            }
-            
-            if(!action.validate(LOGGER)) {
-                currentLoaderActions.addInvalidAction(action);
-                return;
-            }
-            
-            final String describe = action.describe();
-            if(describe != null && !describe.isEmpty()) {
-                LOGGER.info(describe);
-            }
-            action.apply();
-            currentLoaderActions.addValidAction(action);
-        } catch(Exception e) {
-            LOGGER.error("Error running action", e);
-        }
+        return REGISTRY.get();
     }
     
     /**
-     * Applies IActions in {@link #apply(IAction)}
-     * Extracted as interface to be able to override this in tests.
+     * Obtains the {@link IScriptRunManager} used to create and execute script runs.
+     *
+     * @return The script run manager.
+     *
+     * @since 9.1.0
      */
-    @VisibleForTesting
-    public static void setActionApplier(ActionApplier actionApplier) {
+    public static IScriptRunManager getScriptRunManager() {
         
-        CraftTweakerAPI.ACTION_APPLIER = actionApplier;
+        return SCRIPT_RUN_MANAGER.get();
     }
-    
     
     /**
-     * Finds all files in the given path that end with `.zs` and adds them to the files list.
-     * Traverses the file tree recursively.
+     * Obtains a {@link Path} to the default {@code scripts} directory used by CraftTweaker.
      *
-     * @param path       The path to traverse.
-     * @param foundFiles The list where the found files will be stored in.
+     * @return The default scripts directory.
+     *
+     * @since 9.1.0
      */
-    public static void findScriptFiles(File path, List<File> foundFiles) {
+    public static Path getScriptsDirectory() {
         
-        if(path.isDirectory()) {
-            File[] files = path.listFiles();
-            if(files == null) {
-                return;
-            }
-            for(File file : files) {
-                if(file.isDirectory()) {
-                    findScriptFiles(file, foundFiles);
-                } else {
-                    if(file.getName().toLowerCase().endsWith(".zs")) {
-                        foundFiles.add(file);
-                    }
-                }
-            }
-        }
+        return SCRIPTS_DIRECTORY.get();
     }
     
-    public static RecipeManager getRecipeManager() {
+    /**
+     * Applies the given {@link IAction}.
+     *
+     * @param action The action to apply.
+     *
+     * @see IScriptRunManager#applyAction(IAction)
+     * @since 9.1.0
+     */
+    public static void apply(final IAction action) {
         
-        Preconditions.checkNotNull(recipeManager, "Cannot get the recipe manager before it has been set!");
-        
-        return recipeManager;
-    }
-    
-    public static AccessRecipeManager getAccessibleRecipeManager() {
-        
-        Preconditions.checkNotNull(recipeManager, "Cannot get the recipe manager before it has been set!");
-        
-        return (AccessRecipeManager) recipeManager;
-    }
-    
-    
-    public static void setRecipeManager(RecipeManager recipeManager) {
-        
-        CraftTweakerAPI.recipeManager = recipeManager;
-    }
-    
-    public static void loadScriptsFromRecipeManager(RecipeManager recipeManager, ScriptLoadingOptions scriptLoadingOptions) {
-        
-        Map<ResourceLocation, Recipe<?>> map = ((AccessRecipeManager) recipeManager).getRecipes()
-                .getOrDefault(CraftTweakerRegistries.RECIPE_TYPE_SCRIPTS, new HashMap<>());
-        Collection<Recipe<?>> recipes = map.values();
-        CraftTweakerAPI.NO_BRAND = false;
-        
-        final Comparator<FileAccessSingle> comparator = FileAccessSingle.createComparator(CraftTweakerRegistry.getPreprocessors());
-        final SourceFile[] sourceFiles = recipes.stream()
-                .map(iRecipe -> (ScriptRecipe) iRecipe)
-                .map(recipe -> new FileAccessSingle(recipe.getFileName(), new InputStreamReader(new ByteArrayInputStream(recipe.getContent()
-                        .getBytes(StandardCharsets.UTF_8))), scriptLoadingOptions, CraftTweakerRegistry
-                        .getPreprocessors()))
-                .filter(FileAccessSingle::shouldBeLoaded)
-                .sorted(comparator)
-                .map(FileAccessSingle::getSourceFile)
-                .toArray(SourceFile[]::new);
-        loadScripts(sourceFiles, scriptLoadingOptions);
+        getScriptRunManager().applyAction(action);
     }
     
 }

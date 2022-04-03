@@ -57,7 +57,7 @@ public class IngredientConverterTest implements CraftTweakerGameTest {
         );
         final IIngredient[] expectedIngredients = new IIngredient[] {stackA, stackB};
         
-        final Ingredient ingredient = AccessIngredient.callFromValues(lists.stream());
+        final Ingredient ingredient = AccessIngredient.crafttweaker$callFromValues(lists.stream());
         
         //Act
         final IIngredient result = IngredientConverter.fromIngredient(ingredient);

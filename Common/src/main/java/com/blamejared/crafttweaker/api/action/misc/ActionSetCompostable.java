@@ -1,8 +1,8 @@
 package com.blamejared.crafttweaker.api.action.misc;
 
-import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import net.minecraft.world.level.block.ComposterBlock;
 
 public class ActionSetCompostable implements IUndoableAction {
@@ -52,7 +52,7 @@ public class ActionSetCompostable implements IUndoableAction {
     
     
     @Override
-    public boolean shouldApplyOn(ScriptLoadingOptions.ScriptLoadSource source) {
+    public boolean shouldApplyOn(final IScriptLoadSource source) {
         
         return true;
     }

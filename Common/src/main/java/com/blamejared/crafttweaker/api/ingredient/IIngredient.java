@@ -53,7 +53,7 @@ import java.util.regex.Pattern;
 /**
  * The CraftTweaker Ingredient class which is used to power our recipes and ItemStack matching.
  *
- * @docParam this <tag:items:forge:ingots>
+ * @docParam this <tag:items:minecraft:wool>
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.ingredient.IIngredient")
@@ -117,8 +117,6 @@ public interface IIngredient extends CommandStringDisplayable {
     @ZenCodeType.Method
     default IItemStack getRemainingItem(IItemStack stack) {
         
-        // TODO
-        // Forge has special hooks for this, we may want to use that impl for forge.
         Item remainingItem = stack.getInternal()
                 .getItem()
                 .getCraftingRemainingItem();
@@ -146,6 +144,7 @@ public interface IIngredient extends CommandStringDisplayable {
      *
      * @docParam time 500
      */
+    @ZenCodeType.Method
     @ZenCodeType.Setter("burnTime")
     default void setBurnTime(int time) {
         
@@ -153,9 +152,9 @@ public interface IIngredient extends CommandStringDisplayable {
     }
     
     @ZenCodeType.Method
-    default void clearTooltip() {
+    default void clearTooltip(@ZenCodeType.OptionalBoolean() boolean leaveName) {
         
-        CraftTweakerAPI.apply(new ActionClearTooltip(this));
+        CraftTweakerAPI.apply(new ActionClearTooltip(this, leaveName));
     }
     
     @ZenCodeType.Method
@@ -212,15 +211,7 @@ public interface IIngredient extends CommandStringDisplayable {
     default void addGlobalAttributeModifier(Attribute attribute, String name, double value, AttributeModifier.Operation operation, EquipmentSlot[] slotTypes) {
         
         AttributeModifier modifier = new AttributeModifier(name, value, operation);
-        final Set<EquipmentSlot> validSlots = new HashSet<>(Arrays.asList(slotTypes));
-        CraftTweakerAPI.apply(new ActionModifyAttribute(this, event -> {
-            if(validSlots.contains(event.getSlotType())) {
-                if(event.getModifiers().containsEntry(attribute, modifier)) {
-                    event.removeModifier(attribute, modifier);
-                }
-                event.addModifier(attribute, modifier);
-            }
-        }));
+        addModifier(attribute, slotTypes, modifier);
     }
     
     /**
@@ -283,6 +274,11 @@ public interface IIngredient extends CommandStringDisplayable {
     default void addGlobalAttributeModifier(Attribute attribute, UUID uuid, String name, double value, AttributeModifier.Operation operation, EquipmentSlot[] slotTypes) {
         
         AttributeModifier modifier = new AttributeModifier(uuid, name, value, operation);
+        addModifier(attribute, slotTypes, modifier);
+    }
+    
+    private void addModifier(Attribute attribute, EquipmentSlot[] slotTypes, AttributeModifier modifier) {
+        
         final Set<EquipmentSlot> validSlots = new HashSet<>(Arrays.asList(slotTypes));
         CraftTweakerAPI.apply(new ActionModifyAttribute(this, event -> {
             if(validSlots.contains(event.getSlotType())) {

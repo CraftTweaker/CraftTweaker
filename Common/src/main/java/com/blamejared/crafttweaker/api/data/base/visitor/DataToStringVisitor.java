@@ -15,8 +15,8 @@ import com.blamejared.crafttweaker.api.data.ShortData;
 import com.blamejared.crafttweaker.api.data.StringData;
 import com.blamejared.crafttweaker.api.data.base.IData;
 import com.blamejared.crafttweaker.api.data.base.converter.tag.TagToDataConverter;
-import com.blamejared.crafttweaker.api.util.StringUtils;
-import com.blamejared.crafttweaker.api.zencode.impl.util.ZenKeywordUtil;
+import com.blamejared.crafttweaker.api.util.StringUtil;
+import com.blamejared.crafttweaker.api.zencode.util.ZenKeywordUtil;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.LongTag;
@@ -180,7 +180,7 @@ public enum DataToStringVisitor implements DataVisitor<String> {
     @Override
     public String visitString(StringData data) {
         
-        return visitSimple(StringUtils.quoteAndEscape(data.getInternal().getAsString()), "string");
+        return visitSimple(StringUtil.quoteAndEscape(data.getInternal().getAsString()), "string");
     }
     
     private boolean isValidIdentifier(String str) {

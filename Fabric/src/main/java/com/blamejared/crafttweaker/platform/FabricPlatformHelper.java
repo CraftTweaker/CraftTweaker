@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.platform;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.MCItemStack;
 import com.blamejared.crafttweaker.api.item.MCItemStackMutable;
@@ -9,39 +8,40 @@ import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
 import com.blamejared.crafttweaker.api.mod.Mod;
 import com.blamejared.crafttweaker.api.recipe.handler.helper.CraftingTableRecipeConflictChecker;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
-import com.blamejared.crafttweaker.api.tag.manager.TagManagerWrapper;
-import com.blamejared.crafttweaker.api.tag.registry.CrTTagRegistryData;
-import com.blamejared.crafttweaker.api.util.HandleHelper;
-import com.blamejared.crafttweaker.api.util.StringUtils;
+import com.blamejared.crafttweaker.api.util.HandleUtil;
+import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
 import com.blamejared.crafttweaker.impl.script.ScriptSerializer;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessBucketItem;
-import com.blamejared.crafttweaker.mixin.common.access.tag.AccessStaticTags;
 import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
 import com.blamejared.crafttweaker.platform.helper.world.inventory.TAInventoryWrapper;
 import com.blamejared.crafttweaker.platform.services.IPlatformHelper;
 import com.google.common.base.Suppliers;
 import com.mojang.datafixers.util.Either;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
-import net.fabricmc.fabric.impl.tag.extension.TagFactoryImpl;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.Util;
-import net.minecraft.core.Registry;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.StaticTagHelper;
-import net.minecraft.tags.TagCollection;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.material.Fluid;
-import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -50,6 +50,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -136,16 +137,23 @@ public class FabricPlatformHelper implements IPlatformHelper {
     @Override
     public Fluid getBucketContent(BucketItem item) {
         
-        return ((AccessBucketItem) item).getContent();
+        return ((AccessBucketItem) item).crafttweaker$getContent();
     }
     
+    @Override
+    public Path getGameDirectory() {
+        
+        return FabricLoader.getInstance().getGameDir();
+    }
     
     @Override
     public <T extends Annotation> Stream<? extends Class<?>> findClassesWithAnnotation(Class<T> annotationCls, Consumer<Mod> consumer, Predicate<Either<T, Map<String, Object>>> annotationFilter) {
         
         Set<Class<?>> typesAnnotatedWith = REFLECTIONS.get().getTypesAnnotatedWith(annotationCls);
         typesAnnotatedWith.stream().map(this::getModsForClass).flatMap(Collection::stream).forEach(consumer);
-        return typesAnnotatedWith.stream();
+        return typesAnnotatedWith.stream()
+                .filter(it -> it.isAnnotationPresent(annotationCls)) // Thank you reflections for giving classes without the annotation, very cool
+                .filter(it -> annotationFilter.test(Either.left(it.getAnnotation(annotationCls))));
     }
     
     private List<Mod> getModsForClass(Class<?> clazz) {
@@ -154,19 +162,23 @@ public class FabricPlatformHelper implements IPlatformHelper {
         List<Mod> mods = new ArrayList<>();
         // This doesn't work for the current mod in dev.
         // The origin paths just include build/resources/main, not build/classes/main, but otherwise works great
-        FabricLoader.getInstance().getAllMods().stream().filter(modContainer -> modContainer.getOrigin().getKind() == ModOrigin.Kind.PATH).forEach(modContainer -> {
-            for(Path rootPath : modContainer.getOrigin().getPaths()) {
-                if(rootPath.toFile().equals(classFile)) {
-                    mods.add(new Mod(modContainer.getMetadata().getId(), modContainer.getMetadata()
-                            .getName(), modContainer.getMetadata().getVersion().getFriendlyString()));
-                }
-            }
-        });
+        FabricLoader.getInstance()
+                .getAllMods()
+                .stream()
+                .filter(modContainer -> modContainer.getOrigin().getKind() == ModOrigin.Kind.PATH)
+                .forEach(modContainer -> {
+                    for(Path path : modContainer.getOrigin().getPaths()) {
+                        if(path.toFile().equals(classFile)) {
+                            mods.add(new Mod(modContainer.getMetadata().getId(), modContainer.getMetadata()
+                                    .getName(), modContainer.getMetadata().getVersion().getFriendlyString()));
+                        }
+                    }
+                });
         return mods;
     }
     
     @Override
-    public Method findMethod(@NotNull Class<?> clazz, @NotNull String methodName, final Class<?> returnType, @NotNull Class<?>... parameterTypes) {
+    public Method findMethod(@Nonnull Class<?> clazz, @Nonnull String methodName, final Class<?> returnType, @Nonnull Class<?>... parameterTypes) {
         
         // This is untested, so anyone running into issues using findMethod, yes the issue is probably here.
         
@@ -182,12 +194,12 @@ public class FabricPlatformHelper implements IPlatformHelper {
             method.setAccessible(true);
             return method;
         } catch(NoSuchMethodException e) {
-            throw new HandleHelper.UnableToLinkHandleException("Method %s was not found inside class %s".formatted(StringUtils.quoteAndEscape(methodName), clazz.getName()), e);
+            throw new HandleUtil.UnableToLinkHandleException("Method %s was not found inside class %s".formatted(StringUtil.quoteAndEscape(methodName), clazz.getName()), e);
         }
     }
     
     @Override
-    public <T> Field findField(@NotNull Class<? super T> clazz, @NotNull String fieldName, @NotNull final String fieldDescription) {
+    public <T> Field findField(@Nonnull Class<? super T> clazz, @Nonnull String fieldName, @Nonnull final String fieldDescription) {
         
         final String mappedName = FabricLoader.getInstance()
                 .getMappingResolver()
@@ -200,30 +212,8 @@ public class FabricPlatformHelper implements IPlatformHelper {
             field.setAccessible(true);
             return field;
         } catch(NoSuchFieldException e) {
-            throw new HandleHelper.UnableToLinkHandleException("Field %s was not found inside class %s".formatted(StringUtils.quoteAndEscape(fieldName), clazz.getName()), e);
+            throw new HandleUtil.UnableToLinkHandleException("Field %s was not found inside class %s".formatted(StringUtil.quoteAndEscape(fieldName), clazz.getName()), e);
         }
-    }
-    
-    public Map<ResourceLocation, TagCollection<?>> getCustomTags() {
-        
-        return TagFactoryImpl.TAG_LISTS.values()
-                .stream()
-                .collect(Collectors.toMap(helper -> new ResourceLocation(removeTagsDirectory(helper.getDirectory())), StaticTagHelper::getAllTags));
-    }
-    
-    private String removeTagsDirectory(String directory) {
-        
-        if(directory.startsWith("tags/")) {
-            return directory.substring("tags/".length());
-        }
-        CraftTweakerAPI.LOGGER.warn("Custom tag directory does not start with 'tags/'! Please report this to the CraftTweaker issue tracker!");
-        return directory;
-    }
-    
-    @Override
-    public Collection<StaticTagHelper<?>> getStaticTagHelpers() {
-        
-        return AccessStaticTags.getHELPERS();
     }
     
     @Override
@@ -239,16 +229,30 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
     
     @Override
-    public void registerCustomTags() {
-        
-        // Fabric's tag system doesn't let us get the type...
-        CrTTagRegistryData.INSTANCE.register(new TagManagerWrapper<>(Biome.class, Registry.BIOME_REGISTRY.location(), "biomes"));
-    }
-    
-    @Override
     public Map<ResourceLocation, ILootModifier> getLootModifiersMap() {
         
         return LootModifierManager.INSTANCE.modifiers();
+    }
+    
+    @SuppressWarnings("UnstableApiUsage")
+    @Override
+    public Set<MutableComponent> getFluidsForDump(ItemStack stack, Player player, InteractionHand hand) {
+        
+        Storage<FluidVariant> storage = FluidStorage.ITEM.find(stack, ContainerItemContext.ofPlayerHand(player, InteractionHand.MAIN_HAND));
+        if(storage == null) {
+            return Set.of();
+        }
+        Set<MutableComponent> components = new HashSet<>();
+        try(Transaction transaction = Transaction.openOuter()) {
+            for(StorageView<FluidVariant> view : storage.iterable(transaction)) {
+                if(!view.isResourceBlank()) {
+                    components.add(new TextComponent(Services.REGISTRY.getRegistryKey(view.getResource()
+                            .getFluid()) + " * " + view.getAmount()));
+                }
+            }
+        }
+        
+        return components;
     }
     
 }

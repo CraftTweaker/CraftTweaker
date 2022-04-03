@@ -2,7 +2,7 @@ package com.blamejared.crafttweaker.natives.entity.type.player;
 
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.tag.MCTag;
+import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.world.damagesource.DamageSource;
@@ -119,9 +119,9 @@ public class ExpandInventory {
     
     @ZenCodeType.Method
     @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
-    public static boolean contains(Inventory internal, MCTag<Item> tag) {
+    public static boolean contains(Inventory internal, KnownTag<Item> tag) {
         
-        return internal.contains(tag.getInternal());
+        return internal.contains(tag.getTagKey());
     }
     
 }

@@ -53,7 +53,7 @@ public final class ExpandLocationPredicateBuilder {
     @ZenCodeType.Method
     public static LocationPredicate.Builder feature(final LocationPredicate.Builder internal, final ResourceLocation feature) {
         
-        return internal.setFeature(Registry.STRUCTURE_FEATURE.getOrThrow(ResourceKey.create(Registry.STRUCTURE_FEATURE_REGISTRY, feature)));
+        return internal.setFeature(ResourceKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, feature));
     }
     
     @ZenCodeType.Method

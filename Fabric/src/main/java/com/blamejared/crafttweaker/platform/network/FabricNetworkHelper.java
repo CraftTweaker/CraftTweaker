@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.platform.network;
 
 import com.blamejared.crafttweaker.impl.network.message.ClientMessages;
 import com.blamejared.crafttweaker.impl.network.message.MessageCopy;
-import com.blamejared.crafttweaker.impl.network.message.MessageOpen;
 import com.blamejared.crafttweaker.platform.services.INetworkHelper;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -17,14 +16,6 @@ public class FabricNetworkHelper implements INetworkHelper {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         message.serialize(buf);
         ServerPlayNetworking.send(target, ClientMessages.COPY.getId(), buf);
-    }
-    
-    @Override
-    public void sendOpenMessage(ServerPlayer target, MessageOpen message) {
-        
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-        message.serialize(buf);
-        ServerPlayNetworking.send(target, ClientMessages.OPEN.getId(), buf);
     }
     
 }

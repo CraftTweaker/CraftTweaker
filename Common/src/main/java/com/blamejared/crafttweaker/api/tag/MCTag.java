@@ -3,231 +3,161 @@ package com.blamejared.crafttweaker.api.tag;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
-import com.blamejared.crafttweaker.api.util.Many;
+import com.blamejared.crafttweaker.api.tag.type.KnownTag;
+import com.blamejared.crafttweaker.api.tag.type.UnknownTag;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * A reference to a Tag object.
- * Note that this tag may not exist in the game already, such as when you create new tags.
- * See the {@link MCTag#exists()} Method on whether this tag already exists.
- * <p>
- * A tag will be created as soon as you add
- *
- * @docParam this <tag:items:forge:gems>
+ * @docParam this <tag:items:minecraft:wool>
  */
 @ZenRegister
 @Document("vanilla/api/tag/MCTag")
 @ZenCodeType.Name("crafttweaker.api.tag.MCTag")
-public final class MCTag<T> implements CommandStringDisplayable, Iterable<T> {
-    
-    private final ResourceLocation id;
-    private final ITagManager<T> manager;
-    
-    public MCTag(ResourceLocation id, ITagManager<T> manager) {
-        
-        this.id = id;
-        this.manager = manager;
-    }
+public interface MCTag extends CommandStringDisplayable, Comparable<MCTag> {
     
     /**
-     * Adds the given items to the tag. Creates the tag if it does not exist.
+     * Checks if this tag exists.
      *
-     * @param items The items to add. Can be one or more items.
-     *
-     * @docParam items <item:minecraft:bedrock>
-     * @docParam items <item:minecraft:iron_ingot>, <item:minecraft:gold_ingot>
-     * @docParam items [<item:minecraft:iron_ingot>, <item:minecraft:gold_ingot>]
+     * @return true if this tag exists, false otherwise.
      */
-    @SafeVarargs
-    @ZenCodeType.Method
-    public final void add(T... items) {
-        
-        add(Arrays.asList(items));
-    }
-    
-    /**
-     * Adds the given items to the tag. Creates the tag if it does not exist.
-     *
-     * @param items The items to add. Provided as list.
-     */
-    @ZenCodeType.Method
-    public void add(List<T> items) {
-        
-        manager.addElements(this, items);
-    }
-    
-    /**
-     * Adds the given tag to this tag. Creates the tag if it does not exist.
-     *
-     * @param tag The tag to add.
-     *
-     * @docParam tag <tag:items:forge:rods>
-     */
-    @ZenCodeType.Method
-    public void add(MCTag<T> tag) {
-        
-        add(tag.getElements());
-    }
-    
-    /**
-     * Adds the given tags to this tag. Creates the tag if it does not exist.
-     *
-     * @param tags The tags to add.
-     *
-     * @docParam tags <tag:items:forge:rods>
-     */
-    @ZenCodeType.Method
-    public void addTags(List<MCTag<T>> tags) {
-        
-        add(tags.stream()
-                .flatMap(tag -> tag.getElements().stream())
-                .collect(Collectors.toList()));
-    }
-    
-    @SafeVarargs
-    @ZenCodeType.Method
-    public final void remove(T... items) {
-        
-        remove(Arrays.asList(items));
-    }
-    
-    @ZenCodeType.Method
-    public void remove(List<T> items) {
-        
-        manager.removeElements(this, items);
-    }
-    
-    @ZenCodeType.Method
-    public void remove(MCTag<T> tag) {
-        
-        remove(tag.getElements());
-    }
-    
     @ZenCodeType.Method
     @ZenCodeType.Getter("exists")
-    public boolean exists() {
+    default boolean exists() {
         
-        return manager.exists(id.toString());
+        return manager().exists(id());
     }
     
-    @ZenCodeType.Method
-    @ZenCodeType.Getter("elements")
-    public List<T> getElements() {
-        
-        return manager.getElementsInTag(this);
-    }
-    
-    @ZenCodeType.Method
-    @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
-    public boolean contains(T element) {
-        
-        return getElements().contains(element);
-    }
-    
-    @Override
-    public String getCommandString() {
-        
-        return "<tag:" + manager.getTagFolder() + ":" + id + ">";
-    }
-    
+    /**
+     * Gets the id of this tag.
+     *
+     * @return The id of this tag.
+     */
     @ZenCodeType.Method
     @ZenCodeType.Getter("id")
-    public ResourceLocation id() {
-        
-        return id;
-    }
+    ResourceLocation id();
     
+    /**
+     * Adds the elements that correspond to the given {@link ResourceLocation} to this tag..
+     *
+     * @param elements The registry key of the elements to add.
+     *
+     * @docParam elements <resource:minecraft:diamond>
+     */
     @ZenCodeType.Method
-    @ZenCodeType.Getter("manager")
-    public ITagManager<T> manager() {
+    default void addId(ResourceLocation... elements) {
         
-        return manager;
+        manager().addId(GenericUtil.uncheck(this), elements);
     }
     
+    /**
+     * Removes the elements that correspond to the given {@link ResourceLocation} from this tag.
+     *
+     * @param elements The registry key of the elements to remove.
+     *
+     * @docParam elements <resource:minecraft:diamond>
+     */
+    @ZenCodeType.Method
+    default void removeId(ResourceLocation... elements) {
+        
+        manager().removeId(GenericUtil.uncheck(this), elements);
+    }
+    
+    /**
+     * Checks if this tag contains an element with the given id
+     *
+     * @param id The ID of the element to check.
+     *
+     * @return true if it contains the element, false otherwise.
+     *
+     * @docParam id <resource:minecraft:white_wool>
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
+    default boolean contains(ResourceLocation id) {
+        
+        return idElements().contains(id);
+    }
+    
+    /**
+     * Gets the id's of the elements in this tag.
+     *
+     * @return The id's elements in this tag.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("idElements")
+    default List<ResourceLocation> idElements() {
+        
+        return manager().idElements(GenericUtil.uncheck(this));
+    }
+    
+    /**
+     * Gets the {@link ITagManager} for this tag.
+     *
+     * @return The {@link ITagManager} for this tag.
+     *
+     * @implNote This method needs to be registered to ZC in the implemented class,
+     * with the return type of this method narrowed through the use of covariant return types.
+     *
+     * If you aren't sure how to implement this, look at {@link KnownTag#manager()} and {@link UnknownTag#manager()} for implementations.
+     */
+    ITagManager<?> manager();
+    
+    /**
+     * Checks if this tag equals the other tag.
+     *
+     * @param other The tag to check against.
+     *
+     * @return true if the tags are equal, false otherwise.
+     *
+     * @docParam other <tag:items:minecraft:wool>
+     */
+    @ZenCodeType.Method
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
-    public boolean equals(MCTag<T> other) {
+    default boolean equals(MCTag other) {
         
-        return id.equals(other.id) && manager.equals(other.manager);
-    }
-    
-    @ZenCodeType.Method
-    @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
-    public Many<MCTag<T>> withAmount(int amount) {
-        
-        return new Many<>(this, amount, ts -> ts.getCommandString() + " * " + amount);
-    }
-    
-    @ZenCodeType.Method
-    @ZenCodeType.Caster(implicit = true)
-    public Many<MCTag<T>> asTagWithAmount() {
-        
-        return withAmount(1);
+        return id().equals(other.id()) && manager().equals(other.manager());
     }
     
     /**
-     * Use the manager directly if possible, as then you can work typed.
+     * Gets the internal {@link Tag} of this tag.
+     *
+     * <p>This should only be used if the values of the tag is needed, other usecases should use {@link #getTagKey()} instead.</p>
+     *
+     * @return The internal {@link Tag} of this tag.
      */
-    public Tag<T> getInternal() {
+    default <T extends Tag<Holder<?>>> T getInternal() {
         
-        return manager.getInternal(this);
+        return (T) manager().getInternalRaw(GenericUtil.uncheck(this));
     }
     
     /**
-     * Only used to make it easier if for some reason you cannot work typed, to not always have to cast to Raw.
+     * Gets the {@link TagKey} of this tag.
+     *
+     * @return The {@link TagKey} of this tag.
      */
-    @SuppressWarnings({"rawtypes", "unused"})
-    public Tag getInternalRaw() {
+    default <T extends TagKey<?>> T getTagKey() {
         
-        return getInternal();
+        return (T) TagKey.create(GenericUtil.uncheck(manager().resourceKey()), this.id());
     }
     
     @Override
-    @ZenCodeType.Caster(implicit = true)
-    public String toString() {
+    default int compareTo(@Nonnull MCTag o) {
         
-        return getCommandString();
+        return this.id().compareTo(o.id());
     }
     
-    @Override
-    public boolean equals(Object o) {
+    default String getCommandString() {
         
-        if(this == o) {
-            return true;
-        }
-        if(o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        
-        MCTag<?> mcTag = (MCTag<?>) o;
-        
-        if(!id.equals(mcTag.id)) {
-            return false;
-        }
-        return manager.equals(mcTag.manager);
-    }
-    
-    @Override
-    public int hashCode() {
-        
-        int result = id.hashCode();
-        result = 31 * result + manager.hashCode();
-        return result;
-    }
-    
-    @Nonnull
-    @Override
-    public Iterator<T> iterator() {
-        
-        return getElements().iterator();
+        return "<tag:" + manager().tagFolder() + ":" + id() + ">";
     }
     
 }

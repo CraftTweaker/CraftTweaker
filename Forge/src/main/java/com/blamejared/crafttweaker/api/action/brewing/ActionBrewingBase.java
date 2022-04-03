@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.api.action.brewing;
 
-import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
+import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import net.minecraftforge.common.brewing.IBrewingRecipe;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public abstract class ActionBrewingBase implements IUndoableAction {
     }
     
     @Override
-    public boolean shouldApplyOn(ScriptLoadingOptions.ScriptLoadSource source) {
+    public boolean shouldApplyOn(final IScriptLoadSource source) {
         
         return true;
     }

@@ -16,24 +16,28 @@ import java.util.UUID;
 @NativeTypeRegistration(value = AttributeInstance.class, zenCodeName = "crafttweaker.api.entity.attribute.AttributeInstance")
 public class ExpandAttributeInstance {
     
+    @ZenCodeType.Method
     @ZenCodeType.Getter("baseValue")
     public static double getBaseValue(AttributeInstance internal) {
         
         return internal.getBaseValue();
     }
     
+    @ZenCodeType.Method
     @ZenCodeType.Setter("baseValue")
     public static void setBaseValue(AttributeInstance internal, double value) {
         
         internal.setBaseValue(value);
     }
     
+    @ZenCodeType.Method
     @ZenCodeType.Getter("value")
     public static double getValue(AttributeInstance internal) {
         
         return internal.getValue();
     }
     
+    @ZenCodeType.Method
     @ZenCodeType.Getter("modifiers")
     public static List<AttributeModifier> getModifiers(AttributeInstance internal) {
         

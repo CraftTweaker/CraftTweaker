@@ -4,7 +4,7 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.base.IData;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.api.tag.MCTag;
+import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
@@ -38,11 +38,11 @@ public final class ExpandItemPredicateBuilder {
     }
     
     @ZenCodeType.Method
-    public static ItemPredicate.Builder tag(final ItemPredicate.Builder internal, final MCTag<Item> tag) {
-        
-        return internal.of(tag.getInternal());
+    public static ItemPredicate.Builder tag(final ItemPredicate.Builder internal, final KnownTag<Item> tag) {
+
+        return internal.of(tag.getTagKey());
     }
-    
+
     @ZenCodeType.Method
     public static ItemPredicate.Builder amount(final ItemPredicate.Builder internal, final MinMaxBounds.Ints amount) {
         

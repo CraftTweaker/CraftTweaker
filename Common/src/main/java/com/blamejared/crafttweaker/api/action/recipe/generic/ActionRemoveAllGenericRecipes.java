@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.action.recipe.generic;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.recipe.RecipeList;
 import com.blamejared.crafttweaker.api.recipe.manager.RecipeManagerWrapper;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.Map;
@@ -13,12 +14,12 @@ public class ActionRemoveAllGenericRecipes extends ActionWholeRegistryBase {
     @Override
     public void apply() {
         
-        Map<RecipeType<?>, RecipeList<?>> recipeLists = getRecipeLists();
+        Map<RecipeType<Recipe<?>>, RecipeList<?>> recipeLists = getRecipeLists();
         
         final Map<String, Integer> numberOfRemovedRecipesByType = new TreeMap<>();
         int totalRemoved = 0;
         
-        for(RecipeType recipeType : recipeLists.keySet()) {
+        for(RecipeType<Recipe<?>> recipeType : recipeLists.keySet()) {
             final int removedRecipes = remove(recipeLists.get(recipeType));
             if(removedRecipes > 0) {
                 totalRemoved += removedRecipes;

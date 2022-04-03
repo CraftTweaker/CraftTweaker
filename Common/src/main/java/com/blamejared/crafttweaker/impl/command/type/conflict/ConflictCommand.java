@@ -2,13 +2,12 @@ package com.blamejared.crafttweaker.impl.command.type.conflict;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.command.CommandUtilities;
 import com.blamejared.crafttweaker.api.command.argument.RecipeTypeArgument;
-import com.blamejared.crafttweaker.api.command.boilerplate.CommandImpl;
+import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
+import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
-import com.blamejared.crafttweaker.impl.command.CTCommands;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -50,22 +49,25 @@ public final class ConflictCommand {
     
     private ConflictCommand() {}
     
-    public static void registerCommands() {
+    public static void registerCommands(final ICommandRegistrationHandler handler) {
         
-        CTCommands.registerCommand(new CommandImpl("conflicts", new TranslatableComponent("crafttweaker.command.description.conflicts"), builder -> {
-            builder.then(Commands.argument("type", RecipeTypeArgument.get())
-                            .executes(context -> conflicts(
-                                    context.getSource().getPlayerOrException(),
-                                    DescriptiveFilter.of(context.getArgument("type", IRecipeManager.class))
-                            )))
-                    .then(Commands.literal("hand")
-                            .executes(context -> ifNotEmpty(
-                                    context,
-                                    (player, item) -> conflicts(player, DescriptiveFilter.of(item))
-                            )))
-                    .executes(context -> conflicts(context.getSource()
-                            .getPlayerOrException(), DescriptiveFilter.of()));
-        }));
+        handler.registerRootCommand(
+                "conflicts",
+                new TranslatableComponent("crafttweaker.command.description.conflicts"),
+                builder ->
+                        builder.then(Commands.argument("type", RecipeTypeArgument.get())
+                                        .executes(context -> conflicts(
+                                                context.getSource().getPlayerOrException(),
+                                                DescriptiveFilter.of(context.getArgument("type", IRecipeManager.class))
+                                        )))
+                                .then(Commands.literal("hand")
+                                        .executes(context -> ifNotEmpty(
+                                                context,
+                                                (player, item) -> conflicts(player, DescriptiveFilter.of(item))
+                                        )))
+                                .executes(context -> conflicts(context.getSource()
+                                        .getPlayerOrException(), DescriptiveFilter.of()))
+        );
     }
     
     private static int ifNotEmpty(final CommandContext<CommandSourceStack> source, final ToIntBiFunction<Player, ItemStack> command) throws CommandSyntaxException {
@@ -99,7 +101,7 @@ public final class ConflictCommand {
         
         // Cloning the map to avoid /reload messing up with CMEs when looping on it from off-thread
         // Also, this deep copies only the two maps: the recipe type, RL, and recipe objects are not also deep copied
-        final Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> recipes = deepCopy(((AccessRecipeManager) manager).getRecipes(), filter);
+        final Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> recipes = deepCopy(((AccessRecipeManager) manager).crafttweaker$getRecipes(), filter);
         CompletableFuture.supplyAsync(() -> computeConflicts(recipes), OFF_THREAD_SERVICE)
                 .thenAcceptAsync(message -> dispatchCompletionTo(message, player), OFF_THREAD_SERVICE)
                 .exceptionallyAsync(exception -> dispatchExceptionTo(exception, player), OFF_THREAD_SERVICE);
@@ -148,7 +150,7 @@ public final class ConflictCommand {
     
     private static <T extends Recipe<?>> boolean conflictsWith(final IRecipeManager<?> manager, final T first, final Recipe<?> second) {
         
-        return first != second && CraftTweakerRegistry.getHandlerFor(first).doesConflict(manager, first, second);
+        return first != second && IRecipeHandlerRegistry.getHandlerFor(first).doesConflict(manager, first, second);
     }
     
     private static String formatConflict(final IRecipeManager<?> manager, final ResourceLocation firstName, final ResourceLocation secondName) {

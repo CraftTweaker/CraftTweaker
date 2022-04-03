@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Item;
@@ -15,6 +16,7 @@ import java.util.Set;
 @ZenRegister
 @Document("vanilla/api/villager/VillagerProfession")
 @NativeTypeRegistration(value = VillagerProfession.class, zenCodeName = "crafttweaker.api.villager.VillagerProfession")
+@TaggableElement("minecraft:villager_profession")
 public class ExpandVillagerProfession {
     
     @ZenCodeType.Method

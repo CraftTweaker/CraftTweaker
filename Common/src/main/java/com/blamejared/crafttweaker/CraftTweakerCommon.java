@@ -2,12 +2,14 @@ package com.blamejared.crafttweaker;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
-import com.blamejared.crafttweaker.api.CraftTweakerRegistry;
-import com.blamejared.crafttweaker.api.ScriptLoadingOptions;
 import com.blamejared.crafttweaker.api.command.argument.IItemStackArgument;
 import com.blamejared.crafttweaker.api.command.argument.RecipeTypeArgument;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
-import com.blamejared.crafttweaker.impl.command.CTCommands;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
+import com.blamejared.crafttweaker.impl.command.CtCommands;
+import com.blamejared.crafttweaker.impl.plugin.core.PluginManager;
+import com.google.common.base.Suppliers;
+import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -24,6 +26,7 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class CraftTweakerCommon {
@@ -31,22 +34,20 @@ public class CraftTweakerCommon {
     public static final Logger LOG = LogManager.getLogger(CraftTweakerConstants.MOD_NAME);
     private static Set<String> PATRON_LIST = new HashSet<>();
     
+    private static final Supplier<PluginManager> PLUGIN_MANAGER = Suppliers.memoize(PluginManager::of);
+    
     public static void init() {
         
         try {
-            Files.createDirectories(CraftTweakerConstants.SCRIPT_DIR.toPath());
+            Files.createDirectories(CraftTweakerAPI.getScriptsDirectory());
         } catch(IOException e) {
-            final String path = CraftTweakerConstants.SCRIPT_DIR.getAbsolutePath();
+            final String path = CraftTweakerAPI.getScriptsDirectory().toAbsolutePath().toString();
             throw new IllegalStateException("Could not create Directory " + path);
         }
         CraftTweakerLogger.init();
-        
-        CraftTweakerAPI.LOGGER.info("Starting building internal Registries");
-        CraftTweakerRegistry.addAdvancedBEPName("recipemanager");
-        CraftTweakerRegistry.findClasses();
-        CraftTweakerAPI.LOGGER.info("Completed building internal Registries");
-        
-        CraftTweakerRegistries.init();
+    
+    
+        Services.REGISTRY.init();
         
         new Thread(() -> {
             try {
@@ -64,9 +65,14 @@ public class CraftTweakerCommon {
         }).start();
     }
     
+    public static PluginManager getPluginManager() {
+        
+        return PLUGIN_MANAGER.get();
+    }
+    
     public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, Commands.CommandSelection environment) {
         
-        CTCommands.init(dispatcher, environment);
+        CtCommands.get().registerCommandsTo(dispatcher, environment);
     }
     
     public static void registerCommandArguments() {
@@ -82,8 +88,19 @@ public class CraftTweakerCommon {
     
     public static void loadInitScripts() {
         
-        final ScriptLoadingOptions setupCommon = new ScriptLoadingOptions().setLoaderName("initialize").execute();
-        CraftTweakerAPI.loadScripts(setupCommon);
+        final ScriptRunConfiguration configuration = new ScriptRunConfiguration(
+                CraftTweakerConstants.INIT_LOADER_NAME,
+                CraftTweakerConstants.RELOAD_LISTENER_SOURCE_ID, // TODO("Custom load source?")
+                ScriptRunConfiguration.RunKind.EXECUTE
+        );
+        
+        try {
+            CraftTweakerAPI.getScriptRunManager()
+                    .createScriptRun(configuration)
+                    .execute();
+        } catch(final Throwable e) {
+            CraftTweakerAPI.LOGGER.error("Unable to run init scripts due to an error", e);
+        }
     }
     
 }

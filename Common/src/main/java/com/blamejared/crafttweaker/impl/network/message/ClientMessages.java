@@ -7,8 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.function.Function;
 
 public enum ClientMessages {
-    COPY(MessageCopy.class, "copy", buf -> new MessageCopy(buf.readUtf())),
-    OPEN(MessageOpen.class, "open", buf -> new MessageOpen(buf.readUtf()));
+    COPY(MessageCopy.class, "copy", buf -> new MessageCopy(buf.readUtf()));
     
     private final Class<?> messageClass;
     private final ResourceLocation id;

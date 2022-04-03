@@ -37,6 +37,12 @@ public class ExpandBlockEntity {
     }
     
     @ZenCodeType.Method
+    @ZenCodeType.Setter("data")
+    public static void setData(BlockEntity internal, MapData data){
+        internal.load(data.getInternal());
+    }
+    
+    @ZenCodeType.Method
     public static void updateData(BlockEntity internal, MapData data) {
         
         internal.load(getData(internal).merge(data).getInternal());

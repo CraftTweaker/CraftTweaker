@@ -129,13 +129,6 @@ public class BracketValidators {
     }
     
     @ZenCodeType.Method
-    @BracketValidator("recipemanager")
-    public static boolean validateRecipeManagerBracket(String tokens) {
-        
-        return validateBracket("recipemanager", tokens, BracketHandlers::getRecipeManager);
-    }
-    
-    @ZenCodeType.Method
     @BracketValidator("profession")
     public static boolean validateProfessionBracket(String tokens) {
         
@@ -156,9 +149,9 @@ public class BracketValidators {
     }
     
     @ZenCodeType.Method
-    @BracketValidator("itemgroup")
-    public static boolean validateItemGroupBracket(String tokens) {
-        
+    @BracketValidator("creativemodetab")
+    public static boolean validateCreativeModeTabBracket(String tokens) {
+    
         return Arrays.stream(CreativeModeTab.TABS).anyMatch(group -> group.getRecipeFolderName().equals(tokens));
     }
     
