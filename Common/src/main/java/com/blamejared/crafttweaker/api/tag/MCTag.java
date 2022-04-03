@@ -93,7 +93,7 @@ public interface MCTag extends CommandStringDisplayable, Comparable<MCTag> {
      * @return The id's elements in this tag.
      */
     @ZenCodeType.Method
-    @ZenCodeType.Getter("isElements")
+    @ZenCodeType.Getter("idElements")
     default List<ResourceLocation> idElements() {
         
         return manager().idElements(GenericUtil.uncheck(this));
