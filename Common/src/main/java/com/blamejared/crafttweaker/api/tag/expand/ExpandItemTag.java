@@ -6,13 +6,11 @@ import com.blamejared.crafttweaker.api.data.base.IData;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.IIngredientWithAmount;
 import com.blamejared.crafttweaker.api.ingredient.type.IIngredientEmpty;
-import com.blamejared.crafttweaker.api.ingredient.type.WrappingIIngredient;
+import com.blamejared.crafttweaker.api.ingredient.type.TagIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.Ingredient;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
@@ -32,13 +30,11 @@ public class ExpandItemTag {
     @ZenCodeType.Caster(implicit = true)
     public static IIngredient asIIngredient(KnownTag<Item> internal) {
         
-        final TagKey<Item> internalTag = internal.getTagKey();
-        if(internalTag == null) {
+        if(!internal.exists()) {
             CraftTweakerAPI.LOGGER.warn("Tag '{}' does not exist, replacing with empty IIngredient", internal.getCommandString());
             return IIngredientEmpty.INSTANCE;
         }
-        final Ingredient ingredient = Ingredient.of(internalTag);
-        return new WrappingIIngredient(ingredient, internal.getCommandString());
+        return new TagIngredient(internal);
     }
     
     @ZenCodeType.Method

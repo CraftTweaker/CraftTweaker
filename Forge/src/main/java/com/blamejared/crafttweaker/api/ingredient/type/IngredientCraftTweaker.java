@@ -18,7 +18,7 @@ public abstract class IngredientCraftTweaker<T extends IIngredient> extends Ingr
     
     protected IngredientCraftTweaker(T crtIngredient) {
         
-        this(crtIngredient, IngredientCraftTweakerBase.getValues(crtIngredient));
+        this(crtIngredient, IngredientCraftTweakerBase.getValues(crtIngredient.getItems()));
     }
     
     @Override
