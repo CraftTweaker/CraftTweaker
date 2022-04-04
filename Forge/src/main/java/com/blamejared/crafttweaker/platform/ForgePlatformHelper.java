@@ -39,6 +39,7 @@ import net.minecraftforge.common.ForgeInternalHandler;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifierManager;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.data.loading.DatagenModLoader;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.ModList;
@@ -113,6 +114,12 @@ public class ForgePlatformHelper implements IPlatformHelper {
     public boolean isDevelopmentEnvironment() {
         
         return !FMLLoader.isProduction();
+    }
+    
+    @Override
+    public boolean isDataGen() {
+        
+        return DatagenModLoader.isRunningDataGen();
     }
     
     @Override

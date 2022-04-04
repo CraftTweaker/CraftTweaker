@@ -49,6 +49,8 @@ public interface IPlatformHelper {
     
     boolean isDevelopmentEnvironment();
     
+    boolean isDataGen();
+    
     List<Mod> getMods();
     
     Optional<Mod> getMod(String modid);

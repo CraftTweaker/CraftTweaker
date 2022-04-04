@@ -99,6 +99,13 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
     
     @Override
+    public boolean isDataGen() {
+        
+        // If / When fabric has a way to detect datagen, update this.
+        return false;
+    }
+    
+    @Override
     public List<Mod> getMods() {
         
         return modList.get();
