@@ -71,7 +71,7 @@ public interface MCTag extends CommandStringDisplayable, Comparable<MCTag> {
         
         addId(Arrays.stream(tags)
                 .map(MCTag::idElements)
-                .flatMap(it -> Arrays.stream(it.toArray(ResourceLocation[]::new)))
+                .flatMap(List::stream)
                 .toArray(ResourceLocation[]::new));
     }
     
@@ -100,7 +100,7 @@ public interface MCTag extends CommandStringDisplayable, Comparable<MCTag> {
         
         removeId(Arrays.stream(tags)
                 .map(MCTag::idElements)
-                .flatMap(it -> Arrays.stream(it.toArray(ResourceLocation[]::new)))
+                .flatMap(List::stream)
                 .toArray(ResourceLocation[]::new));
     }
     
