@@ -14,6 +14,7 @@ import net.minecraft.tags.TagKey;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -46,7 +47,7 @@ public interface MCTag extends CommandStringDisplayable, Comparable<MCTag> {
     ResourceLocation id();
     
     /**
-     * Adds the elements that correspond to the given {@link ResourceLocation} to this tag..
+     * Adds the elements that correspond to the given {@link ResourceLocation} to this tag.
      *
      * @param elements The registry key of the elements to add.
      *
@@ -56,6 +57,22 @@ public interface MCTag extends CommandStringDisplayable, Comparable<MCTag> {
     default void addId(ResourceLocation... elements) {
         
         manager().addId(GenericUtil.uncheck(this), elements);
+    }
+    
+    /**
+     * Adds the given tags to this tag.
+     *
+     * @param tags The tags to add.
+     *
+     * @docParam tags <tag:items:minecraft:wool>
+     */
+    @ZenCodeType.Method
+    default void add(MCTag... tags) {
+        
+        addId(Arrays.stream(tags)
+                .map(MCTag::idElements)
+                .flatMap(it -> Arrays.stream(it.toArray(ResourceLocation[]::new)))
+                .toArray(ResourceLocation[]::new));
     }
     
     /**
@@ -69,6 +86,22 @@ public interface MCTag extends CommandStringDisplayable, Comparable<MCTag> {
     default void removeId(ResourceLocation... elements) {
         
         manager().removeId(GenericUtil.uncheck(this), elements);
+    }
+    
+    /**
+     * Removes the given tags from this tag.
+     *
+     * @param tags The tags to remove.
+     *
+     * @docParam tags <tag:items:minecraft:wool>
+     */
+    @ZenCodeType.Method
+    default void remove(MCTag... tags) {
+        
+        removeId(Arrays.stream(tags)
+                .map(MCTag::idElements)
+                .flatMap(it -> Arrays.stream(it.toArray(ResourceLocation[]::new)))
+                .toArray(ResourceLocation[]::new));
     }
     
     /**
