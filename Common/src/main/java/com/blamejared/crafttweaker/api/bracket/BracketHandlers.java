@@ -360,7 +360,7 @@ public class BracketHandlers {
         final ResourceLocation resourceLocation = new ResourceLocation(tokens);
         
         return Services.REGISTRY.villagerProfessions().getOptional(resourceLocation)
-                .orElseThrow(() -> new IllegalArgumentException("Could not get potion with name: <profession:" + tokens + ">! Profession does not appear to exist!"));
+                .orElseThrow(() -> new IllegalArgumentException("Could not get profession with name: <profession:" + tokens + ">! Profession does not appear to exist!"));
     }
     
     /**
