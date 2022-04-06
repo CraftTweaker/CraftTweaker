@@ -136,7 +136,7 @@ public final class ConflictCommand {
         
         final IRecipeManager manager = RecipeTypeBracketHandler.getOrDefault(entry.getKey());
         
-        if (manager == null) return Stream.empty();
+        if (manager == null || entry.getValue().size() == 1) return Stream.empty();
         
         final List<Map.Entry<ResourceLocation, IRecipe<?>>> recipes = new ArrayList<>(entry.getValue().entrySet());
         final RecipeLongIterator iterator = new RecipeLongIterator(recipes.size());
