@@ -1,11 +1,14 @@
 package com.blamejared.crafttweaker.api.action.tag.known;
 
 import com.blamejared.crafttweaker.api.tag.type.KnownTag;
+import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class ActionKnownTagModify<T> extends ActionKnownTag<T> {
@@ -44,7 +47,7 @@ public abstract class ActionKnownTagModify<T> extends ActionKnownTag<T> {
     
     public String describeValues() {
         
-        return values().stream().map(Object::toString).collect(Collectors.joining(", ", "[", "]"));
+        return values().stream().map(it -> Services.REGISTRY.maybeGetRegistryKey(it).map(ResourceLocation::toString).orElseGet(() -> Objects.toString(it))).collect(Collectors.joining(", ", "[", "]"));
     }
     
 }
