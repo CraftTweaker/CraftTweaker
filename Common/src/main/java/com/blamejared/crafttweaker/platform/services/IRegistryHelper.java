@@ -25,9 +25,9 @@ import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.WritableRegistry;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -137,6 +137,8 @@ public interface IRegistryHelper {
             return Optional.of(getRegistryKey(obj));
         } else if(object instanceof Biome obj) {
             return Optional.of(getRegistryKey(obj));
+        } else if(object instanceof SoundEvent obj) {
+            return Optional.of(getRegistryKey(obj));
         }
         
         
@@ -203,6 +205,11 @@ public interface IRegistryHelper {
         return biomes().getKey(biome);
     }
     
+    default ResourceLocation getRegistryKey(SoundEvent biome) {
+        
+        return soundEvents().getKey(biome);
+    }
+    
     private <T> RegistryWrapper<T> wrap(Registry<T> registry) {
         
         return new VanillaRegistryWrapper<>(registry);
@@ -258,9 +265,16 @@ public interface IRegistryHelper {
         return wrap(Registry.VILLAGER_PROFESSION);
     }
     
+    default RegistryWrapper<SoundEvent> soundEvents() {
+        
+        return wrap(Registry.SOUND_EVENT);
+    }
+    
     default RegistryWrapper<Biome> biomes() {
         
-        return wrap(BuiltinRegistries.BIOME);
+        return wrap(CraftTweakerAPI.getAccessibleElementsProvider()
+                .registryAccess()
+                .registryOrThrow(Registry.BIOME_REGISTRY));
     }
     
     default RegistryWrapper<EntityType<?>> entityTypes() {
@@ -274,7 +288,7 @@ public interface IRegistryHelper {
     }
     
     default <T> Holder<T> makeHolder(ResourceKey<?> resourceKey, T object) {
-    
+        
         Registry<T> registry = CraftTweakerAPI.getAccessibleElementsProvider()
                 .registryAccess()
                 .registryOrThrow(GenericUtil.uncheck(resourceKey));

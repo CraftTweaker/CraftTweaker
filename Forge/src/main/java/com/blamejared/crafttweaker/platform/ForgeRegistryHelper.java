@@ -33,6 +33,7 @@ import com.blamejared.crafttweaker.platform.registry.RegistryWrapper;
 import com.blamejared.crafttweaker.platform.services.IRegistryHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -44,7 +45,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -221,9 +221,9 @@ public class ForgeRegistryHelper implements IRegistryHelper {
     }
     
     @Override
-    public RegistryWrapper<Biome> biomes() {
+    public RegistryWrapper<SoundEvent> soundEvents() {
         
-        return wrap(ForgeRegistries.BIOMES);
+        return wrap(ForgeRegistries.SOUND_EVENTS);
     }
     
     @Override

@@ -12,6 +12,7 @@ import com.blamejared.crafttweaker.natives.entity.effect.ExpandMobEffect;
 import com.blamejared.crafttweaker.natives.item.ExpandCreativeModeTab;
 import com.blamejared.crafttweaker.natives.item.alchemy.ExpandPotion;
 import com.blamejared.crafttweaker.natives.item.enchantment.ExpandEnchantment;
+import com.blamejared.crafttweaker.natives.sound.ExpandSoundEvent;
 import com.blamejared.crafttweaker.natives.villager.ExpandVillagerProfession;
 import com.blamejared.crafttweaker.natives.world.damage.ExpandDamageSource;
 import com.blamejared.crafttweaker.platform.Services;
@@ -136,6 +137,16 @@ public class BracketDumpers {
         
         return Arrays.stream(CreativeModeTab.TABS)
                 .map(ExpandCreativeModeTab::getCommandString)
+                .collect(Collectors.toList());
+    }
+    
+    @ZenCodeType.Method
+    @BracketDumper("soundevent")
+    public static Collection<String> getSoundEventDump() {
+        
+        return Services.REGISTRY.soundEvents()
+                .stream()
+                .map(ExpandSoundEvent::getCommandString)
                 .collect(Collectors.toList());
     }
     

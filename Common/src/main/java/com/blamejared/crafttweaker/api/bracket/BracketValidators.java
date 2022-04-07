@@ -140,7 +140,6 @@ public class BracketValidators {
         return validateBracket("profession", tokens, BracketHandlers::getProfession);
     }
     
-    
     @ZenCodeType.Method
     @BracketValidator("resource")
     public static boolean validateResourceBracket(String tokens) {
@@ -172,5 +171,16 @@ public class BracketValidators {
         return validateBracket(bracketName, tokens, bracketMethod, true);
     }
     
+    @ZenCodeType.Method
+    @BracketValidator("soundevent")
+    public static boolean validateSoundEvent(String tokens) {
+        
+        if(tokens.split(":").length != 2) {
+            CraftTweakerAPI.LOGGER.error("Invalid Bracket Syntax: <soundevent:" + tokens + ">! Syntax is <soundevent:modid:name>");
+            return false;
+        }
+        
+        return validateBracket("soundevent", tokens, BracketHandlers::getSoundEvent);
+    }
     
 }

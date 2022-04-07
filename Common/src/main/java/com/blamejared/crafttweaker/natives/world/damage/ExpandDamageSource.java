@@ -8,6 +8,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Fireball;
+import net.minecraft.world.entity.projectile.FireworkRocketEntity;
+import net.minecraft.world.entity.projectile.WitherSkull;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.phys.Vec3;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -210,6 +216,96 @@ public class ExpandDamageSource {
     public static Vec3 getSourcePosition(DamageSource internal) {
         
         return internal.getSourcePosition();
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource string(LivingEntity living) {
+        
+        return DamageSource.sting(living);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource mobAttack(LivingEntity living) {
+        
+        return DamageSource.mobAttack(living);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource indirectMobAttack(Entity entity, @ZenCodeType.Nullable LivingEntity owner) {
+        
+        return DamageSource.indirectMobAttack(entity, owner);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource playerAttack(Player player) {
+        
+        return DamageSource.playerAttack(player);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource arrow(AbstractArrow arrow, @ZenCodeType.Nullable Entity owner) {
+        
+        return DamageSource.arrow(arrow, owner);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource trident(Entity entity, @ZenCodeType.Nullable Entity owner) {
+        
+        return DamageSource.trident(entity, owner);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource fireworks(FireworkRocketEntity entity, @ZenCodeType.Nullable Entity owner) {
+        
+        return DamageSource.fireworks(entity, owner);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource fireball(Fireball fireball, @ZenCodeType.Nullable Entity owner) {
+        
+        return DamageSource.fireball(fireball, owner);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource witherSkull(WitherSkull witherSkull, @ZenCodeType.Nullable Entity owner) {
+        
+        return DamageSource.witherSkull(witherSkull, owner);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource thrown(Entity entity, @ZenCodeType.Nullable Entity owner) {
+        
+        return DamageSource.thrown(entity, owner);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource indirectMagic(Entity entity, @ZenCodeType.Nullable Entity owner) {
+        
+        return DamageSource.indirectMagic(entity, owner);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource thorns(Entity entity) {
+        
+        return DamageSource.thorns(entity);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource explosion(@ZenCodeType.Nullable Explosion explosion) {
+        
+        return DamageSource.explosion(explosion);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource explosion(@ZenCodeType.Optional @ZenCodeType.Nullable LivingEntity owner) {
+        
+        return DamageSource.explosion(owner);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource badRespawnPointExplosion() {
+        
+        return DamageSource.badRespawnPointExplosion();
     }
     
 }

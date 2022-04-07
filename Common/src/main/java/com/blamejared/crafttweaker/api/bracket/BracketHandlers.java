@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.api.bracket;
 
-
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.BracketResolver;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
@@ -13,6 +12,7 @@ import com.blamejared.crafttweaker.natives.world.damage.ExpandDamageSource;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
@@ -239,7 +239,7 @@ public class BracketHandlers {
         return Services.REGISTRY.entityTypes().getOptional(resourceLocation)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get entitytype <entitytype:" + tokens + ">"));
     }
-
+    
     
     /**
      * Gets the item based on registry name. Throws an error if it can't find the item.
@@ -398,6 +398,29 @@ public class BracketHandlers {
                 .filter(g -> g.getRecipeFolderName().equals(tokens))
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("Could not find creativemodetab for '<creativemodetab:" + tokens + ">'!"));
+    }
+    
+    /**
+     * Gets a sound event based on registry name. Throws an exception if it can't find the sound event.
+     *
+     * @param tokens The sound event's resource location
+     *
+     * @return The found sound event
+     *
+     * @docParam tokens "minecraft:ambient.cave"
+     */
+    @ZenCodeType.Method
+    @BracketResolver("soundevent")
+    public static SoundEvent getSoundEvent(String tokens) {
+        
+        final int length = tokens.split(":").length;
+        if(length == 0 || length > 2) {
+            throw new IllegalArgumentException("Could not get sound event <soundevent:" + tokens + ">");
+        }
+        final ResourceLocation resourceLocation = new ResourceLocation(tokens);
+        
+        return Services.REGISTRY.soundEvents().getOptional(resourceLocation)
+                .orElseThrow(() -> new IllegalArgumentException("Could not get sound event with name: <soundevent:" + tokens + ">! Sound event does not appear to exist!"));
     }
     
 }

@@ -16,14 +16,14 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/util/math/BlockPos")
 @NativeTypeRegistration(value = BlockPos.class, zenCodeName = "crafttweaker.api.util.math.BlockPos", constructors = {
         @NativeConstructor(value = {
-                @NativeConstructor.ConstructorParameter(name = "x", type = Integer.class, description = "The x value of the blockpos", examples = "0"),
-                @NativeConstructor.ConstructorParameter(name = "y", type = Integer.class, description = "The y value of the blockpos", examples = "1"),
-                @NativeConstructor.ConstructorParameter(name = "z", type = Integer.class, description = "The z value of the blockpos", examples = "2")
+                @NativeConstructor.ConstructorParameter(name = "x", type = int.class, description = "The x value of the blockpos", examples = "0"),
+                @NativeConstructor.ConstructorParameter(name = "y", type = int.class, description = "The y value of the blockpos", examples = "1"),
+                @NativeConstructor.ConstructorParameter(name = "z", type = int.class, description = "The z value of the blockpos", examples = "2")
         }, description = "Creates a new BlockPos using the provided values."),
         @NativeConstructor(value = {
-                @NativeConstructor.ConstructorParameter(name = "x", type = Double.class, description = "The x value of the blockpos", examples = "0"),
-                @NativeConstructor.ConstructorParameter(name = "y", type = Double.class, description = "The y value of the blockpos", examples = "1"),
-                @NativeConstructor.ConstructorParameter(name = "z", type = Double.class, description = "The z value of the blockpos", examples = "2")
+                @NativeConstructor.ConstructorParameter(name = "x", type = double.class, description = "The x value of the blockpos", examples = "0.25"),
+                @NativeConstructor.ConstructorParameter(name = "y", type = double.class, description = "The y value of the blockpos", examples = "1.84"),
+                @NativeConstructor.ConstructorParameter(name = "z", type = double.class, description = "The z value of the blockpos", examples = "2.34")
         }, description = "Creates a new BlockPos using the provided values. Note, the values will be floored down, providing 0.85 is the same as providing 0."),
         @NativeConstructor(value = {
                 @NativeConstructor.ConstructorParameter(name = "vector", type = Vec3.class, description = "The vector to copy the values of.", examples = "new Vec3(0, 1, 2)"),

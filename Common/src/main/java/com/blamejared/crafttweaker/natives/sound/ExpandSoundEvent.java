@@ -21,4 +21,11 @@ public class ExpandSoundEvent {
         return internal.getLocation();
     }
     
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("commandString")
+    public static String getCommandString(SoundEvent internal) {
+        
+        return "<soundevent:" + internal.getLocation() + ">";
+    }
+    
 }
