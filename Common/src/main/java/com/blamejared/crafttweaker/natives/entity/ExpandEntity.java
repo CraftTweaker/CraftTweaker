@@ -1150,7 +1150,7 @@ public class ExpandEntity {
     @ZenCodeType.Getter("customData")
     public static MapData getCustomData(Entity internal) {
         
-        return new MapData(Services.PLATFORM.getCustomDate(internal));
+        return new MapData(Services.PLATFORM.getCustomData(internal));
     }
     
     /**
@@ -1161,9 +1161,9 @@ public class ExpandEntity {
      * @docParam data {custom: "data"}
      */
     @ZenCodeType.Method
-    public static void updateCustomDate(Entity internal, MapData data) {
+    public static void updateCustomData(Entity internal, MapData data) {
         
-        CompoundTag persistentData = Services.PLATFORM.getCustomDate(internal);
+        CompoundTag persistentData = Services.PLATFORM.getCustomData(internal);
         persistentData.merge(data.getInternal());
     }
     

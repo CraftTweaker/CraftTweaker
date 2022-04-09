@@ -38,7 +38,7 @@ public class ExpandServerPlayer {
      * @docParam data {custom: "data"}
      */
     @ZenCodeType.Method
-    public static void updatePersistentDate(ServerPlayer internal, MapData data) {
+    public static void updatePersistentData(ServerPlayer internal, MapData data) {
         
         CompoundTag persistentData = Services.PLATFORM.getPersistentData(internal);
         persistentData.merge(data.getInternal());

@@ -267,7 +267,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
     
     @Override
-    public CompoundTag getCustomDate(Entity entity) {
+    public CompoundTag getCustomData(Entity entity) {
         
         return CustomDataHelper.getCustomData(entity);
     }

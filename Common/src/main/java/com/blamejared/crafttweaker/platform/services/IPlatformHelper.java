@@ -152,7 +152,7 @@ public interface IPlatformHelper {
     
     Set<MutableComponent> getFluidsForDump(ItemStack stack, Player player, InteractionHand hand);
     
-    CompoundTag getCustomDate(Entity entity);
+    CompoundTag getCustomData(Entity entity);
     
     CompoundTag getPersistentData(ServerPlayer player);
     
