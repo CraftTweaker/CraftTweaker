@@ -8,9 +8,12 @@ import com.blamejared.crafttweaker.api.villager.CTTradeObject;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
 import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
 import com.mojang.datafixers.util.Either;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
@@ -86,6 +89,7 @@ public interface IPlatformHelper {
         
         return this.getRelativePathFromGameDirectory(Path.of(path));
     }
+    
     /**
      * Finds classes with the given annotation
      *
@@ -147,4 +151,9 @@ public interface IPlatformHelper {
     boolean doCraftingTableRecipesConflict(final IRecipeManager manager, final Recipe<?> first, final Recipe<?> second);
     
     Set<MutableComponent> getFluidsForDump(ItemStack stack, Player player, InteractionHand hand);
+    
+    CompoundTag getCustomDate(Entity entity);
+    
+    CompoundTag getPersistentData(ServerPlayer player);
+    
 }

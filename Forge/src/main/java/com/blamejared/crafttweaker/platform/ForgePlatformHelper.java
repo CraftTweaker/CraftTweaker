@@ -23,10 +23,13 @@ import com.blamejared.crafttweaker.platform.services.IPlatformHelper;
 import com.google.common.base.Suppliers;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.Util;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
@@ -299,6 +302,19 @@ public class ForgePlatformHelper implements IPlatformHelper {
             e.printStackTrace();
             return null;
         }
+    }
+    
+    
+    @Override
+    public CompoundTag getCustomDate(Entity entity) {
+        
+        return entity.getPersistentData();
+    }
+    
+    @Override
+    public CompoundTag getPersistentData(ServerPlayer player) {
+        
+        return player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
     }
     
 }

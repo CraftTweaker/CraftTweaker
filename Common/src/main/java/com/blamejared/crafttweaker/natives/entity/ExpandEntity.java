@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.natives.entity;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.MapData;
+import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.core.BlockPos;
@@ -1124,6 +1125,46 @@ public class ExpandEntity {
     public static MapData getData(Entity internal) {
         
         return new MapData(internal.saveWithoutId(new CompoundTag()));
+    }
+    
+    /**
+     * Updates the NBT data of this Entity.
+     *
+     * @param data The new Data for this Entity
+     *
+     * @docParam data {key: "value"}
+     */
+    @ZenCodeType.Method
+    public static void updateData(Entity internal, MapData data) {
+        
+        internal.load(internal.saveWithoutId(new CompoundTag())
+                .merge(data.getInternal()));
+    }
+    
+    /**
+     * Gets the custom NBT data for this Entity.
+     *
+     * @return The custom data for this Entity.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("customData")
+    public static MapData getCustomData(Entity internal) {
+        
+        return new MapData(Services.PLATFORM.getCustomDate(internal));
+    }
+    
+    /**
+     * Updates the custom NBT data for this Entity.
+     *
+     * @param data The custom data to store.
+     *
+     * @docParam data {custom: "data"}
+     */
+    @ZenCodeType.Method
+    public static void updateCustomDate(Entity internal, MapData data) {
+        
+        CompoundTag persistentData = Services.PLATFORM.getCustomDate(internal);
+        persistentData.merge(data.getInternal());
     }
     
 }

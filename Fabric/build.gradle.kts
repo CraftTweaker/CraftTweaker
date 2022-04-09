@@ -50,6 +50,8 @@ dependencies {
     modLocalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${reiVersion}")
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:${reiVersion}")
 
+    modImplementation("com.faux.fauxcustomentitydata:FauxCustomEntityData-fabric-1.18.2:2.0.1")
+
     implementation("org.reflections:reflections:0.10.2")?.let { include(it) }
     implementation("org.javassist:javassist:3.28.0-GA")?.let { include(it) } // required for reflections
 

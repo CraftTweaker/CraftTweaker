@@ -43,7 +43,6 @@ public interface IEventHelper {
     
     Map<RecipeType<?>, List<Pair<IIngredient,Integer>>> BURN_TIMES = new HashMap<>();
     
-    //TODO when there is persistent data, store a tag on the player instead of this list
     Set<Player> BLOCK_INFO_PLAYERS = new HashSet<>();
     Set<Player> ENTITY_INFO_PLAYERS = new HashSet<>();
     

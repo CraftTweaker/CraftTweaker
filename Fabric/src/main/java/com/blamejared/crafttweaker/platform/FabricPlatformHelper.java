@@ -16,6 +16,7 @@ import com.blamejared.crafttweaker.mixin.common.access.item.AccessBucketItem;
 import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
 import com.blamejared.crafttweaker.platform.helper.world.inventory.TAInventoryWrapper;
 import com.blamejared.crafttweaker.platform.services.IPlatformHelper;
+import com.faux.customentitydata.api.CustomDataHelper;
 import com.google.common.base.Suppliers;
 import com.mojang.datafixers.util.Either;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -29,10 +30,13 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.Util;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
@@ -260,6 +264,18 @@ public class FabricPlatformHelper implements IPlatformHelper {
         }
         
         return components;
+    }
+    
+    @Override
+    public CompoundTag getCustomDate(Entity entity) {
+        
+        return CustomDataHelper.getCustomData(entity);
+    }
+    
+    @Override
+    public CompoundTag getPersistentData(ServerPlayer player) {
+        
+        return CustomDataHelper.getPersistentData(player);
     }
     
 }
