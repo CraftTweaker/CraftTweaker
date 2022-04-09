@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.CompoundTag;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -131,6 +132,29 @@ public class MapData implements IData {
             return new BoolData(getInternal().getByte(key) == 1);
         }
         return TagToDataConverter.convert(getInternal().get(key));
+    }
+    
+    /**
+     * Retrieves the value associated with the key and returns it as the given type.
+     *
+     * @param key The key to search for.
+     *
+     * @return The value if present, null otherwise.
+     *
+     * @docParam key "Hello"
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Nullable
+    public <T extends IData> T getData(Class<T> clazz, String key) {
+        
+        if((clazz == null || clazz.equals(BoolData.class)) && boolDataKeys.contains(key)) {
+            return (T) new BoolData(getInternal().getByte(key) == 1);
+        }
+        try {
+            return TagToDataConverter.convertTo(getInternal().get(key), clazz);
+        } catch(NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException("Unable to convert IData to " + clazz, e);
+        }
     }
     
     /**

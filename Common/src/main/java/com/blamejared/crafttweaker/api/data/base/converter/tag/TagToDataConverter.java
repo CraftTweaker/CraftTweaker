@@ -7,6 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.InvocationTargetException;
 
 public class TagToDataConverter {
     
@@ -26,6 +27,29 @@ public class TagToDataConverter {
         TagToDataVisitor visitor = new TagToDataVisitor();
         tag.accept(visitor);
         return visitor.getValue();
+    }
+    
+    /**
+     * Converst the given Tag to it's {@link IData} representation.
+     *
+     * @param tag   The tag to convert.
+     * @param clazz The reified type of T IData to convert to.
+     * @param <T>   The type of data to convert to.
+     *
+     * @return The IData representation of the tag.
+     */
+    @Nullable
+    public static <T extends IData> T convertTo(Tag tag, Class<T> clazz) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        
+        if(tag == null) {
+            return null;
+        }
+        
+        if(clazz == null) {
+            return (T) convert(tag);
+        }
+        
+        return clazz.getConstructor(tag.getClass()).newInstance(tag);
     }
     
     /**
