@@ -182,6 +182,7 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
     mainFile.releaseType = CFG_Contants.RELEASE_TYPE_RELEASE
     mainFile.addJavaVersion("Java $modJavaVersion")
     mainFile.addRequirement("ingredient-extension-api")
+    mainFile.addRequirement("faux-custom-entity-data")
     mainFile.addRequirement("fabric-api")
 
     doLast {
