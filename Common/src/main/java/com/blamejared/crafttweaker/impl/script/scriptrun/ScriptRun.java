@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.impl.script.scriptrun;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRun;
@@ -15,7 +14,7 @@ import org.openzen.zencode.shared.SourceFile;
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 @SuppressWarnings("ClassCanBeRecord")
 final class ScriptRun implements IScriptRun {
@@ -23,14 +22,22 @@ final class ScriptRun implements IScriptRun {
     private final List<SourceFile> sources;
     private final RunInfo info;
     private final Consumer<RunInfo> runInfoSetter;
-    private final Function<IScriptLoader, RunInfo> previousRunInfoGetter;
+    private final Predicate<IScriptLoader> isFirstRunPredicate;
+    private final Consumer<IScriptLoader> actionUndoExecutor;
     
-    ScriptRun(final List<SourceFile> sources, final RunInfo info, final Consumer<RunInfo> runInfoSetter, final Function<IScriptLoader, RunInfo> previousRunInfoGetter) {
+    ScriptRun(
+            final List<SourceFile> sources,
+            final RunInfo info,
+            final Consumer<RunInfo> runInfoSetter,
+            final Predicate<IScriptLoader> isFirstRunPredicate,
+            final Consumer<IScriptLoader> actionUndoExecutor
+    ) {
         
         this.sources = sources;
         this.info = info;
         this.runInfoSetter = runInfoSetter;
-        this.previousRunInfoGetter = previousRunInfoGetter;
+        this.isFirstRunPredicate = isFirstRunPredicate;
+        this.actionUndoExecutor = actionUndoExecutor;
     }
     
     @Override
@@ -38,12 +45,11 @@ final class ScriptRun implements IScriptRun {
         
         final IScriptLoader loader = this.info.loader();
         final String loaderName = loader.name();
-        final RunInfo previousInfo = this.previousRunInfoGetter.apply(loader);
-        this.info.isFirstRun(previousInfo == null);
+        this.info.isFirstRun(this.isFirstRunPredicate.test(loader));
         
         try {
             CraftTweakerAPI.LOGGER.info("Started loading scripts for loader '{}'", loaderName);
-            this.undoPreviousRun(previousInfo);
+            this.undoPreviousRun(loader, this.info.configuration().runKind());
             this.executeRun();
             CraftTweakerAPI.LOGGER.info("Execution for loader '{}' completed successfully", loaderName);
         } catch(final Throwable t) {
@@ -58,25 +64,15 @@ final class ScriptRun implements IScriptRun {
         return this.info;
     }
     
-    private void undoPreviousRun(final RunInfo info) {
+    private void undoPreviousRun(final IScriptLoader loader, final ScriptRunConfiguration.RunKind runKind) {
         
         CraftTweakerLogger.clearPreviousMessages(); // TODO("Move to internal method?")
         
-        if(info == null) {
-            return;
-        }
-        if(this.info.configuration().runKind() != ScriptRunConfiguration.RunKind.EXECUTE) {
+        if(runKind != ScriptRunConfiguration.RunKind.EXECUTE) {
             return;
         }
         
-        CraftTweakerAPI.LOGGER.info("Undoing previous actions");
-        info.appliedActions()
-                .stream()
-                .filter(IUndoableAction.class::isInstance)
-                .filter(it -> it.shouldApplyOn(info.loadSource()))
-                .map(IUndoableAction.class::cast)
-                .peek(it -> CraftTweakerAPI.LOGGER.info(it.describeUndo()))
-                .forEach(IUndoableAction::undo);
+        this.actionUndoExecutor.accept(loader);
     }
     
     private void executeRun() throws Exception {

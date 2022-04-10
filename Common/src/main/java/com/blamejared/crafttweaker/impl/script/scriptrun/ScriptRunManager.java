@@ -43,12 +43,12 @@ public final class ScriptRunManager implements IScriptRunManager {
                 .thenComparing(IScriptFile::name);
     });
     
-    private final Map<IScriptLoader, RunInfo> previousRunInfo;
+    private final Map<IScriptLoader, RunInfoQueue> previousRunQueues;
     private RunInfo currentRunInfo;
     
     private ScriptRunManager() {
         
-        this.previousRunInfo = new HashMap<>();
+        this.previousRunQueues = new HashMap<>();
         this.currentRunInfo = null;
     }
     
@@ -115,7 +115,14 @@ public final class ScriptRunManager implements IScriptRunManager {
     // Package-private to allow ThroughRecipeScriptRunManager to access it TODO("Remove")
     IScriptRun createScriptRun(final List<SourceFile> sources, final RunInfo info) {
         
-        return new ScriptRun(sources, info, this::updateCurrentRunInfo, this.previousRunInfo::get);
+        this.previousRunQueues.computeIfAbsent(info.loader(), it -> new RunInfoQueue());
+        return new ScriptRun(
+                sources,
+                info,
+                this::updateCurrentRunInfo,
+                loader -> this.previousRunQueues.get(loader).isFirstRun(),
+                loader -> this.previousRunQueues.get(loader).undoActions()
+        );
     }
     
     private List<Path> lookupScriptFiles(final Path root) {
@@ -154,7 +161,7 @@ public final class ScriptRunManager implements IScriptRunManager {
             throw new IllegalStateException("Unable to terminate a script run that never started");
         }
         
-        this.previousRunInfo.put(this.currentRunInfo.loader(), this.currentRunInfo);
+        this.previousRunQueues.get(this.currentRunInfo.loader()).offer(this.currentRunInfo);
         this.currentRunInfo = null;
     }
     
