@@ -27,7 +27,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-sealed public abstract class ScriptRunner permits ExecutingScriptRunner, FormattingScriptRunner, SyntaxCheckScriptRunner {
+sealed abstract class ScriptRunner implements IScriptRunner permits ExecutingScriptRunner, FormattingScriptRunner, SyntaxCheckScriptRunner {
     
     @FunctionalInterface
     private interface ScriptRunCreator {

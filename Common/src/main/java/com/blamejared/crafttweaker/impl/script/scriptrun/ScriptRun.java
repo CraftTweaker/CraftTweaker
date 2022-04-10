@@ -7,7 +7,7 @@ import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRun;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunInfo;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.preprocessor.PriorityPreprocessor;
-import com.blamejared.crafttweaker.impl.script.scriptrun.runner.ScriptRunner;
+import com.blamejared.crafttweaker.impl.script.scriptrun.runner.IScriptRunner;
 import org.openzen.zencode.java.logger.ScriptingEngineLogger;
 import org.openzen.zencode.shared.SourceFile;
 
@@ -81,34 +81,12 @@ final class ScriptRun implements IScriptRun {
             this.runInfoSetter.accept(this.info);
             
             final ScriptingEngineLogger logger = new ScriptRunLogger(this::findPriorityIfPresent);
-            final ScriptRunner runner = switch(this.info.configuration().runKind()) {
-                case SYNTAX_CHECK -> this.syntax(logger);
-                case FORMAT -> this.format(logger);
-                case EXECUTE -> this.run(logger);
-            };
-            
+            final DecoratedRunKind runKind = DecoratedRunKind.decorate(this.info.configuration().runKind());
+            final IScriptRunner runner = runKind.runner(this.info, this.sources, logger);
             runner.run();
         } finally {
             this.runInfoSetter.accept(null);
         }
-    }
-    
-    private ScriptRunner syntax(final ScriptingEngineLogger logger) {
-        
-        CraftTweakerAPI.LOGGER.info("Compiling scripts: this is only a syntax check, no actions will be applied");
-        return ScriptRunner.of(this.info, this.sources, logger);
-    }
-    
-    private ScriptRunner format(final ScriptingEngineLogger logger) {
-        
-        CraftTweakerAPI.LOGGER.info("Formatting scripts");
-        return ScriptRunner.of(this.info, this.sources, logger);
-    }
-    
-    private ScriptRunner run(final ScriptingEngineLogger logger) {
-        
-        CraftTweakerAPI.LOGGER.info("Compiling and executing scripts");
-        return ScriptRunner.of(this.info, this.sources, logger);
     }
     
     private OptionalInt findPriorityIfPresent(final SourceFile file) {
