@@ -31,7 +31,8 @@ public final class ExamplesCommand {
         handler.registerRootCommand(
                 "examples",
                 new TranslatableComponent("crafttweaker.command.description.examples"),
-                builder -> builder.executes(ctx -> execute(ctx.getSource().getPlayerOrException()))
+                builder -> builder.requires((source) -> source.hasPermission(2)) // TODO("Permission API")
+                        .executes(ctx -> execute(ctx.getSource().getPlayerOrException()))
         );
     }
     
