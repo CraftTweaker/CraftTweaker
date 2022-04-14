@@ -87,19 +87,19 @@ allprojects {
 subprojects {
 
     this.ext.set(
-        "zenCodeDeps",
-        setOf(
-            ":CodeFormatter",
-            ":CodeFormatterShared",
-            ":JavaIntegration",
-            ":JavaAnnotations",
-            ":JavaBytecodeCompiler",
-            ":JavaShared",
-            ":Validator",
-            ":Parser",
-            ":CodeModel",
-            ":Shared"
-        )
+            "zenCodeDeps",
+            setOf(
+                    ":CodeFormatter",
+                    ":CodeFormatterShared",
+                    ":JavaIntegration",
+                    ":JavaAnnotations",
+                    ":JavaBytecodeCompiler",
+                    ":JavaShared",
+                    ":Validator",
+                    ":Parser",
+                    ":CodeModel",
+                    ":Shared"
+            )
     )
     this.ext.set("zenCodeTestDeps", setOf(":ScriptingExample"))
 
@@ -124,10 +124,7 @@ subprojects {
         apply(plugin = "java")
         apply(plugin = "idea")
         val library by configurations.creating
-
-        configurations {
-            implementation.get().extendsFrom(library)
-        }
+        val gametestLibrary by configurations.creating
 
         idea {
             module {
@@ -145,6 +142,10 @@ subprojects {
                 runtimeClasspath += sourceSets.main.get().runtimeClasspath
             }
         }
+        configurations {
+            implementation.get().extendsFrom(library)
+            this.getByName("gametestImplementation").extendsFrom(gametestLibrary)
+        }
 
         dependencies {
 //            library(project(":Crafttweaker_Annotations"))
@@ -152,10 +153,9 @@ subprojects {
 
             implementation("com.google.code.findbugs:jsr305:3.0.1")
 
-            "gametestImplementation"("com.google.truth:truth:1.1.3")
-            "gametestImplementation"("com.google.truth.extensions:truth-java8-extension:1.1.3")
+            gametestLibrary("com.google.truth:truth:1.1.3")
             // This is required for Truth since MC uses an old Guava version, however in 1.18 the game uses an updated version.
-            "gametestImplementation"("com.google.guava:guava:31.0.1-jre")
+            gametestLibrary("com.google.guava:guava:31.0.1-jre")
         }
 
         extensions.configure<JavaPluginExtension> {
@@ -180,16 +180,16 @@ subprojects {
             jar {
                 manifest {
                     attributes(
-                        "Specification-Title" to modName,
-                        "Specification-Vendor" to modAuthor,
-                        "Specification-Version" to archiveVersion,
-                        "Implementation-Title" to project.name,
-                        "Implementation-Version" to archiveVersion,
-                        "Implementation-Vendor" to modAuthor,
-                        "Implementation-Timestamp" to SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(Date()),
-                        "Timestamp" to System.currentTimeMillis(),
-                        "Built-On-Java" to "${System.getProperty("java.vm.version")} (${System.getProperty("java.vm.vendor")})",
-                        "Build-On-Minecraft" to minecraftVersion
+                            "Specification-Title" to modName,
+                            "Specification-Vendor" to modAuthor,
+                            "Specification-Version" to archiveVersion,
+                            "Implementation-Title" to project.name,
+                            "Implementation-Version" to archiveVersion,
+                            "Implementation-Vendor" to modAuthor,
+                            "Implementation-Timestamp" to SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(Date()),
+                            "Timestamp" to System.currentTimeMillis(),
+                            "Built-On-Java" to "${System.getProperty("java.vm.version")} (${System.getProperty("java.vm.vendor")})",
+                            "Build-On-Minecraft" to minecraftVersion
                     )
                 }
             }
@@ -217,6 +217,11 @@ subprojects {
     // </editor-fold>
 }
 
+tasks.create("gameTest") {
+    dependsOn(":Fabric:runGameTest", ":Forge:GameTest")
+    group = "verification"
+}
+
 tasks.create("postDiscord") {
 
     doLast {
@@ -224,8 +229,8 @@ tasks.create("postDiscord") {
 
             // Create a new webhook instance for Discord
             val webhook = Webhook(
-                System.getenv("discordCFWebhook"),
-                "$modName CurseForge Gradle Upload"
+                    System.getenv("discordCFWebhook"),
+                    "$modName CurseForge Gradle Upload"
             )
 
             // Craft a message to send to Discord using the webhook.
@@ -248,19 +253,19 @@ tasks.create("postDiscord") {
             }
 
             downloadSources.add(
-                "<:maven:932165250738970634> `\"${project(":Common").group}:${project(":Common").base.archivesName.get()}:${
-                    project(":Common").version
-                }\"`"
+                    "<:maven:932165250738970634> `\"${project(":Common").group}:${project(":Common").base.archivesName.get()}:${
+                        project(":Common").version
+                    }\"`"
             )
             downloadSources.add(
-                "<:maven:932165250738970634> `\"${project(":Fabric").group}:${project(":Fabric").base.archivesName.get()}:${
-                    project(":Fabric").version
-                }\"`"
+                    "<:maven:932165250738970634> `\"${project(":Fabric").group}:${project(":Fabric").base.archivesName.get()}:${
+                        project(":Fabric").version
+                    }\"`"
             )
             downloadSources.add(
-                "<:maven:932165250738970634> `\"${project(":Forge").group}:${project(":Forge").base.archivesName.get()}:${
-                    project(":Forge").version
-                }\"`"
+                    "<:maven:932165250738970634> `\"${project(":Forge").group}:${project(":Forge").base.archivesName.get()}:${
+                        project(":Forge").version
+                    }\"`"
             )
 
             // Add Curseforge DL link if available.

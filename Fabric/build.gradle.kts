@@ -4,7 +4,7 @@ import net.darkhax.curseforgegradle.Constants as CFG_Contants
 
 plugins {
     `maven-publish`
-    id("fabric-loom") version "0.10-SNAPSHOT"
+    id("fabric-loom") version "0.12-SNAPSHOT"
     id("com.blamejared.modtemplate")
     id("net.darkhax.curseforgegradle") version ("1.0.9")
 }
@@ -83,10 +83,10 @@ loom {
         create("GameTest") {
             server()
             source(sourceSets.gametest.get())
-            vmArgs("-Dfabric-api.gametest=1",
-                    "-Dfabric-api.gametest.report-file=${file("fabric-game-tests.html").path}")
+            vmArgs("-Dfabric-api.gametest=1")
             configName = "Fabric Game Test"
             ideConfigGenerated(true)
+            runDir("run_game_test")
         }
     }
 }

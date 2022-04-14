@@ -4,10 +4,14 @@ import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.gametest.framework.GlobalTestReporter;
+import net.minecraft.gametest.framework.JUnitLikeTestReporter;
 import net.minecraft.gametest.framework.StructureUtils;
 import net.minecraft.gametest.framework.TestFunction;
 import net.minecraft.world.level.block.Rotation;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -36,8 +40,15 @@ public class CraftTweakerGameTests {
                 ModifingConsumer consumer = new ModifingConsumer(aClass, method, Modifier.from(method));
                 functions.add(new TestFunction(batch, testName, template, rotation, annotation.timeoutTicks(), annotation.setupTicks(), annotation.required(), annotation.requiredSuccesses(), annotation.attempts(), consumer));
             }
-            
         });
+        // We will only find tests in our own gametest environment, so this should only run if we are in our own environment
+        if(!functions.isEmpty()) {
+            try {
+                GlobalTestReporter.replaceWith(new JUnitLikeTestReporter(new File("game-test-results.xml")));
+            } catch(ParserConfigurationException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return functions;
     }
     

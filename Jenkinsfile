@@ -44,7 +44,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Running tests'
-                sh './gradlew check :Fabric:runGameTest'
+                sh './gradlew check gameTest'
             }
         }
 
@@ -145,7 +145,8 @@ pipeline {
             archiveArtifacts 'Fabric/build/libs/**.jar'
             archiveArtifacts 'Forge/build/libs/**.jar'
             junit 'ZenCode/ScriptingExample/build/test-results/**/*.xml'
-            junit 'Fabric/fabric-game-tests.html'
+            junit 'Fabric/run_game_test/game-test-results.xml'
+            junit 'Forge/run_game_test/game-test-results.xml'
         }
     }
     options {

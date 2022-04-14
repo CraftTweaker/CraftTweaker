@@ -4,14 +4,13 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.gametest.truth.IExpectIData;
 import com.blamejared.crafttweaker.gametest.truth.IExpectIIngredient;
 import com.blamejared.crafttweaker.gametest.truth.IExpectVanilla;
-import com.blamejared.crafttweaker.gametest.truth.ITruth8Wrapper;
 import com.blamejared.crafttweaker.gametest.truth.ITruthWrapper;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
-public interface CraftTweakerGameTest extends ITruthWrapper, ITruth8Wrapper, IExpectIData, IExpectIIngredient, IExpectVanilla {
+public interface CraftTweakerGameTest extends ITruthWrapper, IExpectIData, IExpectIIngredient, IExpectVanilla {
     
     
     default void fail() {

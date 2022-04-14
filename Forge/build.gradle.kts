@@ -50,10 +50,13 @@ dependencies {
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         implementation(project(it.toString()))
     }
-
     implementation(fg.deobf("mezz.jei:jei-1.18.2:9.5.2.133"))
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
 
+    gametestCompileOnly(files(project(":Common").dependencyProject.sourceSets.gametest.get().java.srcDirs))
+    (project.ext["zenCodeTestDeps"] as Set<*>).forEach {
+        gametestImplementation(project(it.toString()).dependencyProject.sourceSets.test.get().output)
+    }
 }
 
 minecraft {
@@ -68,6 +71,9 @@ minecraft {
         all {
             lazyToken("minecraft_classpath") {
                 configurations.library.get().copyRecursive().resolve()
+                        .joinToString(File.pathSeparator) { it.absolutePath }
+
+                configurations.gametestLibrary.get().copyRecursive().resolve()
                         .joinToString(File.pathSeparator) { it.absolutePath }
             }
         }
@@ -106,7 +112,7 @@ minecraft {
 
         create("data") {
             taskName("Data")
-            workingDirectory(project.file("run"))
+            workingDirectory(project.file("run_game_test"))
             ideaModule("${rootProject.name}.${project.name}.main")
             args(
                     "--mod",
@@ -125,6 +131,33 @@ minecraft {
                     source(project(":Crafttweaker_Annotations").sourceSets.main.get())
                     (project.ext["zenCodeDeps"] as Set<*>).forEach {
                         source(project(it.toString()).sourceSets.main.get())
+                    }
+                }
+            }
+        }
+
+        create("gameTestServer") {
+            taskName("GameTest")
+            workingDirectory(project.file("run_game_test"))
+            ideaModule("${rootProject.name}.${project.name}.main")
+            property("forge.enabledGameTestNamespaces", modId)
+            setForceExit(false)
+            args("-mixin.config=${modId}.mixins.json", "-mixin.config=${modId}.forge.mixins.json")
+            mods {
+                create(modId) {
+                    source(sourceSets.main.get())
+                    source(sourceSets.gametest.get())
+
+                    source(project(":Common").sourceSets.main.get())
+                    source(project(":Common").sourceSets.gametest.get())
+
+                    source(project(":Crafttweaker_Annotations").sourceSets.main.get())
+
+                    (project.ext["zenCodeDeps"] as Set<*>).forEach {
+                        source(project(it.toString()).sourceSets.main.get())
+                    }
+                    (project.ext["zenCodeTestDeps"] as Set<*>).forEach {
+                        source(project(it.toString()).sourceSets.test.get())
                     }
                 }
             }
@@ -161,6 +194,10 @@ tasks.withType<JavaCompile> {
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         source(project(it.toString()).sourceSets.main.get().allSource)
     }
+}
+
+tasks.compileGametestJava {
+    source(project(":Common").sourceSets.gametest.get().java)
 }
 
 tasks.withType<Javadoc> {
