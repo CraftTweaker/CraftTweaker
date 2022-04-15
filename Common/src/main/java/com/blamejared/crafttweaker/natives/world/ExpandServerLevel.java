@@ -1,6 +1,8 @@
 package com.blamejared.crafttweaker.natives.world;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.level.CraftTweakerSavedData;
+import com.blamejared.crafttweaker.api.level.CraftTweakerSavedDataHolder;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.core.BlockPos;
@@ -18,6 +20,20 @@ import java.util.function.Predicate;
 @Document("vanilla/api/world/ServerLevel")
 @NativeTypeRegistration(value = ServerLevel.class, zenCodeName = "crafttweaker.api.world.ServerLevel")
 public class ExpandServerLevel {
+    
+    /**
+     * Gets the custom data that is saved/loaded to/from disk when the level is saved/loaded to/from disk.
+     *
+     * <p>This lets you store data on this specific level, so data stored in the Overworld will not be accessible from the Nether.</p>
+     *
+     * @return The custom data for this world.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("customData")
+    public static CraftTweakerSavedData getCustomData(ServerLevel internal) {
+        
+        return ((CraftTweakerSavedDataHolder) internal).crafttweaker$getSavedData();
+    }
     
     /**
      * Sets the time of the Minecraft day.

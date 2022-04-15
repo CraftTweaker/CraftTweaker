@@ -1,6 +1,8 @@
 package com.blamejared.crafttweaker.natives.game;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.level.CraftTweakerSavedData;
+import com.blamejared.crafttweaker.api.level.CraftTweakerSavedDataHolder;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.commands.CommandSourceStack;
@@ -21,6 +23,20 @@ import java.util.List;
 @Document("vanilla/api/game/Server")
 @NativeTypeRegistration(value = MinecraftServer.class, zenCodeName = "crafttweaker.api.game.Server")
 public class ExpandServer {
+    
+    /**
+     * Gets the custom data of the overworld.
+     *
+     * <p>The overworld is always loaded, so this can be used to store and access data no matter what level a player may be in.</p>
+     *
+     * @return The overworld's custom data.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("overworldData")
+    public static CraftTweakerSavedData getOverworldData(MinecraftServer internal) {
+        
+        return ((CraftTweakerSavedDataHolder) internal.overworld()).crafttweaker$getSavedData();
+    }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("defaultGameTime")

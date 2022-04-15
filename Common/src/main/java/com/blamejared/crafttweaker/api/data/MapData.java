@@ -302,4 +302,9 @@ public class MapData implements IData {
         return internal.hashCode();
     }
     
+    public Set<String> boolDataKeys() {
+        
+        return boolDataKeys;
+    }
+    
 }
