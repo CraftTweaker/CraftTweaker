@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.action.block;
 
 
 import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
+import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.natives.block.ExpandBlock;
 import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
 import net.minecraft.world.level.block.Block;
@@ -81,6 +82,12 @@ public class ActionSetBlockProperty<T> implements IUndoableAction {
     public String describeUndo() {
         
         return "Reset the value of " + propertyName + " on " + getTargetCommandString() + " to: '" + (newValue == null ? "null" : this.valueNameGetter.apply(oldValue)) + "'";
+    }
+    
+    @Override
+    public boolean shouldApplyOn(IScriptLoadSource source) {
+        
+        return true;
     }
     
     public String getTargetCommandString() {

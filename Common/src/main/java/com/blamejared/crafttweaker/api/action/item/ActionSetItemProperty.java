@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.action.item;
 
 import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -63,6 +64,12 @@ public class ActionSetItemProperty<T> implements IUndoableAction {
     public String getTargetCommandString() {
         
         return item.getCommandString();
+    }
+    
+    @Override
+    public boolean shouldApplyOn(IScriptLoadSource source) {
+        
+        return true;
     }
     
 }
