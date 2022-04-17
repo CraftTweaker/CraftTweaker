@@ -44,12 +44,15 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.material.Fluid;
 import org.reflections.Reflections;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,8 +84,15 @@ public class FabricPlatformHelper implements IPlatformHelper {
             .filter(modObject -> modObject.id().equals(modid))
             .findFirst());
     
-    private static final Supplier<Reflections> REFLECTIONS = Suppliers.memoize(Reflections::new);
+    private static final Supplier<Reflections> REFLECTIONS = Suppliers.memoize(FabricPlatformHelper::makeReflections);
     
+    private static Reflections makeReflections() {
+        
+        Collection<URL> urls = ClasspathHelper.forClassLoader();
+        // Not a fan of hard coding for a specific thing, but not sure the implications of removing everything that isn't a file.
+        urls.removeIf(url -> url.getProtocol().equals("magic-at"));
+        return new Reflections(new ConfigurationBuilder().addUrls(urls).setParallel(true));
+    }
     
     @Override
     public String getPlatformName() {
