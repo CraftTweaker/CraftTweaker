@@ -72,6 +72,15 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     
     public static Collection<IRecipeManager<Recipe<?>>> getManagerInstances() {
         
+        if(enqueuedRegistration != null) {
+            synchronized(LOCK) {
+                if(enqueuedRegistration != null) {
+                    enqueuedRegistration.run();
+                    enqueuedRegistration = null;
+                }
+            }
+        }
+        
         return managerInstances.values();
     }
     
