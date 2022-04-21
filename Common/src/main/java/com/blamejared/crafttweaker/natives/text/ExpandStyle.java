@@ -15,7 +15,8 @@ import org.openzen.zencode.java.ZenCodeType;
 public class ExpandStyle {
     
     @ZenCodeType.StaticExpansionMethod
-    public static Style empty(){
+    public static Style empty() {
+        
         return Style.EMPTY;
     }
     
@@ -109,9 +110,21 @@ public class ExpandStyle {
     }
     
     @ZenCodeType.Method
-    public static Style withItalic(Style internal, Boolean value) {
+    public static Style setBold(Style internal) {
+        
+        return withBold(internal, true);
+    }
+    
+    @ZenCodeType.Method
+    public static Style withItalic(Style internal, @ZenCodeType.Nullable Boolean value) {
         
         return internal.withItalic(value);
+    }
+    
+    @ZenCodeType.Method
+    public static Style setItalic(Style internal) {
+        
+        return withItalic(internal, true);
     }
     
     @ZenCodeType.Method
@@ -121,15 +134,33 @@ public class ExpandStyle {
     }
     
     @ZenCodeType.Method
+    public static Style setUnderlined(Style internal) {
+        
+        return withUnderlined(internal, true);
+    }
+    
+    @ZenCodeType.Method
     public static Style withStrikethrough(Style internal, @ZenCodeType.Nullable Boolean value) {
         
         return internal.withStrikethrough(value);
     }
     
     @ZenCodeType.Method
+    public static Style setStrikethrough(Style internal) {
+        
+        return withStrikethrough(internal, true);
+    }
+    
+    @ZenCodeType.Method
     public static Style withObfuscated(Style internal, @ZenCodeType.Nullable Boolean value) {
         
         return internal.withObfuscated(value);
+    }
+    
+    @ZenCodeType.Method
+    public static Style setObfuscated(Style internal) {
+        
+        return withObfuscated(internal, true);
     }
     
     @ZenCodeType.Method
