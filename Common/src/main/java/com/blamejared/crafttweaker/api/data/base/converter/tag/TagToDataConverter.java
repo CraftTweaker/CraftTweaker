@@ -48,6 +48,16 @@ public class TagToDataConverter {
         if(clazz == null) {
             return (T) convert(tag);
         }
+        if(clazz.isInterface()) {
+            IData converted = convert(tag);
+            if(converted == null) {
+                return null;
+            }
+            if(clazz.isInstance(converted)) {
+                return (T) converted;
+            }
+            throw new IllegalArgumentException("Given tag '" + converted.getClass() + "' is not of expected type '" + clazz + "'");
+        }
         
         return clazz.getConstructor(tag.getClass()).newInstance(tag);
     }
