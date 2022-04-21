@@ -98,7 +98,7 @@ public class KnownTagManager<T> implements ITagManager<KnownTag<T>> {
                 .map(o -> (T) o)
                 .toList();
         
-        CraftTweakerAPI.apply(new ActionKnownTagAdd<>(from, actualValues));
+        CraftTweakerAPI.apply(new ActionKnownTagRemove<>(from, actualValues));
         recalculate();
     }
     
