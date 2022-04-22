@@ -17,8 +17,8 @@ public class TableOfContentTypeAdapter extends TypeAdapter<TableOfContent> {
     public void write(JsonWriter out, TableOfContent value) throws IOException {
         
         out.beginObject();
-        writeSameLevelFiles(out, value);
         writeNextLevel(out, value);
+        writeSameLevelFiles(out, value);
         out.endObject();
     }
     
