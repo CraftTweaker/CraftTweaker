@@ -63,6 +63,4 @@ public enum LootTableManager {
         return CraftTweakerAPI.getAccessibleElementsProvider().server().resources().getLootTables();
     }
     
-    // TODO("Loot table modifying")
-    // TODO("Loot table querying")
 }
