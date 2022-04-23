@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.natives.loot;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.NativeConstructor;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -19,8 +18,21 @@ import java.util.Random;
  */
 @ZenRegister
 @Document("vanilla/api/loot/LootContextBuilder")
-@NativeTypeRegistration(value = LootContext.Builder.class, zenCodeName = "crafttweaker.api.loot.LootContextBuilder", constructors = {@NativeConstructor(value = {@NativeConstructor.ConstructorParameter(type = ServerLevel.class, name = "level")})})
+@NativeTypeRegistration(value = LootContext.Builder.class, zenCodeName = "crafttweaker.api.loot.LootContextBuilder")
 public final class ExpandLootContextBuilder {
+    
+    /**
+     * Creates a new builder with the given level.
+     *
+     * @param level The level the loot will be rolled in.
+     *
+     * @return A new builder.
+     */
+    @ZenCodeType.StaticExpansionMethod
+    public static LootContext.Builder create(ServerLevel level) {
+        
+        return new LootContext.Builder(level);
+    }
     
     /**
      * Supplies a {@link Random} source to the built context.
