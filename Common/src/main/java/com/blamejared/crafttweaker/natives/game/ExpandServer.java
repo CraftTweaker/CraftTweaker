@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.level.CraftTweakerSavedData;
 import com.blamejared.crafttweaker.api.level.CraftTweakerSavedDataHolder;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -15,6 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.storage.loot.LootTables;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
@@ -23,6 +25,18 @@ import java.util.List;
 @Document("vanilla/api/game/Server")
 @NativeTypeRegistration(value = MinecraftServer.class, zenCodeName = "crafttweaker.api.game.Server")
 public class ExpandServer {
+    
+    /**
+     * Gets the {@link LootTables} for this server.
+     *
+     * @return The {@link LootTables} for this server.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("lootTables")
+    public static LootTables getLootTables(MinecraftServer server) {
+        
+        return server.getLootTables();
+    }
     
     /**
      * Gets the custom data of the overworld.
