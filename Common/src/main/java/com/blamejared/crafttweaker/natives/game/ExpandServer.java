@@ -5,7 +5,6 @@ import com.blamejared.crafttweaker.api.level.CraftTweakerSavedData;
 import com.blamejared.crafttweaker.api.level.CraftTweakerSavedDataHolder;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
-import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -16,7 +15,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.storage.loot.LootTables;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
