@@ -332,8 +332,8 @@ public final class CommonLootModifiers {
     /**
      * Replaces every instance of the targeted {@link IIngredient} with the replacement {@link IItemStack}.
      *
-     * In this case, a simple matching procedure is used, where every stack that matches the given <code>target</code>
-     * is replaced by the <code>replacement</code> without considering stack size. If stack size is to be preserved,
+     * In this case, a simple matching procedure is used, where every stack that matches the given {@code target}
+     * is replaced by the {@code replacement} without considering stack size. If stack size is to be preserved,
      * refer to {@link #replaceStackWith(IItemStack, IItemStack)}.
      *
      * @param target      The target to replace.
@@ -374,8 +374,8 @@ public final class CommonLootModifiers {
      * Replaces every instance of the targeted {@link IItemStack} with the replacement {@link IItemStack},
      * proportionally.
      *
-     * As an example, if the loot drops 5 carrots and this loot modifier runs with 2 carrots as the <code>target</code>
-     * and 1 potato as the <code>replacement</code>, the loot will be modified to 2 potatoes and 1 carrot. This happens
+     * As an example, if the loot drops 5 carrots and this loot modifier runs with 2 carrots as the {@code target}
+     * and 1 potato as the {@code replacement}, the loot will be modified to 2 potatoes and 1 carrot. This happens
      * because every 2-carrot stack will be actively replaced by a 1-potato stack, without exceptions.
      *
      * This loot modifier acts differently than {@link #replaceWith(IIngredient, IItemStack)}, where a simpler approach

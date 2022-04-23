@@ -270,9 +270,7 @@ public class ExpandBlockState {
      * Gets the blockstate bracket handler syntax for this BlockState.
      *
      * E.G.
-     * <code>
-     * <blockstate:minecraft:grass:snowy=true>
-     * </code>
+     * {@code <blockstate:minecraft:grass:snowy=true>}
      *
      * @return The blockstate bracket handler syntax for this BlockState.
      */

@@ -96,9 +96,7 @@ public class ExpandBlock {
      * Gets the block bracket handler syntax for this Block.
      *
      * E.G.
-     * <code>
-     * <block:minecraft:dirt>
-     * </code>
+     * {@code <block:minecraft:dirt>}
      *
      * @return The block bracket handler syntax for this Block.
      */

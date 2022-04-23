@@ -25,7 +25,7 @@ import java.util.Map;
 @NativeTypeRegistration(value = DamageSource.class, zenCodeName = "crafttweaker.api.world.DamageSource")
 public class ExpandDamageSource {
     
-    public static Map<String, DamageSource> PRE_REGISTERED_DAMAGE_SOURCES = Util.make(() -> {
+    public static final Map<String, DamageSource> PRE_REGISTERED_DAMAGE_SOURCES = Util.make(() -> {
         Map<String, DamageSource> temp = new HashMap<>();
         temp.put("inFire", DamageSource.IN_FIRE);
         temp.put("lightningBolt", DamageSource.LIGHTNING_BOLT);

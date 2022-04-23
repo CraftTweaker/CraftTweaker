@@ -57,9 +57,7 @@ public class ExpandAttribute {
      * Gets the attribute bracket handler syntax for this Attribute.
      *
      * E.G.
-     * <code>
-     * <attribute:minecraft:generic.max_health>
-     * </code>
+     * {@code <attribute:minecraft:generic.max_health>}
      *
      * @return The attribute bracket handler syntax for this Block.
      */
