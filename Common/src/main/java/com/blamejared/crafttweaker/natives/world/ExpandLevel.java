@@ -39,8 +39,15 @@ public class ExpandLevel {
     }
     
     @ZenCodeType.Method
-    @ZenCodeType.Getter("isClientSide")
+    @Deprecated(forRemoval = true)
     public static boolean isRemote(Level internal) {
+        
+        return internal.isClientSide();
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("isClientSide")
+    public static boolean isClientSide(Level internal) {
         
         return internal.isClientSide();
     }
@@ -289,7 +296,7 @@ public class ExpandLevel {
      */
     @ZenCodeType.Method
     public static Biome getBiome(Level internal, BlockPos pos) {
-
+        
         return internal.getBiome(pos).value();
     }
     
