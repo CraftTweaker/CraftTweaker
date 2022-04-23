@@ -11,6 +11,8 @@ public interface IAccessibleServerElementsProvider {
     
     AccessReloadableServerResources accessibleResources();
     
+    boolean hasResources();
+    
     void resources(final ReloadableServerResources resources);
     
     RegistryAccess registryAccess();

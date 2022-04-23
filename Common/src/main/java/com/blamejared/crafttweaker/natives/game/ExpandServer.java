@@ -27,18 +27,6 @@ import java.util.List;
 public class ExpandServer {
     
     /**
-     * Gets the {@link LootTables} for this server.
-     *
-     * @return The {@link LootTables} for this server.
-     */
-    @ZenCodeType.Method
-    @ZenCodeType.Getter("lootTables")
-    public static LootTables getLootTables(MinecraftServer server) {
-        
-        return server.getLootTables();
-    }
-    
-    /**
      * Gets the custom data of the overworld.
      *
      * <p>The overworld is always loaded, so this can be used to store and access data no matter what level a player may be in.</p>

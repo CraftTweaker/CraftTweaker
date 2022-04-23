@@ -39,6 +39,12 @@ public final class AccessibleServerElementsProvider implements IAccessibleServer
     }
     
     @Override
+    public boolean hasResources() {
+        
+        return this.resources != null;
+    }
+    
+    @Override
     public void resources(final ReloadableServerResources resources) {
         
         this.resources = resources;
