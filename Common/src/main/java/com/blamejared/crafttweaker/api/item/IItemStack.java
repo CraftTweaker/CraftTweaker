@@ -648,6 +648,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         return getInternal().useOnRelease();
     }
     
+    @ZenCodeType.Method
     @ZenCodeType.Getter("food")
     @ZenCodeType.Nullable
     default FoodProperties getFood() {
@@ -655,8 +656,9 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         return getInternal().getItem().getFoodProperties();
     }
     
+    @ZenCodeType.Method
     @ZenCodeType.Setter("food")
-    default void setFood(FoodProperties food) {
+    default void setFood(@ZenCodeType.Nullable FoodProperties food) {
         
         CraftTweakerAPI.apply(new ActionSetFood(this, food, this.getInternal()
                 .getItem()
@@ -664,6 +666,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     }
     
     @ZenCodeType.Method
+    @ZenCodeType.Getter("isEdible")
     default boolean isEdible() {
         
         return getInternal().isEdible();

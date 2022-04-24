@@ -27,7 +27,9 @@ public class ActionSetFood implements IUndoableAction {
     
     @Override
     public String describe() {
-        
+        if(newFood == null){
+            return "Removing food properties of " + stack.getCommandString();
+        }
         return String.format("Setting food of: %s to food with stats: nutrition: %s, saturation: %s, isMeat: %s, isFastFood: %s, canAlwaysEat: %s, effects: %s", stack
                 .getCommandString(), newFood.getNutrition(), newFood.getSaturationModifier(), newFood.isMeat(), newFood.isFastFood(), newFood
                 .canAlwaysEat(), newFood.getEffects());
@@ -42,7 +44,7 @@ public class ActionSetFood implements IUndoableAction {
     @Override
     public String describeUndo() {
         
-        return "Undoing setting of food for stack: " + stack.getCommandString();
+        return "Undoing modification of food for stack: " + stack.getCommandString();
     }
     
     @Override
