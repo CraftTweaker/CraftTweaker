@@ -12,6 +12,8 @@
     "common.access.item.AccessIngredient",
     "common.access.item.AccessIngredientTagValue",
     "common.access.item.AccessItem",
+    "common.access.loot.AccessLootContext",
+    "common.access.loot.AccessLootContextBuilder",
     "common.access.predicate.AccessLightningBoltPredicate",
     "common.access.predicate.AccessStatePropertiesPredicateBuilder",
     "common.access.recipe.AccessRecipeManager",

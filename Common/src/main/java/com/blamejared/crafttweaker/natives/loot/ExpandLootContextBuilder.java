@@ -1,6 +1,8 @@
 package com.blamejared.crafttweaker.natives.loot;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.mixin.common.access.loot.AccessLootContext;
+import com.blamejared.crafttweaker.mixin.common.access.loot.AccessLootContextBuilder;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.server.level.ServerLevel;
@@ -32,6 +34,19 @@ public final class ExpandLootContextBuilder {
     public static LootContext.Builder create(ServerLevel level) {
         
         return new LootContext.Builder(level);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static LootContext.Builder copy(LootContext context) {
+        
+        LootContext.Builder builder = new LootContext.Builder(context.getLevel());
+        builder.withLuck(context.getLuck());
+        builder.withRandom(context.getRandom());
+        ((AccessLootContextBuilder) builder).crafttweaker$getParams()
+                .putAll(((AccessLootContext) context).crafttweaker$getParams());
+        ((AccessLootContextBuilder) builder).crafttweaker$getDynamicDrops()
+                .putAll(((AccessLootContext) context).crafttweaker$getDynamicDrops());
+        return builder;
     }
     
     /**
