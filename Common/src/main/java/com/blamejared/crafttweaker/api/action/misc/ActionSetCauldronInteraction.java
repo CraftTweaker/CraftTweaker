@@ -23,7 +23,11 @@ public class ActionSetCauldronInteraction implements IUndoableAction {
     @Override
     public void apply() {
         
-        previous = map.put(key, interaction);
+        if(interaction == null) {
+            previous = map.remove(key);
+        } else {
+            previous = map.put(key, interaction);
+        }
     }
     
     @Override
@@ -35,7 +39,11 @@ public class ActionSetCauldronInteraction implements IUndoableAction {
     @Override
     public void undo() {
         
-        map.put(key, previous);
+        if(previous == null) {
+            map.remove(key);
+        } else {
+            map.put(key, previous);
+        }
     }
     
     @Override
