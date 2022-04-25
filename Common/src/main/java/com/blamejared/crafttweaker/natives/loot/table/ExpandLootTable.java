@@ -28,6 +28,7 @@ public final class ExpandLootTable {
      * Rolls this table and passes all the rolled items to the given {@code Consumer<{@link IItemStack}>}
      *
      * <p>NOTE: This method does not respect max stack sizes!</p>
+     * <p>NOTE: The provided {@link LootContext} should not be reused from a loot modifier, if you want to reuse a context, look at {@link com.blamejared.crafttweaker.natives.loot.ExpandLootContextBuilder#copy(LootContext)}.</p>
      *
      * @param context       The context that will generate the loot.
      * @param stackConsumer A consumer to act on the rolled stacks.
@@ -48,6 +49,7 @@ public final class ExpandLootTable {
      * Rolls this table and passes all the rolled items to the given {@code Consumer<{@link IItemStack}>}
      *
      * <p>NOTE: This method does respect max stack sizes</p>
+     * <p>NOTE: The provided {@link LootContext} should not be reused from a loot modifier, if you want to reuse a context, look at {@link com.blamejared.crafttweaker.natives.loot.ExpandLootContextBuilder#copy(LootContext)}.</p>
      *
      * @param context       The context that will generate the loot.
      * @param stackConsumer A consumer to act on the rolled stacks.
@@ -66,6 +68,8 @@ public final class ExpandLootTable {
     
     /**
      * Rolls this table and returns the rolled items in a list.
+     *
+     * <p>NOTE: The provided {@link LootContext} should not be reused from a loot modifier, if you want to reuse a context, look at {@link com.blamejared.crafttweaker.natives.loot.ExpandLootContextBuilder#copy(LootContext)}.</p>
      *
      * @param context The context that this loot was generated.
      *
