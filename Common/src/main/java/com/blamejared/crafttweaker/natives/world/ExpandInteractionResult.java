@@ -35,4 +35,19 @@ public class ExpandInteractionResult {
         return internal.shouldAwardStats();
     }
     
+    /**
+     * Returns true if {@code successSide} is true, this can be used to return {@code SUCCESS} on the client, but {@code CONSUME} on the server.
+     *
+     * @param successSide Is the current side the success side.
+     *
+     * @return <constant:minecraft:world/interactionresult:success> if {@code successSide} is true, otherwise <constant:minecraft:world/interactionresult:consume>.
+     *
+     * @docParam successSide true
+     */
+    @ZenCodeType.StaticExpansionMethod
+    public static InteractionResult sidedSuccess(boolean successSide) {
+        
+        return InteractionResult.sidedSuccess(successSide);
+    }
+    
 }

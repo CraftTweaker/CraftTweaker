@@ -14,10 +14,14 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.misc.Composter")
 @Document("vanilla/api/misc/Composter")
-public class CTComposter {
+public final class CTComposter {
     
     @ZenCodeGlobals.Global("composter")
     public static final CTComposter INSTANCE = new CTComposter();
+    
+    private CTComposter() {
+    
+    }
     
     /**
      * Sets the compost value of the given IItemStack.
