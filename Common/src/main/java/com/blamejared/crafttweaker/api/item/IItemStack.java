@@ -157,7 +157,6 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         return getInternal().getDisplayName();
     }
     
-    
     /**
      * Sets the display name of the ItemStack
      *
@@ -169,6 +168,20 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     default IItemStack withDisplayName(Component text) {
         
         return modify(itemStack -> itemStack.setHoverName(text));
+    }
+    
+    /**
+     * Gets the hover name of the ItemStack.
+     *
+     * <p>This will give the raw name without the formatting that 'displayName' applies. </p>
+     *
+     * @return The hover name of the ItemStack.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("hoverName")
+    default Component getHoverName() {
+        
+        return getInternal().getHoverName();
     }
     
     /**
