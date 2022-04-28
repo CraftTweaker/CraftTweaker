@@ -21,7 +21,10 @@ public class ForgeRegistryWrapper<T extends IForgeRegistryEntry<T>> implements R
     @Override
     public Optional<T> getOptional(ResourceLocation location) {
         
-        return Optional.ofNullable(registry.getValue(location));
+        if(registry.containsKey(location)){
+            return Optional.ofNullable(registry.getValue(location));
+        }
+        return Optional.empty();
     }
     
     @Override
