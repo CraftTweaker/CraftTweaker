@@ -12,4 +12,5 @@ public interface IRecipeHandlerRegistry {
     
     <T extends Recipe<?>> IRecipeHandler<T> getRecipeHandlerFor(final T recipe);
     
+    <T extends Recipe<?>> IRecipeHandler<T> getRecipeHandlerFor(final Class<T> recipeClass);
 }

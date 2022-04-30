@@ -7,12 +7,7 @@ import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.world.item.crafting.Recipe;
 
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public final class RecipeHandlerRegistry implements IRecipeHandlerRegistry {
@@ -25,19 +20,13 @@ public final class RecipeHandlerRegistry implements IRecipeHandlerRegistry {
         public String dumpToCommandString(IRecipeManager manager, Recipe<?> recipe) {
             
             
-            return String.format(
-                    "~~ Recipe name: %s, Outputs: %s, Inputs: [%s], Recipe Class: %s, Recipe Serializer: %s ~~",
-                    recipe.getId(),
-                    Services.PLATFORM.createMCItemStack(recipe.getResultItem())
-                            .getCommandString(),
-                    recipe.getIngredients()
-                            .stream()
-                            .map(IIngredient::fromIngredient)
-                            .map(IIngredient::getCommandString)
-                            .collect(Collectors.joining(", ")),
-                    recipe.getClass().getName(),
-                    Services.REGISTRY.getRegistryKey(recipe.getSerializer())
-            );
+            return String.format("~~ Recipe name: %s, Outputs: %s, Inputs: [%s], Recipe Class: %s, Recipe Serializer: %s ~~", recipe.getId(), Services.PLATFORM.createMCItemStack(recipe.getResultItem())
+                    .getCommandString(), recipe.getIngredients()
+                    .stream()
+                    .map(IIngredient::fromIngredient)
+                    .map(IIngredient::getCommandString)
+                    .collect(Collectors.joining(", ")), recipe.getClass()
+                    .getName(), Services.REGISTRY.getRegistryKey(recipe.getSerializer()));
         }
         
     }
@@ -53,11 +42,17 @@ public final class RecipeHandlerRegistry implements IRecipeHandlerRegistry {
     @SuppressWarnings("unchecked")
     public <T extends Recipe<?>> IRecipeHandler<T> getRecipeHandlerFor(final T recipe) {
         
-        return (IRecipeHandler<T>) this.getRecipeHandlerFor(recipe.getClass())
-                .orElse(DefaultRecipeHandler.INSTANCE);
+        return (IRecipeHandler<T>) getRecipeHandlerFor(recipe.getClass());
     }
     
-    private Optional<IRecipeHandler<?>> getRecipeHandlerFor(final Class<?> recipeClass) {
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Recipe<?>> IRecipeHandler<T> getRecipeHandlerFor(Class<T> recipeClass) {
+        
+        return (IRecipeHandler<T>) getRecipeHandlerForClass(recipeClass).orElse(DefaultRecipeHandler.INSTANCE);
+    }
+    
+    private Optional<IRecipeHandler<?>> getRecipeHandlerForClass(final Class<?> recipeClass) {
         
         final Deque<Class<?>> classes = new ArrayDeque<>();
         classes.offer(recipeClass);

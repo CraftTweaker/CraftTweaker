@@ -131,6 +131,12 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
     }
     
     @Override
+    public <T extends Recipe<?>> IRecipeHandler<T> getRecipeHandlerFor(Class<T> recipeClazz) {
+        
+        return this.registries.recipeHandlerRegistry().getRecipeHandlerFor(recipeClazz);
+    }
+    
+    @Override
     @SuppressWarnings("unchecked") // why? how?
     public <T extends Enum<T>> T getEnumBracketValue(final IScriptLoader loader, final ResourceLocation type, final String value) {
         

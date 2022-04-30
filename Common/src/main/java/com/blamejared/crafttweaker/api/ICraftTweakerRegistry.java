@@ -150,6 +150,18 @@ public interface ICraftTweakerRegistry {
     <T extends Recipe<?>> IRecipeHandler<T> getRecipeHandlerFor(final T recipe);
     
     /**
+     * Obtains the {@link IRecipeHandler} responsible for the given recipe class.
+     *
+     * @param recipeClazz The recipe class whose handler should be identified.
+     * @param <T>    The type of the recipe whose handler should be identified.
+     *
+     * @return A {@link IRecipeHandler} that is able to deal with the given recipe class.
+     *
+     * @since 9.1.117
+     */
+    <T extends Recipe<?>> IRecipeHandler<T> getRecipeHandlerFor(final Class<T> recipeClazz);
+    
+    /**
      * Obtains the enumeration constant that corresponds to the given {@link IScriptLoader}, id, and value as if it were
      * looked up from the {@code <}{@code constant>} bracket handler.
      *
