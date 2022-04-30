@@ -37,13 +37,17 @@ public final class CommandUtilities {
     public static void send(Component component, CommandSourceStack source) {
         
         source.sendSuccess(component, true);
-        CraftTweakerAPI.LOGGER.info(component.getString());
+        if(!component.getString().isBlank()){
+            CraftTweakerAPI.LOGGER.info(component.getString());
+        }
     }
     
     public static void send(Component component, Player player) {
         
         player.sendMessage(component, CraftTweakerConstants.CRAFTTWEAKER_UUID);
-        CraftTweakerAPI.LOGGER.info(component.getContents());
+        if(!component.getContents().isBlank()){
+            CraftTweakerAPI.LOGGER.info(component.getContents());
+        }
     }
     
     public static void copy(final Player player, final String toCopy) {

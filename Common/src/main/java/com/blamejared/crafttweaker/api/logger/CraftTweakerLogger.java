@@ -44,7 +44,7 @@ public class CraftTweakerLogger {
                 .withImmediateFlush(true)
                 .setIgnoreExceptions(false)
                 .setConfiguration(config)
-                .withLayout(logPattern)
+                .setLayout(logPattern)
                 .build();
         PLAYER_APPENDER = PlayerAppender.createAppender(PLAYER_LOG_NAME, LevelRangeFilter.createFilter(Level.FATAL, Level.WARN, Filter.Result.ACCEPT, Filter.Result.DENY), playerPattern);
         
