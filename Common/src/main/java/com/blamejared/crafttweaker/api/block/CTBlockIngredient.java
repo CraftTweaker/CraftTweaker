@@ -26,6 +26,18 @@ public abstract class CTBlockIngredient implements CommandStringDisplayable {
     
     public abstract String getCommandString();
     
+    public abstract boolean matches(Block block);
+    
+    public abstract boolean matches(Block block, int amount);
+    
+    public abstract boolean matches(BlockState blockState);
+    
+    public abstract boolean matches(BlockState blockState, int amount);
+    
+    public abstract boolean matches(TagKey<Block> tag);
+    
+    public abstract boolean matches(TagKey<Block> tag, int amount);
+    
     public abstract <T> T mapTo(Function<Block, T> blockMapper,
                                 Function<BlockState, T> blockStateMapper,
                                 BiFunction<TagKey<Block>, Integer, T> tagMapper,
@@ -68,6 +80,42 @@ public abstract class CTBlockIngredient implements CommandStringDisplayable {
         }
         
         @Override
+        public boolean matches(Block block) {
+            
+            return this.block == block;
+        }
+        
+        @Override
+        public boolean matches(Block block, int amount) {
+            
+            return amount == 1 && this.matches(block);
+        }
+        
+        @Override
+        public boolean matches(BlockState blockState) {
+            
+            return this.block.defaultBlockState() == blockState;
+        }
+        
+        @Override
+        public boolean matches(BlockState blockState, int amount) {
+            
+            return amount == 1 && this.matches(blockState);
+        }
+        
+        @Override
+        public boolean matches(TagKey<Block> tag) {
+            
+            return this.block.builtInRegistryHolder().is(tag);
+        }
+        
+        @Override
+        public boolean matches(TagKey<Block> tag, int amount) {
+            
+            return amount == 1 && this.matches(tag);
+        }
+        
+        @Override
         public <T> T mapTo(Function<Block, T> blockMapper, Function<BlockState, T> blockStateMapper, BiFunction<TagKey<Block>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
             
             return blockMapper.apply(block);
@@ -88,6 +136,42 @@ public abstract class CTBlockIngredient implements CommandStringDisplayable {
         public String getCommandString() {
             
             return ExpandBlockState.getCommandString(blockState);
+        }
+        
+        @Override
+        public boolean matches(Block block) {
+            
+            return this.blockState.getBlock() == block;
+        }
+        
+        @Override
+        public boolean matches(Block block, int amount) {
+            
+            return amount == 1 && this.matches(block);
+        }
+        
+        @Override
+        public boolean matches(BlockState blockState) {
+            
+            return this.blockState == blockState;
+        }
+        
+        @Override
+        public boolean matches(BlockState blockState, int amount) {
+            
+            return amount == 1 && this.matches(blockState);
+        }
+        
+        @Override
+        public boolean matches(TagKey<Block> tag) {
+            
+            return this.blockState.is(tag);
+        }
+        
+        @Override
+        public boolean matches(TagKey<Block> tag, int amount) {
+            
+            return amount == 1 && this.matches(tag);
         }
         
         @Override
@@ -114,6 +198,42 @@ public abstract class CTBlockIngredient implements CommandStringDisplayable {
         }
         
         @Override
+        public boolean matches(Block block) {
+            
+            return this.tag.getAmount() == 1 && this.tag.getData().contains(block);
+        }
+        
+        @Override
+        public boolean matches(Block block, int amount) {
+            
+            return this.tag.getAmount() == amount && this.tag.getData().contains(block);
+        }
+        
+        @Override
+        public boolean matches(BlockState blockState) {
+            
+            return this.tag.getAmount() == 1 && blockState.is((TagKey<Block>) this.tag.getData().getTagKey());
+        }
+        
+        @Override
+        public boolean matches(BlockState blockState, int amount) {
+            
+            return this.tag.getAmount() == amount && blockState.is((TagKey<Block>) this.tag.getData().getTagKey());
+        }
+        
+        @Override
+        public boolean matches(TagKey<Block> tag) {
+            
+            return this.tag.getAmount() == 1 && this.tag.getData().getTagKey().equals(tag);
+        }
+        
+        @Override
+        public boolean matches(TagKey<Block> tag, int amount) {
+            
+            return this.tag.getAmount() == amount && this.tag.getData().getTagKey().equals(tag);
+        }
+        
+        @Override
         public <T> T mapTo(Function<Block, T> blockMapper, Function<BlockState, T> blockStateMapper, BiFunction<TagKey<Block>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
             
             return tagMapper.apply(tag.getData().getTagKey(), tag.getAmount());
@@ -134,6 +254,42 @@ public abstract class CTBlockIngredient implements CommandStringDisplayable {
         public String getCommandString() {
             
             return elements.stream().map(CTBlockIngredient::getCommandString).collect(Collectors.joining(" | "));
+        }
+        
+        @Override
+        public boolean matches(Block block) {
+            
+            return elements.stream().anyMatch(ingredient -> ingredient.matches(block));
+        }
+        
+        @Override
+        public boolean matches(Block block, int amount) {
+            
+            return elements.stream().anyMatch(ingredient -> ingredient.matches(block, amount));
+        }
+        
+        @Override
+        public boolean matches(BlockState blockState) {
+            
+            return elements.stream().anyMatch(ingredient -> ingredient.matches(blockState));
+        }
+        
+        @Override
+        public boolean matches(BlockState blockState, int amount) {
+            
+            return elements.stream().anyMatch(ingredient -> ingredient.matches(blockState, amount));
+        }
+        
+        @Override
+        public boolean matches(TagKey<Block> tag) {
+            
+            return elements.stream().anyMatch(ingredient -> ingredient.matches(tag));
+        }
+        
+        @Override
+        public boolean matches(TagKey<Block> tag, int amount) {
+            
+            return elements.stream().anyMatch(ingredient -> ingredient.matches(tag, amount));
         }
         
         @Override

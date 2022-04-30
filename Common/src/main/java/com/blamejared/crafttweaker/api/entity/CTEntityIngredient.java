@@ -30,6 +30,14 @@ public abstract class CTEntityIngredient implements CommandStringDisplayable {
     
     public abstract String getCommandString();
     
+    public abstract boolean matches(EntityType<?> type);
+    
+    public abstract boolean matches(EntityType<?> type, int amount);
+    
+    public abstract boolean matches(TagKey<EntityType<?>> tag);
+    
+    public abstract boolean matches(TagKey<EntityType<?>> tag, int amount);
+    
     public abstract <T> T mapTo(Function<EntityType<?>, T> typeMapper,
                                 BiFunction<TagKey<EntityType<?>>, Integer, T> tagMapper,
                                 Function<Stream<T>, T> compoundMapper);
@@ -70,6 +78,30 @@ public abstract class CTEntityIngredient implements CommandStringDisplayable {
         }
         
         @Override
+        public boolean matches(EntityType<?> type) {
+            
+            return this.entityType == type;
+        }
+        
+        @Override
+        public boolean matches(EntityType<?> type, int amount) {
+            
+            return amount == 1 && this.matches(type);
+        }
+        
+        @Override
+        public boolean matches(TagKey<EntityType<?>> tag) {
+            
+            return this.entityType.is(tag);
+        }
+        
+        @Override
+        public boolean matches(TagKey<EntityType<?>> tag, int amount) {
+            
+            return amount == 1 && matches(tag);
+        }
+        
+        @Override
         public <T> T mapTo(Function<EntityType<?>, T> typeMapper, BiFunction<TagKey<EntityType<?>>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
             
             return typeMapper.apply(entityType);
@@ -84,6 +116,30 @@ public abstract class CTEntityIngredient implements CommandStringDisplayable {
         public EntityTagWithAmountIngredient(Many<KnownTag<EntityType<?>>> tag) {
             
             this.tag = tag;
+        }
+        
+        @Override
+        public boolean matches(EntityType<?> type) {
+            
+            return this.tag.getAmount() == 1 && this.tag.getData().contains(type);
+        }
+        
+        @Override
+        public boolean matches(EntityType<?> type, int amount) {
+            
+            return this.tag.getAmount() == amount && this.tag.getData().contains(type);
+        }
+        
+        @Override
+        public boolean matches(TagKey<EntityType<?>> tag) {
+            
+            return this.tag.getData().getTagKey().equals(tag);
+        }
+        
+        @Override
+        public boolean matches(TagKey<EntityType<?>> tag, int amount) {
+            
+            return this.tag.getAmount() == amount && this.tag.getData().getTagKey().equals(tag);
         }
         
         @Override
@@ -112,7 +168,32 @@ public abstract class CTEntityIngredient implements CommandStringDisplayable {
         @Override
         public String getCommandString() {
             
-            return elements.stream().map(CTEntityIngredient::getCommandString).collect(Collectors.joining(" | "));
+            return this.elements.stream().map(CTEntityIngredient::getCommandString).collect(Collectors.joining(" | "));
+        }
+        
+        @Override
+        public boolean matches(EntityType<?> type) {
+            
+            return this.elements.stream().anyMatch(ctEntityIngredient -> ctEntityIngredient.matches(type));
+        }
+        
+        @Override
+        public boolean matches(EntityType<?> type, int amount) {
+            
+            return this.elements.stream().anyMatch(ctEntityIngredient -> ctEntityIngredient.matches(type, amount));
+        }
+        
+        @Override
+        public boolean matches(TagKey<EntityType<?>> tag) {
+            
+            return this.elements.stream().anyMatch(ctEntityIngredient -> ctEntityIngredient.matches(tag));
+        }
+        
+        
+        @Override
+        public boolean matches(TagKey<EntityType<?>> tag, int amount) {
+            
+            return this.elements.stream().anyMatch(ctEntityIngredient -> ctEntityIngredient.matches(tag, amount));
         }
         
         @Override
