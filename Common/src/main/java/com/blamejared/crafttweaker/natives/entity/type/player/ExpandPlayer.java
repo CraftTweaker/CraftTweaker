@@ -218,6 +218,20 @@ public class ExpandPlayer {
     }
     
     @ZenCodeType.Method
+    @ZenCodeType.Getter("experienceLevel")
+    public static int getExperienceLevel(Player internal){
+    
+        return internal.experienceLevel;
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("experienceLevel")
+    public static void setExperienceLevel(Player internal, int level){
+        
+        internal.experienceLevel = level;
+    }
+    
+    @ZenCodeType.Method
     public static void causeFoodExhaustion(Player internal, float exhaustion) {
         
         internal.causeFoodExhaustion(exhaustion);
