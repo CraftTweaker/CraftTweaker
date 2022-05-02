@@ -55,7 +55,6 @@ public interface IRegistryHelper {
     
     default Set<ResourceKey<?>> serverOnlyRegistries() {
         
-        Iterator<RegistryAccess.RegistryData<?>> iterator = RegistryAccess.knownRegistries().iterator();
         return StreamSupport.stream(RegistryAccess.knownRegistries().spliterator(), false)
                 .filter(registryData -> !registryData.sendToClient())
                 .map(RegistryAccess.RegistryData::key)
