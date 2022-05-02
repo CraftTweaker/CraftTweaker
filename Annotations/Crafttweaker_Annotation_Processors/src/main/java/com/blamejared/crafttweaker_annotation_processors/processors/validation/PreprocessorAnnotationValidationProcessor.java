@@ -13,9 +13,8 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.tools.Diagnostic;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-@SupportedAnnotationTypes({"com.blamejared.crafttweaker.api.annotations.Preprocessor"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class PreprocessorAnnotationValidationProcessor extends AbstractProcessor {
     
     private static final String preprocessorInterfaceCanonicalName = "com.blamejared.crafttweaker.api.zencode.IPreprocessor";
@@ -79,4 +78,15 @@ public class PreprocessorAnnotationValidationProcessor extends AbstractProcessor
         return false;
     }
     
+    @Override
+    public Set<String> getSupportedAnnotationTypes() {
+        
+        return Set.of("com.blamejared.crafttweaker.api.annotations.Preprocessor");
+    }
+    
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        
+        return SourceVersion.latestSupported();
+    }
 }

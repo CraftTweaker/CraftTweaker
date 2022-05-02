@@ -17,8 +17,6 @@ import javax.tools.Diagnostic;
 import java.util.List;
 import java.util.Set;
 
-@SupportedAnnotationTypes({"com.blamejared.crafttweaker.api.annotations.BracketResolver"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class BracketHandlerCheckValidationProcessor extends AbstractProcessor {
     
     private final AnnotationMirrorUtil annotationMirrorUtil = new AnnotationMirrorUtil();
@@ -62,6 +60,18 @@ public class BracketHandlerCheckValidationProcessor extends AbstractProcessor {
         }
         
         return false;
+    }
+    
+    @Override
+    public Set<String> getSupportedAnnotationTypes() {
+        
+        return Set.of("com.blamejared.crafttweaker.api.annotations.BracketResolver");
+    }
+    
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        
+        return SourceVersion.latestSupported();
     }
     
 }

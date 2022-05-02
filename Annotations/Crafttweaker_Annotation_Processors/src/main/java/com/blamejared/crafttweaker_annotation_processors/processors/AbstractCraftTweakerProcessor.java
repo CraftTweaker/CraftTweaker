@@ -26,7 +26,7 @@ public abstract class AbstractCraftTweakerProcessor extends AbstractProcessor {
     @Override
     public SourceVersion getSupportedSourceVersion() {
         
-        return SourceVersion.RELEASE_17;
+        return SourceVersion.latestSupported();
     }
     
     @Override
