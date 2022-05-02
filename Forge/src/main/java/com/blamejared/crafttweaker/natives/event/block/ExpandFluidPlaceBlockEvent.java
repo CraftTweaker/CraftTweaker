@@ -59,9 +59,9 @@ public class ExpandFluidPlaceBlockEvent {
     }
     
     /**
-     * Gets the original BlockState that would have been placed before the event fired.
+     * Gets the original BlockState in the world before the event was fired.
      *
-     * @return The original BlockState that would have been placed.
+     * @return The original BlockState in the world before the event was fired.
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("originalState")
