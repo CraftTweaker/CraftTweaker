@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.tag.manager.type;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.action.tag.known.ActionKnownTagAdd;
+import com.blamejared.crafttweaker.api.action.tag.known.ActionKnownTagClear;
 import com.blamejared.crafttweaker.api.action.tag.known.ActionKnownTagCreate;
 import com.blamejared.crafttweaker.api.action.tag.known.ActionKnownTagRemove;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
@@ -99,6 +100,17 @@ public class KnownTagManager<T> implements ITagManager<KnownTag<T>> {
                 .toList();
         
         CraftTweakerAPI.apply(new ActionKnownTagRemove<>(from, actualValues));
+        recalculate();
+    }
+    
+    @Override
+    public void clear(KnownTag<T> from) {
+        
+        if(!exists(from)) {
+            throw new IllegalArgumentException("Cannot clear elements of an empty tag: " + from);
+        }
+        
+        CraftTweakerAPI.apply(new ActionKnownTagClear<>(from));
         recalculate();
     }
     

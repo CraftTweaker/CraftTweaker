@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.tag.manager.type;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.action.tag.unknown.ActionUnknownTagAdd;
+import com.blamejared.crafttweaker.api.action.tag.unknown.ActionUnknownTagClear;
 import com.blamejared.crafttweaker.api.action.tag.unknown.ActionUnknownTagCreate;
 import com.blamejared.crafttweaker.api.action.tag.unknown.ActionUnknownTagRemove;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
@@ -67,6 +68,16 @@ public class UnknownTagManager implements ITagManager<UnknownTag> {
             throw new IllegalArgumentException("Cannot remove elements from empty tag: " + from);
         }
         CraftTweakerAPI.apply(new ActionUnknownTagRemove(from, List.of(values)));
+        recalculate();
+    }
+    
+    @Override
+    public void clear(UnknownTag from) {
+        
+        if(!exists(from)) {
+            throw new IllegalArgumentException("Cannot remove elements from empty tag: " + from);
+        }
+        CraftTweakerAPI.apply(new ActionUnknownTagClear(from));
         recalculate();
     }
     

@@ -105,6 +105,15 @@ public interface MCTag extends CommandStringDisplayable, Comparable<MCTag> {
     }
     
     /**
+     * Removes all elements in this tag.
+     */
+    @ZenCodeType.Method
+    default void clear() {
+        
+        manager().clear(GenericUtil.uncheck(this));
+    }
+    
+    /**
      * Checks if this tag contains an element with the given id
      *
      * @param id The ID of the element to check.

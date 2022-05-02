@@ -215,6 +215,16 @@ public interface ITagManager<T extends MCTag> extends CommandStringDisplayable, 
     void removeId(T from, ResourceLocation... values);
     
     /**
+     * Clears all values of the given tag.
+     *
+     * @param from The tag to clear.
+     *
+     * @docParam from <tag:items:minecraft:wool>
+     */
+    @ZenCodeType.Method
+    void clear(T from);
+    
+    /**
      * Gets the {@link ResourceLocation} ids of the elements in the given tag.
      *
      * @param of The tag to get the elements of.
