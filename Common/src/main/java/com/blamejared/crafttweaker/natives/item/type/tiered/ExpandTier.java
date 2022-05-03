@@ -21,7 +21,7 @@ public class ExpandTier {
     }
     
     @ZenCodeType.Method
-    @ZenCodeType.Getter("speec")
+    @ZenCodeType.Getter("speed")
     public static float getSpeed(Tier internal) {
         
         return internal.getSpeed();
