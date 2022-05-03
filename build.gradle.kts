@@ -148,8 +148,7 @@ subprojects {
         }
 
         dependencies {
-//            library(project(":Crafttweaker_Annotations"))
-            annotationProcessor(project(":Crafttweaker_Annotation_Processors"))
+            annotationProcessor("com.blamejared.crafttweaker:Crafttweaker_Annotation_Processors:3.0.0.5")
 
             implementation("com.google.code.findbugs:jsr305:3.0.1")
 
@@ -211,8 +210,6 @@ subprojects {
     // </editor-fold>
     // <editor-fold desc="Other projects">
     else {
-        apply(plugin = "java-library")
-        // Any AP specific stuff can go here
     }
     // </editor-fold>
 }
@@ -289,4 +286,14 @@ tasks.create("postDiscord") {
         }
     }
 
+}
+
+tasks.create("checkoutAP") {
+    if (!rootProject.file("CraftTweaker-Annotation-Processors").exists()) {
+        exec {
+            commandLine("git", "clone", "https://github.com/CraftTweaker/CraftTweaker-Annotation-Processors.git")
+        }
+    } else {
+        println("CraftTweaker-Annotation-Processors folder already exists!")
+    }
 }

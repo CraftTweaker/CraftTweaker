@@ -46,7 +46,6 @@ mixin {
 dependencies {
     "minecraft"("net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}")
     compileOnly(project(":Common"))
-    compileOnly(project(":Crafttweaker_Annotations"))
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         implementation(project(it.toString()))
     }
@@ -86,7 +85,6 @@ minecraft {
                 create(modId) {
                     source(sourceSets.main.get())
                     source(project(":Common").sourceSets.main.get())
-                    source(project(":Crafttweaker_Annotations").sourceSets.main.get())
                     (project.ext["zenCodeDeps"] as Set<*>).forEach {
                         source(project(it.toString()).sourceSets.main.get())
                     }
@@ -102,7 +100,6 @@ minecraft {
                 create(modId) {
                     source(sourceSets.main.get())
                     source(project(":Common").sourceSets.main.get())
-                    source(project(":Crafttweaker_Annotations").sourceSets.main.get())
                     (project.ext["zenCodeDeps"] as Set<*>).forEach {
                         source(project(it.toString()).sourceSets.main.get())
                     }
@@ -128,7 +125,6 @@ minecraft {
                 create(modId) {
                     source(sourceSets.main.get())
                     source(project(":Common").sourceSets.main.get())
-                    source(project(":Crafttweaker_Annotations").sourceSets.main.get())
                     (project.ext["zenCodeDeps"] as Set<*>).forEach {
                         source(project(it.toString()).sourceSets.main.get())
                     }
@@ -150,8 +146,6 @@ minecraft {
 
                     source(project(":Common").sourceSets.main.get())
                     source(project(":Common").sourceSets.gametest.get())
-
-                    source(project(":Crafttweaker_Annotations").sourceSets.main.get())
 
                     (project.ext["zenCodeDeps"] as Set<*>).forEach {
                         source(project(it.toString()).sourceSets.main.get())
@@ -189,7 +183,6 @@ sourceSets.main.get().resources.srcDir("src/generated/resources")
 
 tasks.withType<JavaCompile> {
     source(project(":Common").sourceSets.main.get().allSource)
-    source(project(":Crafttweaker_Annotations").sourceSets.main.get().allSource)
 
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         source(project(it.toString()).sourceSets.main.get().allSource)
@@ -202,7 +195,6 @@ tasks.compileGametestJava {
 
 tasks.withType<Javadoc> {
     source(project(":Common").sourceSets.main.get().allJava)
-    source(project(":Crafttweaker_Annotations").sourceSets.main.get().allJava)
 
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         source(project(it.toString()).sourceSets.main.get().allJava)
@@ -211,7 +203,6 @@ tasks.withType<Javadoc> {
 
 tasks.named<Jar>("sourcesJar") {
     from(project(":Common").sourceSets.main.get().allSource)
-    from(project(":Crafttweaker_Annotations").sourceSets.main.get().allSource)
 
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         from(project(it.toString()).sourceSets.main.get().allSource)
