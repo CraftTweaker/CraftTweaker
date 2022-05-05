@@ -16,9 +16,6 @@ val modId: String by project
 val baseArchiveName = "${modName}-common-${minecraftVersion}"
 
 version = Utils.updatingVersion(modVersion)
-tasks.withType<JavaCompile> {
-    source(project(":Crafttweaker_Annotations").sourceSets.main.get().allSource)
-}
 
 minecraft {
     version(minecraftVersion)
@@ -41,7 +38,6 @@ base {
 
 dependencies {
     compileOnly("org.spongepowered:mixin:0.8.4")
-    implementation(project(":Crafttweaker_Annotations"))
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         implementation(project(it.toString()))
     }
@@ -60,24 +56,18 @@ tasks.processResources {
 }
 
 tasks.withType<JavaCompile> {
-    source(project(":Crafttweaker_Annotations").sourceSets.main.get().allSource)
-
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         source(project(it.toString()).sourceSets.main.get().allSource)
     }
 }
 
 tasks.withType<Javadoc> {
-    source(project(":Crafttweaker_Annotations").sourceSets.main.get().allJava)
-
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         source(project(it.toString()).sourceSets.main.get().allJava)
     }
 }
 
 tasks.named<Jar>("sourcesJar") {
-    from(project(":Crafttweaker_Annotations").sourceSets.main.get().allSource)
-
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         from(project(it.toString()).sourceSets.main.get().allSource)
     }

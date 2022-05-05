@@ -33,29 +33,36 @@ pluginManagement {
 
 rootProject.name = "CraftTweaker"
 val excludedProjects = setOf(
-    "ModuleDeserializer",
-    "ModuleSerializationShared",
-    "ModuleSerializer",
-    "JavaSource",
-    "JavaSourceCompiler",
-    "IDE",
-    "Constructor",
-    "DrawableGui",
-    "DrawableGuiIconConverter",
-    "CompilerShared"
+        "ModuleDeserializer",
+        "ModuleSerializationShared",
+        "ModuleSerializer",
+        "JavaSource",
+        "JavaSourceCompiler",
+        "IDE",
+        "Constructor",
+        "DrawableGui",
+        "DrawableGuiIconConverter",
+        "CompilerShared"
 )
 
 include("ZenCode")
 collectSubProjects("ZenCode")
-collectSubProjects("Annotations")
 
 include("Common")
 include("Fabric")
 include("Forge")
 
+if (file("CraftTweaker-Annotation-Processors").exists()) {
+    includeBuild("CraftTweaker-Annotation-Processors") {
+        dependencySubstitution {
+            substitute(module("com.blamejared.crafttweaker:Crafttweaker_Annotation_Processors")).using(project(":"))
+        }
+    }
+}
+
 fun collectSubProjects(folder: String) {
 
-    File(rootDir, folder).listFiles(FileFilter {
+    file(folder).listFiles(FileFilter {
 
         if (!it.isDirectory || excludedProjects.contains(it.name)) {
             return@FileFilter false

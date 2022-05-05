@@ -40,7 +40,6 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${fabricLoaderVersion}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
     implementation(project(":Common"))
-    implementation(project(":Crafttweaker_Annotations"))
 
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         implementation(project(it.toString()))
@@ -135,7 +134,6 @@ tasks.processResources {
 
 tasks.withType<JavaCompile> {
     source(project(":Common").sourceSets.main.get().allSource)
-    source(project(":Crafttweaker_Annotations").sourceSets.main.get().allSource)
 
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         source(project(it.toString()).sourceSets.main.get().allSource)
@@ -144,7 +142,6 @@ tasks.withType<JavaCompile> {
 
 tasks.withType<Javadoc> {
     source(project(":Common").sourceSets.main.get().allJava)
-    source(project(":Crafttweaker_Annotations").sourceSets.main.get().allJava)
 
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         source(project(it.toString()).sourceSets.main.get().allJava)
@@ -153,7 +150,6 @@ tasks.withType<Javadoc> {
 
 tasks.named<Jar>("sourcesJar") {
     from(project(":Common").sourceSets.main.get().allSource)
-    from(project(":Crafttweaker_Annotations").sourceSets.main.get().allSource)
 
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         from(project(it.toString()).sourceSets.main.get().allSource)
