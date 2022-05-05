@@ -288,12 +288,22 @@ tasks.create("postDiscord") {
 
 }
 
+val apDir = "CraftTweaker-Annotation-Processors";
+
 tasks.create("checkoutAP") {
-    if (!rootProject.file("CraftTweaker-Annotation-Processors").exists()) {
-        exec {
-            commandLine("git", "clone", "https://github.com/CraftTweaker/CraftTweaker-Annotation-Processors.git")
+    doFirst {
+        if (!rootProject.file(apDir).exists() || (rootProject.file(apDir).listFiles() ?: arrayOf()).isEmpty()) {
+            exec {
+                commandLine("git", "clone", "https://github.com/CraftTweaker/CraftTweaker-Annotation-Processors.git")
+            }
+        } else {
+            throw GradleException("$apDir folder already exists and is not empty!")
         }
-    } else {
-        println("CraftTweaker-Annotation-Processors folder already exists!")
+    }
+}
+
+tasks.create<Delete>("clearAP") {
+    doFirst {
+        delete(rootProject.file(apDir))
     }
 }
