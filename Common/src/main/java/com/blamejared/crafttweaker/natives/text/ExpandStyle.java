@@ -104,7 +104,7 @@ public class ExpandStyle {
     }
     
     @ZenCodeType.Method
-    public static Style withBold(Style internal, @ZenCodeType.Nullable Boolean value) {
+    public static Style withBold(Style internal, Boolean value) {
         
         return internal.withBold(value);
     }
@@ -116,7 +116,7 @@ public class ExpandStyle {
     }
     
     @ZenCodeType.Method
-    public static Style withItalic(Style internal, @ZenCodeType.Nullable Boolean value) {
+    public static Style withItalic(Style internal, Boolean value) {
         
         return internal.withItalic(value);
     }
@@ -128,7 +128,7 @@ public class ExpandStyle {
     }
     
     @ZenCodeType.Method
-    public static Style withUnderlined(Style internal, @ZenCodeType.Nullable Boolean value) {
+    public static Style withUnderlined(Style internal, Boolean value) {
         
         return internal.withUnderlined(value);
     }
@@ -140,7 +140,7 @@ public class ExpandStyle {
     }
     
     @ZenCodeType.Method
-    public static Style withStrikethrough(Style internal, @ZenCodeType.Nullable Boolean value) {
+    public static Style withStrikethrough(Style internal, Boolean value) {
         
         return internal.withStrikethrough(value);
     }
@@ -152,7 +152,7 @@ public class ExpandStyle {
     }
     
     @ZenCodeType.Method
-    public static Style withObfuscated(Style internal, @ZenCodeType.Nullable Boolean value) {
+    public static Style withObfuscated(Style internal, Boolean value) {
         
         return internal.withObfuscated(value);
     }
