@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.natives.food;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.mixin.common.access.food.AccessFoodPropertiesBuilder;
+import com.blamejared.crafttweaker.mixin.common.access.food.AccessFoodProperties;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.mojang.datafixers.util.Pair;
@@ -10,6 +10,7 @@ import net.minecraft.world.food.FoodProperties;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 @ZenRegister
 @Document("vanilla/api/food/FoodProperties")
@@ -33,7 +34,7 @@ public class ExpandFoodProperties {
     @ZenCodeType.Setter("nutrition")
     public static FoodProperties setNutrition(FoodProperties internal, int nutrition) {
         
-        return getbuilder(internal).nutrition(nutrition).build();
+        return modify(internal, accessFoodProperties -> accessFoodProperties.crafttweaker$setNutrition(nutrition));
     }
     
     @ZenCodeType.Method
@@ -47,7 +48,7 @@ public class ExpandFoodProperties {
     @ZenCodeType.Setter("saturationModifier")
     public static FoodProperties setSaturationModifier(FoodProperties internal, float saturationModifier) {
         
-        return getbuilder(internal).saturationMod(saturationModifier).build();
+        return modify(internal, accessFoodProperties -> accessFoodProperties.crafttweaker$setSaturationModifier(saturationModifier));
     }
     
     @ZenCodeType.Method
@@ -61,9 +62,7 @@ public class ExpandFoodProperties {
     @ZenCodeType.Setter("isMeat")
     public static FoodProperties setIsMeat(FoodProperties internal, boolean isMeat) {
         
-        FoodProperties.Builder builder = getbuilder(internal);
-        ((AccessFoodPropertiesBuilder) builder).crafttweaker$setIsMeat(isMeat);
-        return builder.build();
+        return modify(internal, accessFoodProperties -> accessFoodProperties.crafttweaker$setIsMeat(isMeat));
     }
     
     @ZenCodeType.Method
@@ -77,9 +76,7 @@ public class ExpandFoodProperties {
     @ZenCodeType.Setter("canAlwaysEat")
     public static FoodProperties setCanAlwaysEat(FoodProperties internal, boolean canAlwaysEat) {
         
-        FoodProperties.Builder builder = getbuilder(internal);
-        ((AccessFoodPropertiesBuilder) builder).crafttweaker$setCanAlwaysEat(canAlwaysEat);
-        return builder.build();
+        return modify(internal, accessFoodProperties -> accessFoodProperties.crafttweaker$setCanAlwaysEat(canAlwaysEat));
     }
     
     @ZenCodeType.Method
@@ -93,9 +90,7 @@ public class ExpandFoodProperties {
     @ZenCodeType.Setter("isFastFood")
     public static FoodProperties setIsFastFood(FoodProperties internal, boolean fastFood) {
         
-        FoodProperties.Builder builder = getbuilder(internal);
-        ((AccessFoodPropertiesBuilder) builder).crafttweaker$setFastFood(fastFood);
-        return builder.build();
+        return modify(internal, accessFoodProperties -> accessFoodProperties.crafttweaker$setFastFood(fastFood));
     }
     
     @ZenCodeType.Method
@@ -108,34 +103,22 @@ public class ExpandFoodProperties {
     @ZenCodeType.Method
     public static FoodProperties addEffect(FoodProperties internal, MobEffectInstance effect, float probability) {
         
-        FoodProperties.Builder builder = getbuilder(internal);
-        ((AccessFoodPropertiesBuilder) builder).crafttweaker$getEffects().add(Pair.of(effect, probability));
-        return builder.build();
+        return modify(internal, accessFoodProperties -> accessFoodProperties.crafttweaker$getEffects()
+                .add(Pair.of(effect, probability)));
     }
     
     @ZenCodeType.Method
     public static FoodProperties removeEffect(FoodProperties internal, MobEffectInstance effect) {
         
-        FoodProperties.Builder builder = getbuilder(internal);
-        ((AccessFoodPropertiesBuilder) builder).crafttweaker$getEffects().removeIf(pair -> pair.getFirst().equals(effect));
-        return builder.build();
+        return modify(internal, accessFoodProperties -> accessFoodProperties.crafttweaker$getEffects()
+                .removeIf(pair -> pair.getFirst().equals(effect)));
     }
     
-    private static FoodProperties.Builder getbuilder(FoodProperties internal) {
+    private static FoodProperties modify(FoodProperties properties, Consumer<AccessFoodProperties> propertyMutator) {
         
-        FoodProperties.Builder builder = new FoodProperties.Builder();
-        if(internal.isMeat()) {
-            builder.meat();
-        }
-        if(internal.isFastFood()) {
-            builder.fast();
-        }
-        builder.saturationMod(internal.getSaturationModifier());
-        builder.nutrition(internal.getNutrition());
-        for(Pair<MobEffectInstance, Float> effect : internal.getEffects()) {
-            builder.effect(effect.getFirst(), effect.getSecond());
-        }
-        return builder;
+        FoodProperties copy = AccessFoodProperties.crafttweaker$createFoodProperties(properties.getNutrition(), properties.getSaturationModifier(), properties.isMeat(), properties.canAlwaysEat(), properties.isFastFood(), properties.getEffects());
+        propertyMutator.accept((AccessFoodProperties) copy);
+        return copy;
     }
     
 }
