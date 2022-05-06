@@ -25,7 +25,7 @@ public final class ThroughRecipeScriptRunManager {
                 .stream()
                 .map(it -> ScriptFile.of(
                         it.getFileName(),
-                        Arrays.stream(it.getContent().split(System.lineSeparator())),
+                        Arrays.stream(it.getContent().split("\n")),
                         info,
                         preprocessors
                 ))
