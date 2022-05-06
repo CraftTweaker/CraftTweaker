@@ -1167,4 +1167,24 @@ public class ExpandEntity {
         persistentData.merge(data.getInternal());
     }
     
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("deltaMovement")
+    public static Vec3 getDeltaMovement(Entity internal) {
+        
+        return internal.getDeltaMovement();
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("deltaMovement")
+    public static void setDeltaMovement(Entity internal, Vec3 deltaMovement) {
+        
+        internal.setDeltaMovement(deltaMovement);
+    }
+    
+    @ZenCodeType.Method
+    public static void setDeltaMovement(Entity internal, double xDelta, double yDelta, double zDelta) {
+        
+        internal.setDeltaMovement(xDelta, yDelta, zDelta);
+    }
+    
 }
