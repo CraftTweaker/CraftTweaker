@@ -7,8 +7,10 @@ import com.blamejared.crafttweaker.api.event.type.GatherReplacementExclusionEven
 import com.blamejared.crafttweaker.api.item.attribute.ItemAttributeModifierBase;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
 import com.blamejared.crafttweaker.api.recipe.replacement.rule.DefaultExclusionReplacements;
+import com.blamejared.crafttweaker.api.util.sequence.SequenceType;
 import com.blamejared.crafttweaker.api.villager.CTVillagerTrades;
 import com.blamejared.crafttweaker.impl.script.ScriptReloadListener;
+import com.blamejared.crafttweaker.impl.util.sequence.SequenceManager;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.MutableComponent;
@@ -17,6 +19,7 @@ import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
@@ -32,6 +35,14 @@ import java.util.List;
 
 @Mod.EventBusSubscriber(modid = CraftTweakerConstants.MOD_ID)
 public class CTCommonEventHandler {
+    
+    @SubscribeEvent
+    public static void worldTick(TickEvent.WorldTickEvent e) {
+        
+        if(e.phase == TickEvent.Phase.START) {
+            SequenceManager.tick(SequenceType.LEVEL, e.world.isClientSide);
+        }
+    }
     
     @SubscribeEvent
     public static void onGatherReplacementExclusion(GatherReplacementExclusionEvent event) {
@@ -130,6 +141,7 @@ public class CTCommonEventHandler {
         
         event.addListener(new ScriptReloadListener(event.getServerResources(), CTCommonEventHandler::giveFeedback));
     }
+    
     
     private static void giveFeedback(MutableComponent msg) {
         

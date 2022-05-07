@@ -40,11 +40,10 @@ public class ExpandEntityType {
     
     @ZenCodeType.Method
     @ZenCodeType.Nullable
-    public static Entity create(EntityType internal, ServerLevel param0, @ZenCodeType.Nullable MapData param1, @ZenCodeType.Nullable Component param2, @ZenCodeType.Nullable Player param3, BlockPos param4, MobSpawnType param5, boolean alignPosition, boolean invertY) {
+    public static Entity create(EntityType internal, ServerLevel level, @ZenCodeType.Nullable MapData data, @ZenCodeType.Nullable Component displayName, @ZenCodeType.Nullable Player spawningPlayer, BlockPos pos, MobSpawnType spawnType, boolean alignPosition, boolean invertY) {
         
-        return internal.create(param0, param1.getInternal(), param2, param3, param4, param5, alignPosition, invertY);
+        return internal.create(level, data.getInternal(), displayName, spawningPlayer, pos, spawnType, alignPosition, invertY);
     }
-    
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("canSummon")

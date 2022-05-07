@@ -3,13 +3,14 @@ package com.blamejared.crafttweaker.natives.world;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.base.converter.tag.TagToDataConverter;
+import com.blamejared.crafttweaker.api.util.sequence.SequenceBuilder;
+import com.blamejared.crafttweaker.api.util.sequence.SequenceType;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import com.google.common.base.Suppliers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
@@ -31,18 +32,34 @@ import java.util.function.Predicate;
 @NativeTypeRegistration(value = Level.class, zenCodeName = "crafttweaker.api.world.Level")
 public class ExpandLevel {
     
+    /**
+     * Creates a new {@link SequenceBuilder} for this level.
+     *
+     * <p>{@link SequenceBuilder}'s let you compose scripted events such as waiting 5 ticks, then setting the weather to rain
+     *
+     * @return A new {@link SequenceBuilder} for this level.
+     *
+     * @docParam data {version: "1.0.0"}
+     */
     @ZenCodeType.Method
-    @ZenCodeType.Caster
-    public static ServerLevel asServerLevel(Level internal) {
+    public static SequenceBuilder<Level, MapData> sequence(Level internal, @ZenCodeType.Optional("new crafttweaker.api.data.MapData()") MapData data) {
         
-        return (ServerLevel) internal;
+        return sequence(internal, MapData.class, data);
     }
     
+    /**
+     * Creates a new {@link SequenceBuilder} for this level.
+     *
+     * <p>{@link SequenceBuilder}'s let you compose scripted events such as waiting 5 ticks, then setting the weather to rain
+     *
+     * @return A new {@link SequenceBuilder} for this level.
+     *
+     * @docParam data {version: "1.0.0"}
+     */
     @ZenCodeType.Method
-    @Deprecated(forRemoval = true)
-    public static boolean isRemote(Level internal) {
+    public static <T> SequenceBuilder<Level, T> sequence(Level internal, Class<T> dataClass, T data) {
         
-        return internal.isClientSide();
+        return new SequenceBuilder<>(SequenceType.LEVEL, Suppliers.memoize(() -> internal), data, internal.isClientSide());
     }
     
     @ZenCodeType.Method
@@ -101,6 +118,20 @@ public class ExpandLevel {
     public static boolean isRaining(Level internal) {
         
         return internal.isRaining();
+    }
+    
+    /**
+     * Sets the current rain level.
+     *
+     * @param level The new rain level between 0 and 1
+     *
+     * @docParam level 0.5
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("rainLevel")
+    public static void setRainingLevel(Level internal, float level) {
+        
+        internal.setRainLevel(level);
     }
     
     /**
@@ -233,7 +264,6 @@ public class ExpandLevel {
     @ZenCodeType.Method
     public static MapData getBlockEntityData(Level internal, BlockPos pos) {
         
-        CompoundTag nbt = new CompoundTag();
         BlockEntity te = internal.getBlockEntity(pos);
         return te == null ? new MapData() : TagToDataConverter.convertCompound(te.saveWithoutMetadata());
     }
