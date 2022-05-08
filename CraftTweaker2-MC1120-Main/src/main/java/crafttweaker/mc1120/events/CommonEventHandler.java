@@ -149,7 +149,7 @@ public class CommonEventHandler {
             CrafttweakerImplementationAPI.events.publishPlayerChangedDimension(new MCPlayerChangedDimensionEvent(ev));
     }
     
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void mobDrop(LivingDropsEvent ev) {
         Entity entity = ev.getEntity();
         IEntityDefinition entityDefinition = CraftTweakerAPI.game.getEntity(EntityList.getEntityString(ev.getEntity()));
@@ -185,6 +185,8 @@ public class CommonEventHandler {
                 entityDefinition.getDropFunctions().stream().map((fun) -> fun.handle(ent, dmgSource)).filter(Objects::nonNull).filter((item) -> item.getAmount() > 0).map(CraftTweakerMC::getItemStack).map((ItemStack item) -> new EntityItem(entity.world, entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, item)).forEach(ev.getDrops()::add);
             }
         }
+        if (CrafttweakerImplementationAPI.events.hasEntityLivingDeathDrops())
+            CrafttweakerImplementationAPI.events.publishEntityLivingDeathDrops(new MCEntityLivingDeathDropsEvent(ev));
     }
     
     @SubscribeEvent
@@ -322,12 +324,6 @@ public class CommonEventHandler {
     public void onEntityLivingJumpEvent(LivingEvent.LivingJumpEvent ev) {
         if (CrafttweakerImplementationAPI.events.hasEntityLivingJump())
             CrafttweakerImplementationAPI.events.publishEntityLivingJump(new MCEntityLivingJumpEvent(ev));
-    }
-    
-    @SubscribeEvent
-    public void onEntityLivingDeathDropsEvent(LivingDropsEvent ev) {
-        if (CrafttweakerImplementationAPI.events.hasEntityLivingDeathDrops())
-            CrafttweakerImplementationAPI.events.publishEntityLivingDeathDrops(new MCEntityLivingDeathDropsEvent(ev));
     }
     
     @SubscribeEvent
