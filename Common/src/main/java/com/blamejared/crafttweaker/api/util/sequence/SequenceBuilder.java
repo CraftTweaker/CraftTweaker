@@ -6,11 +6,11 @@ import com.blamejared.crafttweaker.api.util.sequence.task.type.InstantTask;
 import com.blamejared.crafttweaker.api.util.sequence.task.type.SleepTask;
 import com.blamejared.crafttweaker.api.util.sequence.task.type.SleepUntilTask;
 import com.blamejared.crafttweaker.impl.util.sequence.SequenceManager;
-import com.blamejared.crafttweaker.platform.sides.DistributionType;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.LinkedList;
+import java.util.Queue;
 import java.util.function.*;
 
 /**
@@ -28,7 +28,7 @@ public class SequenceBuilder<T, U> {
     private final Supplier<T> actor;
     private final U data;
     private final boolean isClientSide;
-    private final LinkedList<ISequenceTask<T, U>> timeline;
+    private final Queue<ISequenceTask<T, U>> timeline;
     
     public SequenceBuilder(SequenceType type, Supplier<T> actor, U data, boolean isClientSide) {
         

@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker.api.util.sequence.task.ISequenceTask;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.LinkedList;
+import java.util.Queue;
 import java.util.function.Supplier;
 
 /**
@@ -22,11 +22,11 @@ import java.util.function.Supplier;
 public class Sequence<T, U> {
     
     private final Supplier<T> actor;
-    private final LinkedList<ISequenceTask<T, U>> timeline;
+    private final Queue<ISequenceTask<T, U>> timeline;
     private boolean stopped;
     private final SequenceContext<T, U> context;
     
-    public Sequence(Supplier<T> actor, U data, LinkedList<ISequenceTask<T, U>> timeline) {
+    public Sequence(Supplier<T> actor, U data, Queue<ISequenceTask<T, U>> timeline) {
         
         this.actor = actor;
         this.timeline = timeline;
