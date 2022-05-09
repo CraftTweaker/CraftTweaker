@@ -34,7 +34,7 @@ cauldron.addEmptyInteraction(<item:minecraft:dirt>, (blockState, cLevel, bPos, p
             var player = playerIn;
             // Starts a SequenceBuilder
             cLevel.sequence()
-                // Run immediately
+                // Run a task
                 .run(level => {
                     // Check if the redstone signal at the position of the cauldron is 0
                     if level.getBestNeighborSignal(pos) == 0 {
@@ -49,7 +49,7 @@ cauldron.addEmptyInteraction(<item:minecraft:dirt>, (blockState, cLevel, bPos, p
                 })
                 // Sleep for 20 ticks
                 .sleep(20)
-                // Run immediately ('then' is an alias for 'run', you can use whichever sounds better and is easier to read)
+                // Run immediately after the sleep is done ('then' is an alias for 'run', you can use whichever sounds better and is easier to read)
                 .then(level => {
                     // Stores the data for the entity
                     val data = {EntityTag: {LifeTime:10,FireworksItem:{id:"firework_rocket",Count:1,tag:{Fireworks:{Explosions:[{Type:1,Trail:1,Colors:[2651799],FadeColors:[14602026, 6719955, 12801229]}],Flight:1}}}}} as MapData;
@@ -86,7 +86,7 @@ cauldron.addEmptyInteraction(<item:minecraft:diamond>, (blockState, cLevel, bPos
             var savedData = (cLevel as ServerLevel).server.overworldData.data;
             // Starts a SequenceBuilder
             cLevel.sequence()
-                // run immediately, checking if it is raining or not
+                // Run a task, checking if it is raining or not
                 .run(level => {
                     // Check if the saved data contains a key with the name "first-<cauldron position>" and if the value for that key is true.
                     // The cauldron position is used to ensure that multiple cauldrons in the world can run this sequence at the same time.
@@ -115,7 +115,7 @@ cauldron.addEmptyInteraction(<item:minecraft:diamond>, (blockState, cLevel, bPos
                     // return if it was raining or not.
                     return level.raining;
                 })
-                // run immediately, checking if it is raining or not
+                // run immediately after the sleep is done, checking if it is raining or not
                 .run(level => {
                     // Check if the saved data contains a key with the name "second-<cauldron position>" and if the value for that key is true.
                     // The cauldron position is used to ensure that multiple cauldrons in the world can run this sequence at the same time.
@@ -145,7 +145,7 @@ cauldron.addEmptyInteraction(<item:minecraft:diamond>, (blockState, cLevel, bPos
                     // return if it was raining or not.
                     return !level.raining;
                 })
-                // run immediately, checking if it is raining or not
+                // run immediately after the sleep is done, checking if it is raining or not
                 .run(level => {
                     // Check if the saved data contains a key with the name "third-<cauldron position>" and if the value for that key is true.
                     // The cauldron position is used to ensure that multiple cauldrons in the world can run this sequence at the same time.
@@ -222,7 +222,7 @@ cauldron.addEmptyInteraction(<item:minecraft:stick>, (blockState, cLevel, bPos, 
             var player = playerIn;
             // Starts a SequenceBuilder, providing it with custom data. The type inside the <> is the type of the data to be passed in.
             cLevel.sequence<MySequenceData>(new MySequenceData("1.0.0"))
-                // Run immediately with context
+                // Run a task with context
                 .run((level, context) => {
                     // print the version from the data passed into the sequence.
                     println(context.data.version);
@@ -233,7 +233,7 @@ cauldron.addEmptyInteraction(<item:minecraft:stick>, (blockState, cLevel, bPos, 
                         context.stop();
                     }
                 })
-                // Run immediately ('then' is an alias for 'run', you can use whichever sounds better and is easier to read)
+                // Run immediately after the previous task is done ('then' is an alias for 'run', you can use whichever sounds better and is easier to read)
                 .then(level => {
                     // Stores the data for the entity
                     val data = {EntityTag: {LifeTime:10,FireworksItem:{id:"firework_rocket",Count:1,tag:{Fireworks:{Explosions:[{Type:1,Trail:1,Colors:[2651799],FadeColors:[14602026, 6719955, 12801229]}],Flight:1}}}}} as MapData;
