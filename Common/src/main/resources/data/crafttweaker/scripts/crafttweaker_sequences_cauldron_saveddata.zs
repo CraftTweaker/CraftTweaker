@@ -194,10 +194,10 @@ cauldron.addEmptyInteraction(<item:minecraft:diamond>, (blockState, cLevel, bPos
 // Sequence tasks can also use a SequenceContext, which can provide custom data to the sequence as well as allowing a sequence to be stopped.
 // The custom data provided to a sequence can be any type, but for the sake of this example, lets create a custom type.
 
-// Create a public class called 'MyObject'
-public class MyObject {
+// Create a public class called 'MySequenceData'
+public class MySequenceData {
 
-    // A public string version that has a getter (we can call myObjectInstance.version)
+    // A public string version that has a getter (we can call mySequenceDataInstance.version)
     public var version as string : get;
 
     // A constructor so we can make our object.
@@ -221,7 +221,7 @@ cauldron.addEmptyInteraction(<item:minecraft:stick>, (blockState, cLevel, bPos, 
             var block = blockState;
             var player = playerIn;
             // Starts a SequenceBuilder, providing it with custom data. The type inside the <> is the type of the data to be passed in.
-            cLevel.sequence<MyObject>(new MyObject("1.0.0"))
+            cLevel.sequence<MySequenceData>(new MySequenceData("1.0.0"))
                 // Run immediately with context
                 .run((level, context) => {
                     // print the version from the data passed into the sequence.
