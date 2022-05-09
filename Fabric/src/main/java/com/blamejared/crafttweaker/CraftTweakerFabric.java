@@ -2,8 +2,8 @@ package com.blamejared.crafttweaker;
 
 import com.blamejared.crafttweaker.api.event.CraftTweakerEvents;
 import com.blamejared.crafttweaker.api.recipe.replacement.rule.DefaultExclusionReplacements;
+import com.blamejared.crafttweaker.api.util.sequence.SequenceManager;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceType;
-import com.blamejared.crafttweaker.impl.util.sequence.SequenceManager;
 import com.blamejared.crafttweaker.platform.Services;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;

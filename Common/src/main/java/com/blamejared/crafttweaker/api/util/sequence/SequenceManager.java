@@ -1,7 +1,4 @@
-package com.blamejared.crafttweaker.impl.util.sequence;
-
-import com.blamejared.crafttweaker.api.util.sequence.Sequence;
-import com.blamejared.crafttweaker.api.util.sequence.SequenceType;
+package com.blamejared.crafttweaker.api.util.sequence;
 
 import java.util.*;
 

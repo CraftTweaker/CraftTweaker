@@ -5,7 +5,6 @@ import com.blamejared.crafttweaker.api.util.sequence.task.ISequenceTask;
 import com.blamejared.crafttweaker.api.util.sequence.task.type.InstantTask;
 import com.blamejared.crafttweaker.api.util.sequence.task.type.SleepTask;
 import com.blamejared.crafttweaker.api.util.sequence.task.type.SleepUntilTask;
-import com.blamejared.crafttweaker.impl.util.sequence.SequenceManager;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 

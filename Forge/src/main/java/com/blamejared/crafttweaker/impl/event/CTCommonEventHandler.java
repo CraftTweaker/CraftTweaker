@@ -7,10 +7,10 @@ import com.blamejared.crafttweaker.api.event.type.GatherReplacementExclusionEven
 import com.blamejared.crafttweaker.api.item.attribute.ItemAttributeModifierBase;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
 import com.blamejared.crafttweaker.api.recipe.replacement.rule.DefaultExclusionReplacements;
+import com.blamejared.crafttweaker.api.util.sequence.SequenceManager;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceType;
 import com.blamejared.crafttweaker.api.villager.CTVillagerTrades;
 import com.blamejared.crafttweaker.impl.script.ScriptReloadListener;
-import com.blamejared.crafttweaker.impl.util.sequence.SequenceManager;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.MutableComponent;
