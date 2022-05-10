@@ -90,7 +90,7 @@ public class SequenceManager {
      */
     public static Map<SequenceType, List<Sequence<?, ?>>> getServerSequences() {
         
-        return serverSequences;
+        return serverSequencesView;
     }
     
     /**
