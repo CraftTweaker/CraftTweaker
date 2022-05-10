@@ -5,7 +5,11 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
- * The type of a {@link Sequence}.
+ * Represents the type of 'actor' a {@link Sequence} acts on and is used to ensure that {@link Sequence}s are ticked correctly.
+ *
+ * <p>Some examples are a {@link net.minecraft.world.level.Level} or a {@link net.minecraft.world.entity.LivingEntity} (which is not yet implemented).</p>
+ *
+ * <p>Mods adding custom sequenceable actors (really anything that can be ticked) should make their own SequenceType and expose it to ZenScript.</p>
  *
  * @docParam this SequenceType.LEVEL
  */
