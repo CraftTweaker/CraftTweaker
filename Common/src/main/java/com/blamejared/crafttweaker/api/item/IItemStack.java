@@ -15,6 +15,8 @@ import com.blamejared.crafttweaker.mixin.common.access.item.AccessItem;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -149,17 +151,21 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     /**
      * Sets the lore of the ItemStack
      *
-     * @param text the new Lore of the ItemStack.
+     * @param lore the new Lore of the ItemStack.
      *
-     * @docParam text new crafttweaker.api.text.TextComponent("I am the lore I speak for the trees");
+     * @docParam lore new crafttweaker.api.text.TextComponent("I am the lore I speak for the trees");
      */
     @ZenCodeType.Method
-    default IItemStack withLore(@ZenCodeType.Nullable Component text) {
+    default IItemStack withLore(@ZenCodeType.Nullable Component... lore) {
         
         return modify(itemStack -> {
             CompoundTag tag = itemStack.getOrCreateTagElement(ItemStack.TAG_DISPLAY);
-            if(text != null) {
-                tag.putString(ItemStack.TAG_LORE, Component.Serializer.toJson(text));
+            if(lore != null || lore.length == 0) {
+                ListTag listtag = new ListTag();
+                for(Component component : lore) {
+                    listtag.add(StringTag.valueOf(Component.Serializer.toJson(component)));
+                }
+                tag.put("Lore", listtag);
             } else {
                 tag.remove(ItemStack.TAG_LORE);
             }
