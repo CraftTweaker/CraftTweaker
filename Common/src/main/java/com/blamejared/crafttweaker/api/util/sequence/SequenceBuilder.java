@@ -10,7 +10,11 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * A builder for {@link Sequence}.
@@ -26,15 +30,13 @@ public class SequenceBuilder<T, U> {
     private final SequenceType type;
     private final Supplier<T> actor;
     private final U data;
-    private final boolean isClientSide;
     private final Queue<ISequenceTask<T, U>> timeline;
     
-    public SequenceBuilder(SequenceType type, Supplier<T> actor, U data, boolean isClientSide) {
+    public SequenceBuilder(SequenceType type, Supplier<T> actor, U data) {
         
         this.type = type;
         this.actor = actor;
         this.data = data;
-        this.isClientSide = isClientSide;
         this.timeline = new LinkedList<>();
     }
     
@@ -172,7 +174,7 @@ public class SequenceBuilder<T, U> {
     public Sequence<T, U> start() {
         
         Sequence<T, U> schedule = new Sequence<>(actor, data, timeline);
-        SequenceManager.addSequence(type, schedule, isClientSide);
+        SequenceManager.addSequence(type, schedule);
         return schedule;
     }
     

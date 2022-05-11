@@ -40,7 +40,7 @@ public class CraftTweakerFabric implements ModInitializer {
             return InteractionResult.PASS;
         });
         
-        ServerTickEvents.START_WORLD_TICK.register(world -> SequenceManager.tick(SequenceType.LEVEL, false));
+        ServerTickEvents.START_WORLD_TICK.register(world -> SequenceManager.tick(SequenceType.SERVER_THREAD_LEVEL));
         
         CraftTweakerEvents.GATHER_REPLACEMENT_EXCLUSION_EVENT.register(DefaultExclusionReplacements::handleDefaultExclusions);
         

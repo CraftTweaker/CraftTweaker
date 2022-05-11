@@ -60,7 +60,7 @@ public class ExpandLevel {
     @ZenCodeType.Method
     public static <T> SequenceBuilder<Level, T> sequence(Level internal, Class<T> dataClass, T data) {
         
-        return new SequenceBuilder<>(SequenceType.LEVEL, Suppliers.memoize(() -> internal), data, internal.isClientSide());
+        return new SequenceBuilder<>(internal.isClientSide ? SequenceType.CLIENT_THREAD_LEVEL : SequenceType.SERVER_THREAD_LEVEL, Suppliers.memoize(() -> internal), data);
     }
     
     @ZenCodeType.Method

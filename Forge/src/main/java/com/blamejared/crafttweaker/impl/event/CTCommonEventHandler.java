@@ -40,7 +40,7 @@ public class CTCommonEventHandler {
     public static void worldTick(TickEvent.WorldTickEvent e) {
         
         if(e.phase == TickEvent.Phase.START) {
-            SequenceManager.tick(SequenceType.LEVEL, e.world.isClientSide);
+            SequenceManager.tick(e.world.isClientSide ? SequenceType.CLIENT_THREAD_LEVEL : SequenceType.SERVER_THREAD_LEVEL);
         }
     }
     

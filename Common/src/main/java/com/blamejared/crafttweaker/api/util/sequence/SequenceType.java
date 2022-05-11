@@ -11,7 +11,7 @@ import org.openzen.zencode.java.ZenCodeType;
  *
  * <p>Mods adding custom sequenceable actors (really anything that can be ticked) should make their own SequenceType and expose it to ZenScript.</p>
  *
- * @docParam this SequenceType.LEVEL
+ * @docParam this SequenceType.SERVER_THREAD_LEVEL
  */
 @ZenRegister
 @Document("vanilla/api/util/sequence/SequenceType")
@@ -20,10 +20,16 @@ import org.openzen.zencode.java.ZenCodeType;
 public final class SequenceType {
     
     /**
-     * The type of the LEVEL sequence.
+     * The type of the SERVER_THREAD_LEVEL sequence which is only ticked on the server thread.
      */
     @ZenCodeType.Field
-    public static final SequenceType LEVEL = new SequenceType("level");
+    public static final SequenceType SERVER_THREAD_LEVEL = new SequenceType("server_thread_level");
+    
+    /**
+     * The type of the CLIENT_THREAD_LEVEL sequence which is only ticked on the server thread.
+     */
+    @ZenCodeType.Field
+    public static final SequenceType CLIENT_THREAD_LEVEL = new SequenceType("client_thread_level");
     
     private final String name;
     

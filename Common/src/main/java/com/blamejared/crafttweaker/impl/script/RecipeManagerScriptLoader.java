@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceManager;
+import com.blamejared.crafttweaker.api.util.sequence.SequenceType;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.script.scriptrun.ThroughRecipeScriptRunManager;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
@@ -51,7 +52,7 @@ public class RecipeManagerScriptLoader {
     //Maybe move this / rename the class
     public static void loadScriptsFromManager(final RecipeManager manager) {
     
-        SequenceManager.clearSequences(true);
+        SequenceManager.clearSequences(SequenceType.CLIENT_THREAD_LEVEL);
         
         if(Services.CLIENT.isSingleplayer()) {
             
