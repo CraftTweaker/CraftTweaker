@@ -55,6 +55,7 @@ public class ExpandLevel {
      * @return A new {@link SequenceBuilder} for this level.
      *
      * @docParam data {version: "1.0.0"}
+     * @docParam <T> crafttweaker.api.data.MapData
      */
     @ZenCodeType.Method
     public static <T> SequenceBuilder<Level, T> sequence(Level internal, Class<T> dataClass, T data) {
