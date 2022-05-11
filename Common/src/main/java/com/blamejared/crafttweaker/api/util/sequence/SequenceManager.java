@@ -65,7 +65,7 @@ public class SequenceManager {
      *
      * @return A map of sequences for the given side,
      */
-    public static Map<SequenceType, List<Sequence<?, ?>>> getSequences(boolean isClientSide) {
+    private static Map<SequenceType, List<Sequence<?, ?>>> getSequences(boolean isClientSide) {
         
         return (isClientSide ? clientSequences : serverSequences);
     }
