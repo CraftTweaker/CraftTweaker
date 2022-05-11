@@ -34,7 +34,7 @@ public class SequenceManager {
      */
     public static void removeSequence(SequenceType type, Sequence<?, ?> sequence, boolean isClientSide) {
         
-        (isClientSide ? clientSequences : serverSequences).computeIfAbsent(type, sequenceType -> new LinkedList<>())
+        (isClientSide ? clientSequences : serverSequences).getOrDefault(type, Collections.emptyList())
                 .remove(sequence);
     }
     
