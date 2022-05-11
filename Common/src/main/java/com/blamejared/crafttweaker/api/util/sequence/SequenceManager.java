@@ -40,7 +40,7 @@ public class SequenceManager {
     }
     
     /**
-     * Tick all sequences for the given type on the given side.
+     * Tick all sequences for the given type.
      *
      * @param type The type to tick for.
      */
@@ -61,9 +61,9 @@ public class SequenceManager {
     }
     
     /**
-     * Gets a view of the client side Sequences.
+     * Gets a view of the Sequences.
      *
-     * @return A map of client side sequences,
+     * @return A map of sequences,
      */
     public static Map<SequenceType, List<Sequence<?, ?>>> getSequences() {
         
