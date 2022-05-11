@@ -147,6 +147,26 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     
     
     /**
+     * Sets the lore of the ItemStack
+     *
+     * @param text the new Lore of the ItemStack.
+     *
+     * @docParam text new crafttweaker.api.text.TextComponent("I am the lore I speak for the trees");
+     */
+    @ZenCodeType.Method
+    default IItemStack withLore(@ZenCodeType.Nullable Component text) {
+        
+        return modify(itemStack -> {
+            CompoundTag tag = itemStack.getOrCreateTagElement(ItemStack.TAG_DISPLAY);
+            if(text != null) {
+                tag.putString(ItemStack.TAG_LORE, Component.Serializer.toJson(text));
+            } else {
+                tag.remove(ItemStack.TAG_LORE);
+            }
+        });
+    }
+    
+    /**
      * Gets the display name of the ItemStack
      *
      * @return formatted display name of the ItemStack.
@@ -160,14 +180,14 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     /**
      * Sets the display name of the ItemStack
      *
-     * @param text New name of the stack.
+     * @param name New name of the stack.
      *
      * @docParam name "totally not dirt"
      */
     @ZenCodeType.Method
-    default IItemStack withDisplayName(Component text) {
+    default IItemStack withDisplayName(Component name) {
         
-        return modify(itemStack -> itemStack.setHoverName(text));
+        return modify(itemStack -> itemStack.setHoverName(name));
     }
     
     /**
