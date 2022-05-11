@@ -43,7 +43,7 @@ public class SequenceBuilder<T, U> {
     /**
      * Adds a task to the sequence.
      *
-     * @param task The task toa dd.
+     * @param task The task to add.
      *
      * @return This builder to chain calls.
      *
