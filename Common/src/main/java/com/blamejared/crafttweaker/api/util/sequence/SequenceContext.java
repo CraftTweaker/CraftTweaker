@@ -6,9 +6,6 @@ import org.openzen.zencode.java.ZenCodeType;
 
 /**
  * A SequenceContext provides more data to {@link Sequence}s and allows a sequence to be stopped from inside a task.
- *
- * @param <T>
- * @param <U>
  */
 @ZenRegister
 @Document("vanilla/api/util/sequence/SequenceContext")
