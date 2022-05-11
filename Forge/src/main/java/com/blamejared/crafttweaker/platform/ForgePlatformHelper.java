@@ -17,11 +17,13 @@ import com.blamejared.crafttweaker.impl.loot.CraftTweakerPrivilegedLootModifierM
 import com.blamejared.crafttweaker.impl.loot.ForgeLootModifierMapAdapter;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
 import com.blamejared.crafttweaker.impl.script.ScriptSerializer;
+import com.blamejared.crafttweaker.mixin.common.access.food.AccessFoodPropertiesForge;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessBasicTrade;
 import com.blamejared.crafttweaker.platform.helper.inventory.IItemHandlerWrapper;
 import com.blamejared.crafttweaker.platform.services.IPlatformHelper;
 import com.google.common.base.Suppliers;
 import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
@@ -29,9 +31,11 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -315,6 +319,19 @@ public class ForgePlatformHelper implements IPlatformHelper {
     public CompoundTag getPersistentData(ServerPlayer player) {
         
         return player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
+    }
+    
+    @Override
+    public void addFoodPropertiesEffect(FoodProperties internal, MobEffectInstance effect, float probability) {
+        
+        ((AccessFoodPropertiesForge) internal).crafttweaker$getEffects().add(Pair.of(() -> effect, probability));
+    }
+    
+    @Override
+    public void removeFoodPropertiesEffect(FoodProperties internal, MobEffectInstance effect) {
+        
+        ((AccessFoodPropertiesForge) internal).crafttweaker$getEffects()
+                .removeIf(pair -> pair.getFirst() != null && pair.getFirst().get().equals(effect));
     }
     
 }

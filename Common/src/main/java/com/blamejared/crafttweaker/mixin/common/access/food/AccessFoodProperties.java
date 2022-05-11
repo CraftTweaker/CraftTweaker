@@ -38,11 +38,4 @@ public interface AccessFoodProperties {
     @Accessor("fastFood")
     void crafttweaker$setFastFood(boolean fastFood);
     
-    @Accessor("effects")
-    List<Pair<MobEffectInstance, Float>> crafttweaker$getEffects();
-    
-    @Mutable
-    @Accessor("effects")
-    void crafttweaker$setEffects(List<Pair<MobEffectInstance, Float>> effects);
-    
 }

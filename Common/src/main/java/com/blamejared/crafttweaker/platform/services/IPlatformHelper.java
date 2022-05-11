@@ -8,14 +8,17 @@ import com.blamejared.crafttweaker.api.villager.CTTradeObject;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
 import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
 import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -155,5 +158,15 @@ public interface IPlatformHelper {
     CompoundTag getCustomData(Entity entity);
     
     CompoundTag getPersistentData(ServerPlayer player);
+    
+    default void addFoodPropertiesEffect(FoodProperties internal, MobEffectInstance effect, float probability) {
+        
+        internal.getEffects().add(Pair.of(effect, probability));
+    }
+    
+    default void removeFoodPropertiesEffect(FoodProperties internal, MobEffectInstance effect) {
+        
+        internal.getEffects().removeIf(pair -> pair.getFirst().equals(effect));
+    }
     
 }
