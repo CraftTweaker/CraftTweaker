@@ -35,7 +35,7 @@ public class ExpandLevel {
     /**
      * Creates a new {@link SequenceBuilder} for this level.
      *
-     * <p>{@link SequenceBuilder}'s let you compose scripted events such as waiting 5 ticks, then setting the weather to rain
+     * <p>{@link SequenceBuilder}'s let you compose scripted events such as waiting 5 ticks, then setting the weather to rain.</p>
      *
      * @return A new {@link SequenceBuilder} for this level.
      *
@@ -50,7 +50,7 @@ public class ExpandLevel {
     /**
      * Creates a new {@link SequenceBuilder} for this level.
      *
-     * <p>{@link SequenceBuilder}'s let you compose scripted events such as waiting 5 ticks, then setting the weather to rain
+     * <p>{@link SequenceBuilder}'s let you compose scripted events such as waiting 5 ticks, then setting the weather to rain.</p>
      *
      * @return A new {@link SequenceBuilder} for this level.
      *
