@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraft.world.item.crafting.UpgradeRecipe;
 
 @ZenRegister
-@Document("vanilla/api/recipe/type/type/UpgradeRecipe")
+@Document("vanilla/api/recipe/type/UpgradeRecipe")
 @NativeTypeRegistration(value = UpgradeRecipe.class, zenCodeName = "crafttweaker.api.recipe.type.UpgradeRecipe")
 public class ExpandUpgradeRecipe {
 

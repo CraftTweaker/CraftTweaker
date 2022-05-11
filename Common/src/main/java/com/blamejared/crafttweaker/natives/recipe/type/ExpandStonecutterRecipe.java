@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraft.world.item.crafting.StonecutterRecipe;
 
 @ZenRegister
-@Document("vanilla/api/recipe/type/type/StonecutterRecipe")
+@Document("vanilla/api/recipe/type/StonecutterRecipe")
 @NativeTypeRegistration(value = StonecutterRecipe.class, zenCodeName = "crafttweaker.api.recipe.type.StonecutterRecipe")
 public class ExpandStonecutterRecipe {
 
