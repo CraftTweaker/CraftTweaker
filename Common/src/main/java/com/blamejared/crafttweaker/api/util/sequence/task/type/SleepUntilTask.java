@@ -29,10 +29,8 @@ public class SleepUntilTask<T, U> implements ISequenceTask<T, U> {
     
     @Override
     public void tick(T actor, SequenceContext<T, U> data) {
-        
-        if(!complete) {
-            complete = condition.test(actor, data);
-        }
+    
+        complete = complete || condition.test(actor, data);
     }
     
     @Override
