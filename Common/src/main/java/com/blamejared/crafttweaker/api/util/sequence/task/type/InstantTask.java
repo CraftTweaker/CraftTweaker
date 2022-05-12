@@ -20,6 +20,7 @@ import java.util.function.Consumer;
 public class InstantTask<T, U> implements ISequenceTask<T, U> {
     
     private final BiConsumer<T, SequenceContext<T, U>> actorConsumer;
+    private boolean complete = false;
     
     @ZenCodeType.Constructor
     public InstantTask(Consumer<T> actorConsumer) {
@@ -37,12 +38,13 @@ public class InstantTask<T, U> implements ISequenceTask<T, U> {
     public void tick(T actor, SequenceContext<T, U> data) {
         
         actorConsumer.accept(actor, data);
+        complete = true;
     }
     
     @Override
     public boolean isComplete(T actor, SequenceContext<T, U> data) {
         
-        return true;
+        return complete;
     }
     
 }
