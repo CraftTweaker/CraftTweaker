@@ -99,7 +99,7 @@ public enum CraftingTableRecipeManager implements IRecipeManager<CraftingRecipe>
         
         // " " is reserved for empty
         keys.put(" ", IIngredientEmpty.INSTANCE);
-        IIngredient[][] ingredients = new IIngredient[height][height];
+        IIngredient[][] ingredients = new IIngredient[height][width];
         Set<String> set = Sets.newHashSet(keys.keySet());
         set.remove(" ");
         
