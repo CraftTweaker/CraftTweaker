@@ -26,11 +26,15 @@ public class Percentaged<T> implements CommandStringDisplayable {
         this.commandStringFunc = commandStringFunc;
     }
     
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("data")
     public T getData() {
         
         return data;
     }
     
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("percentage")
     public double getPercentage() {
         
         return percentage;
