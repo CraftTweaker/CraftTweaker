@@ -31,6 +31,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.shared.CodePosition;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +56,12 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
      * @param mapData data representing the json file
      *
      * @docParam name "recipe_name"
-     * @docParam data {ingredient:{item:<item:minecraft:gold_ore>.registryName},result:<item:minecraft:cooked_porkchop>.registryName,experience:0.35 as float, cookingtime:100}
+     * @docParam mapData {
+     *     ingredient: <item:minecraft:gold_ore>,
+     *     result: <item:minecraft:cooked_porkchop>.registryName,
+     *     experience: 0.35 as float,
+     *     cookingtime:100
+     * }
      */
     @ZenCodeType.Method
     default void addJsonRecipe(String name, MapData mapData) {
@@ -160,11 +166,27 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
      * @param name registry name of recipe to remove
      *
      * @docParam name "minecraft:furnace"
+     * @deprecated Use {@link #removeByName(String...)} instead
      */
-    @ZenCodeType.Method
+    @Deprecated(forRemoval = true)
     default void removeByName(String name) {
         
         CraftTweakerAPI.apply(new ActionRemoveRecipeByName<>(this, new ResourceLocation(name)));
+    }
+    
+    /**
+     * Remove recipes based on Registry names
+     *
+     * @param names registry names of recipes to remove
+     *
+     * @docParam name "minecraft:furnace", "minecraft:bow"
+     */
+    @ZenCodeType.Method
+    default void removeByName(String... names) {
+        
+        CraftTweakerAPI.apply(new ActionRemoveRecipeByName<>(this, Arrays.stream(names)
+                .map(ResourceLocation::new)
+                .toArray(ResourceLocation[]::new)));
     }
     
     
