@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
+import com.blamejared.crafttweaker.api.util.sequence.SequenceManager;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRun;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.helper.FileGathererHelper;
@@ -62,7 +63,8 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
     
     @Override
     protected void apply(Void object, ResourceManager resourceManager, ProfilerFiller profiler) {
-        
+    
+        SequenceManager.clearSequences();
         IAccessibleServerElementsProvider asep = CraftTweakerAPI.getAccessibleElementsProvider().server();
         asep.resources(this.resources);
         TagManager tagmanager = asep.accessibleResources().crafttweaker$getTagManager();
