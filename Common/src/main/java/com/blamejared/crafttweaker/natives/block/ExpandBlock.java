@@ -11,6 +11,7 @@ import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -90,6 +91,18 @@ public class ExpandBlock {
     public static String getDescriptionId(Block internal) {
         
         return internal.getDescriptionId();
+    }
+    
+    /**
+     * Gets the name of this Block
+     *
+     * @return The name of this block.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("name")
+    public static MutableComponent getName(Block internal) {
+        
+        return internal.getName();
     }
     
     /**
