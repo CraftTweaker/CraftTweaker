@@ -51,6 +51,13 @@ public class Mods {
         return Services.PLATFORM.getMod(modid).orElse(null);
     }
     
+    @ZenCodeType.Nullable
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.INDEXGET)
+    public Mod getModByIndex(String modid) {
+        
+        return Services.PLATFORM.getMod(modid).orElse(null);
+    }
+    
     /**
      * Checks if a mod is laoded
      *

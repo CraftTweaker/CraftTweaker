@@ -25,4 +25,11 @@ public interface RegistryWrapper<T> {
         return keySet().stream();
     }
     
+    default Stream<T> getForNamespace(String namespace) {
+        
+        return this.keyStream()
+                .filter(resourceLocation -> resourceLocation.getNamespace().equals(namespace))
+                .map(location -> getOptional(location).orElseThrow(() -> new IllegalArgumentException("Cannot get registry object from name: '" + location + "'! This should never happen!")));
+    }
+    
 }
