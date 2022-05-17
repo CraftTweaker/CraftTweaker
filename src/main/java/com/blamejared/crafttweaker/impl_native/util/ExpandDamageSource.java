@@ -161,7 +161,7 @@ public class ExpandDamageSource {
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("immediateSource")
-    @Nullable
+    @ZenCodeType.Nullable
     public static Entity getImmediateSource(DamageSource internal) {
         
         return internal.getImmediateSource();
@@ -174,7 +174,7 @@ public class ExpandDamageSource {
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("trueSource")
-    @Nullable
+    @ZenCodeType.Nullable
     public static Entity getTrueSource(DamageSource internal) {
         
         return internal.getTrueSource();
