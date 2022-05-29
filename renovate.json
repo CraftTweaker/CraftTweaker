@@ -4,6 +4,7 @@
   ],
   "prHourlyLimit": 0,
   "addLabels": ["dependencies"],
+  "cloneSubmodules": true,
 
   "packageRules": [
     {
