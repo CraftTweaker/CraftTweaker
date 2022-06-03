@@ -3,39 +3,41 @@ package com.blamejared.crafttweaker.api.action.recipe.generic;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
-import org.apache.logging.log4j.Logger;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ActionRemoveGenericRecipeByName extends ActionRemoveGenericRecipeBase {
     
-    private final String name;
+    private final Set<ResourceLocation> names;
     
     public ActionRemoveGenericRecipeByName(String name) {
         
-        this.name = name;
+        this.names = new HashSet<>();
+        this.names.add(new ResourceLocation(name));
     }
     
-    @Override
-    public boolean validate(Logger logger) {
+    public ActionRemoveGenericRecipeByName(ResourceLocation[] names) {
         
-        if(ResourceLocation.tryParse(name) != null) {
-            return true;
-        }
         
-        logger.warn("Invalid recipe name: \"{}\"", name);
-        return false;
+        this.names = new HashSet<>();
+        Collections.addAll(this.names, names);
     }
     
     @Override
     public String describe() {
         
-        return String.format("Removing all recipes with name \"%s\"", name);
+        return "Removing all recipe(s) with name(s): '" + names.stream()
+                .map(ResourceLocation::toString)
+                .collect(Collectors.joining(", ", "[", "]")) + "'";
     }
     
     @Override
     protected boolean shouldRemove(Recipe<?> recipe) {
         
-        final String recipeId = recipe.getId().toString();
-        return name.equals(recipeId);
+        return this.names.contains(recipe.getId());
     }
     
 }

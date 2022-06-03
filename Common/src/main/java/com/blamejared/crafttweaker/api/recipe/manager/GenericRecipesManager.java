@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.recipe.manager;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.action.recipe.ActionAddRecipe;
+import com.blamejared.crafttweaker.api.action.recipe.ActionRemoveRecipeByName;
 import com.blamejared.crafttweaker.api.action.recipe.generic.ActionRemoveAllGenericRecipes;
 import com.blamejared.crafttweaker.api.action.recipe.generic.ActionRemoveGenericRecipeByModId;
 import com.blamejared.crafttweaker.api.action.recipe.generic.ActionRemoveGenericRecipeByName;
@@ -25,6 +26,7 @@ import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -159,11 +161,27 @@ public enum GenericRecipesManager {
      * Removes all recipes with this name.
      *
      * @param name The recipe name to remove
+     * @deprecated Use {@link #removeByName(String...)} instead
      */
-    @ZenCodeType.Method
+    @Deprecated(forRemoval = true)
     public void removeByName(String name) {
         
         CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByName(name));
+    }
+    
+    /**
+     * Remove recipes based on Registry names
+     *
+     * @param names registry names of recipes to remove
+     *
+     * @docParam name "minecraft:furnace", "minecraft:bow"
+     */
+    @ZenCodeType.Method
+    public void removeByName(String... names) {
+        
+        CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByName(Arrays.stream(names)
+                .map(ResourceLocation::new)
+                .toArray(ResourceLocation[]::new)));
     }
     
     /**
