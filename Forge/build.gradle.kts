@@ -49,7 +49,7 @@ dependencies {
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         implementation(project(it.toString()))
     }
-    implementation(fg.deobf("mezz.jei:jei-1.18.2:9.5.2.133"))
+    implementation(fg.deobf("mezz.jei:jei-1.18.2:9.7.0.195"))
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
 
     gametestCompileOnly(files(project(":Common").dependencyProject.sourceSets.gametest.get().java.srcDirs))

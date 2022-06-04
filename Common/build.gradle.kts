@@ -37,7 +37,7 @@ base {
 }
 
 dependencies {
-    compileOnly("org.spongepowered:mixin:0.8.4")
+    compileOnly("org.spongepowered:mixin:0.8.5")
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         implementation(project(it.toString()))
     }
