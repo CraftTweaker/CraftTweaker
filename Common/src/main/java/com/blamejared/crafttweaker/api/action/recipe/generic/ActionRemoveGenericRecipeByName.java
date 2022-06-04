@@ -15,15 +15,12 @@ public class ActionRemoveGenericRecipeByName extends ActionRemoveGenericRecipeBa
     
     public ActionRemoveGenericRecipeByName(String name) {
         
-        this.names = new HashSet<>();
-        this.names.add(new ResourceLocation(name));
+        this.names = Set.of(new ResourceLocation(name));
     }
     
     public ActionRemoveGenericRecipeByName(ResourceLocation[] names) {
         
-        
-        this.names = new HashSet<>();
-        Collections.addAll(this.names, names);
+        this.names = Set.of(names);
     }
     
     @Override
