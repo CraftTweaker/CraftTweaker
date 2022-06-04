@@ -35,7 +35,7 @@ dependencies {
     minecraft("com.mojang:minecraft:${minecraftVersion}")
     mappings(loom.layered {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.18.2:2022.03.13@zip")
+        parchment("org.parchmentmc.data:parchment-1.18.2:2022.05.22@zip")
     })
     modImplementation("net.fabricmc:fabric-loader:${fabricLoaderVersion}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
@@ -52,7 +52,7 @@ dependencies {
     modImplementation("com.faux.fauxcustomentitydata:FauxCustomEntityData-fabric-1.18.2:2.0.1")
 
     implementation("org.reflections:reflections:0.10.2")?.let { include(it) }
-    implementation("org.javassist:javassist:3.28.0-GA")?.let { include(it) } // required for reflections
+    implementation("org.javassist:javassist:3.29.0-GA")?.let { include(it) } // required for reflections
 
 
     modImplementation("com.faux.ingredientextension:IngredientExtensionAPI-fabric-1.18.2:2.0.5")
