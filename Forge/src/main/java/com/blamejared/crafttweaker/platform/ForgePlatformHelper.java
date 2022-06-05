@@ -31,6 +31,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerTrades;
@@ -332,6 +333,13 @@ public class ForgePlatformHelper implements IPlatformHelper {
         
         ((AccessFoodPropertiesForge) internal).crafttweaker$getEffects()
                 .removeIf(pair -> pair.getFirst() != null && pair.getFirst().get().equals(effect));
+    }
+    
+    @Override
+    public void removeFoodPropertiesEffect(FoodProperties internal, MobEffect effect) {
+        
+        ((AccessFoodPropertiesForge) internal).crafttweaker$getEffects()
+                .removeIf(pair -> pair.getFirst() != null && pair.getFirst().get().getEffect() == effect);
     }
     
 }

@@ -14,6 +14,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerTrades;
@@ -167,6 +168,11 @@ public interface IPlatformHelper {
     default void removeFoodPropertiesEffect(FoodProperties internal, MobEffectInstance effect) {
         
         internal.getEffects().removeIf(pair -> pair.getFirst().equals(effect));
+    }
+    
+    default void removeFoodPropertiesEffect(FoodProperties internal, MobEffect effect) {
+        
+        internal.getEffects().removeIf(pair -> pair.getFirst().getEffect() == effect);
     }
     
 }

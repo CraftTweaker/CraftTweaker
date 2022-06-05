@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
 import org.openzen.zencode.java.ZenCodeType;
@@ -109,6 +110,12 @@ public class ExpandFoodProperties {
     
     @ZenCodeType.Method
     public static FoodProperties removeEffect(FoodProperties internal, MobEffectInstance effect) {
+        
+        return modify(internal, properties -> Services.PLATFORM.removeFoodPropertiesEffect(properties, effect));
+    }
+    
+    @ZenCodeType.Method
+    public static FoodProperties removeEffect(FoodProperties internal, MobEffect effect) {
         
         return modify(internal, properties -> Services.PLATFORM.removeFoodPropertiesEffect(properties, effect));
     }
