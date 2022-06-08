@@ -8,9 +8,15 @@ import com.blamejared.crafttweaker.impl.preprocessor.onlyif.EndIfPreprocessor;
 import com.blamejared.crafttweaker.impl.preprocessor.onlyif.OnlyIfPreprocessor;
 import com.blamejared.crafttweaker.impl.script.scriptrun.GameTestScriptRunner;
 import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
+import org.apache.commons.io.IOExceptionList;
+import org.apache.commons.io.IOUtils;
+import org.openzen.zencode.shared.SourceFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.StringJoiner;
 
 @CraftTweakerGameTestHolder
@@ -136,5 +142,29 @@ public class OnlyIfPreprocessorTest implements CraftTweakerGameTest {
         return GameTestScriptRunner.getFile(contents, List.of(OnlyIfPreprocessor.INSTANCE, EndIfPreprocessor.INSTANCE));
     }
     
+    
+    @GameTest(template = "crafttweaker:empty")
+    @TestModifier(implicitSuccession = true)
+    public void modloadedRemovesCorrectly(GameTestHelper helper) {
+        
+        final StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
+        stringJoiner.add("#onlyif modloaded invalid-modid");
+        stringJoiner.add("Hello World");
+        stringJoiner.add("#endif");
+        
+        final IScriptFile file = getFile(stringJoiner.toString());
+        Optional<SourceFile> sourceFile = file.toSourceFile();
+        assertThat(sourceFile.isPresent()).isTrue();
+        try {
+            List<String> fileContents = IOUtils.readLines(sourceFile.get().open());
+    
+            assertWithMessage("File must remain the same structure").that(fileContents.size()).isEqualTo(3);
+            assertThat(fileContents.get(0)).isEqualTo("                               ");
+            assertThat(fileContents.get(1)).isEqualTo("           ");
+            assertThat(fileContents.get(2)).isEqualTo("      ");
+        }catch(IOException e){
+            throw new GameTestAssertException(e.getMessage());
+        }
+    }
     
 }

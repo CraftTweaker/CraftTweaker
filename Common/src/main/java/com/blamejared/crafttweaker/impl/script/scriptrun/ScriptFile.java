@@ -208,7 +208,7 @@ final class ScriptFile implements IScriptFile {
     
     private SourceFile toFile() {
         
-        return new PreprocessedSourceFile(this.fileName, this.fileContents, this.matches);
+        return new PreprocessedSourceFile(this.fileName, this.preprocessedContents(), this.matches);
     }
     
 }
