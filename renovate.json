@@ -5,9 +5,7 @@
   "prHourlyLimit": 0,
   "addLabels": ["dependencies"],
   "cloneSubmodules": true,
-  {
-    "schedule": ["every weekend"]
-  },
+  "schedule": ["every weekend"],
   "packageRules": [
     {
       "matchDatasources": ["maven"],
