@@ -13,7 +13,11 @@ public interface FabricItemStack extends IItemStack {
     @Override
     default int getBurnTime() {
         
-        return FuelRegistry.INSTANCE.get(getInternal().getItem());
+        Integer burnTime = FuelRegistry.INSTANCE.get(getInternal().getItem());
+        if(burnTime == null) {
+            return 0;
+        }
+        return burnTime;
     }
     
 }
