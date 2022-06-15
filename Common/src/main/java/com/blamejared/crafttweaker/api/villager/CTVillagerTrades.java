@@ -563,18 +563,12 @@ public class CTVillagerTrades {
      *
      * @docParam rarity 2
      * @docParam tradeFor <item:minecraft:arrow>
+     * @deprecated Use {@link #removeWanderingTrade(int, IIngredient)}
      */
-    @ZenCodeType.Method
+    @Deprecated(forRemoval = true)
     public void removeWanderingTrade(int rarity, IItemStack tradeFor) {
         
-        removeWanderingTradeInternal(rarity, trade -> {
-            if(trade instanceof VillagerTrades.ItemsForEmeralds) {
-                return tradeFor.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) trade).crafttweaker$getItemStack()));
-            } else if(trade instanceof IBasicItemListing basicTrade) {
-                return tradeFor.matches(Services.PLATFORM.createMCItemStackMutable(basicTrade.getForSale()));
-            }
-            return false;
-        });
+        removeWanderingTrade(rarity, (IIngredient) tradeFor);
     }
     
     /**
@@ -590,12 +584,12 @@ public class CTVillagerTrades {
     public void removeWanderingTrade(int rarity, IIngredient tradeFor) {
         
         removeWanderingTradeInternal(rarity, trade -> {
-            if(trade instanceof VillagerTrades.ItemsForEmeralds) {
-                return tradeFor.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) trade).crafttweaker$getItemStack()));
-            } else if(trade instanceof IBasicItemListing basicTrade) {
-                return tradeFor.matches(Services.PLATFORM.createMCItemStackMutable(basicTrade.getForSale()));
+            Function<VillagerTrades.ItemListing, CTTradeObject> tradeFunc = TRADE_CONVERTER.get(trade.getClass());
+            if(tradeFunc == null) {
+                return false;
             }
-            return false;
+            CTTradeObject tradeObject = tradeFunc.apply(trade);
+            return tradeFor.matches(tradeObject.getSellingStack());
         });
     }
     
