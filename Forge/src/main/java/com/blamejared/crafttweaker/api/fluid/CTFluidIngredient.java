@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 
 /**
  * FluidIngredient that facilitates accepting either a single, or multiple {@link IFluidStack}s, {@link KnownTag <Fluid>}s
- * or {@link Many< KnownTag ><Fluid>}s.
+ * or {@link Many<KnownTag<Fluid>>}s.
  */
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.fluid.FluidIngredient")
