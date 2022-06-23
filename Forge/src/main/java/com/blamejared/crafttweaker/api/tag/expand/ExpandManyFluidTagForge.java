@@ -14,7 +14,7 @@ import java.util.List;
 @ZenRegister
 @Document("vanilla/api/tag/ExpandManyFluidTagForge")
 @ZenCodeType.Expansion("crafttweaker.api.util.Many<crafttweaker.api.tag.type.KnownTag<crafttweaker.api.fluid.Fluid>>")
-public class ExpandManyFluidTag {
+public class ExpandManyFluidTagForge {
     
     @ZenCodeType.Method
     @ZenCodeType.Caster(implicit = true)
