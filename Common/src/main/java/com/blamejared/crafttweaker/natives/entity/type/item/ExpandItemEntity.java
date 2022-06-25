@@ -8,9 +8,8 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeConstructor;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.openzen.zencode.java.ZenCodeType;
-
-import java.util.logging.Level;
 
 @ZenRegister
 @Document("vanilla/api/entity/type/item/ItemEntity")
