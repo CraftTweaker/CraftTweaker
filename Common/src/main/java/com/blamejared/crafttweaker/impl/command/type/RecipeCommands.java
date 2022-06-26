@@ -20,11 +20,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public final class RecipeCommands {
     
@@ -50,6 +49,26 @@ public final class RecipeCommands {
                     return RecipeCommands.dumpHand(player, player.getMainHandItem());
                 })
         );
+        handler.registerSubCommand(
+                "recipes",
+                "inventory",
+                new TranslatableComponent("crafttweaker.command.description.recipes.inventory"),
+                builder -> builder.executes(context -> {
+                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    
+                    List<ItemStack> stacks = new ArrayList<>();
+                    
+                    IntStream.range(0, player.getInventory().getContainerSize())
+                            .mapToObj(player.getInventory()::getItem)
+                            .filter(itemStack -> !itemStack.isEmpty())
+                            .forEach(itemStack -> {
+                                if(stacks.stream().noneMatch(itemStack::sameItemStackIgnoreDurability)) {
+                                    stacks.add(itemStack);
+                                }
+                            });
+                    return RecipeCommands.dump(player, stacks);
+                })
+        );
     }
     
     private static int dumpRecipes(final Player player) {
@@ -65,19 +84,27 @@ public final class RecipeCommands {
     
     private static int dumpHand(final Player player, final ItemStack stack) {
         
-        if(stack.isEmpty()) {
-            // Only done because *a lot* of mods return empty ItemStacks as outputs
-            CommandUtilities.send(new TranslatableComponent("crafttweaker.command.recipes.hand.empty").withStyle(ChatFormatting.RED), player);
-            return Command.SINGLE_SUCCESS;
+        return dump(player, List.of(stack));
+    }
+    
+    private static int dump(final Player player, final List<ItemStack> stacks) {
+        
+        for(ItemStack stack : stacks) {
+            
+            if(stack.isEmpty()) {
+                // Only done because *a lot* of mods return empty ItemStacks as outputs
+                CommandUtilities.send(new TranslatableComponent("crafttweaker.command.recipes.hand.empty").withStyle(ChatFormatting.RED), player);
+                return Command.SINGLE_SUCCESS;
+            }
+            
+            final IItemStack workingStack = Services.PLATFORM.createMCItemStack(stack.copy()).setAmount(1);
+            
+            CraftTweakerAPI.LOGGER.info("Dumping all recipes that output {}!", ItemStackUtil.getCommandString(workingStack.getInternal()));
+            
+            ((AccessRecipeManager) player.level.getRecipeManager()).crafttweaker$getRecipes()
+                    .forEach((recipeType, map) ->
+                            dumpRecipe(recipeType, map.values(), it -> workingStack.matches(Services.PLATFORM.createMCItemStack(it.getResultItem())), true));
         }
-        
-        final IItemStack workingStack = Services.PLATFORM.createMCItemStack(stack.copy()).setAmount(1);
-        
-        CraftTweakerAPI.LOGGER.info("Dumping all recipes that output {}!", ItemStackUtil.getCommandString(workingStack.getInternal()));
-        
-        ((AccessRecipeManager) player.level.getRecipeManager()).crafttweaker$getRecipes().forEach((recipeType, map) ->
-                dumpRecipe(recipeType, map.values(), it -> workingStack.matches(Services.PLATFORM.createMCItemStack(it.getResultItem())), true));
-        
         CommandUtilities.send(CommandUtilities.openingLogFile(new TranslatableComponent("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(new TranslatableComponent("crafttweaker.command.misc.recipes.list")), CommandUtilities.getFormattedLogFile()).withStyle(ChatFormatting.GREEN)), player);
         return Command.SINGLE_SUCCESS;
     }

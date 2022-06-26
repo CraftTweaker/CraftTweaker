@@ -43,6 +43,7 @@
   "crafttweaker.command.description.patreon": "Opens a link to patreon",
   "crafttweaker.command.description.recipes": "Outputs information on all recipes.",
   "crafttweaker.command.description.recipes.hand": "Outputs information on all Recipes for the held item",
+  "crafttweaker.command.description.recipes.inventory": "Outputs information on all Recipes for the items in the player's inventory",
   "crafttweaker.command.description.reload": "Points people to /reload",
   "crafttweaker.command.description.script": "Opens the scripts folder",
   "crafttweaker.command.description.syntax": "Checks the syntax of the scripts",
