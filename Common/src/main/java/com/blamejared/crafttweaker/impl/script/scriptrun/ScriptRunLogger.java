@@ -72,7 +72,7 @@ final class ScriptRunLogger implements ScriptingEngineLogger {
         CraftTweakerAPI.LOGGER.info(
                 "Loading file '{}'{}",
                 file.getFilename(),
-                this.priority.apply(file).stream().mapToObj(it -> "with priority " + it).findFirst().orElse("")
+                this.priority.apply(file).stream().mapToObj(it -> " with priority " + it).findFirst().orElse("")
         );
     }
     
