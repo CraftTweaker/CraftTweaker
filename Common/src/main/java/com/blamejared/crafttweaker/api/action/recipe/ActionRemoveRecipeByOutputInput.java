@@ -25,7 +25,7 @@ public class ActionRemoveRecipeByOutputInput<T extends Recipe<?>> extends Action
                 }
             }
             return false;
-        }, action -> "Removing \"" + action.getRecipeTypeName() + "\" recipes that output: " + output + "\" from an input of: " + input);
+        }, action -> "Removing \"" + action.getRecipeTypeName() + "\" recipes that output: " + output + "\" from an input of: " + input.getCommandString());
         this.output = output;
         this.input = input;
         
