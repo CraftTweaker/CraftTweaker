@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.ingredient;
 
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessIngredient;
+import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.ArrayList;
@@ -28,10 +29,7 @@ public class IngredientCacheBuster {
     public static void release() {
         
         claimed = false;
-        ingredients.forEach(ingredient -> {
-            ((AccessIngredient) (Object) ingredient).crafttweaker$setItemStacks(null);
-        });
-        ingredients.clear();
+        Services.PLATFORM.invalidateIngredients(ingredients);
     }
     
     /**
