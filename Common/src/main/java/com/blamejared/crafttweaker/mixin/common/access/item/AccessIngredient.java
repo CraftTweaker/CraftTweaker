@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.mixin.common.access.item;
 
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -15,5 +16,11 @@ public interface AccessIngredient {
     
     @Accessor("values")
     Ingredient.Value[] crafttweaker$getValues();
+    
+    @Accessor("itemStacks")
+    ItemStack[] crafttweaker$getItemStacks();
+    
+    @Accessor("itemStacks")
+    void crafttweaker$setItemStacks(ItemStack[] itemStacks);
     
 }

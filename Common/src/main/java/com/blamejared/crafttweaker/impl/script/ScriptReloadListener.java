@@ -4,11 +4,13 @@ import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
+import com.blamejared.crafttweaker.api.ingredient.IngredientCacheBuster;
 import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceManager;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRun;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.helper.FileGathererHelper;
+import com.blamejared.crafttweaker.mixin.common.access.item.AccessIngredient;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.blamejared.crafttweaker.mixin.common.access.tag.AccessTagManager;
 import com.blamejared.crafttweaker.platform.helper.IAccessibleServerElementsProvider;
@@ -28,14 +30,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 
@@ -64,6 +59,7 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
     @Override
     protected void apply(Void object, ResourceManager resourceManager, ProfilerFiller profiler) {
     
+        IngredientCacheBuster.claim();
         SequenceManager.clearSequences();
         IAccessibleServerElementsProvider asep = CraftTweakerAPI.getAccessibleElementsProvider().server();
         asep.resources(this.resources);
@@ -92,6 +88,7 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
             
             this.displayPatreonBranding();
         }
+        IngredientCacheBuster.release();
     }
     
     private void fixRecipeManager(final RecipeManager manager) {
