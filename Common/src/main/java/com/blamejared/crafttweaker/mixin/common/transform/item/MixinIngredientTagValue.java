@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Objects;
 
 @Mixin(Ingredient.TagValue.class)
 public class MixinIngredientTagValue {
@@ -39,12 +39,14 @@ public class MixinIngredientTagValue {
                     .crafttweaker$getTagManager().getResult().stream()
                     .filter(loadResult -> loadResult.key().equals(Registry.ITEM_REGISTRY))
                     .map(GenericUtil::<TagManager.LoadResult<Item>>uncheck)
-                    .flatMap(loadResult -> loadResult.tags()
-                            .getOrDefault(this.tag.location(), new Tag<>(List.of()))
-                            .getValues()
-                            .stream()
-                            .map(Holder::value)
-                            .map(ItemStack::new)).toList());
+                    .map(TagManager.LoadResult::tags)
+                    .map(map -> map.get(this.tag.location()))
+                    .filter(Objects::nonNull)
+                    .map(Tag::getValues)
+                    .flatMap(Collection::stream)
+                    .map(Holder::value)
+                    .map(ItemStack::new)
+                    .toList());
         }
     }
     
