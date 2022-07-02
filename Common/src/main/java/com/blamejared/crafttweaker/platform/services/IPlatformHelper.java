@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.mod.Mod;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.villager.CTTradeObject;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
+import com.blamejared.crafttweaker.mixin.common.access.item.AccessIngredient;
 import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
@@ -22,6 +23,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.material.Fluid;
@@ -173,6 +175,14 @@ public interface IPlatformHelper {
     default void removeFoodPropertiesEffect(FoodProperties internal, MobEffect effect) {
         
         internal.getEffects().removeIf(pair -> pair.getFirst().getEffect() == effect);
+    }
+    
+    default void invalidateIngredients(List<Ingredient> ingredients) {
+        
+        ingredients.forEach(ingredient -> {
+            ((AccessIngredient) (Object) ingredient).crafttweaker$setItemStacks(null);
+        });
+        ingredients.clear();
     }
     
 }

@@ -39,6 +39,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.material.Fluid;
@@ -340,6 +341,16 @@ public class ForgePlatformHelper implements IPlatformHelper {
         
         ((AccessFoodPropertiesForge) internal).crafttweaker$getEffects()
                 .removeIf(pair -> pair.getFirst() != null && pair.getFirst().get().getEffect() == effect);
+    }
+    
+    @Override
+    public void invalidateIngredients(List<Ingredient> ingredients) {
+        
+        Ingredient.invalidateAll();
+        for(Ingredient ingredient : ingredients) {
+            ingredient.checkInvalidation();
+        }
+        ingredients.clear();
     }
     
 }
