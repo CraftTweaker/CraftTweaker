@@ -28,11 +28,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
+import org.jetbrains.annotations.NotNull;
 import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.shared.CodePosition;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -45,7 +47,7 @@ import java.util.function.Predicate;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.recipe.IRecipeManager")
 @Document("vanilla/api/recipe/manager/IRecipeManager")
-public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDisplayable {
+public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDisplayable, Iterable<T> {
     
     Gson JSON_RECIPE_GSON = new GsonBuilder().create();
     
@@ -57,10 +59,10 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
      *
      * @docParam name "recipe_name"
      * @docParam mapData {
-     *     ingredient: <item:minecraft:gold_ore>,
-     *     result: <item:minecraft:cooked_porkchop>.registryName,
-     *     experience: 0.35 as float,
-     *     cookingtime:100
+     * ingredient: <item:minecraft:gold_ore>,
+     * result: <item:minecraft:cooked_porkchop>.registryName,
+     * experience: 0.35 as float,
+     * cookingtime:100
      * }
      */
     @ZenCodeType.Method
@@ -301,6 +303,13 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
                         fixed
                 )
         );
+    }
+    
+    @NotNull
+    @Override
+    default Iterator<T> iterator() {
+        
+        return getAllRecipes().iterator();
     }
     
 }
