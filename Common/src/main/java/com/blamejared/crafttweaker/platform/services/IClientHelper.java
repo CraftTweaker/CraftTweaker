@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.platform.services;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.entity.INameplateFunction;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
@@ -8,6 +9,7 @@ import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
@@ -15,10 +17,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public interface IClientHelper {
     
     Map<IIngredient, LinkedList<ITooltipFunction>> TOOLTIPS = new HashMap<>();
+    Map<Predicate<Entity>, INameplateFunction> NAMEPLATES = new HashMap<>();
     
     default boolean isSingleplayer() {
         
@@ -60,13 +64,8 @@ public interface IClientHelper {
                 try {
                     function.apply(ctStack, lines, context);
                 } catch(final Exception exception) {
-                    CraftTweakerAPI.LOGGER.error(
-                            "Unable to run one of the tooltip functions for {} on {} due to an error (for experts, refer to {})",
-                            ingredient.getCommandString(),
-                            ctStack.getCommandString(),
-                            function.getClass().getName(),
-                            exception
-                    );
+                    CraftTweakerAPI.LOGGER.error("Unable to run one of the tooltip functions for {} on {} due to an error (for experts, refer to {})", ingredient.getCommandString(), ctStack.getCommandString(), function.getClass()
+                            .getName(), exception);
                 }
             });
         }
