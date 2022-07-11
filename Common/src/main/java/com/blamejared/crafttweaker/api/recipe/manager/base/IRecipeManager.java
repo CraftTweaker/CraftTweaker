@@ -28,7 +28,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
-import org.jetbrains.annotations.NotNull;
 import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.shared.CodePosition;
 
@@ -305,7 +304,6 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
         );
     }
     
-    @NotNull
     @Override
     default Iterator<T> iterator() {
         
