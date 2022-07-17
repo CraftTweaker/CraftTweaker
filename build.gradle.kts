@@ -148,7 +148,7 @@ subprojects {
         }
 
         dependencies {
-            annotationProcessor("com.blamejared.crafttweaker:Crafttweaker_Annotation_Processors:3.0.0.6")
+            annotationProcessor("com.blamejared.crafttweaker:Crafttweaker_Annotation_Processors:3.0.0.7")
 
             implementation("com.google.code.findbugs:jsr305:3.0.2")
 

@@ -173,7 +173,7 @@ public record NativeTypeInfo(String name, Class<?> targetedType, Constructor[] c
          */
         public Parameter(Class<?> type, String name, String... examples) {
             
-            this(type, name, "No description provided", examples);
+            this(type, name, "", examples);
         }
         
         /**

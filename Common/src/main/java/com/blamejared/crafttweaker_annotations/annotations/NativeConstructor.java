@@ -20,7 +20,7 @@ public @interface NativeConstructor {
         
         String name();
         
-        String description() default "No description provided";
+        String description() default "";
         
         String[] examples() default {};
         
