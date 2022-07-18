@@ -13,7 +13,7 @@ import java.util.*;
  */
 @ZenClass("crafttweaker.item.WeightedItemStack")
 @ZenRegister
-public final class WeightedItemStack {
+public final class WeightedItemStack implements IWeightedIngredient {
     
     private final IItemStack stack;
     private final float p;
@@ -34,17 +34,25 @@ public final class WeightedItemStack {
         
         return result;
     }
-    
+
+    @Override
+    @ZenGetter("ingredient")
+    public IIngredient getIngredient() {
+        return stack;
+    }
+
     @ZenGetter("stack")
     public IItemStack getStack() {
         return stack;
     }
-    
+
+    @Override
     @ZenGetter("chance")
     public float getChance() {
         return p;
     }
-    
+
+    @Override
     @ZenGetter("percent")
     public float getPercent() {
         return p * 100;
