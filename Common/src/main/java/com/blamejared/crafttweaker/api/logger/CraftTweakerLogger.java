@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.logger;
 
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.logger.appender.PlayerAppender;
+import com.blamejared.crafttweaker.gametest.logger.appender.GameTestLoggerAppender;
 import com.blamejared.crafttweaker.platform.Services;
 import com.google.common.base.Preconditions;
 import net.minecraft.world.entity.player.Player;
@@ -25,6 +26,9 @@ public class CraftTweakerLogger {
     private static final String PLAYER_LOG_NAME = "CRT_PLAYER";
     
     
+    private static final String GAMETEST_LOG_NAME = "CRT_GAMETEST";
+    public static GameTestLoggerAppender GAMETEST_APPENDER;
+    
     public static void init() {
         
         final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
@@ -35,6 +39,10 @@ public class CraftTweakerLogger {
                 .build();
         PatternLayout playerPattern = PatternLayout.newBuilder()
                 .withPattern("%msg%n%throwable{short.message}")
+                .build();
+    
+        PatternLayout gametestPattern = PatternLayout.newBuilder()
+                .withPattern("%msg%n%throwable")
                 .build();
         
         Appender fileAppender = FileAppender.newBuilder()
@@ -47,18 +55,24 @@ public class CraftTweakerLogger {
                 .setLayout(logPattern)
                 .build();
         PLAYER_APPENDER = PlayerAppender.createAppender(PLAYER_LOG_NAME, LevelRangeFilter.createFilter(Level.FATAL, Level.WARN, Filter.Result.ACCEPT, Filter.Result.DENY), playerPattern);
-        
+        GAMETEST_APPENDER = GameTestLoggerAppender.createAppender(GAMETEST_LOG_NAME, LevelRangeFilter.createFilter(Level.FATAL, Level.ALL, Filter.Result.ACCEPT, Filter.Result.DENY), gametestPattern);
+    
         fileAppender.start();
         PLAYER_APPENDER.start();
+        GAMETEST_APPENDER.start();
+    
         config.addAppender(fileAppender);
         config.addAppender(PLAYER_APPENDER);
+        config.addAppender(GAMETEST_APPENDER);
+    
         AppenderRef[] refs = new AppenderRef[] {createAppenderRef(CRT_LOG_NAME), createAppenderRef(PLAYER_LOG_NAME)};
         
         LoggerConfig loggerConfig = LoggerConfig.createLogger(false, Level.INFO, LOGGER_NAME, "true", refs, null, config, null);
         
         loggerConfig.addAppender(fileAppender, null, null);
         loggerConfig.addAppender(PLAYER_APPENDER, null, null);
-        
+        loggerConfig.addAppender(GAMETEST_APPENDER, null, null);
+    
         config.addLogger(LOGGER_NAME, loggerConfig);
         ctx.updateLoggers();
     }

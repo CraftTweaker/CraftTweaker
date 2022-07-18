@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.plugin.CraftTweakerPlugin;
 import com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.registry.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.datafixers.util.Pair;
@@ -15,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -40,11 +42,12 @@ public final class PluginManager {
         
     }
     
-    private record Listeners(List<Runnable> zenListeners, List<Runnable> endListeners) {
+    private record Listeners(List<Runnable> zenListeners, List<Runnable> endListeners,
+                             List<Consumer<ScriptRunConfiguration>> executeRunListeners) {
         
         Listeners() {
             
-            this(new ArrayList<>(), new ArrayList<>());
+            this(new ArrayList<>(), new ArrayList<>(), new LinkedList<>());
         }
         
     }
@@ -102,7 +105,8 @@ public final class PluginManager {
             final ICraftTweakerPlugin plugin = pluginData.getSecond().getConstructor().newInstance();
             CraftTweakerAPI.LOGGER.info("Successfully identified and loaded plugin {}", id);
             return new DecoratedCraftTweakerPlugin(id, plugin);
-        } catch(final InstantiationException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+        } catch(final InstantiationException | NoSuchMethodException | IllegalAccessException |
+                      InvocationTargetException e) {
             CraftTweakerAPI.LOGGER.error("Unable to load plugin class '" + pluginData.getSecond()
                     .getName() + "' due to an error", e);
             return null;
@@ -125,6 +129,11 @@ public final class PluginManager {
         this.callListeners("initialization end", this.listeners.endListeners());
     }
     
+    public void broadcastRunExecution(final ScriptRunConfiguration configuration) {
+        
+        this.callListeners("run execution", this.listeners.executeRunListeners(), configuration);
+    }
+    
     private void gatherListeners() {
         
         final ListenerRegistrationHandler handler = this.verifying(
@@ -133,6 +142,7 @@ public final class PluginManager {
         );
         this.listeners.endListeners().addAll(handler.endListeners());
         this.listeners.zenListeners().addAll(handler.zenListeners());
+        this.listeners.executeRunListeners().addAll(handler.executeRunListeners());
     }
     
     private void handleZenDataRegistration(final IPluginRegistryAccess access) {
@@ -304,6 +314,11 @@ public final class PluginManager {
     private void callListeners(final String type, final Collection<Runnable> listeners) {
         
         listeners.forEach(it -> this.verifying("calling " + type + " listener", it));
+    }
+    
+    private <T> void callListeners(final String type, final Collection<Consumer<T>> listeners, final T instance) {
+        
+        listeners.forEach(it -> this.verifying("calling " + type + " listener with " + instance, () -> it.accept(instance)));
     }
     
 }

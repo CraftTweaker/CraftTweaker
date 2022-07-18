@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.script.scriptrun;
 
+import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
@@ -51,6 +52,7 @@ final class ScriptRun implements IScriptRun {
             CraftTweakerAPI.LOGGER.info("Started loading scripts for loader '{}'", loaderName);
             this.undoPreviousRun(loader, this.info.configuration().runKind());
             this.executeRun();
+            CraftTweakerCommon.getPluginManager().broadcastRunExecution(this.info.configuration());
             CraftTweakerAPI.LOGGER.info("Execution for loader '{}' completed successfully", loaderName);
         } catch(final Throwable t) {
             CraftTweakerAPI.LOGGER.error("Execution for loader '" + loaderName + "' completed with an error", t);
@@ -80,8 +82,8 @@ final class ScriptRun implements IScriptRun {
         try {
             this.runInfoSetter.accept(this.info);
             
-            final ScriptingEngineLogger logger = new ScriptRunLogger(this::findPriorityIfPresent);
             final DecoratedRunKind runKind = DecoratedRunKind.decorate(this.info.configuration().runKind());
+            final ScriptingEngineLogger logger = runKind.kind() != ScriptRunConfiguration.RunKind.GAME_TEST ? new ScriptRunLogger(this::findPriorityIfPresent) : new GameTestScriptRunLogger(this::findPriorityIfPresent);
             final IScriptRunner runner = runKind.runner(this.info, this.sources, logger);
             runner.run();
         } finally {

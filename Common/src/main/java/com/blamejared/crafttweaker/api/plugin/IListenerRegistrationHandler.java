@@ -1,5 +1,10 @@
 package com.blamejared.crafttweaker.api.plugin;
 
+import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
+
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
 /**
  * Handles registration of additional listeners that will be invoked at certain points during CraftTweaker's lifecycle.
  *
@@ -40,4 +45,5 @@ public interface IListenerRegistrationHandler {
      */
     void onCraftTweakerLoadCompletion(final Runnable runnable);
     
+    void onExecuteRun(final Consumer<ScriptRunConfiguration> executionConsumer);
 }

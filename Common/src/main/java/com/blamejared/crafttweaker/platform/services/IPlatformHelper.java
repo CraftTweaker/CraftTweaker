@@ -185,4 +185,9 @@ public interface IPlatformHelper {
         ingredients.clear();
     }
     
+    default void removeFoodPropertiesEffect(FoodProperties internal, MobEffect effect) {
+        
+        internal.getEffects().removeIf(pair -> pair.getFirst().getEffect() == effect);
+    }
+    
 }

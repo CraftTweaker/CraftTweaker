@@ -7,8 +7,8 @@ import com.blamejared.crafttweaker.api.data.StringData;
 import com.blamejared.crafttweaker.api.data.base.IData;
 import com.blamejared.crafttweaker.api.data.base.converter.JSONConverter;
 import com.blamejared.crafttweaker.gametest.CraftTweakerGameTest;
-import com.blamejared.crafttweaker.gametest.CraftTweakerGameTestHolder;
-import com.blamejared.crafttweaker.gametest.TestModifier;
+import com.blamejared.crafttweaker.gametest.framework.annotation.CraftTweakerGameTestHolder;
+import com.blamejared.crafttweaker.gametest.framework.annotation.TestModifier;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -16,6 +16,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 @SuppressWarnings({"ConstantConditions", "RedundantCast"})
 @CraftTweakerGameTestHolder
@@ -26,8 +32,7 @@ public class JsonConverterTest implements CraftTweakerGameTest {
     public void nullElementReturnsNull(GameTestHelper helper) {
         
         final IData convert = JSONConverter.convert((JsonElement) null);
-        
-        assertThat(convert).isNull();
+        assertThat(convert, is(nullValue()));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -36,7 +41,7 @@ public class JsonConverterTest implements CraftTweakerGameTest {
         
         final IData convert = JSONConverter.convert((JsonObject) null);
         
-        assertThat(convert).isNull();
+        assertThat(convert, is(nullValue()));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -47,7 +52,7 @@ public class JsonConverterTest implements CraftTweakerGameTest {
         
         final IData convert = JSONConverter.convert(jsonNull);
         
-        assertThat(convert).isNull();
+        assertThat(convert, is(nullValue()));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -59,7 +64,7 @@ public class JsonConverterTest implements CraftTweakerGameTest {
         
         final IData convert = JSONConverter.convert(numberPrimitive);
         
-        assertThat(convert).isEqualTo(new IntData(value));
+        assertThat(convert, is(new IntData(value)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -71,7 +76,7 @@ public class JsonConverterTest implements CraftTweakerGameTest {
         
         final IData convert = JSONConverter.convert(stringPrimitive);
         
-        assertThat(convert).isEqualTo(new StringData(value));
+        assertThat(convert, is(new StringData(value)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -83,7 +88,7 @@ public class JsonConverterTest implements CraftTweakerGameTest {
         
         final IData convert = JSONConverter.convert(booleanPrimitive);
         
-        assertThat(convert).isEqualTo(new StringData(String.valueOf(value)));
+        assertThat(convert, is(new StringData(String.valueOf(value))));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -97,11 +102,12 @@ public class JsonConverterTest implements CraftTweakerGameTest {
         
         final IData convert = JSONConverter.convert(jsonArray);
         
-        expect().that(convert).isInstanceOf(ListData.class);
+        
+        assertThat(convert, is(instanceOf(ListData.class)));
         ListData listData = (ListData) convert;
-        assertThat(listData).at(0).isEqualTo(new IntData(1));
-        assertThat(listData).at(1).isEqualTo(new IntData(2));
-        assertThat(listData).at(2).isEqualTo(new IntData(3));
+        assertThat(listData.getAt(0), is(new IntData(1)));
+        assertThat(listData.getAt(1), is(new IntData(2)));
+        assertThat(listData.getAt(2), is(new IntData(3)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -114,9 +120,9 @@ public class JsonConverterTest implements CraftTweakerGameTest {
         
         final MapData convert = JSONConverter.convert(jsonObject);
         
-        assertThat(convert).keySet().containsExactly("num", "greeting");
-        assertThat(convert).at("num").isEqualTo(new IntData(0));
-        assertThat(convert).at("greeting").isEqualTo(new StringData("Hello World"));
+        assertThat(convert.getKeySet(), contains("num", "greeting"));
+        assertThat(convert.getAt("num"), is(new IntData(0)));
+        assertThat(convert.getAt("greeting"), is(new StringData("Hello World")));
     }
     
     

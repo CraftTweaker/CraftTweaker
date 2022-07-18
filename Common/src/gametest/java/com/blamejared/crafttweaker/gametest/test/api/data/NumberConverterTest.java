@@ -9,12 +9,17 @@ import com.blamejared.crafttweaker.api.data.ShortData;
 import com.blamejared.crafttweaker.api.data.base.INumberData;
 import com.blamejared.crafttweaker.api.data.base.converter.NumberConverter;
 import com.blamejared.crafttweaker.gametest.CraftTweakerGameTest;
-import com.blamejared.crafttweaker.gametest.CraftTweakerGameTestHolder;
-import com.blamejared.crafttweaker.gametest.TestModifier;
+import com.blamejared.crafttweaker.gametest.framework.annotation.CraftTweakerGameTestHolder;
+import com.blamejared.crafttweaker.gametest.framework.annotation.TestModifier;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 
 import java.math.BigDecimal;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 @CraftTweakerGameTestHolder
 public class NumberConverterTest implements CraftTweakerGameTest {
@@ -28,7 +33,7 @@ public class NumberConverterTest implements CraftTweakerGameTest {
         final INumberData convert = NumberConverter.convertNumber(null);
         
         //Assert
-        assertThat(convert).isNull();
+        assertThat(convert, is(nullValue()));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -41,7 +46,7 @@ public class NumberConverterTest implements CraftTweakerGameTest {
         final INumberData convert = NumberConverter.convertNumber(value);
         
         //Assert
-        assertThat(convert).isEqualTo(new IntData(value));
+        assertThat(convert, is(new IntData(value)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -54,7 +59,7 @@ public class NumberConverterTest implements CraftTweakerGameTest {
         final INumberData convert = NumberConverter.convertNumber(value);
         
         //Assert
-        assertThat(convert).isEqualTo(new ByteData(value));
+        assertThat(convert, is(new ByteData(value)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -67,7 +72,7 @@ public class NumberConverterTest implements CraftTweakerGameTest {
         final INumberData convert = NumberConverter.convertNumber(value);
         
         //Assert
-        assertThat(convert).isEqualTo(new DoubleData(value));
+        assertThat(convert, is(new DoubleData(value)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -80,7 +85,7 @@ public class NumberConverterTest implements CraftTweakerGameTest {
         final INumberData convert = NumberConverter.convertNumber(value);
         
         //Assert
-        assertThat(convert).isEqualTo(new FloatData(value));
+        assertThat(convert, is(new FloatData(value)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -93,7 +98,7 @@ public class NumberConverterTest implements CraftTweakerGameTest {
         final INumberData convert = NumberConverter.convertNumber(value);
         
         //Assert
-        assertThat(convert).isEqualTo(new LongData(value));
+        assertThat(convert, is(new LongData(value)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -106,7 +111,7 @@ public class NumberConverterTest implements CraftTweakerGameTest {
         final INumberData convert = NumberConverter.convertNumber(value);
         
         //Assert
-        assertThat(convert).isEqualTo(new ShortData(value));
+        assertThat(convert, is(new ShortData(value)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -120,10 +125,8 @@ public class NumberConverterTest implements CraftTweakerGameTest {
         final INumberData convert = NumberConverter.convertNumber(bigDecimal);
         
         //Assert
-        
-        assertThat(convert).isInstanceOf(DoubleData.class);
-        DoubleData doubleData = (DoubleData) convert;
-        assertThat(doubleData).isEqualTo(new DoubleData(doubleValue));
+        assertThat(convert, is(instanceOf(DoubleData.class)));
+        assertThat(convert, is(new DoubleData(doubleValue)));
     }
     
 }

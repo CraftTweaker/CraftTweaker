@@ -1,9 +1,9 @@
 package com.blamejared.crafttweaker.gametest.test.zencode.impl.util;
 
 import com.blamejared.crafttweaker.api.zencode.util.PositionUtil;
-import com.blamejared.crafttweaker.gametest.CraftTweakerGameTestHolder;
-import com.blamejared.crafttweaker.gametest.TestModifier;
-import com.blamejared.crafttweaker.gametest.truth.zencode.helpers.ZenCodeGameTest;
+import com.blamejared.crafttweaker.gametest.framework.annotation.CraftTweakerGameTestHolder;
+import com.blamejared.crafttweaker.gametest.framework.annotation.TestModifier;
+import com.blamejared.crafttweaker.gametest.framework.zencode.helpers.ZenCodeGameTest;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import org.openzen.zencode.java.ZenCodeGlobals;
@@ -69,8 +69,6 @@ public class ZenCodePositionUtilTest extends ZenCodeGameTest {
         //Assert
         logger.assertPrintOutputSize(1);
         logger.assertPrintOutput(0, fileNameCallee);
-        
-        
     }
     
     
