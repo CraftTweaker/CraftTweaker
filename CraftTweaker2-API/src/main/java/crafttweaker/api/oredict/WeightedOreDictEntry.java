@@ -21,6 +21,11 @@ public class WeightedOreDictEntry implements IWeightedIngredient {
         this.p = p;
     }
 
+    @ZenGetter("entry")
+    public IOreDictEntry getEntry() {
+        return entry;
+    }
+
     @Override
     @ZenGetter("ingredient")
     public IIngredient getIngredient() {
