@@ -4,14 +4,14 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.oredict.IOreDictEntry;
 import crafttweaker.api.oredict.WeightedOreDictEntry;
 import stanhebben.zenscript.annotations.OperatorType;
-import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.annotations.ZenMethod;
 import stanhebben.zenscript.annotations.ZenOperator;
 
 /**
  * @author Gary Bryson Luis Jr.
  */
-@ZenClass("crafttweaker.oredict.IOreDictEntry")
+@ZenExpansion("crafttweaker.oredict.IOreDictEntry")
 @ZenRegister
 public class ExpandOreDictEntry {
     @ZenOperator(OperatorType.MOD)
