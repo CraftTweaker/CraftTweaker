@@ -12,7 +12,7 @@ import java.util.*;
  *
  * @author Stan Hebben
  */
-@ZenClass("crafttweaker.liquid.WeightedLiquidStack")
+@ZenClass("crafttweaker.item.WeightedLiquidStack")
 @ZenRegister
 public final class WeightedLiquidStack implements IWeightedIngredient {
     
