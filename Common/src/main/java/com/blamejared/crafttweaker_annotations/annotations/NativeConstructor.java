@@ -14,6 +14,8 @@ public @interface NativeConstructor {
     
     String getSinceVersion() default "";
     
+    String getObtention() default "";
+    
     @interface ConstructorParameter {
         
         Class<?> type();

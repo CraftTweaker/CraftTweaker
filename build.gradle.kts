@@ -148,7 +148,7 @@ subprojects {
         }
 
         dependencies {
-            annotationProcessor("com.blamejared.crafttweaker:Crafttweaker_Annotation_Processors:3.0.0.7")
+            annotationProcessor("com.blamejared.crafttweaker:Crafttweaker_Annotation_Processors:3.0.0.8")
 
             implementation("com.google.code.findbugs:jsr305:3.0.2")
 
@@ -201,7 +201,7 @@ subprojects {
                 // Javadoc defines this specifically as StandardJavadocDocletOptions
                 // but only has a getter for MinimalJavadocOptions, but let's just make sure to be safe
                 if (this is StandardJavadocDocletOptions) {
-                    this.tags("docParam", "docEvent", "docShortDescription")
+                    this.tags("docParam", "docEvent", "docShortDescription", "docObtention")
                     this.addStringOption("Xdoclint:none", "-quiet")
                 }
             }
