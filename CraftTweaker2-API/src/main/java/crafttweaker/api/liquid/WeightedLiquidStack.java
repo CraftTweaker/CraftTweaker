@@ -1,6 +1,7 @@
 package crafttweaker.api.liquid;
 
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.item.*;
 import stanhebben.zenscript.annotations.*;
 
 import java.util.*;
@@ -11,9 +12,9 @@ import java.util.*;
  *
  * @author Stan Hebben
  */
-@ZenClass("crafttweaker.item.WeightedLiquidStack")
+@ZenClass("crafttweaker.liquid.WeightedLiquidStack")
 @ZenRegister
-public final class WeightedLiquidStack {
+public final class WeightedLiquidStack implements IWeightedIngredient {
     
     private final ILiquidStack stack;
     private final float p;
@@ -34,22 +35,30 @@ public final class WeightedLiquidStack {
         
         return result;
     }
-    
+
+    @Override
+    @ZenGetter("ingredient")
+    public IIngredient getIngredient() {
+        return stack;
+    }
+
     @ZenGetter("stack")
     public ILiquidStack getStack() {
         return stack;
     }
-    
+
+    @Override
     @ZenGetter("chance")
     public float getChance() {
         return p;
     }
-    
+
+    @Override
     @ZenGetter("percent")
     public float getPercent() {
         return p * 100;
     }
-    
+
     // #############################
     // ### Object implementation ###
     // #############################
