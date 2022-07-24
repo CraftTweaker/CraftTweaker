@@ -21,7 +21,7 @@ import java.util.StringJoiner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 @CraftTweakerGameTestHolder
 public class OnlyIfPreprocessorTest implements CraftTweakerGameTest {
@@ -157,14 +157,14 @@ public class OnlyIfPreprocessorTest implements CraftTweakerGameTest {
         
         final IScriptFile file = getFile(stringJoiner.toString());
         Optional<SourceFile> sourceFile = file.toSourceFile();
-        assertThat(sourceFile.isPresent()).isTrue();
+        assertThat(sourceFile.isPresent(), is(true));
         try {
             List<String> fileContents = IOUtils.readLines(sourceFile.get().open());
     
-            assertWithMessage("File must remain the same structure").that(fileContents.size()).isEqualTo(3);
-            assertThat(fileContents.get(0)).isEqualTo("                               ");
-            assertThat(fileContents.get(1)).isEqualTo("           ");
-            assertThat(fileContents.get(2)).isEqualTo("      ");
+            assertThat("File must remain the same structure", fileContents.size(), is(3));
+            assertThat(fileContents.get(0), is("                               "));
+            assertThat(fileContents.get(1), is("           "));
+            assertThat(fileContents.get(2), is("      "));
         }catch(IOException e){
             throw new GameTestAssertException(e.getMessage());
         }
