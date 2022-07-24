@@ -29,7 +29,7 @@ public class GameTestLoggerAppender extends AbstractAppender {
     @Override
     public void append(LogEvent event) {
         
-        final String message = ((PatternLayout) getLayout()).toSerializable(event).replaceAll("\r\n", "");
+        final String message = ((PatternLayout) getLayout()).toSerializable(event).replaceAll(System.lineSeparator(), "");
         
         messages.add(new LogMessage(message, event.getLevel()));
     }
