@@ -270,7 +270,7 @@ public class ExpandLevel {
     }
     
     /**
-     * Sets the block and it's state at a given position.
+     * Sets the block and its state at a given position.
      *
      * @param pos   The position to set the block at.
      * @param state The new state of the block.
