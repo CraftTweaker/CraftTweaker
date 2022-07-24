@@ -9,7 +9,7 @@ import org.openzen.zenscript.validator.ValidationLogEntry;
 import java.util.OptionalInt;
 import java.util.function.Function;
 
-final class ScriptRunLogger implements ScriptingEngineLogger {
+sealed class ScriptRunLogger implements ScriptingEngineLogger permits GameTestScriptRunLogger {
     
     private final Function<SourceFile, OptionalInt> priority;
     
@@ -20,7 +20,7 @@ final class ScriptRunLogger implements ScriptingEngineLogger {
     
     @Override
     public void logCompileException(final CompileException exception) {
-    
+        
         CraftTweakerAPI.LOGGER.error("Error while compiling scripts: ", exception);
     }
     
@@ -62,7 +62,7 @@ final class ScriptRunLogger implements ScriptingEngineLogger {
     
     @Override
     public void throwingWarn(final String message, final Throwable throwable) {
-    
+        
         CraftTweakerAPI.LOGGER.warn("Warning while running scripts:", throwable);
     }
     

@@ -190,7 +190,13 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.compileGametestJava {
+    outputs.upToDateWhen { false }
     source(project(":Common").sourceSets.gametest.get().java)
+}
+
+tasks.processGametestResources {
+    outputs.upToDateWhen { false }
+    from(project(":Common").sourceSets.gametest.get().resources)
 }
 
 tasks.withType<Javadoc> {

@@ -6,8 +6,8 @@ import com.blamejared.crafttweaker.api.ingredient.type.IIngredientEmpty;
 import com.blamejared.crafttweaker.api.ingredient.type.IIngredientList;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.gametest.CraftTweakerGameTest;
-import com.blamejared.crafttweaker.gametest.CraftTweakerGameTestHolder;
-import com.blamejared.crafttweaker.gametest.TestModifier;
+import com.blamejared.crafttweaker.gametest.framework.annotation.CraftTweakerGameTestHolder;
+import com.blamejared.crafttweaker.gametest.framework.annotation.TestModifier;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessIngredient;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -16,6 +16,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 @CraftTweakerGameTestHolder
 public class IngredientConverterTest implements CraftTweakerGameTest {
@@ -28,7 +31,7 @@ public class IngredientConverterTest implements CraftTweakerGameTest {
         
         final IIngredient result = IngredientConverter.fromIngredient(ingredient);
         
-        assertThat(result).isSameInstanceAs(IIngredientEmpty.INSTANCE);
+        assertThat(result, is(sameInstance(IIngredientEmpty.INSTANCE)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -40,8 +43,7 @@ public class IngredientConverterTest implements CraftTweakerGameTest {
         
         final IIngredient result = IngredientConverter.fromIngredient(ingredient);
         
-        assertThat(expectedStack)
-                .isEqualTo(result);
+        assertThat(expectedStack, is(result));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -59,14 +61,10 @@ public class IngredientConverterTest implements CraftTweakerGameTest {
         
         final Ingredient ingredient = AccessIngredient.crafttweaker$callFromValues(lists.stream());
         
-        //Act
         final IIngredient result = IngredientConverter.fromIngredient(ingredient);
         
-        //Assert
-        
-        assertThat(result).isInstanceOf(IIngredientList.class);
-        assertThat(((IIngredientList) result).getIngredients()).asList()
-                .containsExactly((Object[]) expectedIngredients);
+        assertThat(result, is(instanceOf(IIngredientList.class)));
+        assertThat(((IIngredientList) result).getIngredients(), arrayContaining(expectedIngredients));
     }
     
 }

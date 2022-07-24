@@ -43,6 +43,7 @@ dependencies {
 
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         implementation(project(it.toString()))
+        gametestImplementation(project(it.toString()))
     }
 
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${reiVersion}")
@@ -65,6 +66,20 @@ dependencies {
 
 loom {
     accessWidenerPath.set(project(":Common").file("src/main/resources/${modId}.accesswidener"))
+    mods {
+        register("crafttweaker") {
+            sourceSet(sourceSets.main.get())
+            sourceSet(sourceSets.gametest.get())
+            (project.ext["zenCodeDeps"] as Set<*>).forEach {
+                sourceSet(project(it.toString()).sourceSets.main.get())
+                sourceSet(project(it.toString()).sourceSets.test.get())
+            }
+            (project.ext["zenCodeTestDeps"] as Set<*>).forEach {
+                sourceSet(project(it.toString()).sourceSets.main.get())
+                sourceSet(project(it.toString()).sourceSets.test.get())
+            }
+        }
+    }
     runs {
         named("client") {
             client()
@@ -112,7 +127,13 @@ modTemplate {
 }
 
 tasks.compileGametestJava {
+    outputs.upToDateWhen { false }
     source(project(":Common").sourceSets.gametest.get().java)
+}
+
+tasks.processGametestResources {
+    outputs.upToDateWhen { false }
+    from(project(":Common").sourceSets.gametest.get().resources)
 }
 
 tasks.processResources {

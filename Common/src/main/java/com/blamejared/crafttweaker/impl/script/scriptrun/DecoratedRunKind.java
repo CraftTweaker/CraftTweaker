@@ -15,7 +15,8 @@ import java.util.stream.Collectors;
 enum DecoratedRunKind {
     SYNTAX(ScriptRunConfiguration.RunKind.SYNTAX_CHECK, "Compiling scripts: this is only a syntax check, no actions will be applied"),
     FORMAT(ScriptRunConfiguration.RunKind.FORMAT, "Formatting scripts"),
-    EXECUTE(ScriptRunConfiguration.RunKind.EXECUTE, "Compiling and executing scripts");
+    EXECUTE(ScriptRunConfiguration.RunKind.EXECUTE, "Compiling and executing scripts"),
+    GAME_TEST(ScriptRunConfiguration.RunKind.GAME_TEST, "Running game test scripts");
     
     private record DecoratedScriptRunner(IScriptRunner runner, String message) implements IScriptRunner {
         

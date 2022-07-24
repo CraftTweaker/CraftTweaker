@@ -15,8 +15,8 @@ import com.blamejared.crafttweaker.api.data.StringData;
 import com.blamejared.crafttweaker.api.data.base.IData;
 import com.blamejared.crafttweaker.api.data.base.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker.gametest.CraftTweakerGameTest;
-import com.blamejared.crafttweaker.gametest.CraftTweakerGameTestHolder;
-import com.blamejared.crafttweaker.gametest.TestModifier;
+import com.blamejared.crafttweaker.gametest.framework.annotation.CraftTweakerGameTestHolder;
+import com.blamejared.crafttweaker.gametest.framework.annotation.TestModifier;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.ByteArrayTag;
@@ -32,6 +32,10 @@ import net.minecraft.nbt.LongTag;
 import net.minecraft.nbt.ShortTag;
 import net.minecraft.nbt.StringTag;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+
 @SuppressWarnings("ConstantConditions")
 @CraftTweakerGameTestHolder
 public class TagToDataConverterTest implements CraftTweakerGameTest {
@@ -44,7 +48,7 @@ public class TagToDataConverterTest implements CraftTweakerGameTest {
         final IData convert = TagToDataConverter.convert(null);
         
         //Assert
-        assertThat(convert).isNull();
+        assertThat(convert, is(nullValue()));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -58,7 +62,7 @@ public class TagToDataConverterTest implements CraftTweakerGameTest {
         final IData convert = TagToDataConverter.convert(byteNBT);
         
         //Assert
-        assertThat(convert).isEqualTo(new ByteData(value));
+        assertThat(convert, is(new ByteData(value)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -72,7 +76,7 @@ public class TagToDataConverterTest implements CraftTweakerGameTest {
         final IData convert = TagToDataConverter.convert(shortNbt);
         
         //Assert
-        assertThat(convert).isEqualTo(new ShortData(value));
+        assertThat(convert, is(new ShortData(value)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -86,7 +90,7 @@ public class TagToDataConverterTest implements CraftTweakerGameTest {
         final IData convert = TagToDataConverter.convert(intNbt);
         
         //Assert
-        assertThat(convert).isEqualTo(new IntData(value));
+        assertThat(convert, is(new IntData(value)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -100,7 +104,7 @@ public class TagToDataConverterTest implements CraftTweakerGameTest {
         final IData convert = TagToDataConverter.convert(longNbt);
         
         //Assert
-        assertThat(convert).isEqualTo(new LongData(value));
+        assertThat(convert, is(new LongData(value)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -114,7 +118,7 @@ public class TagToDataConverterTest implements CraftTweakerGameTest {
         final IData convert = TagToDataConverter.convert(floatNbt);
         
         //Assert
-        assertThat(convert).isEqualTo(new FloatData(value));
+        assertThat(convert, is(new FloatData(value)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -128,7 +132,7 @@ public class TagToDataConverterTest implements CraftTweakerGameTest {
         final IData convert = TagToDataConverter.convert(doubleNbt);
         
         //Assert
-        assertThat(convert).isEqualTo(new DoubleData(value));
+        assertThat(convert, is(new DoubleData(value)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -142,7 +146,7 @@ public class TagToDataConverterTest implements CraftTweakerGameTest {
         final IData convert = TagToDataConverter.convert(stringNBT);
         
         //Assert
-        assertThat(convert).isEqualTo(new StringData(value));
+        assertThat(convert, is(new StringData(value)));
     }
     
     
@@ -157,7 +161,7 @@ public class TagToDataConverterTest implements CraftTweakerGameTest {
         final IData convert = TagToDataConverter.convert(byteArrayNBT);
         
         //Assert
-        assertThat(convert).isEqualTo(new ByteArrayData(value));
+        assertThat(convert, is(new ByteArrayData(value)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -171,7 +175,7 @@ public class TagToDataConverterTest implements CraftTweakerGameTest {
         final IData convert = TagToDataConverter.convert(intArrayNBT);
         
         //Assert
-        assertThat(convert).isEqualTo(new IntArrayData(value));
+        assertThat(convert, is(new IntArrayData(value)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -185,7 +189,7 @@ public class TagToDataConverterTest implements CraftTweakerGameTest {
         final IData convert = TagToDataConverter.convert(longArrayNBT);
         
         //Assert
-        assertThat(convert).isEqualTo(new LongArrayData(value));
+        assertThat(convert, is(new LongArrayData(value)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -201,7 +205,7 @@ public class TagToDataConverterTest implements CraftTweakerGameTest {
         final IData convert = TagToDataConverter.convert(listNBT);
         
         //Assert
-        assertThat(convert).isEqualTo(new ListData(listNBT));
+        assertThat(convert, is(new ListData(listNBT)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -214,8 +218,7 @@ public class TagToDataConverterTest implements CraftTweakerGameTest {
         
         //Act
         final IData convert = TagToDataConverter.convert(compoundNBT);
-        
-        assertThat(convert).isEqualTo(new MapData(compoundNBT));
+        assertThat(convert, is(new MapData(compoundNBT)));
     }
     
 }

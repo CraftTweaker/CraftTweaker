@@ -2,11 +2,16 @@ package com.blamejared.crafttweaker.gametest.test.zencode.impl.util;
 
 import com.blamejared.crafttweaker.api.zencode.util.PositionUtil;
 import com.blamejared.crafttweaker.gametest.CraftTweakerGameTest;
-import com.blamejared.crafttweaker.gametest.CraftTweakerGameTestHolder;
-import com.blamejared.crafttweaker.gametest.TestModifier;
+import com.blamejared.crafttweaker.gametest.framework.annotation.CraftTweakerGameTestHolder;
+import com.blamejared.crafttweaker.gametest.framework.annotation.TestModifier;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import org.openzen.zencode.shared.CodePosition;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.sameInstance;
 
 @CraftTweakerGameTestHolder
 public class PositionUtilTest implements CraftTweakerGameTest {
@@ -19,9 +24,7 @@ public class PositionUtilTest implements CraftTweakerGameTest {
         
         final CodePosition position = PositionUtil.getZCScriptPositionFromStackTrace(stackTrace);
         
-        assertThat(CodePosition.UNKNOWN).isSameInstanceAs(position);
-        
-        
+        assertThat(CodePosition.UNKNOWN, is(sameInstance(position)));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -38,11 +41,10 @@ public class PositionUtilTest implements CraftTweakerGameTest {
         
         final CodePosition position = PositionUtil.getZCScriptPositionFromStackTrace(stackTrace);
         
-        assertThat(CodePosition.UNKNOWN).isNotSameInstanceAs(position);
-        assertThat(lineNumber).isEqualTo(position.fromLine);
-        assertThat(lineNumber).isEqualTo(position.toLine);
-        assertThat(fileName).isEqualTo(position.getFilename());
-        
+        assertThat(CodePosition.UNKNOWN, is(not(sameInstance(position))));
+        assertThat(lineNumber, is(position.fromLine));
+        assertThat(lineNumber, is(position.toLine));
+        assertThat(fileName, is(position.getFilename()));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -61,11 +63,9 @@ public class PositionUtilTest implements CraftTweakerGameTest {
         
         final CodePosition position = PositionUtil.getZCScriptPositionFromStackTrace(stackTrace);
         
-        assertThat(CodePosition.UNKNOWN).isNotSameInstanceAs(position);
-        assertThat(firstFileName).isEqualTo(position.getFilename());
-        assertThat(secondFileName).isNotEqualTo(position.getFilename());
-        
-        
+        assertThat(CodePosition.UNKNOWN, is(not(sameInstance(position))));
+        assertThat(firstFileName, is(position.getFilename()));
+        assertThat(secondFileName, is(not(position.getFilename())));
     }
     
 }

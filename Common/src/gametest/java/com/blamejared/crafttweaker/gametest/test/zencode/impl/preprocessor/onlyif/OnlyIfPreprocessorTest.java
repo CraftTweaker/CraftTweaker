@@ -2,8 +2,8 @@ package com.blamejared.crafttweaker.gametest.test.zencode.impl.preprocessor.only
 
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
 import com.blamejared.crafttweaker.gametest.CraftTweakerGameTest;
-import com.blamejared.crafttweaker.gametest.CraftTweakerGameTestHolder;
-import com.blamejared.crafttweaker.gametest.TestModifier;
+import com.blamejared.crafttweaker.gametest.framework.annotation.CraftTweakerGameTestHolder;
+import com.blamejared.crafttweaker.gametest.framework.annotation.TestModifier;
 import com.blamejared.crafttweaker.impl.preprocessor.onlyif.EndIfPreprocessor;
 import com.blamejared.crafttweaker.impl.preprocessor.onlyif.OnlyIfPreprocessor;
 import com.blamejared.crafttweaker.impl.script.scriptrun.GameTestScriptRunner;
@@ -19,6 +19,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+
 @CraftTweakerGameTestHolder
 public class OnlyIfPreprocessorTest implements CraftTweakerGameTest {
     
@@ -26,7 +30,7 @@ public class OnlyIfPreprocessorTest implements CraftTweakerGameTest {
     @TestModifier(implicitSuccession = true)
     public void nameIsOnlyIf(GameTestHelper helper) {
         
-        assertThat(OnlyIfPreprocessor.INSTANCE.name()).isEqualTo("onlyif");
+        assertThat(OnlyIfPreprocessor.INSTANCE.name(), is("onlyif"));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -35,8 +39,8 @@ public class OnlyIfPreprocessorTest implements CraftTweakerGameTest {
         
         final IScriptFile file = getFile("#onlyif false HelloWorld #endif");
         final List<String> fileContents = file.preprocessedContents();
-        assertWithMessage("File contents should remain one line").that(fileContents.size()).isEqualTo(1);
-        assertThat(fileContents.get(0)).isEqualTo("                               ");
+        assertThat("File contents should remain one line", fileContents.size(), is(1));
+        assertThat(fileContents.get(0), is("                               "));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -51,10 +55,10 @@ public class OnlyIfPreprocessorTest implements CraftTweakerGameTest {
         final IScriptFile file = getFile(stringJoiner.toString());
         final List<String> fileContents = file.preprocessedContents();
         
-        assertWithMessage("File must remain the same structure").that(fileContents.size()).isEqualTo(3);
-        assertThat(fileContents.get(0)).isEqualTo("             ");
-        assertThat(fileContents.get(1)).isEqualTo("           ");
-        assertThat(fileContents.get(2)).isEqualTo("      ");
+        assertThat("File must remain the same structure", fileContents.size(), is(3));
+        assertThat(fileContents.get(0), is("             "));
+        assertThat(fileContents.get(1), is("           "));
+        assertThat(fileContents.get(2), is("      "));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -63,8 +67,8 @@ public class OnlyIfPreprocessorTest implements CraftTweakerGameTest {
         
         final IScriptFile file = getFile("#onlyif true HelloWorld #endif");
         final List<String> fileContents = file.preprocessedContents();
-        assertWithMessage("File content should remain one line").that(fileContents.size()).isEqualTo(1);
-        assertThat(fileContents.get(0)).isEqualTo("             HelloWorld       ");
+        assertThat("File content should remain one line", fileContents.size(), is(1));
+        assertThat(fileContents.get(0), is("             HelloWorld       "));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -78,11 +82,10 @@ public class OnlyIfPreprocessorTest implements CraftTweakerGameTest {
         
         final IScriptFile file = getFile(stringJoiner.toString());
         final List<String> fileContents = file.preprocessedContents();
-        
-        assertWithMessage("File must remain the same structure").that(fileContents.size()).isEqualTo(3);
-        assertThat(fileContents.get(0)).isEqualTo("            ");
-        assertThat(fileContents.get(1)).isEqualTo("Hello World");
-        assertThat(fileContents.get(2)).isEqualTo("      ");
+        assertThat("File must remain the same structure", fileContents.size(), is(3));
+        assertThat(fileContents.get(0), is("            "));
+        assertThat(fileContents.get(1), is("Hello World"));
+        assertThat(fileContents.get(2), is("      "));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -100,13 +103,13 @@ public class OnlyIfPreprocessorTest implements CraftTweakerGameTest {
         final IScriptFile file = getFile(stringJoiner.toString());
         final List<String> fileContents = file.preprocessedContents();
         
-        assertWithMessage("File must remain the same structure").that(fileContents.size()).isEqualTo(6);
-        assertThat(fileContents.get(0)).isEqualTo("            ");
-        assertThat(fileContents.get(1)).isEqualTo("Hello World");
-        assertThat(fileContents.get(2)).isEqualTo("             ");
-        assertThat(fileContents.get(3)).isEqualTo("           ");
-        assertThat(fileContents.get(4)).isEqualTo("      ");
-        assertThat(fileContents.get(5)).isEqualTo("      ");
+        assertThat("File must remain the same structure", fileContents.size(), is(6));
+        assertThat(fileContents.get(0), is("            "));
+        assertThat(fileContents.get(1), is("Hello World"));
+        assertThat(fileContents.get(2), is("             "));
+        assertThat(fileContents.get(3), is("           "));
+        assertThat(fileContents.get(4), is("      "));
+        assertThat(fileContents.get(5), is("      "));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -126,20 +129,20 @@ public class OnlyIfPreprocessorTest implements CraftTweakerGameTest {
         final IScriptFile file = getFile(stringJoiner.toString());
         final List<String> fileContents = file.preprocessedContents();
         
-        assertWithMessage("File must remain the same structure").that(fileContents.size()).isEqualTo(8);
-        assertWithMessage("Line 0").that(fileContents.get(0)).isEqualTo("            ");
-        assertWithMessage("Line 1").that(fileContents.get(1)).isEqualTo("            ");
-        assertWithMessage("Line 2").that(fileContents.get(2)).isEqualTo("var x = 13;");
-        assertWithMessage("Line 3").that(fileContents.get(3)).isEqualTo("             ");
-        assertWithMessage("Line 4").that(fileContents.get(4)).isEqualTo("           ");
-        assertWithMessage("Line 5").that(fileContents.get(5)).isEqualTo("      ");
-        assertWithMessage("Line 6").that(fileContents.get(6)).isEqualTo("      ");
-        assertWithMessage("Line 7").that(fileContents.get(7)).isEqualTo("      ");
+        assertThat("File must remain the same structure", fileContents.size(), is(8));
+        assertThat("Line 0", fileContents.get(0), is("            "));
+        assertThat("Line 1", fileContents.get(1), is("            "));
+        assertThat("Line 2", fileContents.get(2), is("var x = 13;"));
+        assertThat("Line 3", fileContents.get(3), is("             "));
+        assertThat("Line 4", fileContents.get(4), is("           "));
+        assertThat("Line 5", fileContents.get(5), is("      "));
+        assertThat("Line 6", fileContents.get(6), is("      "));
+        assertThat("Line 7", fileContents.get(7), is("      "));
     }
     
     private IScriptFile getFile(String contents) {
         
-        return GameTestScriptRunner.getFile(contents, List.of(OnlyIfPreprocessor.INSTANCE, EndIfPreprocessor.INSTANCE));
+        return GameTestScriptRunner.getFile("test.zs", contents, List.of(OnlyIfPreprocessor.INSTANCE, EndIfPreprocessor.INSTANCE));
     }
     
     

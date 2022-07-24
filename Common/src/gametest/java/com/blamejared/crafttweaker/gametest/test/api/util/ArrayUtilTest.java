@@ -2,13 +2,16 @@ package com.blamejared.crafttweaker.gametest.test.api.util;
 
 import com.blamejared.crafttweaker.api.util.ArrayUtil;
 import com.blamejared.crafttweaker.gametest.CraftTweakerGameTest;
-import com.blamejared.crafttweaker.gametest.CraftTweakerGameTestHolder;
-import com.blamejared.crafttweaker.gametest.TestModifier;
+import com.blamejared.crafttweaker.gametest.framework.annotation.CraftTweakerGameTestHolder;
+import com.blamejared.crafttweaker.gametest.framework.annotation.TestModifier;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 
 import java.util.stream.Stream;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayContaining;
 
 @CraftTweakerGameTestHolder
 public class ArrayUtilTest implements CraftTweakerGameTest {
@@ -30,8 +33,6 @@ public class ArrayUtilTest implements CraftTweakerGameTest {
     private Stream<Pair<String[], String[]>> getArraysWithEvenNumberOfParameters() {
         
         return Stream.<Pair<String[], String[]>> builder()
-                .add(new Pair<>(new String[] {}, new String[] {}))
-                .add(new Pair<>(new String[] {}, new String[] {}))
                 .add(new Pair<>(new String[] {"a", "b"}, new String[] {"b", "a"}))
                 .add(new Pair<>(new String[] {"a", "b", "c", "d"}, new String[] {"d", "c", "b", "a"}))
                 .add(new Pair<>(new String[] {"a", "b", "c", "d", "e", "f"}, new String[] {"f", "e", "d", "c", "b", "a"}))
@@ -55,25 +56,11 @@ public class ArrayUtilTest implements CraftTweakerGameTest {
         final String[] beforeClone = before.clone();
         final String[] mirrored = ArrayUtil.mirror(before);
         
-        assertWithMessage("ArrayUtil may not modify the actual array")
-                .that(before)
-                .asList()
-                .containsExactlyElementsIn(beforeClone)
-                .inOrder();
+        assertThat("ArrayUtil may not modify the actual array", before, arrayContaining(beforeClone));
         
-        assertWithMessage("mirrored must match expectedMirrored")
-                .that(mirrored)
-                .asList()
-                .containsExactlyElementsIn(expectedMirrored)
-                .inOrder();
+        assertThat("mirred must match expectedMirrored", mirrored, arrayContaining(expectedMirrored));
         
-        assertWithMessage("Mirroring twice must restore order")
-                .that(ArrayUtil.mirror(mirrored))
-                .asList()
-                .containsExactlyElementsIn(before)
-                .inOrder();
-        
-        
+        assertThat("Mirroring twice must restore order", ArrayUtil.mirror(mirrored), arrayContaining(before));
     }
     
 }

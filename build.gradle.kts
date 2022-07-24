@@ -137,6 +137,7 @@ subprojects {
             create("gametest") {
                 resources {
                     srcDirs.add(project.file("src/gametest/resources"))
+
                 }
                 compileClasspath += sourceSets.main.get().runtimeClasspath
                 runtimeClasspath += sourceSets.main.get().runtimeClasspath
@@ -152,9 +153,9 @@ subprojects {
 
             implementation("com.google.code.findbugs:jsr305:3.0.2")
 
-            gametestLibrary("com.google.truth:truth:1.1.3")
-            // This is required for Truth since MC uses an old Guava version, however in 1.18 the game uses an updated version.
-            gametestLibrary("com.google.guava:guava:31.1-jre")
+            gametestLibrary("org.hamcrest:hamcrest:2.2")
+            gametestLibrary("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+            gametestLibrary("org.junit.platform:junit-platform-launcher:1.8.2")
         }
 
         extensions.configure<JavaPluginExtension> {

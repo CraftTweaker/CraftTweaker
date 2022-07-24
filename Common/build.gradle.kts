@@ -61,6 +61,10 @@ tasks.withType<JavaCompile> {
     }
 }
 
+tasks.compileGametestJava {
+    outputs.upToDateWhen { false }
+}
+
 tasks.withType<Javadoc> {
     (project.ext["zenCodeDeps"] as Set<*>).forEach {
         source(project(it.toString()).sourceSets.main.get().allJava)

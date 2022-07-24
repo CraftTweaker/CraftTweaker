@@ -27,7 +27,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-sealed abstract class ScriptRunner implements IScriptRunner permits ExecutingScriptRunner, FormattingScriptRunner, SyntaxCheckScriptRunner {
+sealed abstract class ScriptRunner implements IScriptRunner permits ExecutingScriptRunner, FormattingScriptRunner, SyntaxCheckScriptRunner, GameTestScriptRunner {
     
     @FunctionalInterface
     private interface ScriptRunCreator {
@@ -40,7 +40,8 @@ sealed abstract class ScriptRunner implements IScriptRunner permits ExecutingScr
             Suppliers.memoize(() -> Map.of(
                     ScriptRunConfiguration.RunKind.SYNTAX_CHECK, SyntaxCheckScriptRunner::new,
                     ScriptRunConfiguration.RunKind.FORMAT, FormattingScriptRunner::new,
-                    ScriptRunConfiguration.RunKind.EXECUTE, ExecutingScriptRunner::new
+                    ScriptRunConfiguration.RunKind.EXECUTE, ExecutingScriptRunner::new,
+                    ScriptRunConfiguration.RunKind.GAME_TEST, GameTestScriptRunner::new
             ));
     
     private final IScriptRunInfo runInfo;
@@ -78,7 +79,7 @@ sealed abstract class ScriptRunner implements IScriptRunner permits ExecutingScr
         return parser;
     }
     
-    private void runScripts(final BracketExpressionParser parser) throws ParseException {
+    protected void runScripts(final BracketExpressionParser parser) throws ParseException {
         
         final SourceFile[] sources = this.sources.toArray(SourceFile[]::new);
         final SemanticModule module = this.engine()

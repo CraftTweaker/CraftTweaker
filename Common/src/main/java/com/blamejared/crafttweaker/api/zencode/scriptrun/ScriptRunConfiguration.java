@@ -39,7 +39,8 @@ public record ScriptRunConfiguration(IScriptLoader loader, IScriptLoadSource loa
          *
          * @since 9.1.0
          */
-        EXECUTE
+        EXECUTE,
+        GAME_TEST
     }
     
     /**

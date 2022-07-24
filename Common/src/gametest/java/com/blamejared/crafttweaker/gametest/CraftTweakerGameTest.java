@@ -1,17 +1,13 @@
 package com.blamejared.crafttweaker.gametest;
 
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.gametest.truth.IExpectIData;
-import com.blamejared.crafttweaker.gametest.truth.IExpectIIngredient;
-import com.blamejared.crafttweaker.gametest.truth.IExpectVanilla;
-import com.blamejared.crafttweaker.gametest.truth.ITruthWrapper;
+import com.blamejared.crafttweaker.gametest.framework.DelegatingGameTestAssertException;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
-public interface CraftTweakerGameTest extends ITruthWrapper, IExpectIData, IExpectIIngredient, IExpectVanilla {
-    
+public interface CraftTweakerGameTest {
     
     default void fail() {
         
@@ -30,10 +26,7 @@ public interface CraftTweakerGameTest extends ITruthWrapper, IExpectIData, IExpe
     
     default void fail(String message, Exception e) {
         
-        e.printStackTrace();
-        GameTestAssertException gtae = new GameTestAssertException(message);
-        gtae.setStackTrace(e.getStackTrace());
-        throw gtae;
+        throw new DelegatingGameTestAssertException(message, e);
     }
     
     
