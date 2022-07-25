@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.api.data.base;
 
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.NumericTag;
@@ -10,8 +11,8 @@ import org.openzen.zencode.java.ZenCodeType;
  *
  * @docParam this 1
  */
+@ZenRegister(loaders = {CraftTweakerConstants.DEFAULT_LOADER_NAME, CraftTweakerConstants.TAGS_LOADER_NAME})
 @Document("vanilla/api/data/INumberData")
-@ZenRegister
 @ZenCodeType.Name("crafttweaker.api.data.INumberData")
 public interface INumberData extends IData {
     

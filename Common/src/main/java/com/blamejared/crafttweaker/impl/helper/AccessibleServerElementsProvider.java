@@ -19,6 +19,7 @@ public final class AccessibleServerElementsProvider implements IAccessibleServer
     private AccessibleServerElementsProvider() {
         
         this.resources = null;
+        this.registryAccess = null;
     }
     
     static IAccessibleServerElementsProvider get() {

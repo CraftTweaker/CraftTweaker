@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.api.tag.type;
 
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.api.tag.manager.type.UnknownTagManager;
@@ -15,7 +16,7 @@ import javax.annotation.Nonnull;
  *
  * @implNote Modders should use {@link MCTag} instead of this class for parameters as a previously unknown tag could become a known tag in the future..
  */
-@ZenRegister
+@ZenRegister(loaders = {CraftTweakerConstants.DEFAULT_LOADER_NAME, CraftTweakerConstants.TAGS_LOADER_NAME})
 @Document("vanilla/api/tag/type/UnknownTag")
 @ZenCodeType.Name("crafttweaker.api.tag.type.UnknownTag")
 @SuppressWarnings("ClassCanBeRecord")

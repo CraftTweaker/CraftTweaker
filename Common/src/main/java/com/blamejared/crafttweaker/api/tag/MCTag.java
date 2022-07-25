@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.api.tag;
 
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
@@ -20,7 +21,7 @@ import java.util.List;
 /**
  * @docParam this <tag:items:minecraft:wool>
  */
-@ZenRegister
+@ZenRegister(loaders = {CraftTweakerConstants.DEFAULT_LOADER_NAME, CraftTweakerConstants.TAGS_LOADER_NAME})
 @Document("vanilla/api/tag/MCTag")
 @ZenCodeType.Name("crafttweaker.api.tag.MCTag")
 public interface MCTag extends CommandStringDisplayable, Comparable<MCTag> {

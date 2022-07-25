@@ -332,12 +332,13 @@ public class BracketHandlers {
      * @return The location
      *
      * @docParam tokens "minecraft:dirt"
+     * @deprecated Use {@link ResourceLocationBracketHandler#getResourceLocation(String)} instead.
      */
+    @Deprecated(forRemoval = true)
     @ZenCodeType.Method
-    @BracketResolver("resource")
     public static ResourceLocation getResourceLocation(String tokens) {
         
-        return new ResourceLocation(tokens);
+        return ResourceLocationBracketHandler.getResourceLocation(tokens);
     }
     
     /**

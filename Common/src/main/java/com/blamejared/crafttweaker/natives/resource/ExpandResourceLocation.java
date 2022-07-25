@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.natives.resource;
 
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.StringData;
 import com.blamejared.crafttweaker.api.data.base.IData;
@@ -9,7 +10,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraft.resources.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 
-@ZenRegister
+@ZenRegister(loaders = {CraftTweakerConstants.DEFAULT_LOADER_NAME, CraftTweakerConstants.TAGS_LOADER_NAME})
 @Document("vanilla/api/resource/ResourceLocation")
 @NativeTypeRegistration(value = ResourceLocation.class, zenCodeName = ExpandResourceLocation.ZC_CLASS_NAME, constructors = @NativeConstructor({@NativeConstructor.ConstructorParameter(name = "namespace", type = String.class, description = "Usually a ModId"), @NativeConstructor.ConstructorParameter(name = "path", type = String.class, description = "May only contain lower-cased alphanumeric values, as well as / and _")}))
 public class ExpandResourceLocation {
