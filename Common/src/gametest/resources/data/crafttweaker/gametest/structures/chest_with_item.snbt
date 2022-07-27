@@ -1,0 +1,13 @@
+{
+    DataVersion: 2975,
+    size: [1, 2, 1],
+    data: [
+        {pos: [0, 0, 0], state: "minecraft:polished_andesite"},
+        {pos: [0, 1, 0], state: "minecraft:chest{facing:east,type:single,waterlogged:false}", nbt: {Items: [{Count: 2b, Slot: 2b, id: "minecraft:diamond"}], id: "minecraft:chest"}}
+    ],
+    entities: [],
+    palette: [
+        "minecraft:polished_andesite",
+        "minecraft:chest{facing:east,type:single,waterlogged:false}"
+    ]
+}

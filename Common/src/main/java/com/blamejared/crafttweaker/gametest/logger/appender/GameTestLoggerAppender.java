@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.gametest.logger.appender;
 
 import com.blamejared.crafttweaker.CraftTweakerCommon;
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.*;
@@ -29,7 +30,8 @@ public class GameTestLoggerAppender extends AbstractAppender {
     @Override
     public void append(LogEvent event) {
         
-        final String message = ((PatternLayout) getLayout()).toSerializable(event).replaceAll(System.lineSeparator(), "");
+        final String message = ((PatternLayout) getLayout()).toSerializable(event)
+                .replaceAll(System.lineSeparator(), "");
         
         messages.add(new LogMessage(message, event.getLevel()));
     }
@@ -94,7 +96,9 @@ public class GameTestLoggerAppender extends AbstractAppender {
         
         public void dump() {
             
-            this.log.forEach(CraftTweakerCommon.LOG::info);
+            for(int i = 0; i < this.log.size(); i++) {
+                CraftTweakerCommon.LOG.info("{}: '{}'", i, this.log.get(i));
+            }
         }
         
     }

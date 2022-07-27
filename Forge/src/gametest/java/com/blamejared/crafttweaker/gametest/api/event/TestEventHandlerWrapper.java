@@ -1,13 +1,14 @@
-package com.blamejared.crafttweaker.api.event;
+package com.blamejared.crafttweaker.gametest.api.event;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 
 import java.util.function.Consumer;
 
-public class EventHandlerWrapper<T extends Event> implements Consumer<T> {
+public class TestEventHandlerWrapper<T extends Event> implements Consumer<T> {
     
-    public EventHandlerWrapper(Consumer<T> consumer) {
+    public TestEventHandlerWrapper(Consumer<T> consumer) {
         
         this.consumer = consumer;
     }
@@ -22,6 +23,7 @@ public class EventHandlerWrapper<T extends Event> implements Consumer<T> {
         } catch(Throwable throwable) {
             CraftTweakerAPI.LOGGER.error("Error occurred in event handler", throwable);
         }
+        MinecraftForge.EVENT_BUS.unregister(this);
     }
     
 }

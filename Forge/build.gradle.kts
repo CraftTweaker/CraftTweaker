@@ -52,6 +52,7 @@ dependencies {
     implementation(fg.deobf("mezz.jei:jei-1.18.2:9.7.0.229"))
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
 
+    gametestCompileOnly(project(":Common"))
     gametestCompileOnly(files(project(":Common").dependencyProject.sourceSets.gametest.get().java.srcDirs))
     (project.ext["zenCodeTestDeps"] as Set<*>).forEach {
         gametestImplementation(project(it.toString()).dependencyProject.sourceSets.test.get().output)
