@@ -27,7 +27,7 @@ public class MixinTagManager {
     private RegistryAccess registryAccess;
     
     @ModifyArg(method = "reload", at = @At(value = "INVOKE", target = "Ljava/util/concurrent/CompletableFuture;thenAcceptAsync(Ljava/util/function/Consumer;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"))
-    public <T> Consumer<? super T> modifyArg(Consumer<? super T> action) {
+    public <T> Consumer<? super T> crafttweaker$appendConsumer(Consumer<? super T> action) {
         
         return action.andThen(o -> {
             CraftTweakerTagRegistry.INSTANCE.bind(results, new CraftTweakerTagRegistry.BindContext().registerKnownManagers(false));
