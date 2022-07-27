@@ -27,10 +27,10 @@ public class ItemCapabilityTest implements CraftTweakerGameTest {
         GameTestLoggerAppender.QueryableLog log = GameTestScriptRunner.runScripts(helper, builder);
         log.assertNoErrors();
         log.assertNoWarnings();
-        
         MinecraftForge.EVENT_BUS.post(new TestEvent("testItemHandler", helper.getLevel(), helper.absolutePos(BlockPos.ZERO), helper.makeMockPlayer()));
-        log.assertOutput(3, Services.PLATFORM.createMCItemStack(new ItemStack(Items.DIAMOND, 2)).getCommandString());
-        log.assertOutput(4, Services.PLATFORM.createMCItemStack(new ItemStack(Items.DIRT)).getCommandString());
+        log.assertOutput(2, Services.PLATFORM.createMCItemStack(new ItemStack(Items.DIAMOND, 2)).getCommandString());
+        log.assertOutput(3, Services.PLATFORM.createMCItemStack(new ItemStack(Items.DIRT)).getCommandString());
+        log.dump();
     }
     
 }

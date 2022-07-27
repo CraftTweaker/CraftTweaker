@@ -3,7 +3,6 @@ import test.api.TestEvent;
 import crafttweaker.api.capability.IItemHandler;
 import crafttweaker.api.capability.Capabilities;
 
-println("running");
 CTTestEventManager.register<TestEvent>((event) => {
 
     var player = event.player;
