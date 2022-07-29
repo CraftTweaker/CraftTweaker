@@ -26,6 +26,12 @@ public enum IIngredientEmpty implements IIngredient {
     }
     
     @Override
+    public boolean isEmpty() {
+        
+        return true;
+    }
+    
+    @Override
     public Ingredient asVanillaIngredient() {
         
         return Ingredient.EMPTY;

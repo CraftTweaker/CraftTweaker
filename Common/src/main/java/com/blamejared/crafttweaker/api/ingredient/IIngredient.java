@@ -3,23 +3,14 @@ package com.blamejared.crafttweaker.api.ingredient;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.action.item.ActionModifyAttribute;
 import com.blamejared.crafttweaker.api.action.item.ActionSetBurnTime;
-import com.blamejared.crafttweaker.api.action.item.tooltip.ActionAddShiftedTooltip;
-import com.blamejared.crafttweaker.api.action.item.tooltip.ActionAddTooltip;
-import com.blamejared.crafttweaker.api.action.item.tooltip.ActionClearTooltip;
-import com.blamejared.crafttweaker.api.action.item.tooltip.ActionModifyShiftedTooltip;
-import com.blamejared.crafttweaker.api.action.item.tooltip.ActionModifyTooltip;
-import com.blamejared.crafttweaker.api.action.item.tooltip.ActionRemoveRegexTooltip;
+import com.blamejared.crafttweaker.api.action.item.tooltip.*;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.base.IData;
 import com.blamejared.crafttweaker.api.data.base.converter.JSONConverter;
 import com.blamejared.crafttweaker.api.ingredient.condition.IIngredientCondition;
-import com.blamejared.crafttweaker.api.ingredient.condition.type.ConditionAnyDamage;
-import com.blamejared.crafttweaker.api.ingredient.condition.type.ConditionCustom;
-import com.blamejared.crafttweaker.api.ingredient.condition.type.ConditionDamaged;
-import com.blamejared.crafttweaker.api.ingredient.condition.type.ConditionDamagedAtLeast;
-import com.blamejared.crafttweaker.api.ingredient.condition.type.ConditionDamagedAtMost;
+import com.blamejared.crafttweaker.api.ingredient.condition.type.*;
 import com.blamejared.crafttweaker.api.ingredient.transform.IIngredientTransformer;
 import com.blamejared.crafttweaker.api.ingredient.transform.type.TransformCustom;
 import com.blamejared.crafttweaker.api.ingredient.transform.type.TransformDamage;
@@ -83,6 +74,18 @@ public interface IIngredient extends CommandStringDisplayable {
      */
     @ZenCodeType.Method
     boolean matches(IItemStack stack, boolean ignoreDamage);
+    
+    /**
+     * Checks if this ingredient is empty.
+     *
+     * @return true if empty, false otherwise
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("empty")
+    default boolean isEmpty() {
+        
+        return asVanillaIngredient().isEmpty();
+    }
     
     /**
      * Does the ingredient contain the given ingredient?

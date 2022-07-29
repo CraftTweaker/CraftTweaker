@@ -31,6 +31,12 @@ public class WrappingIIngredient implements IIngredient {
     }
     
     @Override
+    public boolean isEmpty() {
+        
+        return ingredient.isEmpty();
+    }
+    
+    @Override
     public boolean matches(IItemStack stack, boolean ignoreDamage) {
         
         if(!ignoreDamage) {

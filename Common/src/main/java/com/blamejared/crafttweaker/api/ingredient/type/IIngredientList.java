@@ -28,6 +28,13 @@ public class IIngredientList implements IIngredient {
     }
     
     @Override
+    public boolean isEmpty() {
+        
+        // Short circuit if ingredients is empty
+        return ingredients.length == 0 || IIngredient.super.isEmpty();
+    }
+    
+    @Override
     public boolean matches(IItemStack stack, boolean ignoreDamage) {
         
         for(IIngredient item : ingredients) {

@@ -85,7 +85,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      *
      * @return true if empty, false if not
      */
-    @ZenCodeType.Getter("empty")
+    @Override
     default boolean isEmpty() {
         
         return getInternal().isEmpty();
