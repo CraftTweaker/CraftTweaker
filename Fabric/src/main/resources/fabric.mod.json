@@ -36,7 +36,7 @@
         "crafttweaker.fabric.mixins.json"
     ],
     "depends": {
-        "fabricloader": ">=0.13.1",
+        "fabricloader": ">=0.14.8",
         "fabric": "*",
         "minecraft": "1.18.x",
         "java": ">=17",

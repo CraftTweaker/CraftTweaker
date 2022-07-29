@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker;
 
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.event.CraftTweakerEvents;
 import com.blamejared.crafttweaker.api.recipe.replacement.rule.DefaultExclusionReplacements;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceManager;
@@ -11,29 +10,20 @@ import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
-import net.fabricmc.fabric.impl.resource.loader.ModNioResourcePack;
-import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
-import net.fabricmc.fabric.impl.resource.loader.ModResourcePackUtil;
-import net.fabricmc.fabric.impl.resource.loader.ResourceManagerHelperImpl;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.commands.Commands;
-import net.minecraft.server.packs.PackType;
 import net.minecraft.world.InteractionResult;
-
-import java.util.List;
 
 public class CraftTweakerFabric implements ModInitializer {
     
     @Override
     public void onInitialize() {
-    
+        
         CraftTweakerCommon.init();
         CraftTweakerCommon.getPluginManager().loadPlugins();
         
         // TODO("Will be removed")
         CraftTweakerCommon.registerCommandArguments();
+        
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
             CraftTweakerCommon.registerCommands(dispatcher, dedicated ? Commands.CommandSelection.DEDICATED : Commands.CommandSelection.INTEGRATED);
         });
