@@ -17,12 +17,13 @@ buildscript {
     }
 }
 
-
 plugins {
     `java`
     idea
     id("com.blamejared.modtemplate")
 }
+
+version = Utils.updatingVersion(Versions.MOD)
 
 tasks.wrapper {
     //Define wrapper values here to not have to always do so when updating gradlew.properties
