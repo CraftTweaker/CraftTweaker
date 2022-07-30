@@ -1,6 +1,8 @@
 package com.blamejared.crafttweaker.impl.plugin.crafttweaker;
 
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
+import com.blamejared.crafttweaker.api.bracket.BracketHandlers;
+import com.blamejared.crafttweaker.api.bracket.ResourceLocationBracketHandler;
 import com.blamejared.crafttweaker.api.bracket.custom.EnumConstantBracketHandler;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.bracket.custom.TagBracketHandler;
@@ -65,6 +67,7 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         
         handler.registerLoader(CraftTweakerConstants.INIT_LOADER_NAME);
         handler.registerLoader(CraftTweakerConstants.DEFAULT_LOADER_NAME);
+        handler.registerLoader(CraftTweakerConstants.TAGS_LOADER_NAME);
     }
     
     @Override
@@ -80,6 +83,7 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         final IScriptRunModuleConfigurator defaultConfig = IScriptRunModuleConfigurator.createDefault(CraftTweakerConstants.MOD_ID);
         handler.registerConfigurator(CraftTweakerConstants.DEFAULT_LOADER_NAME, defaultConfig);
         handler.registerConfigurator(CraftTweakerConstants.INIT_LOADER_NAME, defaultConfig); // TODO("Is this valid?")
+        handler.registerConfigurator(CraftTweakerConstants.TAGS_LOADER_NAME, defaultConfig);
     }
     
     @Override
@@ -105,6 +109,8 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "tag", new TagBracketHandler(), new IBracketParserRegistrationHandler.DumperData("tag", TagBracketHandler.getDumperData()));
         handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "tagmanager", new TagManagerBracketHandler(), new IBracketParserRegistrationHandler.DumperData("tagmanager", TagManagerBracketHandler.getDumperData()));
         
+        handler.registerParserFor(CraftTweakerConstants.TAGS_LOADER_NAME, "tag", new TagBracketHandler());
+        handler.registerParserFor(CraftTweakerConstants.TAGS_LOADER_NAME, "tagmanager", new TagManagerBracketHandler());
     }
     
     @Override

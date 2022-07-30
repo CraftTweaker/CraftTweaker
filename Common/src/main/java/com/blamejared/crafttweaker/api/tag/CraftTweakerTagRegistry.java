@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.tag;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.manager.TagManagerFactory;
@@ -20,21 +21,11 @@ import net.minecraft.tags.TagNetworkSerialization;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-@ZenRegister
+@ZenRegister(loaders = {CraftTweakerConstants.DEFAULT_LOADER_NAME, CraftTweakerConstants.TAGS_LOADER_NAME})
 @ZenCodeType.Name("crafttweaker.api.tag.TagManager")
 public final class CraftTweakerTagRegistry {
     
@@ -234,6 +225,18 @@ public final class CraftTweakerTagRegistry {
      */
     @SuppressWarnings("rawtypes")
     public void bind(Map<ResourceKey<? extends Registry<?>>, TagNetworkSerialization.NetworkPayload> tags) {
+        bind(tags, new BindContext());
+    }
+    /**
+     * Binds the given map to the registry.
+     *
+     * <p>Note: This will clear all registered managers.</p>
+     *
+     * @param tags The map to bind.
+     * @param context The bind context.
+     */
+    @SuppressWarnings("rawtypes")
+    public void bind(Map<ResourceKey<? extends Registry<?>>, TagNetworkSerialization.NetworkPayload> tags, BindContext context) {
         
         List<TagManager.LoadResult<?>> results = new ArrayList<>();
         Set<ResourceKey<?>> knownKeys = new HashSet<>();
@@ -259,7 +262,7 @@ public final class CraftTweakerTagRegistry {
                     }
                     results.add(new TagManager.LoadResult<>(registryEntry.key(), new HashMap<>()));
                 });
-        bind(results);
+        bind(results, context);
     }
     
     /**
@@ -272,16 +275,36 @@ public final class CraftTweakerTagRegistry {
     @SuppressWarnings("rawtypes")
     public void bind(List<TagManager.LoadResult<?>> results) {
         
+        bind(results, new BindContext());
+    }
+    
+    /**
+     * Binds the given results to the registry.
+     *
+     * <p>Note: This will clear all registered managers.</p>
+     *
+     * @param results The results to bind.
+     * @param context The bind context.
+     */
+    @SuppressWarnings("rawtypes")
+    public void bind(List<TagManager.LoadResult<?>> results, BindContext context) {
+        
         this.registeredManagers.clear();
         this.knownManagers.clear();
         for(TagManager.LoadResult loadResult : results) {
             Optional<? extends Class<?>> taggableElement = CraftTweakerAPI.getRegistry()
                     .getTaggableElementFor(loadResult.key());
             
-            TagManagerFactory taggableElementFactory = CraftTweakerAPI.getRegistry()
-                    .getTaggableElementFactory(loadResult.key());
-            taggableElement.ifPresentOrElse(it -> this.addManager(taggableElementFactory.apply(loadResult.key(), it)).bind(loadResult),
-                    () -> this.addManager(new UnknownTagManager(loadResult.key())).bind(loadResult));
+            if(context.registerKnownManagers()){
+                TagManagerFactory taggableElementFactory = CraftTweakerAPI.getRegistry()
+                        .getTaggableElementFactory(loadResult.key());
+                taggableElement.ifPresentOrElse(it -> this.addManager(taggableElementFactory.apply(loadResult.key(), it))
+                                .bind(loadResult),
+                        () -> this.addManager(new UnknownTagManager(loadResult.key())).bind(loadResult));
+            } else {
+                this.addManager(new UnknownTagManager(loadResult.key())).bind(loadResult);
+            }
+            
         }
     }
     
@@ -294,6 +317,27 @@ public final class CraftTweakerTagRegistry {
             tagDir = tagDir.substring("tags/".length());
         }
         return tagDir;
+    }
+    
+    public static class BindContext {
+        
+        private boolean registerKnownManagers = true;
+        
+        public BindContext() {
+        
+        }
+    
+        public boolean registerKnownManagers() {
+        
+            return registerKnownManagers;
+        }
+    
+        public BindContext registerKnownManagers(boolean value) {
+            
+            this.registerKnownManagers = value;
+            return this;
+        }
+        
     }
     
 }

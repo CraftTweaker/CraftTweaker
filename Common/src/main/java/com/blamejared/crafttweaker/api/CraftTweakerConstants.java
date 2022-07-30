@@ -14,6 +14,7 @@ public final class CraftTweakerConstants {
     public static final String ALL_LOADERS_MARKER = "*";
     public static final String INIT_LOADER_NAME = "initialize";
     public static final String DEFAULT_LOADER_NAME = "crafttweaker";
+    public static final String TAGS_LOADER_NAME = "tags";
     
     /**
      * This is not the mod version, this is specifically for the network!!

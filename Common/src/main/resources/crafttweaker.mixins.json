@@ -32,6 +32,7 @@
     "common.access.world.biome.AccessBiome",
     "common.transform.item.MixinIngredient",
     "common.transform.item.MixinIngredientTagValue",
+    "common.transform.tags.MixinTagManager",
     "common.transform.world.level.MixinServerLevel"
   ],
   "client": [

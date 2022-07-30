@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.tag.manager.type;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.action.tag.unknown.ActionUnknownTagAdd;
 import com.blamejared.crafttweaker.api.action.tag.unknown.ActionUnknownTagClear;
 import com.blamejared.crafttweaker.api.action.tag.unknown.ActionUnknownTagCreate;
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@ZenRegister
+@ZenRegister(loaders = {CraftTweakerConstants.DEFAULT_LOADER_NAME, CraftTweakerConstants.TAGS_LOADER_NAME})
 @Document("vanilla/api/tag/manager/type/UnknownTagManager")
 @ZenCodeType.Name("crafttweaker.api.tag.manager.type.UnknownTagManager")
 public class UnknownTagManager implements ITagManager<UnknownTag> {

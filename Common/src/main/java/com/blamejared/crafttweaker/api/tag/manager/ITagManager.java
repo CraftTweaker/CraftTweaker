@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.api.tag.manager;
 
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
 /**
  * @docParam this <tagmanager:items>
  */
-@ZenRegister
+@ZenRegister(loaders = {CraftTweakerConstants.DEFAULT_LOADER_NAME, CraftTweakerConstants.TAGS_LOADER_NAME})
 @Document("vanilla/api/tag/manager/ITagManager")
 @ZenCodeType.Name("crafttweaker.api.tag.manager.ITagManager")
 public interface ITagManager<T extends MCTag> extends CommandStringDisplayable, Iterable<T> {

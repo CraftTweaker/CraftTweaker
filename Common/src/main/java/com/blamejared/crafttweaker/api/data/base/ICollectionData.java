@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.api.data.base;
 
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.ByteArrayData;
 import com.blamejared.crafttweaker.api.data.ByteData;
@@ -18,7 +19,7 @@ import java.util.Arrays;
  *
  * @docParam this new ListData(["Hello", "World"])
  */
-@ZenRegister
+@ZenRegister(loaders = {CraftTweakerConstants.DEFAULT_LOADER_NAME, CraftTweakerConstants.TAGS_LOADER_NAME})
 @ZenCodeType.Name("crafttweaker.api.data.ICollectionData")
 @Document("vanilla/api/data/ICollectionData")
 public interface ICollectionData extends IData {

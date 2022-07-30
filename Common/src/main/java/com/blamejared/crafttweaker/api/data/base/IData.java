@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.api.data.base;
 
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.BoolData;
 import com.blamejared.crafttweaker.api.data.ByteData;
@@ -22,8 +23,8 @@ import java.util.Map;
  *
  * @docParam this {Display: {lore: ["Hello", "World"]}}
  */
+@ZenRegister(loaders = {CraftTweakerConstants.DEFAULT_LOADER_NAME, CraftTweakerConstants.TAGS_LOADER_NAME})
 @ZenCodeType.Name("crafttweaker.api.data.IData")
-@ZenRegister
 @Document("vanilla/api/data/IData")
 public interface IData {
     
