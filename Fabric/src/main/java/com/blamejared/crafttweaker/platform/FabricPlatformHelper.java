@@ -92,7 +92,8 @@ public class FabricPlatformHelper implements IPlatformHelper {
         
         Collection<URL> urls = ClasspathHelper.forClassLoader();
         // Not a fan of hard coding for a specific thing, but not sure the implications of removing everything that isn't a file.
-        urls.removeIf(url -> url.getProtocol().equals("magic-at"));
+        // Absolutely hate this but fabric mods gotta be fabric mods, this catches FabricASM and MagicLib
+        urls.removeIf(url -> url.getProtocol().contains("magic"));
         return new Reflections(new ConfigurationBuilder().addUrls(urls).setParallel(true));
     }
     
