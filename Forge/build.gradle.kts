@@ -25,12 +25,15 @@ dependencies {
     "minecraft"("net.minecraftforge:forge:${Versions.MINECRAFT}-${Versions.FORGE}")
     compileOnly(project(":Common"))
 
-    implementation(fg.deobf("mezz.jei:jei-${Versions.MINECRAFT}:${Versions.JEI}"))
+    compileOnly(fg.deobf("mezz.jei:jei-${Versions.MINECRAFT}-common-api:${Versions.JEI}"))
+    compileOnly(fg.deobf("mezz.jei:jei-${Versions.MINECRAFT}-forge-api:${Versions.JEI}"))
+    runtimeOnly(fg.deobf("mezz.jei:jei-${Versions.MINECRAFT}-forge:${Versions.JEI}"))
+
     annotationProcessor("org.spongepowered:mixin:${Versions.MIXIN}-SNAPSHOT:processor")
 }
 
 minecraft {
-    mappings("parchment", "${Versions.PARCHMENT}-${Versions.MINECRAFT}")
+    mappings("parchment", "1.18.2-${Versions.PARCHMENT}-${Versions.MINECRAFT}")
     accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg"))
 
     runs {
