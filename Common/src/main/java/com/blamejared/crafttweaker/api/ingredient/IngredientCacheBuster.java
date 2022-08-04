@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.api.ingredient;
 
-import com.blamejared.crafttweaker.mixin.common.access.item.AccessIngredient;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -49,6 +48,9 @@ public class IngredientCacheBuster {
      */
     public static void store(Ingredient ingredient) {
         
+        if(ingredient == null) {
+            throw new IllegalStateException("Cannot store a null ingredient!");
+        }
         ingredients.add(ingredient);
     }
     
