@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
+import net.minecraftforge.common.crafting.NBTIngredient;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -23,6 +24,7 @@ public enum IngredientConditionedSerializer implements IIngredientSerializer<Ing
     public JsonObject toJson(IngredientConditioned<?, ?> ingredientVanillaPlus) {
         
         final JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", CraftingHelper.getID(IngredientConditionedSerializer.INSTANCE).toString());
         jsonObject.add("base", ingredientVanillaPlus.getCrTIngredient()
                 .getBaseIngredient()
                 .asVanillaIngredient()
