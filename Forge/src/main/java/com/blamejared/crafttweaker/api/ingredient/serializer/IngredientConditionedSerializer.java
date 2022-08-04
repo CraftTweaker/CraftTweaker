@@ -23,6 +23,7 @@ public enum IngredientConditionedSerializer implements IIngredientSerializer<Ing
     public JsonObject toJson(IngredientConditioned<?, ?> ingredientVanillaPlus) {
         
         final JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", CraftingHelper.getID(IngredientConditionedSerializer.INSTANCE).toString());
         jsonObject.add("base", ingredientVanillaPlus.getCrTIngredient()
                 .getBaseIngredient()
                 .asVanillaIngredient()

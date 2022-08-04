@@ -23,6 +23,7 @@ public enum IngredientTransformedSerializer implements IIngredientSerializer<Ing
     public JsonObject toJson(IngredientTransformed<?, ?> ingredientVanillaPlus) {
         
         final JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", CraftingHelper.getID(IngredientTransformedSerializer.INSTANCE).toString());
         jsonObject.add("base", ingredientVanillaPlus.getCrTIngredient()
                 .getBaseIngredient()
                 .asVanillaIngredient()
