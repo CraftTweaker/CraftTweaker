@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.plugin.crafttweaker;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.Preprocessor;
 import com.blamejared.crafttweaker.api.natives.NativeTypeInfo;
 import com.blamejared.crafttweaker.api.plugin.IJavaNativeIntegrationRegistrationHandler;
@@ -9,11 +10,11 @@ import com.blamejared.crafttweaker.api.zencode.ZenTypeInfo;
 import com.blamejared.crafttweaker_annotations.annotations.NativeMethod;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TypedExpansion;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.ArrayDeque;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Queue;
 
 final class ZenClassRegistrationManager {
@@ -28,13 +29,13 @@ final class ZenClassRegistrationManager {
     private record LateRegistrationCandidate(Class<?> clazz, String loader, LateCallback callback) {}
     
     private final AnnotationsToApiConverters converters;
-    private final Map<Class<?>, NativeTypeInfo> foundNatives;
+    private final Table<Class<?>, String, NativeTypeInfo> foundNatives;
     private final Queue<LateRegistrationCandidate> lateRegistrations;
     
     ZenClassRegistrationManager() {
         
         this.converters = new AnnotationsToApiConverters();
-        this.foundNatives = new HashMap<>();
+        this.foundNatives = HashBasedTable.create();
         this.lateRegistrations = new ArrayDeque<>();
     }
     
@@ -42,7 +43,7 @@ final class ZenClassRegistrationManager {
         
         this.attemptNativeRegistration(clazz, loader, handler);
         this.attemptZenRegistration(clazz, loader, handler);
-        this.attemptPreprocessorRegistration(clazz, loader, handler);
+        this.attemptPreprocessorRegistration(clazz, handler);
     }
     
     void attemptDeferredRegistration(final IJavaNativeIntegrationRegistrationHandler handler) {
@@ -60,7 +61,18 @@ final class ZenClassRegistrationManager {
         final NativeMethod[] methods = clazz.getDeclaredAnnotationsByType(NativeMethod.class);
         final NativeTypeInfo nativeTypeInfo = this.converters.toNativeTypeInfo(ntr, methods);
         
-        this.foundNatives.put(nativeTypeInfo.targetedType(), nativeTypeInfo);
+        final NativeTypeInfo previous = this.foundNatives.get(nativeTypeInfo.targetedType(), loader);
+        if(previous != null) {
+            CraftTweakerAPI.LOGGER.warn(
+                    "Found two native expansions for the same class {} in loader {}, current {}, new {}: this will lead to issues",
+                    nativeTypeInfo.targetedType().getName(),
+                    loader,
+                    previous,
+                    nativeTypeInfo
+            );
+        }
+        
+        this.foundNatives.put(nativeTypeInfo.targetedType(), loader, nativeTypeInfo);
         handler.registerNativeType(loader, clazz, nativeTypeInfo);
     }
     
@@ -101,7 +113,7 @@ final class ZenClassRegistrationManager {
         }
         
         final Class<?> target = expansion.value();
-        final String targetName = this.figureOutTypedExpansionName(target);
+        final String targetName = this.figureOutTypedExpansionName(loader, target);
         if(targetName == null) {
             throw new IllegalStateException("Unable to register typed expansion for unknown type " + clazz.getName());
         }
@@ -109,7 +121,7 @@ final class ZenClassRegistrationManager {
         handler.registerZenClass(loader, clazz, new ZenTypeInfo(targetName, ZenTypeInfo.TypeKind.EXPANSION));
     }
     
-    private void attemptPreprocessorRegistration(final Class<?> clazz, final String loader, final IJavaNativeIntegrationRegistrationHandler handler) {
+    private void attemptPreprocessorRegistration(final Class<?> clazz, final IJavaNativeIntegrationRegistrationHandler handler) {
         
         final Preprocessor preprocessor = clazz.getDeclaredAnnotation(Preprocessor.class);
         if(preprocessor == null) {
@@ -129,7 +141,7 @@ final class ZenClassRegistrationManager {
         }
     }
     
-    private String figureOutTypedExpansionName(final Class<?> target) {
+    private String figureOutTypedExpansionName(final String loader, final Class<?> target) {
         
         final NativeTypeRegistration registration = target.getDeclaredAnnotation(NativeTypeRegistration.class);
         if(registration != null) {
@@ -141,7 +153,7 @@ final class ZenClassRegistrationManager {
             return name.value();
         }
         
-        final NativeTypeInfo knownNative = this.foundNatives.get(target);
+        final NativeTypeInfo knownNative = this.foundNatives.get(target, loader);
         if(knownNative != null) {
             return knownNative.name();
         }
