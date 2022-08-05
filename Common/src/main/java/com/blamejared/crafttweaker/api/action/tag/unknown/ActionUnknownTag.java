@@ -5,7 +5,8 @@ import com.blamejared.crafttweaker.api.action.tag.ActionTag;
 import com.blamejared.crafttweaker.api.tag.manager.type.UnknownTagManager;
 import com.blamejared.crafttweaker.api.tag.type.UnknownTag;
 import net.minecraft.core.Holder;
-import net.minecraft.tags.Tag;
+
+import java.util.Collection;
 
 public abstract class ActionUnknownTag extends ActionTag<UnknownTag, UnknownTagManager> {
     
@@ -14,7 +15,7 @@ public abstract class ActionUnknownTag extends ActionTag<UnknownTag, UnknownTagM
         super(mcTag);
     }
     
-    public Tag<Holder<?>> tag() {
+    public Collection<Holder<?>> tag() {
         
         return mcTag().getInternal();
     }

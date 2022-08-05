@@ -15,7 +15,7 @@ public class ActionUnknownTagAdd extends ActionUnknownTagModify {
     @Override
     public void apply() {
         
-        tag().getValues().addAll(holderValues());
+        tag().addAll(holderValues());
     }
     
     @Override

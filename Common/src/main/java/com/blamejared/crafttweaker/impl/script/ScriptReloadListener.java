@@ -10,13 +10,12 @@ import com.blamejared.crafttweaker.api.util.sequence.SequenceManager;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRun;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.helper.FileGathererHelper;
-import com.blamejared.crafttweaker.mixin.common.access.item.AccessIngredient;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.blamejared.crafttweaker.mixin.common.access.tag.AccessTagManager;
 import com.blamejared.crafttweaker.platform.helper.IAccessibleServerElementsProvider;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -36,8 +35,8 @@ import java.util.function.Consumer;
 
 public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
     
-    private static final MutableComponent MSG_RELOAD_STARTING = new TranslatableComponent("crafttweaker.reload.start");
-    private static final MutableComponent MSG_RELOAD_COMPLETE = new TranslatableComponent("crafttweaker.reload.complete");
+    private static final MutableComponent MSG_RELOAD_STARTING = Component.translatable("crafttweaker.reload.start");
+    private static final MutableComponent MSG_RELOAD_COMPLETE = Component.translatable("crafttweaker.reload.complete");
     private static final Random RANDOM = ThreadLocalRandom.current();
     
     private final ReloadableServerResources resources;
@@ -58,7 +57,7 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
     
     @Override
     protected void apply(Void object, ResourceManager resourceManager, ProfilerFiller profiler) {
-    
+        
         IngredientCacheBuster.claim();
         SequenceManager.clearSequences();
         IAccessibleServerElementsProvider asep = CraftTweakerAPI.getAccessibleElementsProvider().server();

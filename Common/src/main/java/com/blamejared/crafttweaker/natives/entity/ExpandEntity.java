@@ -239,10 +239,10 @@ public class ExpandEntity {
     }
     
     @ZenCodeType.Method
-    @ZenCodeType.Getter("occludesVibrations")
-    public static boolean occludesVibrations(Entity internal) {
+    @ZenCodeType.Getter("dampensVibrations")
+    public static boolean dampensVibrations(Entity internal) {
         
-        return internal.occludesVibrations();
+        return internal.dampensVibrations();
     }
     
     @ZenCodeType.Method
@@ -298,13 +298,6 @@ public class ExpandEntity {
     public static void moveRelative(Entity internal, float amount, Vec3 relative) {
         
         internal.moveRelative(amount, relative);
-    }
-    
-    @ZenCodeType.Method
-    @ZenCodeType.Getter("brightness")
-    public static float getBrightness(Entity internal) {
-        
-        return internal.getBrightness();
     }
     
     @ZenCodeType.Method
@@ -879,7 +872,7 @@ public class ExpandEntity {
     @ZenCodeType.Method
     public static void sendMessage(Entity internal, Component message) {
         
-        internal.sendMessage(message, CraftTweakerConstants.CRAFTTWEAKER_UUID);
+        internal.sendSystemMessage(message);
     }
     
     @ZenCodeType.Method
@@ -1012,13 +1005,6 @@ public class ExpandEntity {
     public static BlockState getFeetBlockState(Entity internal) {
         
         return internal.getFeetBlockState();
-    }
-    
-    @ZenCodeType.Method
-    @ZenCodeType.Getter("eyeBlockPosition")
-    public static BlockPos eyeBlockPosition(Entity internal) {
-        
-        return internal.eyeBlockPosition();
     }
     
     @ZenCodeType.Method

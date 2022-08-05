@@ -1,14 +1,13 @@
 package com.blamejared.crafttweaker.api.action.brewing;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.mixin.common.access.brewing.AccessPotionBrewing;
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.brewing.IBrewingRecipe;
-import net.minecraftforge.registries.IRegistryDelegate;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,7 +29,8 @@ public class ActionRemoveBrewingRecipeByReagent extends ActionBrewingBase {
     @Override
     public void apply() {
         
-        Iterator<PotionBrewing.Mix<Potion>> vanillaIterator = AccessPotionBrewing.crafttweaker$getPOTION_MIXES().iterator();
+        Iterator<PotionBrewing.Mix<Potion>> vanillaIterator = AccessPotionBrewing.crafttweaker$getPOTION_MIXES()
+                .iterator();
         while(vanillaIterator.hasNext()) {
             PotionBrewing.Mix<Potion> mix = vanillaIterator.next();
             
@@ -58,13 +58,9 @@ public class ActionRemoveBrewingRecipeByReagent extends ActionBrewingBase {
     public void undo() {
         
         for(PotionBrewing.Mix<Potion> potion : removed) {
-            IRegistryDelegate<Potion> potionInput = potion.from;
+            Holder.Reference<Potion> potionInput = potion.from;
             Ingredient itemReagent = potion.ingredient;
-            IRegistryDelegate<Potion> potionOutput = potion.to;
-            if(potionInput == null || itemReagent == null || potionOutput == null) {
-                CraftTweakerAPI.LOGGER.error("Error getting mix entries! potionInput: {}, itemReagent: {}, potionOutput: {}", potionInput, itemReagent, potionOutput);
-                continue;
-            }
+            Holder.Reference<Potion> potionOutput = potion.to;
             AccessPotionBrewing.crafttweaker$callAddMix(potionInput.get(), itemReagent.getItems()[0].getItem(), potionOutput.get());
         }
         removedRecipes.forEach(BrewingRecipeRegistry::addRecipe);

@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker.natives.event.block.piston;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
-import net.minecraftforge.event.world.PistonEvent;
+import net.minecraftforge.event.level.PistonEvent;
 
 /**
  * Fires after the piston has moved and set surrounding states. This will not fire if {@link PistonEvent.Pre} is cancelled.

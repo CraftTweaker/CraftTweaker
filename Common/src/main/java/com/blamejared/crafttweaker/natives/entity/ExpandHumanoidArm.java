@@ -21,10 +21,10 @@ public class ExpandHumanoidArm {
         return internal.getOpposite();
     }
     
-    @ZenCodeType.Method
-    public static Component getName(HumanoidArm internal) {
+    @ZenCodeType.Method("key")
+    public static String getKey(HumanoidArm internal) {
         
-        return internal.getName();
+        return internal.getKey();
     }
     
 }

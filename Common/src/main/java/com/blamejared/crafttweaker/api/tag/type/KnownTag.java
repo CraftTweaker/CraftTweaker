@@ -3,14 +3,15 @@ package com.blamejared.crafttweaker.api.tag.type;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.api.tag.manager.type.KnownTagManager;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.Many;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -39,9 +40,10 @@ public class KnownTag<T> implements MCTag, Iterable<T> {
     }
     
     @Override
-    public Tag<Holder<T>> getInternal() {
+    public <U extends Collection<Holder<?>>> U getInternal() {
         
-        return manager().getInternal(this);
+        //TODO 1.19 confirm
+        return GenericUtil.uncheck(manager().getInternal(this));
     }
     
     @SafeVarargs

@@ -15,7 +15,7 @@ public class ActionUnknownTagClear extends ActionUnknownTag {
     @Override
     public void apply() {
         
-        tag().getValues().clear();
+        tag().clear();
     }
     
     @Override

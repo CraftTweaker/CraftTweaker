@@ -2,19 +2,15 @@ package com.blamejared.crafttweaker;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
-import com.blamejared.crafttweaker.api.command.argument.IItemStackArgument;
-import com.blamejared.crafttweaker.api.command.argument.RecipeTypeArgument;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.command.CtCommands;
 import com.blamejared.crafttweaker.impl.plugin.core.PluginManager;
-import com.google.common.base.Suppliers;
 import com.blamejared.crafttweaker.platform.Services;
+import com.google.common.base.Suppliers;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.synchronization.ArgumentTypes;
-import net.minecraft.commands.synchronization.EmptyArgumentSerializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,8 +41,8 @@ public class CraftTweakerCommon {
             throw new IllegalStateException("Could not create Directory " + path);
         }
         CraftTweakerLogger.init();
-    
-    
+        
+        
         Services.REGISTRY.init();
         
         new Thread(() -> {
@@ -76,9 +72,9 @@ public class CraftTweakerCommon {
     }
     
     public static void registerCommandArguments() {
-        
-        ArgumentTypes.register(CraftTweakerConstants.MOD_ID + ":recipe_type", RecipeTypeArgument.class, new EmptyArgumentSerializer<>(RecipeTypeArgument::get));
-        ArgumentTypes.register(CraftTweakerConstants.MOD_ID + ":item", IItemStackArgument.class, new EmptyArgumentSerializer<>(IItemStackArgument::get));
+        //TODO 1.19
+        //        ArgumentTypes.register(CraftTweakerConstants.MOD_ID + ":recipe_type", RecipeTypeArgument.class, new EmptyArgumentSerializer<>(RecipeTypeArgument::get));
+        //        ArgumentTypes.register(CraftTweakerConstants.MOD_ID + ":item", IItemStackArgument.class, new EmptyArgumentSerializer<>(IItemStackArgument::get));
     }
     
     public static Set<String> getPatronList() {

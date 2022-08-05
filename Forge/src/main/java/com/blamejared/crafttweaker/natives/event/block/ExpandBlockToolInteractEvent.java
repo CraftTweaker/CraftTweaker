@@ -8,37 +8,37 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
- * Fired when when this block is right clicked by a tool to change its state.
+ * Fired when this block is interacted with by a tool to change its state.
  * For example: Used to determine if an axe can strip a log, a shovel can turn grass into a path, or a hoe can till dirt into farmland.
  *
  * @docEvent canceled this will prevent the tool from changing the block's state.
  */
 @ZenRegister
-@Document("forge/api/event/block/BlockToolInteractEvent")
-@NativeTypeRegistration(value = BlockEvent.BlockToolInteractEvent.class, zenCodeName = "crafttweaker.api.event.block.BlockToolInteractEvent")
+@Document("forge/api/event/block/BlockToolModificationEvent")
+@NativeTypeRegistration(value = BlockEvent.BlockToolModificationEvent.class, zenCodeName = "crafttweaker.api.event.block.BlockToolModificationEvent")
 public class ExpandBlockToolInteractEvent {
     
     @ZenCodeType.Getter("player")
     @ZenCodeType.Method
-    public static Player getPlayer(BlockEvent.BlockToolInteractEvent internal) {
+    public static Player getPlayer(BlockEvent.BlockToolModificationEvent internal) {
         
         return internal.getPlayer();
     }
     
     @ZenCodeType.Getter("heldItemStack")
     @ZenCodeType.Method
-    public static IItemStack getHeldItemStack(BlockEvent.BlockToolInteractEvent internal) {
+    public static IItemStack getHeldItemStack(BlockEvent.BlockToolModificationEvent internal) {
         
         return Services.PLATFORM.createMCItemStack(internal.getHeldItemStack());
     }
     
     @ZenCodeType.Getter("toolAction")
     @ZenCodeType.Method
-    public static ToolAction getToolType(BlockEvent.BlockToolInteractEvent internal) {
+    public static ToolAction getToolType(BlockEvent.BlockToolModificationEvent internal) {
         
         return internal.getToolAction();
     }
@@ -51,7 +51,7 @@ public class ExpandBlockToolInteractEvent {
     @ZenCodeType.Getter("finalState")
     @ZenCodeType.Nullable
     @ZenCodeType.Method
-    public static BlockState getFinalState(BlockEvent.BlockToolInteractEvent internal) {
+    public static BlockState getFinalState(BlockEvent.BlockToolModificationEvent internal) {
         
         return internal.getFinalState();
     }
@@ -63,7 +63,7 @@ public class ExpandBlockToolInteractEvent {
      */
     @ZenCodeType.Setter("finalState")
     @ZenCodeType.Method
-    public static void setFinalState(BlockEvent.BlockToolInteractEvent internal, BlockState state) {
+    public static void setFinalState(BlockEvent.BlockToolModificationEvent internal, BlockState state) {
         
         internal.setFinalState(state);
     }

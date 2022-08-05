@@ -17,7 +17,7 @@ public class ExpandPlayerEvent {
     @ZenCodeType.Nullable
     public static Player getPlayer(PlayerEvent internal) {
         
-        return internal.getPlayer();
+        return internal.getEntity();
     }
     
 }

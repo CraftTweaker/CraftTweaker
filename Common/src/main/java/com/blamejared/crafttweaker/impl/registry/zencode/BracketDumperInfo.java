@@ -10,8 +10,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Locale;
@@ -58,7 +58,7 @@ final class BracketDumperInfo implements IBracketDumperInfo {
     @Override
     public MutableComponent description() {
         
-        return new TranslatableComponent("crafttweaker.command.description.dump.info", CommandUtilities.makeNoticeable(this.bepHandlerName));
+        return Component.translatable("crafttweaker.command.description.dump.info", CommandUtilities.makeNoticeable(this.bepHandlerName));
     }
     
     @Override
@@ -78,8 +78,8 @@ final class BracketDumperInfo implements IBracketDumperInfo {
         
         final ServerPlayer player = context.getSource().getPlayerOrException();
         this.values().forEach(bepCall -> CraftTweakerAPI.LOGGER.info("- " + bepCall));
-        CommandUtilities.send(new TranslatableComponent("crafttweaker.command.dump.generated", CommandUtilities.makeNoticeable(this.bepHandlerName)).withStyle(ChatFormatting.GREEN), player);
-        CommandUtilities.send(CommandUtilities.openingLogFile(new TranslatableComponent("crafttweaker.command.check.log", CommandUtilities.getFormattedLogFile()).withStyle(ChatFormatting.GREEN)), player);
+        CommandUtilities.send(Component.translatable("crafttweaker.command.dump.generated", CommandUtilities.makeNoticeable(this.bepHandlerName)).withStyle(ChatFormatting.GREEN), player);
+        CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.check.log", CommandUtilities.getFormattedLogFile()).withStyle(ChatFormatting.GREEN)), player);
         return Command.SINGLE_SUCCESS;
     }
     

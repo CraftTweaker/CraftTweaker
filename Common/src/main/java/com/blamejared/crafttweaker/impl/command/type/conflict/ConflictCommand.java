@@ -14,7 +14,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -23,12 +23,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Spliterator;
-import java.util.Spliterators;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -53,7 +48,7 @@ public final class ConflictCommand {
         
         handler.registerRootCommand(
                 "conflicts",
-                new TranslatableComponent("crafttweaker.command.description.conflicts"),
+                Component.translatable("crafttweaker.command.description.conflicts"),
                 builder ->
                         builder.then(Commands.argument("type", RecipeTypeArgument.get())
                                         .executes(context -> conflicts(
@@ -76,7 +71,8 @@ public final class ConflictCommand {
         final ItemStack stack = player.getMainHandItem();
         if(stack.isEmpty()) {
             
-            CommandUtilities.send(new TranslatableComponent("crafttweaker.command.conflict.hand.empty").withStyle(ChatFormatting.RED), player);
+            CommandUtilities.send(Component.translatable("crafttweaker.command.conflict.hand.empty")
+                    .withStyle(ChatFormatting.RED), player);
             return -1;
         }
         
@@ -86,9 +82,10 @@ public final class ConflictCommand {
     private static int conflicts(final Player player, final DescriptiveFilter filter) {
         
         CommandUtilities.send(
-                new TranslatableComponent("crafttweaker.command.conflict.begin", filter.description())
+                Component.translatable("crafttweaker.command.conflict.begin", filter.description())
                         .withStyle(ChatFormatting.GREEN)
-                        .append(new TranslatableComponent("crafttweaker.command.conflict.warnings").withStyle(ChatFormatting.RED)),
+                        .append(Component.translatable("crafttweaker.command.conflict.warnings")
+                                .withStyle(ChatFormatting.RED)),
                 player
         );
         
@@ -163,7 +160,8 @@ public final class ConflictCommand {
         
         try {
             CraftTweakerAPI.LOGGER.info(message.isEmpty() ? "No conflicts identified" : message);
-            CommandUtilities.send(CommandUtilities.openingLogFile(new TranslatableComponent("crafttweaker.command.conflict.complete").withStyle(ChatFormatting.GREEN)), player);
+            CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.conflict.complete")
+                    .withStyle(ChatFormatting.GREEN)), player);
         } catch(final Exception e) {
             try {
                 CraftTweakerAPI.LOGGER.error("An error occurred while reporting conflicts, hopefully it does not happen again", e);
@@ -179,7 +177,8 @@ public final class ConflictCommand {
         
         try {
             CraftTweakerAPI.LOGGER.error("Unable to verify for conflicts due to an exception", exception);
-            CommandUtilities.send(CommandUtilities.openingLogFile(new TranslatableComponent("crafttweaker.command.conflict.error").withStyle(ChatFormatting.RED)), player);
+            CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.conflict.error")
+                    .withStyle(ChatFormatting.RED)), player);
         } catch(final Exception e) {
             try {
                 CraftTweakerAPI.LOGGER.error("An error occurred while reporting conflicts, hopefully it does not happen again", e);

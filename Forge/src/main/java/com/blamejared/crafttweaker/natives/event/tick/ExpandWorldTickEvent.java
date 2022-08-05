@@ -8,15 +8,15 @@ import net.minecraftforge.event.TickEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@Document("forge/api/event/tick/WorldTickEvent")
-@NativeTypeRegistration(value = TickEvent.WorldTickEvent.class, zenCodeName = "crafttweaker.api.event.tick.WorldTickEvent")
+@Document("forge/api/event/tick/LevelTickEvent")
+@NativeTypeRegistration(value = TickEvent.LevelTickEvent.class, zenCodeName = "crafttweaker.api.event.tick.LevelTickEvent")
 public class ExpandWorldTickEvent {
     
     @ZenCodeType.Method
-    @ZenCodeType.Getter("world")
-    public static Level getWorld(TickEvent.WorldTickEvent internal) {
+    @ZenCodeType.Getter("level")
+    public static Level getLevel(TickEvent.LevelTickEvent internal) {
         
-        return internal.world;
+        return internal.level;
     }
     
 }

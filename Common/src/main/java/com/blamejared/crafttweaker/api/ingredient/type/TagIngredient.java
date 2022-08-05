@@ -48,8 +48,8 @@ public class TagIngredient implements IIngredient {
     public IItemStack[] getItems() {
         
         return internal.getInternal()
-                .getValues()
                 .stream()
+                .map(o -> (Holder<Item>)o)
                 .map(Holder::value)
                 .map(ExpandItem::getDefaultInstance)
                 .toArray(IItemStack[]::new);

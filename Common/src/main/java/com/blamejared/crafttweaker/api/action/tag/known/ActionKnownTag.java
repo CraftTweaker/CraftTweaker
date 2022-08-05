@@ -4,8 +4,10 @@ package com.blamejared.crafttweaker.api.action.tag.known;
 import com.blamejared.crafttweaker.api.action.tag.ActionTag;
 import com.blamejared.crafttweaker.api.tag.manager.type.KnownTagManager;
 import com.blamejared.crafttweaker.api.tag.type.KnownTag;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import net.minecraft.core.Holder;
-import net.minecraft.tags.Tag;
+
+import java.util.Collection;
 
 public abstract class ActionKnownTag<T> extends ActionTag<KnownTag<T>, KnownTagManager<T>> {
     
@@ -13,9 +15,10 @@ public abstract class ActionKnownTag<T> extends ActionTag<KnownTag<T>, KnownTagM
         super(mcTag);
     }
     
-    public Tag<Holder<T>> tag() {
+    public Collection<Holder<T>> tag() {
         
-        return mcTag().getInternal();
+        //TODO 1.19 confirm
+        return GenericUtil.uncheck(mcTag().getInternal());
     }
     
 }

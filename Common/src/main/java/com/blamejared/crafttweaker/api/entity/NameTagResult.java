@@ -8,16 +8,16 @@ import org.openzen.zencode.java.ZenCodeType;
 import javax.annotation.Nullable;
 
 @ZenRegister
-@Document("vanilla/api/entity/NamePlateResult")
-@ZenCodeType.Name("crafttweaker.api.entity.NamePlateResult")
-public class NamePlateResult {
+@Document("vanilla/api/entity/NameTagResult")
+@ZenCodeType.Name("crafttweaker.api.entity.NameTagResult")
+public class NameTagResult {
     
     @Nullable
     private Boolean result;
     private Component content;
     private final Component originalContent;
     
-    public NamePlateResult(@Nullable Boolean result, Component content, Component originalContent) {
+    public NameTagResult(@Nullable Boolean result, Component content, Component originalContent) {
         
         this.result = result;
         this.content = content;
@@ -25,10 +25,10 @@ public class NamePlateResult {
     }
     
     /**
-     * Gets the current content of the nameplate.
+     * Gets the current content of the name tag.
      * This can be changed by mods.
      *
-     * @return The current nameplate content.
+     * @return The current name tag content.
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("content")
@@ -39,9 +39,9 @@ public class NamePlateResult {
     
     
     /**
-     * Sets the new content of the nameplate.
+     * Sets the new content of the name tag.
      *
-     * @param content The new nameplate contents.
+     * @param content The new name tag contents.
      *
      * @docParam contents "Creator"
      */
@@ -53,10 +53,10 @@ public class NamePlateResult {
     }
     
     /**
-     * Gets the original content of the nameplate.
+     * Gets the original content of the name tag.
      * This can not be changed by mods.
      *
-     * @return The original nameplate content.
+     * @return The original name tag content.
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("originalContent")
@@ -66,7 +66,7 @@ public class NamePlateResult {
     }
     
     /**
-     * Forces the nameplate to be visible even when it would otherwise not be.
+     * Forces the name tag to be visible even when it would otherwise not be.
      */
     @ZenCodeType.Method
     public void alwaysRender() {
@@ -84,7 +84,7 @@ public class NamePlateResult {
     }
     
     /**
-     * Sets the default vanilla behaviour of rendering nameplates.
+     * Sets the default vanilla behaviour of rendering name tags.
      */
     @ZenCodeType.Method
     public void setDefault() {

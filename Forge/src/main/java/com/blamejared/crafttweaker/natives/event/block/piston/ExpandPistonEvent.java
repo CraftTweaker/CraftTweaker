@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
-import net.minecraftforge.event.world.PistonEvent;
+import net.minecraftforge.event.level.PistonEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**

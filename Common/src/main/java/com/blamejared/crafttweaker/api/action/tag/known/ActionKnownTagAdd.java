@@ -14,7 +14,7 @@ public class ActionKnownTagAdd<T> extends ActionKnownTagModify<T> {
     @Override
     public void apply() {
         
-        tag().getValues().addAll(holderValues());
+        tag().addAll(holderValues());
     }
     
     @Override

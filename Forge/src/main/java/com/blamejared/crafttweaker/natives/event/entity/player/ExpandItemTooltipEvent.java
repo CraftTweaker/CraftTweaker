@@ -73,7 +73,7 @@ public class ExpandItemTooltipEvent {
     @ZenCodeType.Nullable
     public static Player getPlayer(ItemTooltipEvent internal) {
         
-        return internal.getPlayer();
+        return internal.getEntity();
     }
     
 }

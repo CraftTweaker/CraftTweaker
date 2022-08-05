@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker_annotations.annotations.BracketEnum;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Iterator;
@@ -17,13 +18,13 @@ import java.util.Random;
 public class ExpandPlane {
     
     @ZenCodeType.Method
-    public static Direction getRandomDirection(Direction.Plane internal, Random random) {
+    public static Direction getRandomDirection(Direction.Plane internal, RandomSource random) {
         
         return internal.getRandomDirection(random);
     }
     
     @ZenCodeType.Method
-    public static Direction.Axis getRandomAxis(Direction.Plane internal, Random random) {
+    public static Direction.Axis getRandomAxis(Direction.Plane internal, RandomSource random) {
         
         return internal.getRandomAxis(random);
     }

@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.api.action.tag.unknown;
 
 import com.blamejared.crafttweaker.api.tag.type.UnknownTag;
-import net.minecraft.tags.Tag;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ public class ActionUnknownTagCreate extends ActionUnknownTag {
     @Override
     public void apply() {
         
-        manager().addTag(mcTag().id(), new Tag<>(new ArrayList<>()));
+        manager().addTag(mcTag().id(), new ArrayList<>());
     }
     
     @Override

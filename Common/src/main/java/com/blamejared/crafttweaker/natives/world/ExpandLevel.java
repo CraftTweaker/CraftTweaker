@@ -11,6 +11,7 @@ import com.google.common.base.Suppliers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
@@ -24,7 +25,6 @@ import net.minecraft.world.phys.Vec3;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.Predicate;
 
 @ZenRegister
@@ -528,7 +528,7 @@ public class ExpandLevel {
     }
     
     @ZenCodeType.Getter("random")
-    public static Random getRandom(Level internal) {
+    public static RandomSource getRandom(Level internal) {
         
         return internal.random;
     }

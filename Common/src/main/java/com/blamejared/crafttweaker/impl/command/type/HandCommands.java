@@ -19,9 +19,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -36,11 +35,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluids;
 import org.apache.logging.log4j.util.TriConsumer;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public final class HandCommands {
     
@@ -50,7 +45,7 @@ public final class HandCommands {
         
         handler.registerRootCommand(
                 "hand",
-                new TranslatableComponent("crafttweaker.command.description.hand"),
+                Component.translatable("crafttweaker.command.description.hand"),
                 builder -> builder.executes(context -> {
                     final ServerPlayer player = context.getSource().getPlayerOrException();
                     final ItemStack stack = player.getMainHandItem();
@@ -67,7 +62,7 @@ public final class HandCommands {
                     }
                     
                     for(MutableComponent component : Services.PLATFORM.getFluidsForDump(stack, player, InteractionHand.MAIN_HAND)) {
-                        sendHand(player, new TranslatableComponent("crafttweaker.command.misc.fluid"), component.getString());
+                        sendHand(player, Component.translatable("crafttweaker.command.misc.fluid"), component.getString());
                     }
                     
                     sendTagsInformation(player, item);
@@ -78,13 +73,13 @@ public final class HandCommands {
         handler.registerSubCommand(
                 "hand",
                 "registry_name",
-                new TranslatableComponent("crafttweaker.command.description.hand.registryname"),
+                Component.translatable("crafttweaker.command.description.hand.registryname"),
                 builder -> builder.executes(context -> {
                     final ItemStack mainHandItem = context.getSource()
                             .getPlayerOrException()
                             .getMainHandItem();
                     sendCopyingHand(context.getSource()
-                            .getPlayerOrException(), new TranslatableComponent("crafttweaker.command.misc.item"), Services.REGISTRY.getRegistryKey(mainHandItem.getItem())
+                            .getPlayerOrException(), Component.translatable("crafttweaker.command.misc.item"), Services.REGISTRY.getRegistryKey(mainHandItem.getItem())
                             .toString());
                     return Command.SINGLE_SUCCESS;
                 })
@@ -93,17 +88,17 @@ public final class HandCommands {
         handler.registerSubCommand(
                 "hand",
                 "data",
-                new TranslatableComponent("crafttweaker.command.description.hand.data"),
+                Component.translatable("crafttweaker.command.description.hand.data"),
                 builder -> builder.executes(context -> {
                     final ServerPlayer player = context.getSource()
                             .getPlayerOrException();
                     final ItemStack stack = player.getMainHandItem();
                     if(!stack.hasTag()) {
-                        CommandUtilities.send(new TranslatableComponent("crafttweaker.command.hand.no.data"), player);
+                        CommandUtilities.send(Component.translatable("crafttweaker.command.hand.no.data"), player);
                         return 0;
                     }
                     
-                    sendCopyingHand(player, new TranslatableComponent("crafttweaker.command.misc.data"), new MapData(stack.getTag()).accept(new DataToTextComponentVisitor(" ", 0))
+                    sendCopyingHand(player, Component.translatable("crafttweaker.command.misc.data"), new MapData(stack.getTag()).accept(new DataToTextComponentVisitor(" ", 0))
                             .getString());
                     return Command.SINGLE_SUCCESS;
                 })
@@ -112,7 +107,7 @@ public final class HandCommands {
         handler.registerSubCommand(
                 "hand",
                 "tags",
-                new TranslatableComponent("crafttweaker.command.description.hand.tags"),
+                Component.translatable("crafttweaker.command.description.hand.tags"),
                 builder -> builder.executes(context -> {
                     final ServerPlayer player = context.getSource()
                             .getPlayerOrException();
@@ -120,7 +115,7 @@ public final class HandCommands {
                     final Collection<String> tags = sendTagsInformation(player, stack.getItem());
                     
                     if(tags.isEmpty()) {
-                        CommandUtilities.send(new TranslatableComponent("crafttweaker.command.hand.no.tags"), player);
+                        CommandUtilities.send(Component.translatable("crafttweaker.command.hand.no.tags"), player);
                         return Command.SINGLE_SUCCESS;
                     }
                     
@@ -134,7 +129,7 @@ public final class HandCommands {
         handler.registerSubCommand(
                 "hand",
                 "vanilla",
-                new TranslatableComponent("crafttweaker.command.description.hand.vanilla"),
+                Component.translatable("crafttweaker.command.description.hand.vanilla"),
                 builder -> builder.executes(context -> {
                     final ServerPlayer player = context.getSource()
                             .getPlayerOrException();
@@ -159,7 +154,7 @@ public final class HandCommands {
         handler.registerSubCommand(
                 "hand",
                 "attributes",
-                new TranslatableComponent("crafttweaker.command.description.hand.attributes"),
+                Component.translatable("crafttweaker.command.description.hand.attributes"),
                 builder -> builder.executes(context -> {
                     final ServerPlayer player = context.getSource()
                             .getPlayerOrException();
@@ -172,14 +167,16 @@ public final class HandCommands {
                             continue;
                         }
                         final String equipmentCS = ExpandEquipmentSlot.getCommandString(slot);
-                        CommandUtilities.sendCopying(new TranslatableComponent("crafttweaker.command.hand.header.attributes").append(": ")
-                                .append(new TextComponent(equipmentCS).withStyle(ChatFormatting.GREEN))
+                        CommandUtilities.sendCopying(Component.translatable("crafttweaker.command.hand.header.attributes")
+                                .append(": ")
+                                .append(Component.literal(equipmentCS).withStyle(ChatFormatting.GREEN))
                                 .withStyle(ChatFormatting.DARK_AQUA), equipmentCS, player);
                         
                         modifiers.forEach((attribute, attributeModifiers) -> {
                             final String attributeCS = ExpandAttribute.getCommandString(attribute);
-                            CommandUtilities.sendCopying(new TextComponent("- ").withStyle(ChatFormatting.YELLOW)
-                                    .append(new TextComponent(attributeCS).withStyle(ChatFormatting.GREEN)), attributeCS, player);
+                            CommandUtilities.sendCopying(Component.literal("- ").withStyle(ChatFormatting.YELLOW)
+                                    .append(Component.literal(attributeCS)
+                                            .withStyle(ChatFormatting.GREEN)), attributeCS, player);
                             
                             attributeModifiers.forEach(attributeModifier -> {
                                 
@@ -193,7 +190,7 @@ public final class HandCommands {
                             });
                         });
                     }
-                    sendCopyingHand(player, new TranslatableComponent("crafttweaker.command.misc.item"), Services.REGISTRY.getRegistryKey(stack.getItem())
+                    sendCopyingHand(player, Component.translatable("crafttweaker.command.misc.item"), Services.REGISTRY.getRegistryKey(stack.getItem())
                             .toString());
                     return Command.SINGLE_SUCCESS;
                 })
@@ -206,7 +203,7 @@ public final class HandCommands {
         
         final String output = Services.PLATFORM.createMCItemStackMutable(target)
                 .getCommandString();
-        sendCopyingHand(player, new TranslatableComponent("crafttweaker.command.misc.item"), output);
+        sendCopyingHand(player, Component.translatable("crafttweaker.command.misc.item"), output);
     }
     
     private static void sendBlockInformation(final Player player, final BlockItem target) {
@@ -216,8 +213,8 @@ public final class HandCommands {
     
     private static void sendBlockInformation(final Player player, final Block target) {
         
-        sendHand(player, new TranslatableComponent("crafttweaker.command.misc.block"), ExpandBlock.getCommandString(target));
-        sendHand(player, new TranslatableComponent("crafttweaker.command.misc.blockstate"), ExpandBlockState.getCommandString(target.defaultBlockState()));
+        sendHand(player, Component.translatable("crafttweaker.command.misc.block"), ExpandBlock.getCommandString(target));
+        sendHand(player, Component.translatable("crafttweaker.command.misc.blockstate"), ExpandBlockState.getCommandString(target.defaultBlockState()));
     }
     
     private static void sendBucketInformation(final Player player, final BucketItem target) {
@@ -225,7 +222,7 @@ public final class HandCommands {
         if(Services.PLATFORM.getBucketContent(target) == Fluids.EMPTY) {
             return;
         }
-        sendHand(player, new TranslatableComponent("crafttweaker.command.misc.fluidblockstate"), ExpandBlockState.getCommandString(Services.PLATFORM.getBucketContent(target)
+        sendHand(player, Component.translatable("crafttweaker.command.misc.fluidblockstate"), ExpandBlockState.getCommandString(Services.PLATFORM.getBucketContent(target)
                 .defaultFluidState()
                 .createLegacyBlock()));
     }
@@ -241,12 +238,12 @@ public final class HandCommands {
     
     private static Collection<String> sendItemTagsInformation(final Player player, final Item item) {
         
-        return sendTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.item"), CraftTweakerTagRegistry.INSTANCE.knownTagManager(Registry.ITEM_REGISTRY), item);
+        return sendTagsInformation(player, Component.translatable("crafttweaker.command.hand.header.tags.item"), CraftTweakerTagRegistry.INSTANCE.knownTagManager(Registry.ITEM_REGISTRY), item);
     }
     
     private static Collection<String> sendBlockTagsInformation(final Player player, final BlockItem item) {
         
-        return sendTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.block"), CraftTweakerTagRegistry.INSTANCE.knownTagManager(Registry.BLOCK_REGISTRY), item.getBlock());
+        return sendTagsInformation(player, Component.translatable("crafttweaker.command.hand.header.tags.block"), CraftTweakerTagRegistry.INSTANCE.knownTagManager(Registry.BLOCK_REGISTRY), item.getBlock());
     }
     
     private static <T> Collection<String> sendTagsInformation(final Player player, final MutableComponent header, final KnownTagManager<?> manager, final T target) {
@@ -272,12 +269,12 @@ public final class HandCommands {
         
         final String output = Objects.requireNonNull(Services.REGISTRY.getRegistryKey(target.getItem()))
                 .toString();
-        sendCopyingHand(player, new TranslatableComponent("crafttweaker.command.misc.item"), output);
+        sendCopyingHand(player, Component.translatable("crafttweaker.command.misc.item"), output);
     }
     
     private static void sendVanillaDataInformation(final Player player, final Tag nbt) {
         
-        sendHand(player, new TranslatableComponent("crafttweaker.command.misc.data"), nbt.toString());
+        sendHand(player, Component.translatable("crafttweaker.command.misc.data"), nbt.toString());
     }
     
     private static void sendVanillaBucketInformation(final Player player, final BucketItem target) {
@@ -285,7 +282,7 @@ public final class HandCommands {
         if(Services.PLATFORM.getBucketContent(target) == Fluids.EMPTY) {
             return;
         }
-        sendHand(player, new TranslatableComponent("crafttweaker.command.misc.fluidblockstate"), Services.REGISTRY.getRegistryKey(Services.PLATFORM.getBucketContent(target))
+        sendHand(player, Component.translatable("crafttweaker.command.misc.fluidblockstate"), Services.REGISTRY.getRegistryKey(Services.PLATFORM.getBucketContent(target))
                 .toString());
     }
     
@@ -299,12 +296,12 @@ public final class HandCommands {
     
     private static void sendVanillaItemTagsInformation(final Player player, final Item item) {
         
-        sendVanillaTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.item"), CraftTweakerTagRegistry.INSTANCE.tagManager(Registry.ITEM_REGISTRY), item);
+        sendVanillaTagsInformation(player, Component.translatable("crafttweaker.command.hand.header.tags.item"), CraftTweakerTagRegistry.INSTANCE.tagManager(Registry.ITEM_REGISTRY), item);
     }
     
     private static void sendVanillaBlockTagsInformation(final Player player, final BlockItem item) {
         
-        sendVanillaTagsInformation(player, new TranslatableComponent("crafttweaker.command.hand.header.tags.block"), CraftTweakerTagRegistry.INSTANCE.tagManager(Registry.BLOCK_REGISTRY), item.getBlock());
+        sendVanillaTagsInformation(player, Component.translatable("crafttweaker.command.hand.header.tags.block"), CraftTweakerTagRegistry.INSTANCE.tagManager(Registry.BLOCK_REGISTRY), item.getBlock());
     }
     
     private static <T> void sendVanillaTagsInformation(final Player player, final MutableComponent header, final ITagManager<?> manager, final T target) {
@@ -321,9 +318,9 @@ public final class HandCommands {
     
     private static void sendAttributePropertyInformation(final Player player, final String propertyName, final String value) {
         
-        CommandUtilities.sendCopying(new TextComponent("    - ").append(propertyName)
+        CommandUtilities.sendCopying(Component.literal("    - ").append(propertyName)
                 .append(": ").withStyle(ChatFormatting.YELLOW)
-                .append(new TextComponent(value).withStyle(ChatFormatting.AQUA)), value, player);
+                .append(Component.literal(value).withStyle(ChatFormatting.AQUA)), value, player);
     }
     // </editor-fold>
     
@@ -341,7 +338,7 @@ public final class HandCommands {
     private static void sendHand(final Player receiver, final MutableComponent messagePrefix, final String target, final TriConsumer<MutableComponent, String, Player> consumer) {
         
         consumer.accept(
-                messagePrefix.append(": ").append(new TextComponent(target).withStyle(ChatFormatting.GREEN)),
+                messagePrefix.append(": ").append(Component.literal(target).withStyle(ChatFormatting.GREEN)),
                 target,
                 receiver
         );
@@ -350,9 +347,9 @@ public final class HandCommands {
     private static void sendTagHand(final Player receiver, final String tag) {
         
         CommandUtilities.sendCopying(
-                new TranslatableComponent("    ").append(new TextComponent("- ").withStyle(ChatFormatting.YELLOW))
+                Component.translatable("    ").append(Component.literal("- ").withStyle(ChatFormatting.YELLOW))
                         .append(" ")
-                        .append(new TextComponent(tag).withStyle(ChatFormatting.AQUA)),
+                        .append(Component.literal(tag).withStyle(ChatFormatting.AQUA)),
                 tag,
                 receiver
         );

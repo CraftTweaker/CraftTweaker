@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.api.util.random.Percentaged;
 import com.blamejared.crafttweaker.natives.item.ExpandItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.Util;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -20,7 +21,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -57,7 +57,7 @@ public final class CommonLootModifiers {
             return (amount, level, random) -> amount + random.nextInt(multiplier * level + 1);
         }
         
-        int apply(final int amount, final int level, final Random random);
+        int apply(final int amount, final int level, final RandomSource random);
         
     }
     
@@ -562,7 +562,7 @@ public final class CommonLootModifiers {
         return stack.getData().isEmpty() || stack.getPercentage() <= 0.0;
     }
     
-    private static Optional<IItemStack> chance(final Random random, final Percentaged<IItemStack> stack) {
+    private static Optional<IItemStack> chance(final RandomSource random, final Percentaged<IItemStack> stack) {
         
         return random.nextDouble() <= stack.getPercentage() ? Optional.of(stack.getData().copy()) : Optional.empty();
     }

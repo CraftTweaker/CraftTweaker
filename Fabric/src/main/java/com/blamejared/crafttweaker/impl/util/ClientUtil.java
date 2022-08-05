@@ -11,7 +11,7 @@ public class ClientUtil {
         
         Object gameInstance = FabricLoader.getInstance().getGameInstance();
         if(gameInstance instanceof Minecraft mc && mc.player != null) {
-            mc.player.sendMessage(msg, CraftTweakerConstants.CRAFTTWEAKER_UUID);
+            mc.player.sendSystemMessage(msg);
             return true;
         }
         return false;

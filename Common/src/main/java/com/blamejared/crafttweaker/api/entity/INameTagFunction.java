@@ -7,11 +7,11 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @FunctionalInterface
-@Document("vanilla/api/entity/INameplateFunction")
-@ZenCodeType.Name("crafttweaker.api.entity.INameplateFunction")
-public interface INameplateFunction {
+@Document("vanilla/api/entity/INameTagFunction")
+@ZenCodeType.Name("crafttweaker.api.entity.INameTagFunction")
+public interface INameTagFunction {
     
     @ZenCodeType.Method
-    void apply(Entity entity, NamePlateResult result);
+    void apply(Entity entity, NameTagResult result);
     
 }

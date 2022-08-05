@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.api.villager;
 
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.ItemStack;
@@ -45,7 +46,7 @@ public class BasicTradeListing implements VillagerTrades.ItemListing, IBasicItem
     
     @Nullable
     @Override
-    public MerchantOffer getOffer(Entity trader, Random rand) {
+    public MerchantOffer getOffer(Entity trader, RandomSource rand) {
         
         return new MerchantOffer(price, price2, forSale, maxTrades, xp, priceMult);
     }

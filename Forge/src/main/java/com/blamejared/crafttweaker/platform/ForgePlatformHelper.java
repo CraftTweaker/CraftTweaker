@@ -15,8 +15,6 @@ import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.api.villager.CTTradeObject;
 import com.blamejared.crafttweaker.impl.loot.CraftTweakerPrivilegedLootModifierMap;
 import com.blamejared.crafttweaker.impl.loot.ForgeLootModifierMapAdapter;
-import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
-import com.blamejared.crafttweaker.impl.script.ScriptSerializer;
 import com.blamejared.crafttweaker.mixin.common.access.food.AccessFoodPropertiesForge;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessBasicTrade;
 import com.blamejared.crafttweaker.platform.helper.inventory.IItemHandlerWrapper;
@@ -26,8 +24,8 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -41,7 +39,6 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.BasicItemListing;
 import net.minecraftforge.common.ForgeInternalHandler;
@@ -159,12 +156,6 @@ public class ForgePlatformHelper implements IPlatformHelper {
     public IItemStack getEmptyIItemStack() {
         
         return MCItemStack.EMPTY.get();
-    }
-    
-    @Override
-    public RecipeSerializer<ScriptRecipe> getScriptSerializer() {
-        
-        return ScriptSerializer.INSTANCE;
     }
     
     @Override
@@ -294,7 +285,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
         cap.ifPresent(handler -> {
             int tanks = handler.getTanks();
             for(int i = 0; i < tanks; i++) {
-                components.add(new TextComponent(new MCFluidStack(handler.getFluidInTank(i)).getCommandString()));
+                components.add(Component.literal(new MCFluidStack(handler.getFluidInTank(i)).getCommandString()));
             }
         });
         return components;

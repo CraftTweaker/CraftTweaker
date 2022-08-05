@@ -12,7 +12,6 @@ import com.blamejared.crafttweaker.api.util.sequence.SequenceType;
 import com.blamejared.crafttweaker.api.villager.CTVillagerTrades;
 import com.blamejared.crafttweaker.impl.script.ScriptReloadListener;
 import com.blamejared.crafttweaker.platform.Services;
-import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.npc.VillagerTrades;
@@ -37,10 +36,10 @@ import java.util.List;
 public class CTCommonEventHandler {
     
     @SubscribeEvent
-    public static void worldTick(TickEvent.WorldTickEvent e) {
+    public static void worldTick(TickEvent.LevelTickEvent e) {
         
         if(e.phase == TickEvent.Phase.START) {
-            SequenceManager.tick(e.world.isClientSide ? SequenceType.CLIENT_THREAD_LEVEL : SequenceType.SERVER_THREAD_LEVEL);
+            SequenceManager.tick(e.level.isClientSide ? SequenceType.CLIENT_THREAD_LEVEL : SequenceType.SERVER_THREAD_LEVEL);
         }
     }
     
@@ -53,7 +52,7 @@ public class CTCommonEventHandler {
     @SubscribeEvent
     public static void blockInteract(PlayerInteractEvent.RightClickBlock e) {
         
-        if(Services.EVENT.onBlockInteract(e.getPlayer(), e.getHand(), e.getHitVec())) {
+        if(Services.EVENT.onBlockInteract(e.getEntity(), e.getHand(), e.getHitVec())) {
             e.setCanceled(true);
         }
     }
@@ -61,7 +60,7 @@ public class CTCommonEventHandler {
     @SubscribeEvent
     public static void entityInteract(PlayerInteractEvent.EntityInteract e) {
         
-        if(Services.EVENT.onEntityInteract(e.getPlayer(), e.getHand(), e.getTarget())) {
+        if(Services.EVENT.onEntityInteract(e.getEntity(), e.getHand(), e.getTarget())) {
             e.setCanceled(true);
         }
     }
@@ -120,19 +119,19 @@ public class CTCommonEventHandler {
     @SubscribeEvent
     public static void playerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         
-        CraftTweakerLogger.addPlayer(event.getPlayer());
+        CraftTweakerLogger.addPlayer(event.getEntity());
     }
     
     @SubscribeEvent
     public static void playerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         
-        CraftTweakerLogger.removePlayer(event.getPlayer());
+        CraftTweakerLogger.removePlayer(event.getEntity());
     }
     
     @SubscribeEvent
     public static void registerCommands(RegisterCommandsEvent event) {
         
-        CraftTweakerCommon.registerCommands(event.getDispatcher(), event.getEnvironment());
+        CraftTweakerCommon.registerCommands(event.getDispatcher(), event.getCommandSelection());
     }
     
     
@@ -147,7 +146,7 @@ public class CTCommonEventHandler {
         
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         if(server != null) {
-            server.getPlayerList().broadcastMessage(msg, ChatType.SYSTEM, CraftTweakerConstants.CRAFTTWEAKER_UUID);
+            server.getPlayerList().broadcastSystemMessage(msg, false);
         } else {
             CraftTweakerCommon.LOG.info(msg.getString());
         }

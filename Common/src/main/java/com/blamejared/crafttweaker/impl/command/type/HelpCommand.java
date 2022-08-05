@@ -10,8 +10,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public final class HelpCommand {
         
         instance.registerCommand(
                 "help",
-                new TranslatableComponent("crafttweaker.command.description.help"),
+                Component.translatable("crafttweaker.command.description.help"),
                 builder -> {
                     builder.executes(context -> executeHelp(commands, context, 1));
                     builder.then(Commands.argument("page", IntegerArgumentType.integer(1))
@@ -64,12 +63,12 @@ public final class HelpCommand {
             final CommandImpl command = commands.get(allowedToUseCommands.get(i));
             
             String commandStr = "/ct " + command.name();
-            source.sendSuccess(CommandUtilities.run(new TextComponent(commandStr), commandStr), true);
-            source.sendSuccess(new TextComponent("- ").append(command.description()
+            source.sendSuccess(CommandUtilities.run(Component.literal(commandStr), commandStr), true);
+            source.sendSuccess(Component.literal("- ").append(command.description()
                     .withStyle(ChatFormatting.DARK_AQUA)), true);
         }
         
-        source.sendSuccess(new TranslatableComponent("crafttweaker.command.help.page.info", clampedPage, maxPages), true);
+        source.sendSuccess(Component.translatable("crafttweaker.command.help.page.info", clampedPage, maxPages), true);
         return Command.SINGLE_SUCCESS;
     }
     

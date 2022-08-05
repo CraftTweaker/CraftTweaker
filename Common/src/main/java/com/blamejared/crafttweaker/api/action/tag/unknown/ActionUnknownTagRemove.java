@@ -15,7 +15,7 @@ public class ActionUnknownTagRemove extends ActionUnknownTagModify {
     @Override
     public void apply() {
         
-        tag().getValues().removeAll(holderValues());
+        tag().removeAll(holderValues());
     }
     
     @Override

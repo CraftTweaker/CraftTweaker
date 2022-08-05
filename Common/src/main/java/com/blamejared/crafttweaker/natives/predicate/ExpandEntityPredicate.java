@@ -5,7 +5,9 @@ import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -36,18 +38,6 @@ public final class ExpandEntityPredicate {
     public static EntityPredicate.Builder create(final KnownTag<EntityType<?>> entityTag) {
 
         return create().of(entityTag.getTagKey());
-    }
-    
-    @ZenCodeType.StaticExpansionMethod
-    public static EntityPredicate.Builder create(final ResourceLocation catType) {
-        
-        return create().of(catType);
-    }
-    
-    @ZenCodeType.StaticExpansionMethod
-    public static EntityPredicate.Builder create(final String catType) {
-        
-        return create(new ResourceLocation(catType));
     }
     
 }

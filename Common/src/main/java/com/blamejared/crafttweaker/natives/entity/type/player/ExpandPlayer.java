@@ -395,7 +395,7 @@ public class ExpandPlayer {
     @ZenCodeType.Method
     public static void sendMessage(Player internal, Component text) {
         
-        internal.sendMessage(text, CraftTweakerConstants.CRAFTTWEAKER_UUID);
+        internal.sendSystemMessage(text);
     }
     
 }

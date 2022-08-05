@@ -1,14 +1,12 @@
 package com.blamejared.crafttweaker.impl.command.type.script.example;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.command.CommandUtilities;
 import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.mixin.common.access.server.AccessMinecraftServer;
 import com.mojang.brigadier.Command;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -30,7 +28,7 @@ public final class ExamplesCommand {
         
         handler.registerRootCommand(
                 "examples",
-                new TranslatableComponent("crafttweaker.command.description.examples"),
+                Component.translatable("crafttweaker.command.description.examples"),
                 builder -> builder.requires((source) -> source.hasPermission(2)) // TODO("Permission API")
                         .executes(ctx -> execute(ctx.getSource().getPlayerOrException()))
         );
@@ -43,11 +41,14 @@ public final class ExamplesCommand {
         final ResourceManager resourceManager = reloadableResources.resourceManager();
         
         //Collect all scripts that are in the scripts data pack folder and write them to the example scripts folder
-        for(ResourceLocation file : resourceManager.listResources("scripts", n -> n.endsWith(".zs"))) {
-            writeScriptFile(new ResourceManagerSourceFile(file, resourceManager));
-        }
+        resourceManager.listResources("scripts", n -> n.getPath().endsWith(".zs"))
+                .entrySet()
+                .stream()
+                .map(ResourceManagerSourceFile::new)
+                .forEach(ExamplesCommand::writeScriptFile);
         
-        player.sendMessage(CommandUtilities.openingFile(new TranslatableComponent("crafttweaker.command.example.generated").withStyle(ChatFormatting.GREEN), getExamplesDir().toString()), CraftTweakerConstants.CRAFTTWEAKER_UUID);
+        player.sendSystemMessage(CommandUtilities.openingFile(Component.translatable("crafttweaker.command.example.generated")
+                .withStyle(ChatFormatting.GREEN), getExamplesDir().toString()));
         return Command.SINGLE_SUCCESS;
     }
     

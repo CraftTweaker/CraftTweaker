@@ -12,7 +12,7 @@ import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManage
 import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.brigadier.Command;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -33,7 +33,7 @@ public final class RecipeCommands {
         
         handler.registerRootCommand(
                 "recipes",
-                new TranslatableComponent("crafttweaker.command.description.recipes"),
+                Component.translatable("crafttweaker.command.description.recipes"),
                 builder -> builder.executes(context -> {
                     final ServerPlayer player = context.getSource().getPlayerOrException();
                     return dumpRecipes(player);
@@ -42,7 +42,7 @@ public final class RecipeCommands {
         handler.registerSubCommand(
                 "recipes",
                 "hand",
-                new TranslatableComponent("crafttweaker.command.description.recipes.hand"),
+                Component.translatable("crafttweaker.command.description.recipes.hand"),
                 builder -> builder.executes(context -> {
                     final ServerPlayer player = context.getSource().getPlayerOrException();
                     
@@ -52,7 +52,7 @@ public final class RecipeCommands {
         handler.registerSubCommand(
                 "recipes",
                 "inventory",
-                new TranslatableComponent("crafttweaker.command.description.recipes.inventory"),
+                Component.translatable("crafttweaker.command.description.recipes.inventory"),
                 builder -> builder.executes(context -> {
                     final ServerPlayer player = context.getSource().getPlayerOrException();
                     
@@ -78,7 +78,8 @@ public final class RecipeCommands {
         ((AccessRecipeManager) player.level.getRecipeManager()).crafttweaker$getRecipes()
                 .forEach((recipeType, map) -> dumpRecipe(recipeType, map.values(), it -> true, false));
         
-        CommandUtilities.send(CommandUtilities.openingLogFile(new TranslatableComponent("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(new TranslatableComponent("crafttweaker.command.misc.recipes.list")), CommandUtilities.getFormattedLogFile()).withStyle(ChatFormatting.GREEN)), player);
+        CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.recipes.list")), CommandUtilities.getFormattedLogFile())
+                .withStyle(ChatFormatting.GREEN)), player);
         return Command.SINGLE_SUCCESS;
     }
     
@@ -93,7 +94,8 @@ public final class RecipeCommands {
             
             if(stack.isEmpty()) {
                 // Only done because *a lot* of mods return empty ItemStacks as outputs
-                CommandUtilities.send(new TranslatableComponent("crafttweaker.command.recipes.hand.empty").withStyle(ChatFormatting.RED), player);
+                CommandUtilities.send(Component.translatable("crafttweaker.command.recipes.hand.empty")
+                        .withStyle(ChatFormatting.RED), player);
                 return Command.SINGLE_SUCCESS;
             }
             
@@ -105,7 +107,8 @@ public final class RecipeCommands {
                     .forEach((recipeType, map) ->
                             dumpRecipe(recipeType, map.values(), it -> workingStack.matches(Services.PLATFORM.createMCItemStack(it.getResultItem())), true));
         }
-        CommandUtilities.send(CommandUtilities.openingLogFile(new TranslatableComponent("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(new TranslatableComponent("crafttweaker.command.misc.recipes.list")), CommandUtilities.getFormattedLogFile()).withStyle(ChatFormatting.GREEN)), player);
+        CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.recipes.list")), CommandUtilities.getFormattedLogFile())
+                .withStyle(ChatFormatting.GREEN)), player);
         return Command.SINGLE_SUCCESS;
     }
     

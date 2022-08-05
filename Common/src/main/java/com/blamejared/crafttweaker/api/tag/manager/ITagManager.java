@@ -10,18 +10,13 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.tags.TagManager;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -160,14 +155,14 @@ public interface ITagManager<T extends MCTag> extends CommandStringDisplayable, 
      * @param id  The id of the tag to add.
      * @param tag The tag to add
      */
-    <U> void addTag(ResourceLocation id, Tag<Holder<U>> tag);
+    <U> void addTag(ResourceLocation id, Collection<Holder<U>> tag);
     
     /**
      * Gets the internal tags of this manager.
      *
      * @return a map of id to tag.
      */
-    Map<ResourceLocation, Tag<Holder<?>>> internalTags();
+    Map<ResourceLocation, Collection<Holder<?>>> internalTags();
     
     /**
      * Binds this manager to the given load result.
@@ -240,7 +235,7 @@ public interface ITagManager<T extends MCTag> extends CommandStringDisplayable, 
         if(!exists(of)) {
             return List.of();
         }
-        return getInternalRaw(of).getValues()
+        return getInternalRaw(of)
                 .stream()
                 .map(Holder::unwrapKey)
                 .filter(Optional::isPresent)
@@ -250,16 +245,16 @@ public interface ITagManager<T extends MCTag> extends CommandStringDisplayable, 
     }
     
     /**
-     * Gets the internal {@link Tag}<{@link Holder}> of the given tag.
+     * Gets the internal {@link Collection}<{@link Holder}> of the given tag.
      *
      * <p>This method should only be used when you do not have access to the more specific version of this method in {@link com.blamejared.crafttweaker.api.tag.manager.type.KnownTagManager}</p>
      *
      * @param tag The tag to get the internal value of.
      *
-     * @return The internal {@link Tag}<{@link Holder}> of the given tag.
+     * @return The internal {@link Collection}<{@link Holder}> of the given tag.
      */
     @Nullable
-    Tag<Holder<?>> getInternalRaw(T tag);
+    Collection<Holder<?>> getInternalRaw(T tag);
     
     /**
      * Ges the tags that this manager knows about.

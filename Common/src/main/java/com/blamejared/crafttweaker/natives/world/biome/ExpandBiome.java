@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.natives.world.biome;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.mixin.common.access.world.biome.AccessBiome;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
@@ -40,12 +39,6 @@ public class ExpandBiome {
     public static boolean isHumid(Biome internal) {
         
         return internal.isHumid();
-    }
-    
-    @ZenCodeType.Getter("biomeCategory")
-    public static String getBiomeCategory(Biome internal) {
-        
-        return ((AccessBiome) (Object) internal).crafttweaker$callGetBiomeCategory().getName().toLowerCase();
     }
     
     @ZenCodeType.Getter("doesRain")

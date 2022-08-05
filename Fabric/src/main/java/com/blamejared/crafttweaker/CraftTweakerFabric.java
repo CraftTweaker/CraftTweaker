@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker.api.util.sequence.SequenceManager;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceType;
 import com.blamejared.crafttweaker.platform.Services;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
@@ -24,8 +24,8 @@ public class CraftTweakerFabric implements ModInitializer {
         // TODO("Will be removed")
         CraftTweakerCommon.registerCommandArguments();
         
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
-            CraftTweakerCommon.registerCommands(dispatcher, dedicated ? Commands.CommandSelection.DEDICATED : Commands.CommandSelection.INTEGRATED);
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+            CraftTweakerCommon.registerCommands(dispatcher, environment);
         });
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
             if(Services.EVENT.onBlockInteract(player, hand, hitResult)) {

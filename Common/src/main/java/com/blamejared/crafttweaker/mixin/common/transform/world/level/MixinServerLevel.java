@@ -29,16 +29,17 @@ import java.util.function.Supplier;
 @Mixin(ServerLevel.class)
 public abstract class MixinServerLevel extends Level implements CraftTweakerSavedDataHolder {
     
+    protected MixinServerLevel(WritableLevelData $$0, ResourceKey<Level> $$1, Holder<DimensionType> $$2, Supplier<ProfilerFiller> $$3, boolean $$4, boolean $$5, long $$6, int $$7) {
+        
+        super($$0, $$1, $$2, $$3, $$4, $$5, $$6, $$7);
+    }
+    
     @Shadow
     public abstract DimensionDataStorage getDataStorage();
     
     @Unique
     public CraftTweakerSavedData crafttweaker$crafttweakerSavedData;
     
-    protected MixinServerLevel(WritableLevelData $$0, ResourceKey<Level> $$1, Holder<DimensionType> $$2, Supplier<ProfilerFiller> $$3, boolean $$4, boolean $$5, long $$6) {
-        
-        super($$0, $$1, $$2, $$3, $$4, $$5, $$6);
-    }
     
     @Inject(method = "<init>", at = @At(value = "TAIL"))
     public void crafttwaeker$init(MinecraftServer $$0, Executor $$1, LevelStorageSource.LevelStorageAccess $$2, ServerLevelData $$3, ResourceKey<Level> $$4, Holder<DimensionType> $$5, ChunkProgressListener $$6, ChunkGenerator $$7, boolean $$8, long $$9, List $$10, boolean $$11, CallbackInfo ci) {

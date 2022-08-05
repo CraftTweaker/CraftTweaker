@@ -63,7 +63,7 @@ public final class ScriptReloadListenerAdapter implements IdentifiableResourceRe
         Object gameInstance = FabricLoader.getInstance().getGameInstance();
         Services.DISTRIBUTION.callOn(() -> () -> ClientUtil.giveFeedback(msg), () -> () -> {
             if(gameInstance instanceof MinecraftServer server) {
-                server.getPlayerList().broadcastMessage(msg, ChatType.SYSTEM, CraftTweakerConstants.CRAFTTWEAKER_UUID);
+                server.getPlayerList().broadcastSystemMessage(msg, false);
                 return true;
             }
             return false;

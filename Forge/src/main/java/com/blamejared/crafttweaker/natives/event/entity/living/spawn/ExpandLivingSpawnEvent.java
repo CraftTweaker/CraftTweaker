@@ -21,10 +21,10 @@ public class ExpandLivingSpawnEvent {
     @ZenCodeType.Getter("world")
     public static Level getWorld(LivingSpawnEvent internal) {
         
-        if(internal.getWorld() instanceof Level level) {
+        if(internal.getLevel() instanceof Level level) {
             return level;
         }
-        throw new IllegalArgumentException("IWorld instance was not an instance of World!");
+        throw new IllegalArgumentException("LevelAccessor instance was not an instance of Level!");
     }
     
     @ZenCodeType.Getter("x")

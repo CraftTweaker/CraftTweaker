@@ -16,7 +16,7 @@ public class ExpandLivingEvent {
     @ZenCodeType.Getter("entityLiving")
     public static LivingEntity getEntityLiving(LivingEvent internal) {
         
-        return internal.getEntityLiving();
+        return internal.getEntity();
     }
     
 }

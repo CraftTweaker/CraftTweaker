@@ -16,7 +16,8 @@ public final class ExpandLightningBoltPredicate {
     
     @ZenCodeType.StaticExpansionMethod
     public static LighthingBoltPredicate any() {
-        
+        //TODO 1.19 silk
+        //TODO we could just remove this, just that EntitySubPredicate.ANY exists, so not sure
         return LighthingBoltPredicate.ANY;
     }
     

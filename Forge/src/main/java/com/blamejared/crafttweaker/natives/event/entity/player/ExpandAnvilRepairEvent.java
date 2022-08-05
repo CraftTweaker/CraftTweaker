@@ -17,26 +17,26 @@ public class ExpandAnvilRepairEvent {
     
     @Nonnull
     @ZenCodeType.Method
-    @ZenCodeType.Getter("itemResult")
-    public static IItemStack getItemResult(AnvilRepairEvent internal) {
+    @ZenCodeType.Getter("output")
+    public static IItemStack getOutput(AnvilRepairEvent internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.getItemResult());
+        return Services.PLATFORM.createMCItemStack(internal.getOutput());
     }
     
     @Nonnull
     @ZenCodeType.Method
-    @ZenCodeType.Getter("itemInput")
-    public static IItemStack getItemInput(AnvilRepairEvent internal) {
+    @ZenCodeType.Getter("left")
+    public static IItemStack getLeft(AnvilRepairEvent internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.getItemInput());
+        return Services.PLATFORM.createMCItemStack(internal.getLeft());
     }
     
     @Nonnull
     @ZenCodeType.Method
-    @ZenCodeType.Getter("ingredientInput")
-    public static IItemStack getIngredientInput(AnvilRepairEvent internal) {
+    @ZenCodeType.Getter("right")
+    public static IItemStack getRight(AnvilRepairEvent internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.getIngredientInput());
+        return Services.PLATFORM.createMCItemStack(internal.getRight());
     }
     
     @ZenCodeType.Method

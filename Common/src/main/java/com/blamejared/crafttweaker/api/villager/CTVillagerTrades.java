@@ -18,6 +18,7 @@ import com.blamejared.crafttweaker.mixin.common.access.villager.AccessItemsForEm
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessTippedArrowForItemsAndEmeralds;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
@@ -70,7 +71,7 @@ public class CTVillagerTrades {
      * }
      */
     @ZenCodeType.Method
-    public void addTrade(VillagerProfession profession, int villagerLevel, BiFunction<Entity, Random, @ZenCodeType.Nullable MerchantOffer> offerGenerator) {
+    public void addTrade(VillagerProfession profession, int villagerLevel, BiFunction<Entity, RandomSource, @ZenCodeType.Nullable MerchantOffer> offerGenerator) {
         
         CustomTradeListing trade = new CustomTradeListing(offerGenerator);
         addTradeInternal(profession, villagerLevel, trade);

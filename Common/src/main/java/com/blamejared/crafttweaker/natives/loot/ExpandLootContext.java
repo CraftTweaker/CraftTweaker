@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.natives.item.ExpandItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -107,7 +108,7 @@ public final class ExpandLootContext {
     }
     
     @ZenCodeType.Getter("random")
-    public static Random getRandom(final LootContext internal) {
+    public static RandomSource getRandom(final LootContext internal) {
         
         return internal.getRandom();
     }

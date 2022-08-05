@@ -1,14 +1,13 @@
 package com.blamejared.crafttweaker.api.tag;
 
-import com.blamejared.crafttweaker.mixin.common.access.tag.AccessTag;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 
@@ -31,7 +30,7 @@ public class MutableLoadResult<T> {
      * @param id  The id of the tag to add.
      * @param tag The tag to add.
      */
-    public void addTag(ResourceLocation id, Tag<Holder<T>> tag) {
+    public void addTag(ResourceLocation id, Collection<Holder<T>> tag) {
         
         this.tagMap().put(id, tag);
     }
@@ -52,7 +51,7 @@ public class MutableLoadResult<T> {
      *
      * @return The tags of the load result.
      */
-    public Map<ResourceLocation, Tag<Holder<T>>> tagMap() {
+    public Map<ResourceLocation, Collection<Holder<T>>> tagMap() {
         
         Objects.requireNonNull(result, "Cannot get tagMap before the result has been bound!");
         return result.tags();
@@ -82,11 +81,8 @@ public class MutableLoadResult<T> {
             throw new IllegalStateException("Unable to bind a MutableLoadResult twice!");
         }
         this.result = result;
-        for(Tag<Holder<T>> tag : this.tagMap().values()) {
-            AccessTag accessTag = (AccessTag) tag;
-            accessTag.crafttweaker$setElements(new ArrayList<T>(accessTag.crafttweaker$getElements()));
-        }
-        
+        //TODO 1.19 confirm
+        this.tagMap().replaceAll((key, value) -> new ArrayList<>(value));
     }
     
 }

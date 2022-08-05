@@ -15,7 +15,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagManager;
 import net.minecraft.tags.TagNetworkSerialization;
 import org.openzen.zencode.java.ZenCodeGlobals;
@@ -225,14 +224,16 @@ public final class CraftTweakerTagRegistry {
      */
     @SuppressWarnings("rawtypes")
     public void bind(Map<ResourceKey<? extends Registry<?>>, TagNetworkSerialization.NetworkPayload> tags) {
+        
         bind(tags, new BindContext());
     }
+    
     /**
      * Binds the given map to the registry.
      *
      * <p>Note: This will clear all registered managers.</p>
      *
-     * @param tags The map to bind.
+     * @param tags    The map to bind.
      * @param context The bind context.
      */
     @SuppressWarnings("rawtypes")
@@ -249,7 +250,7 @@ public final class CraftTweakerTagRegistry {
             HashMap<Object, Object> resultMap = new HashMap<>();
             
             Registry<Object> registry = registryAccess.registryOrThrow(resourceKey);
-            TagNetworkSerialization.deserializeTagsFromNetwork(GenericUtil.uncheck(resourceKey), registry, networkPayload, (TagNetworkSerialization.TagOutput) (key, holders) -> resultMap.put(key.location(), new Tag<>(holders)));
+            TagNetworkSerialization.deserializeTagsFromNetwork(GenericUtil.uncheck(resourceKey), registry, networkPayload, (key, holders) -> resultMap.put(key.location(), holders));
             
             results.add(new TagManager.LoadResult(resourceKey, resultMap));
             
@@ -295,7 +296,7 @@ public final class CraftTweakerTagRegistry {
             Optional<? extends Class<?>> taggableElement = CraftTweakerAPI.getRegistry()
                     .getTaggableElementFor(loadResult.key());
             
-            if(context.registerKnownManagers()){
+            if(context.registerKnownManagers()) {
                 TagManagerFactory taggableElementFactory = CraftTweakerAPI.getRegistry()
                         .getTaggableElementFactory(loadResult.key());
                 taggableElement.ifPresentOrElse(it -> this.addManager(taggableElementFactory.apply(loadResult.key(), it))
@@ -326,12 +327,12 @@ public final class CraftTweakerTagRegistry {
         public BindContext() {
         
         }
-    
-        public boolean registerKnownManagers() {
         
+        public boolean registerKnownManagers() {
+            
             return registerKnownManagers;
         }
-    
+        
         public BindContext registerKnownManagers(boolean value) {
             
             this.registerKnownManagers = value;

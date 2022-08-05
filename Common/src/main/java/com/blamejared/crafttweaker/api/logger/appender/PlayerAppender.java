@@ -4,17 +4,13 @@ import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.core.Appender;
-import org.apache.logging.log4j.core.Core;
-import org.apache.logging.log4j.core.Filter;
-import org.apache.logging.log4j.core.Layout;
-import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.*;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
@@ -72,10 +68,10 @@ public class PlayerAppender extends AbstractAppender {
     public void sendMessage(final Player player, final LogMessage event) {
         
         final Pair<Style, Style> styling = STYLING.get(event.level());
-        final MutableComponent header = new TextComponent("[%s]: ".formatted(event.level()
+        final MutableComponent header = Component.literal("[%s]: ".formatted(event.level()
                 .name())).setStyle(styling.getFirst());
-        final MutableComponent line = header.append(new TextComponent(event.message()).setStyle(styling.getSecond()));
-        player.sendMessage(line, CraftTweakerConstants.CRAFTTWEAKER_UUID);
+        final MutableComponent line = header.append(Component.literal(event.message()).setStyle(styling.getSecond()));
+        player.sendSystemMessage(line);
     }
     
     

@@ -7,13 +7,7 @@ import com.blamejared.crafttweaker.impl.network.message.MessageCopy;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
@@ -37,15 +31,16 @@ public final class CommandUtilities {
     public static void send(Component component, CommandSourceStack source) {
         
         source.sendSuccess(component, true);
-        if(!component.getString().isBlank()){
+        if(!component.getString().isBlank()) {
             CraftTweakerAPI.LOGGER.info(component.getString());
         }
     }
     
     public static void send(Component component, Player player) {
         
-        player.sendMessage(component, CraftTweakerConstants.CRAFTTWEAKER_UUID);
-        if(!component.getContents().isBlank()){
+        player.sendSystemMessage(component);
+        //TODO 1.19 confirm
+        if(!component.getString().isBlank()) {
             CraftTweakerAPI.LOGGER.info(component.getContents());
         }
     }
@@ -58,8 +53,9 @@ public final class CommandUtilities {
     }
     
     public static void open(final Player player, final Path path) {
-    
-        MutableComponent component = new TranslatableComponent("crafttweaker.command.click.open", new TextComponent(path.toString()).withStyle(ChatFormatting.GOLD));
+        
+        MutableComponent component = Component.translatable("crafttweaker.command.click.open", Component.literal(path.toString())
+                .withStyle(ChatFormatting.GOLD));
         send(component.withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, component.copy()))
                 .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, path.toString()))), player);
     }
@@ -77,7 +73,8 @@ public final class CommandUtilities {
     public static Component copy(MutableComponent base, String toCopy) {
         
         Style style = base.getStyle();
-        style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableComponent("crafttweaker.command.click.copy", new TextComponent(toCopy).withStyle(ChatFormatting.GOLD))));
+        style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("crafttweaker.command.click.copy", Component.literal(toCopy)
+                .withStyle(ChatFormatting.GOLD))));
         style = style.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, toCopy));
         return base.setStyle(style);
     }
@@ -85,7 +82,8 @@ public final class CommandUtilities {
     public static Component open(MutableComponent base, String path) {
         
         Style style = base.getStyle();
-        style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableComponent("crafttweaker.command.click.open", new TextComponent(path).withStyle(ChatFormatting.GOLD))));
+        style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("crafttweaker.command.click.open", Component.literal(path)
+                .withStyle(ChatFormatting.GOLD))));
         style = style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, path));
         return base.setStyle(style);
     }
@@ -93,7 +91,8 @@ public final class CommandUtilities {
     public static Component run(MutableComponent base, String command) {
         
         Style style = base.getStyle();
-        style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableComponent("crafttweaker.command.click.run", new TextComponent(command).withStyle(ChatFormatting.GOLD))));
+        style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("crafttweaker.command.click.run", Component.literal(command)
+                .withStyle(ChatFormatting.GOLD))));
         style = style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
         
         return base.setStyle(style);
@@ -102,14 +101,16 @@ public final class CommandUtilities {
     
     public static Component openingUrl(MutableComponent base, String url) {
         
-        MutableComponent component = new TranslatableComponent("crafttweaker.command.click.goto", new TextComponent(url).withStyle(ChatFormatting.GOLD));
+        MutableComponent component = Component.translatable("crafttweaker.command.click.goto", Component.literal(url)
+                .withStyle(ChatFormatting.GOLD));
         return base.withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, component))
                 .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url)));
     }
     
     public static Component openingFile(MutableComponent base, String path) {
         
-        MutableComponent component = new TranslatableComponent("crafttweaker.command.click.open", new TextComponent(path).withStyle(ChatFormatting.GOLD));
+        MutableComponent component = Component.translatable("crafttweaker.command.click.open", Component.literal(path)
+                .withStyle(ChatFormatting.GOLD));
         return base.withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, component))
                 .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, path)));
     }
@@ -121,7 +122,7 @@ public final class CommandUtilities {
     
     public static MutableComponent getFormattedLogFile() {
         
-        return new TextComponent(CraftTweakerConstants.LOG_PATH).withStyle(ChatFormatting.AQUA);
+        return Component.literal(CraftTweakerConstants.LOG_PATH).withStyle(ChatFormatting.AQUA);
     }
     
     public static MutableComponent makeNoticeable(MutableComponent text) {
@@ -131,7 +132,7 @@ public final class CommandUtilities {
     
     public static MutableComponent makeNoticeable(String text) {
         
-        return makeNoticeable(new TextComponent(text));
+        return makeNoticeable(Component.literal(text));
     }
     
 }

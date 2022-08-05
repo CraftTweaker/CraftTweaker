@@ -9,8 +9,8 @@ import net.minecraftforge.event.entity.living.LivingEvent;
  * @docEvent canceled the Entity does not update.
  */
 @ZenRegister
-@Document("forge/api/event/entity/living/LivingUpdateEvent")
-@NativeTypeRegistration(value = LivingEvent.LivingUpdateEvent.class, zenCodeName = "crafttweaker.api.event.living.LivingUpdateEvent")
+@Document("forge/api/event/entity/living/LivingTickEvent")
+@NativeTypeRegistration(value = LivingEvent.LivingTickEvent.class, zenCodeName = "crafttweaker.api.event.living.LivingTickEvent")
 public class ExpandLivingUpdateEvent {
 
 }

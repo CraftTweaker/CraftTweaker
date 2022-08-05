@@ -2,7 +2,7 @@ package com.blamejared.crafttweaker.impl.event;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
-import com.blamejared.crafttweaker.api.entity.NamePlateResult;
+import com.blamejared.crafttweaker.api.entity.NameTagResult;
 import com.blamejared.crafttweaker.impl.script.RecipeManagerScriptLoader;
 import com.blamejared.crafttweaker.natives.entity.ExpandEntityType;
 import com.blamejared.crafttweaker.platform.Services;
@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
-import net.minecraftforge.client.event.RenderNameplateEvent;
+import net.minecraftforge.client.event.RenderNameTagEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -34,25 +34,25 @@ public class CTClientEventHandler {
     }
     
     @SubscribeEvent
-    public static void nameplate(RenderNameplateEvent e) {
-    
+    public static void nameTag(RenderNameTagEvent e) {
+        
         Entity entity = e.getEntity();
         Event.Result eventResult = e.getResult();
         Boolean result = eventResult == Event.Result.DEFAULT ? null : eventResult == Event.Result.ALLOW;
         Component content = e.getContent();
         Component originalContent = e.getOriginalContent();
-        for(Predicate<Entity> predicate : Services.CLIENT.NAMEPLATES.keySet()) {
+        for(Predicate<Entity> predicate : Services.CLIENT.NAMETAGS.keySet()) {
             if(predicate.test(entity)) {
                 try {
-                    NamePlateResult namePlateResult = new NamePlateResult(result, content, originalContent);
-                    Services.CLIENT.NAMEPLATES.get(predicate).apply(entity, namePlateResult);
-                    e.setResult(namePlateResult.getResult() == null ? Event.Result.DEFAULT : namePlateResult.getResult() ? Event.Result.ALLOW : Event.Result.DENY);
-                    e.setContent(namePlateResult.getContent());
+                    NameTagResult nameTagResult = new NameTagResult(result, content, originalContent);
+                    Services.CLIENT.NAMETAGS.get(predicate).apply(entity, nameTagResult);
+                    e.setResult(nameTagResult.getResult() == null ? Event.Result.DEFAULT : nameTagResult.getResult() ? Event.Result.ALLOW : Event.Result.DENY);
+                    e.setContent(nameTagResult.getContent());
                 } catch(final Exception exception) {
                     CraftTweakerAPI.LOGGER.error(
-                            "Unable to run one of the nameplate functions for {} due to an error (for experts, refer to {})",
+                            "Unable to run one of the name tag functions for {} due to an error (for experts, refer to {})",
                             ExpandEntityType.getCommandString(entity.getType()),
-                            Services.CLIENT.NAMEPLATES.get(predicate).getClass().getName()
+                            Services.CLIENT.NAMETAGS.get(predicate).getClass().getName()
                             , exception
                     );
                 }

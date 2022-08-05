@@ -21,31 +21,31 @@ public class ExpandVillagerProfession {
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("name")
-    public static String getName(VillagerProfession internal) {
+    public static String name(VillagerProfession internal) {
         
-        return internal.getName();
+        return internal.name();
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("requestedItems")
-    public static Set<Item> getRequestedItems(VillagerProfession internal) {
+    public static Set<Item> requestedItems(VillagerProfession internal) {
         
-        return internal.getRequestedItems();
+        return internal.requestedItems();
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("secondaryPoi")
-    public static Set<Block> getSecondaryPoi(VillagerProfession internal) {
+    public static Set<Block> secondaryPoi(VillagerProfession internal) {
         
-        return internal.getSecondaryPoi();
+        return internal.secondaryPoi();
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("workSound")
     @ZenCodeType.Nullable
-    public static SoundEvent getWorkSound(VillagerProfession internal) {
+    public static SoundEvent workSound(VillagerProfession internal) {
         
-        return internal.getWorkSound();
+        return internal.workSound();
     }
     
     @ZenCodeType.Getter("commandString")

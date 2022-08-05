@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.ingredient.type;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.base.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientPartialTagSerializer;
+import com.blamejared.crafttweaker.platform.Services;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.nbt.CompoundTag;
@@ -10,11 +11,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
-import net.minecraftforge.common.crafting.NBTIngredient;
+import net.minecraftforge.common.crafting.StrictNBTIngredient;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
+// Yes forge has its own PartialNBTIngredient, but using our own IData matching is much safer and ensures that we have consistent matching throughout the mod
 public class IngredientPartialTag extends Ingredient {
     
     private final ItemStack stack;
@@ -71,8 +73,8 @@ public class IngredientPartialTag extends Ingredient {
     public JsonElement toJson() {
         
         JsonObject json = new JsonObject();
-        json.addProperty("type", CraftingHelper.getID(NBTIngredient.Serializer.INSTANCE).toString());
-        json.addProperty("item", stack.getItem().getRegistryName().toString());
+        json.addProperty("type", CraftingHelper.getID(IngredientPartialTagSerializer.INSTANCE).toString());
+        json.addProperty("item", Services.REGISTRY.getRegistryKey(stack.getItem()).toString());
         json.addProperty("count", stack.getCount());
         if(stack.hasTag()) {
             json.addProperty("nbt", stack.getTag().toString());

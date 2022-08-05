@@ -10,8 +10,6 @@ import com.blamejared.crafttweaker.api.recipe.handler.helper.CraftingTableRecipe
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.HandleUtil;
 import com.blamejared.crafttweaker.api.util.StringUtil;
-import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
-import com.blamejared.crafttweaker.impl.script.ScriptSerializer;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessBucketItem;
 import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
 import com.blamejared.crafttweaker.platform.helper.world.inventory.TAInventoryWrapper;
@@ -25,25 +23,21 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.material.Fluid;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
@@ -150,12 +144,6 @@ public class FabricPlatformHelper implements IPlatformHelper {
     public IItemStack getEmptyIItemStack() {
         
         return MCItemStack.EMPTY.get();
-    }
-    
-    @Override
-    public RecipeSerializer<ScriptRecipe> getScriptSerializer() {
-        
-        return ScriptSerializer.INSTANCE;
     }
     
     @Override
@@ -267,12 +255,11 @@ public class FabricPlatformHelper implements IPlatformHelper {
             return Set.of();
         }
         Set<MutableComponent> components = new HashSet<>();
-        try(Transaction transaction = Transaction.openOuter()) {
-            for(StorageView<FluidVariant> view : storage.iterable(transaction)) {
-                if(!view.isResourceBlank()) {
-                    components.add(new TextComponent(Services.REGISTRY.getRegistryKey(view.getResource()
-                            .getFluid()) + " * " + view.getAmount()));
-                }
+        //TODO confirm
+        for(StorageView<FluidVariant> view : storage) {
+            if(!view.isResourceBlank()) {
+                components.add(Component.literal(Services.REGISTRY.getRegistryKey(view.getResource()
+                        .getFluid()) + " * " + view.getAmount()));
             }
         }
         

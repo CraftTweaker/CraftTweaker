@@ -36,7 +36,7 @@ final class ForgeLootModifierAdapter implements ILootModifier {
     
     @Override
     public List<ItemStack> doApply(final List<ItemStack> loot, final LootContext context) {
-        
+        //TODO 1.19 silk
         return this.modifier.apply(loot, context);
     }
     

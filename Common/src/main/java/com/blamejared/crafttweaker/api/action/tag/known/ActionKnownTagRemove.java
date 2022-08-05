@@ -14,7 +14,7 @@ public class ActionKnownTagRemove<T> extends ActionKnownTagModify<T> {
     @Override
     public void apply() {
         
-        tag().getValues().removeAll(holderValues());
+        tag().removeAll(holderValues());
     }
     
     @Override

@@ -3,9 +3,8 @@ package com.blamejared.crafttweaker.impl.command.type.conflict;
 
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -27,18 +26,18 @@ final class DescriptiveFilter implements Predicate<Map.Entry<ResourceLocation, R
     
     static DescriptiveFilter of() {
         
-        return new DescriptiveFilter(it -> true, new TextComponent(""));
+        return new DescriptiveFilter(it -> true, Component.literal(""));
     }
     
     static DescriptiveFilter of(final IRecipeManager<?> manager) {
         
         final RecipeType<?> type = manager.getRecipeType();
-        return new DescriptiveFilter(it -> it.getType() == type, new TranslatableComponent("crafttweaker.command.conflict.description.type", manager.getCommandString()));
+        return new DescriptiveFilter(it -> it.getType() == type, Component.translatable("crafttweaker.command.conflict.description.type", manager.getCommandString()));
     }
     
     static DescriptiveFilter of(final ItemStack stack) {
         
-        return new DescriptiveFilter(it -> ItemStackUtil.areStacksTheSame(it.getResultItem(), stack), new TranslatableComponent("crafttweaker.command.conflict.description.output", ItemStackUtil.getCommandString(stack)));
+        return new DescriptiveFilter(it -> ItemStackUtil.areStacksTheSame(it.getResultItem(), stack), Component.translatable("crafttweaker.command.conflict.description.output", ItemStackUtil.getCommandString(stack)));
     }
     
     @Override

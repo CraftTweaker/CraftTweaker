@@ -15,7 +15,7 @@ public class ExpandItemEvent {
     @ZenCodeType.Getter("entityItem")
     public static ItemEntity getEntityItem(ItemEvent internal) {
         
-        return internal.getEntityItem();
+        return internal.getEntity();
     }
     
 }

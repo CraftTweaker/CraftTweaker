@@ -10,12 +10,12 @@ import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagKey;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -171,13 +171,13 @@ public interface MCTag extends CommandStringDisplayable, Comparable<MCTag> {
     }
     
     /**
-     * Gets the internal {@link Tag} of this tag.
+     * Gets the internal {@link Collection} of this tag.
      *
      * <p>This should only be used if the values of the tag is needed, other usecases should use {@link #getTagKey()} instead.</p>
      *
-     * @return The internal {@link Tag} of this tag.
+     * @return The internal {@link Collection} of this tag.
      */
-    default <T extends Tag<Holder<?>>> T getInternal() {
+    default <T extends Collection<Holder<?>>> T getInternal() {
         
         return (T) manager().getInternalRaw(GenericUtil.uncheck(this));
     }

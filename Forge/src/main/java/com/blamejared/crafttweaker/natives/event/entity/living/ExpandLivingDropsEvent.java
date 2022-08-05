@@ -32,7 +32,7 @@ public class ExpandLivingDropsEvent {
     
     /**
      * Returns the list of items will be dropped. The list is read-only, modifying this list does not change the drops.
-     *
+     * <p>
      * You should use the `drops` setter, `addDrop` or `removeDrop` method to change the drops.
      */
     @ZenCodeType.Method
@@ -80,7 +80,7 @@ public class ExpandLivingDropsEvent {
     @ZenCodeType.Method
     public static void addDrop(LivingDropsEvent internal, IItemStack stack) {
         
-        LivingEntity entity = internal.getEntityLiving();
+        LivingEntity entity = internal.getEntity();
         internal.getDrops()
                 .add(new ItemEntity(entity.level, entity.getX() + 0.5, entity.getY() + 0.5, entity.getZ() + 0.5, stack.getImmutableInternal()));
     }

@@ -5,7 +5,6 @@ import com.blamejared.crafttweaker.api.ingredient.IngredientCacheBuster;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.tags.TagManager;
 import net.minecraft.world.item.Item;
@@ -42,7 +41,6 @@ public class MixinIngredientTagValue {
                     .map(TagManager.LoadResult::tags)
                     .map(map -> map.get(this.tag.location()))
                     .filter(Objects::nonNull)
-                    .map(Tag::getValues)
                     .flatMap(Collection::stream)
                     .map(Holder::value)
                     .map(ItemStack::new)

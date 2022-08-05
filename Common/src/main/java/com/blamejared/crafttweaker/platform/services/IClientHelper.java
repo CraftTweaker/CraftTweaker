@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.platform.services;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.entity.INameplateFunction;
+import com.blamejared.crafttweaker.api.entity.INameTagFunction;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
@@ -22,7 +22,7 @@ import java.util.function.Predicate;
 public interface IClientHelper {
     
     Map<IIngredient, LinkedList<ITooltipFunction>> TOOLTIPS = new HashMap<>();
-    Map<Predicate<Entity>, INameplateFunction> NAMEPLATES = new HashMap<>();
+    Map<Predicate<Entity>, INameTagFunction> NAMETAGS = new HashMap<>();
     
     default boolean isSingleplayer() {
         

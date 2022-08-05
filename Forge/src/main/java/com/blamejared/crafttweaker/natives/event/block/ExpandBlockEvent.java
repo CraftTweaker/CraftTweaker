@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -25,10 +25,10 @@ public class ExpandBlockEvent {
     @ZenCodeType.Getter("world")
     public static Level getWorld(BlockEvent internal) {
         
-        if(internal.getWorld() instanceof Level) {
-            return (Level) internal.getWorld();
+        if(internal.getLevel() instanceof Level) {
+            return (Level) internal.getLevel();
         }
-        throw new IllegalStateException("The event was not fired on a client world or a server world.");
+        throw new IllegalStateException("The event was not fired on a client or server level.");
     }
     
     @ZenCodeType.Method

@@ -29,10 +29,10 @@ public class ExpandEnchantmentLevelSetEvent {
      * @return The Level where the event is fired in.
      */
     @ZenCodeType.Method
-    @ZenCodeType.Getter("world")
-    public static Level getWorld(EnchantmentLevelSetEvent internal) {
+    @ZenCodeType.Getter("level")
+    public static Level getLevel(EnchantmentLevelSetEvent internal) {
         
-        return internal.getWorld();
+        return internal.getLevel();
     }
     
     /**
@@ -97,21 +97,21 @@ public class ExpandEnchantmentLevelSetEvent {
     
     /**
      * Gets the current level of the enchantment for this row.
-     *
+     * <p>
      * This value can be changed by other mods.
      *
      * @return The current level of the enchantment for this row.
      */
     @ZenCodeType.Method
-    @ZenCodeType.Getter("level")
-    public static int getLevel(EnchantmentLevelSetEvent internal) {
+    @ZenCodeType.Getter("enchantLevel")
+    public static int getEnchantLevel(EnchantmentLevelSetEvent internal) {
         
-        return internal.getLevel();
+        return internal.getEnchantLevel();
     }
     
     /**
      * Sets the level of the enchantment for this row.
-     *
+     * <p>
      * Setting this to `0` will make this row not have an enchantment.
      *
      * @param level The new enchantment level.
@@ -119,10 +119,10 @@ public class ExpandEnchantmentLevelSetEvent {
      * @docParam level 5
      */
     @ZenCodeType.Method
-    @ZenCodeType.Setter("level")
+    @ZenCodeType.Setter("enchantLevel")
     public static void setLevel(EnchantmentLevelSetEvent internal, int level) {
         
-        internal.setLevel(level);
+        internal.setEnchantLevel(level);
     }
     
 }

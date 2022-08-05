@@ -9,16 +9,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.UnknownServiceException;
+import java.util.Map;
 
 public class ResourceManagerSourceFile implements SourceFile {
     
     private final ResourceLocation file;
-    private final ResourceManager resourceManager;
+    private final Resource resource;
     
-    ResourceManagerSourceFile(ResourceLocation file, ResourceManager resourceManager) {
+    ResourceManagerSourceFile(ResourceLocation file, Resource resource) {
         
         this.file = file;
-        this.resourceManager = resourceManager;
+        this.resource = resource;
+    }
+    ResourceManagerSourceFile(Map.Entry<ResourceLocation, Resource> entry){
+        this(entry.getKey(), entry.getValue());
     }
     
     @Override
@@ -30,8 +34,7 @@ public class ResourceManagerSourceFile implements SourceFile {
     @Override
     public Reader open() throws IOException {
         
-        final Resource resource = resourceManager.getResource(file);
-        return new InputStreamReader(resource.getInputStream());
+        return resource.openAsReader();
     }
     
     @Override

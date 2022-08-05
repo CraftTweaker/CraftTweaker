@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
@@ -72,7 +73,7 @@ public class ExpandLivingEntity {
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("random")
-    public static Random getRandom(LivingEntity internal) {
+    public static RandomSource getRandom(LivingEntity internal) {
         
         return internal.getRandom();
     }

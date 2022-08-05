@@ -5,7 +5,6 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.StringData;
 import com.blamejared.crafttweaker.api.data.base.IData;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -39,15 +38,9 @@ public class ExpandString {
     }
     
     @ZenCodeType.Caster(implicit = true)
-    public static TextComponent asTextComponent(String value) {
-        
-        return new TextComponent(value);
-    }
-    
-    @ZenCodeType.Caster(implicit = true)
     public static Component asComponent(String value) {
         
-        return asTextComponent(value);
+        return Component.literal(value);
     }
     
 }

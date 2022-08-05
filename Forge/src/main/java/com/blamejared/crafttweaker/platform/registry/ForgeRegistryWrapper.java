@@ -2,14 +2,13 @@ package com.blamejared.crafttweaker.platform.registry;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public class ForgeRegistryWrapper<T extends IForgeRegistryEntry<T>> implements RegistryWrapper<T> {
+public class ForgeRegistryWrapper<T> implements RegistryWrapper<T> {
     
     private final IForgeRegistry<T> registry;
     
@@ -21,7 +20,7 @@ public class ForgeRegistryWrapper<T extends IForgeRegistryEntry<T>> implements R
     @Override
     public Optional<T> getOptional(ResourceLocation location) {
         
-        if(registry.containsKey(location)){
+        if(registry.containsKey(location)) {
             return Optional.ofNullable(registry.getValue(location));
         }
         return Optional.empty();

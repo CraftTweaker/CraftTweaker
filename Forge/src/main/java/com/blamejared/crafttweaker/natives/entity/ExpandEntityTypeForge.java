@@ -1,9 +1,9 @@
 package com.blamejared.crafttweaker.natives.entity;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.action.entity.ActionSetNameplate;
+import com.blamejared.crafttweaker.api.action.entity.ActionSetNameTag;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.entity.INameplateFunction;
+import com.blamejared.crafttweaker.api.entity.INameTagFunction;
 import net.minecraft.world.entity.EntityType;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -12,9 +12,9 @@ import org.openzen.zencode.java.ZenCodeType;
 public class ExpandEntityTypeForge {
     
     /**
-     * Sets the nameplate handler for this EntityType.
+     * Sets the name tag handler for this EntityType.
      *
-     * @param function The function that controls how this EntityType's nameplate is rendered.
+     * @param function The function that controls how this EntityType's name tag is rendered.
      *
      * @docParam function (entity, result) => {
      * result.setAllow();
@@ -22,9 +22,9 @@ public class ExpandEntityTypeForge {
      * })
      */
     @ZenCodeType.Method
-    public static void setNameplate(EntityType internal, INameplateFunction function) {
+    public static void setNameTag(EntityType internal, INameTagFunction function) {
         
-        CraftTweakerAPI.apply(new ActionSetNameplate(entity -> entity.getType().equals(internal), function));
+        CraftTweakerAPI.apply(new ActionSetNameTag(entity -> entity.getType().equals(internal), function));
     }
     
 }

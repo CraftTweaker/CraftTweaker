@@ -8,7 +8,6 @@
     "common.access.food.AccessFoodPropertiesForge",
     "common.access.brewing.AccessBrewingRecipeRegistry",
     "common.access.brewing.AccessPotionBrewing",
-    "common.access.registry.AccessRegistryManager",
     "common.access.villager.AccessBasicTrade",
     "common.transform.item.attribute.MixinItemAttributeModifierEvent",
     "common.transform.villager.MixinBasicTrade"

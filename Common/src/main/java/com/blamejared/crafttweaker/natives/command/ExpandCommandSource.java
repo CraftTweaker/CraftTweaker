@@ -15,9 +15,9 @@ import java.util.UUID;
 public class ExpandCommandSource {
     
     @ZenCodeType.Method
-    public static void sendMessage(CommandSource internal, Component component, UUID senderUUID) {
+    public static void sendMessage(CommandSource internal, Component component) {
         
-        internal.sendMessage(component, senderUUID);
+        internal.sendSystemMessage(component);
     }
     
     @ZenCodeType.Method

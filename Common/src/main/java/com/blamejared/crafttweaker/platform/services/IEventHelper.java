@@ -18,9 +18,8 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -30,18 +29,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 public interface IEventHelper {
     
-    Map<RecipeType<?>, List<Pair<IIngredient,Integer>>> BURN_TIMES = new HashMap<>();
+    Map<RecipeType<?>, List<Pair<IIngredient, Integer>>> BURN_TIMES = new HashMap<>();
     
     Set<Player> BLOCK_INFO_PLAYERS = new HashSet<>();
     Set<Player> ENTITY_INFO_PLAYERS = new HashSet<>();
@@ -51,13 +44,13 @@ public interface IEventHelper {
     IGatherReplacementExclusionEvent fireGatherReplacementExclusionEvent(final IRecipeManager<?> manager);
     
     default void setBurnTime(IIngredient ingredient, int burnTime, RecipeType<?> type) {
-    
+        
         getBurnTimes().computeIfAbsent(type, recipeType -> new ArrayList<>()).add(Pair.of(ingredient, burnTime));
     }
     
     int getBurnTime(IItemStack stack);
     
-    default Map<RecipeType<?>, List<Pair<IIngredient,Integer>>> getBurnTimes() {
+    default Map<RecipeType<?>, List<Pair<IIngredient, Integer>>> getBurnTimes() {
         
         return BURN_TIMES;
     }
@@ -104,18 +97,20 @@ public interface IEventHelper {
         if(BLOCK_INFO_PLAYERS.contains(player)) {
             if(!world.isClientSide() && hand == InteractionHand.MAIN_HAND) {
                 BlockState state = world.getBlockState(pos);
-                sendAndLog(player, new TranslatableComponent("crafttweaker.command.info.block.name", Services.REGISTRY.getRegistryKey(state.getBlock())));
+                sendAndLog(player, Component.translatable("crafttweaker.command.info.block.name", Services.REGISTRY.getRegistryKey(state.getBlock())));
                 if(!state.getProperties().isEmpty()) {
                     
-                    sendAndLog(player, new TranslatableComponent("crafttweaker.command.info.block.properties"));
-                    state.getProperties().forEach(property -> sendAndLog(player, new TextComponent(property.getName()).withStyle(ChatFormatting.YELLOW)
-                            .append(new TextComponent(": ").withStyle(ChatFormatting.WHITE))
-                            .append(new TextComponent(state.getValue(property)
-                                    .toString()).withStyle(ChatFormatting.AQUA))));
+                    sendAndLog(player, Component.translatable("crafttweaker.command.info.block.properties"));
+                    state.getProperties()
+                            .forEach(property -> sendAndLog(player, Component.literal(property.getName())
+                                    .withStyle(ChatFormatting.YELLOW)
+                                    .append(Component.literal(": ").withStyle(ChatFormatting.WHITE))
+                                    .append(Component.literal(state.getValue(property)
+                                            .toString()).withStyle(ChatFormatting.AQUA))));
                 }
                 MapData tileData = ExpandLevel.getBlockEntityData(world, pos);
                 if(!tileData.isEmpty()) {
-                    sendAndLog(player, new TranslatableComponent("crafttweaker.command.info.block.entity.data", tileData.accept(new DataToTextComponentVisitor("    ", 0))));
+                    sendAndLog(player, Component.translatable("crafttweaker.command.info.block.entity.data", tileData.accept(new DataToTextComponentVisitor("    ", 0))));
                 }
             }
             return true;
@@ -129,12 +124,12 @@ public interface IEventHelper {
         
         if(ENTITY_INFO_PLAYERS.contains(player)) {
             if(!world.isClientSide() && hand == InteractionHand.MAIN_HAND) {
-                sendAndLog(player, new TranslatableComponent("crafttweaker.command.info.entity.name", ExpandEntity.getName(target)));
-                sendAndLog(player, new TranslatableComponent("crafttweaker.command.info.entity.type.bracket", ExpandEntityType.getCommandString(target.getType())));
+                sendAndLog(player, Component.translatable("crafttweaker.command.info.entity.name", ExpandEntity.getName(target)));
+                sendAndLog(player, Component.translatable("crafttweaker.command.info.entity.type.bracket", ExpandEntityType.getCommandString(target.getType())));
                 
                 MapData data = ExpandEntity.getData(target);
                 if(!data.isEmpty()) {
-                    sendAndLog(player, new TranslatableComponent("crafttweaker.command.info.entity.data", data.accept(new DataToTextComponentVisitor("    ", 0))));
+                    sendAndLog(player, Component.translatable("crafttweaker.command.info.entity.data", data.accept(new DataToTextComponentVisitor("    ", 0))));
                 }
             }
             return true;

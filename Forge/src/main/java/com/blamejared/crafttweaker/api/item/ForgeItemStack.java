@@ -46,7 +46,7 @@ public interface ForgeItemStack extends IItemStack {
     @Override
     default IItemStack getRemainingItem(IItemStack stack) {
         
-        return Services.PLATFORM.createMCItemStack(stack.getInternal().getContainerItem());
+        return Services.PLATFORM.createMCItemStack(stack.getInternal().getCraftingRemainingItem());
     }
     
     /**

@@ -60,7 +60,7 @@ public class ScriptRecipe implements Recipe<Container> {
     @Override
     public RecipeSerializer<?> getSerializer() {
         
-        return Services.PLATFORM.getScriptSerializer();
+        return ScriptSerializer.INSTANCE;
     }
     
     @Override

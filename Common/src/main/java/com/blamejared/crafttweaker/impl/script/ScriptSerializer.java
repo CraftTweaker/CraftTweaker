@@ -9,16 +9,18 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import java.util.LinkedList;
 
-public interface IScriptSerializer extends RecipeSerializer<ScriptRecipe> {
+public class ScriptSerializer implements RecipeSerializer<ScriptRecipe> {
+    
+    public static final ScriptSerializer INSTANCE = new ScriptSerializer();
     
     @Override
-    default ScriptRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+    public ScriptRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
         // Please don't make scripts inside a datapack json 👀
         return new ScriptRecipe(recipeId, json.get("fileName").getAsString(), json.get("content").getAsString());
     }
     
     @Override
-    default ScriptRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+    public ScriptRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
         
         String fileName = buffer.readUtf();
         int parts = buffer.readVarInt();
@@ -30,7 +32,7 @@ public interface IScriptSerializer extends RecipeSerializer<ScriptRecipe> {
     }
     
     @Override
-    default void toNetwork(FriendlyByteBuf buffer, ScriptRecipe recipe) {
+    public void toNetwork(FriendlyByteBuf buffer, ScriptRecipe recipe) {
         
         String contents = recipe.getContent();
         LinkedList<String> split = Lists.newLinkedList(Splitter.fixedLength(Short.MAX_VALUE / Byte.SIZE)

@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.mixin.common.access.loot.AccessLootContextBui
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
@@ -59,7 +60,7 @@ public final class ExpandLootContextBuilder {
      * @docParam random level.random
      */
     @ZenCodeType.Method
-    public static LootContext.Builder withRandom(LootContext.Builder internal, Random random) {
+    public static LootContext.Builder withRandom(LootContext.Builder internal, RandomSource random) {
         
         return internal.withRandom(random);
     }
@@ -91,7 +92,7 @@ public final class ExpandLootContextBuilder {
      * @docParam random level.random
      */
     @ZenCodeType.Method
-    public static LootContext.Builder withOptionalRandomSeed(LootContext.Builder internal, long seed, Random random) {
+    public static LootContext.Builder withOptionalRandomSeed(LootContext.Builder internal, long seed, RandomSource random) {
         
         return internal.withOptionalRandomSeed(seed, random);
     }

@@ -14,7 +14,7 @@ public class ActionKnownTagClear<T> extends ActionKnownTag<T> {
     @Override
     public void apply() {
         
-        tag().getValues().clear();
+        tag().clear();
     }
     
     @Override

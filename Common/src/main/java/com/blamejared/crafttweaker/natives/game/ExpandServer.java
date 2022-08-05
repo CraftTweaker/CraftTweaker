@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.level.CraftTweakerSavedData;
 import com.blamejared.crafttweaker.api.level.CraftTweakerSavedDataHolder;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import com.mojang.brigadier.ParseResults;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -362,8 +363,9 @@ public class ExpandServer {
     }
     
     private static int executeCommandInternal(MinecraftServer internal, String command, CommandSourceStack source) {
-        
-        return internal.getCommands().performCommand(source, command);
+    
+        ParseResults<CommandSourceStack> parsedResults = internal.getCommands().getDispatcher().parse(command, source);
+        return internal.getCommands().performCommand(parsedResults, command);
     }
     
 }
