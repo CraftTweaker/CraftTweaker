@@ -79,7 +79,7 @@ public final class HandCommands {
                             .getPlayerOrException()
                             .getMainHandItem();
                     sendCopyingHand(context.getSource()
-                            .getPlayerOrException(), Component.translatable("crafttweaker.command.misc.item"), Services.REGISTRY.getRegistryKey(mainHandItem.getItem())
+                            .getPlayerOrException(), Component.translatable("crafttweaker.command.misc.item"), Registry.ITEM.getKey(mainHandItem.getItem())
                             .toString());
                     return Command.SINGLE_SUCCESS;
                 })
@@ -190,7 +190,7 @@ public final class HandCommands {
                             });
                         });
                     }
-                    sendCopyingHand(player, Component.translatable("crafttweaker.command.misc.item"), Services.REGISTRY.getRegistryKey(stack.getItem())
+                    sendCopyingHand(player, Component.translatable("crafttweaker.command.misc.item"), Registry.ITEM.getKey(stack.getItem())
                             .toString());
                     return Command.SINGLE_SUCCESS;
                 })
@@ -267,7 +267,7 @@ public final class HandCommands {
     // <editor-fold desc="Vanilla Functions">
     private static void sendBasicVanillaItemInformation(final Player player, final ItemStack target) {
         
-        final String output = Objects.requireNonNull(Services.REGISTRY.getRegistryKey(target.getItem()))
+        final String output = Objects.requireNonNull(Registry.ITEM.getKey(target.getItem()))
                 .toString();
         sendCopyingHand(player, Component.translatable("crafttweaker.command.misc.item"), output);
     }
@@ -282,7 +282,7 @@ public final class HandCommands {
         if(Services.PLATFORM.getBucketContent(target) == Fluids.EMPTY) {
             return;
         }
-        sendHand(player, Component.translatable("crafttweaker.command.misc.fluidblockstate"), Services.REGISTRY.getRegistryKey(Services.PLATFORM.getBucketContent(target))
+        sendHand(player, Component.translatable("crafttweaker.command.misc.fluidblockstate"), Registry.FLUID.getKey(Services.PLATFORM.getBucketContent(target))
                 .toString());
     }
     

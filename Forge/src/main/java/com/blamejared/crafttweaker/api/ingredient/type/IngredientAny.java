@@ -1,28 +1,31 @@
 package com.blamejared.crafttweaker.api.ingredient.type;
 
 import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientAnySerializer;
+import com.google.common.base.Suppliers;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 import net.minecraftforge.common.util.Lazy;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 @ParametersAreNonnullByDefault
 public class IngredientAny extends Ingredient implements IngredientSingleton<IIngredientAny> {
     
     public static final IngredientAny INSTANCE = new IngredientAny();
-    private static final Lazy<ItemStack[]> ALL_ITEMS = Lazy.concurrentOf(() -> ForgeRegistries.ITEMS.getValues()
+    private static final Supplier<ItemStack[]> ALL_ITEMS = Suppliers.memoize(() -> Registry.ITEM
             .stream()
             .map(Item::getDefaultInstance)
-            .filter(stack -> !stack.isEmpty())
+            .filter(Predicate.not(ItemStack::isEmpty))
             .toArray(ItemStack[]::new));
     
     private IngredientAny() {

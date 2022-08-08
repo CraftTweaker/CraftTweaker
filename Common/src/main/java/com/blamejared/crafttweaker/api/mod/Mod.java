@@ -3,8 +3,8 @@ package com.blamejared.crafttweaker.api.mod;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.platform.Services;
-import com.blamejared.crafttweaker.platform.registry.RegistryWrapper;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.core.Registry;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -43,9 +43,14 @@ public final class Mod {
     }
     
     
-    private <T> Collection<T> getRegistryObjects(RegistryWrapper<T> registry) {
+    private <T> Collection<T> getRegistryObjects(Registry<T> registry) {
         
-        return registry.getForNamespace(id()).toList();
+        return registry.keySet()
+                .stream()
+                .filter(resourceLocation -> resourceLocation.getNamespace().equals(id()))
+                .map(resourceLocation -> registry.getOptional(resourceLocation)
+                        .orElseThrow(() -> new IllegalArgumentException("Cannot get registry object from name: '" + resourceLocation + "'! This should never happen!")))
+                .toList();
     }
     
     /**
@@ -57,7 +62,7 @@ public final class Mod {
     @ZenCodeType.Getter("items")
     public Collection<Item> getItems() {
         
-        return getRegistryObjects(Services.REGISTRY.items());
+        return getRegistryObjects(Registry.ITEM);
     }
     
     
@@ -70,7 +75,7 @@ public final class Mod {
     @ZenCodeType.Getter("itemStacks")
     public Collection<IItemStack> getItemStacks() {
         
-        return Services.REGISTRY.items()
+        return getItems()
                 .stream()
                 .map(Item::getDefaultInstance)
                 .map(Services.PLATFORM::createMCItemStack)
@@ -86,7 +91,7 @@ public final class Mod {
     @ZenCodeType.Getter("potions")
     public Collection<Potion> getPotions() {
         
-        return getRegistryObjects(Services.REGISTRY.potions());
+        return getRegistryObjects(Registry.POTION);
     }
     
     /**
@@ -98,7 +103,7 @@ public final class Mod {
     @ZenCodeType.Getter("attributes")
     public Collection<Attribute> getAttributes() {
         
-        return getRegistryObjects(Services.REGISTRY.attributes());
+        return getRegistryObjects(Registry.ATTRIBUTE);
     }
     
     /**
@@ -110,7 +115,7 @@ public final class Mod {
     @ZenCodeType.Getter("fluids")
     public Collection<Fluid> getFluids() {
         
-        return getRegistryObjects(Services.REGISTRY.fluids());
+        return getRegistryObjects(Registry.FLUID);
     }
     
     /**
@@ -122,7 +127,7 @@ public final class Mod {
     @ZenCodeType.Getter("enchantments")
     public Collection<Enchantment> getEnchantments() {
         
-        return getRegistryObjects(Services.REGISTRY.enchantments());
+        return getRegistryObjects(Registry.ENCHANTMENT);
     }
     
     /**
@@ -134,7 +139,7 @@ public final class Mod {
     @ZenCodeType.Getter("blocks")
     public Collection<Block> getBlocks() {
         
-        return getRegistryObjects(Services.REGISTRY.blocks());
+        return getRegistryObjects(Registry.BLOCK);
     }
     
     /**
@@ -146,7 +151,7 @@ public final class Mod {
     @ZenCodeType.Getter("mobEffects")
     public Collection<MobEffect> getMobEffects() {
         
-        return getRegistryObjects(Services.REGISTRY.mobEffects());
+        return getRegistryObjects(Registry.MOB_EFFECT);
     }
     
     /**
@@ -158,7 +163,7 @@ public final class Mod {
     @ZenCodeType.Getter("villagerProfessions")
     public Collection<VillagerProfession> getVillagerProfessions() {
         
-        return getRegistryObjects(Services.REGISTRY.villagerProfessions());
+        return getRegistryObjects(Registry.VILLAGER_PROFESSION);
     }
     
     /**
@@ -170,7 +175,7 @@ public final class Mod {
     @ZenCodeType.Getter("soundEvents")
     public Collection<SoundEvent> getSoundEvents() {
         
-        return getRegistryObjects(Services.REGISTRY.soundEvents());
+        return getRegistryObjects(Registry.SOUND_EVENT);
     }
     
     /**

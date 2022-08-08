@@ -12,6 +12,7 @@ import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManage
 import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.brigadier.Command;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -135,7 +136,7 @@ public final class RecipeCommands {
     
     private static ResourceLocation serializer(final Recipe<?> recipe) {
         
-        return Objects.requireNonNull(Services.REGISTRY.getRegistryKey(recipe.getSerializer()));
+        return Objects.requireNonNull(Registry.RECIPE_SERIALIZER.getKey(recipe.getSerializer()));
     }
     
     private static <T extends Recipe<?>> String dump(final IRecipeManager<?> manager, final T recipe) {

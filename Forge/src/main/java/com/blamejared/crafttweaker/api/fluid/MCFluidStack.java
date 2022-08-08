@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.fluid;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.base.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker.platform.Services;
+import net.minecraft.core.Registry;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import org.openzen.zencode.java.ZenCodeType;
@@ -25,7 +26,7 @@ public class MCFluidStack implements IFluidStack {
         
         final Fluid fluid = getInternal().getFluid();
         final StringBuilder builder = new StringBuilder().append("<fluid:")
-                .append(Services.REGISTRY.getRegistryKey(fluid))
+                .append(Registry.FLUID.getKey(fluid))
                 .append(">");
         
         if(getInternal().hasTag()) {

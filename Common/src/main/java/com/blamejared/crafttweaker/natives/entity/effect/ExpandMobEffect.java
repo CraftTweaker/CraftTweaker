@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -118,7 +119,7 @@ public class ExpandMobEffect {
     @ZenCodeType.Getter("commandString")
     public static String getCommandString(MobEffect internal) {
         
-        return "<mobeffect:" + Services.REGISTRY.getRegistryKey(internal) + ">";
+        return "<mobeffect:" + Registry.MOB_EFFECT.getKey(internal) + ">";
     }
     
 }

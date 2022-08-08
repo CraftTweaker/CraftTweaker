@@ -66,7 +66,7 @@ public class ScriptRecipe implements Recipe<Container> {
     @Override
     public RecipeType<?> getType() {
         
-        return CraftTweakerRegistries.RECIPE_TYPE_SCRIPTS;
+        return ScriptRecipeType.INSTANCE;
     }
     
     public String getContent() {

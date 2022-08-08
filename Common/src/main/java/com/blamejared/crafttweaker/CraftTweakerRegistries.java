@@ -6,11 +6,7 @@ import com.blamejared.crafttweaker.api.ingredient.condition.serializer.Condition
 import com.blamejared.crafttweaker.api.ingredient.condition.serializer.ConditionCustomSerializer;
 import com.blamejared.crafttweaker.api.ingredient.condition.serializer.ConditionDamagedSerializer;
 import com.blamejared.crafttweaker.api.ingredient.condition.serializer.IIngredientConditionSerializer;
-import com.blamejared.crafttweaker.api.ingredient.transform.serializer.IIngredientTransformerSerializer;
-import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformCustomSerializer;
-import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformDamageSerializer;
-import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformReplaceSerializer;
-import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformerReuseSerializer;
+import com.blamejared.crafttweaker.api.ingredient.transform.serializer.*;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.core.MappedRegistry;
@@ -24,23 +20,17 @@ public class CraftTweakerRegistries {
     
     public static MappedRegistry<IIngredientTransformerSerializer<?>> REGISTRY_TRANSFORMER_SERIALIZER;
     public static MappedRegistry<IIngredientConditionSerializer<?>> REGISTRY_CONDITIONER_SERIALIZER;
-    public static RecipeType<ScriptRecipe> RECIPE_TYPE_SCRIPTS;
     
     public static void init() {
         
-        RECIPE_TYPE_SCRIPTS = RecipeType.register(CraftTweakerConstants.rl("scripts").toString());
-        
-        ResourceLocation transformerSerializerRL = CraftTweakerConstants.rl("transformer_serializer");
-        ResourceLocation conditionSerializerRL = CraftTweakerConstants.rl("condition_serializer");
-        
-        REGISTRY_TRANSFORMER_SERIALIZER = registerRegistry(transformerSerializerRL);
-        REGISTRY_CONDITIONER_SERIALIZER = registerRegistry(conditionSerializerRL);
+        REGISTRY_TRANSFORMER_SERIALIZER = registerRegistry(CraftTweakerConstants.rl("transformer_serializer"));
+        REGISTRY_CONDITIONER_SERIALIZER = registerRegistry(CraftTweakerConstants.rl("condition_serializer"));
         
         registerSerializer(REGISTRY_TRANSFORMER_SERIALIZER, TransformReplaceSerializer.INSTANCE);
         registerSerializer(REGISTRY_TRANSFORMER_SERIALIZER, TransformDamageSerializer.INSTANCE);
         registerSerializer(REGISTRY_TRANSFORMER_SERIALIZER, TransformCustomSerializer.INSTANCE);
         registerSerializer(REGISTRY_TRANSFORMER_SERIALIZER, TransformerReuseSerializer.INSTANCE);
-
+        
         registerSerializer(REGISTRY_CONDITIONER_SERIALIZER, ConditionDamagedSerializer.INSTANCE);
         registerSerializer(REGISTRY_CONDITIONER_SERIALIZER, ConditionAnyDamagedSerializer.INSTANCE);
         registerSerializer(REGISTRY_CONDITIONER_SERIALIZER, ConditionCustomSerializer.INSTANCE);

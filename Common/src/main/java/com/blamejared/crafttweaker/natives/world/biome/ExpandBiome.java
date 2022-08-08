@@ -80,7 +80,7 @@ public class ExpandBiome {
     @ZenCodeType.Getter("registryName")
     public static ResourceLocation getRegistryName(Biome internal) {
         
-        return Services.REGISTRY.getRegistryKey(internal);
+        return Services.REGISTRY.biomes().getKey(internal);
     }
     
     @ZenCodeType.Getter("commandString")

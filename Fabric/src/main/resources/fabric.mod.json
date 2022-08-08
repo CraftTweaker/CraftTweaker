@@ -27,7 +27,7 @@
         "fabric-gametest": [
             "com.blamejared.crafttweaker.gametest.CraftTweakerGameTests"
         ],
-        "rei": [
+        "rei_client": [
             "com.blamejared.crafttweaker.impl.compat.rei.CraftTweakerPlugin"
         ]
     },
@@ -38,7 +38,7 @@
     "depends": {
         "fabricloader": ">=0.14.8",
         "fabric": "*",
-        "minecraft": "1.18.x",
+        "minecraft": "1.19.x",
         "java": ">=17",
         "ingredient-extension-api": "*"
     },

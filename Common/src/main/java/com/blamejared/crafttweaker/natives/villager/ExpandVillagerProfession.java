@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
+import net.minecraft.core.Registry;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Item;
@@ -51,7 +52,7 @@ public class ExpandVillagerProfession {
     @ZenCodeType.Getter("commandString")
     public static String getCommandString(VillagerProfession internal) {
         
-        return "<profession:" + Services.REGISTRY.getRegistryKey(internal) + ">";
+        return "<profession:" + Registry.VILLAGER_PROFESSION.getKey(internal) + ">";
     }
     
 }

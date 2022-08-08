@@ -6,6 +6,7 @@ import com.faux.ingredientextension.api.ingredient.serializer.IIngredientSeriali
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.FriendlyByteBuf;
@@ -25,7 +26,7 @@ public enum IngredientPartialTagSerializer implements IIngredientSerializer<Ingr
     @Override
     public void toJson(JsonObject json, IngredientPartialTag ingredient) {
         
-        json.addProperty("item", Services.REGISTRY.getRegistryKey(ingredient.getStack().getItem()).toString());
+        json.addProperty("item", Registry.ITEM.getKey(ingredient.getStack().getItem()).toString());
         json.addProperty("count", ingredient.getStack().getCount());
         if(ingredient.getStack().hasTag()) {
             json.addProperty("nbt", ingredient.getStack().getTag().toString());

@@ -6,11 +6,13 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.core.Registry;
 import net.minecraft.locale.Language;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
@@ -21,6 +23,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @ZenRegister
@@ -37,21 +40,21 @@ public class Game {
     @ZenCodeType.Getter("effects")
     public Collection<MobEffect> getMobEffects() {
         
-        return Services.REGISTRY.mobEffects().stream().toList();
+        return Registry.MOB_EFFECT.stream().toList();
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("enchantments")
     public Collection<Enchantment> getEnchantments() {
         
-        return Services.REGISTRY.enchantments().stream().toList();
+        return Registry.ENCHANTMENT.stream().toList();
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("entityTypes")
     public Collection<EntityType> getEntityTypes() {
         
-        return (Collection) Services.REGISTRY.entityTypes()
+        return (Collection) Registry.ENTITY_TYPE
                 .stream()
                 .toList();
     }
@@ -60,17 +63,16 @@ public class Game {
     @ZenCodeType.Getter("fluids")
     public Collection<Fluid> getFluids() {
         
-        return Services.REGISTRY.fluids().stream().toList();
+        return Registry.FLUID.stream().toList();
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("items")
     public Collection<IItemStack> getItemStacks() {
         
-        return Services.REGISTRY.items()
-                .stream()
+        return Registry.ITEM.stream()
                 .map(Item::getDefaultInstance)
-                .filter(stack -> !stack.isEmpty())
+                .filter(Predicate.not(ItemStack::isEmpty))
                 .map(Services.PLATFORM::createMCItemStack)
                 .toList();
     }
@@ -79,14 +81,14 @@ public class Game {
     @ZenCodeType.Getter("potions")
     public Collection<Potion> getPotions() {
         
-        return Services.REGISTRY.potions().stream().toList();
+        return Registry.POTION.stream().toList();
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("recipeTypes")
     public Collection<IRecipeManager> getRecipeTypes() {
         
-        return Services.REGISTRY.recipeTypes()
+        return Registry.RECIPE_TYPE
                 .stream()
                 .map(RecipeTypeBracketHandler::getOrDefault)
                 .filter(Objects::nonNull)
@@ -97,14 +99,14 @@ public class Game {
     @ZenCodeType.Getter("blocks")
     public Collection<Block> getBlocks() {
         
-        return Services.REGISTRY.blocks().stream().toList();
+        return Registry.BLOCK.stream().toList();
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("blockStates")
     public Collection<BlockState> getBlockStates() {
         
-        return Services.REGISTRY.blocks()
+        return Registry.BLOCK
                 .stream()
                 .flatMap(block -> block.getStateDefinition().getPossibleStates().stream())
                 .collect(Collectors.toList());
@@ -112,9 +114,9 @@ public class Game {
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("villagerProfessions")
-    public Collection<VillagerProfession> getProfessions() {
+    public Collection<VillagerProfession> getVillagerProfessions() {
         
-        return Services.REGISTRY.villagerProfessions().stream().toList();
+        return Registry.VILLAGER_PROFESSION.stream().toList();
     }
     
     /**

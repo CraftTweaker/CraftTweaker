@@ -870,12 +870,6 @@ public class ExpandEntity {
     }
     
     @ZenCodeType.Method
-    public static void sendMessage(Entity internal, Component message) {
-        
-        internal.sendSystemMessage(message);
-    }
-    
-    @ZenCodeType.Method
     @ZenCodeType.Getter("commandSenderWorld")
     public static Level getCommandSenderWorld(Entity internal) {
         

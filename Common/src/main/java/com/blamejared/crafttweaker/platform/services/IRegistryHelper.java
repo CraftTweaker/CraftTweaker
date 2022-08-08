@@ -20,11 +20,7 @@ import com.blamejared.crafttweaker.platform.registry.RegistryWrapper;
 import com.blamejared.crafttweaker.platform.registry.VanillaRegistryWrapper;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Lifecycle;
-import net.minecraft.core.Holder;
-import net.minecraft.core.MappedRegistry;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.WritableRegistry;
+import net.minecraft.core.*;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -44,7 +40,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 
 import javax.annotation.Nullable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -113,172 +108,54 @@ public interface IRegistryHelper {
     default Optional<ResourceLocation> maybeGetRegistryKey(Object object) {
         
         if(object instanceof Item obj) {
-            return Optional.of(getRegistryKey(obj));
+            return nonDefaultKey(Registry.ITEM, obj);
         } else if(object instanceof Potion obj) {
-            return Optional.of(getRegistryKey(obj));
+            return nonDefaultKey(Registry.POTION, obj);
         } else if(object instanceof EntityType<?> obj) {
-            return Optional.of(getRegistryKey(obj));
+            return nonDefaultKey(Registry.ENTITY_TYPE, obj);
         } else if(object instanceof RecipeType<?> obj) {
-            return Optional.of(getRegistryKey(obj));
+            return nonDefaultKey(Registry.RECIPE_TYPE, obj);
         } else if(object instanceof RecipeSerializer<?> obj) {
-            return Optional.of(getRegistryKey(obj));
+            return nonDefaultKey(Registry.RECIPE_SERIALIZER, obj);
         } else if(object instanceof Attribute obj) {
-            return Optional.of(getRegistryKey(obj));
+            return nonDefaultKey(Registry.ATTRIBUTE, obj);
         } else if(object instanceof Fluid obj) {
-            return Optional.of(getRegistryKey(obj));
+            return nonDefaultKey(Registry.FLUID, obj);
         } else if(object instanceof Enchantment obj) {
-            return Optional.of(getRegistryKey(obj));
+            return nonDefaultKey(Registry.ENCHANTMENT, obj);
         } else if(object instanceof Block obj) {
-            return Optional.of(getRegistryKey(obj));
+            return nonDefaultKey(Registry.BLOCK, obj);
         } else if(object instanceof MobEffect obj) {
-            return Optional.of(getRegistryKey(obj));
+            return nonDefaultKey(Registry.MOB_EFFECT, obj);
         } else if(object instanceof VillagerProfession obj) {
-            return Optional.of(getRegistryKey(obj));
+            return nonDefaultKey(Registry.VILLAGER_PROFESSION, obj);
         } else if(object instanceof Biome obj) {
-            return Optional.of(getRegistryKey(obj));
+            return nonDefaultKey(CraftTweakerAPI.getAccessibleElementsProvider()
+                    .registryAccess()
+                    .registryOrThrow(Registry.BIOME_REGISTRY), obj);
         } else if(object instanceof SoundEvent obj) {
-            return Optional.of(getRegistryKey(obj));
+            return nonDefaultKey(Registry.SOUND_EVENT, obj);
         }
-        
         
         return Optional.empty();
     }
     
-    default ResourceLocation getRegistryKey(Item item) {
+    private <T> Optional<ResourceLocation> nonDefaultKey(Registry<T> registry, T obj) {
         
-        return items().getKey(item);
+        ResourceLocation key = registry.getKey(obj);
+        if(registry instanceof DefaultedRegistry<T> def) {
+            if(def.getDefaultKey().equals(key) && !def.get(key).equals(obj)) {
+                return Optional.empty();
+            }
+        }
+        return Optional.ofNullable(key);
     }
     
-    default ResourceLocation getRegistryKey(Potion potion) {
+    default Registry<Biome> biomes() {
         
-        return potions().getKey(potion);
-    }
-    
-    default ResourceLocation getRegistryKey(EntityType<?> type) {
-        
-        return entityTypes().getKey(type);
-    }
-    
-    default ResourceLocation getRegistryKey(RecipeType<?> type) {
-        
-        return recipeTypes().getKey(type);
-    }
-    
-    default ResourceLocation getRegistryKey(RecipeSerializer<?> serializer) {
-        
-        return recipeSerializers().getKey(serializer);
-    }
-    
-    default ResourceLocation getRegistryKey(Attribute attribute) {
-        
-        return attributes().getKey(attribute);
-    }
-    
-    default ResourceLocation getRegistryKey(Fluid fluid) {
-        
-        return fluids().getKey(fluid);
-    }
-    
-    default ResourceLocation getRegistryKey(Enchantment enchantment) {
-        
-        return enchantments().getKey(enchantment);
-    }
-    
-    default ResourceLocation getRegistryKey(Block block) {
-        
-        return blocks().getKey(block);
-    }
-    
-    default ResourceLocation getRegistryKey(MobEffect mobEffect) {
-        
-        return mobEffects().getKey(mobEffect);
-    }
-    
-    default ResourceLocation getRegistryKey(VillagerProfession profession) {
-        
-        return villagerProfessions().getKey(profession);
-    }
-    
-    default ResourceLocation getRegistryKey(Biome biome) {
-        
-        return biomes().getKey(biome);
-    }
-    
-    default ResourceLocation getRegistryKey(SoundEvent biome) {
-        
-        return soundEvents().getKey(biome);
-    }
-    
-    private <T> RegistryWrapper<T> wrap(Registry<T> registry) {
-        
-        return new VanillaRegistryWrapper<>(registry);
-    }
-    
-    default RegistryWrapper<Item> items() {
-        
-        return wrap(Registry.ITEM);
-    }
-    
-    default RegistryWrapper<Potion> potions() {
-        
-        return wrap(Registry.POTION);
-    }
-    
-    default RegistryWrapper<RecipeType<?>> recipeTypes() {
-        
-        return wrap(Registry.RECIPE_TYPE);
-    }
-    
-    default RegistryWrapper<RecipeSerializer<?>> recipeSerializers() {
-        
-        return wrap(Registry.RECIPE_SERIALIZER);
-    }
-    
-    default RegistryWrapper<Attribute> attributes() {
-        
-        return wrap(Registry.ATTRIBUTE);
-    }
-    
-    default RegistryWrapper<Fluid> fluids() {
-        
-        return wrap(Registry.FLUID);
-    }
-    
-    default RegistryWrapper<Enchantment> enchantments() {
-        
-        return wrap(Registry.ENCHANTMENT);
-    }
-    
-    default RegistryWrapper<Block> blocks() {
-        
-        return wrap(Registry.BLOCK);
-    }
-    
-    default RegistryWrapper<MobEffect> mobEffects() {
-        
-        return wrap(Registry.MOB_EFFECT);
-    }
-    
-    default RegistryWrapper<VillagerProfession> villagerProfessions() {
-        
-        return wrap(Registry.VILLAGER_PROFESSION);
-    }
-    
-    default RegistryWrapper<SoundEvent> soundEvents() {
-        
-        return wrap(Registry.SOUND_EVENT);
-    }
-    
-    default RegistryWrapper<Biome> biomes() {
-        
-        return wrap(CraftTweakerAPI.getAccessibleElementsProvider()
+        return CraftTweakerAPI.getAccessibleElementsProvider()
                 .registryAccess()
-                .registryOrThrow(Registry.BIOME_REGISTRY));
-    }
-    
-    default RegistryWrapper<EntityType<?>> entityTypes() {
-        
-        return wrap(Registry.ENTITY_TYPE);
+                .registryOrThrow(Registry.BIOME_REGISTRY);
     }
     
     default <T> Holder<T> makeHolder(ResourceKey<?> resourceKey, Either<T, ResourceLocation> objectOrKey) {

@@ -14,6 +14,7 @@ import com.blamejared.crafttweaker.api.util.random.Percentaged;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessItem;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -66,7 +67,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     @ZenCodeType.Getter("registryName")
     default ResourceLocation getRegistryName() {
         
-        return Services.REGISTRY.getRegistryKey(getInternal().getItem());
+        return Registry.ITEM.getKey(getInternal().getItem());
     }
     
     /**

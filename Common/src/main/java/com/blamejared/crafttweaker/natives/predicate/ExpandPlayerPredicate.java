@@ -11,12 +11,12 @@ import org.openzen.zencode.java.ZenCodeType;
 @NativeTypeRegistration(value = PlayerPredicate.class, zenCodeName = "crafttweaker.api.predicate.PlayerPredicate")
 public final class ExpandPlayerPredicate {
     
-    @ZenCodeType.StaticExpansionMethod
-    public static PlayerPredicate any() {
-        //TODO 1.19 silk
-        //TODO we could just remove this, just that EntitySubPredicate.ANY exists, so not sure
-        return PlayerPredicate.ANY;
-    }
+//    @ZenCodeType.StaticExpansionMethod
+//    public static PlayerPredicate any() {
+//        //TODO 1.19 silk
+//        //TODO we could just remove this, just that EntitySubPredicate.ANY exists, so not sure
+//        return PlayerPredicate.ANY;
+//    }
     
     @ZenCodeType.StaticExpansionMethod
     public static PlayerPredicate.Builder create() {

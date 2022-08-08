@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -144,7 +145,7 @@ public class ExpandEntityType {
     @ZenCodeType.Getter("commandString")
     public static String getCommandString(EntityType internal) {
         
-        return "<entitytype:" + Services.REGISTRY.getRegistryKey(internal) + ">";
+        return "<entitytype:" + Registry.ENTITY_TYPE.getKey(internal) + ">";
     }
     
     @ZenCodeType.Caster(implicit = true)

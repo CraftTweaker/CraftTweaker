@@ -11,6 +11,7 @@ import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -40,7 +41,7 @@ public class ExpandBlock {
     @ZenCodeType.Getter("registryName")
     public static ResourceLocation getRegistryName(Block internal) {
         
-        return Services.REGISTRY.getRegistryKey(internal);
+        return Registry.BLOCK.getKey(internal);
     }
     
     /**

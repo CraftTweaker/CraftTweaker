@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.recipe.RecipeList;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
+import com.blamejared.crafttweaker.impl.script.ScriptRecipeType;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
@@ -36,7 +37,7 @@ public abstract class ActionWholeRegistryBase implements IRuntimeAction {
         
         final AccessRecipeManager manager = CraftTweakerAPI.getAccessibleElementsProvider().accessibleRecipeManager();
         final HashMap<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> result = new HashMap<>(manager.crafttweaker$getRecipes());
-        result.remove(CraftTweakerRegistries.RECIPE_TYPE_SCRIPTS);
+        result.remove(ScriptRecipeType.INSTANCE);
         return result;
     }
     

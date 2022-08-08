@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 import org.openzen.zencode.java.ZenCodeType;
@@ -39,7 +40,7 @@ public class ExpandFluid {
     @ZenCodeType.Getter("commandString")
     public static String getCommandString(Fluid internal) {
         
-        return "<fluid:" + Services.REGISTRY.getRegistryKey(internal) + ">.definition";
+        return "<fluid:" + Registry.FLUID.getKey(internal) + ">.definition";
     }
     
 }

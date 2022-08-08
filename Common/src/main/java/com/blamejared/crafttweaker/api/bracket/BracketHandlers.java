@@ -11,6 +11,7 @@ import com.blamejared.crafttweaker.natives.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.natives.world.damage.ExpandDamageSource;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -55,7 +56,7 @@ public class BracketHandlers {
         }
         ResourceLocation key = new ResourceLocation(split[0], split[1]);
         
-        return Services.REGISTRY.attributes().getOptional(key)
+        return Registry.ATTRIBUTE.getOptional(key)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get attribute with name: <attribute:" + tokens + ">! Attribute does not appear to exist!"));
     }
     
@@ -81,7 +82,7 @@ public class BracketHandlers {
             throw new IllegalArgumentException("Could not get block with name: <block:" + tokens + ">! Syntax is <block:modid:itemname>");
         }
         ResourceLocation key = new ResourceLocation(split[0], split[1]);
-        return Services.REGISTRY.blocks().getOptional(key)
+        return Registry.BLOCK.getOptional(key)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get block with name: <block:" + tokens + ">! Block does not appear to exist!"));
     }
     
@@ -128,7 +129,7 @@ public class BracketHandlers {
             String blockName = split[0] + ":" + split[1];
             String properties = split.length > 2 ? split[2] : "";
             
-            Optional<Block> found = Services.REGISTRY.blocks().getOptional(new ResourceLocation(blockName));
+            Optional<Block> found = Registry.BLOCK.getOptional(new ResourceLocation(blockName));
             if(found.isEmpty()) {
                 CraftTweakerAPI.LOGGER.error("Error creating BlockState!", new IllegalArgumentException("Could not get BlockState from: <blockstate:" + tokens + ">! The block does not appear to exist!"));
             } else {
@@ -141,7 +142,7 @@ public class BracketHandlers {
     
     public static BlockState getBlockState(String name, String properties) {
         
-        return getBlockState(Services.REGISTRY.blocks().get(new ResourceLocation(name)), name, properties);
+        return getBlockState(Registry.BLOCK.get(new ResourceLocation(name)), name, properties);
     }
     
     public static BlockState getBlockState(Block block, String name, String properties) {
@@ -182,7 +183,7 @@ public class BracketHandlers {
         if(split.length != 2) {
             throw new IllegalArgumentException("Could not get effect with name: <mobeffect:" + tokens + ">! Syntax is <effect:modid:mobeffect>");
         }
-        return Services.REGISTRY.mobEffects().getOptional(new ResourceLocation(split[0], split[1]))
+        return Registry.MOB_EFFECT.getOptional(new ResourceLocation(split[0], split[1]))
                 .orElseThrow(() -> new IllegalArgumentException("Could not get effect with name: <mobeffect:" + tokens + ">! Effect does not appear to exist!"));
     }
     
@@ -209,7 +210,7 @@ public class BracketHandlers {
         }
         
         final ResourceLocation key = new ResourceLocation(split[0], split[1]);
-        Optional<Enchantment> found = Services.REGISTRY.enchantments().getOptional(key);
+        Optional<Enchantment> found = Registry.ENCHANTMENT.getOptional(key);
         if(found.isEmpty()) {
             throw new IllegalArgumentException("Could not get enchantment '" + tokens + "': the enchantment does not appear to exist");
         }
@@ -236,7 +237,7 @@ public class BracketHandlers {
         }
         final ResourceLocation resourceLocation = new ResourceLocation(tokens);
         
-        return Services.REGISTRY.entityTypes().getOptional(resourceLocation)
+        return Registry.ENTITY_TYPE.getOptional(resourceLocation)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get entitytype <entitytype:" + tokens + ">"));
     }
     
@@ -263,7 +264,8 @@ public class BracketHandlers {
             throw new IllegalArgumentException("Could not get item with name: <item:" + tokens + ">! Syntax is <item:modid:itemname>");
         }
         ResourceLocation key = new ResourceLocation(split[0], split[1]);
-        ItemStack stack = Services.REGISTRY.items().getOptional(key)
+        
+        ItemStack stack = Registry.ITEM.getOptional(key)
                 .map(ItemStack::new)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get item with name: <item:" + tokens + ">! Item does not appear to exist!"));
         return Services.PLATFORM.createMCItemStack(stack);
@@ -283,7 +285,7 @@ public class BracketHandlers {
             throw new IllegalArgumentException("Could not get potion with name: <potion:" + tokens + ">! Syntax is <potion:modid:potionname>");
         }
         ResourceLocation key = new ResourceLocation(split[0], split[1]);
-        return Services.REGISTRY.potions().getOptional(key)
+        return Registry.POTION.getOptional(key)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get potion with name: <potion:" + tokens + ">! Potion does not appear to exist!"));
     }
     
@@ -360,7 +362,7 @@ public class BracketHandlers {
         }
         final ResourceLocation resourceLocation = new ResourceLocation(tokens);
         
-        return Services.REGISTRY.villagerProfessions().getOptional(resourceLocation)
+        return Registry.VILLAGER_PROFESSION.getOptional(resourceLocation)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get profession with name: <profession:" + tokens + ">! Profession does not appear to exist!"));
     }
     
@@ -420,7 +422,7 @@ public class BracketHandlers {
         }
         final ResourceLocation resourceLocation = new ResourceLocation(tokens);
         
-        return Services.REGISTRY.soundEvents().getOptional(resourceLocation)
+        return Registry.SOUND_EVENT.getOptional(resourceLocation)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get sound event with name: <soundevent:" + tokens + ">! Sound event does not appear to exist!"));
     }
     

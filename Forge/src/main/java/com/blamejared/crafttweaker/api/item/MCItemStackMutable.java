@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.base.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.ItemStack;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -30,7 +31,7 @@ public class MCItemStackMutable implements ForgeItemStack {
         //TODO move this to an actual registry or something
         
         final StringBuilder sb = new StringBuilder("<item:");
-        sb.append(Services.REGISTRY.getRegistryKey(getInternal().getItem()));
+        sb.append(Registry.ITEM.getKey(getInternal().getItem()));
         sb.append(">");
         
         if(getInternal().getTag() != null) {

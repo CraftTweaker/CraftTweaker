@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
 import com.blamejared.crafttweaker.api.recipe.RecipeList;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.platform.Services;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -55,7 +56,7 @@ public abstract class ActionRecipeBase<T extends Recipe<?>> implements IRuntimeA
     
     public ResourceLocation getRecipeTypeName() {
         
-        return Services.REGISTRY.getRegistryKey(getRecipeType());
+        return Registry.RECIPE_TYPE.getKey(getRecipeType());
     }
     
     

@@ -17,6 +17,7 @@ import com.blamejared.crafttweaker.natives.villager.ExpandVillagerProfession;
 import com.blamejared.crafttweaker.natives.world.damage.ExpandDamageSource;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import org.openzen.zencode.java.ZenCodeType;
@@ -34,7 +35,7 @@ public class BracketDumpers {
     @BracketDumper("attribute")
     public static Collection<String> getAttributeDump() {
         
-        return Services.REGISTRY.attributes()
+        return Registry.ATTRIBUTE
                 .stream()
                 .map(ExpandAttribute::getCommandString)
                 .collect(Collectors.toSet());
@@ -44,7 +45,7 @@ public class BracketDumpers {
     @BracketDumper("block")
     public static Collection<String> getBlockDump() {
         
-        return Services.REGISTRY.blocks()
+        return Registry.BLOCK
                 .stream()
                 .map(ExpandBlock::getCommandString)
                 .collect(Collectors.toSet());
@@ -64,7 +65,7 @@ public class BracketDumpers {
     @BracketDumper("mobeffect")
     public static Collection<String> getEffectDump() {
         
-        return Services.REGISTRY.mobEffects()
+        return Registry.MOB_EFFECT
                 .stream()
                 .map(ExpandMobEffect::getCommandString)
                 .collect(Collectors.toSet());
@@ -74,7 +75,7 @@ public class BracketDumpers {
     @BracketDumper("enchantment")
     public static Collection<String> getEnchantmentDump() {
         
-        return Services.REGISTRY.enchantments()
+        return Registry.ENCHANTMENT
                 .stream()
                 .map(ExpandEnchantment::getCommandString)
                 .collect(Collectors.toList());
@@ -84,7 +85,7 @@ public class BracketDumpers {
     @BracketDumper("entitytype")
     public static Collection<String> getEntityTypeDump() {
         
-        return Services.REGISTRY.entityTypes()
+        return Registry.ENTITY_TYPE
                 .stream()
                 .map(ExpandEntityType::getCommandString)
                 .collect(Collectors.toList());
@@ -94,7 +95,7 @@ public class BracketDumpers {
     @BracketDumper("item")
     public static Collection<String> getItemBracketDump() {
         
-        return Services.REGISTRY.items()
+        return Registry.ITEM
                 .stream()
                 .map(Item::getDefaultInstance)
                 .map(ItemStackUtil::getCommandString)
@@ -105,7 +106,7 @@ public class BracketDumpers {
     @BracketDumper("potion")
     public static Collection<String> getPotionTypeDump() {
         
-        return Services.REGISTRY.potions()
+        return Registry.POTION
                 .stream()
                 .map(ExpandPotion::getCommandString)
                 .collect(Collectors.toList());
@@ -115,7 +116,7 @@ public class BracketDumpers {
     @BracketDumper("profession")
     public static Collection<String> getProfessionDump() {
         
-        return Services.REGISTRY.villagerProfessions()
+        return Registry.VILLAGER_PROFESSION
                 .stream()
                 .map(ExpandVillagerProfession::getCommandString)
                 .collect(Collectors.toList());
@@ -144,7 +145,7 @@ public class BracketDumpers {
     @BracketDumper("soundevent")
     public static Collection<String> getSoundEventDump() {
         
-        return Services.REGISTRY.soundEvents()
+        return Registry.SOUND_EVENT
                 .stream()
                 .map(ExpandSoundEvent::getCommandString)
                 .collect(Collectors.toList());

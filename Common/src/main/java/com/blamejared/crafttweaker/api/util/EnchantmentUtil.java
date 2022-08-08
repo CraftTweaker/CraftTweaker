@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.util;
 
 
 import com.blamejared.crafttweaker.platform.Services;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.EnchantedBookItem;
@@ -23,7 +24,7 @@ public class EnchantmentUtil {
             if(enchantment != null) {
                 int i = entry.getValue();
                 CompoundTag compoundnbt = new CompoundTag();
-                compoundnbt.putString("id", String.valueOf(Services.REGISTRY.getRegistryKey(enchantment)));
+                compoundnbt.putString("id", String.valueOf(Registry.ENCHANTMENT.getKey(enchantment)));
                 compoundnbt.putShort("lvl", (short) i);
                 listnbt.add(compoundnbt);
                 if(stack.getItem() == Items.ENCHANTED_BOOK) {

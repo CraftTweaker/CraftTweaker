@@ -17,6 +17,7 @@ import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -97,7 +98,7 @@ public interface IEventHelper {
         if(BLOCK_INFO_PLAYERS.contains(player)) {
             if(!world.isClientSide() && hand == InteractionHand.MAIN_HAND) {
                 BlockState state = world.getBlockState(pos);
-                sendAndLog(player, Component.translatable("crafttweaker.command.info.block.name", Services.REGISTRY.getRegistryKey(state.getBlock())));
+                sendAndLog(player, Component.translatable("crafttweaker.command.info.block.name", Registry.BLOCK.getKey(state.getBlock())));
                 if(!state.getProperties().isEmpty()) {
                     
                     sendAndLog(player, Component.translatable("crafttweaker.command.info.block.properties"));

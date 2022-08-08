@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.platform.Services;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.*;
@@ -26,7 +27,7 @@ public final class RecipeHandlerRegistry implements IRecipeHandlerRegistry {
                     .map(IIngredient::fromIngredient)
                     .map(IIngredient::getCommandString)
                     .collect(Collectors.joining(", ")), recipe.getClass()
-                    .getName(), Services.REGISTRY.getRegistryKey(recipe.getSerializer()));
+                    .getName(), Registry.RECIPE_SERIALIZER.getKey(recipe.getSerializer()));
         }
         
     }

@@ -26,6 +26,7 @@ import com.blamejared.crafttweaker.api.recipe.serializer.CTShapedRecipeSerialize
 import com.blamejared.crafttweaker.api.recipe.serializer.CTShapelessRecipeSerializer;
 import com.blamejared.crafttweaker.api.recipe.serializer.ICTShapedRecipeBaseSerializer;
 import com.blamejared.crafttweaker.api.recipe.serializer.ICTShapelessRecipeBaseSerializer;
+import com.blamejared.crafttweaker.impl.script.ScriptRecipeType;
 import com.blamejared.crafttweaker.impl.script.ScriptSerializer;
 import com.blamejared.crafttweaker.platform.services.IRegistryHelper;
 import com.faux.ingredientextension.api.ingredient.IngredientHelper;
@@ -42,9 +43,7 @@ public class FabricRegistryHelper implements IRegistryHelper {
     @Override
     public void init() {
         
-        CraftTweakerRegistries.RECIPE_TYPE_SCRIPTS = RecipeType.register(CraftTweakerConstants.rl("scripts")
-                .toString());
-        
+        Registry.register(Registry.RECIPE_TYPE, ScriptRecipeType.INSTANCE.id(), ScriptRecipeType.INSTANCE);
         ResourceLocation transformerSerializerRL = CraftTweakerConstants.rl("transformer_serializer");
         ResourceLocation conditionSerializerRL = CraftTweakerConstants.rl("condition_serializer");
         

@@ -60,15 +60,15 @@ public final class ExpandLocationPredicate {
     }
     
     @ZenCodeType.StaticExpansionMethod
-    public static LocationPredicate inFeature(final ResourceLocation feature) {
-        //TODO 1.19 silk
-        return LocationPredicate.inFeature(ResourceKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, feature));
+    public static LocationPredicate inStructure(final ResourceLocation structure) {
+        
+        return LocationPredicate.inStructure(ResourceKey.create(Registry.STRUCTURE_REGISTRY, structure));
     }
     
     @ZenCodeType.StaticExpansionMethod
-    public static LocationPredicate inFeature(final String feature) {
+    public static LocationPredicate inStructure(final String structure) {
         
-        return inFeature(new ResourceLocation(feature));
+        return inStructure(new ResourceLocation(structure));
     }
     
 }

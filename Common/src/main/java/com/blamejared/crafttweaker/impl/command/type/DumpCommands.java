@@ -92,7 +92,7 @@ public final class DumpCommands {
                 builder -> builder.executes(context -> {
                     
                     final ServerPlayer player = context.getSource().getPlayerOrException();
-                    Services.REGISTRY.recipeTypes().stream()
+                    Registry.RECIPE_TYPE.stream()
                             .peek(type -> CraftTweakerAPI.LOGGER.info(type.toString()))
                             .map(it -> ((AccessRecipeManager) player.level.getRecipeManager()).crafttweaker$getRecipes()
                                     .getOrDefault(it, Collections.emptyMap())

@@ -8,16 +8,14 @@ import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipe;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipeBase;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import javax.annotation.Nullable;
 
-public class CTShapelessRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements ICTShapelessRecipeBaseSerializer {
+public class CTShapelessRecipeSerializer implements ICTShapelessRecipeBaseSerializer {
     
     public static final CTShapelessRecipeSerializer INSTANCE = new CTShapelessRecipeSerializer();
     
     public CTShapelessRecipeSerializer() {
         
-        setRegistryName(CraftTweakerConstants.rl("shapeless"));
     }
     
     

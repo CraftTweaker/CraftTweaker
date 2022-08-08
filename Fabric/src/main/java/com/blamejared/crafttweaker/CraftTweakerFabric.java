@@ -48,6 +48,7 @@ public class CraftTweakerFabric implements ModInitializer {
         CraftTweakerCommon.getPluginManager().broadcastSetupEnd(); // TODO("Another place?")
         
         CraftTweakerCommon.loadInitScripts();
+        
     }
     
 }

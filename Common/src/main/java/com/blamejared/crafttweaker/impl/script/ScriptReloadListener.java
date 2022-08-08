@@ -128,7 +128,7 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
     private void storeScriptsInRecipes(final RecipeManager manager, final Pair<Path, List<Path>> scripts) {
         
         final Map<ResourceLocation, Recipe<?>> recipes = ((AccessRecipeManager) manager).crafttweaker$getRecipes()
-                .computeIfAbsent(CraftTweakerRegistries.RECIPE_TYPE_SCRIPTS, it -> new HashMap<>());
+                .computeIfAbsent(ScriptRecipeType.INSTANCE, it -> new HashMap<>());
         final Path root = scripts.getFirst();
         
         scripts.getSecond().stream()

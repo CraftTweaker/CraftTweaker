@@ -51,15 +51,15 @@ public final class ExpandLocationPredicateBuilder {
     }
     
     @ZenCodeType.Method
-    public static LocationPredicate.Builder feature(final LocationPredicate.Builder internal, final ResourceLocation feature) {
+    public static LocationPredicate.Builder structure(final LocationPredicate.Builder internal, final ResourceLocation structure) {
         //TODO 1.19 silk
-        return internal.setFeature(ResourceKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, feature));
+        return internal.setStructure(ResourceKey.create(Registry.STRUCTURE_REGISTRY, structure));
     }
     
     @ZenCodeType.Method
-    public static LocationPredicate.Builder feature(final LocationPredicate.Builder internal, final String feature) {
+    public static LocationPredicate.Builder structure(final LocationPredicate.Builder internal, final String structure) {
         
-        return feature(internal, new ResourceLocation(feature));
+        return structure(internal, new ResourceLocation(structure));
     }
     
     @ZenCodeType.Method

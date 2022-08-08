@@ -27,6 +27,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.Util;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -255,10 +256,9 @@ public class FabricPlatformHelper implements IPlatformHelper {
             return Set.of();
         }
         Set<MutableComponent> components = new HashSet<>();
-        //TODO confirm
         for(StorageView<FluidVariant> view : storage) {
             if(!view.isResourceBlank()) {
-                components.add(Component.literal(Services.REGISTRY.getRegistryKey(view.getResource()
+                components.add(Component.literal(Registry.FLUID.getKey(view.getResource()
                         .getFluid()) + " * " + view.getAmount()));
             }
         }

@@ -14,12 +14,12 @@ import org.openzen.zencode.java.ZenCodeType;
 @NativeTypeRegistration(value = LighthingBoltPredicate.class, zenCodeName = "crafttweaker.api.predicate.LightningBoltPredicate")
 public final class ExpandLightningBoltPredicate {
     
-    @ZenCodeType.StaticExpansionMethod
-    public static LighthingBoltPredicate any() {
-        //TODO 1.19 silk
-        //TODO we could just remove this, just that EntitySubPredicate.ANY exists, so not sure
-        return LighthingBoltPredicate.ANY;
-    }
+//    @ZenCodeType.StaticExpansionMethod
+//    public static LighthingBoltPredicate any() {
+//        //TODO 1.19 silk
+//        //TODO we could just remove this, just that EntitySubPredicate.ANY exists, so not sure
+//        return LighthingBoltPredicate.ANY;
+//    }
     
     @ZenCodeType.StaticExpansionMethod
     public static LighthingBoltPredicate create(final MinMaxBounds.Ints blocksSetOnFire) {

@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import net.minecraft.ResourceLocationException;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -78,11 +79,11 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
             } catch(ClassCastException | IllegalStateException | ResourceLocationException ex) {
                 throw new IllegalArgumentException("Expected 'type' field to be a valid resource location.", ex);
             }
-            if(!Services.REGISTRY.recipeSerializers().containsKey(recipeSerializerKey)) {
+            if(!Registry.RECIPE_SERIALIZER.containsKey(recipeSerializerKey)) {
                 throw new IllegalArgumentException("Recipe Serializer '%s' does not exist.".formatted(recipeSerializerKey));
             }
         } else {
-            if(Services.REGISTRY.recipeSerializers().containsKey(recipeTypeKey)) {
+            if(Registry.RECIPE_SERIALIZER.containsKey(recipeTypeKey)) {
                 recipeObject.addProperty("type", recipeTypeKey.toString());
             } else {
                 throw new IllegalArgumentException("""
@@ -95,7 +96,7 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
         if(recipeType != getRecipeType()) {
             throw new IllegalArgumentException("""
                     Recipe Serializer "%s" resulted in Recipe Type "%s" but expected Recipe Type "%s"
-                    """.formatted(Services.REGISTRY.getRegistryKey(iRecipe.getSerializer()), Services.REGISTRY.recipeTypes()
+                    """.formatted(Registry.RECIPE_SERIALIZER.getKey(iRecipe.getSerializer()),Registry.RECIPE_TYPE
                     .getKey(recipeType), recipeTypeKey));
         }
         CraftTweakerAPI.apply(new ActionAddRecipe<>(this, iRecipe, ""));
@@ -272,7 +273,7 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
      */
     default ResourceLocation getBracketResourceLocation() {
         
-        return Services.REGISTRY.getRegistryKey(getRecipeType());
+        return Registry.RECIPE_TYPE.getKey(getRecipeType());
     }
     
     @Override

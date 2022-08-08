@@ -4,6 +4,7 @@ package com.blamejared.crafttweaker.api.util;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.base.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker.platform.Services;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
@@ -17,7 +18,7 @@ public final class ItemStackUtil {
     public static String getCommandString(final ItemStack stack, final boolean mutable) {
         
         final StringBuilder sb = new StringBuilder("<item:");
-        sb.append(Services.REGISTRY.getRegistryKey(stack.getItem()));
+        sb.append(Registry.ITEM.getKey(stack.getItem()));
         sb.append('>');
         
         if(stack.getTag() != null) {

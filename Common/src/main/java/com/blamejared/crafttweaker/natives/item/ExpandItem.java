@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -27,7 +28,7 @@ public class ExpandItem {
     @ZenCodeType.Getter("commandString")
     public static String getCommandString(Item internal) {
         
-        return "<item:" + Services.REGISTRY.getRegistryKey(internal) + ">.definition";
+        return "<item:" + Registry.ITEM.getKey(internal) + ">.definition";
     }
     
     

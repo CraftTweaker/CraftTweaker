@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.recipe.replacement.rule;
 import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.replacement.event.IGatherReplacementExclusionEvent;
+import com.blamejared.crafttweaker.impl.script.ScriptRecipeType;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.world.item.crafting.Recipe;
@@ -37,7 +38,7 @@ public final class DefaultExclusionReplacements {
                     .forEach(event::addExclusion);
         }
     
-        if(manager.getRecipeType() == CraftTweakerRegistries.RECIPE_TYPE_SCRIPTS) {
+        if(manager.getRecipeType() == ScriptRecipeType.INSTANCE) {
             manager.getAllRecipes()
                     .forEach(event::addExclusion);
         }

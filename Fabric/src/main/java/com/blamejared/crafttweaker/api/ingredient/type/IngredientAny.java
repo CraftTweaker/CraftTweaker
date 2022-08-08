@@ -1,13 +1,15 @@
 package com.blamejared.crafttweaker.api.ingredient.type;
 
 import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientAnySerializer;
-import com.blamejared.crafttweaker.platform.Services;
 import com.faux.ingredientextension.api.ingredient.IngredientExtendable;
 import com.faux.ingredientextension.api.ingredient.serializer.IIngredientSerializer;
+import net.minecraft.core.Registry;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 public class IngredientAny extends IngredientExtendable implements IngredientSingleton<IIngredientAny> {
     
@@ -15,11 +17,11 @@ public class IngredientAny extends IngredientExtendable implements IngredientSin
     
     protected IngredientAny() {
         
-        super(Services.REGISTRY.items()
+        super(Registry.ITEM
                 .stream()
-                .map(ItemStack::new)
-                .filter(stack -> !stack.isEmpty())
-                .map(ItemValue::new));
+                .map(Item::getDefaultInstance)
+                .filter(Predicate.not(ItemStack::isEmpty))
+                .toArray(ItemStack[]::new));
     }
     
     @Override

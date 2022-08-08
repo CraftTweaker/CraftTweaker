@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.loot;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
 import com.blamejared.crafttweaker.natives.item.ExpandItemStack;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
@@ -37,7 +38,7 @@ final class ForgeLootModifierAdapter implements ILootModifier {
     @Override
     public List<ItemStack> doApply(final List<ItemStack> loot, final LootContext context) {
         //TODO 1.19 silk
-        return this.modifier.apply(loot, context);
+        return this.modifier.apply(new ObjectArrayList<>(loot), context);
     }
     
     IGlobalLootModifier modifier() {

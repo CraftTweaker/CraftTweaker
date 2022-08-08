@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.api.zencode.expand;
 
-
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.StringData;
 import com.blamejared.crafttweaker.api.data.base.IData;

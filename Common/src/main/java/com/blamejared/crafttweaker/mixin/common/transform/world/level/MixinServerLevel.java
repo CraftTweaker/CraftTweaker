@@ -11,6 +11,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraft.world.level.storage.ServerLevelData;
@@ -42,7 +43,7 @@ public abstract class MixinServerLevel extends Level implements CraftTweakerSave
     
     
     @Inject(method = "<init>", at = @At(value = "TAIL"))
-    public void crafttwaeker$init(MinecraftServer $$0, Executor $$1, LevelStorageSource.LevelStorageAccess $$2, ServerLevelData $$3, ResourceKey<Level> $$4, Holder<DimensionType> $$5, ChunkProgressListener $$6, ChunkGenerator $$7, boolean $$8, long $$9, List $$10, boolean $$11, CallbackInfo ci) {
+    public void crafttweaker$init(MinecraftServer $$0, Executor $$1, LevelStorageSource.LevelStorageAccess $$2, ServerLevelData $$3, ResourceKey $$4, LevelStem $$5, ChunkProgressListener $$6, boolean $$7, long $$8, List $$9, boolean $$10, CallbackInfo ci) {
         
         this.crafttweaker$crafttweakerSavedData = this.getDataStorage()
                 .computeIfAbsent(CraftTweakerSavedData::load, CraftTweakerSavedData::new, "crafttweaker_saved_data");

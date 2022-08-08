@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.api.bracket.custom;
 
 
-import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.ICraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
@@ -9,9 +8,10 @@ import com.blamejared.crafttweaker.api.recipe.manager.RecipeManagerWrapper;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.InstantiationUtil;
 import com.blamejared.crafttweaker.api.util.ParseUtil;
-import com.blamejared.crafttweaker.platform.Services;
+import com.blamejared.crafttweaker.impl.script.ScriptRecipeType;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableSet;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -44,7 +44,7 @@ import java.util.stream.Stream;
 public class RecipeTypeBracketHandler implements BracketExpressionParser {
     
     // Using Lazy here allows us to reference scripts in the correct order without f-ing up classloading
-    private static final Set<Supplier<RecipeType<?>>> FILTERED_TYPES = ImmutableSet.of(Suppliers.memoize(() -> CraftTweakerRegistries.RECIPE_TYPE_SCRIPTS));
+    private static final Set<Supplier<RecipeType<?>>> FILTERED_TYPES = ImmutableSet.of(Suppliers.memoize(() -> ScriptRecipeType.INSTANCE));
     private static final Object LOCK = new Object();
     
     private static final Map<RecipeType<Recipe<?>>, IRecipeManager<Recipe<?>>> registeredTypes = new HashMap<>();
@@ -182,7 +182,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             return getCall(name, registeredTypes().get(lookup(resourceLocation)), position);
         }
         
-        if(Services.REGISTRY.recipeTypes().keySet().contains(resourceLocation)) {
+        if(Registry.RECIPE_TYPE.keySet().contains(resourceLocation)) {
             return getCallFallback(name, position);
         }
         
@@ -222,14 +222,13 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     
     private static RecipeType<Recipe<?>> lookup(final ResourceLocation location) {
         
-        return (RecipeType<Recipe<?>>) Services.REGISTRY.recipeTypes().get(location);
+        return (RecipeType<Recipe<?>>) Registry.RECIPE_TYPE.get(location);
     }
     
     public static Supplier<Stream<String>> getDumperData() {
         
-        return () -> Services.REGISTRY.recipeTypes()
-                .keyStream()
-                .filter(rl -> !rl.toString().equals("crafttweaker:scripts"))
+        return () -> Registry.RECIPE_TYPE.keySet().stream()
+                .filter(rl -> !rl.equals(ScriptRecipeType.INSTANCE.id()))
                 .map(rl -> String.format(Locale.ENGLISH, "<recipetype:%s>", rl));
     }
     

@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -142,7 +143,7 @@ public class ExpandEnchantment {
     @ZenCodeType.Getter("commandString")
     public static String getCommandString(Enchantment internal) {
         
-        return "<enchantment:" + Services.REGISTRY.getRegistryKey(internal) + ">";
+        return "<enchantment:" + Registry.ENCHANTMENT.getKey(internal) + ">";
     }
     
 }

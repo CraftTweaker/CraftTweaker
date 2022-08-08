@@ -62,7 +62,7 @@ public class RecipeManagerScriptLoader {
         fixRecipeManager(manager);
         
         final Map<ResourceLocation, Recipe<?>> recipes = ((AccessRecipeManager) manager).crafttweaker$getRecipes()
-                .getOrDefault(CraftTweakerRegistries.RECIPE_TYPE_SCRIPTS, Collections.emptyMap());
+                .getOrDefault(ScriptRecipeType.INSTANCE, Collections.emptyMap());
         
         if(recipes.isEmpty()) {
             
