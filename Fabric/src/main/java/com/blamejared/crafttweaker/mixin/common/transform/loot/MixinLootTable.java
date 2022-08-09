@@ -25,7 +25,10 @@ public abstract class MixinLootTable {
     @Inject(method = "getRandomItems(Lnet/minecraft/world/level/storage/loot/LootContext;Ljava/util/function/Consumer;)V", at = @At("TAIL"))
     private void crafttweaker$getRandomItems$runLootModifiers(final LootContext contextData, final Consumer<ItemStack> stacksOut, final CallbackInfo ci) {
         
-        ((LootCapturingConsumer) stacksOut).release(loot -> LootModifierManager.INSTANCE.applyModifiers(loot, contextData));
+        // Make sure that we do not crash in case another mod wraps our capturing consumer
+        if(stacksOut instanceof LootCapturingConsumer capturing) {
+            capturing.release(loot -> LootModifierManager.INSTANCE.applyModifiers(loot, contextData));
+        }
     }
     
 }

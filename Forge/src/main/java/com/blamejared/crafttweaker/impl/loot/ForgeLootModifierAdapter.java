@@ -11,7 +11,6 @@ import net.minecraftforge.common.loot.IGlobalLootModifier;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("ClassCanBeRecord")
 final class ForgeLootModifierAdapter implements ILootModifier {
     
     private final IGlobalLootModifier modifier;
@@ -29,16 +28,18 @@ final class ForgeLootModifierAdapter implements ILootModifier {
     @Override
     public List<IItemStack> modify(final List<IItemStack> loot, final LootContext context) {
         
-        return this.doApply(loot.stream().map(IItemStack::getInternal).collect(Collectors.toList()), context)
+        return this.doApply(loot.stream()
+                        .map(IItemStack::getInternal)
+                        .collect(Collectors.toCollection(ObjectArrayList::new)), context)
                 .stream()
                 .map(ExpandItemStack::asIItemStack)
                 .collect(Collectors.toList());
     }
     
     @Override
-    public List<ItemStack> doApply(final List<ItemStack> loot, final LootContext context) {
-        //TODO 1.19 silk
-        return this.modifier.apply(new ObjectArrayList<>(loot), context);
+    public ObjectArrayList<ItemStack> doApply(final ObjectArrayList<ItemStack> loot, final LootContext context) {
+        
+        return this.modifier.apply(loot, context);
     }
     
     IGlobalLootModifier modifier() {

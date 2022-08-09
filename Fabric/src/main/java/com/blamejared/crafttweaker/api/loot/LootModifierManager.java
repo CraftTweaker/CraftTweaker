@@ -1,13 +1,13 @@
 package com.blamejared.crafttweaker.api.loot;
 
 import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public enum LootModifierManager {
@@ -25,7 +25,7 @@ public enum LootModifierManager {
         return this.modifiers;
     }
     
-    public List<ItemStack> applyModifiers(final List<ItemStack> generatedLoot, final LootContext context) {
+    public ObjectArrayList<ItemStack> applyModifiers(final ObjectArrayList<ItemStack> generatedLoot, final LootContext context) {
         
         return this.modifiers()
                 .values()
