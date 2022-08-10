@@ -20,7 +20,17 @@ import net.minecraft.tags.TagNetworkSerialization;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -320,23 +330,11 @@ public final class CraftTweakerTagRegistry {
         return tagDir;
     }
     
-    public static class BindContext {
-        
-        private boolean registerKnownManagers = true;
+    public record BindContext(boolean registerKnownManagers) {
         
         public BindContext() {
-        
-        }
-        
-        public boolean registerKnownManagers() {
             
-            return registerKnownManagers;
-        }
-        
-        public BindContext registerKnownManagers(boolean value) {
-            
-            this.registerKnownManagers = value;
-            return this;
+            this(true);
         }
         
     }

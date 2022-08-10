@@ -30,18 +30,18 @@ public class MixinTagManager {
     public <T> Consumer<? super T> crafttweaker$appendConsumer(Consumer<? super T> action) {
         
         return action.andThen(o -> {
-            CraftTweakerTagRegistry.INSTANCE.bind(results, new CraftTweakerTagRegistry.BindContext().registerKnownManagers(false));
-    
+            CraftTweakerTagRegistry.INSTANCE.bind(results, new CraftTweakerTagRegistry.BindContext(false));
+            
             IAccessibleServerElementsProvider asep = CraftTweakerAPI.getAccessibleElementsProvider().server();
             asep.registryAccess(this.registryAccess);
-    
-    
+            
+            
             final ScriptRunConfiguration configuration = new ScriptRunConfiguration(
                     CraftTweakerConstants.TAGS_LOADER_NAME,
                     CraftTweakerConstants.RELOAD_LISTENER_SOURCE_ID, // TODO("Custom load source?")
                     ScriptRunConfiguration.RunKind.EXECUTE
             );
-    
+            
             try {
                 CraftTweakerAPI.getScriptRunManager()
                         .createScriptRun(configuration)
