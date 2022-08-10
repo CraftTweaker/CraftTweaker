@@ -7,14 +7,12 @@ import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.EntityEquipmentPredicate;
 import net.minecraft.advancements.critereon.EntityFlagsPredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.EntitySubPredicate;
 import net.minecraft.advancements.critereon.EntityTypePredicate;
-import net.minecraft.advancements.critereon.FishingHookPredicate;
-import net.minecraft.advancements.critereon.LighthingBoltPredicate;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.MobEffectsPredicate;
 import net.minecraft.advancements.critereon.NbtPredicate;
 import net.minecraft.advancements.critereon.PlayerPredicate;
-import net.minecraft.resources.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -94,29 +92,17 @@ public final class ExpandEntityPredicateBuilder {
         return equipment(internal, predicate.build());
     }
     
-    //TODO 1.19 silk
-//    @ZenCodeType.Method
-//    public static EntityPredicate.Builder player(final EntityPredicate.Builder internal, final PlayerPredicate predicate) {
-//
-//        return internal.player(predicate);
-//    }
-    //TODO 1.19 silk
-//    @ZenCodeType.Method
-//    public static EntityPredicate.Builder player(final EntityPredicate.Builder internal, final PlayerPredicate.Builder predicate) {
-//
-//        return player(internal, predicate.build());
-//    }
-    //TODO 1.19 silk
-//    @ZenCodeType.Method
-//    public static EntityPredicate.Builder fishingHook(final EntityPredicate.Builder internal, final FishingHookPredicate predicate) {
-//
-//        return internal.fishingHook(predicate);
-//    }
-    //TODO 1.19 silk
-//    @ZenCodeType.Method
-//    public static EntityPredicate.Builder lightningBolt(final EntityPredicate.Builder internal, final LighthingBoltPredicate predicate) { // 🙄 MOJANG CHECK YOUR SPELLING!
-//        return internal.lighthingBolt(predicate);
-//    }
+    @ZenCodeType.Method
+    public static EntityPredicate.Builder subPredicate(final EntityPredicate.Builder internal, final EntitySubPredicate predicate) {
+        
+        return internal.subPredicate(predicate);
+    }
+    
+    @ZenCodeType.Method
+    public static EntityPredicate.Builder subPredicate(final EntityPredicate.Builder internal, final PlayerPredicate.Builder predicate) {
+        
+        return subPredicate(internal, predicate.build());
+    }
     
     @ZenCodeType.Method
     public static EntityPredicate.Builder vehicle(final EntityPredicate.Builder internal, final EntityPredicate predicate) {
@@ -159,20 +145,6 @@ public final class ExpandEntityPredicateBuilder {
         
         return internal.team(team);
     }
-    
-    //TODO 1.19 silk
-//    @ZenCodeType.Method
-//    public static EntityPredicate.Builder catType(final EntityPredicate.Builder internal, final ResourceLocation catType) {
-//
-//        return internal.catType(catType);
-//    }
-    
-    //TODO 1.19 silk
-//    @ZenCodeType.Method
-//    public static EntityPredicate.Builder catType(final EntityPredicate.Builder internal, final String catType) {
-//
-//        return catType(internal, new ResourceLocation(catType));
-//    }
     
     @ZenCodeType.Method
     public static EntityPredicate build(final EntityPredicate.Builder internal) {

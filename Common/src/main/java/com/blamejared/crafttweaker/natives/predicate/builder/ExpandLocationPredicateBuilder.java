@@ -52,7 +52,7 @@ public final class ExpandLocationPredicateBuilder {
     
     @ZenCodeType.Method
     public static LocationPredicate.Builder structure(final LocationPredicate.Builder internal, final ResourceLocation structure) {
-        //TODO 1.19 silk
+        
         return internal.setStructure(ResourceKey.create(Registry.STRUCTURE_REGISTRY, structure));
     }
     
