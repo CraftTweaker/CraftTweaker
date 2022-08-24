@@ -3,30 +3,20 @@ package com.blamejared.crafttweaker.api.loot.modifier;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
+import com.blamejared.crafttweaker.api.ingredient.IIngredientWithAmount;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.util.random.Percentaged;
-import com.blamejared.crafttweaker.natives.item.ExpandItemStack;
+import com.blamejared.crafttweaker.natives.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.Util;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.level.storage.loot.LootContext;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.IntFunction;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -39,27 +29,6 @@ import java.util.stream.Stream;
 @ZenCodeType.Name("crafttweaker.api.loot.modifier.CommonLootModifiers")
 @Document("vanilla/api/loot/modifier/CommonLootModifiers")
 public final class CommonLootModifiers {
-    
-    private interface DropsFormula {
-        
-        DropsFormula ORE_DROPS = (amount, level, random) -> level <= 0 ? amount : amount * Math.max(0, random.nextInt(level + 2) - 1) + 1;
-        
-        static DropsFormula binomial(final int extra, final float p) {
-            
-            return (amount, level, random) -> amount + IntStream.range(0, level + extra)
-                    .filter(ignore -> random.nextFloat() < p)
-                    .map(it -> 1)
-                    .sum();
-        }
-        
-        static DropsFormula uniform(final int multiplier) {
-            
-            return (amount, level, random) -> amount + random.nextInt(multiplier * level + 1);
-        }
-        
-        int apply(final int amount, final int level, final RandomSource random);
-        
-    }
     
     private static final ILootModifier LOOT_CLEARING_MODIFIER = (loot, context) -> new ArrayList<>();
     
@@ -77,7 +46,14 @@ public final class CommonLootModifiers {
     @ZenCodeType.Method
     public static ILootModifier add(final IItemStack stack) {
         
-        return stack.isEmpty() ? ILootModifier.DEFAULT : modifying((loot, context) -> loot.add(stack.copy()));
+        if(stack.isEmpty()) {
+            return ILootModifier.DEFAULT;
+        }
+        
+        return (loot, context) -> {
+            loot.add(stack.copy());
+            return loot;
+        };
     }
     
     /**
@@ -92,8 +68,7 @@ public final class CommonLootModifiers {
     @ZenCodeType.Method
     public static ILootModifier addAll(final IItemStack... stacks) {
         
-        final List<IItemStack> stacksToAdd = filterEmpty(Arrays.stream(stacks)).toList();
-        return modifying((loot, context) -> stacksToAdd.stream().map(IItemStack::copy).forEach(loot::add));
+        return chaining(Arrays.stream(stacks).map(CommonLootModifiers::add));
     }
     
     /**
@@ -110,7 +85,17 @@ public final class CommonLootModifiers {
     @ZenCodeType.Method
     public static ILootModifier addWithChance(final Percentaged<IItemStack> stack) {
         
-        return isInvalidChance(stack) ? ILootModifier.DEFAULT : modifying((loot, context) -> chance(context.getRandom(), stack).ifPresent(loot::add));
+        if(isInvalidChance(stack)) {
+            return ILootModifier.DEFAULT;
+        }
+        
+        return (loot, context) -> {
+            final IItemStack picked = pickStackBasedOnChance(context.getRandom(), stack);
+            if(picked != null) {
+                loot.add(picked);
+            }
+            return loot;
+        };
     }
     
     /**
@@ -153,7 +138,25 @@ public final class CommonLootModifiers {
     @ZenCodeType.Method
     public static ILootModifier addWithOreDropsBonus(final Enchantment enchantment, final IItemStack stack) {
         
-        return withBonus(stack, enchantment, DropsFormula.ORE_DROPS);
+        if(stack.isEmpty()) {
+            return ILootModifier.DEFAULT;
+        }
+        
+        return (loot, context) -> {
+            final IItemStack tool = ExpandLootContext.getTool(context);
+            
+            if(tool == null || tool.getInternal() == null || tool.isEmpty()) {
+                loot.add(stack.copy());
+            } else {
+                final int enchantmentLevel = EnchantmentHelper.getItemEnchantmentLevel(enchantment, tool.getInternal());
+                final int oldAmount = stack.getAmount();
+                final int newAmount = enchantmentLevel <= 0 ? oldAmount : oldAmount * Math.max(0, context.getRandom()
+                        .nextInt(enchantmentLevel + 2) - 1) + 1;
+                loot.add(stack.copy().setAmount(newAmount));
+            }
+            
+            return loot;
+        };
     }
     
     /**
@@ -183,7 +186,38 @@ public final class CommonLootModifiers {
     @ZenCodeType.Method
     public static ILootModifier addWithBinomialBonus(final Enchantment enchantment, final int extra, final float p, final IItemStack stack) {
         
-        return withBonus(stack, enchantment, DropsFormula.binomial(extra, p));
+        if(stack.isEmpty()) {
+            return ILootModifier.DEFAULT;
+        }
+        
+        return (loot, context) -> {
+            final IItemStack tool = ExpandLootContext.getTool(context);
+            
+            if(tool == null || tool.getInternal() == null || tool.isEmpty()) {
+                loot.add(stack.copy());
+            } else {
+                final int enchantmentLevel = EnchantmentHelper.getItemEnchantmentLevel(enchantment, tool.getInternal());
+                
+                if(enchantmentLevel <= 0) {
+                    loot.add(stack.copy());
+                } else {
+                    final RandomSource source = context.getRandom();
+                    final int oldAmount = stack.getAmount();
+                    
+                    int additional = 0;
+                    for(int i = 0, s = enchantmentLevel + extra; i < s; ++i) {
+                        if(source.nextFloat() < p) {
+                            ++additional;
+                        }
+                    }
+                    
+                    final int newAmount = oldAmount + additional;
+                    loot.add(stack.copy().setAmount(newAmount));
+                }
+            }
+            
+            return loot;
+        };
     }
     
     /**
@@ -211,7 +245,30 @@ public final class CommonLootModifiers {
     @ZenCodeType.Method
     public static ILootModifier addWithUniformBonus(final Enchantment enchantment, final int multiplier, final IItemStack stack) {
         
-        return withBonus(stack, enchantment, DropsFormula.uniform(multiplier));
+        if(stack.isEmpty()) {
+            return ILootModifier.DEFAULT;
+        }
+        
+        return (loot, context) -> {
+            final IItemStack tool = ExpandLootContext.getTool(context);
+            
+            if(tool == null || tool.getInternal() == null || tool.isEmpty()) {
+                loot.add(stack.copy());
+            } else {
+                final int enchantmentLevel = EnchantmentHelper.getItemEnchantmentLevel(enchantment, tool.getInternal());
+                
+                if(enchantmentLevel <= 0) {
+                    loot.add(stack.copy());
+                } else {
+                    final int oldAmount = stack.getAmount();
+                    final int newAmount = oldAmount + context.getRandom().nextInt(multiplier * enchantmentLevel + 1);
+                    ;
+                    loot.add(stack.copy().setAmount(newAmount));
+                }
+            }
+            
+            return loot;
+        };
     }
     
     /**
@@ -238,7 +295,7 @@ public final class CommonLootModifiers {
     @ZenCodeType.Method
     public static ILootModifier addAllWithOreDropsBonus(final Enchantment enchantment, final IItemStack... stacks) {
         
-        return chaining(filterEmpty(Arrays.stream(stacks)).map(it -> addWithOreDropsBonus(enchantment, it)));
+        return chaining(Arrays.stream(stacks).map(it -> addWithOreDropsBonus(enchantment, it)));
     }
     
     /**
@@ -270,7 +327,7 @@ public final class CommonLootModifiers {
     @ZenCodeType.Method
     public static ILootModifier addAllWithBinomialBonus(final Enchantment enchantment, final int extra, final float p, final IItemStack... stacks) {
         
-        return chaining(filterEmpty(Arrays.stream(stacks)).map(it -> addWithBinomialBonus(enchantment, extra, p, it)));
+        return chaining(Arrays.stream(stacks).map(it -> addWithBinomialBonus(enchantment, extra, p, it)));
     }
     
     /**
@@ -300,7 +357,7 @@ public final class CommonLootModifiers {
     @ZenCodeType.Method
     public static ILootModifier addAllWithUniformBonus(final Enchantment enchantment, final int multiplier, final IItemStack... stacks) {
         
-        return chaining(filterEmpty(Arrays.stream(stacks)).map(it -> addWithUniformBonus(enchantment, multiplier, it)));
+        return chaining(Arrays.stream(stacks).map(it -> addWithUniformBonus(enchantment, multiplier, it)));
     }
     
     /**
@@ -322,8 +379,15 @@ public final class CommonLootModifiers {
     @ZenCodeType.Method
     public static ILootModifier addWithRandomAmount(final IItemStack stack, final int min, final int max) {
         
-        return stack.isEmpty() || max < min ? ILootModifier.DEFAULT : modifying((loot, context) -> loot.add(stack.copy()
-                .setAmount(boundedRandom(context, min, max))));
+        if(stack.isEmpty() || max < min) {
+            return ILootModifier.DEFAULT;
+        }
+        
+        return (loot, context) -> {
+            final int amount = context.getRandom().nextInt(min, max);
+            loot.add(stack.copy().setAmount(amount));
+            return loot;
+        };
     }
     //endregion
     
@@ -334,7 +398,7 @@ public final class CommonLootModifiers {
      *
      * In this case, a simple matching procedure is used, where every stack that matches the given {@code target}
      * is replaced by the {@code replacement} without considering stack size. If stack size is to be preserved,
-     * refer to {@link #replaceStackWith(IItemStack, IItemStack)}.
+     * refer to {@link #replaceStackWith(IIngredientWithAmount, IItemStack)}.
      *
      * @param target      The target to replace.
      * @param replacement The replacement to use.
@@ -347,7 +411,43 @@ public final class CommonLootModifiers {
     @ZenCodeType.Method
     public static ILootModifier replaceWith(final IIngredient target, final IItemStack replacement) {
         
-        return streaming((loot, context) -> replacing(loot, target, replacement));
+        if(target.isEmpty()) {
+            return ILootModifier.DEFAULT;
+        }
+        
+        if(replacement.isEmpty()) {
+            return remove(target);
+        }
+        
+        return (loot, context) -> {
+            boolean hasFound = false;
+            List<IItemStack> newList = null;
+            
+            for(final IItemStack stack : loot) {
+                if(hasFound) {
+                    if(target.matches(stack)) {
+                        newList.add(replacement.copy());
+                    } else {
+                        newList.add(stack);
+                    }
+                } else {
+                    if(target.matches(stack)) {
+                        hasFound = true;
+                        newList = new ArrayList<>();
+                        
+                        for(final IItemStack other : loot) {
+                            if(other == stack) {
+                                break;
+                            }
+                            newList.add(other);
+                        }
+                        newList.add(replacement.copy());
+                    }
+                }
+            }
+            
+            return newList == null ? loot : newList;
+        };
     }
     
     /**
@@ -371,7 +471,7 @@ public final class CommonLootModifiers {
     }
     
     /**
-     * Replaces every instance of the targeted {@link IItemStack} with the replacement {@link IItemStack},
+     * Replaces every instance of the targeted {@link IIngredientWithAmount} with the replacement {@link IItemStack},
      * proportionally.
      *
      * As an example, if the loot drops 5 carrots and this loot modifier runs with 2 carrots as the {@code target}
@@ -390,9 +490,67 @@ public final class CommonLootModifiers {
      * @docParam replacement <item:minecraft:potatoes>
      */
     @ZenCodeType.Method
-    public static ILootModifier replaceStackWith(final IItemStack target, final IItemStack replacement) {
+    public static ILootModifier replaceStackWith(final IIngredientWithAmount target, final IItemStack replacement) {
         
-        return streaming((loot, context) -> replacingExactly(loot, target, replacement));
+        final IIngredient ingredient = target.getIngredient();
+        final int amount = target.getAmount();
+        
+        if(ingredient.isEmpty()) {
+            return ILootModifier.DEFAULT;
+        }
+        
+        if(amount <= 0) {
+            return ILootModifier.DEFAULT;
+        }
+        
+        if(replacement.isEmpty()) { // TODO("Unless we want some form of 'remove carrots but only if they're a multiple of 2'")
+            return remove(target.getIngredient());
+        }
+        
+        return (loot, context) -> {
+            boolean hasFound = false;
+            List<IItemStack> newList = null;
+            
+            for(final IItemStack stack : loot) {
+                if(hasFound) {
+                    final int stackAmount;
+                    if(ingredient.matches(stack) && (stackAmount = stack.getAmount()) >= amount) {
+                        final int newAmount = stackAmount / amount;
+                        final int oldAmount = stackAmount % amount;
+                        
+                        newList.add(replacement.copy().setAmount(newAmount));
+                        if(oldAmount > 0) {
+                            newList.add(stack.setAmount(oldAmount));
+                        }
+                    } else {
+                        newList.add(stack);
+                    }
+                } else {
+                    final int stackAmount;
+                    if(ingredient.matches(stack) && (stackAmount = stack.getAmount()) >= amount) {
+                        hasFound = true;
+                        newList = new ArrayList<>();
+                        
+                        for(final IItemStack other : loot) {
+                            if(stack == other) {
+                                break;
+                            }
+                            newList.add(other);
+                        }
+                        
+                        final int newAmount = stackAmount / amount;
+                        final int oldAmount = stackAmount % amount;
+                        
+                        newList.add(replacement.copy().setAmount(newAmount));
+                        if(oldAmount > 0) {
+                            newList.add(stack.setAmount(oldAmount));
+                        }
+                    }
+                }
+            }
+            
+            return newList == null ? loot : newList;
+        };
     }
     
     /**
@@ -412,7 +570,7 @@ public final class CommonLootModifiers {
      * @docParam replacementMap { <item:minecraft:carrots> * 2 : <item:minecraft:potatoes> }
      */
     @ZenCodeType.Method
-    public static ILootModifier replaceAllStacksWith(final Map<IItemStack, IItemStack> replacementMap) {
+    public static ILootModifier replaceAllStacksWith(final Map<IIngredientWithAmount, IItemStack> replacementMap) {
         
         return chaining(replacementMap.entrySet().stream().map(it -> replaceStackWith(it.getKey(), it.getValue())));
     }
@@ -432,7 +590,14 @@ public final class CommonLootModifiers {
     @ZenCodeType.Method
     public static ILootModifier remove(final IIngredient target) {
         
-        return replaceWith(target, ExpandItemStack.asIItemStack(ItemStack.EMPTY));
+        if(target.isEmpty()) {
+            return ILootModifier.DEFAULT;
+        }
+        
+        return (loot, context) -> {
+            loot.removeIf(target::matches);
+            return loot;
+        };
     }
     
     /**
@@ -496,80 +661,30 @@ public final class CommonLootModifiers {
     //endregion
     
     //region Private utility stuff
-    private static ILootModifier modifying(final BiConsumer<List<IItemStack>, LootContext> consumer) {
-        
-        return (loot, context) -> Util.make(loot, it -> consumer.accept(it, context));
-    }
-    
-    private static ILootModifier streaming(final BiFunction<Stream<IItemStack>, LootContext, Stream<IItemStack>> consumer) {
-        
-        return (loot, context) -> consumer.apply(loot.stream(), context).collect(Collectors.toList());
-    }
-    
-    private static ILootModifier chaining(final Stream<ILootModifier> chain) {
-        
-        return chain.reduce(ILootModifier.DEFAULT, (first, second) -> (loot, context) -> second.modify(first.modify(loot, context), context));
-    }
-    
-    private static Stream<IItemStack> filterEmpty(final Stream<IItemStack> stream) {
-        
-        return stream.filter(it -> !it.isEmpty());
-    }
-    
-    private static Stream<IItemStack> replacing(final Stream<IItemStack> stream, final IIngredient from, final IItemStack to) {
-        
-        return filterEmpty(stream.map(it -> from.matches(it) ? to.copy() : it));
-    }
-    
-    private static Stream<IItemStack> replacingExactly(final Stream<IItemStack> stream, final IItemStack from, final IItemStack to) {
-        
-        return stream.flatMap(it -> filterEmpty((from.matches(it) ? replacingExactly(it, from, to) : Collections.singleton(it)).stream()));
-    }
-    
-    private static List<IItemStack> replacingExactly(final IItemStack original, final IItemStack from, final IItemStack to) {
-        
-        return List.of(to.copy().setAmount(original.getAmount() / from.getAmount()), original.copy()
-                .setAmount(original.getAmount() % from.getAmount()));
-    }
-    
-    private static ILootModifier withBonus(final IItemStack drop, final Enchantment enchantment, final DropsFormula formula) {
-        
-        return drop.isEmpty() ? ILootModifier.DEFAULT : modifying((loot, context) -> loot.add(applyWithBonus(drop.copy(), enchantment, context, formula)));
-    }
-    
-    private static IItemStack applyWithBonus(final IItemStack original, final Enchantment enchantment, final LootContext context, final DropsFormula formula) {
-        
-        return ifTool(original, context, tool -> withLevel(tool, enchantment, level -> original.setAmount(formula.apply(original.getAmount(), level, context.getRandom()))));
-    }
-    
-    private static IItemStack ifTool(final IItemStack original, final LootContext context, final Function<IItemStack, IItemStack> toolConsumer) {
-        
-        return ifTool(original, (IItemStack) null /* TODO("ExpandLootContext.getTool(context)")*/, toolConsumer);
-    }
-    
-    private static IItemStack ifTool(final IItemStack original, final IItemStack tool, final Function<IItemStack, IItemStack> toolConsumer) {
-        
-        return tool != null && tool.getInternal() != null && !tool.isEmpty() ? toolConsumer.apply(tool) : original;
-    }
-    
-    private static IItemStack withLevel(final IItemStack tool, final Enchantment enchantment, final IntFunction<IItemStack> levelUser) {
-        
-        return levelUser.apply(EnchantmentHelper.getItemEnchantmentLevel(enchantment, tool.getInternal()));
-    }
-    
     private static boolean isInvalidChance(final Percentaged<IItemStack> stack) {
         
         return stack.getData().isEmpty() || stack.getPercentage() <= 0.0;
     }
     
-    private static Optional<IItemStack> chance(final RandomSource random, final Percentaged<IItemStack> stack) {
+    private static IItemStack pickStackBasedOnChance(final RandomSource random, final Percentaged<IItemStack> stack) {
         
-        return random.nextDouble() <= stack.getPercentage() ? Optional.of(stack.getData().copy()) : Optional.empty();
+        return random.nextDouble() <= stack.getPercentage() ? stack.getData().copy() : null;
     }
     
-    private static int boundedRandom(final LootContext context, final int min, final int max) {
+    private static ILootModifier chaining(final Stream<ILootModifier> chain) {
         
-        return context.getRandom().nextInt(max - min) + min;
+        return chain.reduce(
+                ILootModifier.DEFAULT,
+                (first, second) -> {
+                    if(first == ILootModifier.DEFAULT) {
+                        return second;
+                    }
+                    if(second == ILootModifier.DEFAULT) {
+                        return first;
+                    }
+                    return (loot, context) -> second.modify(first.modify(loot, context), context);
+                }
+        );
     }
     //endregion
 }
