@@ -26,10 +26,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.material.Fluid;
 
-import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -130,9 +127,9 @@ public interface IPlatformHelper {
      */
     <T extends Annotation> Stream<? extends Class<?>> findClassesWithAnnotation(Class<T> annotationCls, Consumer<Mod> consumer, Predicate<Either<T, Map<String, Object>>> annotationFilter);
     
-    Method findMethod(@Nonnull final Class<?> clazz, @Nonnull final String methodName, @Nonnull final Class<?> returnType, @Nonnull final Class<?>... parameterTypes);
+    String findMappedMethodName(final Class<?> clazz, final String methodName, final Class<?> returnType, final Class<?>... parameterTypes);
     
-    <T> Field findField(@Nonnull final Class<? super T> clazz, @Nonnull final String fieldName, @Nonnull final String fieldDescription);
+    String findMappedFieldName(final Class<?> clazz, final String fieldName, final Class<?> fieldType);
     
     default void registerCustomTradeConverters(Map<Class<? extends VillagerTrades.ItemListing>, Function<VillagerTrades.ItemListing, CTTradeObject>> classFunctionMap) {
         // no-op

@@ -9,9 +9,7 @@ import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
 import com.blamejared.crafttweaker.api.mod.Mod;
 import com.blamejared.crafttweaker.api.recipe.handler.helper.CraftingTableRecipeConflictChecker;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
-import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.HandleUtil;
-import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.api.villager.CTTradeObject;
 import com.blamejared.crafttweaker.impl.loot.CraftTweakerPrivilegedLootModifierMap;
 import com.blamejared.crafttweaker.impl.loot.ForgeLootModifierMapAdapter;
@@ -22,6 +20,7 @@ import com.blamejared.crafttweaker.platform.services.IPlatformHelper;
 import com.google.common.base.Suppliers;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
+import cpw.mods.modlauncher.api.INameMappingService;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -54,14 +53,11 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.forgespi.language.ModFileScanData;
 import net.minecraftforge.items.CapabilityItemHandler;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.objectweb.asm.Type;
 
 import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
@@ -80,8 +76,19 @@ public class ForgePlatformHelper implements IPlatformHelper {
     
     private static final class Handles {
         
-        private static final MethodHandle LMM_GETTER = HandleUtil.linkMethod(ForgeInternalHandler.class, "getLootModifierManager", LootModifierManager.class);
-        private static final VarHandle LMM_MAP = HandleUtil.linkField(LootModifierManager.class, "registeredLootModifiers", "()Ljava/util/Map;");
+        private static final MethodHandle LMM_GETTER = HandleUtil.linkMethod(
+                ForgeInternalHandler.class,
+                HandleUtil.AccessType.STATIC,
+                "getLootModifierManager",
+                LootModifierManager.class
+        );
+        
+        private static final VarHandle LMM_MAP = HandleUtil.linkField(
+                LootModifierManager.class,
+                HandleUtil.AccessType.VIRTUAL,
+                "registeredLootModifiers",
+                Map.class
+        );
         
     }
     
@@ -193,23 +200,15 @@ public class ForgePlatformHelper implements IPlatformHelper {
     }
     
     @Override
-    public Method findMethod(Class<?> type, String methodName, final Class<?> returnType, Class<?>... arguments) {
+    public String findMappedMethodName(final Class<?> clazz, final String methodName, final Class<?> returnType, final Class<?>... parameterTypes) {
         
-        try {
-            return ObfuscationReflectionHelper.findMethod(type, methodName, arguments);
-        } catch(final ObfuscationReflectionHelper.UnableToFindMethodException e) {
-            throw new HandleUtil.UnableToLinkHandleException("Method %s was not found inside class %s".formatted(StringUtil.quoteAndEscape(methodName), type.getName()), e);
-        }
+        return ObfuscationReflectionHelper.remapName(INameMappingService.Domain.METHOD, methodName);
     }
     
     @Override
-    public <T> Field findField(@NotNull final Class<? super T> clazz, @NotNull final String fieldName, @NotNull final String fieldDescription) {
+    public String findMappedFieldName(final Class<?> clazz, final String fieldName, final Class<?> fieldType) {
         
-        try {
-            return ObfuscationReflectionHelper.findField(GenericUtil.castToSuperExplicitly(clazz), fieldName);
-        } catch(final ObfuscationReflectionHelper.UnableToFindFieldException e) {
-            throw new HandleUtil.UnableToLinkHandleException("Field %s was not found inside class %s".formatted(StringUtil.quoteAndEscape(fieldName), clazz.getName()), e);
-        }
+        return ObfuscationReflectionHelper.remapName(INameMappingService.Domain.FIELD, fieldName);
     }
     
     @Override

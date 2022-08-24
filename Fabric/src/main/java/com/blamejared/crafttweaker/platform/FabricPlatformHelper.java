@@ -8,8 +8,6 @@ import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
 import com.blamejared.crafttweaker.api.mod.Mod;
 import com.blamejared.crafttweaker.api.recipe.handler.helper.CraftingTableRecipeConflictChecker;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
-import com.blamejared.crafttweaker.api.util.HandleUtil;
-import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessBucketItem;
 import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
 import com.blamejared.crafttweaker.platform.helper.world.inventory.TAInventoryWrapper;
@@ -24,6 +22,7 @@ import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.MappingResolver;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.Util;
@@ -44,11 +43,8 @@ import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -82,6 +78,8 @@ public class FabricPlatformHelper implements IPlatformHelper {
             .findFirst());
     
     private static final Supplier<Reflections> REFLECTIONS = Suppliers.memoize(FabricPlatformHelper::makeReflections);
+    private static final Supplier<MappingResolver> MAPPING_RESOLVER = Suppliers.memoize(() -> FabricLoader.getInstance()
+            .getMappingResolver());
     
     private static Reflections makeReflections() {
         
@@ -191,42 +189,23 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
     
     @Override
-    public Method findMethod(@Nonnull Class<?> clazz, @Nonnull String methodName, final Class<?> returnType, @Nonnull Class<?>... parameterTypes) {
+    public String findMappedMethodName(final Class<?> clazz, final String methodName, final Class<?> returnType, final Class<?>... parameterTypes) {
         
-        // This is untested, so anyone running into issues using findMethod, yes the issue is probably here.
-        
-        final String mappedName = FabricLoader.getInstance()
-                .getMappingResolver()
-                .mapMethodName(FabricLoader.getInstance()
-                        .getMappingResolver()
-                        .getCurrentRuntimeNamespace(), clazz.getName(), methodName, "(%s)%s".formatted(Arrays.stream(parameterTypes)
-                        .map(Class::descriptorString)
-                        .collect(Collectors.joining()), returnType.descriptorString()));
-        try {
-            Method method = clazz.getDeclaredMethod(mappedName);
-            method.setAccessible(true);
-            return method;
-        } catch(NoSuchMethodException e) {
-            throw new HandleUtil.UnableToLinkHandleException("Method %s was not found inside class %s".formatted(StringUtil.quoteAndEscape(methodName), clazz.getName()), e);
-        }
+        final String namespace = MAPPING_RESOLVER.get().getCurrentRuntimeNamespace();
+        final String owner = clazz.getName();
+        final String descriptor = Arrays.stream(parameterTypes)
+                .map(Class::descriptorString)
+                .collect(Collectors.joining("", "(", ")" + returnType.descriptorString()));
+        return MAPPING_RESOLVER.get().mapMethodName(namespace, owner, methodName, descriptor);
     }
     
     @Override
-    public <T> Field findField(@Nonnull Class<? super T> clazz, @Nonnull String fieldName, @Nonnull final String fieldDescription) {
+    public String findMappedFieldName(final Class<?> clazz, final String fieldName, final Class<?> fieldType) {
         
-        final String mappedName = FabricLoader.getInstance()
-                .getMappingResolver()
-                .mapFieldName(FabricLoader.getInstance()
-                        .getMappingResolver()
-                        .getCurrentRuntimeNamespace(), clazz.getName(), fieldName, fieldDescription);
-        
-        try {
-            Field field = clazz.getDeclaredField(mappedName);
-            field.setAccessible(true);
-            return field;
-        } catch(NoSuchFieldException e) {
-            throw new HandleUtil.UnableToLinkHandleException("Field %s was not found inside class %s".formatted(StringUtil.quoteAndEscape(fieldName), clazz.getName()), e);
-        }
+        final String namespace = MAPPING_RESOLVER.get().getCurrentRuntimeNamespace();
+        final String owner = clazz.getName();
+        final String descriptor = fieldType.descriptorString();
+        return MAPPING_RESOLVER.get().mapFieldName(namespace, owner, fieldName, descriptor);
     }
     
     @Override
