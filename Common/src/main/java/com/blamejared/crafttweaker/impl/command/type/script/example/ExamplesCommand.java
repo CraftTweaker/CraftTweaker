@@ -37,27 +37,28 @@ public final class ExamplesCommand {
     private static int execute(final ServerPlayer player) {
         
         final MinecraftServer server = player.server;
-        final MinecraftServer.ReloadableResources reloadableResources = ((AccessMinecraftServer) server).crafttweaker$getResources();
+        @SuppressWarnings("resource") final MinecraftServer.ReloadableResources reloadableResources = ((AccessMinecraftServer) server).crafttweaker$getResources();
         final ResourceManager resourceManager = reloadableResources.resourceManager();
         
         //Collect all scripts that are in the scripts data pack folder and write them to the example scripts folder
-        resourceManager.listResources("scripts", n -> n.getPath().endsWith(".zs"))
+        final int examplesAmount = resourceManager.listResources("scripts", n -> n.getPath().endsWith(".zs"))
                 .entrySet()
                 .stream()
                 .map(ResourceManagerSourceFile::new)
-                .forEach(ExamplesCommand::writeScriptFile);
+                .mapToInt(ExamplesCommand::writeScriptFile)
+                .sum();
         
         player.sendSystemMessage(CommandUtilities.openingFile(Component.translatable("crafttweaker.command.example.generated")
                 .withStyle(ChatFormatting.GREEN), getExamplesDir().toString()));
-        return Command.SINGLE_SUCCESS;
+        return examplesAmount;
     }
     
-    private static void writeScriptFile(final SourceFile sourceFile) {
+    private static int writeScriptFile(final SourceFile sourceFile) {
         
         final Path file = getExamplesDir().resolve(sourceFile.getFilename());
         if(Files.exists(file)) {
             CraftTweakerAPI.LOGGER.info("Skip writing example file '{}' since it already exists", file);
-            return;
+            return 0;
         }
         
         if(!Files.exists(file.getParent())) {
@@ -65,7 +66,7 @@ public final class ExamplesCommand {
                 Files.createDirectories(file.getParent());
             } catch(final IOException e) {
                 CraftTweakerAPI.LOGGER.error("Could not create folder '" + file.getParent() + "'", e);
-                return;
+                return 0;
             }
         }
         
@@ -74,6 +75,8 @@ public final class ExamplesCommand {
         } catch(final IOException e) {
             CraftTweakerAPI.LOGGER.warn("Could not write script example: ", e);
         }
+        
+        return Command.SINGLE_SUCCESS;
     }
     
     private static Path getExamplesDir() {
