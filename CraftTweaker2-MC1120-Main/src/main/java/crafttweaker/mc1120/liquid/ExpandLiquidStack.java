@@ -33,4 +33,9 @@ public class ExpandLiquidStack {
     public static WeightedLiquidStack weight(ILiquidStack thisStack, float p) {
         return new WeightedLiquidStack(thisStack, p);
     }
+
+    @ZenCaster
+    public static WeightedLiquidStack asWeightedLiquidStack(ILiquidStack thisStack) {
+        return new WeightedLiquidStack(thisStack, 1.0f);
+    }
 }
