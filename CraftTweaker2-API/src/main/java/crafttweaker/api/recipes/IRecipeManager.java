@@ -188,6 +188,25 @@ public interface IRecipeManager {
     IItemStack craft(IItemStack[][] contents);
 
 
+    /**
+     * Replaces all ingredients in a recipe with another one.
+     *
+     * @param toReplace the old ingredient to be replaced
+     * @param replaceWith the new ingredient to be substituted
+     * @param forOutput the recipe output to match to (optional)
+     */
     @ZenMethod
     void replaceAllOccurences(IIngredient toReplace, IIngredient replaceWith, @Optional IIngredient forOutput);
+
+    /**
+     * Replaces all ingredients in a recipe with another one.
+     *
+     * @param toReplace the old ingredient to be replaced
+     * @param replaceWith the new ingredient to be substituted
+     * @param forOutput the recipe output to match to (optional)
+     */
+    @ZenMethod
+    default void replaceAllOccurrences(IIngredient toReplace, IIngredient replaceWith, @Optional IIngredient forOutput) {
+        replaceAllOccurences(toReplace, replaceWith, forOutput);
+    }
 }
