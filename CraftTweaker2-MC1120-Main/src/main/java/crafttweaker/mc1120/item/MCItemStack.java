@@ -212,35 +212,35 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public IIngredient anyDamage() {
-        ItemStack result = new ItemStack(stack.getItem(), stack.getCount(), OreDictionary.WILDCARD_VALUE);
-        result.setTagCompound(stack.getTagCompound());
+        ItemStack result = stack.copy();
+        result.setItemDamage(OreDictionary.WILDCARD_VALUE);
         return new MCItemStack(result, tag);
     }
     
     @Override
     public IItemStack withDamage(int damage) {
-        ItemStack result = new ItemStack(stack.getItem(), stack.getCount(), damage);
-        result.setTagCompound(stack.getTagCompound());
+        ItemStack result = stack.copy();
+        result.setItemDamage(damage);
         return new MCItemStack(result, tag);
     }
     
     @Override
     public IItemStack anyAmount() {
-        ItemStack result = new ItemStack(stack.getItem(), 1, stack.getItemDamage());
-        result.setTagCompound(stack.getTagCompound());
+        ItemStack result = stack.copy();
+        result.setCount(1);
         return new MCItemStack(result, tag, true);
     }
     
     @Override
     public IItemStack withAmount(int amount) {
-        ItemStack result = new ItemStack(stack.getItem(), amount, stack.getItemDamage());
-        result.setTagCompound(stack.getTagCompound());
+        ItemStack result = stack.copy();
+        result.setCount(amount);
         return new MCItemStack(result, tag);
     }
     
     @Override
     public IItemStack withTag(IData tag, boolean matchTagExact) {
-        ItemStack result = new ItemStack(stack.getItem(), stack.getCount(), stack.getItemDamage());
+        ItemStack result = stack.copy();
         if(tag == null) {
             result.setTagCompound(null);
         } else {
