@@ -32,7 +32,7 @@ public class DataByteArray implements IData {
     
     @Override
     public IData mul(IData other) {
-        throw new UnsupportedOperationException("Cannot multiply with an arary");
+        throw new UnsupportedOperationException("Cannot multiply with an array");
     }
     
     @Override
