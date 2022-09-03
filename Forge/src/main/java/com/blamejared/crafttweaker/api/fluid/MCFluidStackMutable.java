@@ -1,8 +1,8 @@
 package com.blamejared.crafttweaker.api.fluid;
 
+import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.MapData;
-import com.blamejared.crafttweaker.api.data.base.converter.tag.TagToDataConverter;
-import com.blamejared.crafttweaker.platform.Services;
+import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -58,11 +58,11 @@ public class MCFluidStackMutable implements IFluidStack {
     }
     
     @Override
-    public IFluidStack withTag(MapData tag) {
+    public IFluidStack withTag(IData tag) {
         
         if(tag != null) {
-            tag = new MapData(tag.asMap());
-            getInternal().setTag(tag.getInternal());
+            MapData map = new MapData(tag.asMap());
+            getInternal().setTag(map.getInternal());
         } else {
             getInternal().setTag(null);
         }
@@ -71,9 +71,9 @@ public class MCFluidStackMutable implements IFluidStack {
     }
     
     @Override
-    public MapData getTag() {
+    public IData getTag() {
         
-        return TagToDataConverter.convertCompound(getInternal().getTag());
+        return TagToDataConverter.convert(getInternal().getTag());
     }
     
     @Override
@@ -104,7 +104,7 @@ public class MCFluidStackMutable implements IFluidStack {
         stringBuilder.append(">");
         
         if(getInternal().hasTag()) {
-            MapData data = TagToDataConverter.convertCompound(getInternal().getTag()).copyInternal();
+            IData data = TagToDataConverter.convert(getInternal().getTag()).copyInternal();
             if(!data.isEmpty()) {
                 stringBuilder.append(".withTag(");
                 stringBuilder.append(data.asString());

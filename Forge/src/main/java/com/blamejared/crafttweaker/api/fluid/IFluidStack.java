@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.fluid;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
+import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -130,7 +131,7 @@ public interface IFluidStack extends CommandStringDisplayable {
      */
     @ZenCodeType.Getter("tag")
     @ZenCodeType.Method
-    MapData getTag();
+    IData getTag();
     
     /**
      * Sets the tag for the FluidStack.
@@ -142,7 +143,7 @@ public interface IFluidStack extends CommandStringDisplayable {
      * @docParam tag {Display: {lore: ["Hello"]}}
      */
     @ZenCodeType.Method
-    IFluidStack withTag(@ZenCodeType.Nullable MapData tag);
+    IFluidStack withTag(@ZenCodeType.Nullable IData tag);
     
     /**
      * Returns true if this FluidStack has a Tag

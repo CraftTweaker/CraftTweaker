@@ -11,6 +11,7 @@ import com.blamejared.crafttweaker.gametest.GameTestPlugin;
 import com.blamejared.crafttweaker.gametest.framework.DelegatingGameTestAssertException;
 import com.blamejared.crafttweaker.gametest.framework.ScriptBuilder;
 import com.blamejared.crafttweaker.gametest.logger.appender.GameTestLoggerAppender;
+import com.blamejared.crafttweaker.impl.preprocessor.DebugPreprocessor;
 import com.google.common.base.Suppliers;
 import net.minecraft.gametest.framework.GameTestHelper;
 

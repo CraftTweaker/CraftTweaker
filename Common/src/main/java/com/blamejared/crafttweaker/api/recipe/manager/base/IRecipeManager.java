@@ -12,13 +12,12 @@ import com.blamejared.crafttweaker.api.action.recipe.ActionRemoveRecipeByRegex;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.data.MapData;
-import com.blamejared.crafttweaker.api.data.base.visitor.DataToJsonStringVisitor;
+import com.blamejared.crafttweaker.api.data.visitor.DataToJsonStringVisitor;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.RecipeList;
 import com.blamejared.crafttweaker.api.util.NameUtil;
 import com.blamejared.crafttweaker.api.zencode.util.PositionUtil;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -96,7 +95,7 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
         if(recipeType != getRecipeType()) {
             throw new IllegalArgumentException("""
                     Recipe Serializer "%s" resulted in Recipe Type "%s" but expected Recipe Type "%s"
-                    """.formatted(Registry.RECIPE_SERIALIZER.getKey(iRecipe.getSerializer()),Registry.RECIPE_TYPE
+                    """.formatted(Registry.RECIPE_SERIALIZER.getKey(iRecipe.getSerializer()), Registry.RECIPE_TYPE
                     .getKey(recipeType), recipeTypeKey));
         }
         CraftTweakerAPI.apply(new ActionAddRecipe<>(this, iRecipe, ""));

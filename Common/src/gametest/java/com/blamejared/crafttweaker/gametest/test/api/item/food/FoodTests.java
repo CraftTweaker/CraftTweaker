@@ -26,7 +26,7 @@ public class FoodTests implements CraftTweakerGameTest {
     @TestModifier(implicitSuccession = true)
     public void testThatFoodValuesAreCorrect(GameTestHelper helper, ScriptBuilder builder) {
         
-        builder.file("food/create_new_food.zs");
+        builder.file("item/food/create_new_food.zs");
         
         GameTestLoggerAppender.QueryableLog log = GameTestScriptRunner.runScripts(helper, builder);
         log.assertNoErrors();
@@ -52,7 +52,7 @@ public class FoodTests implements CraftTweakerGameTest {
     @TestModifier(implicitSuccession = true)
     public void testQueryCurrentFood(GameTestHelper helper, ScriptBuilder builder) {
         
-        builder.file("food/query_current_food.zs");
+        builder.file("item/food/query_current_food.zs");
         
         GameTestLoggerAppender.QueryableLog log = GameTestScriptRunner.runScripts(helper, builder);
         log.assertNoErrors();
@@ -68,7 +68,7 @@ public class FoodTests implements CraftTweakerGameTest {
     @TestModifier(implicitSuccession = true)
     public void removeCurrentFood(GameTestHelper helper, ScriptBuilder builder) {
         
-        builder.file("food/remove_current_food.zs");
+        builder.file("item/food/remove_current_food.zs");
         
         GameTestLoggerAppender.QueryableLog log = GameTestScriptRunner.runScripts(helper, builder);
         log.assertNoErrors();
@@ -82,7 +82,7 @@ public class FoodTests implements CraftTweakerGameTest {
     @TestModifier(implicitSuccession = true)
     public void modifyCurrentFood(GameTestHelper helper, ScriptBuilder builder) {
         
-        builder.file("food/modify_current_food.zs");
+        builder.file("item/food/modify_current_food.zs");
         
         GameTestLoggerAppender.QueryableLog log = GameTestScriptRunner.runScripts(helper, builder);
         log.assertNoErrors();

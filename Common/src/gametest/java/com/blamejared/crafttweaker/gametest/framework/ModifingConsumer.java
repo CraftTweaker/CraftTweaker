@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.gametest.framework;
 
+import com.blamejared.crafttweaker.gametest.framework.zencode.GameTestGlobals;
 import com.blamejared.crafttweaker.mixin.common.access.server.AccessMinecraftServer;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.MinecraftServer;
@@ -61,6 +62,8 @@ public class ModifingConsumer implements Consumer<GameTestHelper> {
             } else {
                 throw new RuntimeException(e.getCause());
             }
+        } finally {
+            GameTestGlobals.clear();
         }
         
         

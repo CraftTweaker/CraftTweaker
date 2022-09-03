@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker.api.zencode.expand;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.DoubleData;
-import com.blamejared.crafttweaker.api.data.base.IData;
+import com.blamejared.crafttweaker.api.data.IData;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister

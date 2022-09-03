@@ -2,8 +2,8 @@ package com.blamejared.crafttweaker.api.command.argument;
 
 import com.blamejared.crafttweaker.api.bracket.BracketHandlers;
 import com.blamejared.crafttweaker.api.data.MapData;
-import com.blamejared.crafttweaker.api.data.base.IData;
-import com.blamejared.crafttweaker.api.data.base.converter.StringConverter;
+import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.converter.StringConverter;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.LiteralMessage;

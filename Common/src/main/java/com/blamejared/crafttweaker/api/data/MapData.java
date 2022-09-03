@@ -1,22 +1,19 @@
 package com.blamejared.crafttweaker.api.data;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.data.base.IData;
-import com.blamejared.crafttweaker.api.data.base.converter.tag.TagToDataConverter;
-import com.blamejared.crafttweaker.api.data.base.visitor.DataVisitor;
+import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
+import com.blamejared.crafttweaker.api.data.visitor.DataVisitor;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.NotNull;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
- * @docParam this {Hello : "World", Somewhere: "Over the rainbow"}
+ * @docParam this {Hello: "World", Somewhere: "Over the rainbow"}
  */
 @ZenCodeType.Name("crafttweaker.api.data.MapData")
 @ZenRegister
@@ -26,9 +23,16 @@ public class MapData implements IData {
     private final CompoundTag internal;
     private final Set<String> boolDataKeys;
     
+    public MapData(CompoundTag internal, Set<String> boolDataKeys) {
+        
+        this.internal = internal;
+        this.boolDataKeys = boolDataKeys;
+    }
+    
     public MapData(CompoundTag internal) {
         
-        this(internal, new HashSet<>());
+        this.internal = internal;
+        this.boolDataKeys = new HashSet<>();
     }
     
     @ZenCodeType.Constructor
@@ -42,12 +46,6 @@ public class MapData implements IData {
         
         this();
         putAll(map);
-    }
-    
-    public MapData(CompoundTag internal, Set<String> boolDataKeys) {
-        
-        this.internal = internal;
-        this.boolDataKeys = boolDataKeys;
     }
     
     /**
@@ -69,159 +67,126 @@ public class MapData implements IData {
         });
     }
     
-    /**
-     * Adds all entries from the given IData to this entry
-     */
-    @ZenCodeType.Operator(ZenCodeType.OperatorType.ADD)
-    public MapData opAdd(IData data) {
+    @Override
+    public void remove(int index) {
         
-        putAll(data.asMap());
-        return this;
+        this.put(String.valueOf(index), null);
     }
     
-    
-    @ZenCodeType.Getter("keySet")
-    public Set<String> getKeySet() {
+    @Override
+    public void remove(String key) {
         
-        return getInternal().getAllKeys();
+        put(key, null);
     }
     
-    @ZenCodeType.Getter("size")
-    public int getSize() {
+    @Override
+    public IData getAt(int index) {
+        
+        return getAt(Integer.toString(index));
+    }
+    
+    @Override
+    public IData getAt(String key) {
+        
+        if(boolDataKeys.contains(key)) {
+            return getInternal().getByte(key) == 1 ? BoolData.TRUE : BoolData.FALSE;
+        }
+        
+        return TagToDataConverter.convert(getInternal().get(key));
+    }
+    
+    @Override
+    public boolean contains(IData other) {
+        
+        CompoundTag internal = this.getInternal();
+        if(other instanceof StringData) {
+            return internal.contains(other.getAsString());
+        }
+        
+        if(!other.isMappable()) {
+            return false;
+        }
+        Map<String, IData> dataMap = other.asMap();
+        
+        for(Map.Entry<String, IData> dataEntry : dataMap.entrySet()) {
+            if(!internal.contains(dataEntry.getKey())) {
+                return false;
+            } else if(!TagToDataConverter.convert(internal.get(dataEntry.getKey())).contains(dataEntry.getValue())) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    @Override
+    public void put(String name, @ZenCodeType.Nullable IData data) {
+        
+        if(data == null) {
+            boolDataKeys.remove(name);
+            getInternal().remove(name);
+        } else {
+            if(data instanceof BoolData) {
+                boolDataKeys.add(name);
+            }
+            getInternal().put(name, data.getInternal());
+        }
+    }
+    
+    @Override
+    public boolean equalTo(IData other) {
+        
+        if(this == other) {
+            return true;
+        }
+        Map<String, IData> thisMap = asMap();
+        Map<String, IData> otherMap = other.asMap();
+        if(thisMap.size() != otherMap.size()) {
+            return false;
+        }
+        
+        for(Map.Entry<String, IData> entry : this.asMap().entrySet()) {
+            if(!otherMap.containsKey(entry.getKey())) {
+                return false;
+            }
+            if(!otherMap.get(entry.getKey()).equalTo(entry.getValue())) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    @Override
+    public boolean isMappable() {
+        
+        return true;
+    }
+    
+    @Override
+    public Map<String, IData> asMap() {
+        
+        return getInternal().getAllKeys()
+                .stream()
+                .map(s -> Pair.of(s, getAt(s)))
+                .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
+    }
+    
+    @Override
+    public int length() {
         
         return getInternal().size();
     }
     
-    /**
-     * Adds sets the value for the given key or creates a new entry if it did not exist before.
-     *
-     * @param key   The key to set the value for.
-     * @param value The value to set.
-     *
-     * @return The previous value if present, null otherwise
-     *
-     * @docParam key "Hello"
-     * @docParam value "Goodbye"
-     */
-    @ZenCodeType.Method
-    @ZenCodeType.Nullable
-    @ZenCodeType.Operator(ZenCodeType.OperatorType.MEMBERSETTER)
-    public IData put(String key, IData value) {
+    @Override
+    public Set<String> getKeys() {
         
-        if(value instanceof BoolData) {
-            boolDataKeys.add(key);
-        }
-        return TagToDataConverter.convert(getInternal().put(key, value.getInternal()));
-    }
-    
-    /**
-     * Retrieves the value associated with the key
-     *
-     * @param key The key to search for
-     *
-     * @return The value if present, null otherwise
-     *
-     * @docParam key "Hello"
-     */
-    @ZenCodeType.Method
-    @ZenCodeType.Nullable
-    @ZenCodeType.Operator(ZenCodeType.OperatorType.MEMBERGETTER)
-    public IData getAt(String key) {
-        
-        if(boolDataKeys.contains(key)) {
-            return new BoolData(getInternal().getByte(key) == 1);
-        }
-        return TagToDataConverter.convert(getInternal().get(key));
-    }
-    
-    /**
-     * Retrieves the value associated with the key and returns it as the given type.
-     *
-     * @param key The key to search for.
-     *
-     * @return The value if present, null otherwise.
-     *
-     * @docParam key "Hello"
-     */
-    @ZenCodeType.Method
-    @ZenCodeType.Nullable
-    public <T extends IData> T getData(Class<T> clazz, String key) {
-        
-        if((clazz == null || clazz.equals(BoolData.class)) && boolDataKeys.contains(key)) {
-            return (T) new BoolData(getInternal().getByte(key) == 1);
-        }
-        try {
-            return TagToDataConverter.convertTo(getInternal().get(key), clazz);
-        } catch(NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException("Unable to convert IData to " + clazz, e);
-        }
-    }
-    
-    /**
-     * Checks if the Map contains the given key.
-     *
-     * @param key The key to search for
-     *
-     * @return True if the Map contains the key
-     *
-     * @docParam key "Hello"
-     */
-    @ZenCodeType.Method
-    @ZenCodeType.Operator(ZenCodeType.OperatorType.CONTAINS)
-    public boolean contains(String key) {
-        
-        return getInternal().contains(key);
-    }
-    
-    /**
-     * Removes the entry with the given key from the Map
-     *
-     * @param key The key of the entry to remove
-     *
-     * @docParam key "Somewhere"
-     */
-    @ZenCodeType.Method
-    public void remove(String key) {
-        
-        boolDataKeys.remove(key);
-        getInternal().remove(key);
-    }
-    
-    @ZenCodeType.Getter("isEmpty")
-    public boolean isEmpty() {
-        
-        return getInternal().isEmpty();
-    }
-    
-    /**
-     * Merges this map and the other map.
-     * If entries from this map and the other map share the values are tried to be merged.
-     * If that does not work, then the value from the other map is used.
-     *
-     * @param other The other map.
-     *
-     * @return This map, after the merge
-     *
-     * @docParam other {Doodle: "Do"}
-     */
-    @ZenCodeType.Method
-    public MapData merge(MapData other) {
-        
-        Set<String> newBoolDataKeys = new HashSet<>(boolDataKeys);
-        newBoolDataKeys.addAll(other.boolDataKeys);
-        return new MapData(getInternal().merge(other.getInternal()), newBoolDataKeys);
+        return getInternal().getAllKeys();
     }
     
     @Override
-    public MapData copy() {
+    public @NotNull Iterator<IData> iterator() {
         
-        return new MapData(getInternal(), new HashSet<>(boolDataKeys));
-    }
-    
-    @Override
-    public MapData copyInternal() {
-        
-        return new MapData(getInternal().copy(), new HashSet<>(boolDataKeys));
+        return getInternal().getAllKeys().stream().map(StringData::new).map(iData -> (IData) iData).toList().iterator();
     }
     
     @Override
@@ -231,42 +196,21 @@ public class MapData implements IData {
     }
     
     @Override
-    public Map<String, IData> asMap() {
+    public IData copy() {
         
-        Map<String, IData> newMap = new HashMap<>();
-        getInternal().getAllKeys().forEach(s -> newMap.put(s, getAt(s)));
-        return newMap;
+        return new MapData(getInternal(), boolDataKeys);
     }
     
     @Override
-    public boolean contains(IData data) {
+    public IData copyInternal() {
         
-        if(data instanceof StringData) {
-            return this.getInternal().contains(data.asString());
-        }
-        
-        
-        Map<String, IData> dataMap = data.asMap();
-        if(dataMap == null) {
-            return false;
-        }
-        
-        for(Map.Entry<String, IData> dataEntry : dataMap.entrySet()) {
-            if(!this.getInternal().contains(dataEntry.getKey())) {
-                return false;
-            } else if(!TagToDataConverter.convert(this.getInternal()
-                    .get(dataEntry.getKey())).contains(dataEntry.getValue())) {
-                return false;
-            }
-        }
-        
-        return true;
+        return new MapData(getInternal().copy(), new HashSet<>(boolDataKeys));
     }
     
-    @ZenCodeType.Caster(implicit = true)
-    public Map<String, IData> castToMap() {
+    @Override
+    public <T> T accept(DataVisitor<T> visitor) {
         
-        return this.asMap();
+        return visitor.visitMap(this);
     }
     
     @Override
@@ -275,10 +219,20 @@ public class MapData implements IData {
         return Type.MAP;
     }
     
-    @Override
-    public <T> T accept(DataVisitor<T> visitor) {
+    public Set<String> boolDataKeys() {
         
-        return visitor.visitMap(this);
+        return boolDataKeys;
+    }
+    
+    @Override
+    public IData merge(IData other) {
+        
+        if(other instanceof MapData map) {
+            Set<String> newBoolDataKeys = new HashSet<>(boolDataKeys);
+            newBoolDataKeys.addAll(map.boolDataKeys);
+            return new MapData(getInternal().merge(map.getInternal()), newBoolDataKeys);
+        }
+        throw new IllegalArgumentException("Cannot merge incompatible data type: " + other.getType());
     }
     
     @Override
@@ -290,21 +244,20 @@ public class MapData implements IData {
         if(o == null || getClass() != o.getClass()) {
             return false;
         }
-        
-        MapData mapData = (MapData) o;
-        
-        return internal.equals(mapData.internal);
+        MapData iData = (MapData) o;
+        return Objects.equals(getInternal(), iData.getInternal()) && Objects.equals(boolDataKeys, iData.boolDataKeys);
     }
     
     @Override
     public int hashCode() {
         
-        return internal.hashCode();
+        return Objects.hash(getInternal(), boolDataKeys);
     }
     
-    public Set<String> boolDataKeys() {
+    @Override
+    public String toString() {
         
-        return boolDataKeys;
+        return getAsString();
     }
     
 }

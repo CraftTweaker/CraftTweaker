@@ -1,27 +1,27 @@
 package com.blamejared.crafttweaker.api.data;
 
-
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.data.base.ICollectionData;
-import com.blamejared.crafttweaker.api.data.base.IData;
-import com.blamejared.crafttweaker.api.data.base.INumberData;
-import com.blamejared.crafttweaker.api.data.base.visitor.DataVisitor;
+import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
+import com.blamejared.crafttweaker.api.data.visitor.DataVisitor;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.LongArrayTag;
 import net.minecraft.nbt.LongTag;
-import net.minecraft.nbt.NumericTag;
+import org.jetbrains.annotations.NotNull;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
- * @docParam this [100000, 800000, 50000]
+ * @docParam this [100000, 800000, 50000] as IData
  */
 @ZenCodeType.Name("crafttweaker.api.data.LongArrayData")
 @ZenRegister
 @Document("vanilla/api/data/LongArrayData")
-public class LongArrayData implements ICollectionData {
+public class LongArrayData implements IData {
     
     private final LongArrayTag internal;
     
@@ -37,101 +37,125 @@ public class LongArrayData implements ICollectionData {
     }
     
     @Override
-    public LongArrayData copy() {
-        
-        return new LongArrayData(getInternal());
-    }
-    
-    @Override
-    public LongArrayData copyInternal() {
-        
-        return new LongArrayData(getInternal().copy());
-    }
-    
-    @Override
     public LongArrayTag getInternal() {
         
         return internal;
     }
     
     @Override
-    public LongData setAt(int index, IData value) {
+    public void put(String index, IData value) {
         
-        if(value instanceof NumericTag) {
-            return new LongData(getInternal().set(index, LongTag.valueOf(((INumberData) value).getLong())));
-        } else {
-            return null;
+        try {
+            getInternal().setTag(Integer.parseInt(index), LongTag.valueOf(value.asLong()));
+        } catch(NumberFormatException e) {
+            throw new IllegalArgumentException("Provided index: '%s' is not an Integer!".formatted(index));
         }
-    }
-    
-    
-    @Override
-    public void add(int index, IData value) {
-        
-        if(value instanceof INumberData) {
-            getInternal().add(index, LongTag.valueOf(((INumberData) value).getInt()));
-        }
-    }
-    
-    @Override
-    public void add(IData value) {
-        
-        if(value instanceof INumberData) {
-            getInternal().add(LongTag.valueOf(((INumberData) value).getInt()));
-        }
-    }
-    
-    @Override
-    public LongData remove(int index) {
-        
-        return new LongData(getInternal().remove(index));
     }
     
     @Override
     public IData getAt(int index) {
         
-        return new LongData(getInternal().get(index));
+        return TagToDataConverter.convert(getInternal().get(index));
     }
     
     @Override
-    public int size() {
+    public void remove(int index) {
         
-        return getInternal().size();
+        this.getInternal().remove(index);
     }
     
     @Override
-    public boolean isEmpty() {
+    public boolean contains(IData other) {
         
-        return getInternal().isEmpty();
+        return getInternal().contains(LongTag.valueOf(other.asLong()));
     }
     
     @Override
-    public void clear() {
+    public int compareTo(@NotNull IData other) {
         
-        getInternal().clear();
+        return Arrays.compare(asLongArray(), other.asLongArray());
+    }
+    
+    @Override
+    public boolean equalTo(IData other) {
+        
+        return Arrays.equals(asLongArray(), other.asLongArray());
     }
     
     @Override
     public List<IData> asList() {
         
-        final long[] asLongArray = getInternal().getAsLongArray();
-        List<IData> list = new ArrayList<>(asLongArray.length);
-        for(long l : asLongArray) {
-            list.add(new LongData(l));
-        }
-        return list;
+        return getInternal().stream().map(TagToDataConverter::convert).collect(Collectors.toList());
     }
     
     @Override
-    public Type getType() {
+    public boolean isListable() {
         
-        return Type.LONG_ARRAY;
+        return true;
+    }
+    
+    @Override
+    public byte[] asByteArray() {
+        
+        long[] longs = asLongArray();
+        byte[] bytes = new byte[longs.length];
+        for(int i = 0; i < longs.length; i++) {
+            bytes[i] = (byte) longs[i];
+        }
+        return bytes;
+    }
+    
+    @Override
+    public int[] asIntArray() {
+        
+        long[] longs = asLongArray();
+        int[] ints = new int[longs.length];
+        for(int i = 0; i < longs.length; i++) {
+            ints[i] = (int) longs[i];
+        }
+        return ints;
+    }
+    
+    @Override
+    public long[] asLongArray() {
+        
+        return getInternal().getAsLongArray();
+    }
+    
+    @Override
+    public int length() {
+        
+        return getInternal().size();
+    }
+    
+    @Override
+    public @NotNull Iterator<IData> iterator() {
+        
+        return asList().iterator();
+    }
+    
+    @Override
+    public IData copy() {
+        
+        return new LongArrayData(getInternal());
+    }
+    
+    @Override
+    public IData copyInternal() {
+        
+        return new LongArrayData(getInternal().copy());
     }
     
     @Override
     public <T> T accept(DataVisitor<T> visitor) {
         
         return visitor.visitLongArray(this);
+    }
+    
+    @Override
+    public Type getType() {
+        
+        return Type.LONG_ARRAY;
     }
     
     @Override
@@ -143,16 +167,20 @@ public class LongArrayData implements ICollectionData {
         if(o == null || getClass() != o.getClass()) {
             return false;
         }
-        
-        LongArrayData that = (LongArrayData) o;
-        
-        return internal.equals(that.internal);
+        LongArrayData iData = (LongArrayData) o;
+        return Objects.equals(getInternal(), iData.getInternal());
     }
     
     @Override
     public int hashCode() {
         
-        return internal.hashCode();
+        return Objects.hash(getInternal());
+    }
+    
+    @Override
+    public String toString() {
+        
+        return getAsString();
     }
     
 }

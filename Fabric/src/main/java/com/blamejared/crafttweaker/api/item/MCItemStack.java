@@ -1,8 +1,9 @@
 package com.blamejared.crafttweaker.api.item;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.MapData;
-import com.blamejared.crafttweaker.api.data.base.converter.tag.TagToDataConverter;
+import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.Registry;
@@ -36,8 +37,7 @@ public class MCItemStack implements FabricItemStack {
         sb.append(">");
         
         if(getInternal().getTag() != null) {
-            MapData data = (MapData) TagToDataConverter.convert(getInternal().getTag())
-                    .copyInternal();
+            IData data = TagToDataConverter.convert(getInternal().getTag()).copyInternal();
             //Damage is special case, if we have more special cases we can handle them here.
             if(getInternal().isDamageableItem()) {
                 data.remove("Damage");

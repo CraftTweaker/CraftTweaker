@@ -21,6 +21,7 @@ final class GameTestScriptRunner extends ScriptRunner {
     GameTestScriptRunner(IScriptRunInfo runInfo, List<SourceFile> sources, ScriptingEngineLogger logger) {
         
         super(runInfo, sources, logger);
+        this.engine().debug = true;
     }
     
     
@@ -34,6 +35,7 @@ final class GameTestScriptRunner extends ScriptRunner {
     
         if(!module.isValid()) {
             Stream.of(CraftTweakerAPI.LOGGER, CraftTweakerCommon.LOG).forEach(it -> it.error("Scripts are invalid!"));
+            CraftTweakerLogger.GAMETEST_APPENDER.query().dump();
             throw new GameTestAssertException("Scripts are invalid!");
         }
     

@@ -1,14 +1,18 @@
 package com.blamejared.crafttweaker.api.data;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.data.base.IData;
-import com.blamejared.crafttweaker.api.data.base.visitor.DataVisitor;
+import com.blamejared.crafttweaker.api.data.visitor.DataVisitor;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.StringTag;
+import org.jetbrains.annotations.NotNull;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
 /**
- * @docParam this new StringData("Hello")
+ * @docParam this "Hello" as IData
  */
 @ZenCodeType.Name("crafttweaker.api.data.StringData")
 @ZenRegister
@@ -29,15 +33,81 @@ public class StringData implements IData {
     }
     
     @Override
-    public StringData copy() {
+    public IData add(IData other) {
         
-        return new StringData(getInternal());
+        return of(getAsString() + other.getAsString());
     }
     
     @Override
-    public StringData copyInternal() {
+    public IData cat(IData other) {
         
-        return new StringData(getInternal().copy());
+        return of(getAsString() + other.getAsString());
+    }
+    
+    @Override
+    public boolean contains(IData other) {
+        
+        return getAsString().contains(other.getAsString());
+    }
+    
+    @Override
+    public int compareTo(@NotNull IData other) {
+        
+        return getAsString().compareTo(other.getAsString());
+    }
+    
+    @Override
+    public boolean equalTo(IData other) {
+        
+        return getAsString().equals(other.getAsString());
+    }
+    
+    @Override
+    public boolean asBool() {
+        
+        return Boolean.parseBoolean(getAsString());
+    }
+    
+    @Override
+    public byte asByte() {
+        
+        return safely(Byte::parseByte, (s, e) -> new UnsupportedOperationException("StringData '%s' cannot be cast to a byte!".formatted(s), e));
+    }
+    
+    @Override
+    public short asShort() {
+        
+        return safely(Short::parseShort, (s, e) -> new UnsupportedOperationException("StringData '%s' cannot be cast to a short!".formatted(s), e));
+    }
+    
+    @Override
+    public int asInt() {
+        
+        return safely(Integer::parseInt, (s, e) -> new UnsupportedOperationException("StringData '%s' cannot be cast to a int!".formatted(s), e));
+    }
+    
+    @Override
+    public long asLong() {
+        
+        return safely(Long::parseLong, (s, e) -> new UnsupportedOperationException("StringData '%s' cannot be cast to a long!".formatted(s), e));
+    }
+    
+    @Override
+    public float asFloat() {
+        
+        return safely(Float::parseFloat, (s, e) -> new UnsupportedOperationException("StringData '%s' cannot be cast to a float!".formatted(s), e));
+    }
+    
+    @Override
+    public double asDouble() {
+        
+        return safely(Double::parseDouble, (s, e) -> new UnsupportedOperationException("StringData '%s' cannot be cast to a double!".formatted(s), e));
+    }
+    
+    @Override
+    public int length() {
+        
+        return getAsString().length();
     }
     
     @Override
@@ -47,30 +117,15 @@ public class StringData implements IData {
     }
     
     @Override
-    public boolean contains(IData data) {
+    public IData copy() {
         
-        return asString().equals(data.asString());
-    }
-    
-    /**
-     * Concatenates the two string Datas and returns the result.
-     *
-     * @param data The other data to append
-     *
-     * @return A new StringData with the value concatenated.
-     *
-     * @docParam data new StringData("World")
-     */
-    @ZenCodeType.Operator(ZenCodeType.OperatorType.ADD)
-    public StringData addTogether(StringData data) {
-        
-        return new StringData(internal.getAsString() + data.getInternal().getAsString());
+        return new StringData(getInternal());
     }
     
     @Override
-    public Type getType() {
+    public IData copyInternal() {
         
-        return Type.STRING;
+        return copy();
     }
     
     @Override
@@ -80,7 +135,29 @@ public class StringData implements IData {
     }
     
     @Override
+    public Type getType() {
+        
+        return Type.STRING;
+    }
+    
+    private StringData of(String value) {
+        
+        return new StringData(StringTag.valueOf(value));
+    }
+    
+    private <T> T safely(Function<String, T> func, BiFunction<String, Exception, UnsupportedOperationException> error) {
+        
+        String internalValue = getAsString();
+        try {
+            return func.apply(internalValue);
+        } catch(Exception e) {
+            throw error.apply(internalValue, e);
+        }
+    }
+    
+    @Override
     public boolean equals(Object o) {
+        
         
         if(this == o) {
             return true;
@@ -88,16 +165,20 @@ public class StringData implements IData {
         if(o == null || getClass() != o.getClass()) {
             return false;
         }
-        
-        StringData that = (StringData) o;
-        
-        return internal.equals(that.internal);
+        StringData iData = (StringData) o;
+        return Objects.equals(getInternal(), iData.getInternal());
     }
     
     @Override
     public int hashCode() {
         
-        return internal.hashCode();
+        return Objects.hash(getInternal());
+    }
+    
+    @Override
+    public String toString() {
+        
+        return getAsString();
     }
     
 }

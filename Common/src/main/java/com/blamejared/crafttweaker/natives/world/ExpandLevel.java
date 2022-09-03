@@ -1,8 +1,9 @@
 package com.blamejared.crafttweaker.natives.world;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.MapData;
-import com.blamejared.crafttweaker.api.data.base.converter.tag.TagToDataConverter;
+import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceBuilder;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceType;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -263,10 +264,10 @@ public class ExpandLevel {
      * @docParam pos new BlockPos(0, 1, 2)
      */
     @ZenCodeType.Method
-    public static MapData getBlockEntityData(Level internal, BlockPos pos) {
+    public static IData getBlockEntityData(Level internal, BlockPos pos) {
         
         BlockEntity te = internal.getBlockEntity(pos);
-        return te == null ? new MapData() : TagToDataConverter.convertCompound(te.saveWithoutMetadata());
+        return te == null ? new MapData() : TagToDataConverter.convert(te.saveWithoutMetadata());
     }
     
     /**

@@ -1,28 +1,29 @@
 package com.blamejared.crafttweaker.api.data;
 
-
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.data.base.ICollectionData;
-import com.blamejared.crafttweaker.api.data.base.IData;
-import com.blamejared.crafttweaker.api.data.base.converter.tag.TagToDataConverter;
-import com.blamejared.crafttweaker.api.data.base.visitor.DataVisitor;
+import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
+import com.blamejared.crafttweaker.api.data.visitor.DataVisitor;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import org.jetbrains.annotations.NotNull;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
- * @docParam this ["Hello", "World", "!"]
+ * @docParam this ["Hello", "World", "!"] as IData
  */
 @ZenCodeType.Name("crafttweaker.api.data.ListData")
 @ZenRegister
 @Document("vanilla/api/data/ListData")
-public class ListData implements ICollectionData {
+public class ListData implements IData {
     
     private final ListTag internal;
     
@@ -47,89 +48,9 @@ public class ListData implements ICollectionData {
     }
     
     @ZenCodeType.Constructor
-    public ListData(IData... array) {
-        
-        this(getArraySafe(array));
-    }
-    
-    private static List<IData> getArraySafe(IData... array) {
-        
-        if(array == null) {
-            array = new IData[0];
-        }
-        return Arrays.asList(array);
-    }
-    
-    
-    @Override
-    public IData setAt(int index, IData value) {
-        
-        return TagToDataConverter.convert(getInternal().set(index, value.getInternal()));
-    }
-    
-    @Override
-    public void add(int index, IData value) {
-        
-        getInternal().add(index, value.getInternal());
-    }
-    
-    @Override
-    public void add(IData value) {
-        
-        getInternal().add(value.getInternal());
-    }
-    
-    @Override
-    public IData remove(int index) {
-        
-        return TagToDataConverter.convert(getInternal().remove(index));
-    }
-    
-    @Override
-    public IData getAt(int index) {
-        
-        return TagToDataConverter.convert(getInternal().get(index));
-    }
-    
-    @ZenCodeType.Method
-    @ZenCodeType.Nullable
-    public <T extends IData> T getData(Class<T> clazz, int index) {
-        
-        try {
-            return TagToDataConverter.convertTo(getInternal().get(index), clazz);
-        } catch(NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException("Unable to convert IData to " + clazz, e);
-        }
-    }
-    
-    @Override
-    public int size() {
-        
-        return getInternal().size();
-    }
-    
-    @Override
-    public boolean isEmpty() {
-        
-        return getInternal().isEmpty();
-    }
-    
-    @Override
-    public void clear() {
-        
-        getInternal().clear();
-    }
-    
-    @Override
-    public ListData copy() {
-        
-        return new ListData(getInternal());
-    }
-    
-    @Override
-    public ListData copyInternal() {
-        
-        return new ListData(getInternal().copy());
+    public ListData(IData[] array) {
+        //TODO 1.19 confirm
+        this(Arrays.asList(array));
     }
     
     @Override
@@ -139,25 +60,39 @@ public class ListData implements ICollectionData {
     }
     
     @Override
-    public List<IData> asList() {
+    public void put(String index, IData value) {
         
-        List<IData> data = new ArrayList<>();
-        for(Tag inbt : getInternal()) {
-            data.add(TagToDataConverter.convert(inbt));
+        try {
+            getInternal().setTag(Integer.parseInt(index), value.getInternal());
+        } catch(NumberFormatException e) {
+            throw new IllegalArgumentException("Provided index: '%s' is not an Integer!".formatted(index));
         }
-        return data;
     }
     
     @Override
-    public boolean contains(IData data) {
+    public void remove(int index) {
         
-        List<IData> dataValues = data.asList();
-        if(dataValues != null && containsList(dataValues)) {
-            return true;
+        getInternal().remove(index);
+    }
+    
+    @Override
+    public IData getAt(int index) {
+        
+        return TagToDataConverter.convert(getInternal().get(index));
+    }
+    
+    @Override
+    public boolean contains(IData other) {
+        
+        if(other.isListable()) {
+            List<IData> dataValues = other.asList();
+            if(dataValues != null && containsList(dataValues)) {
+                return true;
+            }
         }
         
         for(Tag value : getInternal()) {
-            if(TagToDataConverter.convert(value).contains(data)) {
+            if(TagToDataConverter.convert(value).contains(other)) {
                 return true;
             }
         }
@@ -181,22 +116,108 @@ public class ListData implements ICollectionData {
         return true;
     }
     
-    @ZenCodeType.Caster(implicit = true)
-    public List<IData> castToList() {
+    @Override
+    public boolean equalTo(IData other) {
         
-        return this.asList();
+        List<IData> values = asList();
+        List<IData> others = other.asList();
+        if(values.size() != others.size()) {
+            return false;
+        }
+        
+        for(int i = 0; i < values.size(); i++) {
+            if(!values.get(i).equalTo(others.get(i))) {
+                return false;
+            }
+        }
+        return true;
     }
     
     @Override
-    public Type getType() {
+    public List<IData> asList() {
         
-        return Type.LIST;
+        return getInternal().stream().map(TagToDataConverter::convert).toList();
+    }
+    
+    @Override
+    public boolean isListable() {
+        
+        return true;
+    }
+    
+    @Override
+    public byte[] asByteArray() {
+        
+        List<IData> values = asList();
+        byte[] ret = new byte[values.size()];
+        for(int i = 0; i < values.size(); i++) {
+            ret[i] = values.get(i).asByte();
+        }
+        return ret;
+    }
+    
+    @Override
+    public int[] asIntArray() {
+        
+        List<IData> values = asList();
+        int[] ret = new int[values.size()];
+        for(int i = 0; i < values.size(); i++) {
+            ret[i] = values.get(i).asInt();
+        }
+        return ret;
+    }
+    
+    @Override
+    public long[] asLongArray() {
+        
+        List<IData> values = asList();
+        long[] ret = new long[values.size()];
+        for(int i = 0; i < values.size(); i++) {
+            ret[i] = values.get(i).asLong();
+        }
+        return ret;
+    }
+    
+    @Override
+    public int length() {
+        
+        return asList().size();
+    }
+    
+    @Override
+    public Set<String> getKeys() {
+        
+        return IntStream.range(0, length()).mapToObj(String::valueOf).collect(Collectors.toSet());
+    }
+    
+    @Override
+    public @NotNull Iterator<IData> iterator() {
+        
+        return asList().iterator();
+    }
+    
+    @Override
+    public IData copy() {
+        
+        return new ListData(getInternal());
+    }
+    
+    @Override
+    public IData copyInternal() {
+        
+        return new ListData(getInternal().copy());
     }
     
     @Override
     public <T> T accept(DataVisitor<T> visitor) {
         
         return visitor.visitList(this);
+    }
+    
+    @Override
+    public Type getType() {
+        
+        return Type.LIST;
     }
     
     @Override
@@ -208,16 +229,20 @@ public class ListData implements ICollectionData {
         if(o == null || getClass() != o.getClass()) {
             return false;
         }
-        
-        ListData listData = (ListData) o;
-        
-        return internal.equals(listData.internal);
+        ListData iData = (ListData) o;
+        return Objects.equals(getInternal(), iData.getInternal());
     }
     
     @Override
     public int hashCode() {
         
-        return internal.hashCode();
+        return Objects.hash(getInternal());
+    }
+    
+    @Override
+    public String toString() {
+        
+        return getAsString();
     }
     
 }

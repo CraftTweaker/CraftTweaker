@@ -1,20 +1,21 @@
 package com.blamejared.crafttweaker.api.data;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.data.base.IData;
-import com.blamejared.crafttweaker.api.data.base.INumberData;
-import com.blamejared.crafttweaker.api.data.base.visitor.DataVisitor;
+import com.blamejared.crafttweaker.api.data.visitor.DataVisitor;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.LongTag;
+import org.jetbrains.annotations.NotNull;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.Objects;
+
 /**
- * @docParam this 800000000
+ * @docParam this 800000000L as IData
  */
 @ZenCodeType.Name("crafttweaker.api.data.LongData")
 @ZenRegister
 @Document("vanilla/api/data/LongData")
-public class LongData implements INumberData {
+public class LongData implements IData {
     
     private final LongTag internal;
     
@@ -30,15 +31,135 @@ public class LongData implements INumberData {
     }
     
     @Override
-    public LongData copy() {
+    public IData add(IData other) {
         
-        return new LongData(getInternal());
+        return of(asLong() + other.asLong());
     }
     
     @Override
-    public LongData copyInternal() {
+    public IData sub(IData other) {
         
-        return new LongData(getInternal().copy());
+        return of(asLong() - other.asLong());
+    }
+    
+    @Override
+    public IData mul(IData other) {
+        
+        return of(asLong() * other.asLong());
+    }
+    
+    @Override
+    public IData div(IData other) {
+        
+        return of(asLong() / other.asLong());
+    }
+    
+    @Override
+    public IData mod(IData other) {
+        
+        return of(asLong() % other.asLong());
+    }
+    
+    @Override
+    public IData or(IData other) {
+        
+        return of(asLong() | other.asLong());
+    }
+    
+    @Override
+    public IData and(IData other) {
+        
+        return of(asLong() & other.asLong());
+    }
+    
+    @Override
+    public IData xor(IData other) {
+        
+        return of(asLong() ^ other.asLong());
+    }
+    
+    @Override
+    public IData neg() {
+        
+        return of(-asLong());
+    }
+    
+//    @Override
+//    public IData operatorInvert() {
+//
+//        return of(~asLong());
+//    }
+    
+    @Override
+    public boolean contains(IData other) {
+        
+        return asLong() == other.asLong();
+    }
+    
+    @Override
+    public int compareTo(@NotNull IData other) {
+        
+        return Long.compare(asLong(), other.asLong());
+    }
+    
+    @Override
+    public boolean equalTo(IData other) {
+        
+        return asLong() == other.asLong();
+    }
+    
+    @Override
+    public IData shl(IData other) {
+        
+        return of(asLong() << other.asLong());
+    }
+    
+    @Override
+    public IData shr(IData other) {
+        
+        return of(asLong() >> other.asLong());
+    }
+    
+    @Override
+    public boolean asBool() {
+        
+        return asLong() == 1;
+    }
+    
+    @Override
+    public byte asByte() {
+        
+        return (byte) asLong();
+    }
+    
+    @Override
+    public short asShort() {
+        
+        return (short) asLong();
+    }
+    
+    @Override
+    public int asInt() {
+        
+        return (int) asLong();
+    }
+    
+    @Override
+    public long asLong() {
+        
+        return getInternal().getAsLong();
+    }
+    
+    @Override
+    public float asFloat() {
+        
+        return (float) asLong();
+    }
+    
+    @Override
+    public double asDouble() {
+        
+        return (double) asLong();
     }
     
     @Override
@@ -48,12 +169,21 @@ public class LongData implements INumberData {
     }
     
     @Override
-    public boolean contains(IData data) {
+    public IData copy() {
         
-        if(data instanceof LongData) {
-            return getInternal().getAsLong() == ((LongData) data).getInternal().getAsLong();
-        }
-        return false;
+        return new LongData(getInternal().copy());
+    }
+    
+    @Override
+    public IData copyInternal() {
+        
+        return copy();
+    }
+    
+    @Override
+    public <T> T accept(DataVisitor<T> visitor) {
+        
+        return visitor.visitLong(this);
     }
     
     @Override
@@ -62,10 +192,9 @@ public class LongData implements INumberData {
         return Type.LONG;
     }
     
-    @Override
-    public <T> T accept(DataVisitor<T> visitor) {
+    private LongData of(long value) {
         
-        return visitor.visitLong(this);
+        return new LongData(LongTag.valueOf(value));
     }
     
     @Override
@@ -77,16 +206,20 @@ public class LongData implements INumberData {
         if(o == null || getClass() != o.getClass()) {
             return false;
         }
-        
-        LongData longData = (LongData) o;
-        
-        return internal.equals(longData.internal);
+        LongData iData = (LongData) o;
+        return Objects.equals(getInternal(), iData.getInternal());
     }
     
     @Override
     public int hashCode() {
         
-        return internal.hashCode();
+        return Objects.hash(getInternal());
+    }
+    
+    @Override
+    public String toString() {
+        
+        return getAsString();
     }
     
 }

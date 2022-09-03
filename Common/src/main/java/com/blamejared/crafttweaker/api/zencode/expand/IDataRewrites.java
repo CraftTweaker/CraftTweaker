@@ -27,7 +27,6 @@ public class IDataRewrites {
     
     
     public static final List<GenericName> IDATA_NAME = Arrays.asList(new GenericName("crafttweaker"), new GenericName("api"), new GenericName("data"), new GenericName("IData"));
-    public static final List<GenericName> COLLECTION_DATA_NAME = Arrays.asList(new GenericName("crafttweaker"), new GenericName("api"), new GenericName("data"), new GenericName("ICollectionData"));
     public static final List<GenericName> LIST_DATA_NAME = Arrays.asList(new GenericName("crafttweaker"), new GenericName("api"), new GenericName("data"), new GenericName("ListData"));
     public static final List<GenericName> MAP_DATA_NAME = Arrays.asList(new GenericName("crafttweaker"), new GenericName("api"), new GenericName("data"), new GenericName("MapData"));
     
@@ -56,7 +55,6 @@ public class IDataRewrites {
         final CodePosition position = parsedExpressionArray.position;
         final DefinitionTypeID iDataType = (DefinitionTypeID) expressionScope.getType(position, IDATA_NAME);
         final DefinitionTypeID listType = (DefinitionTypeID) expressionScope.getType(position, LIST_DATA_NAME);
-        final DefinitionTypeID collectionType = (DefinitionTypeID) expressionScope.getType(position, COLLECTION_DATA_NAME);
         
         final List<ParsedExpression> contents = parsedExpressionArray.contents;
         final Expression[] cContent = new Expression[contents.size()];
@@ -83,9 +81,9 @@ public class IDataRewrites {
                         .selectMethod(position, expressionScope, arguments, true, true);
                 return new NewExpression(position, listType, constructor, arguments);
             } else {
-                return expressionScope.getTypeMembers(collectionType)
-                        .getGroup("getFromMembers")
-                        .callStatic(position, collectionType, expressionScope, arguments);
+                return expressionScope.getTypeMembers(iDataType)
+                        .getGroup("listOf")
+                        .callStatic(position, iDataType, expressionScope, arguments);
             }
         } catch(CompileException e) {
             return null;

@@ -1,9 +1,8 @@
 package com.blamejared.crafttweaker.api.util;
 
 
-import com.blamejared.crafttweaker.api.data.MapData;
-import com.blamejared.crafttweaker.api.data.base.converter.tag.TagToDataConverter;
-import com.blamejared.crafttweaker.platform.Services;
+import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +22,7 @@ public final class ItemStackUtil {
         
         if(stack.getTag() != null) {
             
-            MapData data = TagToDataConverter.convertCompound(stack.getTag()).copyInternal();
+            IData data = TagToDataConverter.convert(stack.getTag()).copyInternal();
             //Damage is special case, if we have more special cases we can handle them here.
             if(stack.getItem().canBeDepleted()) {
                 

@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.level;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.CompoundTag;
@@ -8,6 +9,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.saveddata.SavedData;
+import org.jetbrains.annotations.NotNull;
 import org.openzen.zencode.java.ZenCodeType;
 
 import javax.annotation.Nonnull;
@@ -38,9 +40,20 @@ public class CraftTweakerSavedData extends SavedData {
         this.data = data;
     }
     
+    public static CraftTweakerSavedData load(CompoundTag tag) {
+        
+        CompoundTag dataTag = tag.getCompound("data");
+        Set<String> booleanKeys = tag.getList("booleanKeys", Tag.TAG_STRING)
+                .stream()
+                .map(Tag::getAsString)
+                .collect(Collectors.toSet());
+        
+        return new CraftTweakerSavedData(new MapData(dataTag, booleanKeys));
+    }
+    
     @ZenCodeType.Method
     @ZenCodeType.Getter("data")
-    public MapData getData() {
+    public IData getData() {
         
         return data;
     }
@@ -53,24 +66,13 @@ public class CraftTweakerSavedData extends SavedData {
     }
     
     @ZenCodeType.Method
-    public void updateData(MapData data) {
+    public void updateData(IData data) {
         
-        this.data = this.data.merge(data);
-    }
-    
-    public static CraftTweakerSavedData load(CompoundTag tag) {
-        
-        CompoundTag dataTag = tag.getCompound("data");
-        Set<String> booleanKeys = tag.getList("booleanKeys", Tag.TAG_STRING)
-                .stream()
-                .map(Tag::getAsString)
-                .collect(Collectors.toSet());
-        
-        return new CraftTweakerSavedData(new MapData(dataTag, booleanKeys));
+        this.data = (MapData) this.data.merge(data);
     }
     
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public @NotNull CompoundTag save(CompoundTag tag) {
         
         ListTag booleanKeys = new ListTag();
         data.boolDataKeys().stream().map(StringTag::valueOf).forEach(booleanKeys::add);

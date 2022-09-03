@@ -16,6 +16,21 @@ import net.minecraft.resources.ResourceLocation;
 public record ScriptRunConfiguration(IScriptLoader loader, IScriptLoadSource loadSource, RunKind runKind) {
     
     /**
+     * Creates a {@link ScriptRunConfiguration} with the given info, performing lookups if necessary.
+     *
+     * @param loader     The name of the loader that will be used to execute the run.
+     * @param loadSource The {@link ResourceLocation} identifying the load source responsible for creating the run.
+     * @param runKind    The {@linkplain RunKind kind of run} that will be executed.
+     *
+     * @throws IllegalArgumentException If the loader or the load source are not registered.
+     * @since 9.1.0
+     */
+    public ScriptRunConfiguration(final String loader, final ResourceLocation loadSource, final RunKind runKind) {
+        
+        this(IScriptLoader.find(loader), IScriptLoadSource.find(loadSource), runKind);
+    }
+    
+    /**
      * Indicates the kind of run that the {@link IScriptRun} will perform.
      *
      * @since 9.1.0
@@ -40,22 +55,14 @@ public record ScriptRunConfiguration(IScriptLoader loader, IScriptLoadSource loa
          * @since 9.1.0
          */
         EXECUTE,
+        /**
+         * Indicates that all scripts will be run and the various actions will be applied.
+         *
+         * <p>Should only be used for game test scripts.</p>
+         *
+         * @since 9.1.0
+         */
         GAME_TEST
-    }
-    
-    /**
-     * Creates a {@link ScriptRunConfiguration} with the given info, performing lookups if necessary.
-     *
-     * @param loader     The name of the loader that will be used to execute the run.
-     * @param loadSource The {@link ResourceLocation} identifying the load source responsible for creating the run.
-     * @param runKind    The {@linkplain RunKind kind of run} that will be executed.
-     *
-     * @throws IllegalArgumentException If the loader or the load source are not registered.
-     * @since 9.1.0
-     */
-    public ScriptRunConfiguration(final String loader, final ResourceLocation loadSource, final RunKind runKind) {
-        
-        this(IScriptLoader.find(loader), IScriptLoadSource.find(loadSource), runKind);
     }
     
 }

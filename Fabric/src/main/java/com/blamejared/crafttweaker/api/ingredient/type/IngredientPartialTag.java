@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.api.ingredient.type;
 
 import com.blamejared.crafttweaker.api.data.MapData;
-import com.blamejared.crafttweaker.api.data.base.converter.tag.TagToDataConverter;
+import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientPartialTagSerializer;
 import com.faux.ingredientextension.api.ingredient.IngredientExtendable;
 import com.faux.ingredientextension.api.ingredient.serializer.IIngredientSerializer;

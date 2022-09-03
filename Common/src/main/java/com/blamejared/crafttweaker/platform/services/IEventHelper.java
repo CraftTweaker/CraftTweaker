@@ -1,8 +1,9 @@
 package com.blamejared.crafttweaker.platform.services;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.MapData;
-import com.blamejared.crafttweaker.api.data.base.visitor.DataToTextComponentVisitor;
+import com.blamejared.crafttweaker.api.data.visitor.DataToTextComponentVisitor;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.attribute.ItemAttributeModifierBase;
@@ -109,7 +110,7 @@ public interface IEventHelper {
                                     .append(Component.literal(state.getValue(property)
                                             .toString()).withStyle(ChatFormatting.AQUA))));
                 }
-                MapData tileData = ExpandLevel.getBlockEntityData(world, pos);
+                IData tileData = ExpandLevel.getBlockEntityData(world, pos);
                 if(!tileData.isEmpty()) {
                     sendAndLog(player, Component.translatable("crafttweaker.command.info.block.entity.data", tileData.accept(new DataToTextComponentVisitor("    ", 0))));
                 }

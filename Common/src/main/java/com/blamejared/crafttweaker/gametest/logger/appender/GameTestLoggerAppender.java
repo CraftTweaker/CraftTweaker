@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.gametest.logger.appender;
 
 import com.blamejared.crafttweaker.CraftTweakerCommon;
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.*;
@@ -30,10 +29,10 @@ public class GameTestLoggerAppender extends AbstractAppender {
     @Override
     public void append(LogEvent event) {
         
-        final String message = ((PatternLayout) getLayout()).toSerializable(event)
-                .replaceAll(System.lineSeparator(), "");
+        String originalMessage = ((PatternLayout) getLayout()).toSerializable(event);
+        final String message = originalMessage.replaceAll(System.lineSeparator(), "");
         
-        messages.add(new LogMessage(message, event.getLevel()));
+        messages.add(new LogMessage(message, originalMessage, event.getLevel()));
     }
     
     @PluginFactory
@@ -42,7 +41,7 @@ public class GameTestLoggerAppender extends AbstractAppender {
         return new GameTestLoggerAppender(name, filter, layout);
     }
     
-    private record LogMessage(String message, Level level) {}
+    private record LogMessage(String message, String actualMessage, Level level) {}
     
     
     public void claim() {
@@ -67,6 +66,7 @@ public class GameTestLoggerAppender extends AbstractAppender {
         public void assertNoErrors() {
             
             if(this.log.stream().anyMatch(logMessage -> logMessage.level() == Level.ERROR)) {
+                dump();
                 throw new GameTestAssertException("Expected no errors but errors were found!");
             }
         }
@@ -74,6 +74,7 @@ public class GameTestLoggerAppender extends AbstractAppender {
         public void assertNoWarnings() {
             
             if(this.log.stream().anyMatch(logMessage -> logMessage.level() == Level.WARN)) {
+                dump();
                 throw new GameTestAssertException("Expected no warnings but errors were found!");
             }
         }
@@ -97,7 +98,7 @@ public class GameTestLoggerAppender extends AbstractAppender {
         public void dump() {
             
             for(int i = 0; i < this.log.size(); i++) {
-                CraftTweakerCommon.LOG.info("{}: '{}'", i, this.log.get(i));
+                CraftTweakerCommon.LOG.info("{}: {} '{}'", i, this.log.get(i).level, this.log.get(i).actualMessage);
             }
         }
         

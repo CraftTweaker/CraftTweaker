@@ -1,20 +1,21 @@
 package com.blamejared.crafttweaker.api.data;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.data.base.IData;
-import com.blamejared.crafttweaker.api.data.base.INumberData;
-import com.blamejared.crafttweaker.api.data.base.visitor.DataVisitor;
+import com.blamejared.crafttweaker.api.data.visitor.DataVisitor;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.DoubleTag;
+import org.jetbrains.annotations.NotNull;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.Objects;
+
 /**
- * @docParam this 3.25
+ * @docParam this 3.25 as IData
  */
 @ZenCodeType.Name("crafttweaker.api.data.DoubleData")
 @ZenRegister
 @Document("vanilla/api/data/DoubleData")
-public class DoubleData implements INumberData {
+public class DoubleData implements IData {
     
     private final DoubleTag internal;
     
@@ -30,15 +31,104 @@ public class DoubleData implements INumberData {
     }
     
     @Override
-    public DoubleData copy() {
+    public IData add(IData other) {
         
-        return new DoubleData(getInternal());
+        return of(asDouble() + other.asDouble());
     }
     
     @Override
-    public DoubleData copyInternal() {
+    public IData sub(IData other) {
         
-        return new DoubleData(getInternal().copy());
+        return of(asDouble() - other.asDouble());
+    }
+    
+    @Override
+    public IData mul(IData other) {
+        
+        return of(asDouble() * other.asDouble());
+    }
+    
+    @Override
+    public IData div(IData other) {
+        
+        return of(asDouble() / other.asDouble());
+    }
+    
+    @Override
+    public IData mod(IData other) {
+        
+        return of(asDouble() % other.asDouble());
+    }
+    
+    @Override
+    public IData neg() {
+        
+        return of(-asDouble());
+    }
+    
+    @Override
+    public boolean contains(IData other) {
+        
+        return asDouble() == other.asDouble();
+    }
+    
+    @Override
+    public int compareTo(@NotNull IData other) {
+        
+        return Double.compare(asDouble(), other.asDouble());
+    }
+    
+    @Override
+    public boolean equalTo(IData other) {
+        
+        return asDouble() == other.asDouble();
+    }
+    
+    @Override
+    public boolean asBool() {
+        
+        return asDouble() == 1.0;
+    }
+    
+    @Override
+    public byte asByte() {
+        
+        return (byte) asDouble();
+    }
+    
+    @Override
+    public short asShort() {
+        
+        return (short) asDouble();
+    }
+    
+    @Override
+    public int asInt() {
+        
+        return (int) asDouble();
+    }
+    
+    @Override
+    public long asLong() {
+        
+        return (long) asDouble();
+    }
+    
+    @Override
+    public float asFloat() {
+        
+        return (float) asDouble();
+    }
+    
+    @Override
+    public double asDouble() {
+        
+        return getInternal().getAsDouble();
+    }
+    
+    private DoubleData of(double value) {
+        
+        return new DoubleData(DoubleTag.valueOf(value));
     }
     
     @Override
@@ -48,24 +138,27 @@ public class DoubleData implements INumberData {
     }
     
     @Override
-    public boolean contains(IData data) {
+    public IData copy() {
         
-        if(data instanceof DoubleData) {
-            return getInternal().getAsDouble() == ((DoubleData) data).getInternal().getAsDouble();
-        }
-        return false;
+        return new DoubleData(getInternal());
     }
     
     @Override
-    public Type getType() {
+    public IData copyInternal() {
         
-        return Type.DOUBLE;
+        return copy();
     }
     
     @Override
     public <T> T accept(DataVisitor<T> visitor) {
         
         return visitor.visitDouble(this);
+    }
+    
+    @Override
+    public Type getType() {
+        
+        return Type.DOUBLE;
     }
     
     @Override
@@ -77,16 +170,20 @@ public class DoubleData implements INumberData {
         if(o == null || getClass() != o.getClass()) {
             return false;
         }
-        
-        DoubleData that = (DoubleData) o;
-        
-        return internal.equals(that.internal);
+        DoubleData iData = (DoubleData) o;
+        return Objects.equals(getInternal(), iData.getInternal());
     }
     
     @Override
     public int hashCode() {
         
-        return internal.hashCode();
+        return Objects.hash(getInternal());
+    }
+    
+    @Override
+    public String toString() {
+        
+        return getAsString();
     }
     
 }

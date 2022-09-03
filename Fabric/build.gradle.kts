@@ -19,6 +19,7 @@ dependencies {
         //TODO make this use 1.19 when it is available
         parchment("org.parchmentmc.data:parchment-1.18.2:${Versions.PARCHMENT}@zip")
     })
+    implementation("org.jetbrains:annotations:23.0.0")
     modImplementation("net.fabricmc:fabric-loader:${Versions.FABRIC_LOADER}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${Versions.FABRIC}")
     implementation(project(":Common"))

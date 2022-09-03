@@ -1,8 +1,8 @@
 package com.blamejared.crafttweaker.natives.villager;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.data.MapData;
-import com.blamejared.crafttweaker.api.data.base.converter.tag.TagToDataConverter;
+import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -194,9 +194,9 @@ public class ExpandMerchantOffer {
     }
     
     @ZenCodeType.Method
-    public static MapData createTag(MerchantOffer internal) {
+    public static IData createTag(MerchantOffer internal) {
         
-        return TagToDataConverter.convertCompound(internal.createTag());
+        return TagToDataConverter.convert(internal.createTag());
     }
     
     @ZenCodeType.Method

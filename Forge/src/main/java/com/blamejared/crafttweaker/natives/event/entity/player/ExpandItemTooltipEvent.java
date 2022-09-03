@@ -2,6 +2,8 @@ package com.blamejared.crafttweaker.natives.event.entity.player;
 
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.network.chat.Component;
@@ -44,9 +46,9 @@ public class ExpandItemTooltipEvent {
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("itemStack")
-    public static ItemStack getItemStack(ItemTooltipEvent internal) {
+    public static IItemStack getItemStack(ItemTooltipEvent internal) {
         
-        return internal.getItemStack();
+        return Services.PLATFORM.createMCItemStack(internal.getItemStack());
     }
     
     /**
@@ -66,7 +68,7 @@ public class ExpandItemTooltipEvent {
      *
      * <p>Note: The player can be null</p>
      *
-     * @return The player htat is viewing the tooltip.
+     * @return The player that is viewing the tooltip.
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("player")

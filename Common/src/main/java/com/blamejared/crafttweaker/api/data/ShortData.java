@@ -1,21 +1,21 @@
 package com.blamejared.crafttweaker.api.data;
 
-
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.data.base.IData;
-import com.blamejared.crafttweaker.api.data.base.INumberData;
-import com.blamejared.crafttweaker.api.data.base.visitor.DataVisitor;
+import com.blamejared.crafttweaker.api.data.visitor.DataVisitor;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.ShortTag;
+import org.jetbrains.annotations.NotNull;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.Objects;
+
 /**
- * @docParam this 1058
+ * @docParam this 1058 as IData
  */
 @ZenCodeType.Name("crafttweaker.api.data.ShortData")
 @ZenRegister
 @Document("vanilla/api/data/ShortData")
-public class ShortData implements INumberData {
+public class ShortData implements IData {
     
     private final ShortTag internal;
     
@@ -30,17 +30,136 @@ public class ShortData implements INumberData {
         this.internal = ShortTag.valueOf(internal);
     }
     
-    
     @Override
-    public ShortData copy() {
+    public IData add(IData other) {
         
-        return new ShortData(getInternal());
+        return of(asShort() + other.asShort());
     }
     
     @Override
-    public ShortData copyInternal() {
+    public IData sub(IData other) {
         
-        return new ShortData(getInternal().copy());
+        return of(asShort() - other.asShort());
+    }
+    
+    @Override
+    public IData mul(IData other) {
+        
+        return of(asShort() * other.asShort());
+    }
+    
+    @Override
+    public IData div(IData other) {
+        
+        return of(asShort() / other.asShort());
+    }
+    
+    @Override
+    public IData mod(IData other) {
+        
+        return of(asShort() % other.asShort());
+    }
+    
+    @Override
+    public IData or(IData other) {
+        
+        return of(asShort() | other.asShort());
+    }
+    
+    @Override
+    public IData and(IData other) {
+        
+        return of(asShort() & other.asShort());
+    }
+    
+    @Override
+    public IData xor(IData other) {
+        
+        return of(asShort() ^ other.asShort());
+    }
+    
+    @Override
+    public IData neg() {
+        
+        return of(-asShort());
+    }
+    
+//    @Override
+//    public IData operatorInvert() {
+//
+//        return of(~asShort());
+//    }
+    
+    @Override
+    public boolean contains(IData other) {
+        
+        return asShort() == other.asShort();
+    }
+    
+    @Override
+    public int compareTo(@NotNull IData other) {
+        
+        return Short.compare(asShort(), other.asShort());
+    }
+    
+    @Override
+    public boolean equalTo(IData other) {
+        
+        return asShort() == other.asShort();
+    }
+    
+    @Override
+    public IData shl(IData other) {
+        
+        return of(asShort() << other.asShort());
+    }
+    
+    @Override
+    public IData shr(IData other) {
+        
+        return of(asShort() >> other.asShort());
+    }
+    
+    @Override
+    public boolean asBool() {
+        
+        return asShort() == 1;
+    }
+    
+    @Override
+    public byte asByte() {
+        
+        return (byte) asShort();
+    }
+    
+    @Override
+    public short asShort() {
+        
+        return getInternal().getAsShort();
+    }
+    
+    @Override
+    public int asInt() {
+        
+        return asShort();
+    }
+    
+    @Override
+    public long asLong() {
+        
+        return asShort();
+    }
+    
+    @Override
+    public float asFloat() {
+        
+        return asShort();
+    }
+    
+    @Override
+    public double asDouble() {
+        
+        return asShort();
     }
     
     @Override
@@ -50,12 +169,21 @@ public class ShortData implements INumberData {
     }
     
     @Override
-    public boolean contains(IData data) {
+    public IData copy() {
         
-        if(data instanceof ShortData) {
-            return getInternal().getAsShort() == ((ShortData) data).getInternal().getAsShort();
-        }
-        return false;
+        return new ShortData(getInternal().copy());
+    }
+    
+    @Override
+    public IData copyInternal() {
+        
+        return copy();
+    }
+    
+    @Override
+    public <T> T accept(DataVisitor<T> visitor) {
+        
+        return visitor.visitShort(this);
     }
     
     @Override
@@ -64,10 +192,9 @@ public class ShortData implements INumberData {
         return Type.SHORT;
     }
     
-    @Override
-    public <T> T accept(DataVisitor<T> visitor) {
+    private ShortData of(int value) {
         
-        return visitor.visitShort(this);
+        return new ShortData(ShortTag.valueOf((short) value));
     }
     
     @Override
@@ -79,16 +206,20 @@ public class ShortData implements INumberData {
         if(o == null || getClass() != o.getClass()) {
             return false;
         }
-        
-        ShortData shortData = (ShortData) o;
-        
-        return internal.equals(shortData.internal);
+        ShortData iData = (ShortData) o;
+        return Objects.equals(getInternal(), iData.getInternal());
     }
     
     @Override
     public int hashCode() {
         
-        return internal.hashCode();
+        return Objects.hash(getInternal());
+    }
+    
+    @Override
+    public String toString() {
+        
+        return getAsString();
     }
     
 }

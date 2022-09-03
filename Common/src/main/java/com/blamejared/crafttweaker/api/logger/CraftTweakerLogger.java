@@ -67,7 +67,7 @@ public class CraftTweakerLogger {
     
         AppenderRef[] refs = new AppenderRef[] {createAppenderRef(CRT_LOG_NAME), createAppenderRef(PLAYER_LOG_NAME)};
         
-        LoggerConfig loggerConfig = LoggerConfig.createLogger(false, Level.ALL, LOGGER_NAME, "true", refs, null, config, null);
+        LoggerConfig loggerConfig = LoggerConfig.createLogger(false, Level.INFO, LOGGER_NAME, "true", refs, null, config, null);
         
         loggerConfig.addAppender(fileAppender, null, null);
         loggerConfig.addAppender(PLAYER_APPENDER, null, null);

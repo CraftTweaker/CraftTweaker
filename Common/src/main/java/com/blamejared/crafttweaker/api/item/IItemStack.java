@@ -4,8 +4,9 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.action.item.ActionSetFood;
 import com.blamejared.crafttweaker.api.action.item.ActionSetItemProperty;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.MapData;
-import com.blamejared.crafttweaker.api.data.base.converter.tag.TagToDataConverter;
+import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.IIngredientWithAmount;
 import com.blamejared.crafttweaker.api.util.AttributeUtil;
@@ -602,9 +603,9 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      */
     @ZenCodeType.Nullable
     @ZenCodeType.Getter("tag")
-    default MapData getTag() {
+    default IData getTag() {
         
-        return TagToDataConverter.convertCompound(getInternal().getTag());
+        return TagToDataConverter.convert(getInternal().getTag());
     }
     
     /**
@@ -613,7 +614,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
      * @return MapData of the ItemStack NBT Tag, empty tag if it doesn't exist.
      */
     @ZenCodeType.Method
-    default MapData getOrCreateTag() {
+    default IData getOrCreateTag() {
         
         if(getInternal().getTag() == null) {
             getInternal().setTag(new CompoundTag());
@@ -649,8 +650,8 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         }
         
         // Lets just use the partial nbt
-        MapData stack2Data = TagToDataConverter.convertCompound(stack2Tag);
-        MapData stack1Data = TagToDataConverter.convertCompound(stack1Tag);
+        IData stack2Data = TagToDataConverter.convert(stack2Tag);
+        IData stack1Data = TagToDataConverter.convert(stack1Tag);
         if(stack1Data == null) {
             return true;
         }
