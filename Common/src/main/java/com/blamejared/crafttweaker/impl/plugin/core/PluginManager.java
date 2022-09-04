@@ -61,6 +61,7 @@ public final class PluginManager {
         this.plugins = List.copyOf(plugins);
         this.req = new Req();
         this.listeners = new Listeners();
+        this.performInitializationPass();
     }
     
     public static PluginManager of() {
@@ -132,6 +133,11 @@ public final class PluginManager {
     public void broadcastRunExecution(final ScriptRunConfiguration configuration) {
         
         this.callListeners("run execution", this.listeners.executeRunListeners(), configuration);
+    }
+    
+    private void performInitializationPass() {
+        
+        this.verifying("initializing plugins", () -> this.plugins.forEach(ICraftTweakerPlugin::initialize));
     }
     
     private void gatherListeners() {

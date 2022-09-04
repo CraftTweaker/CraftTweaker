@@ -15,6 +15,16 @@ package com.blamejared.crafttweaker.api.plugin;
 public interface ICraftTweakerPlugin {
     
     /**
+     * Manages plugin initialization tasks that might be required prior to the plugin lifecycle.
+     *
+     * <p>This method is guaranteed to be called before any other registration methods, but after all plugins have
+     * been discovered.</p>
+     *
+     * @since 10.0
+     */
+    default void initialize() {}
+    
+    /**
      * Manages the registration of {@link com.blamejared.crafttweaker.api.zencode.IScriptLoader}s.
      *
      * @param handler The handler responsible for registration.
@@ -111,9 +121,11 @@ public interface ICraftTweakerPlugin {
     
     /**
      * Manages the registration of taggable elements and their tag managers.
+     *
      * @param handler The handler responsible for registration.
-     * @since 9.1.0
+     *
      * @see ITaggableElementRegistrationHandler
+     * @since 9.1.0
      */
     default void registerTaggableElements(final ITaggableElementRegistrationHandler handler) {}
     

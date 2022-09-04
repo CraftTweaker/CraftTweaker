@@ -16,6 +16,12 @@ import net.minecraft.resources.ResourceLocation;
 record DecoratedCraftTweakerPlugin(ResourceLocation id, ICraftTweakerPlugin plugin) implements ICraftTweakerPlugin {
     
     @Override
+    public void initialize() {
+        
+        this.plugin().initialize();
+    }
+    
+    @Override
     public void registerLoaders(final ILoaderRegistrationHandler handler) {
         
         this.plugin().registerLoaders(handler);
