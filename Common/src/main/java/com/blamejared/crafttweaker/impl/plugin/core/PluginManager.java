@@ -3,11 +3,11 @@ package com.blamejared.crafttweaker.impl.plugin.core;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.plugin.CraftTweakerPlugin;
 import com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin;
+import com.blamejared.crafttweaker.api.util.ClassUtil;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.registry.CraftTweakerRegistry;
-import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
@@ -71,7 +71,7 @@ public final class PluginManager {
     
     private static List<DecoratedCraftTweakerPlugin> discoverPlugins() {
         
-        return Services.PLATFORM.findClassesWithAnnotation(CraftTweakerPlugin.class)
+        return ClassUtil.findClassesWithAnnotation(CraftTweakerPlugin.class)
                 .map(PluginManager::checkAndCast)
                 .map(PluginManager::initPlugin)
                 .filter(Objects::nonNull)

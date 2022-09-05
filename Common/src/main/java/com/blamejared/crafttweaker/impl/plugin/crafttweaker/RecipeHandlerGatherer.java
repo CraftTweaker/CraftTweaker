@@ -2,9 +2,9 @@ package com.blamejared.crafttweaker.impl.plugin.crafttweaker;
 
 import com.blamejared.crafttweaker.api.plugin.IRecipeHandlerRegistrationHandler;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
+import com.blamejared.crafttweaker.api.util.ClassUtil;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.InstantiationUtil;
-import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.world.item.crafting.Recipe;
 
 import java.lang.annotation.Annotation;
@@ -23,7 +23,7 @@ final class RecipeHandlerGatherer {
     
     private Stream<? extends Class<?>> findWithAnnotation(final Class<? extends Annotation> annotation) {
         
-        return Services.PLATFORM.findClassesWithAnnotation(annotation);
+        return ClassUtil.findClassesWithAnnotation(annotation);
     }
     
     private void tryRegister(final Class<?> clazz, final IRecipeHandlerRegistrationHandler handler) {

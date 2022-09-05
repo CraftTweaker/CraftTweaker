@@ -1,7 +1,8 @@
 package com.blamejared.crafttweaker.gametest.framework;
 
+import com.blamejared.crafttweaker.api.util.ClassUtil;
 import com.blamejared.crafttweaker.gametest.framework.annotation.ScriptTestHolder;
-import com.blamejared.crafttweaker.platform.Services;
+import com.mojang.datafixers.util.Either;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.Launcher;
@@ -12,6 +13,7 @@ import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 
 import java.util.List;
+import java.util.Map;
 
 public class TestRunner {
     
@@ -28,8 +30,12 @@ public class TestRunner {
     
     private List<Class<?>> gatherTests() {
         
-        return (List<Class<?>>) Services.PLATFORM.findClassesWithAnnotation(ScriptTestHolder.class, mod -> {}, scriptTestHolderMapEither -> scriptTestHolderMapEither.map(ScriptTestHolder::loader, map -> map.get("loader"))
-                .equals(this.loader)).toList();
+        return (List<Class<?>>) ClassUtil.findClassesWithAnnotation(ScriptTestHolder.class, this::isSuitable).toList();
+    }
+    
+    private boolean isSuitable(final Either<ScriptTestHolder, Map<String, Object>> data) {
+        
+        return this.loader.equals(data.map(ScriptTestHolder::loader, map -> map.get("loader")));
     }
     
     

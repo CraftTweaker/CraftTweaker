@@ -178,23 +178,17 @@ public class ForgePlatformHelper implements IPlatformHelper {
     }
     
     @Override
-    public <T extends Annotation> Stream<? extends Class<?>> findClassesWithAnnotation(Class<T> annotationCls, Consumer<Mod> consumer, Predicate<Either<T, Map<String, Object>>> annotationFilter) {
+    public <T extends Annotation> Stream<? extends Class<?>> findClassesWithAnnotation(
+            final Class<T> annotationClass,
+            final Consumer<Mod> classProviderConsumer,
+            final Predicate<Either<T, Map<String, Object>>> annotationFilter
+    ) {
         
-        final Type annotationType = Type.getType(annotationCls);
+        final Type annotationType = Type.getType(annotationClass);
         return ModList.get()
                 .getAllScanData()
                 .stream()
-                .flatMap(scanData -> scanData.getAnnotations()
-                        .stream()
-                        .filter(a -> annotationType.equals(a.annotationType()))
-                        .filter(annotationData -> annotationFilter.test(Either.right(annotationData.annotationData())))
-                        .peek(annotationData -> scanData.getIModInfoData()
-                                .stream()
-                                .flatMap(iModFileInfo -> iModFileInfo.getMods()
-                                        .stream())
-                                .map(iModInfo -> new Mod(iModInfo.getModId(), iModInfo.getDisplayName(), iModInfo.getVersion()
-                                        .toString())).forEach(consumer))
-                        .map(ModFileScanData.AnnotationData::clazz))
+                .flatMap(it -> this.fromScanData(annotationType, classProviderConsumer, annotationFilter, it))
                 .map(ForgePlatformHelper::getClassFromType)
                 .filter(Objects::nonNull);
     }
@@ -288,6 +282,26 @@ public class ForgePlatformHelper implements IPlatformHelper {
             }
         });
         return components;
+    }
+    
+    private <T extends Annotation> Stream<Type> fromScanData(
+            final Type annotationType,
+            final Consumer<Mod> classProviderConsumer,
+            final Predicate<Either<T, Map<String, Object>>> annotationFilter,
+            final ModFileScanData data
+    ) {
+        
+        return data.getAnnotations()
+                .stream()
+                .filter(it -> annotationType.equals(it.annotationType()))
+                .filter(it -> annotationFilter.test(Either.right(it.annotationData())))
+                .peek(ignored -> data.getIModInfoData()
+                        .stream()
+                        .flatMap(it -> it.getMods().stream())
+                        .map(it -> new Mod(it.getModId(), it.getDisplayName(), it.getVersion().toString()))
+                        .forEach(classProviderConsumer)
+                )
+                .map(ModFileScanData.AnnotationData::clazz);
     }
     
     private static Class<?> getClassFromType(Type type) {

@@ -158,13 +158,17 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
     
     @Override
-    public <T extends Annotation> Stream<? extends Class<?>> findClassesWithAnnotation(Class<T> annotationCls, Consumer<Mod> consumer, Predicate<Either<T, Map<String, Object>>> annotationFilter) {
+    public <T extends Annotation> Stream<? extends Class<?>> findClassesWithAnnotation(
+            final Class<T> annotationClass,
+            final Consumer<Mod> classProviderConsumer,
+            final Predicate<Either<T, Map<String, Object>>> annotationFilter
+    ) {
         
-        Set<Class<?>> typesAnnotatedWith = REFLECTIONS.get().getTypesAnnotatedWith(annotationCls);
-        typesAnnotatedWith.stream().map(this::getModsForClass).flatMap(Collection::stream).forEach(consumer);
+        final Set<Class<?>> typesAnnotatedWith = REFLECTIONS.get().getTypesAnnotatedWith(annotationClass);
         return typesAnnotatedWith.stream()
-                .filter(it -> it.isAnnotationPresent(annotationCls)) // Thank you reflections for giving classes without the annotation, very cool
-                .filter(it -> annotationFilter.test(Either.left(it.getAnnotation(annotationCls))));
+                .filter(it -> it.isAnnotationPresent(annotationClass)) // Thank you reflections for giving classes without the annotation, very cool
+                .filter(it -> annotationFilter.test(Either.left(it.getAnnotation(annotationClass))))
+                .peek(it -> this.getModsForClass(it).forEach(classProviderConsumer));
     }
     
     private List<Mod> getModsForClass(Class<?> clazz) {

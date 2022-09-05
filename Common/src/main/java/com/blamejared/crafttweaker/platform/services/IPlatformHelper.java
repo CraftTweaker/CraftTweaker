@@ -91,32 +91,6 @@ public interface IPlatformHelper {
     }
     
     /**
-     * Finds classes with the given annotation
-     *
-     * @param annotationCls The annotation class to look for.
-     *
-     * @return A stream of classes with the annotation
-     */
-    default <T extends Annotation> Stream<? extends Class<?>> findClassesWithAnnotation(Class<T> annotationCls) {
-        
-        return findClassesWithAnnotation(annotationCls, mod -> {}, tMapEither -> true);
-    }
-    
-    /**
-     * Finds classes with the given annotation
-     *
-     * @param annotationCls The annotation class to look for.
-     * @param consumer      Consumer to collect the given mod that added the class if available.
-     *
-     * @return A stream of classes with the annotation
-     */
-    default <T extends Annotation> Stream<? extends Class<?>> findClassesWithAnnotation(Class<T> annotationCls, Consumer<Mod> consumer) {
-        
-        return findClassesWithAnnotation(annotationCls, consumer, tMapEither -> true);
-    }
-    
-    
-    /**
      * Finds classes with the given annotation and applies a filter.
      *
      * @param annotationCls    The annotation class to look for.
@@ -125,7 +99,11 @@ public interface IPlatformHelper {
      *
      * @return A stream of classes with the annotation
      */
-    <T extends Annotation> Stream<? extends Class<?>> findClassesWithAnnotation(Class<T> annotationCls, Consumer<Mod> consumer, Predicate<Either<T, Map<String, Object>>> annotationFilter);
+    <T extends Annotation> Stream<? extends Class<?>> findClassesWithAnnotation(
+            final Class<T> annotationClass,
+            final Consumer<Mod> classProviderConsumer,
+            final Predicate<Either<T, Map<String, Object>>> annotationFilter
+    );
     
     String findMappedMethodName(final Class<?> clazz, final String methodName, final Class<?> returnType, final Class<?>... parameterTypes);
     

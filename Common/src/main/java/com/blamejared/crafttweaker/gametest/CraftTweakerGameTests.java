@@ -1,9 +1,9 @@
 package com.blamejared.crafttweaker.gametest;
 
+import com.blamejared.crafttweaker.api.util.ClassUtil;
 import com.blamejared.crafttweaker.api.util.InstantiationUtil;
 import com.blamejared.crafttweaker.gametest.util.CraftTweakerGameTester;
 import com.blamejared.crafttweaker.gametest.util.ICraftTweakerGameTester;
-import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
 
@@ -16,7 +16,7 @@ public class CraftTweakerGameTests {
     public static List<TestFunction> getTests() {
         
         List<TestFunction> functions = new ArrayList<>();
-        Services.PLATFORM.findClassesWithAnnotation(CraftTweakerGameTester.class).forEach(aClass -> {
+        ClassUtil.findClassesWithAnnotation(CraftTweakerGameTester.class).forEach(aClass -> {
             if(ICraftTweakerGameTester.class.isAssignableFrom(aClass)) {
                 ICraftTweakerGameTester runner = (ICraftTweakerGameTester) InstantiationUtil.getOrCreateInstance(aClass);
                 if(runner != null) {

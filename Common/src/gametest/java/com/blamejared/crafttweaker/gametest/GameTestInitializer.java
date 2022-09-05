@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.gametest;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
+import com.blamejared.crafttweaker.api.util.ClassUtil;
 import com.blamejared.crafttweaker.gametest.framework.FutureJUnitTestFunction;
 import com.blamejared.crafttweaker.gametest.framework.Modifier;
 import com.blamejared.crafttweaker.gametest.framework.ModifingConsumer;
@@ -10,7 +9,6 @@ import com.blamejared.crafttweaker.gametest.framework.annotation.CraftTweakerGam
 import com.blamejared.crafttweaker.gametest.framework.annotation.ScriptTestHolder;
 import com.blamejared.crafttweaker.gametest.util.CraftTweakerGameTester;
 import com.blamejared.crafttweaker.gametest.util.ICraftTweakerGameTester;
-import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GlobalTestReporter;
 import net.minecraft.gametest.framework.StructureUtils;
@@ -36,7 +34,7 @@ public class GameTestInitializer implements ICraftTweakerGameTester {
         GlobalTestReporter.replaceWith(new SpecialCaseTestReporter("GameTests", new File("game-test-results.xml")));
         
         List<TestFunction> functions = new ArrayList<>();
-        Services.PLATFORM.findClassesWithAnnotation(ScriptTestHolder.class).forEach(aClass -> {
+        ClassUtil.findClassesWithAnnotation(ScriptTestHolder.class).forEach(aClass -> {
             
             for(Method method : aClass.getDeclaredMethods()) {
                 if(method.isAnnotationPresent(Test.class)) {
@@ -46,7 +44,7 @@ public class GameTestInitializer implements ICraftTweakerGameTester {
             }
         });
         
-        Services.PLATFORM.findClassesWithAnnotation(CraftTweakerGameTestHolder.class).forEach(aClass -> {
+        ClassUtil.findClassesWithAnnotation(CraftTweakerGameTestHolder.class).forEach(aClass -> {
             
             for(Method method : aClass.getDeclaredMethods()) {
                 if(!method.isAnnotationPresent(GameTest.class)) {

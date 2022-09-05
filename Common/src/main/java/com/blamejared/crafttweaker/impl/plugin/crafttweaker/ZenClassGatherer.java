@@ -1,12 +1,12 @@
 package com.blamejared.crafttweaker.impl.plugin.crafttweaker;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.util.ClassUtil;
 import com.blamejared.crafttweaker.platform.Services;
 import com.google.common.base.Suppliers;
 import com.mojang.datafixers.util.Either;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -26,11 +26,11 @@ final class ZenClassGatherer {
         
         this.zenCandidates = Suppliers.memoize(() -> {
             final CraftTweakerModList modList = new CraftTweakerModList();
-            final List<ZenClassData> classes = Services.PLATFORM.findClassesWithAnnotation(ZenRegister.class, modList::add, this::checkModDependencies)
+            final List<ZenClassData> classes = ClassUtil.findClassesWithAnnotation(ZenRegister.class, modList::add, this::checkModDependencies)
                     .filter(Objects::nonNull)
                     .flatMap(this::makeForClass)
                     .toList();
-            return new ZenCandidates(Collections.unmodifiableList(classes), modList::printToLog);
+            return new ZenCandidates(classes, modList::printToLog);
         });
     }
     
