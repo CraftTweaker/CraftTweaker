@@ -9,11 +9,8 @@ import net.minecraft.nbt.Tag;
 import org.jetbrains.annotations.NotNull;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -57,6 +54,13 @@ public class ListData implements IData {
     public ListTag getInternal() {
         
         return internal;
+    }
+    
+    @Override
+    public IData add(IData other) {
+        
+        getInternal().add(other.getInternal());
+        return this;
     }
     
     @Override

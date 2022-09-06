@@ -14,6 +14,7 @@ import org.openzen.zenscript.codemodel.OperatorType;
 import org.openzen.zenscript.codemodel.type.BasicTypeID;
 
 import java.util.*;
+import java.util.function.Function;
 
 
 /**
@@ -42,6 +43,9 @@ public interface IData extends Comparable<IData>, Iterable<IData> {
     @ZenCodeType.Method
     static IData listOf(IData... members) {
         
+        if(members == null || members.length == 0) {
+            return new ListData();
+        }
         if(Arrays.stream(members).allMatch(member -> member instanceof ByteData)) {
             byte[] result = new byte[members.length];
             for(int i = 0; i < members.length; i++) {
@@ -82,6 +86,7 @@ public interface IData extends Comparable<IData>, Iterable<IData> {
      * @docParam other 2
      */
     @ZenCodeType.Operator(ZenCodeType.OperatorType.ADD)
+    @ZenCodeType.Method
     default IData add(IData other) {
         
         return notSupportedOperator(OperatorType.ADD);
@@ -661,6 +666,21 @@ public interface IData extends Comparable<IData>, Iterable<IData> {
     IData copyInternal();
     
     <T> T accept(DataVisitor<T> visitor);
+    
+    /**
+     * Maps this IData to another IData based on the given operation.
+     *
+     * @param operation The operation to apply to this IData
+     *
+     * @return A new IData from the operation
+     *
+     * @docParam operation (data) => 3
+     */
+    @ZenCodeType.Method
+    default IData map(Function<IData, IData> operation) {
+        
+        return operation.apply(this);
+    }
     
     /**
      * Gets the type of this IData.
