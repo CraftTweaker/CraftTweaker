@@ -17,7 +17,7 @@ public interface IngredientCraftTweakerBase extends Predicate<ItemStack> {
     
     default boolean test(@Nullable ItemStack stack) {
         
-        return stack != null && getCrTIngredient().matches(Services.PLATFORM.createMCItemStack(stack));
+        return stack != null && getCrTIngredient().matches(IItemStack.of(stack));
     }
     
     default boolean isSimple() {

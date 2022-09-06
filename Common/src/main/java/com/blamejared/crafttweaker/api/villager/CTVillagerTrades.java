@@ -175,15 +175,15 @@ public class CTVillagerTrades {
         
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof IBasicItemListing basicTrade) {
-                boolean saleMatches = forSale.matches(Services.PLATFORM.createMCItemStackMutable(basicTrade.getForSale()));
+                boolean saleMatches = forSale.matches(IItemStack.ofMutable(basicTrade.getForSale()));
                 if(price.isEmpty() && price2.isEmpty()) {
                     return saleMatches;
                 }
-                boolean priceMatches = price.matches(Services.PLATFORM.createMCItemStackMutable(basicTrade.getPrice()));
+                boolean priceMatches = price.matches(IItemStack.ofMutable(basicTrade.getPrice()));
                 if(!price.isEmpty() && price2.isEmpty()) {
                     return saleMatches && priceMatches;
                 }
-                boolean price2Matches = price2.matches(Services.PLATFORM.createMCItemStackMutable(basicTrade.getPrice2()));
+                boolean price2Matches = price2.matches(IItemStack.ofMutable(basicTrade.getPrice2()));
                 return saleMatches && priceMatches && price2Matches;
             }
             return false;
@@ -230,10 +230,9 @@ public class CTVillagerTrades {
         
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.ItemsForEmeralds) {
-                return sellingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsForEmeralds) trade).crafttweaker$getItemStack()));
+                return sellingItem.matches(IItemStack.ofMutable(((AccessItemsForEmeralds) trade).crafttweaker$getItemStack()));
             } else if(trade instanceof IBasicItemListing basicTrade) {
-                return Services.PLATFORM.createMCItemStackMutable(basicTrade.getPrice())
-                        .matches(sellingItem);
+                return IItemStack.ofMutable(basicTrade.getPrice()).matches(sellingItem);
             }
             return false;
         });
@@ -257,12 +256,12 @@ public class CTVillagerTrades {
         
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.ItemsAndEmeraldsToItems) {
-                if(sellingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) trade).crafttweaker$getToItem()))) {
-                    return buyingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessItemsAndEmeraldsToItems) trade).crafttweaker$getFromItem()));
+                if(sellingItem.matches(IItemStack.ofMutable(((AccessItemsAndEmeraldsToItems) trade).crafttweaker$getToItem()))) {
+                    return buyingItem.matches(IItemStack.ofMutable(((AccessItemsAndEmeraldsToItems) trade).crafttweaker$getFromItem()));
                 }
             } else if(trade instanceof IBasicItemListing basicTrade) {
-                if(sellingItem.matches(Services.PLATFORM.createMCItemStackMutable(basicTrade.getPrice()))) {
-                    return buyingItem.matches(Services.PLATFORM.createMCItemStackMutable(basicTrade.getForSale()));
+                if(sellingItem.matches(IItemStack.ofMutable(basicTrade.getPrice()))) {
+                    return buyingItem.matches(IItemStack.ofMutable(basicTrade.getForSale()));
                 }
             }
             return false;
@@ -287,7 +286,7 @@ public class CTVillagerTrades {
         
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.TippedArrowForItemsAndEmeralds) {
-                if(potionStack.matches(Services.PLATFORM.createMCItemStackMutable(((AccessTippedArrowForItemsAndEmeralds) trade).crafttweaker$getToItem()))) {
+                if(potionStack.matches(IItemStack.ofMutable(((AccessTippedArrowForItemsAndEmeralds) trade).crafttweaker$getToItem()))) {
                     return sellingItem == ((AccessTippedArrowForItemsAndEmeralds) trade).crafttweaker$getFromItem();
                 }
             }
@@ -363,7 +362,7 @@ public class CTVillagerTrades {
         
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.EnchantedItemForEmeralds) {
-                return buyingItem.matches(Services.PLATFORM.createMCItemStackMutable(((AccessEnchantedItemForEmeralds) trade).crafttweaker$getItemStack()));
+                return buyingItem.matches(IItemStack.ofMutable(((AccessEnchantedItemForEmeralds) trade).crafttweaker$getItemStack()));
             }
             return false;
         });

@@ -125,9 +125,9 @@ public interface IIngredient extends CommandStringDisplayable {
                 .getCraftingRemainingItem();
         if(remainingItem != null) {
             
-            return Services.PLATFORM.createMCItemStack(remainingItem.getDefaultInstance());
+            return IItemStack.of(remainingItem.getDefaultInstance());
         }
-        return Services.PLATFORM.getEmptyIItemStack();
+        return IItemStack.empty();
     }
     
     /**

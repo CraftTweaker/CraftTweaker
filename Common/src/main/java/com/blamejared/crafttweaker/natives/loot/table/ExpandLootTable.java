@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.natives.loot.table;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.world.Container;
@@ -42,7 +41,7 @@ public final class ExpandLootTable {
     @ZenCodeType.Method
     public static void getRandomItemsRaw(LootTable internal, LootContext context, Consumer<IItemStack> stackConsumer) {
         
-        internal.getRandomItemsRaw(context, itemStack -> stackConsumer.accept(Services.PLATFORM.createMCItemStack(itemStack)));
+        internal.getRandomItemsRaw(context, itemStack -> stackConsumer.accept(IItemStack.of(itemStack)));
     }
     
     /**
@@ -63,7 +62,7 @@ public final class ExpandLootTable {
     @ZenCodeType.Method
     public static void getRandomItems(LootTable internal, LootContext context, Consumer<IItemStack> stackConsumer) {
         
-        internal.getRandomItems(context, itemStack -> stackConsumer.accept(Services.PLATFORM.createMCItemStack(itemStack)));
+        internal.getRandomItems(context, itemStack -> stackConsumer.accept(IItemStack.of(itemStack)));
     }
     
     /**
@@ -80,7 +79,7 @@ public final class ExpandLootTable {
     @ZenCodeType.Method
     public static List<IItemStack> getRandomItems(LootTable internal, LootContext context) {
         
-        return internal.getRandomItems(context).stream().map(Services.PLATFORM::createMCItemStack).toList();
+        return internal.getRandomItems(context).stream().map(IItemStack::of).toList();
     }
     
     /**

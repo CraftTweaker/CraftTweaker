@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.manager.type.KnownTagManager;
 import com.blamejared.crafttweaker.api.tag.type.KnownTag;
+import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.natives.block.ExpandBlock;
 import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
 import com.blamejared.crafttweaker.natives.entity.attribute.ExpandAttribute;
@@ -201,8 +202,7 @@ public final class HandCommands {
     // <editor-fold desc="CT Functions">
     private static void sendBasicItemInformation(final Player player, final ItemStack target) {
         
-        final String output = Services.PLATFORM.createMCItemStackMutable(target)
-                .getCommandString();
+        final String output = ItemStackUtil.getCommandString(target);
         sendCopyingHand(player, Component.translatable("crafttweaker.command.misc.item"), output);
     }
     

@@ -73,7 +73,7 @@ public class Game {
         return Registry.ITEM.stream()
                 .map(Item::getDefaultInstance)
                 .filter(Predicate.not(ItemStack::isEmpty))
-                .map(Services.PLATFORM::createMCItemStack)
+                .map(IItemStack::of)
                 .toList();
     }
     

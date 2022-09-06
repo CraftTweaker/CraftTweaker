@@ -140,7 +140,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
     
     @Override
-    public IItemStack getEmptyIItemStack() {
+    public IItemStack getEmptyItemStack() {
         
         return MCItemStack.EMPTY.get();
     }

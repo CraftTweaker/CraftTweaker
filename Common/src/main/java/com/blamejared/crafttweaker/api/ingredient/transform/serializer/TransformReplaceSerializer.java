@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.ingredient.transform.serializer;
 
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.transform.type.TransformReplace;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.platform.Services;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
@@ -17,7 +18,7 @@ public enum TransformReplaceSerializer implements IIngredientTransformerSerializ
     public TransformReplace<?> fromNetwork(FriendlyByteBuf buffer) {
         
         final ItemStack replaceWith = buffer.readItem();
-        return new TransformReplace<>(Services.PLATFORM.createMCItemStack(replaceWith));
+        return new TransformReplace<>(IItemStack.of(replaceWith));
     }
     
     @Override
@@ -25,7 +26,7 @@ public enum TransformReplaceSerializer implements IIngredientTransformerSerializ
         
         final Ingredient.Value iItemList = Ingredient.valueFromJson(json.getAsJsonObject("replaceWith"));
         final ItemStack replaceWith = iItemList.getItems().iterator().next();
-        return new TransformReplace<>(Services.PLATFORM.createMCItemStack(replaceWith));
+        return new TransformReplace<>(IItemStack.of(replaceWith));
     }
     
     @Override

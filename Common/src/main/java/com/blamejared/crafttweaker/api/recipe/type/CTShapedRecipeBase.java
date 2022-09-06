@@ -52,7 +52,7 @@ public class CTShapedRecipeBase implements CraftingRecipe {
         this.mirroredIngredients = new IIngredient[MirrorAxis.values().length][][];
         for(int index = 0; index < this.ingredients.length; index++) {
             if(this.ingredients[index].length < width) {
-                this.ingredients[index] = ArrayUtil.copyOf(this.ingredients[index], width, Services.PLATFORM.getEmptyIItemStack());
+                this.ingredients[index] = ArrayUtil.copyOf(this.ingredients[index], width, IItemStack.empty());
             }
         }
         initMirroredIngredients();
@@ -126,7 +126,7 @@ public class CTShapedRecipeBase implements CraftingRecipe {
                         final int slotNumber = (rowIndex + rowOffset) * inv.getWidth() + columnIndex + columnOffset;
                         final ItemStack stackInSlot = inv.getItem(slotNumber);
                         
-                        if(item == null && !stackInSlot.isEmpty() || item != null && !item.matches(Services.PLATFORM.createMCItemStackMutable(stackInSlot))) {
+                        if(item == null && !stackInSlot.isEmpty() || item != null && !item.matches(IItemStack.ofMutable(stackInSlot))) {
                             continue offset;
                         }
                         visited[slotNumber] = true;
@@ -178,8 +178,7 @@ public class CTShapedRecipeBase implements CraftingRecipe {
                     continue;
                 }
                 final int slotIndex = (rowIndex + rowOffset) * container.getWidth() + columnIndex + columnOffset;
-                stacks[rowIndex][columnIndex] = Services.PLATFORM.createMCItemStack(container.getItem(slotIndex))
-                        .setAmount(1);
+                stacks[rowIndex][columnIndex] = IItemStack.of(container.getItem(slotIndex)).setAmount(1);
             }
         }
         return function.process(this.output, stacks).getImmutableInternal();
@@ -251,7 +250,7 @@ public class CTShapedRecipeBase implements CraftingRecipe {
                     continue;
                 }
                 final int slotIndex = (rowIndex + rowOffset) * inv.getWidth() + columnIndex + columnOffset;
-                result.set(slotIndex, ingredient.getRemainingItem(Services.PLATFORM.createMCItemStackMutable(inv.getItem(slotIndex)))
+                result.set(slotIndex, ingredient.getRemainingItem(IItemStack.ofMutable(inv.getItem(slotIndex)))
                         .getInternal());
             }
         }

@@ -55,7 +55,7 @@ public interface IClientHelper {
     
     default void applyTooltips(ItemStack stack, TooltipFlag context, List<Component> lines) {
         
-        IItemStack ctStack = Services.PLATFORM.createMCItemStack(stack);
+        IItemStack ctStack = IItemStack.of(stack);
         for(IIngredient ingredient : Services.CLIENT.getTooltips().keySet()) {
             if(!ingredient.matches(ctStack)) {
                 continue;

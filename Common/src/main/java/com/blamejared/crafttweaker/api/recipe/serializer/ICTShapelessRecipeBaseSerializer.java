@@ -48,7 +48,7 @@ public interface ICTShapelessRecipeBaseSerializer extends RecipeSerializer<CTSha
             throw new JsonParseException("Too many ingredients for shapeless recipe the max is " + (3 * 3));
         } else {
             ItemStack itemstack = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(jsonObject, "result"));
-            return makeRecipe(recipeId, Services.PLATFORM.createMCItemStack(itemstack), ingredients, null);
+            return makeRecipe(recipeId, IItemStack.of(itemstack), ingredients, null);
         }
     }
     
@@ -64,7 +64,7 @@ public interface ICTShapelessRecipeBaseSerializer extends RecipeSerializer<CTSha
         }
         
         ItemStack output = buffer.readItem();
-        return makeRecipe(recipeId, Services.PLATFORM.createMCItemStack(output), ingredients, null);
+        return makeRecipe(recipeId, IItemStack.of(output), ingredients, null);
     }
     
     @Override

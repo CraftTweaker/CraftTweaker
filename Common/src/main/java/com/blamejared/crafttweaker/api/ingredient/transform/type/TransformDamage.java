@@ -35,10 +35,10 @@ public class TransformDamage<T extends IIngredient> implements IIngredientTransf
         final ItemStack internal = stack.getImmutableInternal();
         final int newDamage = internal.getDamageValue() + amount;
         if(internal.getMaxDamage() < newDamage) {
-            return Services.PLATFORM.getEmptyIItemStack();
+            return IItemStack.empty();
         }
         internal.setDamageValue(newDamage);
-        return Services.PLATFORM.createMCItemStack(internal.copy());
+        return IItemStack.of(internal.copy());
     }
     
     @Override

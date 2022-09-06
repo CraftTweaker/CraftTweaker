@@ -78,7 +78,7 @@ public final class Mod {
         return getItems()
                 .stream()
                 .map(Item::getDefaultInstance)
-                .map(Services.PLATFORM::createMCItemStack)
+                .map(IItemStack::of)
                 .toList();
     }
     

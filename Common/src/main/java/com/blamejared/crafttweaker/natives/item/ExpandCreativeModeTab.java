@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.natives.item;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.core.NonNullList;
@@ -44,7 +43,7 @@ public class ExpandCreativeModeTab {
     @ZenCodeType.Getter("iconItem")
     public static IItemStack getIconItem(CreativeModeTab internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.getIconItem());
+        return IItemStack.of(internal.getIconItem());
     }
     
     @ZenCodeType.Method
@@ -138,7 +137,7 @@ public class ExpandCreativeModeTab {
         
         NonNullList<ItemStack> stacks = NonNullList.create();
         internal.fillItemList(stacks);
-        return stacks.stream().map(Services.PLATFORM::createMCItemStack).toList();
+        return stacks.stream().map(IItemStack::of).toList();
     }
     
     @ZenCodeType.Getter("commandString")

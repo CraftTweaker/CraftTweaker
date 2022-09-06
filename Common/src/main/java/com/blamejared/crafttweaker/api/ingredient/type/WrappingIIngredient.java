@@ -61,7 +61,7 @@ public class WrappingIIngredient implements IIngredient {
     public IItemStack[] getItems() {
         
         return Arrays.stream(ingredient.getItems())
-                .map(Services.PLATFORM::createMCItemStack)
+                .map(IItemStack::of)
                 .toArray(IItemStack[]::new);
     }
     

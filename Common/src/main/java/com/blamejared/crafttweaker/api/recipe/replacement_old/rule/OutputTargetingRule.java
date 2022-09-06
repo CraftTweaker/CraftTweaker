@@ -40,7 +40,7 @@ public final class OutputTargetingRule implements ITargetingRule {
     @Override
     public boolean shouldBeReplaced(final Recipe<?> recipe, final IRecipeManager<?> manager) {
         
-        return this.output.matches(Services.PLATFORM.createMCItemStack(recipe.getResultItem())) && (this.whitelist.isEmpty() || this.whitelist.contains(manager));
+        return this.output.matches(IItemStack.of(recipe.getResultItem())) && (this.whitelist.isEmpty() || this.whitelist.contains(manager));
     }
     
     @Override

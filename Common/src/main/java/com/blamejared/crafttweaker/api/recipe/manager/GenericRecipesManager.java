@@ -13,6 +13,7 @@ import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.visitor.DataToJsonStringVisitor;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -96,7 +97,7 @@ public enum GenericRecipesManager {
     public List<Recipe<?>> getRecipesByOutput(IIngredient output) {
         
         return getAllRecipes().stream()
-                .filter(iRecipe -> output.matches(Services.PLATFORM.createMCItemStack(iRecipe.getResultItem())))
+                .filter(iRecipe -> output.matches(IItemStack.of(iRecipe.getResultItem())))
                 .collect(Collectors.toList());
     }
     
@@ -132,9 +133,8 @@ public enum GenericRecipesManager {
      *
      * @param output The recipe result
      *
-     * @deprecated use remove(IIngredient output)
-     *
      * @docParam output <item:minecraft:iron_ingot>
+     * @deprecated use remove(IIngredient output)
      */
     @Deprecated(forRemoval = true)
     @ZenCodeType.Method
@@ -160,6 +160,7 @@ public enum GenericRecipesManager {
      * Removes all recipes with this name.
      *
      * @param name The recipe name to remove
+     *
      * @deprecated Use {@link #removeByName(String...)} instead
      */
     @Deprecated(forRemoval = true)

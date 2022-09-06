@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.natives.item;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
@@ -21,7 +20,7 @@ public class ExpandItem {
     @ZenCodeType.Caster(implicit = true)
     public static IItemStack getDefaultInstance(Item internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.getDefaultInstance());
+        return IItemStack.of(internal.getDefaultInstance());
     }
     
     @ZenCodeType.Method

@@ -2,7 +2,7 @@ package com.blamejared.crafttweaker.api.recipe;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
-import com.blamejared.crafttweaker.platform.Services;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -50,7 +50,7 @@ public class RecipeList<T extends Recipe<?>> {
         
         return getRecipes().values()
                 .stream()
-                .filter(iRecipe -> output.matches(Services.PLATFORM.createMCItemStackMutable(iRecipe.getResultItem())))
+                .filter(iRecipe -> output.matches(IItemStack.ofMutable(iRecipe.getResultItem())))
                 .toList();
     }
     

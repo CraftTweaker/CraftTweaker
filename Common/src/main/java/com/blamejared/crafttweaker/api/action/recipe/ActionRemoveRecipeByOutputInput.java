@@ -17,7 +17,7 @@ public class ActionRemoveRecipeByOutputInput<T extends Recipe<?>> extends Action
         
         super(manager, recipe -> {
             ItemStack recipeOutput = recipe.getResultItem();
-            if(output.matches(Services.PLATFORM.createMCItemStackMutable(recipeOutput))) {
+            if(output.matches(IItemStack.ofMutable(recipeOutput))) {
                 for(IItemStack item : input.getItems()) {
                     if(recipe.getIngredients().get(0).test(item.getInternal())) {
                         return true;

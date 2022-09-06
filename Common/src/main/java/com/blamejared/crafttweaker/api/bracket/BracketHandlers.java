@@ -268,7 +268,7 @@ public class BracketHandlers {
         ItemStack stack = Registry.ITEM.getOptional(key)
                 .map(ItemStack::new)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get item with name: <item:" + tokens + ">! Item does not appear to exist!"));
-        return Services.PLATFORM.createMCItemStack(stack);
+        return IItemStack.of(stack);
     }
     
     

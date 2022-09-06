@@ -26,7 +26,7 @@ public class TransformReplace<T extends IIngredient> implements IIngredientTrans
     @Override
     public IItemStack transform(IItemStack stack) {
         
-        return Services.PLATFORM.createMCItemStack(replaceWith.getImmutableInternal());
+        return IItemStack.of(replaceWith.getImmutableInternal());
     }
     
     @Override

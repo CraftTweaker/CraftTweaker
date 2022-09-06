@@ -4,7 +4,6 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeConstructor;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
@@ -57,28 +56,28 @@ public class ExpandMerchantOffer {
     @ZenCodeType.Getter("baseCostA")
     public static IItemStack getBaseCostA(MerchantOffer internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.getBaseCostA());
+        return IItemStack.of(internal.getBaseCostA());
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("costA")
     public static IItemStack getCostA(MerchantOffer internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.getCostA());
+        return IItemStack.of(internal.getCostA());
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("costB")
     public static IItemStack getCostB(MerchantOffer internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.getCostB());
+        return IItemStack.of(internal.getCostB());
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("result")
     public static IItemStack getResult(MerchantOffer internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.getResult());
+        return IItemStack.of(internal.getResult());
     }
     
     @ZenCodeType.Method
@@ -90,7 +89,7 @@ public class ExpandMerchantOffer {
     @ZenCodeType.Method
     public static IItemStack assemble(MerchantOffer internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.assemble());
+        return IItemStack.of(internal.assemble());
     }
     
     @ZenCodeType.Method

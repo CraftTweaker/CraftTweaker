@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.natives.world;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.world.Container;
@@ -119,15 +118,16 @@ public class ExpandContainer {
     
     @ZenCodeType.Method
     public static int countStack(Container internal, IItemStack item) {
+        
         int count = 0;
-    
+        
         for(int i = 0; i < internal.getContainerSize(); i++) {
             ItemStack stack = internal.getItem(i);
-            if(item.matches(Services.PLATFORM.createMCItemStack(stack))){
+            if(item.matches(IItemStack.of(stack))) {
                 count += stack.getCount();
             }
         }
-    
+        
         return count;
     }
     

@@ -62,7 +62,7 @@ public class IngredientConverter {
         final IItemStack[] ingredients = value.getItems()
                 .stream()
                 .filter(stack -> !stack.isEmpty())
-                .map(Services.PLATFORM::createMCItemStack)
+                .map(IItemStack::of)
                 .toArray(IItemStack[]::new);
         
         return mergeIngredients(ingredients);

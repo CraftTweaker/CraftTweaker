@@ -88,7 +88,7 @@ public interface IEventHelper {
         
         Services.EVENT.getAttributeModifiers().keySet()
                 .stream()
-                .filter(ingredient -> ingredient.matches(Services.PLATFORM.createMCItemStackMutable(stack)))
+                .filter(ingredient -> ingredient.matches(IItemStack.of(stack)))
                 .map(Services.EVENT.getAttributeModifiers()::get)
                 .flatMap(Collection::stream)
                 .forEach(consumer -> consumer.accept(modifierBase));

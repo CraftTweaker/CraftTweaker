@@ -63,7 +63,7 @@ public interface IPlatformHelper {
     
     IItemStack createItemStackMutable(ItemStack stack);
     
-    IItemStack getEmptyIItemStack();
+    IItemStack getEmptyItemStack();
     
     
     Fluid getBucketContent(BucketItem item);

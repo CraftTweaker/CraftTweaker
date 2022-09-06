@@ -141,7 +141,7 @@ public class CTShapelessRecipeBase implements CraftingRecipe {
                     continue;
                 }
                 
-                final IItemStack stack = Services.PLATFORM.createMCItemStack(stackInSlot);
+                final IItemStack stack = IItemStack.of(stackInSlot);
                 if(ingredient.matches(stack)) {
                     visited[i] = true;
                     action.accept(ingredientIndex, i, stack);

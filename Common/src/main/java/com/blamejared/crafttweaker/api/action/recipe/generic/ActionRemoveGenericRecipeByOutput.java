@@ -24,8 +24,7 @@ public class ActionRemoveGenericRecipeByOutput extends ActionRemoveGenericRecipe
     @Override
     protected boolean shouldRemove(Recipe<?> recipe) {
         
-        final IItemStack recipeOutput = Services.PLATFORM.createMCItemStack(recipe.getResultItem());
-        return output.matches(recipeOutput);
+        return output.matches(IItemStack.of(recipe.getResultItem()));
     }
     
 }

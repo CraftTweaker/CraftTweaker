@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.natives.entity.type.item;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeConstructor;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
@@ -64,7 +63,7 @@ public class ExpandItemEntity {
     @ZenCodeType.Getter("item")
     public static IItemStack getItem(ItemEntity itemEntity) {
         
-        return Services.PLATFORM.createMCItemStack(itemEntity.getItem());
+        return IItemStack.of(itemEntity.getItem());
     }
     
     /**

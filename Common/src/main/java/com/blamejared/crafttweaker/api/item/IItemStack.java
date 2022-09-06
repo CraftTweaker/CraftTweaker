@@ -56,7 +56,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     
     static IItemStack empty() {
         
-        return Services.PLATFORM.getEmptyIItemStack();
+        return Services.PLATFORM.getEmptyItemStack();
     }
     
     static IItemStack of(final ItemStack stack) {

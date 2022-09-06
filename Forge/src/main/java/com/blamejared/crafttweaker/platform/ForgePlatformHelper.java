@@ -160,7 +160,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
     }
     
     @Override
-    public IItemStack getEmptyIItemStack() {
+    public IItemStack getEmptyItemStack() {
         
         return MCItemStack.EMPTY.get();
     }

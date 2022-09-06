@@ -36,8 +36,7 @@ public final class InventoryCommands {
                     final String inventoryContents = IntStream.range(0, inventory.getContainerSize())
                             .mapToObj(inventory::getItem)
                             .filter(it -> !it.isEmpty())
-                            .map(Services.PLATFORM::createMCItemStack)
-                            .map(IItemStack::getCommandString)
+                            .map(ItemStackUtil::getCommandString)
                             .collect(Collectors.joining("\n", "Inventory items\n", ""));
                     
                     CraftTweakerAPI.LOGGER.info(inventoryContents);
