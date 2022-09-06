@@ -39,9 +39,8 @@ public final class CommandUtilities {
     public static void send(Component component, Player player) {
         
         player.sendSystemMessage(component);
-        //TODO 1.19 confirm
         if(!component.getString().isBlank()) {
-            CraftTweakerAPI.LOGGER.info(component.getContents());
+            CraftTweakerAPI.LOGGER.info(component.getString());
         }
     }
     
