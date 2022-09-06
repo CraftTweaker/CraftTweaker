@@ -54,6 +54,26 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     @ZenCodeType.Field
     UUID BASE_ATTACK_SPEED_UUID = AccessItem.crafttweaker$getBASE_ATTACK_SPEED_UUID();
     
+    static IItemStack empty() {
+        
+        return Services.PLATFORM.getEmptyIItemStack();
+    }
+    
+    static IItemStack of(final ItemStack stack) {
+        
+        return Services.PLATFORM.createItemStack(stack);
+    }
+    
+    static IItemStack of(final ItemStack stack, final boolean mutable) {
+        
+        return mutable ? ofMutable(stack) : of(stack);
+    }
+    
+    static IItemStack ofMutable(final ItemStack stack) {
+        
+        return Services.PLATFORM.createItemStackMutable(stack);
+    }
+    
     /**
      * Creates a copy
      */
@@ -162,7 +182,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         
         return modify(itemStack -> {
             CompoundTag tag = itemStack.getOrCreateTagElement(ItemStack.TAG_DISPLAY);
-            if(lore != null || lore.length == 0) {
+            if(lore != null && lore.length != 0) {
                 ListTag listtag = new ListTag();
                 for(Component component : lore) {
                     listtag.add(StringTag.valueOf(Component.Serializer.toJson(component)));

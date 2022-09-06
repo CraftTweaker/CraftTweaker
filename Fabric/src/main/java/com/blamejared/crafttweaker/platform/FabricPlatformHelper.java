@@ -128,13 +128,13 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
     
     @Override
-    public IItemStack createMCItemStack(ItemStack stack) {
+    public IItemStack createItemStack(ItemStack stack) {
         
         return new MCItemStack(stack);
     }
     
     @Override
-    public IItemStack createMCItemStackMutable(ItemStack stack) {
+    public IItemStack createItemStackMutable(ItemStack stack) {
         
         return new MCItemStackMutable(stack);
     }

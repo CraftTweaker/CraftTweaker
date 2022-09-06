@@ -59,9 +59,9 @@ public interface IPlatformHelper {
     
     Optional<Mod> getMod(String modid);
     
-    IItemStack createMCItemStack(ItemStack stack);
+    IItemStack createItemStack(ItemStack stack);
     
-    IItemStack createMCItemStackMutable(ItemStack stack);
+    IItemStack createItemStackMutable(ItemStack stack);
     
     IItemStack getEmptyIItemStack();
     

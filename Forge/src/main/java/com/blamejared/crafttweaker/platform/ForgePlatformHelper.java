@@ -148,13 +148,13 @@ public class ForgePlatformHelper implements IPlatformHelper {
     }
     
     @Override
-    public IItemStack createMCItemStack(ItemStack stack) {
+    public IItemStack createItemStack(ItemStack stack) {
         
         return new MCItemStack(stack);
     }
     
     @Override
-    public IItemStack createMCItemStackMutable(ItemStack stack) {
+    public IItemStack createItemStackMutable(ItemStack stack) {
         
         return new MCItemStackMutable(stack);
     }
@@ -211,9 +211,9 @@ public class ForgePlatformHelper implements IPlatformHelper {
         classFunctionMap.put(BasicItemListing.class, iTrade -> {
             if(iTrade instanceof BasicItemListing) {
                 return new CTTradeObject(
-                        createMCItemStackMutable(((AccessBasicTrade) iTrade).crafttweaker$getPrice()),
-                        createMCItemStackMutable(((AccessBasicTrade) iTrade).crafttweaker$getPrice2()),
-                        createMCItemStackMutable(((AccessBasicTrade) iTrade).crafttweaker$getForSale()));
+                        IItemStack.ofMutable(((AccessBasicTrade) iTrade).crafttweaker$getPrice()),
+                        IItemStack.ofMutable(((AccessBasicTrade) iTrade).crafttweaker$getPrice2()),
+                        IItemStack.ofMutable(((AccessBasicTrade) iTrade).crafttweaker$getForSale()));
             }
             throw new IllegalArgumentException("Invalid trade passed to trade function! Given: " + iTrade.getClass());
         });

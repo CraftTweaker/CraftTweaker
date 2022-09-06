@@ -2,9 +2,7 @@ package com.blamejared.crafttweaker.api.item;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
-import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.Registry;
 import net.minecraft.world.item.ItemStack;
@@ -78,6 +76,7 @@ public class MCItemStack implements FabricItemStack {
     @Override
     public IItemStack asMutable() {
         
+        // FIXME("EMPTY.asMutable()")
         return new MCItemStackMutable(getInternal());
     }
     
