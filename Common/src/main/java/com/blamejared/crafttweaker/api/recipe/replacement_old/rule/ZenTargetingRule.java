@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.api.recipe.replacement.rule;
+package com.blamejared.crafttweaker.api.recipe.replacement_old.rule;
 
 
 import com.blamejared.crafttweaker.api.recipe.handler.ITargetingRule;

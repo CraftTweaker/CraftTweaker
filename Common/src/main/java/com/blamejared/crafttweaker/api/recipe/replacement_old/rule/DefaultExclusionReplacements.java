@@ -1,8 +1,6 @@
-package com.blamejared.crafttweaker.api.recipe.replacement.rule;
+package com.blamejared.crafttweaker.api.recipe.replacement_old.rule;
 
-import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
-import com.blamejared.crafttweaker.api.recipe.replacement.event.IGatherReplacementExclusionEvent;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipeType;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableSet;
@@ -28,16 +26,17 @@ public final class DefaultExclusionReplacements {
             )
     );
     
-    public static void handleDefaultExclusions(IGatherReplacementExclusionEvent event){
+    public static void handleDefaultExclusions(IGatherReplacementExclusionEvent event) {
+        
         final IRecipeManager<?> manager = event.getTargetedManager();
-    
+        
         if(VANILLA_RECIPE_TYPES.get().contains(manager.getRecipeType())) {
             manager.getAllRecipes()
                     .stream()
                     .filter(Recipe::isSpecial)
                     .forEach(event::addExclusion);
         }
-    
+        
         if(manager.getRecipeType() == ScriptRecipeType.INSTANCE) {
             manager.getAllRecipes()
                     .forEach(event::addExclusion);

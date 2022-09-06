@@ -9,7 +9,7 @@ import com.blamejared.crafttweaker.api.recipe.handler.IReplacementRule;
 import com.blamejared.crafttweaker.api.recipe.handler.ITargetingRule;
 import com.blamejared.crafttweaker.api.recipe.manager.GenericRecipesManager;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
-import com.blamejared.crafttweaker.api.recipe.replacement.rule.SpecificRecipesTargetingRule;
+import com.blamejared.crafttweaker.api.recipe.replacement_old.rule.SpecificRecipesTargetingRule;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
