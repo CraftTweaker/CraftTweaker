@@ -2,13 +2,7 @@ package com.blamejared.crafttweaker.api.data.base;
 
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.data.ByteArrayData;
-import com.blamejared.crafttweaker.api.data.ByteData;
-import com.blamejared.crafttweaker.api.data.IntArrayData;
-import com.blamejared.crafttweaker.api.data.IntData;
-import com.blamejared.crafttweaker.api.data.ListData;
-import com.blamejared.crafttweaker.api.data.LongArrayData;
-import com.blamejared.crafttweaker.api.data.LongData;
+import com.blamejared.crafttweaker.api.data.*;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -37,6 +31,10 @@ public interface ICollectionData extends IData {
      */
     @ZenCodeType.Method
     static ICollectionData getFromMembers(IData... members) {
+        
+        if(members == null || members.length == 0) {
+            return new ListData();
+        }
         
         if(Arrays.stream(members).allMatch(member -> member instanceof ByteData)) {
             byte[] result = new byte[members.length];
