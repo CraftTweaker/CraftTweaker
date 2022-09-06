@@ -81,7 +81,6 @@ public class MutableLoadResult<T> {
             throw new IllegalStateException("Unable to bind a MutableLoadResult twice!");
         }
         this.result = result;
-        //TODO 1.19 confirm
         this.tagMap().replaceAll((key, value) -> new ArrayList<>(value));
     }
     

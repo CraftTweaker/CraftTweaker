@@ -17,7 +17,6 @@ public abstract class ActionKnownTag<T> extends ActionTag<KnownTag<T>, KnownTagM
     
     public Collection<Holder<T>> tag() {
         
-        //TODO 1.19 confirm
         return GenericUtil.uncheck(mcTag().getInternal());
     }
     

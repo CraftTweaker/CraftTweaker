@@ -134,8 +134,6 @@ public class UnknownTagManager implements ITagManager<UnknownTag> {
     @Override
     public <U> void addTag(ResourceLocation id, Collection<Holder<U>> tag) {
     
-    
-        //TODO 1.19 confirm, this used to make the tag contents mutable, but this should only ever be a list we control.
         this.backingResult.addTag(id, GenericUtil.uncheck(tag));
         recalculate();
     }

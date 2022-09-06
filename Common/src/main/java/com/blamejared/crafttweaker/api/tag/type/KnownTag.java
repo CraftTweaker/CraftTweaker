@@ -42,7 +42,6 @@ public class KnownTag<T> implements MCTag, Iterable<T> {
     @Override
     public <U extends Collection<Holder<?>>> U getInternal() {
         
-        //TODO 1.19 confirm
         return GenericUtil.uncheck(manager().getInternal(this));
     }
     
