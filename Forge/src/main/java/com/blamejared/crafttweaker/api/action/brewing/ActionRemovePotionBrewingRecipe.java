@@ -45,7 +45,6 @@ public class ActionRemovePotionBrewingRecipe extends ActionBrewingBase {
                 throw new RuntimeException("Error getting potion from mix: " + mix + "! Please make an issue on the issue tracker!");
             }
             
-            //TODO 1.19 confirm
             if(potionInput.get() == input && potionOutput.get() == output && reagent.test(reagentStack.getInternal())) {
                 removed.add(mix);
                 vanillaIterator.remove();

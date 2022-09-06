@@ -34,7 +34,6 @@ public class ActionRemoveBrewingRecipeByPotionInput extends ActionBrewingBase {
             if(potionInput == null) {
                 throw new RuntimeException("Error getting potion from mix: " + mix + "! Please make an issue on the issue tracker!");
             }
-            //TODO 1.19 confirm
             if(potionInput.get() == input) {
                 removed.add(mix);
                 iterator.remove();
