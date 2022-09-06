@@ -1,7 +1,5 @@
 package com.blamejared.crafttweaker;
 
-import com.blamejared.crafttweaker.api.event.CraftTweakerEvents;
-import com.blamejared.crafttweaker.api.recipe.replacement.rule.DefaultExclusionReplacements;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceManager;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceType;
 import com.blamejared.crafttweaker.platform.Services;
@@ -10,7 +8,6 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
-import net.minecraft.commands.Commands;
 import net.minecraft.world.InteractionResult;
 
 public class CraftTweakerFabric implements ModInitializer {
@@ -39,8 +36,6 @@ public class CraftTweakerFabric implements ModInitializer {
         });
         
         ServerTickEvents.START_WORLD_TICK.register(world -> SequenceManager.tick(SequenceType.SERVER_THREAD_LEVEL));
-        
-        CraftTweakerEvents.GATHER_REPLACEMENT_EXCLUSION_EVENT.register(DefaultExclusionReplacements::handleDefaultExclusions);
         
         CraftTweakerCommon.getPluginManager().broadcastSetupEnd(); // TODO("Another place?")
         

@@ -3,10 +3,8 @@ package com.blamejared.crafttweaker.impl.event;
 import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.action.villager.ActionTradeBase;
-import com.blamejared.crafttweaker.api.event.type.GatherReplacementExclusionEvent;
 import com.blamejared.crafttweaker.api.item.attribute.ItemAttributeModifierBase;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
-import com.blamejared.crafttweaker.api.recipe.replacement.rule.DefaultExclusionReplacements;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceManager;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceType;
 import com.blamejared.crafttweaker.api.villager.CTVillagerTrades;
@@ -41,12 +39,6 @@ public class CTCommonEventHandler {
         if(e.phase == TickEvent.Phase.START) {
             SequenceManager.tick(e.level.isClientSide ? SequenceType.CLIENT_THREAD_LEVEL : SequenceType.SERVER_THREAD_LEVEL);
         }
-    }
-    
-    @SubscribeEvent
-    public static void onGatherReplacementExclusion(GatherReplacementExclusionEvent event) {
-        
-        DefaultExclusionReplacements.handleDefaultExclusions(event);
     }
     
     @SubscribeEvent

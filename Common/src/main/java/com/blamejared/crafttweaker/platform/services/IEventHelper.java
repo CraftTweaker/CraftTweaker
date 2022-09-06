@@ -8,8 +8,6 @@ import com.blamejared.crafttweaker.api.data.visitor.DataToTextComponentVisitor;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.attribute.ItemAttributeModifierBase;
-import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
-import com.blamejared.crafttweaker.api.recipe.replacement.event.IGatherReplacementExclusionEvent;
 import com.blamejared.crafttweaker.api.util.AttributeUtil;
 import com.blamejared.crafttweaker.natives.block.ExpandBlock;
 import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
@@ -33,7 +31,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public interface IEventHelper {
@@ -44,8 +48,6 @@ public interface IEventHelper {
     Set<Player> ENTITY_INFO_PLAYERS = new HashSet<>();
     
     Map<IIngredient, List<Consumer<ItemAttributeModifierBase>>> ATTRIBUTE_MODIFIERS = new HashMap<>();
-    
-    IGatherReplacementExclusionEvent fireGatherReplacementExclusionEvent(final IRecipeManager<?> manager);
     
     default void setBurnTime(IIngredient ingredient, int burnTime, RecipeType<?> type) {
         
