@@ -7,8 +7,8 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @FunctionalInterface
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.recipe.function.RecipeFunctionArray")
-@Document("vanilla/api/recipe/function/RecipeFunctionArray")
+@ZenCodeType.Name("crafttweaker.api.recipe.func.RecipeFunctionArray")
+@Document("vanilla/api/recipe/func/RecipeFunctionArray")
 public interface RecipeFunctionArray {
     
     @ZenCodeType.Method
