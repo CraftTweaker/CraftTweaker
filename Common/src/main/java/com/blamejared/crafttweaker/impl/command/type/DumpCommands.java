@@ -11,6 +11,7 @@ import com.blamejared.crafttweaker.api.villager.CTVillagerTrades;
 import com.blamejared.crafttweaker.impl.command.CtCommands;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.blamejared.crafttweaker.natives.villager.ExpandVillagerProfession;
+import com.blamejared.crafttweaker.natives.world.biome.ExpandBiome;
 import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
@@ -138,6 +139,27 @@ public final class DumpCommands {
                             .forEach(CraftTweakerAPI.LOGGER::info);
                     
                     CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.loot_tables")), CommandUtilities.getFormattedLogFile())
+                            .withStyle(ChatFormatting.GREEN)), player);
+                    
+                    return Command.SINGLE_SUCCESS;
+                })
+        );
+        
+        handler.registerDump(
+                "biomes",
+                Component.translatable("crafttweaker.command.description.dump.biomes"),
+                builder -> builder.executes(context -> {
+                    
+                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    final MinecraftServer server = context.getSource().getServer();
+                    server.registryAccess().registry(Registry.BIOME_REGISTRY).ifPresent(biomes -> {
+                        biomes.stream()
+                                .map(ExpandBiome::getCommandString)
+                                .sorted()
+                                .forEach(CraftTweakerAPI.LOGGER::info);
+                    });
+                    
+                    CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.biomes")), CommandUtilities.getFormattedLogFile())
                             .withStyle(ChatFormatting.GREEN)), player);
                     
                     return Command.SINGLE_SUCCESS;
