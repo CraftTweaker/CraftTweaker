@@ -43,10 +43,43 @@ public interface IData extends Comparable<IData>, Iterable<IData> {
     @ZenCodeType.Method
     static IData listOf(IData... members) {
         
-        if(members == null || members.length == 0) {
+        if(members == null) {
             return new ListData();
         }
-        if(Arrays.stream(members).allMatch(member -> member instanceof ByteData)) {
+        
+        int type = 0;
+        final int byteIndex = 1;
+        final int intIndex = 2;
+        final int longIndex = 4;
+        final int otherIndex = 8;
+        
+        for(IData member : members) {
+            if(member instanceof ByteData) {
+                type |= byteIndex;
+            } else if(member instanceof IntData || member instanceof ShortData) {
+                type |= intIndex;
+            } else if(member instanceof LongData) {
+                type |= longIndex;
+            } else {
+                type |= otherIndex;
+            }
+        }
+        
+        if((type & otherIndex) != 0) {
+            return new ListData(members);
+        } else if((type & longIndex) != 0) {
+            long[] result = new long[members.length];
+            for(int i = 0; i < members.length; i++) {
+                result[i] = members[i].asLong();
+            }
+            return new LongArrayData(result);
+        } else if((type & intIndex) != 0) {
+            int[] result = new int[members.length];
+            for(int i = 0; i < members.length; i++) {
+                result[i] = members[i].asInt();
+            }
+            return new IntArrayData(result);
+        } else if((type & byteIndex) != 0) {
             byte[] result = new byte[members.length];
             for(int i = 0; i < members.length; i++) {
                 result[i] = members[i].asByte();
@@ -54,25 +87,7 @@ public interface IData extends Comparable<IData>, Iterable<IData> {
             return new ByteArrayData(result);
         }
         
-        if(Arrays.stream(members)
-                .allMatch(member -> member instanceof ByteData || member instanceof ShortData || member instanceof IntData)) {
-            int[] result = new int[members.length];
-            for(int i = 0; i < members.length; i++) {
-                result[i] = members[i].asInt();
-            }
-            return new IntArrayData(result);
-        }
-        
-        if(Arrays.stream(members)
-                .allMatch(member -> member instanceof ByteData || member instanceof ShortData || member instanceof IntData || member instanceof LongData)) {
-            long[] result = new long[members.length];
-            for(int i = 0; i < members.length; i++) {
-                result[i] = members[i].asLong();
-            }
-            return new LongArrayData(result);
-        }
-        
-        return new ListData(members);
+        return new ListData();
     }
     
     
