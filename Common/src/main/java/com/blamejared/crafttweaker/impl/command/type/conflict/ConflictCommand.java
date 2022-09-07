@@ -51,12 +51,11 @@ public final class ConflictCommand {
                 Component.translatable("crafttweaker.command.description.conflicts"),
                 builder ->
                         builder
-                                //TODO 1.19
-//                                .then(Commands.argument("type", RecipeTypeArgument.get())
-//                                        .executes(context -> conflicts(
-//                                                context.getSource().getPlayerOrException(),
-//                                                DescriptiveFilter.of(context.getArgument("type", IRecipeManager.class))
-//                                        )))
+                                .then(Commands.argument("type", RecipeTypeArgument.get())
+                                        .executes(context -> conflicts(
+                                                context.getSource().getPlayerOrException(),
+                                                DescriptiveFilter.of(context.getArgument("type", IRecipeManager.class))
+                                        )))
                                 .then(Commands.literal("hand")
                                         .executes(context -> ifNotEmpty(
                                                 context,

@@ -71,11 +71,6 @@ public class CraftTweakerCommon {
         CtCommands.get().registerCommandsTo(dispatcher, environment);
     }
     
-    public static void registerCommandArguments() {
-        //TODO 1.19
-        //        ArgumentTypes.register(CraftTweakerConstants.MOD_ID + ":recipe_type", RecipeTypeArgument.class, new EmptyArgumentSerializer<>(RecipeTypeArgument::get));
-        //        ArgumentTypes.register(CraftTweakerConstants.MOD_ID + ":item", IItemStackArgument.class, new EmptyArgumentSerializer<>(IItemStackArgument::get));
-    }
     
     public static Set<String> getPatronList() {
         

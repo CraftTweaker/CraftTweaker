@@ -2,26 +2,18 @@ package com.blamejared.crafttweaker.platform;
 
 import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
+import com.blamejared.crafttweaker.api.command.argument.IItemStackArgument;
+import com.blamejared.crafttweaker.api.command.argument.RecipeTypeArgument;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.condition.serializer.ConditionAnyDamagedSerializer;
 import com.blamejared.crafttweaker.api.ingredient.condition.serializer.ConditionCustomSerializer;
 import com.blamejared.crafttweaker.api.ingredient.condition.serializer.ConditionDamagedSerializer;
-import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientAnySerializer;
-import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientConditionedSerializer;
-import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientListSerializer;
-import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientPartialTagSerializer;
-import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientTransformedSerializer;
+import com.blamejared.crafttweaker.api.ingredient.serializer.*;
 import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformCustomSerializer;
 import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformDamageSerializer;
 import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformReplaceSerializer;
 import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformerReuseSerializer;
-import com.blamejared.crafttweaker.api.ingredient.type.IIngredientConditioned;
-import com.blamejared.crafttweaker.api.ingredient.type.IIngredientTransformed;
-import com.blamejared.crafttweaker.api.ingredient.type.IngredientAny;
-import com.blamejared.crafttweaker.api.ingredient.type.IngredientConditioned;
-import com.blamejared.crafttweaker.api.ingredient.type.IngredientList;
-import com.blamejared.crafttweaker.api.ingredient.type.IngredientPartialTag;
-import com.blamejared.crafttweaker.api.ingredient.type.IngredientTransformed;
+import com.blamejared.crafttweaker.api.ingredient.type.*;
 import com.blamejared.crafttweaker.api.recipe.serializer.CTShapedRecipeSerializer;
 import com.blamejared.crafttweaker.api.recipe.serializer.CTShapelessRecipeSerializer;
 import com.blamejared.crafttweaker.api.recipe.serializer.ICTShapedRecipeBaseSerializer;
@@ -30,11 +22,12 @@ import com.blamejared.crafttweaker.impl.script.ScriptRecipeType;
 import com.blamejared.crafttweaker.impl.script.ScriptSerializer;
 import com.blamejared.crafttweaker.platform.services.IRegistryHelper;
 import com.faux.ingredientextension.api.ingredient.IngredientHelper;
+import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
+import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.List;
 
@@ -68,6 +61,9 @@ public class FabricRegistryHelper implements IRegistryHelper {
         Registry.register(IngredientHelper.INGREDIENT_SERIALIZER_REGISTRY, CraftTweakerConstants.rl("conditioned"), IngredientConditionedSerializer.INSTANCE);
         Registry.register(IngredientHelper.INGREDIENT_SERIALIZER_REGISTRY, CraftTweakerConstants.rl("transformed"), IngredientTransformedSerializer.INSTANCE);
         Registry.register(IngredientHelper.INGREDIENT_SERIALIZER_REGISTRY, CraftTweakerConstants.rl("partial_tag"), IngredientPartialTagSerializer.INSTANCE);
+        
+        ArgumentTypeRegistry.registerArgumentType(RecipeTypeArgument.ID, RecipeTypeArgument.class, SingletonArgumentInfo.contextFree(RecipeTypeArgument::get));
+        ArgumentTypeRegistry.registerArgumentType(IItemStackArgument.ID, IItemStackArgument.class, SingletonArgumentInfo.contextFree(IItemStackArgument::get));
     }
     
     @Override

@@ -26,7 +26,6 @@ public class CraftTweakerForge {
     private void setup(final FMLCommonSetupEvent event) {
         
         CraftTweakerCommon.loadInitScripts();
-        event.enqueueWork(CraftTweakerCommon::registerCommandArguments);
     }
     
 }

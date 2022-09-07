@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.api.command.argument;
 
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.google.common.collect.Lists;
@@ -13,6 +14,8 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.synchronization.ArgumentTypeInfo;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
@@ -20,6 +23,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RecipeTypeArgument implements ArgumentType<IRecipeManager> {
+    
+    public static final ResourceLocation ID = CraftTweakerConstants.rl("recipe_type");
     
     private static final Collection<String> EXAMPLES = Lists.newArrayList("<recipetype:minecraft:crafting>", "<recipetype:minecraft:blasting>");
     private static final SimpleCommandExceptionType INVALID_STRING = new SimpleCommandExceptionType(new LiteralMessage("Invalid String"));

@@ -2,26 +2,18 @@ package com.blamejared.crafttweaker.platform;
 
 import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
+import com.blamejared.crafttweaker.api.command.argument.IItemStackArgument;
+import com.blamejared.crafttweaker.api.command.argument.RecipeTypeArgument;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.condition.serializer.ConditionAnyDamagedSerializer;
 import com.blamejared.crafttweaker.api.ingredient.condition.serializer.ConditionCustomSerializer;
 import com.blamejared.crafttweaker.api.ingredient.condition.serializer.ConditionDamagedSerializer;
-import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientAnySerializer;
-import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientConditionedSerializer;
-import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientListSerializer;
-import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientPartialTagSerializer;
-import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientTransformedSerializer;
+import com.blamejared.crafttweaker.api.ingredient.serializer.*;
 import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformCustomSerializer;
 import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformDamageSerializer;
 import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformReplaceSerializer;
 import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformerReuseSerializer;
-import com.blamejared.crafttweaker.api.ingredient.type.IIngredientConditioned;
-import com.blamejared.crafttweaker.api.ingredient.type.IIngredientTransformed;
-import com.blamejared.crafttweaker.api.ingredient.type.IngredientAny;
-import com.blamejared.crafttweaker.api.ingredient.type.IngredientConditioned;
-import com.blamejared.crafttweaker.api.ingredient.type.IngredientList;
-import com.blamejared.crafttweaker.api.ingredient.type.IngredientPartialTag;
-import com.blamejared.crafttweaker.api.ingredient.type.IngredientTransformed;
+import com.blamejared.crafttweaker.api.ingredient.type.*;
 import com.blamejared.crafttweaker.api.recipe.serializer.CTShapedRecipeSerializer;
 import com.blamejared.crafttweaker.api.recipe.serializer.CTShapelessRecipeSerializer;
 import com.blamejared.crafttweaker.api.recipe.serializer.ICTShapedRecipeBaseSerializer;
@@ -30,6 +22,8 @@ import com.blamejared.crafttweaker.impl.loot.LootTableIdRegexCondition;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipeType;
 import com.blamejared.crafttweaker.impl.script.ScriptSerializer;
 import com.blamejared.crafttweaker.platform.services.IRegistryHelper;
+import net.minecraft.commands.synchronization.ArgumentTypeInfos;
+import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -82,7 +76,11 @@ public class ForgeRegistryHelper implements IRegistryHelper {
                 event.register(Registry.RECIPE_TYPE_REGISTRY, helper -> {
                     helper.register(ScriptRecipeType.INSTANCE.id(), ScriptRecipeType.INSTANCE);
                 });
-                
+            } else if(Registry.COMMAND_ARGUMENT_TYPE_REGISTRY.equals(event.getRegistryKey())) {
+                event.register(Registry.COMMAND_ARGUMENT_TYPE_REGISTRY, helper -> {
+                    helper.register(RecipeTypeArgument.ID, ArgumentTypeInfos.registerByClass(RecipeTypeArgument.class, SingletonArgumentInfo.contextFree(RecipeTypeArgument::get)));
+                    helper.register(IItemStackArgument.ID, ArgumentTypeInfos.registerByClass(IItemStackArgument.class, SingletonArgumentInfo.contextFree(IItemStackArgument::get)));
+                });
             }
         });
         

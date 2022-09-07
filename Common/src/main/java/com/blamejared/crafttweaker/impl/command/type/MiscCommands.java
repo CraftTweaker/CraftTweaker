@@ -25,19 +25,18 @@ public final class MiscCommands {
     
     public static void registerCommands(final ICommandRegistrationHandler handler) {
         
-        //TODO 1.19
-//        handler.registerRootCommand(
-//                "give",
-//                Component.translatable("crafttweaker.command.description.give"),
-//                builder -> builder.requires((source) -> source.hasPermission(2)) // TODO("Permission API")
-//                        .then(Commands.argument("item", IItemStackArgument.get())
-//                                .executes(context -> {
-//                                    ExpandPlayer.give(context.getSource()
-//                                            .getPlayerOrException(), context.getArgument("item", IItemStack.class), -1);
-//                                    return Command.SINGLE_SUCCESS;
-//                                })
-//                        )
-//        );
+        handler.registerRootCommand(
+                "give",
+                Component.translatable("crafttweaker.command.description.give"),
+                builder -> builder.requires((source) -> source.hasPermission(2)) // TODO("Permission API")
+                        .then(Commands.argument("item", IItemStackArgument.get())
+                                .executes(context -> {
+                                    ExpandPlayer.give(context.getSource()
+                                            .getPlayerOrException(), context.getArgument("item", IItemStack.class), -1);
+                                    return Command.SINGLE_SUCCESS;
+                                })
+                        )
+        );
         
         handler.registerRootCommand(
                 "reload",

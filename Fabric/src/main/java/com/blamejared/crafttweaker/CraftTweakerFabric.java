@@ -21,9 +21,6 @@ public class CraftTweakerFabric implements ModInitializer {
         CraftTweakerCommon.init();
         CraftTweakerCommon.getPluginManager().loadPlugins();
         
-        // TODO("Will be removed")
-        CraftTweakerCommon.registerCommandArguments();
-        
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             CraftTweakerCommon.registerCommands(dispatcher, environment);
         });
