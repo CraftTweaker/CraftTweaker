@@ -11,6 +11,7 @@ import com.blamejared.crafttweaker.api.villager.CTVillagerTrades;
 import com.blamejared.crafttweaker.impl.command.CtCommands;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.blamejared.crafttweaker.natives.villager.ExpandVillagerProfession;
+import com.blamejared.crafttweaker.natives.world.biome.ExpandBiome;
 import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
@@ -27,12 +28,7 @@ import net.minecraft.world.entity.npc.VillagerTrades;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public final class DumpCommands {
     
@@ -144,6 +140,27 @@ public final class DumpCommands {
                     return Command.SINGLE_SUCCESS;
                 })
         );
+        
+        handler.registerDump(
+                "biomes",
+                new TranslatableComponent("crafttweaker.command.description.dump.biomes"),
+                builder -> builder.executes(context -> {
+                    
+                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    final MinecraftServer server = context.getSource().getServer();
+                    server.registryAccess().registry(Registry.BIOME_REGISTRY).ifPresent(biomes -> {
+                        biomes.stream()
+                                .map(ExpandBiome::getCommandString)
+                                .sorted()
+                                .forEach(CraftTweakerAPI.LOGGER::info);
+                    });
+                    
+                    CommandUtilities.send(CommandUtilities.openingLogFile(new TranslatableComponent("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(new TranslatableComponent("crafttweaker.command.misc.biomes")), CommandUtilities.getFormattedLogFile()).withStyle(ChatFormatting.GREEN)), player);
+                    
+                    return Command.SINGLE_SUCCESS;
+                })
+        );
+        
         
         //TODO Forge specific
         //        CTCommands.registerPlayerDump("fake_players", "Outputs the data for all currently available fake players", (player, stack) -> {
