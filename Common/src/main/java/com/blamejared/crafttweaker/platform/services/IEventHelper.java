@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.platform.services;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.command.CommandUtilities;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.visitor.DataToTextComponentVisitor;
@@ -10,6 +11,8 @@ import com.blamejared.crafttweaker.api.item.attribute.ItemAttributeModifierBase;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.replacement.event.IGatherReplacementExclusionEvent;
 import com.blamejared.crafttweaker.api.util.AttributeUtil;
+import com.blamejared.crafttweaker.natives.block.ExpandBlock;
+import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
 import com.blamejared.crafttweaker.natives.entity.ExpandEntity;
 import com.blamejared.crafttweaker.natives.entity.ExpandEntityType;
 import com.blamejared.crafttweaker.natives.entity.type.player.ExpandPlayer;
@@ -18,7 +21,6 @@ import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -99,12 +101,20 @@ public interface IEventHelper {
         if(BLOCK_INFO_PLAYERS.contains(player)) {
             if(!world.isClientSide() && hand == InteractionHand.MAIN_HAND) {
                 BlockState state = world.getBlockState(pos);
-                sendAndLog(player, Component.translatable("crafttweaker.command.info.block.name", Registry.BLOCK.getKey(state.getBlock())));
+                String blockCS = ExpandBlock.getCommandString(state.getBlock());
+                String blockStateCS = ExpandBlockState.getCommandString(state);
+                CommandUtilities.sendCopying(Component.translatable("crafttweaker.command.misc.block")
+                        .append(": ")
+                        .append(Component.literal(blockCS).withStyle(ChatFormatting.GREEN)), blockCS, player);
+                CommandUtilities.sendCopying(Component.translatable("crafttweaker.command.misc.blockstate")
+                        .append(": ")
+                        .append(Component.literal(blockStateCS).withStyle(ChatFormatting.GREEN)), blockStateCS, player);
+                
                 if(!state.getProperties().isEmpty()) {
                     
                     sendAndLog(player, Component.translatable("crafttweaker.command.info.block.properties"));
                     state.getProperties()
-                            .forEach(property -> sendAndLog(player, Component.literal(property.getName())
+                            .forEach(property -> sendAndLog(player, Component.literal("    ").append(property.getName())
                                     .withStyle(ChatFormatting.YELLOW)
                                     .append(Component.literal(": ").withStyle(ChatFormatting.WHITE))
                                     .append(Component.literal(state.getValue(property)
