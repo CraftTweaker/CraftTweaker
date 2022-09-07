@@ -16,23 +16,27 @@ final class RecipeLongIterator implements PrimitiveIterator.OfLong {
         this.size = size;
         this.currentLeft = 0;
         this.currentRight = this.currentLeft + 1;
-        this.kill = false;
+        this.kill = size <= 1;
     }
     
     @Override
     public long nextLong() {
-        
-        if (this.kill) throw new NoSuchElementException();
+    
+        if(this.kill) {
+            throw new NoSuchElementException();
+        }
         
         final long current = make(this.currentLeft, this.currentRight);
         
         ++this.currentRight;
         
-        if (this.currentRight >= this.size) {
+        if(this.currentRight >= this.size) {
             
             ++this.currentLeft;
-            
-            if (this.currentLeft >= this.size - 1) this.kill = true;
+    
+            if(this.currentLeft >= this.size - 1) {
+                this.kill = true;
+            }
             
             this.currentRight = this.currentLeft + 1;
         }
@@ -65,4 +69,5 @@ final class RecipeLongIterator implements PrimitiveIterator.OfLong {
         
         return (int) val;
     }
+    
 }
