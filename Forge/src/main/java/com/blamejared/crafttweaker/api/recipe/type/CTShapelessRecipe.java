@@ -2,7 +2,7 @@ package com.blamejared.crafttweaker.api.recipe.type;
 
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.api.recipe.function.RecipeFunctionArray;
+import com.blamejared.crafttweaker.api.recipe.func.RecipeFunctionArray;
 import javax.annotation.Nullable;
 
 public class CTShapelessRecipe extends CTShapelessRecipeBase {

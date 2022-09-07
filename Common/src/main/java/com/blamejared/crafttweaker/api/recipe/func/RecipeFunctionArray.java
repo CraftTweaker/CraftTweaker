@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.api.recipe.function;
+package com.blamejared.crafttweaker.api.recipe.func;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
@@ -7,11 +7,11 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @FunctionalInterface
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.recipe.function.RecipeFunctionSingle")
-@Document("vanilla/api/recipe/function/RecipeFunctionSingle")
-public interface RecipeFunctionSingle {
+@ZenCodeType.Name("crafttweaker.api.recipe.func.RecipeFunctionArray")
+@Document("vanilla/api/recipe/func/RecipeFunctionArray")
+public interface RecipeFunctionArray {
     
     @ZenCodeType.Method
-    IItemStack process(IItemStack usualOut, IItemStack inputs);
+    IItemStack process(IItemStack usualOut, IItemStack[] inputs);
     
 }

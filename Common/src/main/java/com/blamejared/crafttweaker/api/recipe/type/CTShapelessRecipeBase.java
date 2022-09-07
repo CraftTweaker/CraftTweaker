@@ -4,7 +4,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.api.recipe.function.RecipeFunctionArray;
+import com.blamejared.crafttweaker.api.recipe.func.RecipeFunctionArray;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
