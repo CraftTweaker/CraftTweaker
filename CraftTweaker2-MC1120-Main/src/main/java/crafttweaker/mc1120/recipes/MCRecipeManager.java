@@ -263,6 +263,15 @@ public final class MCRecipeManager implements IRecipeManager {
     }
 
     @Override
+    public void removeByInput(IIngredient input) {
+        if (input == null) {
+            CraftTweakerAPI.logError("Cannot remove recipes for a null item!");
+            return;
+        }
+        recipesToRemove.add(new ActionRemoveRecipesByInput(input));
+    }
+
+    @Override
     public IItemStack craft(IItemStack[][] contents) {
         Container container = new ContainerVirtual();
 
@@ -550,6 +559,8 @@ public final class MCRecipeManager implements IRecipeManager {
                     } else {
                         toRemove.add(recipe.getKey());
                     }
+                    // No recipes with the same name
+                    break;
                 }
             }
 
@@ -654,6 +665,34 @@ public final class MCRecipeManager implements IRecipeManager {
         @Override
         public String describe() {
             return "Removing all crafting recipes";
+        }
+    }
+
+    public static class ActionRemoveRecipesByInput extends ActionBaseRemoveRecipes {
+
+        private final IIngredient ingredient;
+
+        public ActionRemoveRecipesByInput(IIngredient ingredient) {
+            this.ingredient = ingredient;
+        }
+
+        @Override
+        public void apply() {
+            List<ResourceLocation> toRemove = new ArrayList<>();
+            for (Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
+                for (Ingredient ingredient : recipe.getValue().getIngredients()) {
+                    if (matches(ingredient, this.ingredient)) {
+                        toRemove.add(recipe.getKey());
+                        break;
+                    }
+                }
+            }
+            super.removeRecipes(toRemove);
+        }
+
+        @Override
+        public String describe() {
+            return "Removing recipes for " + this.ingredient + " input";
         }
     }
 

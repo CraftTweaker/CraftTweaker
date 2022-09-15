@@ -175,6 +175,14 @@ public interface IRecipeManager {
      */
     @ZenMethod
     void removeShapeless(IIngredient output, @Optional IIngredient[] ingredients, @Optional boolean wildcard);
+
+    /**
+     * Remove all recipes that contain specified ingredient as input
+     *
+     * @param input The input ingredient
+     */
+    @ZenMethod
+    void removeByInput(IIngredient input);
     
     /**
      * Performs a crafting with the specified ingredients. Returns null if no
