@@ -24,7 +24,50 @@ public class IIngredientList implements IIngredient {
     @ZenCodeType.Constructor
     public IIngredientList(IIngredient[] ingredients) {
         
-        this.ingredients = ingredients;
+        this.ingredients = flatten(ingredients);
+    }
+    
+    private static IIngredient[] flatten(final IIngredient[] ingredients) {
+        
+        if(ingredients.length < 2) {
+            return ingredients; // why even have a list?
+        }
+        
+        // Acts as buffer: same length as a rough guess
+        IIngredient[] result = new IIngredient[ingredients.length];
+        int actualLength = 0;
+        
+        for(final IIngredient ingredient : ingredients) {
+            if(ingredient instanceof IIngredientList list) {
+                final IIngredient[] within = list.ingredients; // Flattened by default
+                final int length = actualLength + within.length;
+                
+                if(length == actualLength) {
+                    continue;
+                }
+                
+                if(length > result.length) {
+                    result = Arrays.copyOf(result, length);
+                }
+                
+                System.arraycopy(within, 0, result, actualLength, within.length);
+                actualLength = length;
+                
+                continue;
+            }
+            
+            if(ingredient.isEmpty()) {
+                continue;
+            }
+            
+            result[actualLength++] = ingredient;
+            
+            if(actualLength == result.length) {
+                result = Arrays.copyOf(result, actualLength * 3 / 2);
+            }
+        }
+        
+        return Arrays.copyOf(result, actualLength);
     }
     
     @Override
@@ -43,6 +86,14 @@ public class IIngredientList implements IIngredient {
             }
         }
         return false;
+    }
+    
+    @Override
+    public IIngredientList or(final IIngredient other) {
+        
+        final IIngredient[] newArray = Arrays.copyOf(this.ingredients, this.ingredients.length + 1);
+        newArray[this.ingredients.length] = other;
+        return new IIngredientList(newArray);
     }
     
     @Override
@@ -92,6 +143,12 @@ public class IIngredientList implements IIngredient {
     public int hashCode() {
         
         return Arrays.hashCode(ingredients);
+    }
+    
+    @Override
+    public String toString() {
+        
+        return this.getCommandString();
     }
     
 }
