@@ -65,7 +65,7 @@ public final class ActionBatchReplacement implements IRuntimeAction {
         return Stream.concat(this.registry.filters().stream(), this.targetingRules.stream())
                 .reduce((a, b) -> it -> b.castFilter(a.castFilter(it)))
                 .map(it -> it.castFilter(recipeStream))
-                .orElseThrow(() -> new IllegalStateException("No targeting rules?"));
+                .orElseGet(() -> GenericUtil.uncheck(recipeStream));
     }
     
     private <C extends Container, T extends Recipe<C>> void replace(final T recipe) {
