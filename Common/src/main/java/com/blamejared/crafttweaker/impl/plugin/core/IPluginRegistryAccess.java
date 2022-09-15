@@ -2,7 +2,10 @@ package com.blamejared.crafttweaker.impl.plugin.core;
 
 import com.blamejared.crafttweaker.api.natives.NativeTypeInfo;
 import com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler;
+import com.blamejared.crafttweaker.api.recipe.component.IRecipeComponent;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
+import com.blamejared.crafttweaker.api.recipe.replacement.ITargetingFilter;
+import com.blamejared.crafttweaker.api.recipe.replacement.ITargetingStrategy;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.manager.TagManagerFactory;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
@@ -44,7 +47,13 @@ public interface IPluginRegistryAccess {
     
     <T, U extends ITagManager<?>> void registerTaggableElementManager(final ResourceKey<T> key, final TagManagerFactory<T, U> factory);
     
+    void registerComponents(final Collection<IRecipeComponent<?>> components);
+    
     <T extends Recipe<?>> void registerHandler(final Class<? extends T> clazz, final IRecipeHandler<T> handler);
+    
+    void registerTargetingFilters(final Collection<ITargetingFilter> filters);
+    
+    void registerTargetingStrategy(final ResourceLocation id, final ITargetingStrategy strategy);
     
     void applyInheritanceRules();
     

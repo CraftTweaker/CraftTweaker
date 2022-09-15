@@ -69,6 +69,17 @@ public interface ICraftTweakerPlugin {
     default void registerBracketParsers(final IBracketParserRegistrationHandler handler) {}
     
     /**
+     * Manages the registration of {@link com.blamejared.crafttweaker.api.recipe.component.IRecipeComponent}s.
+     *
+     * @param handler The handler responsible for registration.
+     *
+     * @see IRecipeComponentRegistrationHandler
+     * @see com.blamejared.crafttweaker.api.recipe.component.IRecipeComponent
+     * @since 10.0
+     */
+    default void registerRecipeComponents(final IRecipeComponentRegistrationHandler handler) {}
+    
+    /**
      * Manages the registration of {@link com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler}s.
      *
      * @param handler The handler responsible for registration.
@@ -128,5 +139,15 @@ public interface ICraftTweakerPlugin {
      * @since 9.1.0
      */
     default void registerTaggableElements(final ITaggableElementRegistrationHandler handler) {}
+    
+    /**
+     * Manages the registration of components tied to the {@link Replacer} system in CraftTweaker.
+     *
+     * @param handler The handler responsible for registration
+     *
+     * @see IReplacerComponentRegistrationHandler
+     * @since 10.0
+     */
+    default void registerReplacerComponents(final IReplacerComponentRegistrationHandler handler) {}
     
 }

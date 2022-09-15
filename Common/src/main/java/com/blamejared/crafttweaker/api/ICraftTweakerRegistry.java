@@ -1,7 +1,9 @@
 package com.blamejared.crafttweaker.api;
 
 import com.blamejared.crafttweaker.api.command.type.IBracketDumperInfo;
+import com.blamejared.crafttweaker.api.recipe.component.IRecipeComponent;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
+import com.blamejared.crafttweaker.api.recipe.replacement.IReplacerRegistry;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.manager.TagManagerFactory;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
@@ -153,13 +155,33 @@ public interface ICraftTweakerRegistry {
      * Obtains the {@link IRecipeHandler} responsible for the given recipe class.
      *
      * @param recipeClazz The recipe class whose handler should be identified.
-     * @param <T>    The type of the recipe whose handler should be identified.
+     * @param <T>         The type of the recipe whose handler should be identified.
      *
      * @return A {@link IRecipeHandler} that is able to deal with the given recipe class.
      *
      * @since 9.1.117
      */
     <T extends Recipe<?>> IRecipeHandler<T> getRecipeHandlerFor(final Class<T> recipeClazz);
+    
+    /**
+     * Obtains the {@link IRecipeComponent} with the given id, if available.
+     *
+     * <p>This method can be called only after all registries have been successfully built: attempting to call this
+     * method before that might lead to undefined behavior.</p>
+     *
+     * <p>Take note that all recipe components have a type associated with them. This query does not attempt to verify
+     * that the component with the given id does reflect the type specified in the type parameter. Care must be taken by
+     * the caller of this method to ensure correctness.</p>
+     *
+     * @param id  The name id of the recipe component.
+     * @param <T> The type associated with the {@link IRecipeComponent}.
+     *
+     * @return The {@link IRecipeComponent} with the given name, if available.
+     *
+     * @throws IllegalArgumentException If the name does not identify a valid recipe component.
+     * @since 10.0
+     */
+    <T> IRecipeComponent<T> findRecipeComponent(final ResourceLocation id);
     
     /**
      * Obtains the enumeration constant that corresponds to the given {@link IScriptLoader}, id, and value as if it were
@@ -228,5 +250,7 @@ public interface ICraftTweakerRegistry {
      * @since 9.1.0
      */
     Set<String> getAllEnumStringsForEnumBracket(final IScriptLoader loader);
+    
+    IReplacerRegistry getReplacerRegistry();
     
 }

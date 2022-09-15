@@ -6,7 +6,9 @@ import com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin;
 import com.blamejared.crafttweaker.api.plugin.IJavaNativeIntegrationRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IListenerRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ILoaderRegistrationHandler;
+import com.blamejared.crafttweaker.api.plugin.IRecipeComponentRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IRecipeHandlerRegistrationHandler;
+import com.blamejared.crafttweaker.api.plugin.IReplacerComponentRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IScriptLoadSourceRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IScriptRunModuleConfiguratorRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ITaggableElementRegistrationHandler;
@@ -46,6 +48,12 @@ record DecoratedCraftTweakerPlugin(ResourceLocation id, ICraftTweakerPlugin plug
     }
     
     @Override
+    public void registerRecipeComponents(final IRecipeComponentRegistrationHandler handler) {
+        
+        this.plugin().registerRecipeComponents(handler);
+    }
+    
+    @Override
     public void registerRecipeHandlers(final IRecipeHandlerRegistrationHandler handler) {
         
         this.plugin().registerRecipeHandlers(handler);
@@ -76,9 +84,15 @@ record DecoratedCraftTweakerPlugin(ResourceLocation id, ICraftTweakerPlugin plug
     }
     
     @Override
-    public void registerTaggableElements(ITaggableElementRegistrationHandler handler) {
+    public void registerTaggableElements(final ITaggableElementRegistrationHandler handler) {
         
         this.plugin.registerTaggableElements(handler);
+    }
+    
+    @Override
+    public void registerReplacerComponents(final IReplacerComponentRegistrationHandler handler) {
+        
+        this.plugin().registerReplacerComponents(handler);
     }
     
     @Override

@@ -136,14 +136,14 @@ public final class ReplacementHandlerHelper {
      * out on one or more of its ingredients; {@link Optional#empty()} otherwise.
      */
     public static <T extends Recipe<?>, U> Optional<Function<ResourceLocation, T>> replaceIngredientList(final List<U> originalIngredients, final Class<U> ingredientClass,
-                                                                                                          final T recipe, final List<IReplacementRule> rules,
-                                                                                                          final Function<List<U>, Function<ResourceLocation, T>> factory) {
+                                                                                                         final T recipe, final List<IReplacementRule> rules,
+                                                                                                         final Function<List<U>, Function<ResourceLocation, T>> factory) {
         
         final ReplacementMap<U> replacements = IntStream.range(0, originalIngredients.size())
                 .mapToObj(i -> Pair.of(i, IRecipeHandler.attemptReplacing(originalIngredients.get(i), ingredientClass, recipe, rules)))
                 .filter(it -> it.getSecond().isPresent())
                 .collect(ReplacementMap::new, ReplacementMap::put, ReplacementMap::merge);
-    
+        
         if(replacements.isEmpty()) {
             return Optional.empty();
         }
@@ -180,14 +180,14 @@ public final class ReplacementHandlerHelper {
      * out on one or more of its ingredients; {@link Optional#empty()} otherwise.
      */
     public static <T extends Recipe<?>, U> Optional<Function<ResourceLocation, T>> replaceIngredientArray(final U[] originalIngredients, final Class<U> ingredientClass,
-                                                                                                           final T recipe, final List<IReplacementRule> rules,
-                                                                                                           final Function<U[], Function<ResourceLocation, T>> factory) {
+                                                                                                          final T recipe, final List<IReplacementRule> rules,
+                                                                                                          final Function<U[], Function<ResourceLocation, T>> factory) {
         
         final ReplacementMap<U> replacements = IntStream.range(0, originalIngredients.length)
                 .mapToObj(i -> Pair.of(i, IRecipeHandler.attemptReplacing(originalIngredients[i], ingredientClass, recipe, rules)))
                 .filter(it -> it.getSecond().isPresent())
                 .collect(ReplacementMap::new, ReplacementMap::put, ReplacementMap::merge);
-    
+        
         if(replacements.isEmpty()) {
             return Optional.empty();
         }

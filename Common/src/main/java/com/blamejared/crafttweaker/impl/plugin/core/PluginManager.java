@@ -211,6 +211,11 @@ public final class PluginManager {
     private void handleAdditionalRegistration(final IPluginRegistryAccess access) {
         
         this.verifying(
+                "registering recipe components",
+                () -> access.registerComponents(RecipeComponentRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerRecipeComponents)))
+        );
+        
+        this.verifying(
                 "registering recipe handlers",
                 () -> RecipeHandlerRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerRecipeHandlers))
                         .forEach(it -> access.registerHandler(GenericUtil.uncheck(it.recipeClass()), it.handler()))
@@ -224,6 +229,11 @@ public final class PluginManager {
         this.verifying(
                 "registering commands",
                 () -> CommandRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerCommands))
+        );
+        
+        this.verifying(
+                "registering recipe replacement components",
+                () -> this.manageReplacerRegistration(access, ReplacerComponentsRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::registerReplacerComponents)))
         );
     }
     
@@ -287,6 +297,12 @@ public final class PluginManager {
                         access.registerEnum(loaderFinder.apply(it.loader()), it.id(), GenericUtil.uncheck(it.enumClass()))
                 )
         );
+    }
+    
+    private void manageReplacerRegistration(final IPluginRegistryAccess access, final ReplacerComponentsRegistrationHandler handler) {
+        
+        access.registerTargetingFilters(handler.filters());
+        handler.strategies().forEach(access::registerTargetingStrategy);
     }
     
     private void verifying(final String what, final Runnable block) {

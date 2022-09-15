@@ -1,8 +1,6 @@
 package com.blamejared.crafttweaker.impl.plugin.crafttweaker;
 
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
-import com.blamejared.crafttweaker.api.bracket.BracketHandlers;
-import com.blamejared.crafttweaker.api.bracket.ResourceLocationBracketHandler;
 import com.blamejared.crafttweaker.api.bracket.custom.EnumConstantBracketHandler;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.bracket.custom.TagBracketHandler;
@@ -14,11 +12,15 @@ import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin;
 import com.blamejared.crafttweaker.api.plugin.IJavaNativeIntegrationRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ILoaderRegistrationHandler;
+import com.blamejared.crafttweaker.api.plugin.IRecipeComponentRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IRecipeHandlerRegistrationHandler;
+import com.blamejared.crafttweaker.api.plugin.IReplacerComponentRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IScriptLoadSourceRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IScriptRunModuleConfiguratorRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ITaggableElementRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IVillagerTradeRegistrationHandler;
+import com.blamejared.crafttweaker.api.recipe.component.BuiltinRecipeComponents;
+import com.blamejared.crafttweaker.api.recipe.replacement.ITargetingStrategy;
 import com.blamejared.crafttweaker.api.villager.CTTradeObject;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
 import com.blamejared.crafttweaker.impl.command.type.DumpCommands;
@@ -30,13 +32,14 @@ import com.blamejared.crafttweaker.impl.command.type.RecipeCommands;
 import com.blamejared.crafttweaker.impl.command.type.conflict.ConflictCommand;
 import com.blamejared.crafttweaker.impl.command.type.script.ScriptCommands;
 import com.blamejared.crafttweaker.impl.command.type.script.example.ExamplesCommand;
+import com.blamejared.crafttweaker.impl.recipe.replacement.DefaultTargetingFilters;
+import com.blamejared.crafttweaker.impl.recipe.replacement.DefaultTargetingStrategies;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessDyedArmorForEmeralds;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessEmeraldForItems;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessEnchantedItemForEmeralds;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessItemsAndEmeraldsToItems;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessItemsForEmeralds;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessTippedArrowForItemsAndEmeralds;
-import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -114,6 +117,13 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
     }
     
     @Override
+    public void registerRecipeComponents(final IRecipeComponentRegistrationHandler handler) {
+        
+        handler.registerRecipeComponent(BuiltinRecipeComponents.INPUT_INGREDIENT);
+        handler.registerRecipeComponent(BuiltinRecipeComponents.OUTPUT_ITEM);
+    }
+    
+    @Override
     public void registerRecipeHandlers(final IRecipeHandlerRegistrationHandler handler) {
         
         this.handlerGatherer.gatherAndRegisterHandlers(handler);
@@ -155,7 +165,8 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
                 IItemStack.ofMutable(((AccessEnchantedItemForEmeralds) trade).crafttweaker$getItemStack())));
         handler.registerTradeConverter(VillagerTrades.TippedArrowForItemsAndEmeralds.class, trade -> new CTTradeObject(
                 emerald,
-                IItemStack.ofMutable(((AccessTippedArrowForItemsAndEmeralds) trade).crafttweaker$getFromItem().getDefaultInstance()),
+                IItemStack.ofMutable(((AccessTippedArrowForItemsAndEmeralds) trade).crafttweaker$getFromItem()
+                        .getDefaultInstance()),
                 IItemStack.ofMutable(((AccessTippedArrowForItemsAndEmeralds) trade).crafttweaker$getToItem())));
         handler.registerTradeConverter(VillagerTrades.ItemsAndEmeraldsToItems.class, trade -> new CTTradeObject(
                 emerald,
@@ -194,6 +205,18 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         this.zenGatherer.onCandidates(candidate -> {
             this.taggableElementsRegistrationManager.attemptRegistration(candidate.clazz(), handler);
         });
+    }
+    
+    @Override
+    public void registerReplacerComponents(final IReplacerComponentRegistrationHandler handler) {
+        
+        handler.registerTargetingFilter(DefaultTargetingFilters::scripts);
+        handler.registerTargetingFilter(DefaultTargetingFilters::vanillaSpecial);
+        
+        // TODO("Find better names for all of these")
+        handler.registerTargetingStrategy(ITargetingStrategy.DEFAULT_STRATEGY_ID, DefaultTargetingStrategies::plain);
+        handler.registerTargetingStrategy(CraftTweakerConstants.rl("plain"), DefaultTargetingStrategies::plain);
+        handler.registerTargetingStrategy(CraftTweakerConstants.rl("deep"), DefaultTargetingStrategies::deep);
     }
     
 }

@@ -10,6 +10,8 @@ import net.minecraft.world.item.crafting.Recipe;
  * <p>Each targeting rule should be considered pure, which means it should not rely on external and/or global state to
  * decide whether a recipe may be replaced or not. A targeting rule may in fact be queried multiple times for the same
  * recipe.</p>
+ *
+ * @since 9.1.0
  */
 public interface ITargetingRule {
     
@@ -23,6 +25,8 @@ public interface ITargetingRule {
      * @param manager The recipe manager that is responsible for the given recipe.
      *
      * @return Whether the given recipe should undergo ingredient replacement or not.
+     *
+     * @since 9.1.0
      */
     boolean shouldBeReplaced(final Recipe<?> recipe, final IRecipeManager<?> manager);
     
@@ -33,6 +37,7 @@ public interface ITargetingRule {
      *
      * @apiNote This string will be used in user interactions and log output. For this reason, it should be descriptive
      * yet concise at the same time.
+     * @since 9.1.0
      */
     String describe();
     

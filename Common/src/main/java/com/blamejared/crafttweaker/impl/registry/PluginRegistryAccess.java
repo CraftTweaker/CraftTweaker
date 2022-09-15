@@ -2,7 +2,10 @@ package com.blamejared.crafttweaker.impl.registry;
 
 import com.blamejared.crafttweaker.api.natives.NativeTypeInfo;
 import com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler;
+import com.blamejared.crafttweaker.api.recipe.component.IRecipeComponent;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
+import com.blamejared.crafttweaker.api.recipe.replacement.ITargetingFilter;
+import com.blamejared.crafttweaker.api.recipe.replacement.ITargetingStrategy;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.manager.TagManagerFactory;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
@@ -97,9 +100,27 @@ final class PluginRegistryAccess implements IPluginRegistryAccess {
     }
     
     @Override
+    public void registerComponents(final Collection<IRecipeComponent<?>> components) {
+        
+        this.registries.recipeComponentRegistry().registerComponents(components);
+    }
+    
+    @Override
     public <T extends Recipe<?>> void registerHandler(final Class<? extends T> clazz, final IRecipeHandler<T> handler) {
         
         this.registries.recipeHandlerRegistry().register(clazz, handler);
+    }
+    
+    @Override
+    public void registerTargetingFilters(final Collection<ITargetingFilter> filters) {
+        
+        this.registries.replacerRegistry().castedFilters(filters);
+    }
+    
+    @Override
+    public void registerTargetingStrategy(final ResourceLocation id, final ITargetingStrategy strategy) {
+        
+        this.registries.replacerRegistry().strategy(id, strategy);
     }
     
     @Override

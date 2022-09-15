@@ -141,14 +141,14 @@ public final class ReplacerAction implements IRuntimeAction {
         return this.suppressWarnings ? " (Warnings are suppressed for this batch replacement)" : "";
     }
     
-    private <T extends Container, U extends Recipe<T>> Optional<ActionReplaceRecipe<?>> execute(final IRecipeManager<?> manager, final U recipe, final List<IReplacementRule> rules) {
+    private <T extends Container, U extends Recipe<T>> Optional<ActionReplaceRecipeOld<?>> execute(final IRecipeManager<?> manager, final U recipe, final List<IReplacementRule> rules) {
         
         try {
             final IRecipeHandler<U> handler = IRecipeHandlerRegistry.getHandlerFor(recipe);
             final Optional<Function<ResourceLocation, U>> newRecipeMaybe = handler.replaceIngredients(manager, recipe, rules);
             
             if(newRecipeMaybe.isPresent()) {
-                return Optional.of(new ActionReplaceRecipe<>((IRecipeManager<U>) manager, this.generatorFunction, recipe, name -> newRecipeMaybe.get()
+                return Optional.of(new ActionReplaceRecipeOld<>((IRecipeManager<U>) manager, this.generatorFunction, recipe, name -> newRecipeMaybe.get()
                         .apply(name)));
             }
         } catch(final IRecipeHandler.ReplacementNotSupportedException e) {

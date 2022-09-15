@@ -2,7 +2,9 @@ package com.blamejared.crafttweaker.impl.registry;
 
 import com.blamejared.crafttweaker.api.ICraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.command.type.IBracketDumperInfo;
+import com.blamejared.crafttweaker.api.recipe.component.IRecipeComponent;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
+import com.blamejared.crafttweaker.api.recipe.replacement.IReplacerRegistry;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.tag.manager.TagManagerFactory;
 import com.blamejared.crafttweaker.api.tag.manager.type.KnownTagManager;
@@ -14,6 +16,8 @@ import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
 import com.blamejared.crafttweaker.impl.plugin.core.IPluginRegistryAccess;
 import com.blamejared.crafttweaker.impl.plugin.core.PluginManager;
+import com.blamejared.crafttweaker.impl.recipe.replacement.ReplacerRegistry;
+import com.blamejared.crafttweaker.impl.registry.recipe.RecipeComponentRegistry;
 import com.blamejared.crafttweaker.impl.registry.recipe.RecipeHandlerRegistry;
 import com.blamejared.crafttweaker.impl.registry.zencode.BracketResolverRegistry;
 import com.blamejared.crafttweaker.impl.registry.zencode.EnumBracketRegistry;
@@ -56,7 +60,9 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
                 new LoaderRegistry(),
                 new LoadSourceRegistry(),
                 new PreprocessorRegistry(),
+                new RecipeComponentRegistry(),
                 new RecipeHandlerRegistry(),
+                new ReplacerRegistry(),
                 new ScriptRunModuleConfiguratorRegistry(),
                 new TaggableElementRegistry(),
                 new ZenClassRegistry()
@@ -137,6 +143,12 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
     }
     
     @Override
+    public <T> IRecipeComponent<T> findRecipeComponent(final ResourceLocation id) {
+        
+        return this.registries.recipeComponentRegistry().find(id);
+    }
+    
+    @Override
     @SuppressWarnings("unchecked") // why? how?
     public <T extends Enum<T>> T getEnumBracketValue(final IScriptLoader loader, final ResourceLocation type, final String value) {
         
@@ -181,6 +193,12 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
                         .name()
                         .toLowerCase(Locale.ENGLISH)))
                 .collect(Collectors.toUnmodifiableSet());
+    }
+    
+    @Override
+    public IReplacerRegistry getReplacerRegistry() {
+        
+        return this.registries.replacerRegistry();
     }
     
 }
