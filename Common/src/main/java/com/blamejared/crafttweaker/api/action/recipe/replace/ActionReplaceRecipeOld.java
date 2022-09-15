@@ -39,7 +39,7 @@ public class ActionReplaceRecipeOld<T extends Recipe<?>> extends ActionRecipeBas
     public String describe() {
         
         return String.format(
-                "- Replacing \"%s\" recipe with name \"%s\"%s",
+                "Replacing \"%s\" recipe with name \"%s\"%s",
                 this.getManager().getBracketResourceLocation(),
                 this.oldName,
                 this.oldName.equals(this.newName.get()) ? "" : String.format(", renaming it to \"%s\"", this.newName.get())
