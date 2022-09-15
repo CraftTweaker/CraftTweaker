@@ -15,29 +15,40 @@ public record ReplacementRequest<T>(
 ) {
     
     public boolean applyRequest(final IDecomposedRecipe recipe) {
+        
         final List<T> object = recipe.get(this.component());
         
-        if (object == null || object.isEmpty()) {
+        if(object == null || object.isEmpty()) {
             return false;
         }
-    
+        
         final List<T> newList = new ArrayList<>(object);
         final boolean replaced = this.applyToEach(object);
         
-        if (replaced) {
+        if(replaced) {
             recipe.set(this.component(), newList);
         }
         
         return replaced;
     }
     
+    public String describe() {
+        
+        return "replacing component %s matching %s according to %s with a substitute".formatted(
+                this.component().getCommandString(),
+                this.target(),
+                this.strategy().getCommandString()
+        );
+    }
+    
     private boolean applyToEach(final List<T> elements) {
+        
         boolean any = false;
         
-        for (int i = 0, s = elements.size(); i < s; ++i) {
+        for(int i = 0, s = elements.size(); i < s; ++i) {
             final T old = elements.get(i);
             final T replaced = this.tryToReplace(old);
-            if (replaced != null) {
+            if(replaced != null) {
                 any = true;
                 elements.set(i, replaced);
             }
@@ -47,11 +58,13 @@ public record ReplacementRequest<T>(
     }
     
     private T tryToReplace(final T object) {
+        
         return this.strategy().castStrategy(this.component(), object, this::replace);
     }
     
     private T replace(final T object) {
-        return this.component().match(this.target(), object)? this.replacer().apply(object) : null;
+        
+        return this.component().match(this.target(), object) ? this.replacer().apply(object) : null;
     }
     
 }
