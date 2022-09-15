@@ -44,11 +44,13 @@ public final class ScriptRunManager implements IScriptRunManager {
     });
     
     private final Map<IScriptLoader, RunInfoQueue> previousRunQueues;
+    private final ThreadLocal<Integer> nestingLevel;
     private RunInfo currentRunInfo;
     
     private ScriptRunManager() {
         
         this.previousRunQueues = new HashMap<>();
+        this.nestingLevel = ThreadLocal.withInitial(() -> 0);
         this.currentRunInfo = null;
     }
     
@@ -186,13 +188,26 @@ public final class ScriptRunManager implements IScriptRunManager {
                 return;
             }
             
-            CraftTweakerAPI.LOGGER.info(this.makeDescription(action));
-            action.apply();
-            info.enqueueAction(action, true);
+            final int nestLevel = this.nestingLevel.get();
+            try {
+                
+                this.nestingLevel.set(nestLevel + 1);
+                CraftTweakerAPI.LOGGER.info(this.makeNestedDescription(action, nestLevel));
+                action.apply();
+                info.enqueueAction(action, true);
+            } finally {
+                
+                this.nestingLevel.set(nestLevel);
+            }
             
         } catch(final Exception e) {
             CraftTweakerAPI.LOGGER.error("Unable to run action due to an error", e);
         }
+    }
+    
+    private String makeNestedDescription(final IAction action, final int nestLevel) {
+        
+        return "-".repeat(nestLevel) + (nestLevel > 0 ? " " : "") + this.makeDescription(action);
     }
     
     private String makeDescription(final IAction action) {
