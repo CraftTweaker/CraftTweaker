@@ -10,6 +10,11 @@ import com.google.gson.reflect.TypeToken;
 import java.util.Arrays;
 import java.util.Objects;
 
+/**
+ * Holds all {@link IRecipeComponent}s that CraftTweaker makes available directly.
+ *
+ * @since 10.0.0
+ */
 public final class BuiltinRecipeComponents {
     
     public static final IRecipeComponent<IIngredient> INPUT_INGREDIENT = IRecipeComponent.composite(
@@ -17,7 +22,9 @@ public final class BuiltinRecipeComponents {
             new TypeToken<>() {},
             (a, b) -> Objects.equals(a, b) || (a.contains(b) && b.contains(a)),
             ingredient -> Arrays.asList(ingredient.getItems()),
-            items -> items.size() < 1? IIngredientEmpty.getInstance() : items.stream().reduce(IIngredient::or).orElseThrow()
+            items -> items.size() < 1 ? IIngredientEmpty.getInstance() : items.stream()
+                    .reduce(IIngredient::or)
+                    .orElseThrow()
     );
     
     public static final IRecipeComponent<IItemStack> OUTPUT_ITEM = IRecipeComponent.simple(

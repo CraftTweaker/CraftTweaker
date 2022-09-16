@@ -141,7 +141,8 @@ public interface ICraftTweakerPlugin {
     default void registerTaggableElements(final ITaggableElementRegistrationHandler handler) {}
     
     /**
-     * Manages the registration of components tied to the {@link Replacer} system in CraftTweaker.
+     * Manages the registration of components tied to the
+     * {@link com.blamejared.crafttweaker.api.recipe.replacement.Replacer} system in CraftTweaker.
      *
      * @param handler The handler responsible for registration
      *

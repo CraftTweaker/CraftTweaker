@@ -11,6 +11,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Filters recipes that have been created by the given set of mods.
+ *
+ * <p>Every mod is identified according to its mod id. Recipes have been created by a mod if their name as determined
+ * by {@link Recipe#getId()} has that mod id as the namespace.</p>
+ *
+ * @since 10.0.0
+ */
 @Document("vanilla/api/recipe/replacement/type/ModsFilteringRule")
 @ZenCodeType.Name("crafttweaker.api.recipe.replacement.type.ModsFilteringRule")
 @ZenRegister
@@ -23,6 +31,15 @@ public final class ModsFilteringRule implements IFilteringRule {
         this.modIds = Set.copyOf(modIds);
     }
     
+    /**
+     * Creates a new rule filtering recipes based on the given mod ids.
+     *
+     * @param modIds The mod ids to check for.
+     *
+     * @return A rule carrying out what has been specified.
+     *
+     * @since 10.0.0
+     */
     @ZenCodeType.Method
     public static IFilteringRule of(final String... modIds) {
         
@@ -34,6 +51,15 @@ public final class ModsFilteringRule implements IFilteringRule {
         return new ModsFilteringRule(Set.of(modIds));
     }
     
+    /**
+     * Creates a new rule filtering recipes based on the ids of the given {@link Mod}s.
+     *
+     * @param mods The mods to check for.
+     *
+     * @return A rule carrying out what has been specified.
+     *
+     * @since 10.0.0
+     */
     @ZenCodeType.Method
     public static IFilteringRule of(final Mod... mods) {
         

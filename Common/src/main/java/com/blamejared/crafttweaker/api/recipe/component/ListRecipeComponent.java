@@ -60,4 +60,10 @@ final class ListRecipeComponent<T> implements IRecipeComponent<T> {
         return this.wrapper.apply(objects);
     }
     
+    @Override
+    public String toString() {
+        
+        return "ListComponent[" + this.id() + '/' + this.objectType() + ']';
+    }
+    
 }

@@ -21,6 +21,18 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+/**
+ * Filters recipes that have the specified {@link IRecipeComponent}, optionally with a check on its value.
+ *
+ * <p>In other words, to be able to be processed by the replacer, the target recipe must have the specified
+ * {@link IRecipeComponent}. Optionally, the value of the component must match a specific value or a {@link Predicate}
+ * to match, for more custom filtering. The value of the recipe component can be checked with any
+ * {@link ITargetingStrategy}.</p>
+ *
+ * @param <T> The type of the component that should be filtered.
+ *
+ * @since 10.0.0
+ */
 @Document("vanilla/api/recipe/replacement/type/ComponentFilteringRule")
 @ZenCodeType.Name("crafttweaker.api.recipe.replacement.type.ComponentFilteringRule")
 @ZenRegister
@@ -37,18 +49,57 @@ public final class ComponentFilteringRule<T> implements IFilteringRule {
         this.checkStrategy = checkStrategy;
     }
     
+    /**
+     * Creates a new rule that filters recipes that have the given {@link IRecipeComponent}.
+     *
+     * <p>The value of the component is not checked, merely its presence.</p>
+     *
+     * @param component The component to check for.
+     * @param <T>       The type of the object pointed to by the component.
+     *
+     * @return A rule carrying out what has been specified.
+     *
+     * @since 10.0.0
+     */
     @ZenCodeType.Method
     public static <T> ComponentFilteringRule<T> of(final IRecipeComponent<T> component) {
         
         return of(component, null);
     }
     
+    /**
+     * Creates a new rule that filters recipes that have the given {@link IRecipeComponent} and whose value matches the
+     * given {@code content}.
+     *
+     * <p>The strategy used is the default one, so components will be checked directly.</p>
+     *
+     * @param component The component to check for.
+     * @param content   The oracle that represents the element to check for.
+     * @param <T>       The type of the object pointed to by the component.
+     *
+     * @return A rule carrying out what has been specified.
+     *
+     * @since 10.0.0
+     */
     @ZenCodeType.Method
     public static <T> ComponentFilteringRule<T> of(final IRecipeComponent<T> component, final T content) {
         
         return of(component, content, ITargetingStrategy.find(ITargetingStrategy.DEFAULT_STRATEGY_ID));
     }
     
+    /**
+     * Creates a new rule that filters recipes that have the given {@link IRecipeComponent} and whose value matches the
+     * given {@code content} according to the given {@link ITargetingStrategy}.
+     *
+     * @param component     The component to check for.
+     * @param content       The oracle that represents the element to check for.
+     * @param checkStrategy The strategy that needs to be used to compare the component's value.
+     * @param <T>           The type of the object pointed to by the component.
+     *
+     * @return A rule carrying out what has been specified.
+     *
+     * @since 10.0.0
+     */
     @ZenCodeType.Method
     public static <T> ComponentFilteringRule<T> of(final IRecipeComponent<T> component, final T content, final ITargetingStrategy checkStrategy) {
         
@@ -56,6 +107,20 @@ public final class ComponentFilteringRule<T> implements IFilteringRule {
         return new ComponentFilteringRule<>(component, predicate, checkStrategy);
     }
     
+    /**
+     * Creates a new rule that filters recipes that have the given {@link IRecipeComponent} and whose value matches
+     * the given {@link Predicate} according to the given {@link ITargetingStrategy}.
+     *
+     * @param component     The component to check for.
+     * @param content       A {@link Predicate} that determines whether an element is wanted or not. Its argument
+     *                      represents the object to check for.
+     * @param checkStrategy The strategy that needs to be used to compare the component's value.
+     * @param <T>           The type of object pointed to by the component.
+     *
+     * @return A rule carrying out what has been specified
+     *
+     * @since 10.0.0
+     */
     @ZenCodeType.Method
     public static <T> ComponentFilteringRule<T> of(final IRecipeComponent<T> component, final Predicate<T> content, final ITargetingStrategy checkStrategy) {
         

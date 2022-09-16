@@ -6,6 +6,19 @@ import com.blamejared.crafttweaker.api.recipe.component.IRecipeComponent;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Indicates a request that needs to be carried out by the {@link Replacer}.
+ *
+ * @param component The {@link IRecipeComponent} for which this replacer should be carried out.
+ * @param strategy  The {@link ITargetingStrategy} that indicates how the components should be targeted.
+ * @param target    A {@link java.util.function.Predicate} that determines the element that will be targeted for
+ *                  replacement.
+ * @param replacer  A {@link java.util.function.UnaryOperator} that is responsible for performing the actual
+ *                  replacement.
+ * @param <T>       The type of the object that will undergo replacement.
+ *
+ * @since 10.0.0
+ */
 public record ReplacementRequest<T>(
         IRecipeComponent<T> component,
         ITargetingStrategy strategy,
@@ -13,6 +26,19 @@ public record ReplacementRequest<T>(
         DescriptiveUnaryOperator<T> replacer
 ) {
     
+    /**
+     * Applies this request to the given {@link IDecomposedRecipe}, if possible.
+     *
+     * <p>If the {@linkplain IDecomposedRecipe#components() recipe's components} do not contain the
+     * {@link #component()} this request is targeting, then replacement fails immediately. Otherwise, a best-effort
+     * attempt shall be performed.</p>
+     *
+     * @param recipe The recipe that should undergo replacement.
+     *
+     * @return Whether the replacement was successful or not.
+     *
+     * @since 10.0.0
+     */
     public boolean applyRequest(final IDecomposedRecipe recipe) {
         
         final List<T> object = recipe.get(this.component());
@@ -31,6 +57,13 @@ public record ReplacementRequest<T>(
         return replaced;
     }
     
+    /**
+     * Describes this request in a human-readable format for log output.
+     *
+     * @return A human-readable description.
+     *
+     * @since 10.0.0
+     */
     public String describe() {
         
         return "replacing component %s matching %s according to %s with %s".formatted(

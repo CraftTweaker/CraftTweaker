@@ -48,10 +48,16 @@ final class SimpleRecipeComponent<T> implements IRecipeComponent<T> {
     public T wrap(final Collection<T> objects) {
         
         if(objects.size() != 1) {
-            throw new IllegalArgumentException("Unable to wrap more than 1 object for " + this.id + " recipe component, but got " + objects);
+            throw new IllegalArgumentException("Unable to wrap more than 1 object for " + this.id() + " recipe component, but got " + objects);
         }
         
         return objects.iterator().next();
+    }
+    
+    @Override
+    public String toString() {
+        
+        return "SimpleComponent[" + this.id() + '/' + this.objectType() + ']';
     }
     
 }

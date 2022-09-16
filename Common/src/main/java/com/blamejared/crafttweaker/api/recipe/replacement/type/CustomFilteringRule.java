@@ -14,28 +14,60 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+/**
+ * Filters recipes according to a custom set of rules.
+ *
+ * @since 10.0.0
+ */
 @Document("vanilla/api/recipe/replacement/type/CustomFilteringRule")
 @ZenCodeType.Name("crafttweaker.api.recipe.replacement.type.CustomFilteringRule")
 @ZenRegister
 public final class CustomFilteringRule implements IFilteringRule {
     
     private final BiPredicate<IRecipeManager<?>, Recipe<?>> predicate;
+    private final boolean requiresComputation;
     
-    private CustomFilteringRule(final BiPredicate<IRecipeManager<?>, Recipe<?>> predicate) {
+    private CustomFilteringRule(final BiPredicate<IRecipeManager<?>, Recipe<?>> predicate, final boolean requiresComputation) {
         
         this.predicate = predicate;
+        this.requiresComputation = requiresComputation;
     }
     
+    /**
+     * Creates a new rule filtering recipes based on the given {@link Predicate}.
+     *
+     * <p>The predicate gets access to the {@link Recipe} instance directly, allowing for it to check directly elements
+     * that might be required.</p>
+     *
+     * @param predicate The predicate for checking.
+     *
+     * @return A rule carrying out what has been specified.
+     *
+     * @since 10.0.0
+     */
     @ZenCodeType.Method
     public static CustomFilteringRule of(final Predicate<Recipe<?>> predicate) {
         
-        return of((a, b) -> predicate.test(b));
+        return new CustomFilteringRule((a, b) -> predicate.test(b), false);
     }
     
+    /**
+     * Creates a new rule filtering recipes based on the given {@link BiPredicate}.
+     *
+     * <p>The predicate's first argument represents the {@link IRecipeManager} used by the recipe, whereas the second
+     * argument is the {@link Recipe} instance directly, allowing for it to check properties that might be required or
+     * perform additional manager-specific lookups.</p>
+     *
+     * @param predicate The predicate for checking.
+     *
+     * @return A rule carrying out what has been specified.
+     *
+     * @since 10.0.0
+     */
     @ZenCodeType.Method
     public static CustomFilteringRule of(final BiPredicate<IRecipeManager<?>, Recipe<?>> predicate) {
         
-        return new CustomFilteringRule(predicate);
+        return new CustomFilteringRule(predicate, true);
     }
     
     @Override
@@ -52,7 +84,7 @@ public final class CustomFilteringRule implements IFilteringRule {
     
     private <C extends Container, T extends Recipe<C>> boolean castFilter(final T recipe) {
         
-        final IRecipeManager<? super T> manager = GenericUtil.uncheck(RecipeTypeBracketHandler.getOrDefault(recipe.getType()));
+        final IRecipeManager<? super T> manager = this.requiresComputation ? GenericUtil.uncheck(RecipeTypeBracketHandler.getOrDefault(recipe.getType())) : null;
         return this.predicate.test(manager, recipe);
     }
     

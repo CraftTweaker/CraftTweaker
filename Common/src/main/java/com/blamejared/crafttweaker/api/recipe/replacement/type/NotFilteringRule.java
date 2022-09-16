@@ -11,6 +11,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Inverts a filtering rule.
+ *
+ * <p>This rule should be used sparingly as it incurs a performance loss due to having to loop over all recipes multiple
+ * times to perform the inversion of the rule.</p>
+ *
+ * @since 10.0.0
+ */
 @Document("vanilla/api/recipe/replacement/type/NotFilteringRule")
 @ZenCodeType.Name("crafttweaker.api.recipe.replacement.type.NotFilteringRule")
 @ZenRegister
@@ -23,6 +31,15 @@ public final class NotFilteringRule implements IFilteringRule {
         this.rule = rule;
     }
     
+    /**
+     * Inverts the specified rule.
+     *
+     * @param rule The rule to invert.
+     *
+     * @return The inverted rule.
+     *
+     * @since 10.0.0
+     */
     @ZenCodeType.Method
     public static NotFilteringRule of(final IFilteringRule rule) {
         
@@ -32,9 +49,9 @@ public final class NotFilteringRule implements IFilteringRule {
     @Override
     public Stream<? extends Recipe<?>> castFilter(final Stream<? extends Recipe<?>> allRecipes) {
         
-        final Set<? extends Recipe<?>> toYeet = this.rule.castFilter(GenericRecipesManager.INSTANCE.getAllRecipes()
-                        .stream())
-                .collect(Collectors.toSet());
+        final Set<? extends Recipe<?>> toYeet =
+                this.rule.castFilter(GenericRecipesManager.INSTANCE.getAllRecipes().stream())
+                        .collect(Collectors.toSet());
         return allRecipes.filter(it -> !toYeet.contains(it));
     }
     

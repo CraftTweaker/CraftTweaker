@@ -12,6 +12,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Filters recipes based on their {@link IRecipeManager}.
+ *
+ * @since 10.0.0
+ */
 @Document("vanilla/api/recipe/replacement/type/ManagerFilteringRule")
 @ZenCodeType.Name("crafttweaker.api.recipe.replacement.type.ManagerFilteringRule")
 @ZenRegister
@@ -26,6 +31,15 @@ public final class TypeFilteringRule implements IFilteringRule {
         this.types = this.managers.stream().map(IRecipeManager::getRecipeType).collect(Collectors.toSet());
     }
     
+    /**
+     * Creates a new rule filtering recipes based on the given managers.
+     *
+     * @param managers The managers that should be filtered.
+     *
+     * @return A new rule carrying out the specified operation.
+     *
+     * @since 10.0.0
+     */
     @ZenCodeType.Method
     public static IFilteringRule of(final IRecipeManager<?>... managers) {
         
