@@ -31,6 +31,11 @@ final class RecipeHandlerRegistrationHandler implements IRecipeHandlerRegistrati
     @Override
     public <T extends Recipe<?>> void registerRecipeHandler(final Class<? extends T> recipe, final IRecipeHandler<T> handler) {
         
+        if(recipe == Recipe.class) {
+            
+            throw new IllegalArgumentException("Unable to register a global handler for all recipes: attempted with " + handler);
+        }
+        
         final HandlerData data = this.handlers.get(recipe);
         if(data != null) {
             
