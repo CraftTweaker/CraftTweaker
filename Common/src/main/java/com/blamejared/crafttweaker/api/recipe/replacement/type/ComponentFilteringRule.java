@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.recipe.component.IDecomposedRecipe;
 import com.blamejared.crafttweaker.api.recipe.component.IRecipeComponent;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
+import com.blamejared.crafttweaker.api.recipe.replacement.DescriptivePredicate;
 import com.blamejared.crafttweaker.api.recipe.replacement.IFilteringRule;
 import com.blamejared.crafttweaker.api.recipe.replacement.ITargetingStrategy;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
@@ -17,6 +18,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 @Document("vanilla/api/recipe/replacement/type/ComponentFilteringRule")
@@ -25,10 +27,10 @@ import java.util.stream.Stream;
 public final class ComponentFilteringRule<T> implements IFilteringRule {
     
     private final IRecipeComponent<T> component;
-    private final T thing;
+    private final DescriptivePredicate<T> thing;
     private final ITargetingStrategy checkStrategy;
     
-    private ComponentFilteringRule(final IRecipeComponent<T> component, final T thing, final ITargetingStrategy checkStrategy) {
+    private ComponentFilteringRule(final IRecipeComponent<T> component, final DescriptivePredicate<T> thing, final ITargetingStrategy checkStrategy) {
         
         this.component = component;
         this.thing = thing;
@@ -50,7 +52,14 @@ public final class ComponentFilteringRule<T> implements IFilteringRule {
     @ZenCodeType.Method
     public static <T> ComponentFilteringRule<T> of(final IRecipeComponent<T> component, final T content, final ITargetingStrategy checkStrategy) {
         
-        return new ComponentFilteringRule<>(component, content, checkStrategy);
+        final DescriptivePredicate<T> predicate = content == null ? null : DescriptivePredicate.of(it -> component.match(content, it), content.toString());
+        return new ComponentFilteringRule<>(component, predicate, checkStrategy);
+    }
+    
+    @ZenCodeType.Method
+    public static <T> ComponentFilteringRule<T> of(final IRecipeComponent<T> component, final Predicate<T> content, final ITargetingStrategy checkStrategy) {
+        
+        return new ComponentFilteringRule<>(component, content == null ? null : DescriptivePredicate.wrap(content), checkStrategy);
     }
     
     @Override
@@ -65,7 +74,7 @@ public final class ComponentFilteringRule<T> implements IFilteringRule {
         return "recipes with component %s%s".formatted(
                 this.component.getCommandString(),
                 this.thing == null ? "" : " matching %s according to strategy %s".formatted(
-                        this.thing,
+                        this.thing.describe(),
                         this.checkStrategy.getCommandString()
                 )
         );
@@ -112,7 +121,7 @@ public final class ComponentFilteringRule<T> implements IFilteringRule {
         // We don't need a proper replacement: the strategy by contract has to return a not-null value if at least
         // one invocation of replacer returns a non-null value. This in turn means that the "replacement" was
         // successful, i.e. at least one thing matched the specified target. This is all we need.
-        return this.component.match(this.thing, element) ? element : null;
+        return this.thing.test(element) ? element : null;
     }
     
 }

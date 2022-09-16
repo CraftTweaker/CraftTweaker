@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 @Document("vanilla/api/recipe/replacement/Replacer")
 @ZenCodeType.Name("crafttweaker.api.recipe.replacement.Replacer")
@@ -59,18 +60,39 @@ public final class Replacer {
             return this;
         }
         
-        return this.replace(component, strategy, toReplace, (Function<T, T>) it -> with);
+        final DescriptivePredicate<T> predicate = DescriptivePredicate.of(it -> component.match(toReplace, it), toReplace.toString());
+        final DescriptiveUnaryOperator<T> operator = DescriptiveUnaryOperator.of(it -> with, with.toString());
+        return this.replace(component, strategy, predicate, operator);
     }
     
     @ZenCodeType.Method
     public <T> Replacer replace(final IRecipeComponent<T> component, final ITargetingStrategy strategy, final T toReplace, final Function<T, T> with) {
         
+        final DescriptivePredicate<T> predicate = DescriptivePredicate.of(it -> component.match(toReplace, it), toReplace.toString());
+        final DescriptiveUnaryOperator<T> operator = DescriptiveUnaryOperator.wrap(with::apply);
+        return this.replace(component, strategy, predicate, operator);
+    }
+    
+    @ZenCodeType.Method
+    public <T> Replacer replace(final IRecipeComponent<T> component, final ITargetingStrategy strategy, final Predicate<T> toReplace, final Function<T, T> with) {
+        
+        return this.replace(component, strategy, DescriptivePredicate.wrap(toReplace), DescriptiveUnaryOperator.wrap(with::apply));
+    }
+    
+    private <T> Replacer replace(
+            final IRecipeComponent<T> component,
+            final ITargetingStrategy strategy,
+            final DescriptivePredicate<T> predicate,
+            final DescriptiveUnaryOperator<T> operator
+    ) {
+        
         this.checkDone();
-        final ReplacementRequest<T> request = new ReplacementRequest<>(component, strategy, toReplace, with::apply);
+        final ReplacementRequest<T> request = new ReplacementRequest<>(component, strategy, predicate, operator);
         this.requests.add(request);
         return this;
     }
     
+    @ZenCodeType.Method
     public void execute() {
         
         this.checkDone();

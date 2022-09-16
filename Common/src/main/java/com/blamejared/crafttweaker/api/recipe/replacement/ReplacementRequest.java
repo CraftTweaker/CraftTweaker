@@ -5,13 +5,12 @@ import com.blamejared.crafttweaker.api.recipe.component.IRecipeComponent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.UnaryOperator;
 
 public record ReplacementRequest<T>(
         IRecipeComponent<T> component,
         ITargetingStrategy strategy,
-        T target,
-        UnaryOperator<T> replacer
+        DescriptivePredicate<T> target,
+        DescriptiveUnaryOperator<T> replacer
 ) {
     
     public boolean applyRequest(final IDecomposedRecipe recipe) {
@@ -34,10 +33,11 @@ public record ReplacementRequest<T>(
     
     public String describe() {
         
-        return "replacing component %s matching %s according to %s with a substitute".formatted(
+        return "replacing component %s matching %s according to %s with %s".formatted(
                 this.component().getCommandString(),
-                this.target(),
-                this.strategy().getCommandString()
+                this.target().describe(),
+                this.strategy().getCommandString(),
+                this.replacer().describe()
         );
     }
     
@@ -64,7 +64,7 @@ public record ReplacementRequest<T>(
     
     private T replace(final T object) {
         
-        return this.component().match(this.target(), object) ? this.replacer().apply(object) : null;
+        return this.target().test(object) ? this.replacer().apply(object) : null;
     }
     
 }
