@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl.plugin.core;
 
 import com.blamejared.crafttweaker.api.plugin.IRecipeHandlerRegistrationHandler;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.Collection;
@@ -31,7 +32,8 @@ final class RecipeHandlerRegistrationHandler implements IRecipeHandlerRegistrati
     @Override
     public <T extends Recipe<?>> void registerRecipeHandler(final Class<? extends T> recipe, final IRecipeHandler<T> handler) {
         
-        if(recipe == Recipe.class) {
+        // WTF javac?
+        if(recipe == GenericUtil.uncheck(Recipe.class)) {
             
             throw new IllegalArgumentException("Unable to register a global handler for all recipes: attempted with " + handler);
         }
