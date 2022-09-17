@@ -5,9 +5,9 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.type.IIngredientEmpty;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.MirrorAxis;
-import com.blamejared.crafttweaker.api.recipe.function.RecipeFunction0D;
-import com.blamejared.crafttweaker.api.recipe.function.RecipeFunction1D;
-import com.blamejared.crafttweaker.api.recipe.function.RecipeFunction2D;
+import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction0D;
+import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction1D;
+import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction2D;
 import com.google.gson.reflect.TypeToken;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
 

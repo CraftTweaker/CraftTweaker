@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.MirrorAxis;
 import com.blamejared.crafttweaker.api.recipe.component.BuiltinRecipeComponents;
 import com.blamejared.crafttweaker.api.recipe.component.IDecomposedRecipe;
-import com.blamejared.crafttweaker.api.recipe.function.RecipeFunction2D;
+import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction2D;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipeBase;

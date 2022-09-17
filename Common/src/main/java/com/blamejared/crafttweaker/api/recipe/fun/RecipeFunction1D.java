@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.api.recipe.func;
+package com.blamejared.crafttweaker.api.recipe.fun;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;

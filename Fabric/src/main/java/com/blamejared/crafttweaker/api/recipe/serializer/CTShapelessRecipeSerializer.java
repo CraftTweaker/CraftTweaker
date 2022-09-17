@@ -2,7 +2,7 @@ package com.blamejared.crafttweaker.api.recipe.serializer;
 
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.api.recipe.func.RecipeFunction1D;
+import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction1D;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipeBase;
 import net.minecraft.resources.ResourceLocation;
 
