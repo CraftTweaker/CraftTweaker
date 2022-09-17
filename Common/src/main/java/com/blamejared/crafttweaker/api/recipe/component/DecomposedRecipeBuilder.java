@@ -69,6 +69,25 @@ public final class DecomposedRecipeBuilder {
     }
     
     /**
+     * Adds the given {@link IRecipeComponent} to the recipe, pointing to the given object.
+     *
+     * <p>The contract of this method is the same as {@link IDecomposedRecipe#set(IRecipeComponent, List)}, except it
+     * operates on a recipe builder.</p>
+     *
+     * @param component The component that needs to be added to the recipe.
+     * @param object    The data pointed to by the component.
+     * @param <C>       The type of objects pointed to by the component.
+     *
+     * @return This builder for chaining.
+     *
+     * @since 10.0.0
+     */
+    public <C> DecomposedRecipeBuilder with(final IRecipeComponent<C> component, final C object) {
+        
+        return this.with(component, List.of(object));
+    }
+    
+    /**
      * Adds the given {@link IRecipeComponent} to the recipe, pointing to the given {@link List}.
      *
      * <p>The contract of this method is the same as {@link IDecomposedRecipe#set(IRecipeComponent, List)}, except it

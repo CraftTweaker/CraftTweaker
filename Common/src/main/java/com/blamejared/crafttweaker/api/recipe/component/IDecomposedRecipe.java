@@ -54,6 +54,69 @@ public interface IDecomposedRecipe {
     <C> List<C> get(final IRecipeComponent<C> component);
     
     /**
+     * Gets the values that are being pointed to by the given {@link IRecipeComponent}.
+     *
+     * <p>If the given component is not part of this decomposed recipe instance, then an
+     * {@link IllegalArgumentException} is raised. The returned list need not be modifiable. Clients wanting to perform
+     * modifications are encouraged to copy the list, edit it, then
+     * {@linkplain #set(IRecipeComponent, List) set it back} into the instance.</p>
+     *
+     * <p>It is not allowed for a recipe to throw an exception for any component that is listed in
+     * {@link #components()}.</p>
+     *
+     * @param component The component whose values need to be retrieved.
+     * @param <C>       The type of elements that the component points to.
+     *
+     * @return A {@link List} containing the values pointed to by the component, if any.
+     *
+     * @throws IllegalArgumentException If the component is missing in the current recipe.
+     * @since 10.0.0
+     */
+    default <C> List<C> getOrThrow(final IRecipeComponent<C> component) {
+        
+        final List<C> list = this.get(component);
+        if(list == null) {
+            throw new IllegalArgumentException("Missing " + component.getCommandString());
+        }
+        return list;
+    }
+    
+    /**
+     * Gets the single value that is being pointed to by the given {@link IRecipeComponent}.
+     *
+     * <p>If the given component is not part of this decomposed recipe instance, then an
+     * {@link IllegalArgumentException} is raised. Similarly, if the given component points to a {@link List} with more
+     * than one element, a {@code IllegalArgumentException} is raised. The returned element might or might not be a
+     * copy. Clients are thus encouraged not to modify the instance directly, but rather create a new copy and
+     * {@linkplain #set(IRecipeComponent, Object) set it back}.</p>
+     *
+     * <p>It is not allowed for a recipe to throw an exception for any component that is listed in
+     * {@link #components()}.</p>
+     *
+     * @param component The component whose values need to be retrieved.
+     * @param <C>       The type of elements that the component points to.
+     *
+     * @return The value pointed to by the component, if any
+     *
+     * @throws IllegalArgumentException If the component is missing or has more than one instance in the current recipe.
+     * @since 10.0.0
+     */
+    default <C> C getOrThrowSingle(final IRecipeComponent<C> component) {
+        
+        final List<C> list = this.getOrThrow(component);
+        if(list.size() != 1) {
+            final String message = String.format(
+                    "Expected a list with a single element for %s, but got %d-sized list: %s",
+                    component.getCommandString(),
+                    list.size(),
+                    list
+            );
+            throw new IllegalArgumentException(message);
+        }
+        return list.get(0);
+    }
+    
+    /**
      * Sets the values that are being pointed to by the given {@link IRecipeComponent} to the given {@link List}.
      *
      * <p>If the given component is not part of the decomposed recipe instance, then it is added. Otherwise the existing
@@ -70,6 +133,31 @@ public interface IDecomposedRecipe {
      * @since 10.0.0
      */
     <C> void set(final IRecipeComponent<C> component, final List<C> object);
+    
+    /**
+     * Sets the value that is being pointed to by the given {@link IRecipeComponent} to the given object.
+     *
+     * <p>If the given component is not part of the decomposed recipe instance, then it is added. Otherwise the existing
+     * data is modified to refer to the new object. Take note that no checks are performed on the actual size of the
+     * list, meaning that the component will point to a single element after this call. It is the caller's
+     * responsibility to ensure this respects the contract.</p>
+     *
+     * <p>The given element might be copied by the implementation to prevent tampering. Clients are thus encouraged not
+     * to set the instance directly assuming modifiability, but rather set the element only when all modifications have
+     * been completed.</p>
+     *
+     * <p>It is disallowed to use {@code null} to remove a component from the decomposed recipe.</p>
+     *
+     * @param component The component whose value needs to be set.
+     * @param object    The value that the component should point to.
+     * @param <C>       The type of elements the component points to.
+     *
+     * @since 10.0.0
+     */
+    default <C> void set(final IRecipeComponent<C> component, final C object) {
+        
+        this.set(component, List.of(object));
+    }
     
     /**
      * Obtains all {@link IRecipeComponent}s that are currently present in the recipe.

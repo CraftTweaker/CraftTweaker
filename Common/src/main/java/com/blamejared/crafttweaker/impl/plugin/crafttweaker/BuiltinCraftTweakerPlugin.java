@@ -119,8 +119,16 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
     @Override
     public void registerRecipeComponents(final IRecipeComponentRegistrationHandler handler) {
         
-        handler.registerRecipeComponent(BuiltinRecipeComponents.INPUT_INGREDIENT);
-        handler.registerRecipeComponent(BuiltinRecipeComponents.OUTPUT_ITEM);
+        handler.registerRecipeComponent(BuiltinRecipeComponents.Metadata.GROUP);
+        handler.registerRecipeComponent(BuiltinRecipeComponents.Metadata.MIRROR_AXIS);
+        handler.registerRecipeComponent(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D);
+        handler.registerRecipeComponent(BuiltinRecipeComponents.Input.INGREDIENTS);
+        handler.registerRecipeComponent(BuiltinRecipeComponents.Processing.FUNCTION_0D);
+        handler.registerRecipeComponent(BuiltinRecipeComponents.Processing.FUNCTION_1D);
+        handler.registerRecipeComponent(BuiltinRecipeComponents.Processing.FUNCTION_2D);
+        handler.registerRecipeComponent(BuiltinRecipeComponents.Processing.TIME);
+        handler.registerRecipeComponent(BuiltinRecipeComponents.Output.EXPERIENCE);
+        handler.registerRecipeComponent(BuiltinRecipeComponents.Output.ITEMS);
     }
     
     @Override
