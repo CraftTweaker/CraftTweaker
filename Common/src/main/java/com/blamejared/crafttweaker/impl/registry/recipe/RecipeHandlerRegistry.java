@@ -1,14 +1,21 @@
 package com.blamejared.crafttweaker.impl.registry.recipe;
 
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
+import com.blamejared.crafttweaker.api.recipe.component.IDecomposedRecipe;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
-import com.blamejared.crafttweaker.platform.Services;
+import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public final class RecipeHandlerRegistry implements IRecipeHandlerRegistry {
@@ -18,16 +25,40 @@ public final class RecipeHandlerRegistry implements IRecipeHandlerRegistry {
         private static final DefaultRecipeHandler INSTANCE = new DefaultRecipeHandler();
         
         @Override
-        public String dumpToCommandString(IRecipeManager manager, Recipe<?> recipe) {
+        public String dumpToCommandString(final IRecipeManager<? super Recipe<?>> manager, final Recipe<?> recipe) {
             
-            
-            return String.format("~~ Recipe name: %s, Outputs: %s, Inputs: [%s], Recipe Class: %s, Recipe Serializer: %s ~~", recipe.getId(), Services.PLATFORM.createMCItemStack(recipe.getResultItem())
-                    .getCommandString(), recipe.getIngredients()
+            final String ingredients = recipe.getIngredients()
                     .stream()
                     .map(IIngredient::fromIngredient)
                     .map(IIngredient::getCommandString)
-                    .collect(Collectors.joining(", ")), recipe.getClass()
-                    .getName(), Registry.RECIPE_SERIALIZER.getKey(recipe.getSerializer()));
+                    .collect(Collectors.joining(", "));
+            
+            return String.format(
+                    "~~ Recipe name: %s, Outputs: %s, Inputs: [%s], Recipe Class: %s, Recipe Serializer: %s ~~",
+                    recipe.getId(),
+                    ItemStackUtil.getCommandString(recipe.getResultItem()),
+                    ingredients,
+                    recipe.getClass().getName(),
+                    Registry.RECIPE_SERIALIZER.getKey(recipe.getSerializer())
+            );
+        }
+        
+        @Override
+        public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super Recipe<?>> manager, final Recipe<?> firstRecipe, final U secondRecipe) {
+            
+            return false;
+        }
+        
+        @Override
+        public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super Recipe<?>> manager, final Recipe<?> recipe) {
+            
+            return Optional.empty();
+        }
+        
+        @Override
+        public Optional<Recipe<?>> recompose(final IRecipeManager<? super Recipe<?>> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
+            
+            return Optional.empty();
         }
         
     }

@@ -1,13 +1,15 @@
 package com.blamejared.crafttweaker.impl.recipe.handler.type.vanilla;
 
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.recipe.component.BuiltinRecipeComponents;
+import com.blamejared.crafttweaker.api.recipe.component.IDecomposedRecipe;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
-import com.blamejared.crafttweaker.api.recipe.handler.IReplacementRule;
-import com.blamejared.crafttweaker.api.recipe.handler.helper.ReplacementHandlerHelper;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.platform.Services;
+import it.unimi.dsi.fastutil.ints.IntIntPair;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -16,7 +18,6 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -24,7 +25,7 @@ import java.util.stream.IntStream;
 public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
     
     @Override
-    public String dumpToCommandString(final IRecipeManager manager, final ShapedRecipe recipe) {
+    public String dumpToCommandString(final IRecipeManager<? super ShapedRecipe> manager, final ShapedRecipe recipe) {
         
         final NonNullList<Ingredient> ingredients = recipe.getIngredients();
         return String.format(
@@ -42,21 +43,51 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
     }
     
     @Override
-    public Optional<Function<ResourceLocation, ShapedRecipe>> replaceIngredients(final IRecipeManager manager, final ShapedRecipe recipe, final List<IReplacementRule> rules) {
+    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super ShapedRecipe> manager, final ShapedRecipe firstRecipe, final U secondRecipe) {
         
-        return ReplacementHandlerHelper.replaceNonNullIngredientList(
-                recipe.getIngredients(),
-                Ingredient.class,
-                recipe,
-                rules,
-                newIngredients -> id -> new ShapedRecipe(id, recipe.getGroup(), recipe.getWidth(), recipe.getHeight(), newIngredients, recipe.getResultItem())
-        );
+        return Services.PLATFORM.doCraftingTableRecipesConflict(manager, firstRecipe, secondRecipe);
     }
     
     @Override
-    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager manager, final ShapedRecipe firstRecipe, final U secondRecipe) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super ShapedRecipe> manager, final ShapedRecipe recipe) {
         
-        return Services.PLATFORM.doCraftingTableRecipesConflict(manager, firstRecipe, secondRecipe);
+        final List<IIngredient> ingredients = recipe.getIngredients().stream()
+                .map(IIngredient::fromIngredient)
+                .toList();
+        final IDecomposedRecipe decomposedRecipe = IDecomposedRecipe.builder()
+                .with(BuiltinRecipeComponents.Metadata.GROUP, recipe.getGroup())
+                .with(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D, IntIntPair.of(recipe.getWidth(), recipe.getHeight()))
+                .with(BuiltinRecipeComponents.Input.INGREDIENTS, ingredients)
+                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(recipe.getResultItem()))
+                .build();
+        return Optional.of(decomposedRecipe);
+    }
+    
+    @Override
+    public Optional<ShapedRecipe> recompose(final IRecipeManager<? super ShapedRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
+        
+        final String group = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.GROUP);
+        final IntIntPair size = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D);
+        final List<IIngredient> ingredients = recipe.getOrThrow(BuiltinRecipeComponents.Input.INGREDIENTS);
+        final IItemStack output = recipe.getOrThrowSingle(BuiltinRecipeComponents.Output.ITEMS);
+        
+        final int width = size.firstInt();
+        final int height = size.secondInt();
+        
+        if(width <= 0 || height <= 0) {
+            throw new IllegalArgumentException("Invalid shape size: bounds must be positive but got " + size);
+        }
+        if(width * height != ingredients.size()) {
+            throw new IllegalArgumentException("Invalid shape size: incompatible with ingredients, got " + size + " with " + ingredients.size());
+        }
+        if(output.isEmpty()) {
+            throw new IllegalArgumentException("Invalid output: empty item");
+        }
+        
+        final NonNullList<Ingredient> recipeIngredients = ingredients.stream()
+                .map(IIngredient::asVanillaIngredient)
+                .collect(NonNullList::create, NonNullList::add, NonNullList::addAll);
+        return Optional.of(new ShapedRecipe(name, group, width, height, recipeIngredients, output.getInternal()));
     }
     
 }

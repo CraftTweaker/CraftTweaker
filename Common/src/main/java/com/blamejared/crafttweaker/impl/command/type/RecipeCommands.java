@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.mojang.brigadier.Command;
@@ -127,7 +128,7 @@ public final class RecipeCommands {
         final String dumpResult = recipes.stream()
                 .filter(filter)
                 .sorted(Comparator.comparing(RecipeCommands::serializer).thenComparing(Recipe::getId))
-                .map(it -> dump(manager, it))
+                .map(it -> dump(GenericUtil.uncheck(manager), it))
                 .collect(Collectors.joining("\n  "));
         
         if(hideEmpty && dumpResult.isEmpty()) {
@@ -142,7 +143,7 @@ public final class RecipeCommands {
         return Objects.requireNonNull(Registry.RECIPE_SERIALIZER.getKey(recipe.getSerializer()));
     }
     
-    private static <T extends Recipe<?>> String dump(final IRecipeManager<?> manager, final T recipe) {
+    private static <T extends Recipe<?>> String dump(final IRecipeManager<? super T> manager, final T recipe) {
         
         return IRecipeHandlerRegistry.getHandlerFor(recipe).dumpToCommandString(manager, recipe);
     }

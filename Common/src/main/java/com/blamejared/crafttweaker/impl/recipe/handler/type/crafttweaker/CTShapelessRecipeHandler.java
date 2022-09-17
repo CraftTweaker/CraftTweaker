@@ -1,9 +1,11 @@
 package com.blamejared.crafttweaker.impl.recipe.handler.type.crafttweaker;
 
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.recipe.component.BuiltinRecipeComponents;
+import com.blamejared.crafttweaker.api.recipe.component.IDecomposedRecipe;
+import com.blamejared.crafttweaker.api.recipe.function.RecipeFunctionArray;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
-import com.blamejared.crafttweaker.api.recipe.handler.IReplacementRule;
-import com.blamejared.crafttweaker.api.recipe.handler.helper.ReplacementHandlerHelper;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipeBase;
 import com.blamejared.crafttweaker.api.util.StringUtil;
@@ -14,14 +16,13 @@ import net.minecraft.world.item.crafting.Recipe;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @IRecipeHandler.For(CTShapelessRecipeBase.class)
 public final class CTShapelessRecipeHandler implements IRecipeHandler<CTShapelessRecipeBase> {
     
     @Override
-    public String dumpToCommandString(final IRecipeManager manager, final CTShapelessRecipeBase recipe) {
+    public String dumpToCommandString(final IRecipeManager<? super CTShapelessRecipeBase> manager, final CTShapelessRecipeBase recipe) {
         
         return String.format(
                 "craftingTable.addShapeless(%s, %s, %s%s);",
@@ -35,21 +36,46 @@ public final class CTShapelessRecipeHandler implements IRecipeHandler<CTShapeles
     }
     
     @Override
-    public Optional<Function<ResourceLocation, CTShapelessRecipeBase>> replaceIngredients(final IRecipeManager manager, final CTShapelessRecipeBase recipe, final List<IReplacementRule> rules) {
+    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super CTShapelessRecipeBase> manager, final CTShapelessRecipeBase firstRecipe, final U secondRecipe) {
         
-        return ReplacementHandlerHelper.replaceIngredientArray(
-                recipe.getCtIngredients(),
-                IIngredient.class,
-                recipe,
-                rules,
-                newIngredients -> id -> Services.REGISTRY.createCTShapelessRecipe(id.getPath(), recipe.getCtOutput(), newIngredients, recipe.getFunction())
-        );
+        return Services.PLATFORM.doCraftingTableRecipesConflict(manager, firstRecipe, secondRecipe);
     }
     
     @Override
-    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager manager, final CTShapelessRecipeBase firstRecipe, final U secondRecipe) {
+    public Optional<IDecomposedRecipe> decompose(IRecipeManager<? super CTShapelessRecipeBase> manager, CTShapelessRecipeBase recipe) {
         
-        return Services.PLATFORM.doCraftingTableRecipesConflict(manager, firstRecipe, secondRecipe);
+        final RecipeFunctionArray function = recipe.getFunction();
+        final List<IIngredient> ingredients = Arrays.asList(recipe.getCtIngredients());
+        
+        final IDecomposedRecipe decomposedRecipe = IDecomposedRecipe.builder()
+                .with(BuiltinRecipeComponents.Input.INGREDIENTS, ingredients)
+                .with(BuiltinRecipeComponents.Output.ITEMS, recipe.getCtOutput())
+                .build();
+        
+        if(function != null) {
+            decomposedRecipe.set(BuiltinRecipeComponents.Processing.FUNCTION_1D, function::process);
+        }
+        
+        return Optional.of(decomposedRecipe);
+    }
+    
+    @Override
+    public Optional<CTShapelessRecipeBase> recompose(IRecipeManager<? super CTShapelessRecipeBase> manager, ResourceLocation name, IDecomposedRecipe recipe) {
+        
+        final List<IIngredient> ingredients = recipe.getOrThrow(BuiltinRecipeComponents.Input.INGREDIENTS);
+        final var function = recipe.get(BuiltinRecipeComponents.Processing.FUNCTION_1D);
+        final IItemStack output = recipe.getOrThrowSingle(BuiltinRecipeComponents.Output.ITEMS);
+        
+        if(ingredients.stream().anyMatch(IIngredient::isEmpty)) {
+            throw new IllegalArgumentException("Invalid inputs: found empty ingredient in list " + ingredients);
+        }
+        if(output.isEmpty()) {
+            throw new IllegalArgumentException("Invalid output: empty item");
+        }
+        
+        final IIngredient[] list = ingredients.toArray(IIngredient[]::new);
+        final RecipeFunctionArray recipeFunction = function == null ? null : function.get(0)::apply;
+        return Optional.of(Services.REGISTRY.createCTShapelessRecipe(name.getPath(), output, list, recipeFunction));
     }
     
 }

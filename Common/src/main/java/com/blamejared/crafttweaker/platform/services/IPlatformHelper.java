@@ -126,7 +126,7 @@ public interface IPlatformHelper {
         return (!first.hasTag() || first.getTag().equals(second.getTag()));
     }
     
-    boolean doCraftingTableRecipesConflict(final IRecipeManager manager, final Recipe<?> first, final Recipe<?> second);
+    boolean doCraftingTableRecipesConflict(final IRecipeManager<?> manager, final Recipe<?> first, final Recipe<?> second);
     
     Set<MutableComponent> getFluidsForDump(ItemStack stack, Player player, InteractionHand hand);
     

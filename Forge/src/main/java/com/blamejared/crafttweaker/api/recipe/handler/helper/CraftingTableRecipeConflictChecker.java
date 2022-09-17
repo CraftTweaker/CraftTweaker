@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.recipe.handler.helper;
 
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.IngredientUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 
 public final class CraftingTableRecipeConflictChecker {
     
-    public static boolean checkConflicts(final IRecipeManager manager, final Recipe<?> first, final Recipe<?> second) {
+    public static boolean checkConflicts(final IRecipeManager<?> manager, final Recipe<?> first, final Recipe<?> second) {
         
         // Special recipes cannot conflict by definition
         if(first.isSpecial() || second.isSpecial()) {
@@ -30,10 +31,10 @@ public final class CraftingTableRecipeConflictChecker {
         return checkConflictsMaybeDifferent(first, second);
     }
     
-    private static <T extends Recipe<?>> boolean redirect(final IRecipeManager manager, final T second, final Recipe<?> first) {
+    private static <T extends Recipe<?>> boolean redirect(final IRecipeManager<?> manager, final T second, final Recipe<?> first) {
         
         // We need another lookup because of the wildcard capture
-        return IRecipeHandlerRegistry.getHandlerFor(second).doesConflict(manager, second, first);
+        return IRecipeHandlerRegistry.getHandlerFor(second).doesConflict(GenericUtil.uncheck(manager), second, first);
     }
     
     private static boolean checkConflictsMaybeDifferent(final Recipe<?> first, final Recipe<?> second) {

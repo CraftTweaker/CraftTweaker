@@ -1,8 +1,10 @@
 package com.blamejared.crafttweaker.impl.recipe.handler.type.vanilla;
 
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.recipe.component.BuiltinRecipeComponents;
+import com.blamejared.crafttweaker.api.recipe.component.IDecomposedRecipe;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
-import com.blamejared.crafttweaker.api.recipe.handler.IReplacementRule;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.IngredientUtil;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
@@ -20,10 +22,8 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.item.crafting.SmokingRecipe;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
 @IRecipeHandler.For(BlastingRecipe.class)
 @IRecipeHandler.For(CampfireCookingRecipe.class)
@@ -47,7 +47,7 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
             .build();
     
     @Override
-    public String dumpToCommandString(final IRecipeManager manager, final AbstractCookingRecipe recipe) {
+    public String dumpToCommandString(final IRecipeManager<? super AbstractCookingRecipe> manager, final AbstractCookingRecipe recipe) {
         
         return String.format(
                 "%s.addRecipe(%s, %s, %s, %s, %s);",
@@ -61,18 +61,55 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
     }
     
     @Override
-    public Optional<Function<ResourceLocation, AbstractCookingRecipe>> replaceIngredients(final IRecipeManager manager, final AbstractCookingRecipe recipe, final List<IReplacementRule> rules) {
+    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super AbstractCookingRecipe> manager, final AbstractCookingRecipe firstRecipe, final U secondRecipe) {
         
-        return IRecipeHandler.attemptReplacing(recipe.getIngredients().get(0), Ingredient.class, recipe, rules)
-                .map(input -> id -> LOOKUP.get(recipe.getType())
-                        .getSecond()
-                        .create(id, recipe.getGroup(), input, recipe.getResultItem(), recipe.getExperience(), recipe.getCookingTime()));
+        return IngredientUtil.canConflict(firstRecipe.getIngredients().get(0), secondRecipe.getIngredients().get(0));
     }
     
     @Override
-    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager manager, final AbstractCookingRecipe firstRecipe, final U secondRecipe) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super AbstractCookingRecipe> manager, final AbstractCookingRecipe recipe) {
         
-        return IngredientUtil.canConflict(firstRecipe.getIngredients().get(0), secondRecipe.getIngredients().get(0));
+        final IIngredient ingredient = IIngredient.fromIngredient(recipe.getIngredients().get(0));
+        final IDecomposedRecipe decomposition = IDecomposedRecipe.builder()
+                .with(BuiltinRecipeComponents.Metadata.GROUP, recipe.getGroup())
+                .with(BuiltinRecipeComponents.Input.INGREDIENTS, ingredient)
+                .with(BuiltinRecipeComponents.Processing.TIME, recipe.getCookingTime())
+                .with(BuiltinRecipeComponents.Output.EXPERIENCE, recipe.getExperience())
+                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(recipe.getResultItem()))
+                .build();
+        return Optional.of(decomposition);
+    }
+    
+    @Override
+    public Optional<AbstractCookingRecipe> recompose(final IRecipeManager<? super AbstractCookingRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
+        
+        final String group = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.GROUP);
+        final IIngredient input = recipe.getOrThrowSingle(BuiltinRecipeComponents.Input.INGREDIENTS);
+        final Number cookTime = recipe.getOrThrowSingle(BuiltinRecipeComponents.Processing.TIME);
+        final Number experience = recipe.getOrThrowSingle(BuiltinRecipeComponents.Output.EXPERIENCE);
+        final IItemStack output = recipe.getOrThrowSingle(BuiltinRecipeComponents.Output.ITEMS);
+        
+        if(input.isEmpty()) {
+            throw new IllegalArgumentException("Invalid input: empty ingredient");
+        }
+        if(Math.floor(cookTime.doubleValue()) != cookTime.longValue()) {
+            throw new IllegalArgumentException("Invalid cooking time: must be an integer, but got " + cookTime);
+        }
+        if(cookTime.intValue() != cookTime.longValue()) {
+            throw new IllegalArgumentException("Invalid cooking time: bigger than max allowed " + Integer.MAX_VALUE + ": " + cookTime);
+        }
+        if(cookTime.intValue() <= 0) {
+            throw new IllegalArgumentException("Invalid cooking time: less than min allowed 1: " + cookTime);
+        }
+        if(experience.floatValue() < 0) {
+            throw new IllegalArgumentException("Invalid experience: less than min allowed 0:" + experience);
+        }
+        if(output.isEmpty()) {
+            throw new IllegalArgumentException("Invalid output: empty stack");
+        }
+        
+        final CookingRecipeFactory<?> factory = LOOKUP.get(manager.getRecipeType()).getSecond();
+        return Optional.of(factory.create(name, group, input.asVanillaIngredient(), output.getInternal(), experience.floatValue(), cookTime.intValue()));
     }
     
 }

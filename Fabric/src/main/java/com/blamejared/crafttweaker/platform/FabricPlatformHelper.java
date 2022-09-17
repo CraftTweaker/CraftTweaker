@@ -219,7 +219,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
     
     @Override
-    public boolean doCraftingTableRecipesConflict(IRecipeManager manager, Recipe<?> first, Recipe<?> second) {
+    public boolean doCraftingTableRecipesConflict(IRecipeManager<?> manager, Recipe<?> first, Recipe<?> second) {
         
         return CraftingTableRecipeConflictChecker.checkConflicts(manager, first, second);
     }
