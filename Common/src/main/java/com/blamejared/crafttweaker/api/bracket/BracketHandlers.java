@@ -6,10 +6,10 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
+import com.blamejared.crafttweaker.api.recipe.replacement.ITargetingStrategy;
 import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
 import com.blamejared.crafttweaker.natives.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.natives.world.damage.ExpandDamageSource;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -424,6 +424,35 @@ public class BracketHandlers {
         
         return Registry.SOUND_EVENT.getOptional(resourceLocation)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get sound event with name: <soundevent:" + tokens + ">! Sound event does not appear to exist!"));
+    }
+    
+    /**
+     * Gets a {@link ITargetingStrategy} based on its name.
+     *
+     * <p>Throws an exception if the strategy doesn't exist.</p>
+     *
+     * @param tokens The strategy's resource location
+     *
+     * @return The found targeting strategy
+     *
+     * @docParam tokens "crafttweaker:default"
+     * @since 10.0.0
+     */
+    @ZenCodeType.Method
+    @BracketResolver("targetingstrategy")
+    public static ITargetingStrategy getTargetingStrategy(final String tokens) {
+        
+        if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
+            CraftTweakerAPI.LOGGER.warn("Targeting strategy BEP <targetingstrategy:{}> does not seem to be lower-cased!", tokens);
+        }
+        
+        final String[] split = tokens.split(":");
+        if(split.length != 2) {
+            throw new IllegalArgumentException("Could not get targeting strategy with <targetingstrategy:" + tokens + ">: syntax is <targetingstrategy:modid:name>");
+        }
+        
+        final ResourceLocation key = new ResourceLocation(split[0], split[1]);
+        return ITargetingStrategy.find(key);
     }
     
 }

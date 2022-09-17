@@ -28,7 +28,7 @@ public final class RecipeComponentRegistry {
         }));
     }
     
-    Collection<IRecipeComponent<?>> allComponents() {
+    public Collection<IRecipeComponent<?>> allComponents() {
         
         return Collections.unmodifiableCollection(this.components.values());
     }

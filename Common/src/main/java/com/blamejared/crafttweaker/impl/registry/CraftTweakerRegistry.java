@@ -149,6 +149,12 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
     }
     
     @Override
+    public Collection<IRecipeComponent<?>> getAllRecipeComponents() {
+        
+        return this.registries.recipeComponentRegistry().allComponents();
+    }
+    
+    @Override
     @SuppressWarnings("unchecked") // why? how?
     public <T extends Enum<T>> T getEnumBracketValue(final IScriptLoader loader, final ResourceLocation type, final String value) {
         
@@ -170,6 +176,7 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
         return this.registries.taggableElementRegistry().getTaggableElement(key);
     }
     
+    @Override
     public <T> TagManagerFactory<T, ? extends ITagManager<?>> getTaggableElementFactory(ResourceKey<Registry<T>> key) {
         
         if(this.registries.taggableElementRegistry().getTaggableElement(key).isPresent()) {

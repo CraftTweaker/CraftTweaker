@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl.plugin.crafttweaker;
 
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.bracket.custom.EnumConstantBracketHandler;
+import com.blamejared.crafttweaker.api.bracket.custom.RecipeComponentBracketHandler;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.bracket.custom.TagBracketHandler;
 import com.blamejared.crafttweaker.api.bracket.custom.TagManagerBracketHandler;
@@ -108,6 +109,8 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         this.bracketParserRegistrationManager.attemptRegistration(handler);
         
         handler.registerParserFor(CraftTweakerConstants.ALL_LOADERS_MARKER, "constant", new EnumConstantBracketHandler(), new IBracketParserRegistrationHandler.DumperData("constant", EnumConstantBracketHandler.getDumperData()));
+        
+        handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "recipecomponent", new RecipeComponentBracketHandler(), new IBracketParserRegistrationHandler.DumperData("recipecomponent", RecipeComponentBracketHandler.getDumperData()));
         handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "recipetype", new RecipeTypeBracketHandler(), new IBracketParserRegistrationHandler.DumperData("recipetype", RecipeTypeBracketHandler.getDumperData()));
         handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "tag", new TagBracketHandler(), new IBracketParserRegistrationHandler.DumperData("tag", TagBracketHandler.getDumperData()));
         handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "tagmanager", new TagManagerBracketHandler(), new IBracketParserRegistrationHandler.DumperData("tagmanager", TagManagerBracketHandler.getDumperData()));

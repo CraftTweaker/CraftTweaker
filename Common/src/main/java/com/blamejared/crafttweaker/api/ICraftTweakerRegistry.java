@@ -179,9 +179,18 @@ public interface ICraftTweakerRegistry {
      * @return The {@link IRecipeComponent} with the given name, if available.
      *
      * @throws IllegalArgumentException If the name does not identify a valid recipe component.
-     * @since 10.0
+     * @since 10.0.0
      */
     <T> IRecipeComponent<T> findRecipeComponent(final ResourceLocation id);
+    
+    /**
+     * Obtains a {@link Collection} of all {@link IRecipeComponent}s known to CraftTweaker.
+     *
+     * @return A read-only collection of all known components.
+     *
+     * @since 10.0.0
+     */
+    Collection<IRecipeComponent<?>> getAllRecipeComponents();
     
     /**
      * Obtains the enumeration constant that corresponds to the given {@link IScriptLoader}, id, and value as if it were

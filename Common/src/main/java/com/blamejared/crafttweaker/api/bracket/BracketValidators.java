@@ -3,7 +3,6 @@ package com.blamejared.crafttweaker.api.bracket;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.BracketValidator;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -152,7 +151,7 @@ public class BracketValidators {
     @ZenCodeType.Method
     @BracketValidator("creativemodetab")
     public static boolean validateCreativeModeTabBracket(String tokens) {
-    
+        
         return Arrays.stream(CreativeModeTab.TABS).anyMatch(group -> group.getRecipeFolderName().equals(tokens));
     }
     
@@ -183,6 +182,18 @@ public class BracketValidators {
         }
         
         return validateBracket("soundevent", tokens, BracketHandlers::getSoundEvent);
+    }
+    
+    @ZenCodeType.Method
+    @BracketValidator("targetingstrategy")
+    public static boolean validateTargetingStrategy(final String tokens) {
+        
+        if(tokens.split(":").length != 2) {
+            CraftTweakerAPI.LOGGER.error("Invalid Bracket Syntax <targetingstrategy:" + tokens + ">! Syntax is <targetingstrategy:modid:name>");
+            return false;
+        }
+        
+        return validateBracket("targetingstrategy", tokens, BracketHandlers::getTargetingStrategy);
     }
     
 }

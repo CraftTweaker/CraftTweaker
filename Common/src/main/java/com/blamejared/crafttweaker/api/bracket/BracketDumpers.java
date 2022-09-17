@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.bracket;
 
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.BracketDumper;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
@@ -15,7 +16,6 @@ import com.blamejared.crafttweaker.natives.item.enchantment.ExpandEnchantment;
 import com.blamejared.crafttweaker.natives.sound.ExpandSoundEvent;
 import com.blamejared.crafttweaker.natives.villager.ExpandVillagerProfession;
 import com.blamejared.crafttweaker.natives.world.damage.ExpandDamageSource;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.Registry;
 import net.minecraft.world.item.CreativeModeTab;
@@ -148,6 +148,18 @@ public class BracketDumpers {
         return Registry.SOUND_EVENT
                 .stream()
                 .map(ExpandSoundEvent::getCommandString)
+                .collect(Collectors.toList());
+    }
+    
+    @ZenCodeType.Method
+    @BracketDumper("targetingstrategy")
+    public static Collection<String> getTargetingStrategyDump() {
+        
+        return CraftTweakerAPI.getRegistry()
+                .getReplacerRegistry()
+                .allStrategyNames()
+                .stream()
+                .map("<targetingstrategy:%s>"::formatted)
                 .collect(Collectors.toList());
     }
     
