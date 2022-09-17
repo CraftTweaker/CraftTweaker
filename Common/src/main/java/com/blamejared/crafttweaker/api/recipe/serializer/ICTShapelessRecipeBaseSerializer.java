@@ -2,9 +2,8 @@ package com.blamejared.crafttweaker.api.recipe.serializer;
 
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.api.recipe.func.RecipeFunctionArray;
+import com.blamejared.crafttweaker.api.recipe.func.RecipeFunction1D;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipeBase;
-import com.blamejared.crafttweaker.platform.Services;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -16,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+
 import javax.annotation.Nullable;
 
 public interface ICTShapelessRecipeBaseSerializer extends RecipeSerializer<CTShapelessRecipeBase> {
@@ -78,7 +78,7 @@ public interface ICTShapelessRecipeBaseSerializer extends RecipeSerializer<CTSha
         buffer.writeItem(recipe.getResultItem());
     }
     
-    default CTShapelessRecipeBase makeRecipe(ResourceLocation recipeId, IItemStack output, IIngredient[] ingredients, @javax.annotation.Nullable RecipeFunctionArray function) {
+    default CTShapelessRecipeBase makeRecipe(ResourceLocation recipeId, IItemStack output, IIngredient[] ingredients, @javax.annotation.Nullable RecipeFunction1D function) {
         
         return new CTShapelessRecipeBase(recipeId.getPath(), output, ingredients, function);
     }

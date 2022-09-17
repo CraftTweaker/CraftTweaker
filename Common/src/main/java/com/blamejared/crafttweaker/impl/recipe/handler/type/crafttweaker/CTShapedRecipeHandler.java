@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.MirrorAxis;
 import com.blamejared.crafttweaker.api.recipe.component.BuiltinRecipeComponents;
 import com.blamejared.crafttweaker.api.recipe.component.IDecomposedRecipe;
-import com.blamejared.crafttweaker.api.recipe.function.RecipeFunctionMatrix;
+import com.blamejared.crafttweaker.api.recipe.function.RecipeFunction2D;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipeBase;
@@ -51,7 +51,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecip
         
         final int width = recipe.getRecipeWidth();
         final int height = recipe.getRecipeHeight();
-        final RecipeFunctionMatrix function = recipe.getFunction();
+        final RecipeFunction2D function = recipe.getFunction();
         final List<IIngredient> ingredients = this.flatten(recipe.getCtIngredients(), width, height);
         
         @SuppressWarnings("SuspiciousNameCombination") final IDecomposedRecipe decomposedRecipe = IDecomposedRecipe.builder()
@@ -62,7 +62,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecip
                 .build();
         
         if(function != null) {
-            decomposedRecipe.set(BuiltinRecipeComponents.Processing.FUNCTION_2D, function::process);
+            decomposedRecipe.set(BuiltinRecipeComponents.Processing.FUNCTION_2D, function);
         }
         
         return Optional.of(decomposedRecipe);
@@ -91,7 +91,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecip
         }
         
         final IIngredient[][] matrix = this.inflate(ingredients, width, height);
-        final RecipeFunctionMatrix recipeFunction = function == null ? null : function.get(0)::apply;
+        final RecipeFunction2D recipeFunction = function == null ? null : function.get(0);
         return Optional.of(Services.REGISTRY.createCTShapedRecipe(name.getPath(), output, matrix, axis, recipeFunction));
     }
     

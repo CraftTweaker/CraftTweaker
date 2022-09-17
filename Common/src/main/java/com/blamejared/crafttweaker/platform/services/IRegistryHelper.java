@@ -9,8 +9,8 @@ import com.blamejared.crafttweaker.api.ingredient.type.IIngredientConditioned;
 import com.blamejared.crafttweaker.api.ingredient.type.IIngredientTransformed;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.MirrorAxis;
-import com.blamejared.crafttweaker.api.recipe.func.RecipeFunctionArray;
-import com.blamejared.crafttweaker.api.recipe.func.RecipeFunctionMatrix;
+import com.blamejared.crafttweaker.api.recipe.func.RecipeFunction1D;
+import com.blamejared.crafttweaker.api.recipe.func.RecipeFunction2D;
 import com.blamejared.crafttweaker.api.recipe.serializer.ICTShapedRecipeBaseSerializer;
 import com.blamejared.crafttweaker.api.recipe.serializer.ICTShapelessRecipeBaseSerializer;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipeBase;
@@ -18,7 +18,12 @@ import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipeBase;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Lifecycle;
-import net.minecraft.core.*;
+import net.minecraft.core.DefaultedRegistry;
+import net.minecraft.core.Holder;
+import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -80,12 +85,12 @@ public interface IRegistryHelper {
     
     ICTShapelessRecipeBaseSerializer getCTShapelessRecipeSerializer();
     
-    default CTShapedRecipeBase createCTShapedRecipe(String name, IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunctionMatrix function) {
+    default CTShapedRecipeBase createCTShapedRecipe(String name, IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunction2D function) {
         
         return getCTShapedRecipeSerializer().makeRecipe(CraftTweakerConstants.rl(name), output, ingredients, mirrorAxis, function);
     }
     
-    default CTShapelessRecipeBase createCTShapelessRecipe(String name, IItemStack output, IIngredient[] ingredients, @javax.annotation.Nullable RecipeFunctionArray function) {
+    default CTShapelessRecipeBase createCTShapelessRecipe(String name, IItemStack output, IIngredient[] ingredients, @javax.annotation.Nullable RecipeFunction1D function) {
         
         return getCTShapelessRecipeSerializer().makeRecipe(CraftTweakerConstants.rl(name), output, ingredients, function);
     }

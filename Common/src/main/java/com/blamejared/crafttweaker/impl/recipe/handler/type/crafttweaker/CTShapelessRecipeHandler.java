@@ -4,7 +4,7 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.component.BuiltinRecipeComponents;
 import com.blamejared.crafttweaker.api.recipe.component.IDecomposedRecipe;
-import com.blamejared.crafttweaker.api.recipe.function.RecipeFunctionArray;
+import com.blamejared.crafttweaker.api.recipe.function.RecipeFunction1D;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipeBase;
@@ -44,7 +44,7 @@ public final class CTShapelessRecipeHandler implements IRecipeHandler<CTShapeles
     @Override
     public Optional<IDecomposedRecipe> decompose(IRecipeManager<? super CTShapelessRecipeBase> manager, CTShapelessRecipeBase recipe) {
         
-        final RecipeFunctionArray function = recipe.getFunction();
+        final RecipeFunction1D function = recipe.getFunction();
         final List<IIngredient> ingredients = Arrays.asList(recipe.getCtIngredients());
         
         final IDecomposedRecipe decomposedRecipe = IDecomposedRecipe.builder()
@@ -53,7 +53,7 @@ public final class CTShapelessRecipeHandler implements IRecipeHandler<CTShapeles
                 .build();
         
         if(function != null) {
-            decomposedRecipe.set(BuiltinRecipeComponents.Processing.FUNCTION_1D, function::process);
+            decomposedRecipe.set(BuiltinRecipeComponents.Processing.FUNCTION_1D, function);
         }
         
         return Optional.of(decomposedRecipe);
@@ -74,7 +74,7 @@ public final class CTShapelessRecipeHandler implements IRecipeHandler<CTShapeles
         }
         
         final IIngredient[] list = ingredients.toArray(IIngredient[]::new);
-        final RecipeFunctionArray recipeFunction = function == null ? null : function.get(0)::apply;
+        final RecipeFunction1D recipeFunction = function == null ? null : function.get(0);
         return Optional.of(Services.REGISTRY.createCTShapelessRecipe(name.getPath(), output, list, recipeFunction));
     }
     

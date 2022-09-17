@@ -4,7 +4,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.MirrorAxis;
-import com.blamejared.crafttweaker.api.recipe.func.RecipeFunctionMatrix;
+import com.blamejared.crafttweaker.api.recipe.func.RecipeFunction2D;
 import com.blamejared.crafttweaker.api.util.ArrayUtil;
 import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.datafixers.util.Pair;
@@ -30,14 +30,14 @@ public class CTShapedRecipeBase implements CraftingRecipe {
     private final IItemStack output;
     private final MirrorAxis mirrorAxis;
     @Nullable
-    private final RecipeFunctionMatrix function;
+    private final RecipeFunction2D function;
     private final ResourceLocation resourceLocation;
     
     private final int width;
     private final int height;
     
     
-    public CTShapedRecipeBase(String name, IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunctionMatrix function) {
+    public CTShapedRecipeBase(String name, IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunction2D function) {
         
         this.resourceLocation = CraftTweakerConstants.rl(name);
         this.output = output;
@@ -306,7 +306,7 @@ public class CTShapedRecipeBase implements CraftingRecipe {
     }
     
     @Nullable
-    public RecipeFunctionMatrix getFunction() {
+    public RecipeFunction2D getFunction() {
         
         return this.function;
     }

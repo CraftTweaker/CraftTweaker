@@ -7,11 +7,11 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @FunctionalInterface
 @ZenRegister
-@ZenCodeType.Name("crafttweaker.api.recipe.func.RecipeFunctionMatrix")
-@Document("vanilla/api/recipe/func/RecipeFunctionMatrix")
-public interface RecipeFunctionMatrix {
+@ZenCodeType.Name("crafttweaker.api.recipe.fun.RecipeFunction0D")
+@Document("vanilla/api/recipe/fun/RecipeFunction0D")
+public interface RecipeFunction0D {
     
     @ZenCodeType.Method
-    IItemStack process(IItemStack usualOut, IItemStack[][] inputs);
+    IItemStack process(IItemStack usualOut, IItemStack inputs);
     
 }

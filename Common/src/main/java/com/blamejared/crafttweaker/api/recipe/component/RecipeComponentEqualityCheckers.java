@@ -29,4 +29,9 @@ public final class RecipeComponentEqualityCheckers {
         return Objects.equals(a, b); // TODO("This might not be accurate, please verify and fix")
     }
     
+    public static <T> boolean notComparable(@SuppressWarnings("unused") final T a, @SuppressWarnings("unused") final T b) {
+        
+        throw new UnsupportedOperationException("Cannot compare " + a + " and " + b);
+    }
+    
 }

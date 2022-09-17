@@ -4,9 +4,8 @@ import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.MirrorAxis;
-import com.blamejared.crafttweaker.api.recipe.func.RecipeFunctionMatrix;
+import com.blamejared.crafttweaker.api.recipe.func.RecipeFunction2D;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipeBase;
-import com.blamejared.crafttweaker.platform.Services;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -26,7 +25,7 @@ public interface ICTShapedRecipeBaseSerializer extends RecipeSerializer<CTShaped
         return makeRecipe(
                 CraftTweakerConstants.rl("invalid_recipe"),
                 IItemStack.of(new ItemStack(Items.BARRIER)),
-                new IIngredient[][] { { IItemStack.of(new ItemStack(Items.BARRIER)) } },
+                new IIngredient[][] {{IItemStack.of(new ItemStack(Items.BARRIER))}},
                 MirrorAxis.NONE,
                 null
         );
@@ -66,7 +65,7 @@ public interface ICTShapedRecipeBaseSerializer extends RecipeSerializer<CTShaped
         buffer.writeItem(recipe.getResultItem());
     }
     
-    default CTShapedRecipeBase makeRecipe(ResourceLocation recipeId, IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunctionMatrix function) {
+    default CTShapedRecipeBase makeRecipe(ResourceLocation recipeId, IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunction2D function) {
         
         return new CTShapedRecipeBase(recipeId.getPath(), output, ingredients, mirrorAxis, function);
     }

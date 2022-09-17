@@ -5,11 +5,13 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.type.IIngredientEmpty;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.MirrorAxis;
+import com.blamejared.crafttweaker.api.recipe.function.RecipeFunction0D;
+import com.blamejared.crafttweaker.api.recipe.function.RecipeFunction1D;
+import com.blamejared.crafttweaker.api.recipe.function.RecipeFunction2D;
 import com.google.gson.reflect.TypeToken;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
 
 import java.util.Arrays;
-import java.util.function.BiFunction;
 
 /**
  * Holds all {@link IRecipeComponent}s that CraftTweaker makes available directly.
@@ -34,13 +36,13 @@ public final class BuiltinRecipeComponents {
                 Object::equals
         );
         
-        // TODO("No")
         public static final IRecipeComponent<MirrorAxis> MIRROR_AXIS = IRecipeComponent.simple(
                 CraftTweakerConstants.rl("metadata/mirror_axis"),
                 new TypeToken<>() {},
                 Object::equals
         );
         
+        // TODO("This cannot be specified yet")
         public static final IRecipeComponent<IntIntPair> SHAPE_SIZE_2D = IRecipeComponent.simple(
                 CraftTweakerConstants.rl("metadata/shape_size_2d"),
                 new TypeToken<>() {},
@@ -88,25 +90,22 @@ public final class BuiltinRecipeComponents {
      */
     public static final class Processing {
         
-        // TODO("")
-        public static final IRecipeComponent<BiFunction<IItemStack, IItemStack, IItemStack>> FUNCTION_0D = IRecipeComponent.simple(
+        public static final IRecipeComponent<RecipeFunction0D> FUNCTION_0D = IRecipeComponent.simple(
                 CraftTweakerConstants.rl("processing/function_0d"),
                 new TypeToken<>() {},
-                Object::equals // TODO("")
+                RecipeComponentEqualityCheckers::notComparable
         );
         
-        // TODO("")
-        public static final IRecipeComponent<BiFunction<IItemStack, IItemStack[], IItemStack>> FUNCTION_1D = IRecipeComponent.simple(
+        public static final IRecipeComponent<RecipeFunction1D> FUNCTION_1D = IRecipeComponent.simple(
                 CraftTweakerConstants.rl("processing/function_1d"),
                 new TypeToken<>() {},
-                Object::equals // TODO("")
+                RecipeComponentEqualityCheckers::notComparable
         );
         
-        // TODO("")
-        public static final IRecipeComponent<BiFunction<IItemStack, IItemStack[][], IItemStack>> FUNCTION_2D = IRecipeComponent.simple(
+        public static final IRecipeComponent<RecipeFunction2D> FUNCTION_2D = IRecipeComponent.simple(
                 CraftTweakerConstants.rl("processing/function_2d"),
                 new TypeToken<>() {},
-                Object::equals // TODO("")
+                RecipeComponentEqualityCheckers::notComparable
         );
         
         public static final IRecipeComponent<Number> TIME = IRecipeComponent.simple(
