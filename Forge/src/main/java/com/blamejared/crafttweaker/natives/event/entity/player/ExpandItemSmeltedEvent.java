@@ -3,7 +3,6 @@ package com.blamejared.crafttweaker.natives.event.entity.player;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -22,7 +21,7 @@ public class ExpandItemSmeltedEvent {
     @ZenCodeType.Getter("smelted")
     public static IItemStack getSmelted(PlayerEvent.ItemSmeltedEvent internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.getSmelting());
+        return IItemStack.of(internal.getSmelting());
     }
     
 }

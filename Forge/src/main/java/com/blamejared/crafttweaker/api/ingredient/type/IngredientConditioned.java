@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker.api.ingredient.type;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.condition.IIngredientCondition;
 import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientConditionedSerializer;
-import com.blamejared.crafttweaker.platform.Services;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.google.gson.JsonElement;
 import net.minecraft.world.item.ItemStack;
 
@@ -19,7 +19,7 @@ public class IngredientConditioned<I extends IIngredient, T extends IIngredientC
     @Override
     public boolean test(@Nullable ItemStack stack) {
         
-        return stack != null && getCrTIngredient().matches(Services.PLATFORM.createMCItemStackMutable(stack), true);
+        return stack != null && getCrTIngredient().matches(IItemStack.ofMutable(stack), true);
     }
     
     @Override

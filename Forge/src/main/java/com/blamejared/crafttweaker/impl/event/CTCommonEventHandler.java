@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.event;
 import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.action.villager.ActionTradeBase;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.attribute.ItemAttributeModifierBase;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceManager;
@@ -103,7 +104,7 @@ public class CTCommonEventHandler {
         Services.EVENT.getBurnTimes()
                 .getOrDefault(e.getRecipeType(), List.of())
                 .stream()
-                .filter(pair -> pair.getFirst().matches(Services.PLATFORM.createMCItemStack(e.getItemStack())))
+                .filter(pair -> pair.getFirst().matches(IItemStack.of(e.getItemStack())))
                 // This should use the burn time of the last matching ingredient
                 .forEach(pair -> e.setBurnTime(pair.getSecond()));
     }

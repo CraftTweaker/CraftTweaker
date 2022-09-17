@@ -4,7 +4,6 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.action.item.ActionSetBurnTime;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.common.ForgeHooks;
@@ -46,7 +45,7 @@ public interface ForgeItemStack extends IItemStack {
     @Override
     default IItemStack getRemainingItem(IItemStack stack) {
         
-        return Services.PLATFORM.createMCItemStack(stack.getInternal().getCraftingRemainingItem());
+        return IItemStack.of(stack.getInternal().getCraftingRemainingItem());
     }
     
     /**

@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.gametest;
 
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.gametest.framework.DelegatingGameTestAssertException;
-import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -32,22 +31,22 @@ public interface CraftTweakerGameTest {
     
     default IItemStack immutableStack(ItemStack stack) {
         
-        return Services.PLATFORM.createMCItemStack(stack);
+        return IItemStack.of(stack);
     }
     
     default IItemStack immutableStack(ItemLike item) {
         
-        return Services.PLATFORM.createMCItemStack(new ItemStack(item));
+        return IItemStack.of(new ItemStack(item));
     }
     
     default IItemStack mutableStack(ItemStack stack) {
         
-        return Services.PLATFORM.createMCItemStackMutable(stack);
+        return IItemStack.of(stack);
     }
     
     default IItemStack mutableStack(ItemLike item) {
         
-        return Services.PLATFORM.createMCItemStackMutable(new ItemStack(item));
+        return IItemStack.of(new ItemStack(item));
     }
     
 }

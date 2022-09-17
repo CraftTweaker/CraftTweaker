@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.natives.event;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -194,7 +193,7 @@ public class ExpandItemAttributeModifierEvent {
     @ZenCodeType.Getter("itemstack")
     public static IItemStack getItemStack(ItemAttributeModifierEvent internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.getItemStack());
+        return IItemStack.of(internal.getItemStack());
     }
     
 }

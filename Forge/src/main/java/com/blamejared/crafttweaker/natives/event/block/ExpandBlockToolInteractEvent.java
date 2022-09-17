@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.natives.event.block;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.world.entity.player.Player;
@@ -33,7 +32,7 @@ public class ExpandBlockToolInteractEvent {
     @ZenCodeType.Method
     public static IItemStack getHeldItemStack(BlockEvent.BlockToolModificationEvent internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.getHeldItemStack());
+        return IItemStack.of(internal.getHeldItemStack());
     }
     
     @ZenCodeType.Getter("toolAction")

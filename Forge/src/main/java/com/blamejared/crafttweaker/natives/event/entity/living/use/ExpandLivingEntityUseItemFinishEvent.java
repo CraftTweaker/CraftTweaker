@@ -3,7 +3,6 @@ package com.blamejared.crafttweaker.natives.event.entity.living.use;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
@@ -27,7 +26,7 @@ public class ExpandLivingEntityUseItemFinishEvent {
     @ZenCodeType.Getter("resultStack")
     public static IItemStack getResultStack(LivingEntityUseItemEvent.Finish internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.getResultStack());
+        return IItemStack.of(internal.getResultStack());
     }
     
     @ZenCodeType.Method

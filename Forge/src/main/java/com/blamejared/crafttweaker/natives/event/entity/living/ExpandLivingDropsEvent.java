@@ -3,7 +3,6 @@ package com.blamejared.crafttweaker.natives.event.entity.living;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.world.damagesource.DamageSource;
@@ -42,7 +41,7 @@ public class ExpandLivingDropsEvent {
         return internal.getDrops()
                 .stream()
                 .map(ItemEntity::getItem)
-                .map(Services.PLATFORM::createMCItemStack)
+                .map(IItemStack::of)
                 .collect(Collectors.toList());
     }
     
@@ -91,8 +90,7 @@ public class ExpandLivingDropsEvent {
     @ZenCodeType.Method
     public static void removeDrop(LivingDropsEvent internal, IIngredient ingredient) {
         
-        internal.getDrops()
-                .removeIf(itemEntity -> ingredient.matches(Services.PLATFORM.createMCItemStackMutable(itemEntity.getItem())));
+        internal.getDrops().removeIf(itemEntity -> ingredient.matches(IItemStack.ofMutable(itemEntity.getItem())));
     }
     
 }

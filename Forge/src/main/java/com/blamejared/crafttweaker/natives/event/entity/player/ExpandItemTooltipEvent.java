@@ -3,12 +3,10 @@ package com.blamejared.crafttweaker.natives.event.entity.player;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import org.openzen.zencode.java.ZenCodeType;
@@ -48,7 +46,7 @@ public class ExpandItemTooltipEvent {
     @ZenCodeType.Getter("itemStack")
     public static IItemStack getItemStack(ItemTooltipEvent internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.getItemStack());
+        return IItemStack.of(internal.getItemStack());
     }
     
     /**

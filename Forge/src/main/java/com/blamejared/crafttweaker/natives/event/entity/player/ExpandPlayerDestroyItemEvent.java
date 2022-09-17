@@ -3,7 +3,6 @@ package com.blamejared.crafttweaker.natives.event.entity.player;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.world.InteractionHand;
@@ -32,7 +31,7 @@ public class ExpandPlayerDestroyItemEvent {
     @ZenCodeType.Getter("original")
     public static IItemStack getOriginal(PlayerDestroyItemEvent internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.getOriginal());
+        return IItemStack.of(internal.getOriginal());
     }
     
     @ZenCodeType.Nullable

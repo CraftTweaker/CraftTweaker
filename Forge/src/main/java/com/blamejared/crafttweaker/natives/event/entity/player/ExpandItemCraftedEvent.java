@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.natives.event.entity.player;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.world.Container;
@@ -18,7 +17,7 @@ public class ExpandItemCraftedEvent {
     @ZenCodeType.Getter("crafting")
     public static IItemStack getCrafting(PlayerEvent.ItemCraftedEvent internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.getCrafting());
+        return IItemStack.of(internal.getCrafting());
     }
     
     @ZenCodeType.Method

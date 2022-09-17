@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.natives.event.entity.player;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraftforge.event.entity.player.AnvilRepairEvent;
@@ -20,7 +19,7 @@ public class ExpandAnvilRepairEvent {
     @ZenCodeType.Getter("output")
     public static IItemStack getOutput(AnvilRepairEvent internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.getOutput());
+        return IItemStack.of(internal.getOutput());
     }
     
     @Nonnull
@@ -28,7 +27,7 @@ public class ExpandAnvilRepairEvent {
     @ZenCodeType.Getter("left")
     public static IItemStack getLeft(AnvilRepairEvent internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.getLeft());
+        return IItemStack.of(internal.getLeft());
     }
     
     @Nonnull
@@ -36,7 +35,7 @@ public class ExpandAnvilRepairEvent {
     @ZenCodeType.Getter("right")
     public static IItemStack getRight(AnvilRepairEvent internal) {
         
-        return Services.PLATFORM.createMCItemStack(internal.getRight());
+        return IItemStack.of(internal.getRight());
     }
     
     @ZenCodeType.Method
