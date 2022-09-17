@@ -11,6 +11,7 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.IIngredientWithAmount;
 import com.blamejared.crafttweaker.api.util.AttributeUtil;
 import com.blamejared.crafttweaker.api.util.EnchantmentUtil;
+import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.api.util.random.Percentaged;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessItem;
 import com.blamejared.crafttweaker.platform.Services;
@@ -645,6 +646,9 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     @Override
     default boolean matches(IItemStack stack, boolean ignoreDamage) {
         
+        return ItemStackUtil.areStacksTheSame(this.getInternal(), stack.getInternal(), ignoreDamage);
+        
+        /*
         ItemStack stack1 = getInternal();
         ItemStack stack2 = stack.getInternal();
         
@@ -684,6 +688,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
             }
         }
         return stack2Data != null && stack2Data.contains(stack1Data);
+         */
     }
     
     
