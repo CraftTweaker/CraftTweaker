@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.natives.entity.type.misc;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.mixin.common.access.entity.AccessFallingBlockEntity;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.core.BlockPos;
@@ -103,6 +104,16 @@ public class ExpandFallingBlockEntity {
     public static BlockState getBlockState(FallingBlockEntity internal) {
         
         return internal.getBlockState();
+    }
+    
+    /**
+     * Sets the BlockState of this falling entity.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Setter("blockstate")
+    public static void setBlockState(FallingBlockEntity internal, BlockState state) {
+        
+        ((AccessFallingBlockEntity) internal).crafttweaker$setBlockState(state);
     }
     
 }
