@@ -21,7 +21,7 @@ import java.util.function.Function;
  * that can be decomposed and then recomposed, without requiring explicit support for every type of change.</p>
  *
  * <p>Obtaining an instance of a recipe component in a script can be done through the usage of the
- * {@link <recipecomponent>} bracket handler. Integration writers can instead refer to the {@code find} method.</p>
+ * {@code <recipecomponent>} bracket handler. Integration writers can instead refer to the {@code find} method.</p>
  *
  * <p>Every recipe component must be registered to the registry through a plugin to be able to be used effectively and
  * discovered by script writers. New recipe components can be created with either {@code simple} or {@code composite}. A
@@ -111,7 +111,7 @@ public sealed interface IRecipeComponent<T> extends CommandStringDisplayable per
      *                           meaningful as the general contract of equality must be preserved, with reflectivity,
      *                           symmetry, and transitivity.
      * @param unwrappingFunction A {@link Function} that can decompose an instance of an object pointed to by the
-     *                           component into a {@link Collection]} of smaller atoms. Note how the type must be
+     *                           component into a {@link Collection} of smaller atoms. Note how the type must be
      *                           preserved. The collection can have any size as deemed necessary by the client.
      * @param wrapper            A {@link Function} that can compose together a {@link Collection} of objects pointed to
      *                           by the component into a single composite unit. Note how the type must be preserved. The
