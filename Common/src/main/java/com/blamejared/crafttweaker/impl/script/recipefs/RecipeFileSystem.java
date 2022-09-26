@@ -12,7 +12,6 @@ import java.nio.channels.AsynchronousFileChannel;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
-import java.nio.channels.WritableByteChannel;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.AccessMode;
 import java.nio.file.ClosedFileSystemException;
@@ -27,8 +26,8 @@ import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
+import java.nio.file.ProviderMismatchException;
 import java.nio.file.ReadOnlyFileSystemException;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributeView;
@@ -41,7 +40,6 @@ import java.nio.file.spi.FileSystemProvider;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -190,28 +188,10 @@ final class RecipeFileSystem extends FileSystem {
         Objects.requireNonNull(destination);
         Objects.requireNonNull(options);
         this.open();
-        
-        if(path == destination) {
-            return;
+        if(destination.getFileSystem() != path.getFileSystem()) {
+            throw new ProviderMismatchException();
         }
-        
-        if(destination.getFileSystem().isReadOnly()) {
-            throw new ReadOnlyFileSystemException();
-        }
-        
-        final Set<CopyOption> copyFlags = Set.of(options);
-        final Set<OpenOption> outFlags = new HashSet<>(Set.of(StandardOpenOption.WRITE));
-        
-        if(!copyFlags.contains(StandardCopyOption.REPLACE_EXISTING)) {
-            outFlags.add(StandardOpenOption.CREATE_NEW);
-        } else {
-            outFlags.add(StandardOpenOption.CREATE);
-        }
-        
-        try(final FileChannel in = FileChannel.open(path, StandardOpenOption.READ);
-            final WritableByteChannel out = Files.newByteChannel(destination, outFlags)) {
-            in.transferTo(0, in.size(), out);
-        }
+        this.write();
     }
     
     void moveTo(final RecipePath path, final Path destination, final CopyOption... options) throws IOException {

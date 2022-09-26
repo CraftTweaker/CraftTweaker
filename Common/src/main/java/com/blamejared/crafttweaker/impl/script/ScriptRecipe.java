@@ -1,8 +1,5 @@
 package com.blamejared.crafttweaker.impl.script;
 
-
-import com.blamejared.crafttweaker.CraftTweakerRegistries;
-import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
