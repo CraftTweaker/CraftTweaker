@@ -31,7 +31,7 @@ public class CraftTweakerFabricClient implements ClientModInitializer {
                     .apply(buf)
                     .handle());
         }
-    
+        
         ClientTickEvents.START_WORLD_TICK.register(world -> SequenceManager.tick(SequenceType.CLIENT_THREAD_LEVEL));
     }
     

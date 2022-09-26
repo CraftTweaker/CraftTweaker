@@ -1,12 +1,11 @@
 package com.blamejared.crafttweaker.impl.script;
 
-import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceManager;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceType;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
-import com.blamejared.crafttweaker.impl.script.scriptrun.ThroughRecipeScriptRunManager;
+import com.blamejared.crafttweaker.impl.script.recipefs.RecipeFileSystemProvider;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.resources.ResourceLocation;
@@ -14,11 +13,16 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 
 import javax.annotation.Nullable;
+import java.net.URI;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class RecipeManagerScriptLoader {
     
@@ -51,7 +55,7 @@ public class RecipeManagerScriptLoader {
     
     //Maybe move this / rename the class
     public static void loadScriptsFromManager(final RecipeManager manager) {
-    
+        
         SequenceManager.clearSequences(SequenceType.CLIENT_THREAD_LEVEL);
         
         if(Services.CLIENT.isSingleplayer()) {
@@ -61,10 +65,10 @@ public class RecipeManagerScriptLoader {
         
         fixRecipeManager(manager);
         
-        final Map<ResourceLocation, Recipe<?>> recipes = ((AccessRecipeManager) manager).crafttweaker$getRecipes()
-                .getOrDefault(ScriptRecipeType.INSTANCE, Collections.emptyMap());
+        final var allRecipes = ((AccessRecipeManager) manager).crafttweaker$getRecipes();
+        final Map<ResourceLocation, Recipe<?>> recipes = allRecipes.remove(ScriptRecipeType.INSTANCE); // Why keep them around?
         
-        if(recipes.isEmpty()) {
+        if(recipes == null || recipes.isEmpty()) {
             
             // The server does not have any scripts, so don't reload scripts!
             return;
@@ -73,7 +77,7 @@ public class RecipeManagerScriptLoader {
         final Collection<ScriptRecipe> scriptRecipes = recipes.values()
                 .stream()
                 .map(ScriptRecipe.class::cast)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new)); // We want it modifiable, so we can GC all of them fast
         final ScriptRunConfiguration configuration = new ScriptRunConfiguration(
                 CraftTweakerConstants.DEFAULT_LOADER_NAME,
                 CraftTweakerConstants.CLIENT_RECIPES_UPDATED_SOURCE_ID,
@@ -82,7 +86,7 @@ public class RecipeManagerScriptLoader {
         
         try {
             
-            ThroughRecipeScriptRunManager.createScriptRunFromRecipes(scriptRecipes, configuration).execute();
+            executeScriptRecipes(scriptRecipes, configuration);
         } catch(final Throwable e) {
             
             CraftTweakerAPI.LOGGER.error("Unable to execute script run", e);
@@ -98,6 +102,16 @@ public class RecipeManagerScriptLoader {
                 .replaceAll((k, v) -> new HashMap<>(accessRecipeManager.crafttweaker$getRecipes().get(k)));
         accessRecipeManager.crafttweaker$setByName(new HashMap<>(accessRecipeManager.crafttweaker$getByName()));
         CraftTweakerAPI.getAccessibleElementsProvider().recipeManager(manager);
+    }
+    
+    private static void executeScriptRecipes(final Collection<ScriptRecipe> scriptRecipes, final ScriptRunConfiguration configuration) throws Throwable {
+        
+        final URI uri = new URI(RecipeFileSystemProvider.SCHEME + ":johnson");
+        final Map<String, ?> env = Map.of("recipes", scriptRecipes);
+        try(final FileSystem fs = FileSystems.newFileSystem(uri, env)) {
+            final Path root = fs.getRootDirectories().iterator().next();
+            CraftTweakerAPI.getScriptRunManager().createScriptRun(root, configuration).execute();
+        }
     }
     
     public enum UpdatedState {

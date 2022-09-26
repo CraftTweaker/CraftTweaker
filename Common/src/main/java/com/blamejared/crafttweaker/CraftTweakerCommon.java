@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.command.CtCommands;
 import com.blamejared.crafttweaker.impl.plugin.core.PluginManager;
+import com.blamejared.crafttweaker.impl.script.recipefs.RecipeFileSystemProviderInjector;
 import com.blamejared.crafttweaker.platform.Services;
 import com.google.common.base.Suppliers;
 import com.mojang.brigadier.CommandDispatcher;
@@ -41,7 +42,7 @@ public class CraftTweakerCommon {
             throw new IllegalStateException("Could not create Directory " + path);
         }
         CraftTweakerLogger.init();
-        
+        RecipeFileSystemProviderInjector.inject();
         
         Services.REGISTRY.init();
         

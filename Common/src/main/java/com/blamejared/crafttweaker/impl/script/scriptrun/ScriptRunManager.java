@@ -32,8 +32,7 @@ public final class ScriptRunManager implements IScriptRunManager {
     
     private static final Supplier<ScriptRunManager> INSTANCE = Suppliers.memoize(ScriptRunManager::new);
     
-    // Package-private to allow ThroughRecipeScriptRunManager to access it TODO("Remove")
-    static final Supplier<Comparator<IScriptFile>> FILE_COMPARATOR = Suppliers.memoize(() -> {
+    private static final Supplier<Comparator<IScriptFile>> FILE_COMPARATOR = Suppliers.memoize(() -> {
         final Comparator<IScriptFile> noop = (a, b) -> 0; // Required to allow for type inference
         return CraftTweakerAPI.getRegistry()
                 .getPreprocessors()
@@ -114,8 +113,7 @@ public final class ScriptRunManager implements IScriptRunManager {
         this.applyActionInRun(action);
     }
     
-    // Package-private to allow ThroughRecipeScriptRunManager to access it TODO("Remove")
-    IScriptRun createScriptRun(final List<SourceFile> sources, final RunInfo info) {
+    private IScriptRun createScriptRun(final List<SourceFile> sources, final RunInfo info) {
         
         this.previousRunQueues.computeIfAbsent(info.loader(), it -> new RunInfoQueue());
         return new ScriptRun(
