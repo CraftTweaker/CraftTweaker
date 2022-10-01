@@ -34,6 +34,18 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
                                 BiFunction<TagKey<Fluid>, Integer, T> tagMapper,
                                 Function<Stream<T>, T> compoundMapper);
     
+    @ZenCodeType.Method
+    public abstract boolean matches(Fluid fluid);
+    
+    @ZenCodeType.Method
+    public abstract boolean matches(FluidStack fluidStack);
+    
+    @ZenCodeType.Method
+    public abstract boolean matches(TagKey<Fluid> fluidTag);
+    
+    @ZenCodeType.Method
+    public abstract boolean matches(TagKey<Fluid> fluidTag, int amount);
+    
     @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)
     public CTFluidIngredient asCompound(CTFluidIngredient other) {
         
@@ -64,6 +76,24 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
         }
         
         @Override
+        public boolean matches(FluidStack fluidStack) {
+            
+            return this.fluidStack.getInternal().containsFluid(fluidStack);
+        }
+        
+        @Override
+        public boolean matches(TagKey<Fluid> fluidTag) {
+            
+            return this.fluidStack.getInternal().getFluid().is(fluidTag);
+        }
+        
+        @Override
+        public boolean matches(TagKey<Fluid> fluidTag, int amount) {
+            
+            return amount == 1 && this.matches(fluidTag);
+        }
+        
+        @Override
         public String getCommandString() {
             
             return fluidStack.getCommandString();
@@ -74,7 +104,13 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
             
             return fluidMapper.apply(fluidStack.getImmutableInternal());
         }
+    
+        @Override
+        public boolean matches(Fluid fluid) {
         
+            return this.fluidStack.getInternal().getFluid() == fluid;
+        }
+    
     }
     
     public final static class FluidTagWithAmountIngredient extends CTFluidIngredient {
@@ -96,6 +132,30 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
         public <T> T mapTo(Function<FluidStack, T> fluidMapper, BiFunction<TagKey<Fluid>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
             
             return tagMapper.apply(tag.getData().getTagKey(), tag.getAmount());
+        }
+    
+        @Override
+        public boolean matches(Fluid fluid) {
+        
+            return this.tag.getData().contains(fluid);
+        }
+    
+        @Override
+        public boolean matches(FluidStack fluidStack) {
+            
+            return this.tag.getAmount() == 1 && this.tag.getData().contains(fluidStack.getFluid());
+        }
+        
+        @Override
+        public boolean matches(TagKey<Fluid> fluidTag) {
+            
+            return this.tag.getData().getTagKey().equals(fluidTag);
+        }
+        
+        @Override
+        public boolean matches(TagKey<Fluid> fluidTag, int amount) {
+            
+            return this.tag.getAmount() == amount && matches(fluidTag);
         }
         
     }
@@ -121,6 +181,30 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
             Stream<T> stream = elements.stream()
                     .map(element -> element.mapTo(fluidMapper, tagMapper, compoundMapper));
             return compoundMapper.apply(stream);
+        }
+    
+        @Override
+        public boolean matches(Fluid fluid) {
+        
+            return this.elements.stream().anyMatch(ingr -> ingr.matches(fluid));
+        }
+    
+        @Override
+        public boolean matches(FluidStack fluidStack) {
+            
+            return this.elements.stream().anyMatch(ingr -> ingr.matches(fluidStack));
+        }
+        
+        @Override
+        public boolean matches(TagKey<Fluid> fluidTag) {
+            
+            return this.elements.stream().anyMatch(ingr -> ingr.matches(fluidTag));
+        }
+        
+        @Override
+        public boolean matches(TagKey<Fluid> fluidTag, int amount) {
+            
+            return this.elements.stream().anyMatch(ingr -> ingr.matches(fluidTag, amount));
         }
         
     }
