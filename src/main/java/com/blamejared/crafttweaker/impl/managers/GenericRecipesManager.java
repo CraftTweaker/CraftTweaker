@@ -5,9 +5,11 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.item.IIngredient;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 import com.blamejared.crafttweaker.impl.actions.recipes.generic.ActionRemoveAllGenericRecipes;
+import com.blamejared.crafttweaker.impl.actions.recipes.generic.ActionRemoveGenericRecipeByInput;
 import com.blamejared.crafttweaker.impl.actions.recipes.generic.ActionRemoveGenericRecipeByModId;
 import com.blamejared.crafttweaker.impl.actions.recipes.generic.ActionRemoveGenericRecipeByName;
 import com.blamejared.crafttweaker.impl.actions.recipes.generic.ActionRemoveGenericRecipeByOutput;
@@ -39,11 +41,11 @@ import java.util.stream.Collectors;
 @Document("vanilla/api/managers/GenericRecipesManager")
 @ZenCodeType.Name("crafttweaker.api.GenericRecipesManager")
 public class GenericRecipesManager {
-    
-    
+
+
     @ZenCodeGlobals.Global("recipes")
     public static final GenericRecipesManager RECIPES = new GenericRecipesManager();
-    
+
     /**
      * Add a new recipe based on the given recipe in a valid DataPack JSON format.
      *
@@ -63,7 +65,7 @@ public class GenericRecipesManager {
      */
     @ZenCodeType.Method
     public void addJSONRecipe(String name, IData data) {
-        
+
         if(!(data instanceof MapData)) {
             throw new IllegalArgumentException("Json recipe's IData should be a MapData!");
         }
@@ -77,42 +79,42 @@ public class GenericRecipesManager {
                 .equals("crafttweaker:scripts")) {
             throw new IllegalArgumentException("Cannot add a recipe to the CraftTweaker Scripts recipe type!");
         }
-        
+
         final ResourceLocation recipeName = new ResourceLocation(CraftTweaker.MODID, name);
         final IRecipe<?> result = RecipeManager.deserializeRecipe(recipeName, recipeObject);
         final RecipeManagerWrapper recipeManagerWrapper = new RecipeManagerWrapper(result
                 .getType());
         CraftTweakerAPI.apply(new ActionAddRecipe(recipeManagerWrapper, result, null));
     }
-    
+
     @ZenCodeType.Method
     public WrapperRecipe getRecipeByName(String name) {
-        
+
         WrapperRecipe recipe = getRecipeMap().get(new ResourceLocation(name));
         if(recipe == null) {
             throw new IllegalArgumentException("No recipe found with name: \"" + name + "\"");
         }
         return recipe;
     }
-    
+
     @ZenCodeType.Method
     public List<WrapperRecipe> getRecipesByOutput(IIngredient output) {
-        
+
         return getAllRecipes().stream()
                 .filter(iRecipe -> output.matches(iRecipe.getOutput()))
                 .collect(Collectors.toList());
     }
-    
+
     @ZenCodeType.Method
     @ZenCodeType.Getter("allRecipes")
     public List<WrapperRecipe> getAllRecipes() {
-        
+
         return getAllManagers().stream()
                 .map(IRecipeManager::getAllRecipes)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
-    
+
     /**
      * Returns a map of all known recipes.
      *
@@ -121,7 +123,7 @@ public class GenericRecipesManager {
     @ZenCodeType.Method
     @ZenCodeType.Getter("recipeMap")
     public Map<ResourceLocation, WrapperRecipe> getRecipeMap() {
-        
+
         return getAllManagers().stream()
                 .map(IRecipeManager::getRecipeMap)
                 .flatMap(recipeMap -> recipeMap
@@ -129,7 +131,7 @@ public class GenericRecipesManager {
                         .stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
-    
+
     /**
      * Removes recipes by output
      *
@@ -139,10 +141,23 @@ public class GenericRecipesManager {
      */
     @ZenCodeType.Method
     public void removeRecipe(IIngredient output) {
-        
+
         CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByOutput(output));
     }
-    
+
+    /**
+     * Removes all recipes who's input contains the given IItemStack.
+     *
+     * @param input The input IItemStack.
+     *
+     * @docParam input <item:minecraft:iron_ingot>
+     */
+    @ZenCodeType.Method
+    public void removeRecipeByInput(IItemStack input) {
+
+        CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByInput(input));
+    }
+
     /**
      * Removes all recipes with this name.
      *
@@ -150,10 +165,10 @@ public class GenericRecipesManager {
      */
     @ZenCodeType.Method
     public void removeByName(String name) {
-        
+
         CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByName(name));
     }
-    
+
     /**
      * Removes all recipes from the provided mod.
      * Chooses the recipes based on their full recipe name, not based on output item!
@@ -164,10 +179,10 @@ public class GenericRecipesManager {
      */
     @ZenCodeType.Method
     public void removeByModid(String modId) {
-        
+
         removeByModid(modId, null);
     }
-    
+
     /**
      * Removes all recipes from the provided mod.
      * Allows a function to exclude certain recipe names from being removed.
@@ -183,10 +198,10 @@ public class GenericRecipesManager {
      */
     @ZenCodeType.Method
     public void removeByModid(String modId, IRecipeManager.RecipeFilter exclude) {
-        
+
         CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByModId(modId, exclude));
     }
-    
+
     /**
      * Remove recipe based on regex
      *
@@ -196,19 +211,19 @@ public class GenericRecipesManager {
      */
     @ZenCodeType.Method
     public void removeByRegex(String regex) {
-        
+
         CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByRegex(regex));
     }
-    
+
     /**
      * Removes all recipes from all managers.
      */
     @ZenCodeType.Method
     public void removeAll() {
-        
+
         CraftTweakerAPI.apply(new ActionRemoveAllGenericRecipes());
     }
-    
+
     /**
      * Returns a list of all known recipe managers.
      * This includes managers added by mod integrations as well as wrapper managers added to provide simple support.
@@ -216,8 +231,8 @@ public class GenericRecipesManager {
     @ZenCodeType.Method
     @ZenCodeType.Getter("allManagers")
     public List<IRecipeManager> getAllManagers() {
-        
+
         return new ArrayList<>(RecipeTypeBracketHandler.getManagerInstances());
     }
-    
+
 }
