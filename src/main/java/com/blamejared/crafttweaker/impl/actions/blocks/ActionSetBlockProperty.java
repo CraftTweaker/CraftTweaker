@@ -78,7 +78,7 @@ public class ActionSetBlockProperty<T> implements IUndoableAction {
     @Override
     public String describeUndo() {
         
-        return "Reset the value of " + propertyName + " on " + getTargetCommandString() + " to: '" + (newValue == null ? "null" : this.valueNameGetter.apply(oldValue)) + "'";
+        return "Reset the value of " + propertyName + " on " + getTargetCommandString() + " to: '" + (oldValue == null ? "null" : this.valueNameGetter.apply(oldValue)) + "'";
     }
     
     @Override
