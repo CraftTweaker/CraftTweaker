@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.impl.script.scriptrun.runner;
 
+import com.blamejared.crafttweaker.api.util.PathUtil;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunInfo;
-import com.blamejared.crafttweaker.platform.Services;
 import org.openzen.zencode.java.logger.ScriptingEngineLogger;
 import org.openzen.zencode.shared.SourceFile;
 import org.openzen.zenscript.codemodel.SemanticModule;
@@ -23,8 +23,8 @@ final class SyntaxCheckScriptRunner extends ScriptRunner {
             return;
         }
         
-        final Path classes = Services.PLATFORM.getPathFromGameDirectory("classes");
-        this.engine().createRunUnit().dump(classes.toFile());
+        final Path classes = PathUtil.findFromGameDirectory("classes");
+        this.engine().createRunUnit().dump(classes.toFile()); // FIXME("Make ZenCode use NIO")
     }
     
 }

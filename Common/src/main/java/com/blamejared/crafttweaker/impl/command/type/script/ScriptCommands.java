@@ -4,9 +4,9 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.command.CommandUtilities;
 import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
+import com.blamejared.crafttweaker.api.util.PathUtil;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
-import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.brigadier.Command;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,7 +22,7 @@ public final class ScriptCommands {
                 Component.translatable("crafttweaker.command.description.log"),
                 builder -> builder.executes(context -> {
                     final ServerPlayer player = context.getSource().getPlayerOrException();
-                    CommandUtilities.open(player, Services.PLATFORM.getRelativePathFromGameDirectory(CraftTweakerConstants.LOG_PATH));
+                    CommandUtilities.open(player, PathUtil.makeRelativeToGameDirectory(CraftTweakerConstants.LOG_PATH));
                     return Command.SINGLE_SUCCESS;
                 })
         );
@@ -32,7 +32,7 @@ public final class ScriptCommands {
                 Component.translatable("crafttweaker.command.description.script"),
                 builder -> builder.executes(context -> {
                     final ServerPlayer player = context.getSource().getPlayerOrException();
-                    CommandUtilities.open(player, Services.PLATFORM.getRelativePathFromGameDirectory(CraftTweakerConstants.SCRIPTS_DIRECTORY));
+                    CommandUtilities.open(player, PathUtil.makeRelativeToGameDirectory(CraftTweakerConstants.SCRIPTS_DIRECTORY));
                     return Command.SINGLE_SUCCESS;
                 })
         );

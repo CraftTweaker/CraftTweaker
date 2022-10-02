@@ -7,12 +7,12 @@ import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
 import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
+import com.blamejared.crafttweaker.api.util.PathUtil;
 import com.blamejared.crafttweaker.api.villager.CTVillagerTrades;
 import com.blamejared.crafttweaker.impl.command.CtCommands;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.blamejared.crafttweaker.natives.villager.ExpandVillagerProfession;
 import com.blamejared.crafttweaker.natives.world.biome.ExpandBiome;
-import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.ChatFormatting;
@@ -27,7 +27,12 @@ import net.minecraft.world.entity.npc.VillagerTrades;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Optional;
 
 public final class DumpCommands {
     
@@ -264,9 +269,7 @@ public final class DumpCommands {
                             .flatMap(it -> it.idElements()
                                     .stream()
                                     .map(o -> getTagAsString(player, it, o)))
-                            .forEach(it -> {
-                                CraftTweakerAPI.LOGGER.info("\t- {}", it);
-                            });
+                            .forEach(it -> CraftTweakerAPI.LOGGER.info("\t- {}", it));
                     
                     CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.tag.contents")), CommandUtilities.getFormattedLogFile())
                             .withStyle(ChatFormatting.GREEN)), player);
@@ -297,7 +300,7 @@ public final class DumpCommands {
     
     private static void doFullBracketsDump(final CommandContext<CommandSourceStack> context) {
         
-        final Path directory = Services.PLATFORM.getPathFromGameDirectory("./ct_dumps");
+        final Path directory = PathUtil.findFromGameDirectory("ct_dumps");
         try {
             Files.createDirectories(directory);
         } catch(final IOException e) {

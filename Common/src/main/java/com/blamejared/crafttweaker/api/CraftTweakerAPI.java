@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api;
 
 import com.blamejared.crafttweaker.api.action.base.IAction;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
+import com.blamejared.crafttweaker.api.util.PathUtil;
 import com.blamejared.crafttweaker.api.zencode.expand.IDataRewrites;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunManager;
 import com.blamejared.crafttweaker.platform.Services;
@@ -26,7 +27,7 @@ public final class CraftTweakerAPI {
     
     private static final Supplier<ICraftTweakerRegistry> REGISTRY = Suppliers.memoize(Services.BRIDGE::registry);
     private static final Supplier<IScriptRunManager> SCRIPT_RUN_MANAGER = Suppliers.memoize(Services.BRIDGE::scriptRunManager);
-    private static final Supplier<Path> SCRIPTS_DIRECTORY = Suppliers.memoize(() -> Services.PLATFORM.getPathFromGameDirectory(CraftTweakerConstants.SCRIPTS_DIRECTORY));
+    private static final Supplier<Path> SCRIPTS_DIRECTORY = Suppliers.memoize(() -> PathUtil.findFromGameDirectory(CraftTweakerConstants.SCRIPTS_DIRECTORY));
     
     // Do we want to make a log4j wrapper and expose it to a script...? 😬
     /**

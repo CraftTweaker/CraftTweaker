@@ -1,8 +1,8 @@
 package com.blamejared.crafttweaker.impl.script.scriptrun.runner;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.util.PathUtil;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunInfo;
-import com.blamejared.crafttweaker.platform.Services;
 import org.openzen.zencode.java.logger.ScriptingEngineLogger;
 import org.openzen.zencode.shared.SourceFile;
 import org.openzen.zenscript.codemodel.HighLevelDefinition;
@@ -32,7 +32,7 @@ final class FormattingScriptRunner extends ScriptRunner {
             return;
         }
         
-        final Path classes = Services.PLATFORM.getPathFromGameDirectory("classes");
+        final Path classes = PathUtil.findFromGameDirectory("classes");
         this.engine().createRunUnit().dump(classes.toFile());
     }
     
@@ -41,7 +41,7 @@ final class FormattingScriptRunner extends ScriptRunner {
         final List<HighLevelDefinition> definitions = module.definitions.getAll();
         final ScriptFormattingSettings.Builder builder = new ScriptFormattingSettings.Builder();
         final FileFormatter formatter = new FileFormatter(builder.build());
-        final Path formattedScriptsDirectory = Services.PLATFORM.getPathFromGameDirectory("scriptsFormatted");
+        final Path formattedScriptsDirectory = PathUtil.findFromGameDirectory("scriptsFormatted");
         
         module.scripts.forEach(block -> {
             final String format = formatter.format(module.rootPackage, block, definitions);
