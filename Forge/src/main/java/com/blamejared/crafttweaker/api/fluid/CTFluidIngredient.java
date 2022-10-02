@@ -37,13 +37,10 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
     @ZenCodeType.Method
     public abstract boolean matches(Fluid fluid);
     
-    @ZenCodeType.Method
     public abstract boolean matches(FluidStack fluidStack);
     
-    @ZenCodeType.Method
     public abstract boolean matches(TagKey<Fluid> fluidTag);
     
-    @ZenCodeType.Method
     public abstract boolean matches(TagKey<Fluid> fluidTag, int amount);
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)
