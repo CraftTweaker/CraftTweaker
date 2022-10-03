@@ -38,7 +38,7 @@ public class ScriptBuilder {
         try {
             URL resource = this.getClass().getResource("/data/crafttweaker/gametest/scripts/" + path);
             String content = IOUtils.toString(resource.openStream(), StandardCharsets.UTF_8);
-            scripts.add(new Script(path.toString(), content));
+            scripts.add(new Script(path, content));
         } catch(IOException e) {
             throw new RuntimeException(e);
         }
