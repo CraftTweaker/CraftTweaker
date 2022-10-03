@@ -183,7 +183,6 @@ public class KnownTagManager<T> implements ITagManager<KnownTag<T>> {
     @Nullable
     public Collection<Holder<T>> getInternal(KnownTag<T> tag) {
     
-        Collection<Holder<T>> holderTag = backingResult.tagMap().get(tag.id());
         return backingResult.tagMap().get(tag.id());
     }
     
