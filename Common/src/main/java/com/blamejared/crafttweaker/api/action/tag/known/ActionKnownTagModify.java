@@ -38,7 +38,7 @@ public abstract class ActionKnownTagModify<T> extends ActionKnownTag<T> {
             logger.error("Tag entries cannot be null!", new NullPointerException("Tag entries cannot be null!"));
             return false;
         }
-        if(values().size() == 0) {
+        if(values().isEmpty()) {
             logger.error("Tag entries cannot be empty!", new IndexOutOfBoundsException("Tag entries cannot be empty!"));
             return false;
         }

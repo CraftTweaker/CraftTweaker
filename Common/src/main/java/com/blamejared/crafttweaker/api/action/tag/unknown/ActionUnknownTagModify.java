@@ -39,7 +39,7 @@ public abstract class ActionUnknownTagModify extends ActionUnknownTag {
             logger.error("Tag entries cannot be null!", new NullPointerException("Tag entries cannot be null!"));
             return false;
         }
-        if(values().size() == 0) {
+        if(values().isEmpty()) {
             logger.error("Tag entries cannot be empty!", new IndexOutOfBoundsException("Tag entries cannot be empty!"));
             return false;
         }
