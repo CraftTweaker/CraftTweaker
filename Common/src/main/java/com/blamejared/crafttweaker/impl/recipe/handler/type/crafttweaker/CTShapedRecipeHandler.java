@@ -11,7 +11,7 @@ import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipeBase;
 import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.platform.Services;
-import it.unimi.dsi.fastutil.ints.IntIntPair;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 
@@ -54,8 +54,8 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecip
         final RecipeFunction2D function = recipe.getFunction();
         final List<IIngredient> ingredients = this.flatten(recipe.getCtIngredients(), width, height);
         
-        @SuppressWarnings("SuspiciousNameCombination") final IDecomposedRecipe decomposedRecipe = IDecomposedRecipe.builder()
-                .with(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D, IntIntPair.of(width, height))
+        final IDecomposedRecipe decomposedRecipe = IDecomposedRecipe.builder()
+                .with(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D, Pair.of(width, height))
                 .with(BuiltinRecipeComponents.Metadata.MIRROR_AXIS, recipe.getMirrorAxis())
                 .with(BuiltinRecipeComponents.Input.INGREDIENTS, ingredients)
                 .with(BuiltinRecipeComponents.Output.ITEMS, recipe.getCtOutput())
@@ -71,14 +71,14 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecip
     @Override
     public Optional<CTShapedRecipeBase> recompose(final IRecipeManager<? super CTShapedRecipeBase> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
         
-        final IntIntPair size = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D);
+        final Pair<Integer, Integer> size = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D);
         final MirrorAxis axis = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.MIRROR_AXIS);
         final List<IIngredient> ingredients = recipe.getOrThrow(BuiltinRecipeComponents.Input.INGREDIENTS);
         final var function = recipe.get(BuiltinRecipeComponents.Processing.FUNCTION_2D);
         final IItemStack output = recipe.getOrThrowSingle(BuiltinRecipeComponents.Output.ITEMS);
         
-        final int width = size.firstInt();
-        final int height = size.secondInt();
+        final int width = size.getFirst();
+        final int height = size.getSecond();
         
         if(width <= 0 || height <= 0) {
             throw new IllegalArgumentException("Invalid shape size: bounds must be positive but got " + size);

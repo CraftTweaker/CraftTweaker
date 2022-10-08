@@ -9,7 +9,7 @@ import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction0D;
 import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction1D;
 import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction2D;
 import com.google.gson.reflect.TypeToken;
-import it.unimi.dsi.fastutil.ints.IntIntPair;
+import com.mojang.datafixers.util.Pair;
 
 import java.util.Arrays;
 
@@ -42,11 +42,10 @@ public final class BuiltinRecipeComponents {
                 Object::equals
         );
         
-        // TODO("This cannot be specified yet")
-        public static final IRecipeComponent<IntIntPair> SHAPE_SIZE_2D = IRecipeComponent.simple(
+        public static final IRecipeComponent<Pair<Integer, Integer>> SHAPE_SIZE_2D = IRecipeComponent.simple(
                 CraftTweakerConstants.rl("metadata/shape_size_2d"),
                 new TypeToken<>() {},
-                Object::equals
+                RecipeComponentEqualityCheckers::notComparable
         );
         
         private Metadata() {}
@@ -108,7 +107,7 @@ public final class BuiltinRecipeComponents {
                 RecipeComponentEqualityCheckers::notComparable
         );
         
-        public static final IRecipeComponent<Number> TIME = IRecipeComponent.simple(
+        public static final IRecipeComponent<Integer> TIME = IRecipeComponent.simple(
                 CraftTweakerConstants.rl("processing/time"),
                 new TypeToken<>() {},
                 RecipeComponentEqualityCheckers::areNumbersEqual
@@ -128,7 +127,7 @@ public final class BuiltinRecipeComponents {
      */
     public static final class Output {
         
-        public static final IRecipeComponent<Number> EXPERIENCE = IRecipeComponent.simple(
+        public static final IRecipeComponent<Float> EXPERIENCE = IRecipeComponent.simple(
                 CraftTweakerConstants.rl("output/experience"),
                 new TypeToken<>() {},
                 RecipeComponentEqualityCheckers::areNumbersEqual

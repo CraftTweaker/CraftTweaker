@@ -24,12 +24,12 @@ public final class RecipeComponentEqualityCheckers {
         return a.matches(b, false);
     }
     
-    public static boolean areNumbersEqual(final Number a, final Number b) {
+    public static <T extends Number> boolean areNumbersEqual(final T a, final T b) {
         
-        return Objects.equals(a, b); // TODO("This might not be accurate, please verify and fix")
+        return a.doubleValue() == b.doubleValue();
     }
     
-    public static <T> boolean notComparable(@SuppressWarnings("unused") final T a, @SuppressWarnings("unused") final T b) {
+    public static <T> boolean notComparable(final T a, final T b) {
         
         throw new UnsupportedOperationException("Cannot compare " + a + " and " + b);
     }

@@ -9,7 +9,7 @@ import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.platform.Services;
-import it.unimi.dsi.fastutil.ints.IntIntPair;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -56,7 +56,7 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
                 .toList();
         final IDecomposedRecipe decomposedRecipe = IDecomposedRecipe.builder()
                 .with(BuiltinRecipeComponents.Metadata.GROUP, recipe.getGroup())
-                .with(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D, IntIntPair.of(recipe.getWidth(), recipe.getHeight()))
+                .with(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D, Pair.of(recipe.getWidth(), recipe.getHeight()))
                 .with(BuiltinRecipeComponents.Input.INGREDIENTS, ingredients)
                 .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(recipe.getResultItem()))
                 .build();
@@ -67,12 +67,12 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
     public Optional<ShapedRecipe> recompose(final IRecipeManager<? super ShapedRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
         
         final String group = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.GROUP);
-        final IntIntPair size = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D);
+        final Pair<Integer, Integer> size = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D);
         final List<IIngredient> ingredients = recipe.getOrThrow(BuiltinRecipeComponents.Input.INGREDIENTS);
         final IItemStack output = recipe.getOrThrowSingle(BuiltinRecipeComponents.Output.ITEMS);
         
-        final int width = size.firstInt();
-        final int height = size.secondInt();
+        final int width = size.getFirst();
+        final int height = size.getSecond();
         
         if(width <= 0 || height <= 0) {
             throw new IllegalArgumentException("Invalid shape size: bounds must be positive but got " + size);

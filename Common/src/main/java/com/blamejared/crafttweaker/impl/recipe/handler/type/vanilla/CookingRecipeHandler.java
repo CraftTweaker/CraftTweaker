@@ -85,23 +85,17 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
         
         final String group = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.GROUP);
         final IIngredient input = recipe.getOrThrowSingle(BuiltinRecipeComponents.Input.INGREDIENTS);
-        final Number cookTime = recipe.getOrThrowSingle(BuiltinRecipeComponents.Processing.TIME);
-        final Number experience = recipe.getOrThrowSingle(BuiltinRecipeComponents.Output.EXPERIENCE);
+        final int cookTime = recipe.getOrThrowSingle(BuiltinRecipeComponents.Processing.TIME);
+        final float experience = recipe.getOrThrowSingle(BuiltinRecipeComponents.Output.EXPERIENCE);
         final IItemStack output = recipe.getOrThrowSingle(BuiltinRecipeComponents.Output.ITEMS);
         
         if(input.isEmpty()) {
             throw new IllegalArgumentException("Invalid input: empty ingredient");
         }
-        if(Math.floor(cookTime.doubleValue()) != cookTime.longValue()) {
-            throw new IllegalArgumentException("Invalid cooking time: must be an integer, but got " + cookTime);
-        }
-        if(cookTime.intValue() != cookTime.longValue()) {
-            throw new IllegalArgumentException("Invalid cooking time: bigger than max allowed " + Integer.MAX_VALUE + ": " + cookTime);
-        }
-        if(cookTime.intValue() <= 0) {
+        if(cookTime <= 0) {
             throw new IllegalArgumentException("Invalid cooking time: less than min allowed 1: " + cookTime);
         }
-        if(experience.floatValue() < 0) {
+        if(experience < 0) {
             throw new IllegalArgumentException("Invalid experience: less than min allowed 0:" + experience);
         }
         if(output.isEmpty()) {
@@ -109,7 +103,7 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
         }
         
         final CookingRecipeFactory<?> factory = LOOKUP.get(manager.getRecipeType()).getSecond();
-        return Optional.of(factory.create(name, group, input.asVanillaIngredient(), output.getInternal(), experience.floatValue(), cookTime.intValue()));
+        return Optional.of(factory.create(name, group, input.asVanillaIngredient(), output.getInternal(), experience, cookTime));
     }
     
 }
