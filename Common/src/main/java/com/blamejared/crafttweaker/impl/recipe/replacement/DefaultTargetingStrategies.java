@@ -11,10 +11,8 @@ public final class DefaultTargetingStrategies {
     
     private DefaultTargetingStrategies() {}
     
-    // TODO("we need to find proper names for these strategies")
-    
     @ZenCodeType.Nullable
-    public static <T> T plain(@SuppressWarnings("unused") final IRecipeComponent<T> component, final T object, final Function<T, @ZenCodeType.Nullable T> replacer) {
+    public static <T> T shallow(@SuppressWarnings("unused") final IRecipeComponent<T> component, final T object, final Function<T, @ZenCodeType.Nullable T> replacer) {
         
         return replacer.apply(object);
     }

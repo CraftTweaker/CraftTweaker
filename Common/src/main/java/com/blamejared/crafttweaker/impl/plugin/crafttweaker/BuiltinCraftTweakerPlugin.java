@@ -213,9 +213,9 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
     @Override
     public void registerTaggableElements(ITaggableElementRegistrationHandler handler) {
         
-        this.zenGatherer.onCandidates(candidate -> {
-            this.taggableElementsRegistrationManager.attemptRegistration(candidate.clazz(), handler);
-        });
+        this.zenGatherer.onCandidates(candidate ->
+                this.taggableElementsRegistrationManager.attemptRegistration(candidate.clazz(), handler)
+        );
     }
     
     @Override
@@ -224,9 +224,7 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         handler.registerTargetingFilter(DefaultTargetingFilters::scripts);
         handler.registerTargetingFilter(DefaultTargetingFilters::vanillaSpecial);
         
-        // TODO("Find better names for all of these")
-        handler.registerTargetingStrategy(ITargetingStrategy.DEFAULT_STRATEGY_ID, DefaultTargetingStrategies::plain);
-        handler.registerTargetingStrategy(CraftTweakerConstants.rl("plain"), DefaultTargetingStrategies::plain);
+        handler.registerTargetingStrategy(ITargetingStrategy.DEFAULT_STRATEGY_ID, DefaultTargetingStrategies::shallow);
         handler.registerTargetingStrategy(CraftTweakerConstants.rl("deep"), DefaultTargetingStrategies::deep);
     }
     

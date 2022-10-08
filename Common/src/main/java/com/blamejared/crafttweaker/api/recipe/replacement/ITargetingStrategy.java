@@ -43,7 +43,7 @@ public interface ITargetingStrategy extends CommandStringDisplayable {
      *
      * @since 10.0.0
      */
-    ResourceLocation DEFAULT_STRATEGY_ID = CraftTweakerConstants.rl("default");
+    ResourceLocation DEFAULT_STRATEGY_ID = CraftTweakerConstants.rl("shallow");
     
     /**
      * Obtains a {@link ITargetingStrategy} with the given id, if available.
