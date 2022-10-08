@@ -72,7 +72,9 @@ final class ScriptFile implements IScriptFile {
             throw new IllegalArgumentException("File " + file + " is not contained within " + baseDirectory);
         }
         final String name = baseDirectory.toAbsolutePath().relativize(file.toAbsolutePath()).toString();
-        return of(name, lines(file), info, preprocessors);
+        try(final Stream<String> lines = lines(file)) {
+            return of(name, lines, info, preprocessors);
+        }
     }
     
     private static boolean verifyChild(final Path parent, final Path file) {
