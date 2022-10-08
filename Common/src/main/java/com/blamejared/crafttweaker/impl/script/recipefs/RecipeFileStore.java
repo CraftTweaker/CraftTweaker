@@ -8,15 +8,14 @@ import java.nio.file.attribute.FileAttributeView;
 import java.nio.file.attribute.FileStoreAttributeView;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.function.LongSupplier;
 
 final class RecipeFileStore extends FileStore {
     
-    private final LongSupplier size;
+    private final long size;
     
     RecipeFileStore(final Collection<ScriptRecipe> recipeList) {
         
-        this.size = () -> recipeList.stream().map(ScriptRecipe::getContent).mapToLong(String::length).sum();
+        this.size = recipeList.stream().map(ScriptRecipe::getContent).mapToLong(String::length).sum();
     }
     
     @Override
@@ -40,13 +39,13 @@ final class RecipeFileStore extends FileStore {
     @Override
     public long getTotalSpace() {
         
-        return this.size.getAsLong();
+        return this.size;
     }
     
     @Override
     public long getUsableSpace() {
         
-        return this.size.getAsLong();
+        return this.size;
     }
     
     @Override

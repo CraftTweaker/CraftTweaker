@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl.script.recipefs;
 
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
+import com.google.common.base.Suppliers;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.FileNotFoundException;
@@ -45,6 +46,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Executor;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 final class RecipeFileSystem extends FileSystem {
@@ -52,7 +54,7 @@ final class RecipeFileSystem extends FileSystem {
     private final RecipeFileSystemProvider provider;
     private final Collection<ScriptRecipe> recipes;
     private final RecipePath root;
-    private final FileStore store;
+    private final Supplier<FileStore> store;
     private final FileTime creationTime;
     private boolean closed;
     
@@ -61,7 +63,7 @@ final class RecipeFileSystem extends FileSystem {
         this.provider = provider;
         this.recipes = recipes;
         this.root = RecipePath.of(this, "/");
-        this.store = new RecipeFileStore(recipes);
+        this.store = Suppliers.memoize(() -> new RecipeFileStore(recipes));
         this.creationTime = FileTime.from(Instant.now());
         this.closed = false;
     }
@@ -109,7 +111,7 @@ final class RecipeFileSystem extends FileSystem {
     public Iterable<FileStore> getFileStores() {
         
         this.open();
-        return List.of(this.store);
+        return List.of(this.store.get());
     }
     
     @Override
@@ -227,7 +229,7 @@ final class RecipeFileSystem extends FileSystem {
         
         Objects.requireNonNull(path);
         this.open();
-        return this.store;
+        return this.store.get();
     }
     
     void access(final RecipePath path, final AccessMode... modes) throws IOException {
