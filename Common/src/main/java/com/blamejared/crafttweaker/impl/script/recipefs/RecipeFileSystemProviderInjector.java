@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.util.HandleUtil;
 import java.lang.invoke.VarHandle;
 import java.nio.file.spi.FileSystemProvider;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class RecipeFileSystemProviderInjector {
@@ -30,7 +31,7 @@ public final class RecipeFileSystemProviderInjector {
                     final List<FileSystemProvider> newProviders = new ArrayList<>(providers);
                     newProviders.add(new RecipeFileSystemProvider());
                     
-                    if(installedProviders.compareAndSet(providers, newProviders)) {
+                    if(installedProviders.compareAndSet(providers, Collections.unmodifiableList(newProviders))) {
                         break;
                     }
                 }
