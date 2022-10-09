@@ -160,8 +160,9 @@ class DefaultPlugin : Plugin<Project> {
                 filesMatching("*.mixins.json") {
                     if(project.name.equals("Fabric")){
                         expand("refmap_target" to "${project.extensions.getByType(BasePluginExtension::class.java).archivesName.get()}-")
+                    } else {
+                        expand("refmap_target" to "${Properties.MOD_ID}.")
                     }
-                    expand("refmap_target" to "${Properties.MOD_ID}.")
                 }
                 filesMatching("fabric.mod.json") {
                     expand("version" to project.version)
