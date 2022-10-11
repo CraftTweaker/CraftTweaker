@@ -16,7 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 public interface IReplacerComponentRegistrationHandler {
     
     /**
-     * Registers a {@link ITargetingFilter} that will be applied globally.
+     * Registers an {@link ITargetingFilter} that will be applied globally.
      *
      * <p>This essentially allows you to remove recipes from the list of recipes that a replacer is allowed to see or
      * perform additional changes. Note that this targeting filter is global and <strong>positive</strong>, meaning that
@@ -33,7 +33,7 @@ public interface IReplacerComponentRegistrationHandler {
     void registerTargetingFilter(final ITargetingFilter filter);
     
     /**
-     * Registers a {@link ITargetingStrategy} for script usage.
+     * Registers an {@link ITargetingStrategy} for script usage.
      *
      * <p>It is not allowed to register multiple targeting strategies with the same ID.</p>
      *

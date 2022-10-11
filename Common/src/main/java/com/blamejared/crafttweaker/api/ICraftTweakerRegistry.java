@@ -170,7 +170,7 @@ public interface ICraftTweakerRegistry {
      * method before that might lead to undefined behavior.</p>
      *
      * <p>Take note that all recipe components have a type associated with them. This query does not attempt to verify
-     * that the component with the given id does reflect the type specified in the type parameter. Care must be taken by
+     * that the component with the given id reflects the type specified in the type parameter. Care must be taken by
      * the caller of this method to ensure correctness.</p>
      *
      * @param id  The name id of the recipe component.

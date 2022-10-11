@@ -99,7 +99,7 @@ public final class RecipeComponentBracketHandler implements BracketExpressionPar
         try {
             return ParseUtil.readParsedType(makeParsedType(token.getType()), position);
         } catch(final UnsupportedOperationException | IllegalStateException | NoSuchElementException e) {
-            throw new ParseException(position, "Unable to resolve component generic" + token + " due to an error", e);
+            throw new ParseException(position, "Unable to resolve component generic " + token + " due to an error", e);
         }
     }
     

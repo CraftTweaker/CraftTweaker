@@ -17,6 +17,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -47,7 +48,7 @@ public final class ActionBatchReplacement implements IRuntimeAction {
     @Override
     public String describe() {
         
-        final var joiner = Collectors.joining(",", "{", "}");
+        final Collector<CharSequence, ?, String> joiner = Collectors.joining(",", "{", "}");
         return "Replacing in %s according to requests %s".formatted(
                 this.targetingRules.stream().map(IFilteringRule::describe).collect(joiner),
                 this.requests.stream().map(ReplacementRequest::describe).collect(joiner)
