@@ -223,7 +223,7 @@ public final class Mod {
         if(obj == null || obj.getClass() != this.getClass()) {
             return false;
         }
-        var that = (Mod) obj;
+        Mod that = (Mod) obj;
         return Objects.equals(this.id, that.id) && Objects.equals(this.displayName, that.displayName) && Objects.equals(this.version, that.version);
     }
     

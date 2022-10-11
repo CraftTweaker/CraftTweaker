@@ -11,6 +11,7 @@ import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
 
 import javax.annotation.Nullable;
 import java.net.URI;
@@ -65,7 +66,7 @@ public class RecipeManagerScriptLoader {
         
         fixRecipeManager(manager);
         
-        final var allRecipes = ((AccessRecipeManager) manager).crafttweaker$getRecipes();
+        final Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> allRecipes = ((AccessRecipeManager) manager).crafttweaker$getRecipes();
         final Map<ResourceLocation, Recipe<?>> recipes = allRecipes.remove(ScriptRecipeType.INSTANCE); // Why keep them around?
         
         if(recipes == null || recipes.isEmpty()) {

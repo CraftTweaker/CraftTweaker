@@ -63,7 +63,7 @@ public final class CTShapelessRecipeHandler implements IRecipeHandler<CTShapeles
     public Optional<CTShapelessRecipeBase> recompose(IRecipeManager<? super CTShapelessRecipeBase> manager, ResourceLocation name, IDecomposedRecipe recipe) {
         
         final List<IIngredient> ingredients = recipe.getOrThrow(BuiltinRecipeComponents.Input.INGREDIENTS);
-        final var function = recipe.get(BuiltinRecipeComponents.Processing.FUNCTION_1D);
+        final List<RecipeFunction1D> function = recipe.get(BuiltinRecipeComponents.Processing.FUNCTION_1D);
         final IItemStack output = recipe.getOrThrowSingle(BuiltinRecipeComponents.Output.ITEMS);
         
         if(ingredients.stream().anyMatch(IIngredient::isEmpty)) {

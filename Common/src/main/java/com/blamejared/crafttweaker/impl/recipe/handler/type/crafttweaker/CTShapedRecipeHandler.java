@@ -74,7 +74,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecip
         final Pair<Integer, Integer> size = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D);
         final MirrorAxis axis = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.MIRROR_AXIS);
         final List<IIngredient> ingredients = recipe.getOrThrow(BuiltinRecipeComponents.Input.INGREDIENTS);
-        final var function = recipe.get(BuiltinRecipeComponents.Processing.FUNCTION_2D);
+        final List<RecipeFunction2D> function = recipe.get(BuiltinRecipeComponents.Processing.FUNCTION_2D);
         final IItemStack output = recipe.getOrThrowSingle(BuiltinRecipeComponents.Output.ITEMS);
         
         final int width = size.getFirst();
