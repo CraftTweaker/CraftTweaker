@@ -16,8 +16,7 @@ dependencies {
     minecraft("com.mojang:minecraft:${Versions.MINECRAFT}")
     mappings(loom.layered {
         officialMojangMappings()
-        //TODO make this use 1.19 when it is available
-        parchment("org.parchmentmc.data:parchment-1.18.2:${Versions.PARCHMENT}@zip")
+        parchment("org.parchmentmc.data:parchment-1.19.2:${Versions.PARCHMENT}@zip")
     })
     implementation("org.jetbrains:annotations:23.0.0")
     modImplementation("net.fabricmc:fabric-loader:${Versions.FABRIC_LOADER}")
@@ -33,8 +32,8 @@ dependencies {
     implementation("org.reflections:reflections:${Versions.REFLECTIONS}")?.let { include(it) }
     implementation("org.javassist:javassist:${Versions.JAVA_ASSIST}")?.let { include(it) } // required for reflections
 
-    modImplementation("com.faux.fauxcustomentitydata:FauxCustomEntityData-fabric-1.19:${Versions.FAUX_CUSTOM_ENTITY_DATA}")
-    modImplementation("com.faux.ingredientextension:IngredientExtensionAPI-fabric-1.19:${Versions.INGREDIENT_EXTENSION_API}")
+    modImplementation("com.faux.fauxcustomentitydata:FauxCustomEntityData-fabric-1.19.2:${Versions.FAUX_CUSTOM_ENTITY_DATA}")
+    modImplementation("com.faux.ingredientextension:IngredientExtensionAPI-fabric-1.19.2:${Versions.INGREDIENT_EXTENSION_API}")
 
     gametestCompileOnly(files(project(":Common").dependencyProject.sourceSets.gametest.get().java.srcDirs))
     Dependencies.ZENCODE_TEST.forEach {

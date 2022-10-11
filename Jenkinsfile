@@ -7,9 +7,9 @@ def botUsername = 'crafttweakerbot'
 def botEmail = 'crafttweakerbot@gmail.com'
 
 def documentationDir = 'CrafttweakerDocumentation'
-def exportDirInRepo = 'docs_exported/1.18/crafttweaker'
+def exportDirInRepo = 'docs_exported/1.19/crafttweaker'
 
-def branchName = "1.18";
+def branchName = "1.19";
 
 pipeline {
     agent any
