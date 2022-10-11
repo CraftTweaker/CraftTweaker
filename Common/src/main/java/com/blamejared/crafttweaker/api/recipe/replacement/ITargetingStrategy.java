@@ -18,7 +18,7 @@ import java.util.function.Function;
  * with replacement. For example, a strategy might determine that all composite components should be decomposed into
  * atoms.</p>
  *
- * <p>For script writers, a strategy can be obtained with the {@code <targetinstrategy>} bracket handler.</p>
+ * <p>For script writers, a strategy can be obtained with the {@code <targetingstrategy>} bracket handler.</p>
  *
  * <p>For integration writers, an instance of a targeting strategy can be obtained through the {@code find} method. Any
  * newly created strategy must be registered in the CraftTweaker plugin to be available to users.</p>
