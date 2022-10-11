@@ -19,7 +19,7 @@ public class LongDataTest implements CraftTweakerGameTest {
     
     private String named(String name) {
         
-        return "/data/long/%s.zs".formatted(name);
+        return "data/long/%s.zs".formatted(name);
     }
     
     @GameTest(template = "crafttweaker:empty")

@@ -19,7 +19,7 @@ public class DoubleDataTest implements CraftTweakerGameTest {
     
     private String named(String name) {
         
-        return "/data/double/%s.zs".formatted(name);
+        return "data/double/%s.zs".formatted(name);
     }
     
     @GameTest(template = "crafttweaker:empty")

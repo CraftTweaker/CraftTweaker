@@ -19,7 +19,7 @@ public class IntDataTest implements CraftTweakerGameTest {
     
     private String named(String name) {
         
-        return "/data/int/%s.zs".formatted(name);
+        return "data/int/%s.zs".formatted(name);
     }
     
     @GameTest(template = "crafttweaker:empty")

@@ -19,7 +19,7 @@ public class ByteDataTest implements CraftTweakerGameTest {
     
     private String named(String name) {
         
-        return "/data/byte/%s.zs".formatted(name);
+        return "data/byte/%s.zs".formatted(name);
     }
     
     @GameTest(template = "crafttweaker:empty")

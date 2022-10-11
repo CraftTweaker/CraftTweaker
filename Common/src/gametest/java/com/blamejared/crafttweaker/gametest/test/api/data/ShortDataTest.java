@@ -19,7 +19,7 @@ public class ShortDataTest implements CraftTweakerGameTest {
     
     private String named(String name) {
         
-        return "/data/short/%s.zs".formatted(name);
+        return "data/short/%s.zs".formatted(name);
     }
     
     @GameTest(template = "crafttweaker:empty")

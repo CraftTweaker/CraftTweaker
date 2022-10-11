@@ -24,7 +24,7 @@ public class MapDataTest implements CraftTweakerGameTest {
     
     private String named(String name) {
         
-        return "/data/map/%s.zs".formatted(name);
+        return "data/map/%s.zs".formatted(name);
     }
     
     @GameTest(template = "crafttweaker:empty")
