@@ -427,7 +427,7 @@ public class BracketHandlers {
     }
     
     /**
-     * Gets a {@link ITargetingStrategy} based on its name.
+     * Gets an {@link ITargetingStrategy} based on its name.
      *
      * <p>Throws an exception if the strategy doesn't exist.</p>
      *

@@ -46,7 +46,7 @@ public interface ITargetingStrategy extends CommandStringDisplayable {
     ResourceLocation DEFAULT_STRATEGY_ID = CraftTweakerConstants.rl("shallow");
     
     /**
-     * Obtains a {@link ITargetingStrategy} with the given id, if available.
+     * Obtains an {@link ITargetingStrategy} with the given id, if available.
      *
      * <p>It is invalid to call this method before the {@link IReplacerRegistry} has been fully built: attempting to do
      * that will result in undefined behavior.</p>

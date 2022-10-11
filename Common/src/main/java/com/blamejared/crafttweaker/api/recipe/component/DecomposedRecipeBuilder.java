@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Creates a simple instance of a {@link IDecomposedRecipe} with the given components.
+ * Creates a simple instance of an {@link IDecomposedRecipe} with the given components.
  *
  * <p>An instance of this class can be obtained through {@link IDecomposedRecipe#builder()}. It is highly suggested to
  * use this builder rather than implement the interface yourself.</p>
@@ -108,7 +108,7 @@ public final class DecomposedRecipeBuilder {
     }
     
     /**
-     * Builds a {@link IDecomposedRecipe} with the given set of components.
+     * Builds an {@link IDecomposedRecipe} with the given set of components.
      *
      * @return A new {@link IDecomposedRecipe} with the specified set of components.
      *

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Represents a script file which will be read during a {@link IScriptRun}.
+ * Represents a script file which will be read during an {@link IScriptRun}.
  *
  * <p>The file might refer to a real file stored on disk, a fake file generated on the fly, or any other source of
  * ZenCode code. No assumptions are made on the source of the file.</p>

@@ -14,7 +14,7 @@ import java.util.List;
 public interface IScriptRunManager {
     
     /**
-     * Creates a {@link IScriptRun} with the specified {@link ScriptRunConfiguration}.
+     * Creates an {@link IScriptRun} with the specified {@link ScriptRunConfiguration}.
      *
      * <p>The script run will execute all scripts that are present in the default scripts directory. In this instance, a
      * valid script file is identified by a {@link Path} whose {@link java.nio.file.attribute.BasicFileAttributes}
@@ -30,7 +30,7 @@ public interface IScriptRunManager {
     IScriptRun createScriptRun(final ScriptRunConfiguration configuration);
     
     /**
-     * Creates a {@link IScriptRun} with the specified {@link ScriptRunConfiguration} executing all valid scripts from
+     * Creates an {@link IScriptRun} with the specified {@link ScriptRunConfiguration} executing all valid scripts from
      * the given {@code root}.
      *
      * <p>In this instance, a valid script file is identified by a {@link Path} whose
@@ -48,7 +48,7 @@ public interface IScriptRunManager {
     IScriptRun createScriptRun(final Path root, final ScriptRunConfiguration configuration);
     
     /**
-     * Creates a {@link IScriptRun} with the specified {@link ScriptRunConfiguration} executing the script files in
+     * Creates an {@link IScriptRun} with the specified {@link ScriptRunConfiguration} executing the script files in
      * the {@code files} list.
      *
      * <p>In this instance, all {@link Path}s given in {@code files} are assumed to be valid files. The path given as
@@ -67,7 +67,7 @@ public interface IScriptRunManager {
     IScriptRun createScriptRun(final Path root, final List<Path> files, final ScriptRunConfiguration configuration);
     
     /**
-     * Creates a {@link IScriptRun} with the specified {@link ScriptRunConfiguration} executing the given ZenCode
+     * Creates an {@link IScriptRun} with the specified {@link ScriptRunConfiguration} executing the given ZenCode
      * {@link SourceFile}s.
      *
      * <p>No restrictions are imposed on the type of the source files given.</p>
@@ -100,7 +100,7 @@ public interface IScriptRunManager {
     /**
      * Applies the given action.
      *
-     * <p>Application of the action requires a {@link IScriptRun} to be currently executing. Attempting to apply an
+     * <p>Application of the action requires an {@link IScriptRun} to be currently executing. Attempting to apply an
      * action outside of a script run will result in an {@link IllegalStateException} being thrown.</p>
      *
      * @param action The action to apply.

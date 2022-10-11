@@ -33,7 +33,7 @@ import java.util.Set;
 public interface ICraftTweakerRegistry {
     
     /**
-     * Attempts to find a {@link IScriptLoader} with the given name, if available.
+     * Attempts to find an {@link IScriptLoader} with the given name, if available.
      *
      * <p>This method can be called only after all registries have been successfully built: attempting to call this
      * method before that might lead to undefined behavior. It is also illegal to attempt to query the global loader
@@ -59,7 +59,7 @@ public interface ICraftTweakerRegistry {
     Collection<IScriptLoader> getAllLoaders();
     
     /**
-     * Attempts to find a {@link IScriptLoadSource} with the given id, if possible.
+     * Attempts to find an {@link IScriptLoadSource} with the given id, if possible.
      *
      * <p>This method can be called only after all registries have been successfully built: attempting to call this
      * method before that might lead to undefined behavior.</p>
@@ -145,7 +145,7 @@ public interface ICraftTweakerRegistry {
      * @param recipe The recipe whose handler should be identified.
      * @param <T>    The type of the recipe whose handler should be identified.
      *
-     * @return A {@link IRecipeHandler} that is able to deal with the given recipe.
+     * @return an {@link IRecipeHandler} that is able to deal with the given recipe.
      *
      * @since 9.1.0
      */
@@ -157,7 +157,7 @@ public interface ICraftTweakerRegistry {
      * @param recipeClazz The recipe class whose handler should be identified.
      * @param <T>         The type of the recipe whose handler should be identified.
      *
-     * @return A {@link IRecipeHandler} that is able to deal with the given recipe class.
+     * @return an {@link IRecipeHandler} that is able to deal with the given recipe class.
      *
      * @since 9.1.117
      */

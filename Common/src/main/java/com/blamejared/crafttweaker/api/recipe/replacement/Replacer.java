@@ -59,7 +59,7 @@ public final class Replacer {
     }
     
     /**
-     * Specifies a {@link IFilteringRule} that the replacer must follow.
+     * Specifies an {@link IFilteringRule} that the replacer must follow.
      *
      * <p>Note that the rules are <strong>positive</strong>, meaning that they specify the recipes that the replacer
      * should act upon.</p>

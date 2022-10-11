@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
- * Represents a {@link ITargetingFilter} that can be applied by the user onto a {@link Replacer}.
+ * Represents an {@link ITargetingFilter} that can be applied by the user onto a {@link Replacer}.
  *
  * <p>Much like a targeting filter, a filtering rule can remove a set of recipes from being able to be inspected by a
  * {@code Replacer}. The same condition apply, meaning that the filter is <strong>positive</strong>: it specifies which

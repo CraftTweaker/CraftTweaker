@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * Identifies a preprocessor for a {@link IScriptFile}.
+ * Identifies a preprocessor for an {@link IScriptFile}.
  *
  * <p>A preprocessor is a piece of code that reads the contents of the file and modifies them according to various
  * instructions present in the file itself. Each preprocessor instruction starts with a pound sign ({@code #}), followed
@@ -119,7 +119,7 @@ public interface IPreprocessor extends Comparator<IScriptFile> {
      * @param preprocessedContents The contents of the file, as preprocessed by other preprocessors. If this
      *                             preprocessor wants to modify the file contents, it is allowed to act directly on this
      *                             list.
-     * @param runInfo              A {@link IMutableScriptRunInfo} representing information related to the run and
+     * @param runInfo              an {@link IMutableScriptRunInfo} representing information related to the run and
      *                             allowing modification if desired.
      * @param matches              A read-only list containing all preprocessor matches in the current file. The matches
      *                             are guaranteed to be ordered from top to bottom.

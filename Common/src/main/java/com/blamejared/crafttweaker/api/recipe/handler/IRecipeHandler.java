@@ -38,7 +38,7 @@ import java.util.Optional;
 public interface IRecipeHandler<T extends Recipe<?>> {
     
     /**
-     * Annotates a {@link IRecipeHandler} indicating which recipe classes it is able to handle.
+     * Annotates an {@link IRecipeHandler} indicating which recipe classes it is able to handle.
      *
      * <p>This annotation is only required if the recipe handler needs to be discovered via annotation scanning.
      * Registering an instance manually through a plugin does not require the annotation to be present.</p>
@@ -134,7 +134,7 @@ public interface IRecipeHandler<T extends Recipe<?>> {
     <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super T> manager, final T firstRecipe, final U secondRecipe);
     
     /**
-     * Decomposes a recipe from its complete form into a {@link IDecomposedRecipe}.
+     * Decomposes a recipe from its complete form into an {@link IDecomposedRecipe}.
      *
      * <p>The decomposition needs to be complete, meaning that any meaningful part of the recipe should be present in
      * the returned decomposed recipe. The only exception is the name, as decomposed recipes only track

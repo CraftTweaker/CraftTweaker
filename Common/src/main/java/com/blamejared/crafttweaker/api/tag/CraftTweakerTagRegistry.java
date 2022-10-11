@@ -132,7 +132,7 @@ public final class CraftTweakerTagRegistry {
     }
     
     /**
-     * Tries to get a {@link ITagManager} from the given tag folder.
+     * Tries to get an {@link ITagManager} from the given tag folder.
      *
      * @param tagFolder The tag folder to get the manager of.
      *

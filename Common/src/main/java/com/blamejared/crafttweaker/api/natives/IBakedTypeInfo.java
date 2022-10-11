@@ -7,7 +7,7 @@ import java.util.Optional;
 /**
  * Provides information related to a native type registered to ZenCode.
  *
- * <p>Instances of this class can be obtained through a {@link INativeTypeRegistry}, allowing for introspection of which
+ * <p>Instances of this class can be obtained through an {@link INativeTypeRegistry}, allowing for introspection of which
  * native methods of a specific native class are exposed to scripts.</p>
  *
  * @since 9.1.0
