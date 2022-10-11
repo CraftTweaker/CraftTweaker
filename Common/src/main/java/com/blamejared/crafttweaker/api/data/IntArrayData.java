@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * @docParam this [4, 128, 256, 1024] as IData
+ * @docParam this ([4, 128, 256, 1024] as IData)
  */
 @ZenCodeType.Name("crafttweaker.api.data.IntArrayData")
 @ZenRegister

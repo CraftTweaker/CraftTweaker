@@ -12,7 +12,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
- * @docParam this "Hello" as IData
+ * @docParam this ("Hello" as IData)
  */
 @ZenCodeType.Name("crafttweaker.api.data.StringData")
 @ZenRegister

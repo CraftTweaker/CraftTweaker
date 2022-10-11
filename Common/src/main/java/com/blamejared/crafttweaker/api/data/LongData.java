@@ -10,7 +10,7 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.Objects;
 
 /**
- * @docParam this 800000000L as IData
+ * @docParam this (800000000L as IData)
  */
 @ZenCodeType.Name("crafttweaker.api.data.LongData")
 @ZenRegister

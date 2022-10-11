@@ -16,7 +16,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * @docParam this [100000, 800000, 50000] as IData
+ * @docParam this ([100000, 800000, 50000] as IData)
  */
 @ZenCodeType.Name("crafttweaker.api.data.LongArrayData")
 @ZenRegister

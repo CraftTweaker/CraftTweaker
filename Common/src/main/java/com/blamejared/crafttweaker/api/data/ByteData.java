@@ -10,7 +10,7 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.Objects;
 
 /**
- * @docParam this 4 as IData
+ * @docParam this (4 as IData)
  */
 @ZenCodeType.Name("crafttweaker.api.data.ByteData")
 @ZenRegister

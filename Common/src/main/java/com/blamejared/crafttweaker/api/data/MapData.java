@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @docParam this {Hello: "World", Somewhere: "Over the rainbow"}
+ * @docParam this (Hello: "World", Somewhere: "Over the rainbow")
  */
 @ZenCodeType.Name("crafttweaker.api.data.MapData")
 @ZenRegister

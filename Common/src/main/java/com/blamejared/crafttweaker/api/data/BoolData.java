@@ -14,7 +14,7 @@ import java.util.Objects;
  * using it in Tags will instead use a {@link ByteData} object. Reason for this is that
  * Minecraft does not have Boolean NBT values.
  *
- * @docParam this true as IData
+ * @docParam this (true as IData)
  */
 @ZenCodeType.Name("crafttweaker.api.data.BoolData")
 @ZenRegister

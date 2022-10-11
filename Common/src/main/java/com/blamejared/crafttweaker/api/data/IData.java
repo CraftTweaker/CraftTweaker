@@ -18,7 +18,7 @@ import java.util.function.Function;
 
 
 /**
- * @docParam this 1 as IData
+ * @docParam this (1 as IData)
  */
 @ZenRegister(loaders = {CraftTweakerConstants.DEFAULT_LOADER_NAME, CraftTweakerConstants.TAGS_LOADER_NAME})
 @ZenCodeType.Name("crafttweaker.api.data.IData")
