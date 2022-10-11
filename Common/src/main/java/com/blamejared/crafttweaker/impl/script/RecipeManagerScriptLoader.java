@@ -106,7 +106,7 @@ public class RecipeManagerScriptLoader {
     
     private static void executeScriptRecipes(final Collection<ScriptRecipe> scriptRecipes, final ScriptRunConfiguration configuration) throws Throwable {
         
-        final URI uri = new URI(RecipeFileSystemProvider.SCHEME + ":johnson");
+        final URI uri = new URI(RecipeFileSystemProvider.SCHEME + ":" + RecipeFileSystemProvider.FILE_SYSTEM_NAME);
         final Map<String, ?> env = Map.of("recipes", scriptRecipes);
         try(final FileSystem fs = FileSystems.newFileSystem(uri, env)) {
             final Path root = fs.getRootDirectories().iterator().next();

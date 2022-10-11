@@ -35,6 +35,7 @@ public final class RecipeFileSystemProvider extends FileSystemProvider {
     
     public static final String SCHEME = "crt-recipe-fs";
     private static final Object LOCK = new Object();
+    public static final String FILE_SYSTEM_NAME = "recipes";
     
     private RecipeFileSystem fileSystem;
     
@@ -271,7 +272,7 @@ public final class RecipeFileSystemProvider extends FileSystemProvider {
         if(path) {
             return;
         }
-        if(!"johnson".equals(uri.getRawSchemeSpecificPart())) {
+        if(!FILE_SYSTEM_NAME.equals(uri.getRawSchemeSpecificPart())) {
             throw new IllegalArgumentException("Unable to create a file system with URI " + uri);
         }
     }
