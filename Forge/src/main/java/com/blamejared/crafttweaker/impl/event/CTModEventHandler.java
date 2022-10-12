@@ -13,6 +13,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,10 +34,10 @@ public class CTModEventHandler {
         if(event.includeServer()) {
             List<TagManager.LoadResult<?>> loadResults = new ArrayList<>();
             for(RegistryAccess.RegistryData<?> registry : RegistryAccess.knownRegistries()) {
-                loadResults.add(new TagManager.LoadResult<>(registry.key(), Map.of()));
+                loadResults.add(new TagManager.LoadResult<>(registry.key(), new HashMap<>()));
             }
             for(Registry<?> registry : Registry.REGISTRY) {
-                loadResults.add(new TagManager.LoadResult<>(registry.key(), Map.of()));
+                loadResults.add(new TagManager.LoadResult<>(registry.key(), new HashMap<>()));
             }
             CraftTweakerTagRegistry.INSTANCE.bind(loadResults);
         }
