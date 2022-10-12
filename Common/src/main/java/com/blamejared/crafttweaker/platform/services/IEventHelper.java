@@ -19,6 +19,7 @@ import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -31,13 +32,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
 public interface IEventHelper {
@@ -103,6 +100,7 @@ public interface IEventHelper {
         if(BLOCK_INFO_PLAYERS.contains(player)) {
             if(!world.isClientSide() && hand == InteractionHand.MAIN_HAND) {
                 BlockState state = world.getBlockState(pos);
+                sendAndLog(player, Component.translatable("crafttweaker.command.info.block.name", Registry.BLOCK.getKey(state.getBlock())));
                 String blockCS = ExpandBlock.getCommandString(state.getBlock());
                 String blockStateCS = ExpandBlockState.getCommandString(state);
                 CommandUtilities.sendCopying(Component.translatable("crafttweaker.command.misc.block")
@@ -111,13 +109,11 @@ public interface IEventHelper {
                 CommandUtilities.sendCopying(Component.translatable("crafttweaker.command.misc.blockstate")
                         .append(": ")
                         .append(Component.literal(blockStateCS).withStyle(ChatFormatting.GREEN)), blockStateCS, player);
-                
                 if(!state.getProperties().isEmpty()) {
                     
                     sendAndLog(player, Component.translatable("crafttweaker.command.info.block.properties"));
                     state.getProperties()
-                            .forEach(property -> sendAndLog(player, Component.literal("    ").append(property.getName())
-                                    .withStyle(ChatFormatting.YELLOW)
+                            .forEach(property -> sendAndLog(player, Component.literal("    " + property.getName()).withStyle(ChatFormatting.YELLOW)
                                     .append(Component.literal(": ").withStyle(ChatFormatting.WHITE))
                                     .append(Component.literal(state.getValue(property)
                                             .toString()).withStyle(ChatFormatting.AQUA))));
