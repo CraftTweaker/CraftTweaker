@@ -95,8 +95,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
     public Supplier<List<Mod>> modList = Suppliers.memoize(() -> ModList.get()
             .getMods()
             .stream()
-            .map(iModInfo -> new Mod(iModInfo.getModId(), iModInfo.getDisplayName(), iModInfo.getVersion()
-                    .toString()))
+            .map(iModInfo -> new Mod(iModInfo.getModId(), iModInfo.getDisplayName(), iModInfo.getVersion().toString()))
             .toList());
     
     public Function<String, Optional<Mod>> modFinder = Util.memoize(modid -> modList.get()
@@ -224,8 +223,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
         
         try {
             LootModifierManager manager = HandleUtil.invoke(() -> (LootModifierManager) Handles.LMM_GETTER.invokeExact());
-            @SuppressWarnings("unchecked")
-            Map<ResourceLocation, IGlobalLootModifier> map = (Map<ResourceLocation, IGlobalLootModifier>) Handles.LMM_MAP.get(manager);
+            @SuppressWarnings("unchecked") Map<ResourceLocation, IGlobalLootModifier> map = (Map<ResourceLocation, IGlobalLootModifier>) Handles.LMM_MAP.get(manager);
             
             // Someone else may make the map mutable, but I explicitly want CT stuff to go last
             if(!(map instanceof CraftTweakerPrivilegedLootModifierMap)) {
@@ -314,7 +312,6 @@ public class ForgePlatformHelper implements IPlatformHelper {
         }
     }
     
-    
     @Override
     public CompoundTag getCustomData(Entity entity) {
         
@@ -352,7 +349,10 @@ public class ForgePlatformHelper implements IPlatformHelper {
         
         Ingredient.invalidateAll();
         for(Ingredient ingredient : ingredients) {
-            ingredient.checkInvalidation();
+            // This is dumb, it should never be null, but I have multiple logs saying it is null
+            if(ingredient != null) {
+                ingredient.checkInvalidation();
+            }
         }
         ingredients.clear();
     }
