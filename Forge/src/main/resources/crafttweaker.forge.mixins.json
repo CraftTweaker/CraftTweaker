@@ -5,9 +5,10 @@
   "refmap": "crafttweaker.refmap.json",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "common.access.food.AccessFoodPropertiesForge",
     "common.access.brewing.AccessBrewingRecipeRegistry",
     "common.access.brewing.AccessPotionBrewing",
+    "common.access.entity.AccessFakePlayerFactory",
+    "common.access.food.AccessFoodPropertiesForge",
     "common.access.registry.AccessRegistryManager",
     "common.access.villager.AccessBasicTrade",
     "common.transform.item.attribute.MixinItemAttributeModifierEvent",
