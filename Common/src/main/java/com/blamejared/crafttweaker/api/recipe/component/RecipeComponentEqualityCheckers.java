@@ -2,7 +2,9 @@ package com.blamejared.crafttweaker.api.recipe.component;
 
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.util.random.Percentaged;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -27,6 +29,11 @@ public final class RecipeComponentEqualityCheckers {
     public static <T extends Number> boolean areNumbersEqual(final T a, final T b) {
         
         return a.doubleValue() == b.doubleValue();
+    }
+    
+    public static boolean areChanceStacksEqual(final List<Percentaged<IItemStack>> a, final List<Percentaged<IItemStack>> b) {
+    
+        return a.equals(b);
     }
     
     public static <T> boolean notComparable(final T a, final T b) {

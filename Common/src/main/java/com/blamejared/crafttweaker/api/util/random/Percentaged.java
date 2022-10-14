@@ -46,4 +46,29 @@ public class Percentaged<T> implements CommandStringDisplayable {
         return commandStringFunc.apply(getData());
     }
     
+    @Override
+    public boolean equals(Object o) {
+        
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        Percentaged<?> that = (Percentaged<?>) o;
+        
+        if(Double.compare(that.getPercentage(), getPercentage()) != 0)
+            return false;
+        return getData().equals(that.getData());
+    }
+    
+    @Override
+    public int hashCode() {
+        
+        int result;
+        long temp;
+        result = getData().hashCode();
+        temp = Double.doubleToLongBits(getPercentage());
+        return  31 * result + (int) (temp ^ (temp >>> 32));
+    }
+    
 }
