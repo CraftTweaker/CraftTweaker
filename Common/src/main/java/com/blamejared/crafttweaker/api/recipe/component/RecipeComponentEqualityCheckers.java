@@ -31,11 +31,6 @@ public final class RecipeComponentEqualityCheckers {
         return a.doubleValue() == b.doubleValue();
     }
     
-    public static boolean areChanceStacksEqual(final List<Percentaged<IItemStack>> a, final List<Percentaged<IItemStack>> b) {
-    
-        return a.equals(b);
-    }
-    
     public static <T> boolean notComparable(final T a, final T b) {
         
         throw new UnsupportedOperationException("Cannot compare " + a + " and " + b);

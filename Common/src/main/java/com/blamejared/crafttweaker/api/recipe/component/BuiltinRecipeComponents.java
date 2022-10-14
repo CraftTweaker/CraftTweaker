@@ -15,6 +15,7 @@ import com.mojang.datafixers.util.Pair;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Holds all {@link IRecipeComponent}s that CraftTweaker makes available directly.
@@ -145,7 +146,7 @@ public final class BuiltinRecipeComponents {
         public static final IRecipeComponent<List<Percentaged<IItemStack>>> CHANCED_OUTPUTS = IRecipeComponent.simple(
             CraftTweakerConstants.rl("output/chanced_items"),
             new TypeToken<>() {},
-            RecipeComponentEqualityCheckers::areChanceStacksEqual
+            Objects::equals
         );
         
         private Output() {}
