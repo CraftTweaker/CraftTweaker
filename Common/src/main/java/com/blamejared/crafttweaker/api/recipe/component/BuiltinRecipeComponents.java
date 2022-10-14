@@ -143,7 +143,7 @@ public final class BuiltinRecipeComponents {
         );
         
         public static final IRecipeComponent<List<Percentaged<IItemStack>>> CHANCED_OUTPUTS = IRecipeComponent.simple(
-            CraftTweakerConstants.rl("output/chanced_outputs"),
+            CraftTweakerConstants.rl("output/chanced_items"),
             new TypeToken<>() {},
             RecipeComponentEqualityCheckers::areChanceStacksEqual
         );
