@@ -13,7 +13,7 @@
     This file will have examples for Cauldron interactions, SavedData and obviously Sequences
 */
 
-import crafttweaker.api.data.MapData;
+import crafttweaker.api.data.IData;
 import crafttweaker.api.world.InteractionResult;
 import crafttweaker.api.entity.MobSpawnType;
 import crafttweaker.api.util.sequence.SequenceType;
@@ -52,7 +52,7 @@ cauldron.addEmptyInteraction(<item:minecraft:dirt>, (blockState, cLevel, bPos, p
                 // Run immediately after the sleep is done ('then' is an alias for 'run', you can use whichever sounds better and is easier to read)
                 .then(level => {
                     // Stores the data for the entity
-                    val data = {EntityTag: {LifeTime:10,FireworksItem:{id:"firework_rocket",Count:1,tag:{Fireworks:{Explosions:[{Type:1,Trail:1,Colors:[2651799],FadeColors:[14602026, 6719955, 12801229]}],Flight:1}}}}} as MapData;
+                    val data = {EntityTag: {LifeTime:10,FireworksItem:{id:"firework_rocket",Count:1,tag:{Fireworks:{Explosions:[{Type:1,Trail:1,Colors:[2651799],FadeColors:[14602026, 6719955, 12801229]}],Flight:1}}}}} as IData;
                     // Spawn a firework rocket above the cauldron.
                     <entitytype:minecraft:firework_rocket>.spawn(level, data, null, null, pos.above(), MobSpawnType.TRIGGERED, false, true);
                 })
@@ -90,7 +90,7 @@ cauldron.addEmptyInteraction(<item:minecraft:diamond>, (blockState, cLevel, bPos
                 .run(level => {
                     // Check if the saved data contains a key with the name "first-<cauldron position>" and if the value for that key is true.
                     // The cauldron position is used to ensure that multiple cauldrons in the world can run this sequence at the same time.
-                    if(savedData.contains("first-" + pos.asLong()) && (savedData.getData<BoolData>("first-" + pos.asLong()) as BoolData) as bool) {
+                    if(("first-" + pos.asLong()) in savedData && savedData["first-" + pos.asLong()] as bool) {
                         // if this sleep condition has ran before, lets return without running any other code in this function.
                         return;
                     }
@@ -108,7 +108,7 @@ cauldron.addEmptyInteraction(<item:minecraft:diamond>, (blockState, cLevel, bPos
                 .sleepUntil(level => {
                     // Check if the saved data contains a key with the name "first-<cauldron position>" and if the value for that key is true.
                     // The cauldron position is used to ensure that multiple cauldrons in the world can run this sequence at the same time.
-                    if(savedData.contains("first-" + pos.asLong()) && (savedData.getData<BoolData>("first-" + pos.asLong()) as BoolData) as bool) {
+                    if(("first-" + pos.asLong()) in savedData && savedData["first-" + pos.asLong()] as bool) {
                         // if this sleep condition has ran before, lets return true without having to wait for it again.
                         return true;
                     }
@@ -119,7 +119,7 @@ cauldron.addEmptyInteraction(<item:minecraft:diamond>, (blockState, cLevel, bPos
                 .run(level => {
                     // Check if the saved data contains a key with the name "second-<cauldron position>" and if the value for that key is true.
                     // The cauldron position is used to ensure that multiple cauldrons in the world can run this sequence at the same time.
-                    if(savedData.contains("second-" + pos.asLong()) && (savedData.getData<BoolData>("second-" + pos.asLong()) as BoolData) as bool) {
+                    if(("second-" + pos.asLong()) in savedData && savedData["second-" + pos.asLong()] as bool) {
                         // if this sleep condition has ran before, lets return without running any other code in this function.
                         return;
                     }
@@ -137,7 +137,7 @@ cauldron.addEmptyInteraction(<item:minecraft:diamond>, (blockState, cLevel, bPos
 
                     // Check if the saved data contains a key with the name "second-<cauldron position>" and if the value for that key is true.
                     // The cauldron position is used to ensure that multiple cauldrons in the world can run this sequence at the same time.
-                    if(savedData.contains("second-" + pos.asLong()) && (savedData.getData<BoolData>("second-" + pos.asLong()) as BoolData) as bool) {
+                    if(("second-" + pos.asLong()) in savedData && savedData["second-" + pos.asLong()] as bool) {
                         // if this sleep condition has ran before, lets return true without having to wait for it again.
                         return true;
                     }
@@ -149,7 +149,7 @@ cauldron.addEmptyInteraction(<item:minecraft:diamond>, (blockState, cLevel, bPos
                 .run(level => {
                     // Check if the saved data contains a key with the name "third-<cauldron position>" and if the value for that key is true.
                     // The cauldron position is used to ensure that multiple cauldrons in the world can run this sequence at the same time.
-                    if(savedData.contains("third-" + pos.asLong()) && (savedData.getData<BoolData>("third-" + pos.asLong()) as BoolData) as bool) {
+                    if(("third-" + pos.asLong()) in savedData && savedData["third-" + pos.asLong()] as bool) {
                         // if this sleep condition has ran before, lets return without running any other code in this function.
                         return;
                     }
@@ -167,7 +167,7 @@ cauldron.addEmptyInteraction(<item:minecraft:diamond>, (blockState, cLevel, bPos
 
                     // Check if the saved data contains a key with the name "third-<cauldron position>" and if the value for that key is true.
                     // The cauldron position is used to ensure that multiple cauldrons in the world can run this sequence at the same time.
-                    if(savedData.contains("third-" + pos.asLong()) && (savedData.getData<BoolData>("third-" + pos.asLong()) as BoolData) as bool) {
+                    if(("third-" + pos.asLong()) in savedData && savedData["third-" + pos.asLong()] as bool) {
                         // if this sleep condition has ran before, lets return true without having to wait for it again.
                         return true;
                     }
@@ -236,7 +236,7 @@ cauldron.addEmptyInteraction(<item:minecraft:stick>, (blockState, cLevel, bPos, 
                 // Run immediately after the previous task is done ('then' is an alias for 'run', you can use whichever sounds better and is easier to read)
                 .then(level => {
                     // Stores the data for the entity
-                    val data = {EntityTag: {LifeTime:10,FireworksItem:{id:"firework_rocket",Count:1,tag:{Fireworks:{Explosions:[{Type:1,Trail:1,Colors:[2651799],FadeColors:[14602026, 6719955, 12801229]}],Flight:1}}}}} as MapData;
+                    val data = {EntityTag: {LifeTime:10,FireworksItem:{id:"firework_rocket",Count:1,tag:{Fireworks:{Explosions:[{Type:1,Trail:1,Colors:[2651799],FadeColors:[14602026, 6719955, 12801229]}],Flight:1}}}}} as IData;
                     // Spawn a firework rocket above the cauldron.
                     <entitytype:minecraft:firework_rocket>.spawn(level, data, null, null, pos.above(), MobSpawnType.TRIGGERED, false, true);
                 })

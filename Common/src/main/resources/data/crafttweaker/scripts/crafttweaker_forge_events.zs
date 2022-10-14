@@ -22,7 +22,7 @@
 // First things first, you should import the CTEventManager, which allows you to register Events.
 import crafttweaker.api.events.CTEventManager;
 // We are also going to import other classes that are needed for this example.
-import crafttweaker.api.text.TextComponent;
+import crafttweaker.api.text.Component;
 import crafttweaker.api.event.item.ItemTossEvent;
 
 // Now that we have imported the CTEventManager, we can use it to register an event.
@@ -31,8 +31,8 @@ CTEventManager.register<crafttweaker.api.event.entity.player.PlayerLoggedInEvent
     // You can find what members `event` has by looking on the CraftTweaker docs or by looking at the code
     // In this case, since PlayerLoggedInEvent extends PLayerEvent, we have access to the `player` object.
     event.player.sendMessage("You have the CraftTweaker example scripts enabled!");
-    // Here we are using TextComponents to make `deleting` red
-    var message = new TextComponent("You can disable them by ") + new TextComponent("deleting").setStyle(<constant:formatting:red>) + new TextComponent(" the ./scripts/examples folder!");
+    // Here we are using Component to make `deleting` red
+    var message = Component.literal("You can disable them by ") + Component.literal("deleting").setStyle(<constant:formatting:red>) + Component.literal(" the ./scripts/examples folder!");
     event.player.sendMessage(message);
 });
 
