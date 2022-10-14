@@ -7,8 +7,6 @@ import net.minecraft.commands.CommandSource;
 import net.minecraft.network.chat.Component;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.UUID;
-
 @ZenRegister
 @Document("vanilla/api/command/CommandSource")
 @NativeTypeRegistration(value = CommandSource.class, zenCodeName = "crafttweaker.api.command.CommandSource")

@@ -6,7 +6,6 @@ import com.blamejared.crafttweaker.api.data.visitor.DataVisitor;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.nbt.IntArrayTag;
 import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.LongTag;
 import org.jetbrains.annotations.NotNull;
 import org.openzen.zencode.java.ZenCodeType;
 

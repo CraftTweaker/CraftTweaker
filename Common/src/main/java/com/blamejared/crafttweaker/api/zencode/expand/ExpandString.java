@@ -1,8 +1,8 @@
 package com.blamejared.crafttweaker.api.zencode.expand;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.data.StringData;
 import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.StringData;
 import net.minecraft.network.chat.Component;
 import org.openzen.zencode.java.ZenCodeType;
 

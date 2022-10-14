@@ -16,7 +16,6 @@ import com.blamejared.crafttweaker.mixin.common.access.villager.AccessEnchantedI
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessItemsAndEmeraldsToItems;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessItemsForEmeralds;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessTippedArrowForItemsAndEmeralds;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -32,7 +31,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 

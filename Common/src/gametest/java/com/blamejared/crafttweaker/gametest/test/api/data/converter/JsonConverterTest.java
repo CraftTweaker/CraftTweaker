@@ -1,16 +1,27 @@
 package com.blamejared.crafttweaker.gametest.test.api.data.converter;
 
-import com.blamejared.crafttweaker.api.data.*;
+import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.IntData;
+import com.blamejared.crafttweaker.api.data.ListData;
+import com.blamejared.crafttweaker.api.data.MapData;
+import com.blamejared.crafttweaker.api.data.StringData;
 import com.blamejared.crafttweaker.api.data.converter.JSONConverter;
 import com.blamejared.crafttweaker.gametest.CraftTweakerGameTest;
 import com.blamejared.crafttweaker.gametest.framework.annotation.CraftTweakerGameTestHolder;
 import com.blamejared.crafttweaker.gametest.framework.annotation.TestModifier;
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 @SuppressWarnings({"ConstantConditions", "RedundantCast"})
 @CraftTweakerGameTestHolder

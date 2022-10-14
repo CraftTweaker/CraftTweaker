@@ -2,9 +2,7 @@ package com.blamejared.crafttweaker.api.recipe.component;
 
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.api.util.random.Percentaged;
 
-import java.util.List;
 import java.util.Objects;
 
 /**

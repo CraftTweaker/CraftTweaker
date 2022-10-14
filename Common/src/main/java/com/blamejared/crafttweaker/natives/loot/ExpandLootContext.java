@@ -18,8 +18,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.Random;
-
 @ZenRegister
 @Document("vanilla/api/loot/LootContext")
 @NativeTypeRegistration(value = LootContext.class, zenCodeName = "crafttweaker.api.loot.LootContext")

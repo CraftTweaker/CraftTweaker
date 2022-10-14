@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.api.action.recipe.generic;
 
-import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;

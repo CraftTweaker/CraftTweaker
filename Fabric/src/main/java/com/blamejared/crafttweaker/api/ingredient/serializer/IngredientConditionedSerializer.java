@@ -2,8 +2,8 @@ package com.blamejared.crafttweaker.api.ingredient.serializer;
 
 import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
-import com.blamejared.crafttweaker.api.ingredient.condition.serializer.IIngredientConditionSerializer;
 import com.blamejared.crafttweaker.api.ingredient.condition.IIngredientCondition;
+import com.blamejared.crafttweaker.api.ingredient.condition.serializer.IIngredientConditionSerializer;
 import com.blamejared.crafttweaker.api.ingredient.type.IIngredientConditioned;
 import com.blamejared.crafttweaker.api.ingredient.type.IngredientConditioned;
 import com.faux.ingredientextension.api.ingredient.serializer.IIngredientSerializer;

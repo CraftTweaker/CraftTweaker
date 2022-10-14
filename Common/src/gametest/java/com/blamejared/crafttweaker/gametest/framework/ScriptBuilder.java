@@ -1,18 +1,12 @@
 package com.blamejared.crafttweaker.gametest.framework;
 
 
-
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.google.common.annotations.VisibleForTesting;
-import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.server.packs.resources.ResourceManager;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;

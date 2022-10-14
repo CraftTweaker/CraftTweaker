@@ -7,8 +7,6 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import com.mojang.datafixers.util.Pair;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.function.Function;
-
 @ZenRegister
 @Document("vanilla/api/util/Pair")
 @NativeTypeRegistration(value = Pair.class, zenCodeName = "crafttweaker.api.util.Pair")

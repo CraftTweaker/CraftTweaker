@@ -4,8 +4,6 @@ package com.blamejared.crafttweaker.api.action.recipe.generic;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 

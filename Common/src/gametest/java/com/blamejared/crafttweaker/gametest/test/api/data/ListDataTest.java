@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.gametest.test.api.data;
 
 import com.blamejared.crafttweaker.api.data.IData;
-import com.blamejared.crafttweaker.api.data.IntData;
 import com.blamejared.crafttweaker.api.data.ListData;
 import com.blamejared.crafttweaker.api.data.StringData;
 import com.blamejared.crafttweaker.gametest.CraftTweakerGameTest;

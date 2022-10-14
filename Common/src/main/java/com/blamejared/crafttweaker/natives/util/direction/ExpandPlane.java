@@ -9,7 +9,6 @@ import net.minecraft.util.RandomSource;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Iterator;
-import java.util.Random;
 
 @ZenRegister
 @Document("vanilla/api/util/direction/Plane")

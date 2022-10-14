@@ -2,8 +2,8 @@ package com.blamejared.crafttweaker.api.zencode.expand;
 
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.data.IntData;
 import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.IntData;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister

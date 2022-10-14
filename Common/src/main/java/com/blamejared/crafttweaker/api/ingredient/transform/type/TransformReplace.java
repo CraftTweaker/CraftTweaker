@@ -7,7 +7,6 @@ import com.blamejared.crafttweaker.api.ingredient.transform.IIngredientTransform
 import com.blamejared.crafttweaker.api.ingredient.transform.serializer.IIngredientTransformerSerializer;
 import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformReplaceSerializer;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 

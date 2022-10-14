@@ -3,7 +3,6 @@ package com.blamejared.crafttweaker.api.action.recipe;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
-import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.world.item.crafting.Recipe;
 import org.apache.logging.log4j.Logger;
 
