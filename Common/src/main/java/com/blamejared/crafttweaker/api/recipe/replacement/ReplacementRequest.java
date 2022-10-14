@@ -48,7 +48,7 @@ public record ReplacementRequest<T>(
         }
         
         final List<T> newList = new ArrayList<>(object);
-        final boolean replaced = this.applyToEach(object);
+        final boolean replaced = this.applyToEach(newList);
         
         if(replaced) {
             recipe.set(this.component(), newList);

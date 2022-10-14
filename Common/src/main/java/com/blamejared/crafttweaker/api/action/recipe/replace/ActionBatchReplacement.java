@@ -14,7 +14,6 @@ import com.blamejared.crafttweaker.api.util.GenericUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.stream.Collector;
@@ -53,17 +52,6 @@ public final class ActionBatchReplacement implements IRuntimeAction {
                 this.targetingRules.stream().map(IFilteringRule::describe).collect(joiner),
                 this.requests.stream().map(ReplacementRequest::describe).collect(joiner)
         );
-    }
-    
-    @Override
-    public boolean validate(final Logger logger) {
-        
-        if(this.targetingRules.isEmpty()) {
-            logger.error("Invalid replacer action: no rules available");
-            return false;
-        }
-        
-        return IRuntimeAction.super.validate(logger);
     }
     
     private Stream<? extends Recipe<?>> castFilters(final Stream<? extends Recipe<?>> recipeStream) {

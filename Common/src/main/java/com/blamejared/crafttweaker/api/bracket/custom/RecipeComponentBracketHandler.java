@@ -17,10 +17,8 @@ import org.openzen.zenscript.parser.BracketExpressionParser;
 import org.openzen.zenscript.parser.expression.ParsedCallArguments;
 import org.openzen.zenscript.parser.expression.ParsedExpression;
 import org.openzen.zenscript.parser.expression.ParsedExpressionCall;
-import org.openzen.zenscript.parser.expression.ParsedExpressionCast;
 import org.openzen.zenscript.parser.expression.ParsedExpressionMember;
 import org.openzen.zenscript.parser.type.IParsedType;
-import org.openzen.zenscript.parser.type.ParsedTypeBasic;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -82,8 +80,7 @@ public final class RecipeComponentBracketHandler implements BracketExpressionPar
         
         final ParsedExpression thisClass = this.compileClassCall(position);
         final ParsedExpression method = new ParsedExpressionMember(position, thisClass, BRACKET_METHOD_NAME, List.of());
-        final ParsedExpression name = ParseUtil.createResourceLocationArgument(position, rl);
-        final ParsedExpression argument = new ParsedExpressionCast(position, name, ParsedTypeBasic.STRING, false);
+        final ParsedExpression argument = ParseUtil.createResourceLocationArgument(position, rl);
         final IParsedType generic = this.makeParsedType(token, position);
         final ParsedCallArguments arguments = new ParsedCallArguments(List.of(generic), List.of(argument));
         return new ParsedExpressionCall(position, method, arguments);
