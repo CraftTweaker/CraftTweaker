@@ -10,7 +10,6 @@ import com.blamejared.crafttweaker.impl.script.scriptrun.GameTestScriptRunner;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
-import org.apache.commons.io.IOExceptionList;
 import org.apache.commons.io.IOUtils;
 import org.openzen.zencode.shared.SourceFile;
 
@@ -20,8 +19,7 @@ import java.util.Optional;
 import java.util.StringJoiner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
 
 @CraftTweakerGameTestHolder
 public class OnlyIfPreprocessorTest implements CraftTweakerGameTest {

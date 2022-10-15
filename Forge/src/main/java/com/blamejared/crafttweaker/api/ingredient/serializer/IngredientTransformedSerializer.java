@@ -3,8 +3,8 @@ package com.blamejared.crafttweaker.api.ingredient.serializer;
 
 import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
-import com.blamejared.crafttweaker.api.ingredient.transform.serializer.IIngredientTransformerSerializer;
 import com.blamejared.crafttweaker.api.ingredient.transform.IIngredientTransformer;
+import com.blamejared.crafttweaker.api.ingredient.transform.serializer.IIngredientTransformerSerializer;
 import com.blamejared.crafttweaker.api.ingredient.type.IIngredientTransformed;
 import com.blamejared.crafttweaker.api.ingredient.type.IngredientTransformed;
 import com.google.gson.JsonObject;

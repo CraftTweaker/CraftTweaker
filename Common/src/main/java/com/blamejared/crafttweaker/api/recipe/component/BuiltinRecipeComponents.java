@@ -8,10 +8,13 @@ import com.blamejared.crafttweaker.api.recipe.MirrorAxis;
 import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction0D;
 import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction1D;
 import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction2D;
+import com.blamejared.crafttweaker.api.util.random.Percentaged;
 import com.google.gson.reflect.TypeToken;
 import com.mojang.datafixers.util.Pair;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Holds all {@link IRecipeComponent}s that CraftTweaker makes available directly.
@@ -137,6 +140,12 @@ public final class BuiltinRecipeComponents {
                 CraftTweakerConstants.rl("output/items"),
                 new TypeToken<>() {},
                 RecipeComponentEqualityCheckers::areStacksEqual
+        );
+        
+        public static final IRecipeComponent<List<Percentaged<IItemStack>>> CHANCED_OUTPUTS = IRecipeComponent.simple(
+            CraftTweakerConstants.rl("output/chanced_items"),
+            new TypeToken<>() {},
+            Objects::equals
         );
         
         private Output() {}

@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.util;
 
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.MutableComponent;

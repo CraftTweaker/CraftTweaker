@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.api.action.recipe;
 
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
-import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.world.item.crafting.Recipe;
 
 public class ActionAddRecipe<T extends Recipe<?>> extends ActionRecipeBase<T> {

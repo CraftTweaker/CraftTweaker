@@ -4,7 +4,8 @@ import com.blamejared.crafttweaker.gametest.CraftTweakerGameTest;
 import org.openzen.zenscript.scriptingexample.tests.helpers.ZenCodeTestLoggerOutput;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsStringIgnoringCase;
+import static org.hamcrest.Matchers.is;
 
 public class ZenCodeGameTestLoggerOutput extends ZenCodeTestLoggerOutput implements CraftTweakerGameTest {
     

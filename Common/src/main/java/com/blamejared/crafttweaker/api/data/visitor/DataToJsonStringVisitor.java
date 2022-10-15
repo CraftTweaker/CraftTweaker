@@ -1,6 +1,19 @@
 package com.blamejared.crafttweaker.api.data.visitor;
 
-import com.blamejared.crafttweaker.api.data.*;
+import com.blamejared.crafttweaker.api.data.BoolData;
+import com.blamejared.crafttweaker.api.data.ByteArrayData;
+import com.blamejared.crafttweaker.api.data.ByteData;
+import com.blamejared.crafttweaker.api.data.DoubleData;
+import com.blamejared.crafttweaker.api.data.FloatData;
+import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.IntArrayData;
+import com.blamejared.crafttweaker.api.data.IntData;
+import com.blamejared.crafttweaker.api.data.ListData;
+import com.blamejared.crafttweaker.api.data.LongArrayData;
+import com.blamejared.crafttweaker.api.data.LongData;
+import com.blamejared.crafttweaker.api.data.MapData;
+import com.blamejared.crafttweaker.api.data.ShortData;
+import com.blamejared.crafttweaker.api.data.StringData;
 import com.blamejared.crafttweaker.api.util.StringUtil;
 
 import java.util.StringJoiner;

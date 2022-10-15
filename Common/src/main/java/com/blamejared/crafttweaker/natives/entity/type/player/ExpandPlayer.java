@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.natives.entity.type.player;
 
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.item.IItemStack;

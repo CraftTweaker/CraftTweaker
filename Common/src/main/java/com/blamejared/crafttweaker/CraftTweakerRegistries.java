@@ -6,15 +6,17 @@ import com.blamejared.crafttweaker.api.ingredient.condition.serializer.Condition
 import com.blamejared.crafttweaker.api.ingredient.condition.serializer.ConditionCustomSerializer;
 import com.blamejared.crafttweaker.api.ingredient.condition.serializer.ConditionDamagedSerializer;
 import com.blamejared.crafttweaker.api.ingredient.condition.serializer.IIngredientConditionSerializer;
-import com.blamejared.crafttweaker.api.ingredient.transform.serializer.*;
-import com.blamejared.crafttweaker.impl.script.ScriptRecipe;
+import com.blamejared.crafttweaker.api.ingredient.transform.serializer.IIngredientTransformerSerializer;
+import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformCustomSerializer;
+import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformDamageSerializer;
+import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformReplaceSerializer;
+import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformerReuseSerializer;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeType;
 
 public class CraftTweakerRegistries {
     

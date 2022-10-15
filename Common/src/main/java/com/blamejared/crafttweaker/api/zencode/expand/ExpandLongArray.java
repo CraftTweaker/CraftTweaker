@@ -1,8 +1,8 @@
 package com.blamejared.crafttweaker.api.zencode.expand;
 
 
-import com.blamejared.crafttweaker.api.data.LongArrayData;
 import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.LongArrayData;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenCodeType.Expansion("long[]")

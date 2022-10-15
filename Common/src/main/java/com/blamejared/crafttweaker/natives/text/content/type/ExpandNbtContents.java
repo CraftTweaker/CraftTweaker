@@ -4,7 +4,6 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.contents.DataSource;
 import net.minecraft.network.chat.contents.NbtContents;
 import org.openzen.zencode.java.ZenCodeType;
 

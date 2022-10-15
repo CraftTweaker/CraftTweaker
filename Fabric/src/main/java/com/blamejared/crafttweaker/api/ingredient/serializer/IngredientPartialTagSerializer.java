@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.api.ingredient.serializer;
 
 import com.blamejared.crafttweaker.api.ingredient.type.IngredientPartialTag;
-import com.blamejared.crafttweaker.platform.Services;
 import com.faux.ingredientextension.api.ingredient.serializer.IIngredientSerializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
