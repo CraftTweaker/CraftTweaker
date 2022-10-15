@@ -26,8 +26,6 @@ dependencies {
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${Versions.REI}")
     modLocalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${Versions.REI}")
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:${Versions.REI}")
-    modRuntimeOnly("dev.architectury:architectury-fabric:6.0.37")
-
 
     implementation("org.reflections:reflections:${Versions.REFLECTIONS}")?.let { include(it) }
     implementation("org.javassist:javassist:${Versions.JAVA_ASSIST}")?.let { include(it) } // required for reflections
