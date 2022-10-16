@@ -647,48 +647,12 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     default boolean matches(IItemStack stack, boolean ignoreDamage) {
         
         return ItemStackUtil.areStacksTheSame(this.getInternal(), stack.getInternal(), ignoreDamage);
+    }
+    
+    @Override
+    default String getCommandString() {
         
-        /*
-        ItemStack stack1 = getInternal();
-        ItemStack stack2 = stack.getInternal();
-        
-        if(stack1.isEmpty() != stack2.isEmpty()) {
-            return false;
-        }
-        if(stack1.getItem() != stack2.getItem()) {
-            return false;
-        }
-        if(stack1.getCount() > stack2.getCount()) {
-            return false;
-        }
-        // This is really just an early exit, since damage is NBT based, it is checked again in the NBT contains
-        if(!ignoreDamage) {
-            if(stack1.getDamageValue() != stack2.getDamageValue()) {
-                return false;
-            }
-        }
-        CompoundTag stack1Tag = stack1.getTag();
-        CompoundTag stack2Tag = stack2.getTag();
-        if(stack1Tag == null && stack2Tag == null) {
-            return true;
-        }
-        
-        // Lets just use the partial nbt
-        IData stack2Data = TagToDataConverter.convert(stack2Tag);
-        IData stack1Data = TagToDataConverter.convert(stack1Tag);
-        if(stack1Data == null) {
-            return true;
-        }
-        if(ignoreDamage) {
-            stack1Data = stack1Data.copyInternal();
-            stack1Data.remove("Damage");
-            if(stack2Data != null) {
-                stack2Data = stack2Data.copyInternal();
-                stack2Data.remove("Damage");
-            }
-        }
-        return stack2Data != null && stack2Data.contains(stack1Data);
-         */
+        return ItemStackUtil.getCommandString(this.getInternal(), this.isMutable());
     }
     
     

@@ -1,11 +1,9 @@
 package com.blamejared.crafttweaker.api.item;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.data.IData;
-import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.core.Registry;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Objects;
@@ -27,41 +25,6 @@ public class MCItemStack implements FabricItemStack {
     }
     
     @Override
-    public String getCommandString() {
-        //TODO move this to an actual registry or something
-        
-        final StringBuilder sb = new StringBuilder("<item:");
-        sb.append(Registry.ITEM.getKey(getInternal().getItem()));
-        sb.append(">");
-        
-        if(getInternal().getTag() != null) {
-            IData data = TagToDataConverter.convert(getInternal().getTag()).copyInternal();
-            //Damage is special case, if we have more special cases we can handle them here.
-            if(getInternal().isDamageableItem()) {
-                data.remove("Damage");
-            }
-            if(!data.isEmpty()) {
-                sb.append(".withTag(");
-                sb.append(data.asString());
-                sb.append(")");
-            }
-        }
-        
-        if(getInternal().getDamageValue() > 0) {
-            sb.append(".withDamage(")
-                    .append(getInternal().getDamageValue())
-                    .append(")");
-        }
-        
-        if(!isEmpty()) {
-            if(getAmount() != 1) {
-                sb.append(" * ").append(getAmount());
-            }
-        }
-        return sb.toString();
-    }
-    
-    @Override
     public IItemStack[] getItems() {
         
         return new IItemStack[] {this.copy()};
@@ -76,7 +39,11 @@ public class MCItemStack implements FabricItemStack {
     @Override
     public IItemStack asMutable() {
         
-        // FIXME("EMPTY.asMutable()")
+        if(this == EMPTY.get() || this.getInternal() == ItemStack.EMPTY) { // Check both just in case
+            // We don't want to allow mutations to the empty stack, so we just replace it with a stack of air. The game
+            // treats air stacks as mostly the same as the empty stack, so this should be transparent to the user
+            return new MCItemStackMutable(new ItemStack(Items.AIR));
+        }
         return new MCItemStackMutable(getInternal());
     }
     
@@ -142,6 +109,12 @@ public class MCItemStack implements FabricItemStack {
     public int hashCode() {
         
         return Objects.hash(getInternal().getCount(), getInternal().getItem(), getInternal().getTag());
+    }
+    
+    @Override
+    public String toString() {
+        
+        return this.getCommandString();
     }
     
 }

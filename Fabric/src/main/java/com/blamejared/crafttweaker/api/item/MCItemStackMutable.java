@@ -1,63 +1,23 @@
 package com.blamejared.crafttweaker.api.item;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.data.IData;
-import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.core.Registry;
 import net.minecraft.world.item.ItemStack;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.MCItemStackMutable")
 @Document("fabric/api/item/MCItemStackMutable")
 public class MCItemStackMutable implements FabricItemStack {
     
-    public static Supplier<MCItemStackMutable> EMPTY = () -> new MCItemStackMutable(ItemStack.EMPTY);
     private final ItemStack internal;
     
     public MCItemStackMutable(ItemStack internal) {
         
         this.internal = internal;
-    }
-    
-    @Override
-    public String getCommandString() {
-        //TODO move this to an actual registry or something
-        
-        final StringBuilder sb = new StringBuilder("<item:");
-        sb.append(Registry.ITEM.getKey(getInternal().getItem()));
-        sb.append(">");
-        
-        if(getInternal().getTag() != null) {
-            IData data = TagToDataConverter.convert(getInternal().getTag()).copyInternal();
-            //Damage is special case, if we have more special cases we can handle them here.
-            if(getInternal().isDamageableItem()) {
-                data.remove("Damage");
-            }
-            if(!data.isEmpty()) {
-                sb.append(".withTag(");
-                sb.append(data.asString());
-                sb.append(")");
-            }
-        }
-        
-        if(getInternal().getDamageValue() > 0) {
-            sb.append(".withDamage(")
-                    .append(getInternal().getDamageValue())
-                    .append(")");
-        }
-        
-        if(!isEmpty()) {
-            if(getAmount() != 1) {
-                sb.append(" * ").append(getAmount());
-            }
-        }
-        return sb.toString();
     }
     
     @Override
@@ -138,6 +98,12 @@ public class MCItemStackMutable implements FabricItemStack {
     public int hashCode() {
         
         return Objects.hash(getInternal().getCount(), getInternal().getItem(), getInternal().getTag());
+    }
+    
+    @Override
+    public String toString() {
+        
+        return this.getCommandString();
     }
     
 }
