@@ -24,7 +24,7 @@ public final class ItemStackUtil {
         final CompoundTag tag;
         if((tag = stack.getTag()) != null) {
             
-            IData data = Objects.requireNonNull(TagToDataConverter.convert(tag)).copyInternal();
+            final IData data = Objects.requireNonNull(TagToDataConverter.convert(tag)).copyInternal();
             
             //Damage is special case, if we have more special cases we can handle them here.
             if(stack.getItem().canBeDepleted()) {
@@ -49,7 +49,8 @@ public final class ItemStackUtil {
         
         if(mutable) {
             
-            sb.append(".mutable()");
+            // Another option would be to mark it as mutable from the start: which one do we prefer?
+            sb.insert(0, '(').append(").mutable()");
         }
         
         return sb.toString();
