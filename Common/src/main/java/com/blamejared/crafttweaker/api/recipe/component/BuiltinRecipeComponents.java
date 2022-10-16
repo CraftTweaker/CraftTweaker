@@ -11,7 +11,9 @@ import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction2D;
 import com.blamejared.crafttweaker.api.util.random.Percentaged;
 import com.google.gson.reflect.TypeToken;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.Util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -130,6 +132,18 @@ public final class BuiltinRecipeComponents {
      */
     public static final class Output {
         
+        public static final IRecipeComponent<List<Percentaged<IItemStack>>> CHANCED_ITEMS = IRecipeComponent.composite(
+                CraftTweakerConstants.rl("output/chanced_items"),
+                new TypeToken<>() {},
+                Objects::equals,
+                it -> it.stream().map(List::of).toList(),
+                it -> it.stream().reduce(
+                        new ArrayList<>(),
+                        (list, element) -> Util.make(list, l -> l.addAll(element)),
+                        (firstList, secondList) -> Util.make(firstList, l -> l.addAll(secondList))
+                )
+        );
+        
         public static final IRecipeComponent<Float> EXPERIENCE = IRecipeComponent.simple(
                 CraftTweakerConstants.rl("output/experience"),
                 new TypeToken<>() {},
@@ -140,12 +154,6 @@ public final class BuiltinRecipeComponents {
                 CraftTweakerConstants.rl("output/items"),
                 new TypeToken<>() {},
                 RecipeComponentEqualityCheckers::areStacksEqual
-        );
-        
-        public static final IRecipeComponent<List<Percentaged<IItemStack>>> CHANCED_OUTPUTS = IRecipeComponent.simple(
-            CraftTweakerConstants.rl("output/chanced_items"),
-            new TypeToken<>() {},
-            Objects::equals
         );
         
         private Output() {}

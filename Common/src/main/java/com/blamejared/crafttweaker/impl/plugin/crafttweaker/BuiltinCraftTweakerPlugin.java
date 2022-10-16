@@ -132,6 +132,7 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         handler.registerRecipeComponent(BuiltinRecipeComponents.Processing.TIME);
         handler.registerRecipeComponent(BuiltinRecipeComponents.Output.EXPERIENCE);
         handler.registerRecipeComponent(BuiltinRecipeComponents.Output.ITEMS);
+        handler.registerRecipeComponent(BuiltinRecipeComponents.Output.CHANCED_ITEMS);
     }
     
     @Override
