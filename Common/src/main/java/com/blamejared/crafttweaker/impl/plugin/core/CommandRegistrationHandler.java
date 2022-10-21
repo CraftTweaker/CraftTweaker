@@ -14,6 +14,11 @@ final class CommandRegistrationHandler implements ICommandRegistrationHandler {
         
         final CommandRegistrationHandler handler = new CommandRegistrationHandler();
         consumer.accept(handler);
+        try {
+            CtCommands.get().finalizeCommands();
+        } catch(final IllegalArgumentException e) {
+            throw new IllegalStateException("Command finalization failed", e);
+        }
     }
     
     @Override

@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.command;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.impl.command.type.HelpCommand;
 import com.mojang.brigadier.CommandDispatcher;
@@ -23,8 +22,7 @@ public final class CtCommands {
             String parent,
             String id,
             MutableComponent desc,
-            ICommandRegistrationHandler.CommandBuilder builder,
-            boolean criticalConflict
+            ICommandRegistrationHandler.CommandBuilder builder
     ) {}
     
     private static final CtCommands INSTANCE = new CtCommands();
@@ -58,7 +56,7 @@ public final class CtCommands {
         // TODO("Allow recursion?")
         final CommandImpl parentCommand = this.commands.get(parent);
         if(parentCommand == null) {
-            this.lazyData.add(new ChildData(parent, id, desc, builder, true));
+            this.lazyData.add(new ChildData(parent, id, desc, builder));
             return;
         }
         parentCommand.registerSubCommand(new CommandImpl(id, desc, builder));
@@ -66,12 +64,15 @@ public final class CtCommands {
     
     public void registerDump(final String dumpId, final MutableComponent description, final ICommandRegistrationHandler.CommandBuilder builder) {
         
-        this.lazyData.add(new ChildData("dump", dumpId, description, builder, false));
+        this.lazyData.add(new ChildData("dump", dumpId, description, builder));
+    }
+    
+    public void finalizeCommands() {
+        
+        this.computeLazyData(this.lazyData);
     }
     
     public void registerCommandsTo(final CommandDispatcher<CommandSourceStack> dispatcher, @SuppressWarnings("unused") final Commands.CommandSelection environment) {
-        
-        this.computeLazyData(this.lazyData);
         
         final LiteralCommandNode<CommandSourceStack> root = Commands.literal("ct").build();
         final LiteralArgumentBuilder<CommandSourceStack> aliasedRoot = Commands.literal("crafttweaker");
@@ -89,11 +90,7 @@ public final class CtCommands {
             final ChildData data = dataQueue.remove();
             final CommandImpl parent = Objects.requireNonNull(this.commands.get(data.parent()), "Unknown parent command " + data.parent());
             if(parent.subCommands().containsKey(data.id())) {
-                if(data.criticalConflict()) {
-                    throw new IllegalArgumentException("Duplicated subcommand for parent " + parent.name() + ": " + data.id());
-                } else {
-                    CraftTweakerAPI.LOGGER.warn("Two subcommands with the same ID {} found for {}: this it not a critical error", data.id(), parent.name());
-                }
+                throw new IllegalArgumentException("Duplicated subcommand for parent " + parent.name() + ": " + data.id());
             }
             parent.registerSubCommand(new CommandImpl(data.id(), data.desc(), data.builder()));
         }
