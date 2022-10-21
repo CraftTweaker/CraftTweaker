@@ -1,5 +1,6 @@
 package crafttweaker.api.recipes;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.*;
 import crafttweaker.api.item.*;
 import stanhebben.zenscript.annotations.*;
@@ -175,6 +176,16 @@ public interface IRecipeManager {
      */
     @ZenMethod
     void removeShapeless(IIngredient output, @Optional IIngredient[] ingredients, @Optional boolean wildcard);
+
+    /**
+     * Remove all recipes that contain specified ingredient as input
+     *
+     * @param input The input ingredient
+     */
+    @ZenMethod
+    default void removeByInput(IIngredient input) {
+        CraftTweakerAPI.logError("Default method IRecipeManager#removeByInput(IIngredient) is not overwritten in " + getClass() + " please report to the author!");
+    }
     
     /**
      * Performs a crafting with the specified ingredients. Returns null if no

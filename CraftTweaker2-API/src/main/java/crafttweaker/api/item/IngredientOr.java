@@ -110,26 +110,28 @@ public class IngredientOr implements IIngredient {
     @Override
     public boolean matches(IItemStack item) {
         for(IIngredient ingredient : elements) {
-            if(ingredient == null) {
-                if(item == null)
-                    return true;
-            } else if(ingredient.matches(item))
+            if ((ingredient != null && ingredient.matches(item)) || (ingredient == null && item == null)) {
+                for (IItemCondition condition : conditions) {
+                    if (!condition.matches(item))
+                        return false;
+                }
                 return true;
+            }
         }
-        
         return false;
     }
     
     @Override
     public boolean matchesExact(IItemStack item) {
         for(IIngredient ingredient : elements) {
-            if(ingredient == null) {
-                if(item == null)
-                    return true;
-            } else if(ingredient.matchesExact(item))
+            if ((ingredient != null && ingredient.matchesExact(item)) || (ingredient == null && item == null)) {
+                for (IItemCondition condition : conditions) {
+                    if (!condition.matches(item))
+                        return false;
+                }
                 return true;
+            }
         }
-        
         return false;
     }
     
