@@ -1,5 +1,6 @@
 package crafttweaker.api.recipes;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.*;
 import crafttweaker.api.item.*;
 import stanhebben.zenscript.annotations.*;
@@ -182,7 +183,9 @@ public interface IRecipeManager {
      * @param input The input ingredient
      */
     @ZenMethod
-    void removeByInput(IIngredient input);
+    default void removeByInput(IIngredient input) {
+        CraftTweakerAPI.logError("Default method IRecipeManager#removeByInput(IIngredient) is not overwritten in " + getClass() + " please report to the author!");
+    }
     
     /**
      * Performs a crafting with the specified ingredients. Returns null if no
