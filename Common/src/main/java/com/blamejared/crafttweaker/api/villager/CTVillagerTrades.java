@@ -66,7 +66,7 @@ public class CTVillagerTrades {
      * @docParam profession <profession:minecraft:farmer>
      * @docParam villagerLevel 1
      * @docParam offerGenerator (entity, random) => {
-     * return new MerchantOffer(<item:minecraft:dirt>, <item:minecraft:diamond>, 0, 5);
+     * return new MerchantOffer(<item:minecraft:dirt>, <item:minecraft:diamond>, 16, 0, 5);
      * }
      */
     @ZenCodeType.Method
