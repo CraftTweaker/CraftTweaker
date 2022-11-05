@@ -95,16 +95,14 @@ public final class ItemStackUtil {
             return false;
         }
         
-        if(!ignoreDamage) {
-            return firstTag.equals(secondTag);
-        }
-        
         final Tag firstDamage = firstTag.get("Damage");
         final Tag secondDamage = secondTag.get("Damage");
         
         try {
-            firstTag.remove("Damage");
-            secondTag.remove("Damage");
+            if(ignoreDamage) {
+                firstTag.remove("Damage");
+                secondTag.remove("Damage");
+            }
             
             // We want to perform the full check only if partial matching is not required. In fact, checking tag
             // equality means making a full comparison of the two compound's maps. In Java's wisdom, this is done by
@@ -116,6 +114,9 @@ public final class ItemStackUtil {
             
             return areStackTagsPartiallyEqual(firstTag, secondTag);
         } finally {
+            // We set the values we obtained back into the tag. If we ignored damage, then the removal operation did not
+            // occur. Setting the values again results in a no-op then, the equivalent of map.put("a", map.get("a")).
+            // If that's not the case, on the other hand, we reset the tag to how it was before
             if(firstDamage != null) {
                 firstTag.put("Damage", firstDamage);
             }
