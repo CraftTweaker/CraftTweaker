@@ -21,8 +21,7 @@ public class TagToDataConverter {
             return null;
         }
         TagToDataVisitor visitor = new TagToDataVisitor();
-        tag.accept(visitor);
-        return visitor.getValue();
+        return visitor.visit(tag);
     }
     
 }

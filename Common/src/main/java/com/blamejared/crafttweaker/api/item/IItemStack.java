@@ -646,7 +646,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     @Override
     default boolean matches(IItemStack stack, boolean ignoreDamage) {
         
-        return ItemStackUtil.areStacksTheSame(this.getInternal(), stack.getInternal(), ignoreDamage);
+        return ItemStackUtil.areStacksTheSame(this.getInternal(), stack.getInternal(), ignoreDamage, true);
     }
     
     @Override
