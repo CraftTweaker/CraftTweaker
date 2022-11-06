@@ -96,7 +96,8 @@ public class MCMutableItemStack extends MCItemStack implements IMutableItemStack
 
     @Override
     public IItemStack withDamage(int damage) {
-        origin.setItemDamage(damage);
+        if (damage < 0) damage = 0;
+        origin.itemDamage = damage;
         return this;
     }
 
