@@ -7,6 +7,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -36,6 +37,7 @@ public class MCEntityAttributeInstance implements IEntityAttributeInstance {
     @Override
     public List<IEntityAttributeModifier> getModifiersByOperation(int operation) {
         return attributeInstance.getModifiersByOperation(operation).stream()
+                .filter(Objects::nonNull)
                 .map(MCEntityAttributeModifier::new)
                 .collect(Collectors.toList());
     }

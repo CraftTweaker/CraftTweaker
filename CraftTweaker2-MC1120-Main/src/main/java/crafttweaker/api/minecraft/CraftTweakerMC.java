@@ -1089,6 +1089,14 @@ public class CraftTweakerMC {
 		return entity == null ? null : new MCEntityFishHook(entity);
 	}
 
+    public static IEntityAttributeInstance getAttributeInstance(IAttributeInstance instance) {
+        return instance == null ? null : new MCEntityAttributeInstance(instance);
+    }
+
+    public static IAttributeInstance getAttributeInstance(IEntityAttributeInstance instance) {
+        return instance == null ? null : ((IAttributeInstance) instance.getInternal());
+    }
+
 	public static AttributeModifier getAttributeModifier(IEntityAttributeModifier modifier) {
 		return modifier == null ? null : (AttributeModifier) modifier.getInternal();
 	}
