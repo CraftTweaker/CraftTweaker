@@ -212,15 +212,15 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public IIngredient anyDamage() {
-        return withDamage(OreDictionary.WILDCARD_VALUE);
+        ItemStack result = stack.copy();
+        result.setItemDamage(OreDictionary.WILDCARD_VALUE);
+        return new MCItemStack(result, tag);
     }
     
     @Override
     public IItemStack withDamage(int damage) {
         ItemStack result = stack.copy();
-        if (damage < 0) damage = 0;
-        // access the itemDamage field directly, because some mods may override the setter to prevent this modification
-        result.itemDamage = damage;
+        result.setItemDamage(damage);
         return new MCItemStack(result, tag);
     }
     
