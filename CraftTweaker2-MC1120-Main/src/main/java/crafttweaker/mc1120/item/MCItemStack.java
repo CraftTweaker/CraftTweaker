@@ -212,8 +212,8 @@ public class MCItemStack implements IItemStack {
     
     @Override
     public IIngredient anyDamage() {
-        ItemStack result = stack.copy();
-        result.setItemDamage(OreDictionary.WILDCARD_VALUE);
+        ItemStack result = new ItemStack(stack.getItem(), stack.getCount(), OreDictionary.WILDCARD_VALUE);
+        result.setTagCompound(stack.getTagCompound());
         return new MCItemStack(result, tag);
     }
     

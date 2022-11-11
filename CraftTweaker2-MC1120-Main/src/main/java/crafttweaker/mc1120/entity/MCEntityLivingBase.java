@@ -9,7 +9,6 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.potions.IPotion;
 import crafttweaker.api.potions.IPotionEffect;
-import crafttweaker.mc1120.entity.attribute.MCEntityAttributeInstance;
 import net.minecraft.entity.EntityLivingBase;
 
 import java.util.List;
@@ -81,7 +80,7 @@ public class MCEntityLivingBase extends MCEntity implements IEntityLivingBase {
     
     @Override
     public IEntityAttributeInstance getAttribute(String name) {
-        return new MCEntityAttributeInstance(entityLivingBase.getAttributeMap().getAttributeInstanceByName(name));
+        return CraftTweakerMC.getAttributeInstance(entityLivingBase.getAttributeMap().getAttributeInstanceByName(name));
     }
     
     @Override
