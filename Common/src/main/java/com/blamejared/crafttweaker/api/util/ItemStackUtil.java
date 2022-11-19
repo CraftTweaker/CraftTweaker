@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.api.util;
 
-
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
 import net.minecraft.core.Registry;
@@ -63,6 +62,11 @@ public final class ItemStackUtil {
     
     public static boolean areStacksTheSame(final ItemStack first, final ItemStack second, final boolean ignoreDamage) {
         
+        return areStacksTheSame(first, second, ignoreDamage, false);
+    }
+    
+    public static boolean areStacksTheSame(final ItemStack first, final ItemStack second, final boolean ignoreDamage, final boolean partial) {
+        
         if(first.isEmpty() != second.isEmpty()) {
             return false;
         }
@@ -91,19 +95,28 @@ public final class ItemStackUtil {
             return false;
         }
         
-        if(!ignoreDamage) {
-            return firstTag.equals(secondTag);
-        }
-        
         final Tag firstDamage = firstTag.get("Damage");
         final Tag secondDamage = secondTag.get("Damage");
         
         try {
-            firstTag.remove("Damage");
-            secondTag.remove("Damage");
+            if(ignoreDamage) {
+                firstTag.remove("Damage");
+                secondTag.remove("Damage");
+            }
             
-            return firstTag.equals(secondTag);
+            // We want to perform the full check only if partial matching is not required. In fact, checking tag
+            // equality means making a full comparison of the two compound's maps. In Java's wisdom, this is done by
+            // looping over all keys and checking with get and contains... which is literally what we'd end up doing in
+            // a partial match. It's very interesting that HashMap does not override this behavior to check for buckets.
+            if(!partial) {
+                return firstTag.equals(secondTag);
+            }
+            
+            return areStackTagsPartiallyEqual(firstTag, secondTag);
         } finally {
+            // We set the values we obtained back into the tag. If we ignored damage, then the removal operation did not
+            // occur. Setting the values again results in a no-op then, the equivalent of map.put("a", map.get("a")).
+            // If that's not the case, on the other hand, we reset the tag to how it was before
             if(firstDamage != null) {
                 firstTag.put("Damage", firstDamage);
             }
@@ -153,6 +166,24 @@ public final class ItemStackUtil {
         }
         return stack2Data != null && stack2Data.contains(stack1Data);
         */
+    }
+    
+    private static boolean areStackTagsPartiallyEqual(final CompoundTag partial, final CompoundTag actual) {
+        
+        if(partial == actual) {
+            return true;
+        }
+        if(partial == null || actual == null) {
+            return false;
+        }
+        
+        // TODO("If we figure out a way to avoid having to convert everything to IData, let's use that")
+        final IData partialData = TagToDataConverter.convert(partial);
+        final IData actualData = TagToDataConverter.convert(actual);
+        
+        assert partialData != null && actualData != null;
+        
+        return actualData.contains(partialData);
     }
     
 }

@@ -121,6 +121,10 @@ public final class RecipeComponentBracketHandler implements BracketExpressionPar
     
     private String className(final Class<?> clazz) {
         
+        if(clazz == List.class) { // TODO("Find a way to obtain full ZenCode type information within BEPs: ZenCode change?")
+            return "stdlib.List";
+        }
+        
         final IScriptLoader loader = CraftTweakerAPI.getScriptRunManager().currentRunInfo().loader();
         final IZenClassRegistry registry = CraftTweakerAPI.getRegistry().getZenClassRegistry();
         return registry.getNameFor(loader, clazz).orElseThrow();

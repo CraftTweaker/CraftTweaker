@@ -724,7 +724,7 @@ public interface IData extends Comparable<IData>, Iterable<IData> {
     
     private <T> T notSupportedCast(BasicTypeID toType) {
         
-        return notSupportedCast("support being cast to '%s'".formatted(toType.name));
+        return notSupportedCast(toType.name);
     }
     
     /**
