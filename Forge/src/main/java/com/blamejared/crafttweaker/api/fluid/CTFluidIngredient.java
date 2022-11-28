@@ -73,9 +73,16 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
         }
         
         @Override
+        public boolean matches(Fluid fluid) {
+            
+            return this.fluidStack.getInternal().getFluid() == fluid;
+        }
+        
+        @Override
         public boolean matches(FluidStack fluidStack) {
             
-            return this.fluidStack.getInternal().containsFluid(fluidStack);
+            FluidStack internal = this.fluidStack.getInternal();
+            return internal.isFluidEqual(fluidStack) && internal.getAmount() <= fluidStack.getAmount();
         }
         
         @Override
@@ -87,7 +94,7 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
         @Override
         public boolean matches(TagKey<Fluid> fluidTag, int amount) {
             
-            return amount == 1 && this.matches(fluidTag);
+            return this.matches(fluidTag) && this.fluidStack.getAmount() <= amount;
         }
         
         @Override
@@ -101,13 +108,7 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
             
             return fluidMapper.apply(fluidStack.getImmutableInternal());
         }
-    
-        @Override
-        public boolean matches(Fluid fluid) {
         
-            return this.fluidStack.getInternal().getFluid() == fluid;
-        }
-    
     }
     
     public final static class FluidTagWithAmountIngredient extends CTFluidIngredient {
@@ -130,17 +131,17 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
             
             return tagMapper.apply(tag.getData().getTagKey(), tag.getAmount());
         }
-    
+        
         @Override
         public boolean matches(Fluid fluid) {
-        
+            
             return this.tag.getData().contains(fluid);
         }
-    
+        
         @Override
         public boolean matches(FluidStack fluidStack) {
             
-            return this.tag.getAmount() == 1 && this.tag.getData().contains(fluidStack.getFluid());
+            return this.tag.getData().contains(fluidStack.getFluid()) && this.tag.getAmount() <= fluidStack.getAmount();
         }
         
         @Override
@@ -152,7 +153,7 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
         @Override
         public boolean matches(TagKey<Fluid> fluidTag, int amount) {
             
-            return this.tag.getAmount() == amount && matches(fluidTag);
+            return matches(fluidTag) && this.tag.getAmount() <= amount;
         }
         
     }
@@ -179,13 +180,13 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
                     .map(element -> element.mapTo(fluidMapper, tagMapper, compoundMapper));
             return compoundMapper.apply(stream);
         }
-    
+        
         @Override
         public boolean matches(Fluid fluid) {
-        
+            
             return this.elements.stream().anyMatch(ingr -> ingr.matches(fluid));
         }
-    
+        
         @Override
         public boolean matches(FluidStack fluidStack) {
             

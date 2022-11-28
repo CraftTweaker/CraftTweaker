@@ -86,7 +86,7 @@ public abstract class CTEntityIngredient implements CommandStringDisplayable {
         @Override
         public boolean matches(EntityType<?> type, int amount) {
             
-            return amount == 1 && this.matches(type);
+            return this.matches(type);
         }
         
         @Override
@@ -98,7 +98,7 @@ public abstract class CTEntityIngredient implements CommandStringDisplayable {
         @Override
         public boolean matches(TagKey<EntityType<?>> tag, int amount) {
             
-            return amount == 1 && matches(tag);
+            return matches(tag);
         }
         
         @Override
@@ -121,13 +121,13 @@ public abstract class CTEntityIngredient implements CommandStringDisplayable {
         @Override
         public boolean matches(EntityType<?> type) {
             
-            return this.tag.getAmount() == 1 && this.tag.getData().contains(type);
+            return this.tag.getData().contains(type);
         }
         
         @Override
         public boolean matches(EntityType<?> type, int amount) {
             
-            return this.tag.getAmount() == amount && this.tag.getData().contains(type);
+            return this.tag.getData().contains(type) && this.tag.getAmount() <= amount;
         }
         
         @Override
@@ -139,7 +139,7 @@ public abstract class CTEntityIngredient implements CommandStringDisplayable {
         @Override
         public boolean matches(TagKey<EntityType<?>> tag, int amount) {
             
-            return this.tag.getAmount() == amount && this.tag.getData().getTagKey().equals(tag);
+            return this.tag.getData().getTagKey().equals(tag) && this.tag.getAmount() <= amount;
         }
         
         @Override

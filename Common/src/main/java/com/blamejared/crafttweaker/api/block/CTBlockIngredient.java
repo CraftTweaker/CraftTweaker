@@ -88,7 +88,7 @@ public abstract class CTBlockIngredient implements CommandStringDisplayable {
         @Override
         public boolean matches(Block block, int amount) {
             
-            return amount == 1 && this.matches(block);
+            return this.matches(block);
         }
         
         @Override
@@ -100,7 +100,7 @@ public abstract class CTBlockIngredient implements CommandStringDisplayable {
         @Override
         public boolean matches(BlockState blockState, int amount) {
             
-            return amount == 1 && this.matches(blockState);
+            return this.matches(blockState);
         }
         
         @Override
@@ -112,7 +112,7 @@ public abstract class CTBlockIngredient implements CommandStringDisplayable {
         @Override
         public boolean matches(TagKey<Block> tag, int amount) {
             
-            return amount == 1 && this.matches(tag);
+            return this.matches(tag);
         }
         
         @Override
@@ -147,7 +147,7 @@ public abstract class CTBlockIngredient implements CommandStringDisplayable {
         @Override
         public boolean matches(Block block, int amount) {
             
-            return amount == 1 && this.matches(block);
+            return this.matches(block);
         }
         
         @Override
@@ -159,7 +159,7 @@ public abstract class CTBlockIngredient implements CommandStringDisplayable {
         @Override
         public boolean matches(BlockState blockState, int amount) {
             
-            return amount == 1 && this.matches(blockState);
+            return this.matches(blockState);
         }
         
         @Override
@@ -171,7 +171,7 @@ public abstract class CTBlockIngredient implements CommandStringDisplayable {
         @Override
         public boolean matches(TagKey<Block> tag, int amount) {
             
-            return amount == 1 && this.matches(tag);
+            return this.matches(tag);
         }
         
         @Override
@@ -200,37 +200,37 @@ public abstract class CTBlockIngredient implements CommandStringDisplayable {
         @Override
         public boolean matches(Block block) {
             
-            return this.tag.getAmount() == 1 && this.tag.getData().contains(block);
+            return this.tag.getData().contains(block);
         }
         
         @Override
         public boolean matches(Block block, int amount) {
             
-            return this.tag.getAmount() == amount && this.tag.getData().contains(block);
+            return this.tag.getData().contains(block) && this.tag.getAmount() <= amount ;
         }
         
         @Override
         public boolean matches(BlockState blockState) {
             
-            return this.tag.getAmount() == 1 && blockState.is((TagKey<Block>) this.tag.getData().getTagKey());
+            return blockState.is((TagKey<Block>) this.tag.getData().getTagKey());
         }
         
         @Override
         public boolean matches(BlockState blockState, int amount) {
             
-            return this.tag.getAmount() == amount && blockState.is((TagKey<Block>) this.tag.getData().getTagKey());
+            return blockState.is((TagKey<Block>) this.tag.getData().getTagKey()) && this.tag.getAmount() <= amount;
         }
         
         @Override
         public boolean matches(TagKey<Block> tag) {
             
-            return this.tag.getAmount() == 1 && this.tag.getData().getTagKey().equals(tag);
+            return this.tag.getData().getTagKey().equals(tag);
         }
         
         @Override
         public boolean matches(TagKey<Block> tag, int amount) {
             
-            return this.tag.getAmount() == amount && this.tag.getData().getTagKey().equals(tag);
+            return this.tag.getData().getTagKey().equals(tag) && this.tag.getAmount() <= amount;
         }
         
         @Override
