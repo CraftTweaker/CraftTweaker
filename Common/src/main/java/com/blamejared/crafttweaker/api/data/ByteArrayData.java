@@ -59,7 +59,12 @@ public class ByteArrayData implements IData {
     
     @Override
     public boolean contains(IData other) {
-        
+    
+        if(other.isListable()) {
+            List<IData> dataValues = other.asList();
+            return dataValues != null && containsList(dataValues);
+        }
+    
         return getInternal().contains(ByteTag.valueOf(other.asByte()));
     }
     

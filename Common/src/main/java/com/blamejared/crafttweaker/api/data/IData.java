@@ -2,11 +2,15 @@ package com.blamejared.crafttweaker.api.data;
 
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker.api.data.visitor.DataToStringVisitor;
 import com.blamejared.crafttweaker.api.data.visitor.DataToTextComponentVisitor;
 import com.blamejared.crafttweaker.api.data.visitor.DataVisitor;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.Util;
+import net.minecraft.nbt.CollectionTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.level.storage.DataVersion;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.openzen.zencode.java.ZenCodeType;
@@ -749,6 +753,23 @@ public interface IData extends Comparable<IData>, Iterable<IData> {
         return false;
     }
     
+    default boolean containsList(List<IData> dataValues) {
+        
+        if(getInternal() instanceof CollectionTag<?> internal) {
+            outer:
+            for(IData dataValue : dataValues) {
+                for(Tag value : internal) {
+                    if(TagToDataConverter.convert(value).contains(dataValue)) {
+                        continue outer;
+                    }
+                }
+        
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
     
     /**
      * Used to specify what "type" of IData this is.
