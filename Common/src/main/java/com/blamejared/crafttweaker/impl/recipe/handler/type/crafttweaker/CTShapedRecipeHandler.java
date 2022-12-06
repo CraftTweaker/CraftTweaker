@@ -15,7 +15,6 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -98,7 +97,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecip
     private List<IIngredient> flatten(final IIngredient[][] ingredients, final int width, final int height) {
         
         final int size;
-        final List<IIngredient> flattened = new ArrayList<>(size = width * height);
+        final List<IIngredient> flattened = Arrays.asList(new IIngredient[size = width * height]);
         for(int i = 0; i < size; ++i) {
             flattened.set(i, ingredients[i / width][i % width]);
         }

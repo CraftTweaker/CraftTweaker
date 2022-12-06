@@ -49,10 +49,16 @@ public class TagIngredient implements IIngredient {
         
         return internal.getInternal()
                 .stream()
-                .map(o -> (Holder<Item>)o)
+                .map(o -> (Holder<Item>) o)
                 .map(Holder::value)
                 .map(ExpandItem::getDefaultInstance)
                 .toArray(IItemStack[]::new);
+    }
+    
+    @Override
+    public String toString() {
+        
+        return this.getCommandString();
     }
     
 }
