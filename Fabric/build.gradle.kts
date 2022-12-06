@@ -88,6 +88,7 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
     mainFile.changelogType = "markdown"
     mainFile.changelog = Utils.getFullChangelog(project)
     mainFile.releaseType = CFG_Contants.RELEASE_TYPE_RELEASE
+    mainFile.addGameVersion(Versions.MINECRAFT)
     mainFile.addJavaVersion("Java ${Versions.MOD_JAVA}")
     mainFile.addRequirement("ingredient-extension-api")
     mainFile.addRequirement("faux-custom-entity-data")
