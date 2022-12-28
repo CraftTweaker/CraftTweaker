@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.gametest.logger.appender;
+package com.blamejared.crafttweaker.gametest.logging.appender;
 
 import com.blamejared.crafttweaker.CraftTweakerCommon;
 import net.minecraft.gametest.framework.GameTestAssertException;
@@ -9,6 +9,7 @@ import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.apache.logging.log4j.core.config.Property;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
 import org.apache.logging.log4j.core.config.plugins.PluginElement;
@@ -25,9 +26,9 @@ public class GameTestLoggerAppender extends AbstractAppender {
     
     private final List<LogMessage> messages = new LinkedList<>();
     
-    protected GameTestLoggerAppender(String name, Filter filter, Layout<? extends Serializable> layout) {
+    protected GameTestLoggerAppender(String name, Filter filter, Layout<? extends Serializable> layout, boolean ignoreExceptions, Property[] properties) {
         
-        super(name, filter, layout);
+        super(name, filter, layout, ignoreExceptions, properties);
     }
     
     @Override
@@ -42,7 +43,7 @@ public class GameTestLoggerAppender extends AbstractAppender {
     @PluginFactory
     public static GameTestLoggerAppender createAppender(@PluginAttribute("name") String name, @PluginElement("Filter") Filter filter, @Nullable @PluginElement("Layout") Layout<? extends Serializable> layout) {
         
-        return new GameTestLoggerAppender(name, filter, layout);
+        return new GameTestLoggerAppender(name, filter, layout, true, Property.EMPTY_ARRAY);
     }
     
     private record LogMessage(String message, String actualMessage, Level level) {}

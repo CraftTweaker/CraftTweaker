@@ -2,7 +2,6 @@ package com.blamejared.crafttweaker.impl.script.scriptrun;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
-import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRun;
@@ -10,7 +9,8 @@ import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.gametest.GameTestPlugin;
 import com.blamejared.crafttweaker.gametest.framework.DelegatingGameTestAssertException;
 import com.blamejared.crafttweaker.gametest.framework.ScriptBuilder;
-import com.blamejared.crafttweaker.gametest.logger.appender.GameTestLoggerAppender;
+import com.blamejared.crafttweaker.gametest.logging.appender.GameTestLoggerAppender;
+import com.blamejared.crafttweaker.impl.logging.CraftTweakerLog4jEditor;
 import com.google.common.base.Suppliers;
 import net.minecraft.gametest.framework.GameTestHelper;
 
@@ -48,7 +48,7 @@ public class GameTestScriptRunner {
             throw new DelegatingGameTestAssertException(e.getMessage(), e);
         }
         
-        return CraftTweakerLogger.GAMETEST_APPENDER.query();
+        return CraftTweakerLog4jEditor.queryGameTestLogger();
     }
     
     private static IScriptFile getFile(final ScriptBuilder.Script script) {

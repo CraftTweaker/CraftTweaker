@@ -2,8 +2,8 @@ package com.blamejared.crafttweaker.impl.script.scriptrun.runner;
 
 import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunInfo;
+import com.blamejared.crafttweaker.impl.logging.CraftTweakerLog4jEditor;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import org.openzen.zencode.java.logger.ScriptingEngineLogger;
 import org.openzen.zencode.shared.SourceFile;
@@ -27,18 +27,18 @@ final class GameTestScriptRunner extends ScriptRunner {
     
     @Override
     protected void runScripts(final BracketExpressionParser parser) throws ParseException {
-    
-        CraftTweakerLogger.GAMETEST_APPENDER.claim();
+        
+        CraftTweakerLog4jEditor.claimGameTestLogger();
         final SourceFile[] sources = this.sources().toArray(SourceFile[]::new);
         final SemanticModule module = this.engine()
                 .createScriptedModule("scripts", sources, parser, FunctionParameter.NONE);
-    
+        
         if(!module.isValid()) {
             Stream.of(CraftTweakerAPI.LOGGER, CraftTweakerCommon.LOG).forEach(it -> it.error("Scripts are invalid!"));
-            CraftTweakerLogger.GAMETEST_APPENDER.query().dump();
+            CraftTweakerLog4jEditor.queryGameTestLogger().dump();
             throw new GameTestAssertException("Scripts are invalid!");
         }
-    
+        
         this.executeRunAction(module);
     }
     

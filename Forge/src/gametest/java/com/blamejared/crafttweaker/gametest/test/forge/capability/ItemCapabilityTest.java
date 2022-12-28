@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker.gametest.api.event.TestEvent;
 import com.blamejared.crafttweaker.gametest.framework.ScriptBuilder;
 import com.blamejared.crafttweaker.gametest.framework.annotation.CraftTweakerGameTestHolder;
 import com.blamejared.crafttweaker.gametest.framework.annotation.TestModifier;
-import com.blamejared.crafttweaker.gametest.logger.appender.GameTestLoggerAppender;
+import com.blamejared.crafttweaker.gametest.logging.appender.GameTestLoggerAppender;
 import com.blamejared.crafttweaker.impl.script.scriptrun.GameTestScriptRunner;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;

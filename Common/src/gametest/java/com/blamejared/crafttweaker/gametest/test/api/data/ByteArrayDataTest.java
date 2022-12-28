@@ -8,7 +8,7 @@ import com.blamejared.crafttweaker.gametest.framework.ScriptBuilder;
 import com.blamejared.crafttweaker.gametest.framework.annotation.CraftTweakerGameTestHolder;
 import com.blamejared.crafttweaker.gametest.framework.annotation.TestModifier;
 import com.blamejared.crafttweaker.gametest.framework.zencode.GameTestGlobals;
-import com.blamejared.crafttweaker.gametest.logger.appender.GameTestLoggerAppender;
+import com.blamejared.crafttweaker.gametest.logging.appender.GameTestLoggerAppender;
 import com.blamejared.crafttweaker.impl.script.scriptrun.GameTestScriptRunner;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -28,20 +28,20 @@ public class ByteArrayDataTest implements CraftTweakerGameTest {
         return "data/byte_array/%s.zs".formatted(name);
     }
     
-//    @GameTest(template = "crafttweaker:empty")
-//    @TestModifier(implicitSuccession = true)
-//    public void testToByteArray(GameTestHelper helper, ScriptBuilder builder) {
-//        //TODO add byte array tests when you can get a byte array instead of an sbyte array
-//        //
-//        //        builder.file("data/byte_array/caster/byte_array.zs");
-//        //
-//        //        GameTestLoggerAppender.QueryableLog log = GameTestScriptRunner.runScripts(helper, builder);
-//        //        log.assertNoErrors();
-//        //        log.assertNoWarnings();
-//        //        IData iData = GameTestGlobals.data().get(0);
-//        //
-//        //        assertThat(iData.asBool() == true, is(true));
-//    }
+    //    @GameTest(template = "crafttweaker:empty")
+    //    @TestModifier(implicitSuccession = true)
+    //    public void testToByteArray(GameTestHelper helper, ScriptBuilder builder) {
+    //        //TODO add byte array tests when you can get a byte array instead of an sbyte array
+    //        //
+    //        //        builder.file("data/byte_array/caster/byte_array.zs");
+    //        //
+    //        //        GameTestLoggerAppender.QueryableLog log = GameTestScriptRunner.runScripts(helper, builder);
+    //        //        log.assertNoErrors();
+    //        //        log.assertNoWarnings();
+    //        //        IData iData = GameTestGlobals.data().get(0);
+    //        //
+    //        //        assertThat(iData.asBool() == true, is(true));
+    //    }
     
     @GameTest(template = "crafttweaker:empty")
     @TestModifier(implicitSuccession = true)

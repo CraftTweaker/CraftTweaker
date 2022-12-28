@@ -1,14 +1,13 @@
 package com.blamejared.crafttweaker.api;
 
 import com.blamejared.crafttweaker.api.action.base.IAction;
-import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
+import com.blamejared.crafttweaker.api.logging.ILoggerRegistry;
 import com.blamejared.crafttweaker.api.util.PathUtil;
 import com.blamejared.crafttweaker.api.zencode.expand.IDataRewrites;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunManager;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker.platform.helper.IAccessibleElementsProvider;
 import com.google.common.base.Suppliers;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openzen.zenscript.parser.expression.ParsedExpressionArray;
 import org.openzen.zenscript.parser.expression.ParsedExpressionMap;
@@ -27,6 +26,7 @@ public final class CraftTweakerAPI {
     
     private static final Supplier<ICraftTweakerRegistry> REGISTRY = Suppliers.memoize(Services.BRIDGE::registry);
     private static final Supplier<IScriptRunManager> SCRIPT_RUN_MANAGER = Suppliers.memoize(Services.BRIDGE::scriptRunManager);
+    private static final Supplier<ILoggerRegistry> LOGGER_REGISTRY = Suppliers.memoize(Services.BRIDGE::loggerRegistry);
     private static final Supplier<Path> SCRIPTS_DIRECTORY = Suppliers.memoize(() -> PathUtil.findFromGameDirectory(CraftTweakerConstants.SCRIPTS_DIRECTORY));
     
     // Do we want to make a log4j wrapper and expose it to a script...? 😬
@@ -36,8 +36,11 @@ public final class CraftTweakerAPI {
      * <p>This logger is also wired to the {@code crafttweaker.log} file.</p>
      *
      * @since 9.1.0
+     * @deprecated Use {@link #getLogger(String)} to create a new logger for your system instead.
      */
-    public static final Logger LOGGER = LogManager.getLogger(CraftTweakerLogger.LOGGER_NAME);
+    @Deprecated(forRemoval = true, since = "10.1.0")
+    @SuppressWarnings("removal")
+    public static final Logger LOGGER = getLoggerRegistry().getUnknownLogger();
     
     static {
         ParsedExpressionMap.compileOverrides.add(IDataRewrites::rewriteMap);
@@ -81,6 +84,18 @@ public final class CraftTweakerAPI {
     }
     
     /**
+     * Obtains the {@link ILoggerRegistry} used to create system-specific {@link Logger} instances.
+     *
+     * @return The logger registry.
+     *
+     * @since 10.1.0
+     */
+    public static ILoggerRegistry getLoggerRegistry() {
+        
+        return LOGGER_REGISTRY.get();
+    }
+    
+    /**
      * Obtains a {@link Path} to the default {@code scripts} directory used by CraftTweaker.
      *
      * @return The default scripts directory.
@@ -103,6 +118,24 @@ public final class CraftTweakerAPI {
     public static void apply(final IAction action) {
         
         getScriptRunManager().applyAction(action);
+    }
+    
+    /**
+     * Obtains a new {@link Logger} for logging CraftTweaker-specific messages.
+     *
+     * <p>The given logger is automatically configured to output messages to {@code crafttweaker.log} with the correct
+     * format. It can be therefore used directly.</p>
+     *
+     * @param systemName The name of the system.
+     *
+     * @return A {@link Logger} instance tailored to the given system.
+     *
+     * @see ILoggerRegistry#getLoggerFor(String)
+     * @since 10.1.0
+     */
+    public static Logger getLogger(final String systemName) {
+        
+        return getLoggerRegistry().getLoggerFor(systemName);
     }
     
 }

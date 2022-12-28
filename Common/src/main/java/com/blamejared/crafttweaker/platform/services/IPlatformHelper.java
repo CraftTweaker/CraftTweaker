@@ -46,7 +46,7 @@ public interface IPlatformHelper {
      */
     default String getLogFormat() {
         
-        return "[%d{HH:mm:ss.SSS}][%level]: %msg%n%throwable";
+        return "[%d{HH:mm:ss.SSS}][%level][%markerSimpleName]: %msg%n%throwable";
     }
     
     String getPlatformName();

@@ -1,9 +1,11 @@
 package com.blamejared.crafttweaker.impl.service;
 
 import com.blamejared.crafttweaker.api.ICraftTweakerRegistry;
+import com.blamejared.crafttweaker.api.logging.ILoggerRegistry;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunManager;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
 import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
+import com.blamejared.crafttweaker.impl.logging.LoggerRegistry;
 import com.blamejared.crafttweaker.impl.registry.CraftTweakerRegistry;
 import com.blamejared.crafttweaker.impl.script.scriptrun.DefaultScriptRunModuleConfigurator;
 import com.blamejared.crafttweaker.impl.script.scriptrun.ScriptRunManager;
@@ -34,6 +36,12 @@ public final class BridgeService implements IBridgeService {
     public IAccessibleElementsProvider accessibleElementsProvider() {
         
         return AccessibleElementsProvider.get();
+    }
+    
+    @Override
+    public ILoggerRegistry loggerRegistry() {
+        
+        return LoggerRegistry.get();
     }
     
 }
