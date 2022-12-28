@@ -2,11 +2,11 @@ package com.blamejared.crafttweaker.impl.script.scriptrun;
 
 import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRun;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunInfo;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
+import com.blamejared.crafttweaker.impl.logging.CraftTweakerLog4jEditor;
 import com.blamejared.crafttweaker.impl.preprocessor.PriorityPreprocessor;
 import com.blamejared.crafttweaker.impl.script.scriptrun.runner.IScriptRunner;
 import org.openzen.zencode.java.logger.ScriptingEngineLogger;
@@ -17,7 +17,6 @@ import java.util.OptionalInt;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-@SuppressWarnings("ClassCanBeRecord")
 final class ScriptRun implements IScriptRun {
     
     private final List<SourceFile> sources;
@@ -68,7 +67,7 @@ final class ScriptRun implements IScriptRun {
     
     private void undoPreviousRun(final IScriptLoader loader, final ScriptRunConfiguration.RunKind runKind) {
         
-        CraftTweakerLogger.clearPreviousMessages(); // TODO("Move to internal method?")
+        CraftTweakerLog4jEditor.clearPreviousMessages(); // TODO("Move to internal method?")
         
         if(runKind != ScriptRunConfiguration.RunKind.EXECUTE) {
             return;

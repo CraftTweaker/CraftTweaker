@@ -2,9 +2,9 @@ package com.blamejared.crafttweaker;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
-import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.command.CtCommands;
+import com.blamejared.crafttweaker.impl.logging.CraftTweakerLog4jEditor;
 import com.blamejared.crafttweaker.impl.plugin.core.PluginManager;
 import com.blamejared.crafttweaker.impl.script.recipefs.RecipeFileSystemProviderInjector;
 import com.blamejared.crafttweaker.platform.Services;
@@ -41,7 +41,7 @@ public class CraftTweakerCommon {
             final String path = CraftTweakerAPI.getScriptsDirectory().toAbsolutePath().toString();
             throw new IllegalStateException("Could not create Directory " + path);
         }
-        CraftTweakerLogger.init();
+        CraftTweakerLog4jEditor.edit();
         RecipeFileSystemProviderInjector.inject();
         
         Services.REGISTRY.init();

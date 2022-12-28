@@ -7,7 +7,7 @@ import com.blamejared.crafttweaker.gametest.framework.ScriptBuilder;
 import com.blamejared.crafttweaker.gametest.framework.annotation.CraftTweakerGameTestHolder;
 import com.blamejared.crafttweaker.gametest.framework.annotation.TestModifier;
 import com.blamejared.crafttweaker.gametest.framework.zencode.GameTestGlobals;
-import com.blamejared.crafttweaker.gametest.logger.appender.GameTestLoggerAppender;
+import com.blamejared.crafttweaker.gametest.logging.appender.GameTestLoggerAppender;
 import com.blamejared.crafttweaker.impl.script.scriptrun.GameTestScriptRunner;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -162,7 +162,7 @@ public class MapDataTest implements CraftTweakerGameTest {
         log.assertNoErrors();
         log.assertNoWarnings();
         log.assertOutput(0, "3");
-    
+        
         IData iData = GameTestGlobals.data().get(0);
         assertThat(((CompoundTag) iData.getInternal()).size(), is(3));
     }
@@ -179,8 +179,8 @@ public class MapDataTest implements CraftTweakerGameTest {
         log.assertOutput(0, "1");
         log.assertOutput(1, "key");
         log.assertOutput(2, "second");
-    
-    
+        
+        
         IData iData = GameTestGlobals.data().get(0);
         assertThat(((CompoundTag) iData.getInternal()).getAllKeys(), is(Set.of("key", "1", "second")));
     }
@@ -198,4 +198,5 @@ public class MapDataTest implements CraftTweakerGameTest {
         log.assertOutput(1, "key");
         log.assertOutput(2, "second");
     }
+    
 }

@@ -5,10 +5,10 @@ import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.action.villager.ActionTradeBase;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.attribute.ItemAttributeModifierBase;
-import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceManager;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceType;
 import com.blamejared.crafttweaker.api.villager.CTVillagerTrades;
+import com.blamejared.crafttweaker.impl.logging.CraftTweakerLog4jEditor;
 import com.blamejared.crafttweaker.impl.script.ScriptReloadListener;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.network.chat.MutableComponent;
@@ -70,18 +70,14 @@ public class CTCommonEventHandler {
         CTVillagerTrades.ACTION_WANDERING_TRADES.forEach(ActionTradeBase::undo);
         CTVillagerTrades.ACTION_WANDERING_TRADES.forEach(actionTradeBase -> {
             
-            List<VillagerTrades.ItemListing> trades;
-            switch(actionTradeBase.getLevel()) {
-                case 1:
-                    trades = e.getGenericTrades();
-                    break;
-                case 2:
-                    trades = e.getRareTrades();
-                    break;
-                default:
-                    return;
+            List<VillagerTrades.ItemListing> trades = switch(actionTradeBase.getLevel()) {
+                case 1 -> e.getGenericTrades();
+                case 2 -> e.getRareTrades();
+                default -> null;
+            };
+            if(trades != null) {
+                actionTradeBase.apply(trades);
             }
-            actionTradeBase.apply(trades);
         });
         CTVillagerTrades.ACTION_WANDERING_TRADES.clear();
     }
@@ -112,13 +108,13 @@ public class CTCommonEventHandler {
     @SubscribeEvent
     public static void playerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         
-        CraftTweakerLogger.addPlayer(event.getEntity());
+        CraftTweakerLog4jEditor.addPlayer(event.getEntity());
     }
     
     @SubscribeEvent
     public static void playerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         
-        CraftTweakerLogger.removePlayer(event.getEntity());
+        CraftTweakerLog4jEditor.removePlayer(event.getEntity());
     }
     
     @SubscribeEvent

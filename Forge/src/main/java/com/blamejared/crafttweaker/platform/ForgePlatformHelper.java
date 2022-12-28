@@ -107,7 +107,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public String getLogFormat() {
         
-        return "[%d{HH:mm:ss.SSS}][%level]: %minecraftFormatting{%msg}{strip}%n%throwable";
+        return "[%d{HH:mm:ss.SSS}][%level][%markerSimpleName]: %minecraftFormatting{%msg}{strip}%n%throwable";
     }
     
     @Override

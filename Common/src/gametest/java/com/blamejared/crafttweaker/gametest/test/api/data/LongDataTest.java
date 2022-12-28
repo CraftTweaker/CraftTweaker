@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker.gametest.framework.ScriptBuilder;
 import com.blamejared.crafttweaker.gametest.framework.annotation.CraftTweakerGameTestHolder;
 import com.blamejared.crafttweaker.gametest.framework.annotation.TestModifier;
 import com.blamejared.crafttweaker.gametest.framework.zencode.GameTestGlobals;
-import com.blamejared.crafttweaker.gametest.logger.appender.GameTestLoggerAppender;
+import com.blamejared.crafttweaker.gametest.logging.appender.GameTestLoggerAppender;
 import com.blamejared.crafttweaker.impl.script.scriptrun.GameTestScriptRunner;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -199,7 +199,7 @@ public class LongDataTest implements CraftTweakerGameTest {
         log.assertOutput(0, "true");
         IData iData = GameTestGlobals.data().get(0);
         
-        assertThat(iData.asByte(), is((byte)1));
+        assertThat(iData.asByte(), is((byte) 1));
     }
     
     @GameTest(template = "crafttweaker:empty")

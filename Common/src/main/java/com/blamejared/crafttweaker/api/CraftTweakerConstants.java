@@ -9,6 +9,8 @@ public final class CraftTweakerConstants {
     public static final String MOD_ID = "crafttweaker";
     public static final String MOD_NAME = "CraftTweaker";
     public static final String SCRIPTS_DIRECTORY = "./scripts";
+    
+    public static final String LOG_NAME = "CRT_LOG_FILE";
     public static final String LOG_PATH = "logs/crafttweaker.log";
     
     public static final String ALL_LOADERS_MARKER = "*";
