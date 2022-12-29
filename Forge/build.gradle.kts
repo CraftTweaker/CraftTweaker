@@ -9,7 +9,7 @@ plugins {
     id("net.minecraftforge.gradle") version ("5.1.+")
     id("org.parchmentmc.librarian.forgegradle") version ("1.+")
     id("org.spongepowered.mixin") version ("0.7-SNAPSHOT")
-    id("com.blamejared.modtemplate") version ("[2.0.0.34,)")
+    id("com.blamejared.modtemplate") version ("2.0.0.35")
     id("com.matthewprenger.cursegradle") version ("1.4.0")
 }
 
