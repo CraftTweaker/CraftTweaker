@@ -134,7 +134,7 @@ public class CTCommands {
         if(!subCommands.isEmpty()) {
             subCommands.forEach((name, subCommand) -> registerCommandInternal(literalCommand, subCommand));
         }
-        root.then(literalCommand.executes(command.getCaller()::executeCommand));
+        root.then(literalCommand.requires(command.getRequirement()).executes(command.getCaller()::executeCommand));
     }
     
     private static void registerCustomCommand(LiteralArgumentBuilder<CommandSource> literal) {

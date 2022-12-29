@@ -30,7 +30,7 @@ public class ExamplesCommand extends CommandImpl {
     
     public ExamplesCommand() {
         
-        super(name, description, (CommandCallerPlayer) ExamplesCommand::execute);
+        super(name, description, (CommandCallerPlayer) ExamplesCommand::execute, commandSource -> commandSource.hasPermissionLevel(3));
     }
     
     public static void register() {

@@ -1,7 +1,10 @@
 package com.blamejared.crafttweaker.impl.commands;
 
+import net.minecraft.command.CommandSource;
+
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Predicate;
 
 public class CommandImpl implements Comparable<CommandImpl> {
     
@@ -10,13 +13,26 @@ public class CommandImpl implements Comparable<CommandImpl> {
     private final com.blamejared.crafttweaker.impl.commands.CommandCaller caller;
     private final Map<String, CommandImpl> subCommands;
     
+    private final Predicate<CommandSource> requirement;
+    
     public CommandImpl(String name, String description, CommandCaller caller) {
         
         this.name = name;
         this.description = description;
         this.caller = caller;
         this.subCommands = new TreeMap<>();
+        this.requirement = commandSource -> true;
     }
+    
+    public CommandImpl(String name, String description, CommandCaller caller,  Predicate<CommandSource> requirement) {
+        
+        this.name = name;
+        this.description = description;
+        this.caller = caller;
+        this.subCommands = new TreeMap<>();
+        this.requirement = requirement;
+    }
+    
     
     public String getName() {
         
@@ -42,6 +58,11 @@ public class CommandImpl implements Comparable<CommandImpl> {
     public Map<String, CommandImpl> getChildCommands() {
         
         return subCommands;
+    }
+    
+    public Predicate<CommandSource> getRequirement() {
+        
+        return requirement;
     }
     
     @Override
