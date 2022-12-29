@@ -26,7 +26,7 @@ public final class ExamplesCommand extends CommandImpl {
     public ExamplesCommand() {
         
         super("examples", new TranslatableComponent("crafttweaker.command.description.examples"), commandSourceStackLiteralArgumentBuilder -> {
-            commandSourceStackLiteralArgumentBuilder.executes(context -> {
+            commandSourceStackLiteralArgumentBuilder.requires(commandSourceStack -> commandSourceStack.hasPermission(3)).executes(context -> {
                 ServerPlayer player = context.getSource().getPlayerOrException();
                 return execute(player);
             });
