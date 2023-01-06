@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.preprocessor.onlyif;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.Preprocessor;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
@@ -99,7 +98,7 @@ public final class OnlyIfPreprocessor implements IPreprocessor {
         if(this.currentMatch != null) {
             final CodePosition start = this.currentMatch.start();
             final String name = this.currentMatch.name();
-            CraftTweakerAPI.LOGGER.warn("{} onlyif '{}' starting at line {}:{} was not closed properly", file, name, start.fromLine, start.fromLineOffset);
+            PREPROCESSOR_LOGGER.warn("{} onlyif '{}' starting at line {}:{} was not closed properly", file, name, start.fromLine, start.fromLineOffset);
         }
     }
     
@@ -112,7 +111,7 @@ public final class OnlyIfPreprocessor implements IPreprocessor {
         final String[] content = preprocessorMatch.content().split(SPACE);
         //If none were given that means only '#onlyif' was called, ignore for now.
         if(content.length < 1) {
-            CraftTweakerAPI.LOGGER.warn("{}:{} Using 'onlyif' requires a parameter, like start, end, modloaded, etc", fileName, line);
+            PREPROCESSOR_LOGGER.warn("{}:{} Using 'onlyif' requires a parameter, like start, end, modloaded, etc", fileName, line);
             return;
         }
         
@@ -128,14 +127,14 @@ public final class OnlyIfPreprocessor implements IPreprocessor {
                 this.currentMatch = this.currentMatch.parent();
             } else {
                 
-                CraftTweakerAPI.LOGGER.warn("{}:{} Called 'onlyif end' without prior start", fileName, line);
+                PREPROCESSOR_LOGGER.warn("{}:{} Called 'onlyif end' without prior start", fileName, line);
             }
             
             return;
         }
         
         if(!this.knownParameters.containsKey(parameterName.toLowerCase())) {
-            CraftTweakerAPI.LOGGER.warn("{}:{} Unknown 'onlyif' parameter: '{}'", fileName, line, parameterName);
+            PREPROCESSOR_LOGGER.warn("{}:{} Unknown 'onlyif' parameter: '{}'", fileName, line, parameterName);
             return;
         }
         
@@ -147,7 +146,7 @@ public final class OnlyIfPreprocessor implements IPreprocessor {
         //Invalid arguments
         if(!hit.validArguments()) {
             final String array = Arrays.toString(additionalArguments);
-            CraftTweakerAPI.LOGGER.warn("{}:{} Invalid 'onlyif' arguments for parameter '{}': {}'", fileName, line, parameterName, array);
+            PREPROCESSOR_LOGGER.warn("{}:{} Invalid 'onlyif' arguments for parameter '{}': {}'", fileName, line, parameterName, array);
             return;
         }
         

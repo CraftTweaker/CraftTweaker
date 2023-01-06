@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.platform.services;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.entity.INameTagFunction;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
@@ -64,8 +65,13 @@ public interface IClientHelper {
                 try {
                     function.apply(ctStack, lines, context);
                 } catch(final Exception exception) {
-                    CraftTweakerAPI.LOGGER.error("Unable to run one of the tooltip functions for {} on {} due to an error (for experts, refer to {})", ingredient.getCommandString(), ctStack.getCommandString(), function.getClass()
-                            .getName(), exception);
+                    CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME).error(
+                            "Unable to run one of the tooltip functions for {} on {} due to an error (for experts, refer to {})",
+                            ingredient.getCommandString(),
+                            ctStack.getCommandString(),
+                            function.getClass().getName(),
+                            exception
+                    );
                 }
             });
         }

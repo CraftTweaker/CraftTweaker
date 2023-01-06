@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.tag.expand;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
@@ -34,7 +35,8 @@ public class ExpandItemTag {
         
         TagKey<?> tagKey = internal.getTagKey();
         if(!internal.exists() && !Services.PLATFORM.isDataGen()) {
-            CraftTweakerAPI.LOGGER.warn("Tag '{}' does not exist, replacing with empty IIngredient", internal.getCommandString());
+            CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME)
+                    .warn("Tag '{}' does not exist, replacing with empty IIngredient", internal.getCommandString());
             return IIngredientEmpty.INSTANCE;
         }
         return new TagIngredient(internal);

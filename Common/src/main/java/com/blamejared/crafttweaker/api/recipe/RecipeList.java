@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.recipe;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import net.minecraft.resources.ResourceLocation;
@@ -121,7 +122,7 @@ public class RecipeList<T extends Recipe<?>> {
     public void add(ResourceLocation id, T recipe) {
         
         if(getByName().containsKey(recipe.getId())) {
-            CraftTweakerAPI.LOGGER.warn(
+            CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME).warn(
                     "A recipe with the name '{}' already exists and will be overwritten: this is most likely an error in your scripts",
                     recipe.getId().getPath()
             );

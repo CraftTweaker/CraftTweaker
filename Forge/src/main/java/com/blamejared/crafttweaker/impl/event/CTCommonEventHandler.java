@@ -132,7 +132,7 @@ public class CTCommonEventHandler {
         if (server != null) {
             server.getPlayerList().broadcastSystemMessage(msg, false);
         } else {
-            CraftTweakerCommon.LOG.info(msg.getString());
+            CraftTweakerCommon.logger().info(msg.getString());
         }
     }
 

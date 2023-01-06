@@ -101,13 +101,13 @@ public final class DumpCommands {
                     
                     final ServerPlayer player = context.getSource().getPlayerOrException();
                     BuiltInRegistries.RECIPE_TYPE.stream()
-                            .peek(type -> CraftTweakerAPI.LOGGER.info(type.toString()))
+                            .peek(type -> CommandUtilities.COMMAND_LOGGER.info(type.toString()))
                             .map(it -> ((AccessRecipeManager) player.level.getRecipeManager()).crafttweaker$getRecipes()
                                     .getOrDefault(it, Collections.emptyMap())
                                     .keySet())
                             .flatMap(Collection::stream)
                             .map(ResourceLocation::toString)
-                            .forEach(CraftTweakerAPI.LOGGER::info);
+                            .forEach(CommandUtilities.COMMAND_LOGGER::info);
                     
                     CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.recipes")), CommandUtilities.getFormattedLogFile())
                             .withStyle(ChatFormatting.GREEN)), player);
@@ -122,7 +122,9 @@ public final class DumpCommands {
                 builder -> builder.executes(context -> {
                     
                     final ServerPlayer player = context.getSource().getPlayerOrException();
-                    LootManager.INSTANCE.getModifierManager().getAllNames().forEach(CraftTweakerAPI.LOGGER::info);
+                    LootManager.INSTANCE.getModifierManager()
+                            .getAllNames()
+                            .forEach(CommandUtilities.COMMAND_LOGGER::info);
                     
                     CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.loot_modifiers")), CommandUtilities.getFormattedLogFile())
                             .withStyle(ChatFormatting.GREEN)), player);
@@ -143,7 +145,7 @@ public final class DumpCommands {
                             .stream()
                             .map(ResourceLocation::toString)
                             .sorted()
-                            .forEach(CraftTweakerAPI.LOGGER::info);
+                            .forEach(CommandUtilities.COMMAND_LOGGER::info);
                     
                     CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.loot_tables")), CommandUtilities.getFormattedLogFile())
                             .withStyle(ChatFormatting.GREEN)), player);
@@ -163,7 +165,7 @@ public final class DumpCommands {
                         biomes.stream()
                                 .map(ExpandBiome::getCommandString)
                                 .sorted()
-                                .forEach(CraftTweakerAPI.LOGGER::info);
+                                .forEach(CommandUtilities.COMMAND_LOGGER::info);
                     });
     
                     CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.biomes")), CommandUtilities.getFormattedLogFile())
@@ -179,12 +181,12 @@ public final class DumpCommands {
                 builder -> builder.executes(context -> {
                     final ServerPlayer player = context.getSource().getPlayerOrException();
                     VillagerTrades.TRADES.forEach((villagerProfession, levelToTrades) -> {
-                        CraftTweakerAPI.LOGGER.info("Trades for: " + ExpandVillagerProfession.getCommandString(villagerProfession));
+                        CommandUtilities.COMMAND_LOGGER.info("Trades for: " + ExpandVillagerProfession.getCommandString(villagerProfession));
                         levelToTrades.keySet()
                                 .intStream()
                                 .sorted()
                                 .filter(level -> levelToTrades.getOrDefault(level, new VillagerTrades.ItemListing[0]).length > 0)
-                                .peek(level -> CraftTweakerAPI.LOGGER.info("Level " + level + " trades"))
+                                .peek(level -> CommandUtilities.COMMAND_LOGGER.info("Level " + level + " trades"))
                                 .mapToObj(level -> levelToTrades.getOrDefault(level, new VillagerTrades.ItemListing[0]))
                                 .flatMap(Arrays::stream)
                                 .forEach(iTrade -> {
@@ -194,7 +196,7 @@ public final class DumpCommands {
                                                 .apply(iTrade)
                                                 .toString();
                                     }
-                                    CraftTweakerAPI.LOGGER.info(iTrade.getClass().getSimpleName() + tradeStr);
+                                    CommandUtilities.COMMAND_LOGGER.info(iTrade.getClass().getSimpleName() + tradeStr);
                                 });
                     });
                     
@@ -209,12 +211,12 @@ public final class DumpCommands {
                 Component.translatable("crafttweaker.command.description.dump.wandering.trades"),
                 builder -> builder.executes(context -> {
                     final ServerPlayer player = context.getSource().getPlayerOrException();
-                    CraftTweakerAPI.LOGGER.info("Wandering Trader Trades");
+                    CommandUtilities.COMMAND_LOGGER.info("Wandering Trader Trades");
                     VillagerTrades.WANDERING_TRADER_TRADES.keySet()
                             .intStream()
                             .sorted()
                             .filter(level -> VillagerTrades.WANDERING_TRADER_TRADES.getOrDefault(level, new VillagerTrades.ItemListing[0]).length > 0)
-                            .peek(level -> CraftTweakerAPI.LOGGER.info("Level " + level + " trades"))
+                            .peek(level -> CommandUtilities.COMMAND_LOGGER.info("Level " + level + " trades"))
                             .mapToObj(level -> VillagerTrades.WANDERING_TRADER_TRADES.getOrDefault(level, new VillagerTrades.ItemListing[0]))
                             .flatMap(Arrays::stream)
                             .forEach(iTrade -> {
@@ -224,7 +226,7 @@ public final class DumpCommands {
                                             .apply(iTrade)
                                             .toString();
                                 }
-                                CraftTweakerAPI.LOGGER.info(iTrade.getClass().getSimpleName() + tradeStr);
+                                CommandUtilities.COMMAND_LOGGER.info(iTrade.getClass().getSimpleName() + tradeStr);
                             });
                     
                     CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.wandering.trades")), CommandUtilities.getFormattedLogFile())
@@ -239,18 +241,18 @@ public final class DumpCommands {
                 builder -> builder.executes(context -> {
                     final ServerPlayer player = context.getSource().getPlayerOrException();
                     
-                    CraftTweakerAPI.LOGGER.info("All Tag Contents");
+                    CommandUtilities.COMMAND_LOGGER.info("All Tag Contents");
                     CraftTweakerTagRegistry.INSTANCE.managers()
                             .stream()
                             .sorted(ITagManager::compareTo)
-                            .peek(it -> CraftTweakerAPI.LOGGER.info("Contents of '{}' tags:", it.tagFolder()))
+                            .peek(it -> CommandUtilities.COMMAND_LOGGER.info("Contents of '{}' tags:", it.tagFolder()))
                             .flatMap(it -> it.tags().stream().sorted(MCTag::compareTo))
-                            .peek(it -> CraftTweakerAPI.LOGGER.info(it.getCommandString()))
+                            .peek(it -> CommandUtilities.COMMAND_LOGGER.info(it.getCommandString()))
                             .flatMap(it -> it.idElements()
                                     .stream()
                                     .sorted(Comparator.comparing((ResourceLocation rl) -> rl.getPath()).thenComparing(rl -> rl.getNamespace()))
                                     .map(o -> getTagAsString(player, it, o)))
-                            .forEach(it -> CraftTweakerAPI.LOGGER.info("\t- {}", it));
+                            .forEach(it -> CommandUtilities.COMMAND_LOGGER.info("\t- {}", it));
                     
                     CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.tag.contents")), CommandUtilities.getFormattedLogFile())
                             .withStyle(ChatFormatting.GREEN)), player);
@@ -285,7 +287,7 @@ public final class DumpCommands {
         try {
             Files.createDirectories(directory);
         } catch(final IOException e) {
-            CraftTweakerAPI.LOGGER.error("Could not create output folder '{}'", directory);
+            CommandUtilities.COMMAND_LOGGER.error("Could not create output folder '{}'", directory);
             return;
         }
         CraftTweakerAPI.getRegistry().getAllLoaders()
@@ -300,7 +302,7 @@ public final class DumpCommands {
                     try {
                         Files.write(directory.resolve(dumpedFileName), iterable);
                     } catch(final IOException e) {
-                        CraftTweakerAPI.LOGGER.error("Error writing to file '" + dumpedFileName + "'", e);
+                        CommandUtilities.COMMAND_LOGGER.error("Error writing to file '" + dumpedFileName + "'", e);
                     }
                 });
         CommandUtilities.send(CommandUtilities.openingFile(Component.translatable("crafttweaker.command.files.created")

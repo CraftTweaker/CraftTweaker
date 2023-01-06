@@ -103,7 +103,8 @@ public class GameTestLoggerAppender extends AbstractAppender {
         public void dump() {
             
             for(int i = 0; i < this.log.size(); i++) {
-                CraftTweakerCommon.LOG.info("{}: {} '{}'", i, this.log.get(i).level, this.log.get(i).actualMessage);
+                CraftTweakerCommon.logger()
+                        .info("{}: {} '{}'", i, this.log.get(i).level, this.log.get(i).actualMessage);
             }
         }
         

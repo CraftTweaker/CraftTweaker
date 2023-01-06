@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.script.scriptrun;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.script.scriptrun.runner.IScriptRunner;
 import org.openzen.zencode.java.logger.ScriptingEngineLogger;
@@ -18,12 +17,13 @@ enum DecoratedRunKind {
     EXECUTE(ScriptRunConfiguration.RunKind.EXECUTE, "Compiling and executing scripts"),
     GAME_TEST(ScriptRunConfiguration.RunKind.GAME_TEST, "Running game test scripts");
     
-    private record DecoratedScriptRunner(IScriptRunner runner, String message) implements IScriptRunner {
+    private record DecoratedScriptRunner(IScriptRunner runner, ScriptingEngineLogger logger,
+                                         String message) implements IScriptRunner {
         
         @Override
         public void run() throws Exception {
             
-            CraftTweakerAPI.LOGGER.info(this.message());
+            this.logger().info(this.message());
             this.runner().run();
         }
         
@@ -53,6 +53,6 @@ enum DecoratedRunKind {
     
     IScriptRunner runner(final RunInfo info, final List<SourceFile> sources, final ScriptingEngineLogger logger) {
         
-        return new DecoratedScriptRunner(IScriptRunner.of(info, sources, logger), this.logMessage);
+        return new DecoratedScriptRunner(IScriptRunner.of(info, sources, logger), logger, this.logMessage);
     }
 }

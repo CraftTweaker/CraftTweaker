@@ -67,6 +67,12 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
     }
     
     @Override
+    public void initialize() {
+        
+        this.zenGatherer.gatherCandidates();
+    }
+    
+    @Override
     public void registerLoaders(final ILoaderRegistrationHandler handler) {
         
         handler.registerLoader(CraftTweakerConstants.INIT_LOADER_NAME);

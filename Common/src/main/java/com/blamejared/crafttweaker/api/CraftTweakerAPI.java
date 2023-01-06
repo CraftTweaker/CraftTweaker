@@ -29,19 +29,6 @@ public final class CraftTweakerAPI {
     private static final Supplier<ILoggerRegistry> LOGGER_REGISTRY = Suppliers.memoize(Services.BRIDGE::loggerRegistry);
     private static final Supplier<Path> SCRIPTS_DIRECTORY = Suppliers.memoize(() -> PathUtil.findFromGameDirectory(CraftTweakerConstants.SCRIPTS_DIRECTORY));
     
-    // Do we want to make a log4j wrapper and expose it to a script...? 😬
-    /**
-     * Logger used to log CraftTweaker specific messages.
-     *
-     * <p>This logger is also wired to the {@code crafttweaker.log} file.</p>
-     *
-     * @since 9.1.0
-     * @deprecated Use {@link #getLogger(String)} to create a new logger for your system instead.
-     */
-    @Deprecated(forRemoval = true, since = "10.1.0")
-    @SuppressWarnings("removal")
-    public static final Logger LOGGER = getLoggerRegistry().getUnknownLogger();
-    
     static {
         ParsedExpressionMap.compileOverrides.add(IDataRewrites::rewriteMap);
         ParsedExpressionArray.compileOverrides.add(IDataRewrites::rewriteArray);

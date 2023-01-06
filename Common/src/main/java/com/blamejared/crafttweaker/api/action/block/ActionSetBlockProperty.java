@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.action.block;
 
 
 import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
+import com.blamejared.crafttweaker.api.action.internal.CraftTweakerAction;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.natives.block.ExpandBlock;
 import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
@@ -12,7 +13,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class ActionSetBlockProperty<T> implements IUndoableAction {
+public class ActionSetBlockProperty<T> extends CraftTweakerAction implements IUndoableAction {
     
     private final Block block;
     private final String propertyName;

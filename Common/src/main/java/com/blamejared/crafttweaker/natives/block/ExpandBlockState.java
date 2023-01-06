@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.natives.block;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.action.block.ActionSetBlockProperty;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.block.CTBlockIngredient;
@@ -136,13 +137,13 @@ public class ExpandBlockState {
         
         Property property = internal.getBlock().getStateDefinition().getProperty(name);
         if(property == null) {
-            CraftTweakerAPI.LOGGER.warn("Invalid property name");
+            CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME).warn("Invalid property name");
         } else {
             Optional<Comparable> propValue = property.getValue(value);
             if(propValue.isPresent()) {
                 return internal.setValue(property, propValue.get());
             }
-            CraftTweakerAPI.LOGGER.warn("Invalid property value");
+            CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME).warn("Invalid property value");
         }
         return internal;
     }
@@ -177,7 +178,7 @@ public class ExpandBlockState {
         if(prop != null) {
             return internal.getValue(prop).toString();
         }
-        CraftTweakerAPI.LOGGER.warn("Invalid property name");
+        CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME).warn("Invalid property name");
         return "";
     }
     
@@ -199,7 +200,7 @@ public class ExpandBlockState {
             prop.getPossibleValues().forEach(v -> values.add(v.toString()));
             return values;
         }
-        CraftTweakerAPI.LOGGER.warn("Invalid property name");
+        CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME).warn("Invalid property name");
         return ImmutableList.of();
     }
     
@@ -237,6 +238,7 @@ public class ExpandBlockState {
     
     @ZenCodeType.Method
     public static String asString(BlockState internal) {
+        
         return internal.toString();
     }
     

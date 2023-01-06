@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.impl.script.scriptrun.runner;
 
 import com.blamejared.crafttweaker.CraftTweakerCommon;
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunInfo;
 import com.blamejared.crafttweaker.impl.logging.CraftTweakerLog4jEditor;
 import net.minecraft.gametest.framework.GameTestAssertException;
@@ -14,7 +13,6 @@ import org.openzen.zenscript.parser.BracketExpressionParser;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 
 final class GameTestScriptRunner extends ScriptRunner {
     
@@ -34,7 +32,7 @@ final class GameTestScriptRunner extends ScriptRunner {
                 .createScriptedModule("scripts", sources, parser, FunctionParameter.NONE);
         
         if(!module.isValid()) {
-            Stream.of(CraftTweakerAPI.LOGGER, CraftTweakerCommon.LOG).forEach(it -> it.error("Scripts are invalid!"));
+            CraftTweakerCommon.logger().error("Scripts are invalid!");
             CraftTweakerLog4jEditor.queryGameTestLogger().dump();
             throw new GameTestAssertException("Scripts are invalid!");
         }

@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.script.scriptrun;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IMutableScriptRunInfo;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
@@ -8,6 +7,7 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.Util;
+import org.apache.logging.log4j.Logger;
 import org.openzen.zencode.shared.SourceFile;
 
 import java.io.IOException;
@@ -66,13 +66,13 @@ final class ScriptFile implements IScriptFile {
         return new ScriptFile(name, data.getSecond(), data.getFirst(), info);
     }
     
-    static ScriptFile of(final Path baseDirectory, final Path file, final RunInfo info, final Collection<IPreprocessor> preprocessors) {
+    static ScriptFile of(final Logger logger, final Path baseDirectory, final Path file, final RunInfo info, final Collection<IPreprocessor> preprocessors) {
         
         if(!verifyChild(baseDirectory, file)) {
             throw new IllegalArgumentException("File " + file + " is not contained within " + baseDirectory);
         }
         final String name = baseDirectory.toAbsolutePath().relativize(file.toAbsolutePath()).toString();
-        try(final Stream<String> lines = lines(file)) {
+        try(final Stream<String> lines = lines(logger, file)) {
             return of(name, lines, info, preprocessors);
         }
     }
@@ -89,12 +89,12 @@ final class ScriptFile implements IScriptFile {
         return false;
     }
     
-    private static Stream<String> lines(final Path file) {
+    private static Stream<String> lines(final Logger logger, final Path file) {
         
         try {
             return Files.lines(file, StandardCharsets.UTF_8);
         } catch(final IOException e) {
-            CraftTweakerAPI.LOGGER.error("Could not load file {}", file, e);
+            logger.error("Could not load file {}", file, e);
             return Stream.of();
         }
     }

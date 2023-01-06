@@ -1,8 +1,8 @@
 package com.blamejared.crafttweaker.impl.script.recipefs;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.HandleUtil;
+import org.apache.logging.log4j.Logger;
 
 import java.lang.invoke.VarHandle;
 import java.nio.file.spi.FileSystemProvider;
@@ -14,7 +14,7 @@ public final class RecipeFileSystemProviderInjector {
     
     private RecipeFileSystemProviderInjector() {}
     
-    public static void inject() {
+    public static void inject(final Logger logger) {
         
         if(exists()) {
             return;
@@ -40,7 +40,7 @@ public final class RecipeFileSystemProviderInjector {
             if(!exists()) {
                 throw new RuntimeException("Unable to inject file system provider: discovered " + FileSystemProvider.installedProviders());
             } else {
-                CraftTweakerAPI.LOGGER.info("Successfully injected RecipeFS file system");
+                logger.info("Successfully injected RecipeFS file system");
             }
         } catch(final Throwable e) {
             throw new RuntimeException("An error occurred when attempting to inject RecipeFS file system provider", e);

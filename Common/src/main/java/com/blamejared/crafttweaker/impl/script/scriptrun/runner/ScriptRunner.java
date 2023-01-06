@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 sealed abstract class ScriptRunner implements IScriptRunner permits ExecutingScriptRunner, FormattingScriptRunner, SyntaxCheckScriptRunner, GameTestScriptRunner {
     
@@ -75,7 +74,7 @@ sealed abstract class ScriptRunner implements IScriptRunner permits ExecutingScr
         final CtJavaNativeConverterBuilder converterBuilder = new CtJavaNativeConverterBuilder(this.runInfo, registry.getZenClassRegistry());
         final BracketExpressionParser parser = this.createParser(registry);
         final Collection<DecoratedJavaNativeModule> modules = this.populateModules(converterBuilder, registry, parser);
-        CraftTweakerAPI.LOGGER.info("Successfully initialized modules {}", modules);
+        this.scriptingEngine.logger.info("Successfully initialized modules " + modules);
         return parser;
     }
     
@@ -86,7 +85,7 @@ sealed abstract class ScriptRunner implements IScriptRunner permits ExecutingScr
                 .createScriptedModule("scripts", sources, parser, FunctionParameter.NONE);
         
         if(!module.isValid()) {
-            Stream.of(CraftTweakerAPI.LOGGER, CraftTweakerCommon.LOG).forEach(it -> it.error("Scripts are invalid!"));
+            CraftTweakerCommon.logger().error("Scripts are invalid!");
             return;
         }
         

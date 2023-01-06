@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.impl.registry.zencode;
 
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.command.CommandUtilities;
 import com.blamejared.crafttweaker.api.command.type.IBracketDumperInfo;
 import com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler;
@@ -77,9 +76,11 @@ final class BracketDumperInfo implements IBracketDumperInfo {
     public int run(final CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         
         final ServerPlayer player = context.getSource().getPlayerOrException();
-        this.values().forEach(bepCall -> CraftTweakerAPI.LOGGER.info("- " + bepCall));
-        CommandUtilities.send(Component.translatable("crafttweaker.command.dump.generated", CommandUtilities.makeNoticeable(this.bepHandlerName)).withStyle(ChatFormatting.GREEN), player);
-        CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.check.log", CommandUtilities.getFormattedLogFile()).withStyle(ChatFormatting.GREEN)), player);
+        this.values().forEach(bepCall -> CommandUtilities.COMMAND_LOGGER.info("- " + bepCall));
+        CommandUtilities.send(Component.translatable("crafttweaker.command.dump.generated", CommandUtilities.makeNoticeable(this.bepHandlerName))
+                .withStyle(ChatFormatting.GREEN), player);
+        CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.check.log", CommandUtilities.getFormattedLogFile())
+                .withStyle(ChatFormatting.GREEN)), player);
         return Command.SINGLE_SUCCESS;
     }
     

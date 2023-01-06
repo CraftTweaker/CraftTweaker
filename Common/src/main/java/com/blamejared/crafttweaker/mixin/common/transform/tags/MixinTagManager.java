@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.mixin.common.transform.tags;
 
+import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
@@ -47,7 +48,7 @@ public class MixinTagManager {
                         .createScriptRun(configuration)
                         .execute();
             } catch(final Throwable e) {
-                CraftTweakerAPI.LOGGER.error("Unable to run tag scripts due to an error", e);
+                CraftTweakerCommon.logger().error("Unable to run tag scripts due to an error", e);
             }
             asep.registryAccess(null);
         });

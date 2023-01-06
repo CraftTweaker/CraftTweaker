@@ -160,7 +160,7 @@ public enum LootModifierManager {
         
         return NameUtil.fromFixedName(
                 name,
-                (fixed, mistakes) -> CraftTweakerAPI.LOGGER.warn(
+                (fixed, mistakes) -> CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME).warn(
                         "The given loot modifier name '{}' isn't valid due to:\n{}\nThe name was changed to '{}'",
                         name,
                         String.join("\n", mistakes),

@@ -79,7 +79,7 @@ public final class ScriptReloadListener extends SimplePreparableReloadListener<V
         try {
             runPreparation.run().execute();
         } catch(final Throwable e) {
-            CraftTweakerAPI.LOGGER.error("Unable to execute script run", e);
+            CraftTweakerCommon.logger().error("Unable to execute script run", e);
             return;
         } finally {
             IngredientCacheBuster.release();
@@ -160,7 +160,7 @@ public final class ScriptReloadListener extends SimplePreparableReloadListener<V
         try {
             return String.join("\n", Files.readAllLines(file));
         } catch(final IOException e) {
-            CraftTweakerAPI.LOGGER.info("Unable to read script file " + file, e);
+            CraftTweakerCommon.logger().info("Unable to read script file " + file, e);
             return "";
         }
     }
@@ -170,10 +170,15 @@ public final class ScriptReloadListener extends SimplePreparableReloadListener<V
         
         final Collection<String> patronList = CraftTweakerCommon.getPatronList();
         
+        if(patronList.isEmpty()) {
+            return;
+        }
+        
         patronList.stream()
-                .skip(patronList.isEmpty() ? 0 : RANDOM.nextInt(patronList.size()))
+                .skip(RANDOM.nextInt(patronList.size()))
                 .findFirst()
-                .ifPresent(name -> CraftTweakerAPI.LOGGER.info("This reload was made possible by {} and more! Become a patron at https://patreon.com/jaredlll08?s=crtmod", name));
+                .ifPresent(name -> CraftTweakerCommon.logger()
+                        .info("This reload was made possible by {} and more! Become a patron at https://patreon.com/jaredlll08?s=crtmod", name));
     }
     
 }

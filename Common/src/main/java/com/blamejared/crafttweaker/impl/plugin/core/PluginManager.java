@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.plugin.core;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.plugin.CraftTweakerPlugin;
 import com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin;
 import com.blamejared.crafttweaker.api.util.ClassUtil;
@@ -11,6 +12,7 @@ import com.blamejared.crafttweaker.impl.registry.CraftTweakerRegistry;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
+import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -51,6 +53,8 @@ public final class PluginManager {
         }
         
     }
+    
+    private static final Logger LOGGER = CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME + "-Plugins");
     
     private final List<DecoratedCraftTweakerPlugin> plugins;
     private final Req req;
@@ -104,12 +108,11 @@ public final class PluginManager {
         try {
             final ResourceLocation id = pluginData.getFirst();
             final ICraftTweakerPlugin plugin = pluginData.getSecond().getConstructor().newInstance();
-            CraftTweakerAPI.LOGGER.info("Successfully identified and loaded plugin {}", id);
+            LOGGER.info("Successfully identified and loaded plugin {}", id);
             return new DecoratedCraftTweakerPlugin(id, plugin);
         } catch(final InstantiationException | NoSuchMethodException | IllegalAccessException |
                       InvocationTargetException e) {
-            CraftTweakerAPI.LOGGER.error("Unable to load plugin class '" + pluginData.getSecond()
-                    .getName() + "' due to an error", e);
+            LOGGER.error("Unable to load plugin class '" + pluginData.getSecond().getName() + "' due to an error", e);
             return null;
         }
     }
@@ -193,7 +196,7 @@ public final class PluginManager {
                 "gathering taggable elements",
                 () -> TaggableElementsRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::registerTaggableElements))
         );
-        this.manageTaggableElementRegistration(access, taggableElementsHandler, loaderFinder);
+        this.manageTaggableElementRegistration(access, taggableElementsHandler);
         
         this.callListeners("ZenCode registration end", this.listeners.zenListeners());
     }
@@ -266,7 +269,7 @@ public final class PluginManager {
         
     }
     
-    private void manageTaggableElementRegistration(final IPluginRegistryAccess access, final TaggableElementsRegistrationHandler handler, final Function<String, IScriptLoader> loaderFinder) {
+    private void manageTaggableElementRegistration(final IPluginRegistryAccess access, final TaggableElementsRegistrationHandler handler) {
         
         this.verifying(
                 "registering taggable elements",
@@ -338,6 +341,7 @@ public final class PluginManager {
         listeners.forEach(it -> this.verifying("calling " + type + " listener", it));
     }
     
+    @SuppressWarnings("SameParameterValue")
     private <T> void callListeners(final String type, final Collection<Consumer<T>> listeners, final T instance) {
         
         listeners.forEach(it -> this.verifying("calling " + type + " listener with " + instance, () -> it.accept(instance)));

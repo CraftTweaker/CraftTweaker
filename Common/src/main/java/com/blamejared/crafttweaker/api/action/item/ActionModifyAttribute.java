@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.action.item;
 
 
 import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
+import com.blamejared.crafttweaker.api.action.internal.CraftTweakerAction;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.attribute.ItemAttributeModifierBase;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
@@ -10,7 +11,7 @@ import com.blamejared.crafttweaker.platform.Services;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class ActionModifyAttribute implements IUndoableAction {
+public class ActionModifyAttribute extends CraftTweakerAction implements IUndoableAction {
     
     private final IIngredient ingredient;
     private final Consumer<ItemAttributeModifierBase> consumer;

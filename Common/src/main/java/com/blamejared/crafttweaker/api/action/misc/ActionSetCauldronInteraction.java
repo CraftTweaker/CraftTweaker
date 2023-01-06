@@ -1,12 +1,13 @@
 package com.blamejared.crafttweaker.api.action.misc;
 
 import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
+import com.blamejared.crafttweaker.api.action.internal.CraftTweakerAction;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.world.item.Item;
 
 import java.util.Map;
 
-public class ActionSetCauldronInteraction implements IUndoableAction {
+public class ActionSetCauldronInteraction extends CraftTweakerAction implements IUndoableAction {
     
     private final Map<Item, CauldronInteraction> map;
     private final Item key;

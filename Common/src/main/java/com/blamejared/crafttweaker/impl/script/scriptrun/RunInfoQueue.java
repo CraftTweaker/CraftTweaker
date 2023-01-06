@@ -10,12 +10,14 @@ import java.util.Queue;
 final class RunInfoQueue {
     
     private final Queue<RunInfo> queue;
+    private final Runnable undoActionMessage;
     private RunInfo previous;
     private boolean firstRun;
     
-    RunInfoQueue() {
+    RunInfoQueue(final Runnable undoActionMessage) {
         
         this.queue = new ArrayDeque<>();
+        this.undoActionMessage = undoActionMessage;
         this.firstRun = true;
     }
     
@@ -42,7 +44,7 @@ final class RunInfoQueue {
             return;
         }
         
-        CraftTweakerAPI.LOGGER.info("Undoing previous actions");
+        this.undoActionMessage.run();
         while(!this.queue.isEmpty()) {
             final RunInfo previous = this.queue.poll();
             previous.appliedActions()
@@ -50,7 +52,7 @@ final class RunInfoQueue {
                     .filter(IUndoableAction.class::isInstance)
                     .filter(it -> it.shouldApplyOn(previous.loadSource()))
                     .map(IUndoableAction.class::cast)
-                    .peek(it -> CraftTweakerAPI.LOGGER.info(it.describeUndo()))
+                    .peek(it -> CraftTweakerAPI.getLogger(it.systemName()).info(it.describeUndo()))
                     .forEach(IUndoableAction::undo);
         }
     }

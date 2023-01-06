@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.action.event;
 
 import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
+import com.blamejared.crafttweaker.api.action.internal.CraftTweakerAction;
 import com.blamejared.crafttweaker.api.event.EventHandlerWrapper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
@@ -8,7 +9,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 
 import java.util.function.Consumer;
 
-public class ActionRegisterEvent<T extends Event> implements IUndoableAction {
+public class ActionRegisterEvent<T extends Event> extends CraftTweakerAction implements IUndoableAction {
     
     private final Class<T> typeOfT;
     private final Consumer<T> consumer;
