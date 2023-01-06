@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker.impl.plugin.crafttweaker;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.api.plugin.IRecipeHandlerRegistrationHandler;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
@@ -40,7 +40,8 @@ final class RecipeHandlerGatherer {
             throw new IllegalArgumentException("Class " + clazz.getName() + " is an abstract class and cannot be annotated with @IRecipeHandler.For");
         }
         if(IRecipeManager.class.isAssignableFrom(clazz)) {
-            CraftTweakerAPI.LOGGER.warn("Recipe manager " + clazz.getName() + " doubles as a recipe handler: this is discouraged");
+            CraftTweakerCommon.logger()
+                    .warn("Recipe manager " + clazz.getName() + " doubles as a recipe handler: this is discouraged");
         }
         Arrays.stream(clazz.getAnnotationsByType(IRecipeHandler.For.class))
                 .map(IRecipeHandler.For::value)

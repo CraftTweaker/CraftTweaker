@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.preprocessor;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.Preprocessor;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
@@ -39,7 +38,7 @@ public final class ReplacePreprocessor implements IPreprocessor {
         matches.forEach(match -> {
             final String[] split = match.content().split(SPACE, 2);
             if(split.length != 2) {
-                CraftTweakerAPI.LOGGER.warn("[{}:{}] Invalid Preprocessor line: #replace {}", file.name(), match.line(), match.content());
+                PREPROCESSOR_LOGGER.warn("[{}:{}] Invalid Preprocessor line: #replace {}", file.name(), match.line(), match.content());
             } else {
                 preprocessedContents.replaceAll(s -> s.replace(split[0], split[1]));
             }

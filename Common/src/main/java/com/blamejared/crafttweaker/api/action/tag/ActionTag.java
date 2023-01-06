@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.action.tag;
 
 import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
+import com.blamejared.crafttweaker.api.action.internal.CraftTweakerAction;
 import com.blamejared.crafttweaker.api.tag.MCTag;
 import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.platform.Services;
@@ -9,7 +10,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.Logger;
 
-public abstract class ActionTag<T extends MCTag, U extends ITagManager<T>> implements IRuntimeAction {
+public abstract class ActionTag<T extends MCTag, U extends ITagManager<T>> extends CraftTweakerAction implements IRuntimeAction {
     
     private final T mcTag;
     
@@ -18,6 +19,7 @@ public abstract class ActionTag<T extends MCTag, U extends ITagManager<T>> imple
         this.mcTag = mcTag;
     }
     
+    @SuppressWarnings("unchecked")
     public U manager() {
         
         return (U) mcTag().manager();

@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker.impl.plugin.crafttweaker;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.api.annotation.Preprocessor;
 import com.blamejared.crafttweaker.api.natives.NativeTypeInfo;
 import com.blamejared.crafttweaker.api.plugin.IJavaNativeIntegrationRegistrationHandler;
@@ -63,7 +63,7 @@ final class ZenClassRegistrationManager {
         
         final NativeTypeInfo previous = this.foundNatives.get(nativeTypeInfo.targetedType(), loader);
         if(previous != null) {
-            CraftTweakerAPI.LOGGER.warn(
+            CraftTweakerCommon.logger().warn(
                     "Found two native expansions for the same class {} in loader {}, current {}, new {}: this will lead to issues",
                     nativeTypeInfo.targetedType().getName(),
                     loader,

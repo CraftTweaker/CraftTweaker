@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.script.scriptrun.runner;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.util.PathUtil;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunInfo;
 import org.openzen.zencode.java.logger.ScriptingEngineLogger;
@@ -52,7 +51,7 @@ final class FormattingScriptRunner extends ScriptRunner {
                 try {
                     Files.createDirectories(parent);
                 } catch(final IOException e) {
-                    CraftTweakerAPI.LOGGER.error("Unable to create directory {}, aborting", file.getParent());
+                    this.engine().logger.error("Unable to create directory " + file.getParent() + ", aborting: " + e.getMessage());
                     return;
                 }
             }
@@ -60,7 +59,7 @@ final class FormattingScriptRunner extends ScriptRunner {
             try {
                 Files.write(file, Arrays.asList(format.split(System.lineSeparator())));
             } catch(final IOException e) {
-                CraftTweakerAPI.LOGGER.error("Unable to write formatted files", e);
+                this.engine().logger.error("Unable to write formatted files: " + e.getMessage());
             }
         });
     }

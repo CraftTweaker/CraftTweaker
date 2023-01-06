@@ -1,7 +1,10 @@
 package com.blamejared.crafttweaker.api.zencode;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IMutableScriptRunInfo;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.Comparator;
@@ -43,6 +46,13 @@ public interface IPreprocessor extends Comparator<IScriptFile> {
      * @since 9.1.0
      */
     Pattern PREPROCESSOR_PATTERN = Pattern.compile("#\\w+ ?");
+    
+    /**
+     * Logger that can be used within a preprocessor to log messages.
+     *
+     * @since 10.1.0
+     */
+    Logger PREPROCESSOR_LOGGER = CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME + "-ZenCode");
     
     /**
      * Gets the name of the preprocessor.

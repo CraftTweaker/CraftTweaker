@@ -6,7 +6,4 @@ public interface ILoggerRegistry {
     
     Logger getLoggerFor(final String system);
     
-    @Deprecated(forRemoval = true, since = "10.1.0")
-    Logger getUnknownLogger();
-    
 }

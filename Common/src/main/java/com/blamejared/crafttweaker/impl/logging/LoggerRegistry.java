@@ -38,12 +38,4 @@ public final class LoggerRegistry implements ILoggerRegistry {
         return this.loggers.computeIfAbsent(system, it -> SystemLogger.of("CT_SYSTEM_LOG_" + it, this.mainLogger, it));
     }
     
-    @Deprecated(forRemoval = true, since = "10.1.0")
-    @Override
-    @SuppressWarnings("removal")
-    public Logger getUnknownLogger() {
-        
-        return this.getLoggerFor("Unknown");
-    }
-    
 }

@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.command.type.conflict;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.command.CommandUtilities;
@@ -167,12 +166,12 @@ public final class ConflictCommand {
         //TODO make this go on the correct thread
         
         try {
-            CraftTweakerAPI.LOGGER.info(message.isEmpty() ? "No conflicts identified" : message);
+            CommandUtilities.COMMAND_LOGGER.info(message.isEmpty() ? "No conflicts identified" : message);
             CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.conflict.complete")
                     .withStyle(ChatFormatting.GREEN)), player);
         } catch(final Exception e) {
             try {
-                CraftTweakerAPI.LOGGER.error("An error occurred while reporting conflicts, hopefully it does not happen again", e);
+                CommandUtilities.COMMAND_LOGGER.error("An error occurred while reporting conflicts, hopefully it does not happen again", e);
             } catch(final Exception another) {
                 e.addSuppressed(another);
                 e.printStackTrace(System.err); // It's not going to be useful if the logging throws errors, but at least we can say we tried
@@ -184,12 +183,12 @@ public final class ConflictCommand {
         //TODO make this go on the correct thread
         
         try {
-            CraftTweakerAPI.LOGGER.error("Unable to verify for conflicts due to an exception", exception);
+            CommandUtilities.COMMAND_LOGGER.error("Unable to verify for conflicts due to an exception", exception);
             CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.conflict.error")
                     .withStyle(ChatFormatting.RED)), player);
         } catch(final Exception e) {
             try {
-                CraftTweakerAPI.LOGGER.error("An error occurred while reporting conflicts, hopefully it does not happen again", e);
+                CommandUtilities.COMMAND_LOGGER.error("An error occurred while reporting conflicts, hopefully it does not happen again", e);
             } catch(final Exception another) {
                 e.addSuppressed(another);
                 e.printStackTrace(System.err); // It's not going to be useful if the logging throws errors, but at least we can say we tried

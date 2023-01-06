@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.event;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import net.minecraftforge.eventbus.api.Event;
 
 import java.util.function.Consumer;
@@ -20,7 +21,8 @@ public class EventHandlerWrapper<T extends Event> implements Consumer<T> {
         try {
             consumer.accept(t);
         } catch(Throwable throwable) {
-            CraftTweakerAPI.LOGGER.error("Error occurred in event handler", throwable);
+            CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME)
+                    .error("Error occurred in event handler", throwable);
         }
     }
     

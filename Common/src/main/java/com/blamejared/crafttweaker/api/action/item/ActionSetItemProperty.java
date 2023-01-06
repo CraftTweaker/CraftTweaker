@@ -2,13 +2,14 @@ package com.blamejared.crafttweaker.api.action.item;
 
 
 import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
+import com.blamejared.crafttweaker.api.action.internal.CraftTweakerAction;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class ActionSetItemProperty<T> implements IUndoableAction {
+public class ActionSetItemProperty<T> extends CraftTweakerAction implements IUndoableAction {
     
     private final IItemStack item;
     private final String propertyName;

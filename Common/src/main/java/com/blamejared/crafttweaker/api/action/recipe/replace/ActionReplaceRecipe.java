@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.action.recipe.replace;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
+import com.blamejared.crafttweaker.api.action.internal.CraftTweakerAction;
 import com.blamejared.crafttweaker.api.action.recipe.ActionAddRecipe;
 import com.blamejared.crafttweaker.api.action.recipe.ActionRemoveRecipeByName;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
@@ -12,7 +13,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public final class ActionReplaceRecipe<T extends Recipe<?>> implements IRuntimeAction {
+public final class ActionReplaceRecipe<T extends Recipe<?>> extends CraftTweakerAction implements IRuntimeAction {
     
     private static final String REPLACER_DISCRIMINATOR = "replacer";
     

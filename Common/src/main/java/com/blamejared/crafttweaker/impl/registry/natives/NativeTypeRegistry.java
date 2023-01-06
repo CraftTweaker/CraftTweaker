@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker.impl.registry.natives;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.api.natives.IBakedTypeInfo;
 import com.blamejared.crafttweaker.api.natives.IExecutableReferenceInfo;
 import com.blamejared.crafttweaker.api.natives.INativeTypeRegistry;
@@ -44,7 +44,7 @@ public final class NativeTypeRegistry implements INativeTypeRegistry {
         final BakedTypeInfo knownData = this.info.get(targetedType);
         
         if(knownData != null && !knownData.zenName().equals(zenName)) {
-            CraftTweakerAPI.LOGGER.error(
+            CraftTweakerCommon.logger().error(
                     "Trying to register native type '{}' twice with names (old) '{}' and (new) '{}'",
                     targetedType.getName(),
                     knownData.zenName(),

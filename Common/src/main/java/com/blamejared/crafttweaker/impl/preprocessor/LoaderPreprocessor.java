@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.preprocessor;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.Preprocessor;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
@@ -41,7 +40,7 @@ public final class LoaderPreprocessor implements IPreprocessor {
                 .toList();
         
         if(distinct.size() > 1) {
-            CraftTweakerAPI.LOGGER.warn("Multiple script loaders found for file {}: {}", file.name(), distinct);
+            PREPROCESSOR_LOGGER.warn("Multiple script loaders found for file {}: {}", file.name(), distinct);
         }
         
         return distinct.contains(runInfo.loader().name());

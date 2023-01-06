@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.script.scriptrun.natives;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.natives.INativeTypeRegistry;
 import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunInfo;
@@ -43,7 +44,8 @@ final class CtJavaNativeClassConverter extends JavaNativeClassConverter {
                 .getZenNameFor(cls)
                 .orElseGet(() -> {
                     if(cls.getCanonicalName().startsWith("net.minecraft")) {
-                        CraftTweakerAPI.LOGGER.trace("Minecraft type referenced but not registered: {}", cls.getCanonicalName());
+                        CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME + "-ZenCode")
+                                .trace("Minecraft type referenced but not registered: {}", cls.getCanonicalName());
                     }
                     return super.getNameForScripts(cls);
                 });
@@ -53,7 +55,8 @@ final class CtJavaNativeClassConverter extends JavaNativeClassConverter {
     public boolean shouldLoadClass(final Class<?> cls) {
         
         if(this.zenClassRegistry.isBlacklisted(cls)) {
-            CraftTweakerAPI.LOGGER.info("Not loading class because of blacklist: {}", cls.getCanonicalName());
+            CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME + "-ZenCode")
+                    .info("Not loading class because of blacklist: {}", cls.getCanonicalName());
             return false;
         }
         return super.shouldLoadClass(cls);

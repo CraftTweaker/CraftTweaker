@@ -59,4 +59,10 @@ public enum DistributionType {
         
         return this.getNames().contains(name.toLowerCase(Locale.ENGLISH));
     }
+    
+    @Override
+    public String toString() {
+        
+        return super.toString().toLowerCase(Locale.ENGLISH);
+    }
 }

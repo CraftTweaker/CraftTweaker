@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.action.recipe;
 
 
 import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
+import com.blamejared.crafttweaker.api.action.internal.CraftTweakerAction;
 import com.blamejared.crafttweaker.api.recipe.RecipeList;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import net.minecraft.core.Registry;
@@ -11,7 +12,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.Map;
 
-public abstract class ActionRecipeBase<T extends Recipe<?>> implements IRuntimeAction {
+public abstract class ActionRecipeBase<T extends Recipe<?>> extends CraftTweakerAction implements IRuntimeAction {
     
     private final IRecipeManager<T> manager;
     

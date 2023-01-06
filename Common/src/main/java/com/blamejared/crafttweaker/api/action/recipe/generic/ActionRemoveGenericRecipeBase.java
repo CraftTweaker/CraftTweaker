@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.api.action.recipe.generic;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.recipe.RecipeList;
 import com.blamejared.crafttweaker.api.recipe.manager.RecipeManagerWrapper;
 import net.minecraft.world.item.crafting.Recipe;
@@ -28,7 +27,8 @@ public abstract class ActionRemoveGenericRecipeBase extends ActionWholeRegistryB
         }
         final int numberOfRecipeTypes = numberOfRemovedRecipesByType.size();
         final String recipeTypeList = makeRecipeList(numberOfRemovedRecipesByType);
-        CraftTweakerAPI.LOGGER.info("Removed {} recipes registered in these {} recipe managers: {}", numberOfRemovedRecipes, numberOfRecipeTypes, recipeTypeList);
+        this.logger()
+                .info("Removed {} recipes registered in these {} recipe managers: {}", numberOfRemovedRecipes, numberOfRecipeTypes, recipeTypeList);
     }
     
     private int applyToRegistry(RecipeList<?> list) {

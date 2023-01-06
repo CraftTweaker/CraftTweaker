@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.action.item;
 
 import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
+import com.blamejared.crafttweaker.api.action.internal.CraftTweakerAction;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.platform.Services;
@@ -8,7 +9,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.List;
 
-public class ActionSetBurnTime implements IUndoableAction {
+public class ActionSetBurnTime extends CraftTweakerAction implements IUndoableAction {
     
     private final IIngredient ingredient;
     private final int newBurnTime;

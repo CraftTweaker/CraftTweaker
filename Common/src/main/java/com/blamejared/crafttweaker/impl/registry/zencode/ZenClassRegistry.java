@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.registry.zencode;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.natives.INativeTypeRegistry;
 import com.blamejared.crafttweaker.api.natives.NativeTypeInfo;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
@@ -129,7 +130,7 @@ public final class ZenClassRegistry implements IZenClassRegistry {
             cls.getDeclaredConstructors();
             return false;
         } catch(final Throwable t) {
-            CraftTweakerAPI.LOGGER.error(
+            CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME + "-ZenCode").error(
                     "Could not register class '{}'! This is most likely a compatibility issue!",
                     cls.getCanonicalName(),
                     t

@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.preprocessor;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.Preprocessor;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
@@ -35,7 +34,7 @@ public final class PriorityPreprocessor implements IPreprocessor {
     public boolean apply(final IScriptFile file, final List<String> preprocessedContents, final IMutableScriptRunInfo runInfo, final List<Match> matches) {
         
         if(matches.size() > 1) {
-            CraftTweakerAPI.LOGGER.warn("Conflicting priorities in file {}: only the first will be used", file.name());
+            PREPROCESSOR_LOGGER.warn("Conflicting priorities in file {}: only the first will be used", file.name());
         }
         
         final String priority = matches.get(0).content().trim();
@@ -43,7 +42,7 @@ public final class PriorityPreprocessor implements IPreprocessor {
         try {
             Integer.parseInt(priority);
         } catch(final NumberFormatException e) {
-            CraftTweakerAPI.LOGGER.warn("Invalid priority value '{}' for file {}", priority, file.name());
+            PREPROCESSOR_LOGGER.warn("Invalid priority value '{}' for file {}", priority, file.name());
         }
         
         return true;

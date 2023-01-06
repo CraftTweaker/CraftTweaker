@@ -1,7 +1,8 @@
 package com.blamejared.crafttweaker.impl.plugin.crafttweaker;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.api.mod.Mod;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Comparator;
 import java.util.SortedSet;
@@ -18,8 +19,9 @@ final class CraftTweakerModList {
     
     void printToLog() {
         
-        CraftTweakerAPI.LOGGER.info("The following mods have explicit CraftTweaker support through the default plugin:");
-        this.addedMods.stream().map(this::formatInfo).forEach(CraftTweakerAPI.LOGGER::info);
+        final Logger logger = CraftTweakerCommon.logger();
+        logger.info("The following mods have explicit CraftTweaker support through the default plugin:");
+        this.addedMods.stream().map(this::formatInfo).forEach(logger::info);
     }
     
     private String formatInfo(final Mod info) {

@@ -1,11 +1,12 @@
 package com.blamejared.crafttweaker.api.action.misc;
 
 import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
+import com.blamejared.crafttweaker.api.action.internal.CraftTweakerAction;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import net.minecraft.world.level.block.ComposterBlock;
 
-public class ActionSetCompostable implements IUndoableAction {
+public class ActionSetCompostable extends CraftTweakerAction implements IUndoableAction {
     
     private final IItemStack stack;
     private final float newValue;

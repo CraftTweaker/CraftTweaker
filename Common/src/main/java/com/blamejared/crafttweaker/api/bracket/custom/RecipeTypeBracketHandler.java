@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.bracket.custom;
 
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ICraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.recipe.manager.RecipeManagerWrapper;
@@ -15,6 +16,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
+import org.apache.logging.log4j.Logger;
 import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.shared.CodePosition;
 import org.openzen.zenscript.lexer.ParseException;
@@ -49,6 +51,8 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     
     private static final Map<RecipeType<Recipe<?>>, IRecipeManager<Recipe<?>>> registeredTypes = new HashMap<>();
     private static final Map<Class<? extends IRecipeManager<Recipe<?>>>, IRecipeManager<Recipe<?>>> managerInstances = new HashMap<>();
+    
+    private static final Logger LOGGER = CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME + "-ZenCode");
     
     private static volatile Runnable enqueuedRegistration = null;
     
@@ -147,7 +151,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
         
         final IRecipeManager<Recipe<?>> manager = InstantiationUtil.getOrCreateInstance(managerClass);
         if(manager == null) {
-            CraftTweakerAPI.LOGGER.error("Could not add RecipeManager for {}, please report to the author", managerClass);
+            LOGGER.error("Could not add RecipeManager for {}, please report to the author", managerClass);
             return;
         }
         
@@ -162,7 +166,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
         
         if(managerClass.getAnnotation(ZenCodeType.Name.class) == null) {
             final String canonicalName = managerClass.getCanonicalName();
-            CraftTweakerAPI.LOGGER.warn("No Name Annotation found on manager '{}', it will not be registered!", canonicalName);
+            LOGGER.warn("No Name Annotation found on manager '{}', it will not be registered!", canonicalName);
             return;
         }
         

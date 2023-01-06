@@ -1,12 +1,13 @@
 package com.blamejared.crafttweaker.api.action.item;
 
 import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
+import com.blamejared.crafttweaker.api.action.internal.CraftTweakerAction;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessItem;
 import net.minecraft.world.food.FoodProperties;
 
-public class ActionSetFood implements IUndoableAction {
+public class ActionSetFood extends CraftTweakerAction implements IUndoableAction {
     
     private final IItemStack stack;
     private final FoodProperties newFood;
@@ -27,7 +28,8 @@ public class ActionSetFood implements IUndoableAction {
     
     @Override
     public String describe() {
-        if(newFood == null){
+        
+        if(newFood == null) {
             return "Removing food properties of " + stack.getCommandString();
         }
         return String.format("Setting food of: %s to food with stats: nutrition: %s, saturation: %s, isMeat: %s, isFastFood: %s, canAlwaysEat: %s, effects: %s", stack

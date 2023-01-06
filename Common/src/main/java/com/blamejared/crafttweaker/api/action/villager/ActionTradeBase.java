@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.action.villager;
 
 import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
+import com.blamejared.crafttweaker.api.action.internal.CraftTweakerAction;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.world.entity.npc.VillagerProfession;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class ActionTradeBase implements IUndoableAction {
+public abstract class ActionTradeBase extends CraftTweakerAction implements IUndoableAction {
     
     protected VillagerProfession profession;
     protected final int level;

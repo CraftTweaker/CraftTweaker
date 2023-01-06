@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.impl.preprocessor;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.Preprocessor;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
@@ -51,7 +50,7 @@ public final class ModNotLoadedPreprocessor implements IPreprocessor {
             return;
         }
         
-        CraftTweakerAPI.LOGGER.error("Mod IDs cannot have uppercase letters: the ID " + id + " will never match");
+        PREPROCESSOR_LOGGER.error("Mod IDs cannot have uppercase letters: the ID " + id + " will never match");
     }
     
 }

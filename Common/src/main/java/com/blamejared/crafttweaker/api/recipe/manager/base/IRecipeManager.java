@@ -294,7 +294,7 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
         CodePosition position = PositionUtil.getZCScriptPositionFromStackTrace();
         return NameUtil.fixing(
                 name,
-                (fixed, mistakes) -> CraftTweakerAPI.LOGGER.warn(
+                (fixed, mistakes) -> CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME).warn(
                         "{}Invalid recipe name '{}', mistakes:\n{}\nNew recipe name: {}",
                         position == CodePosition.UNKNOWN ? "" : position + ": ",
                         name,

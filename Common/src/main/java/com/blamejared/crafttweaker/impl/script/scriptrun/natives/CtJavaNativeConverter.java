@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.script.scriptrun.natives;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TypedExpansion;
 import org.openzen.zencode.java.module.JavaNativeTypeConversionContext;
@@ -41,7 +42,8 @@ final class CtJavaNativeConverter extends JavaNativeConverter {
             
             return super.addClass(cls);
         } catch(final Throwable e) {
-            CraftTweakerAPI.LOGGER.error("Error while registering class: '{}', this is most likely a compatibility issue:", cls.getName(), e);
+            CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME + "-ZenCode")
+                    .error("Error while registering class: '{}', this is most likely a compatibility issue:", cls.getName(), e);
             return null;
         }
     }

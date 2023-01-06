@@ -57,7 +57,7 @@ public final class ExamplesCommand {
         
         final Path file = getExamplesDir().resolve(sourceFile.getFilename());
         if(Files.exists(file)) {
-            CraftTweakerAPI.LOGGER.info("Skip writing example file '{}' since it already exists", file);
+            CommandUtilities.COMMAND_LOGGER.info("Skip writing example file '{}' since it already exists", file);
             return 0;
         }
         
@@ -65,7 +65,7 @@ public final class ExamplesCommand {
             try {
                 Files.createDirectories(file.getParent());
             } catch(final IOException e) {
-                CraftTweakerAPI.LOGGER.error("Could not create folder '" + file.getParent() + "'", e);
+                CommandUtilities.COMMAND_LOGGER.error("Could not create folder '" + file.getParent() + "'", e);
                 return 0;
             }
         }
@@ -73,7 +73,7 @@ public final class ExamplesCommand {
         try(final Reader reader = sourceFile.open(); final InputStream stream = new ReaderInputStream(reader, StandardCharsets.UTF_8)) {
             Files.copy(stream, file);
         } catch(final IOException e) {
-            CraftTweakerAPI.LOGGER.warn("Could not write script example: ", e);
+            CommandUtilities.COMMAND_LOGGER.warn("Could not write script example: ", e);
         }
         
         return Command.SINGLE_SUCCESS;

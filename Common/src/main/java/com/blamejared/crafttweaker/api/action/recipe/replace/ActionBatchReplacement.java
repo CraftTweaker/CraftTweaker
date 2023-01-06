@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.action.recipe.replace;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
+import com.blamejared.crafttweaker.api.action.internal.CraftTweakerAction;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.recipe.component.IDecomposedRecipe;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
@@ -20,7 +21,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public final class ActionBatchReplacement implements IRuntimeAction {
+public final class ActionBatchReplacement extends CraftTweakerAction implements IRuntimeAction {
     
     private final Collection<IFilteringRule> targetingRules;
     private final Collection<ReplacementRequest<?>> requests;

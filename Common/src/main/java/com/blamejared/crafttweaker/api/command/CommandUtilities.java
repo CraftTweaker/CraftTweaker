@@ -14,10 +14,13 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import org.apache.logging.log4j.Logger;
 
 import java.nio.file.Path;
 
 public final class CommandUtilities {
+    
+    public static final Logger COMMAND_LOGGER = CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME + "-Commands");
     
     private CommandUtilities() {}
     
@@ -36,7 +39,7 @@ public final class CommandUtilities {
         
         source.sendSuccess(component, true);
         if(!component.getString().isBlank()) {
-            CraftTweakerAPI.LOGGER.info(component.getString());
+            COMMAND_LOGGER.info(component.getString());
         }
     }
     
@@ -44,7 +47,7 @@ public final class CommandUtilities {
         
         player.sendSystemMessage(component);
         if(!component.getString().isBlank()) {
-            CraftTweakerAPI.LOGGER.info(component.getString());
+            COMMAND_LOGGER.info(component.getString());
         }
     }
     

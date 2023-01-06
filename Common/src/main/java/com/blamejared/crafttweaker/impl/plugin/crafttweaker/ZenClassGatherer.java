@@ -34,6 +34,11 @@ final class ZenClassGatherer {
         });
     }
     
+    void gatherCandidates() {
+        
+        this.zenCandidates.get();
+    }
+    
     void onCandidates(final Consumer<ZenClassData> consumer) {
         
         this.zenCandidates.get().classCandidates().forEach(consumer);

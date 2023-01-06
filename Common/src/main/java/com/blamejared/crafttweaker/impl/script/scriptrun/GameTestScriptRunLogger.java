@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.script.scriptrun;
 
+import org.apache.logging.log4j.Logger;
 import org.openzen.zencode.shared.SourceFile;
 
 import java.util.OptionalInt;
@@ -7,9 +8,9 @@ import java.util.function.Function;
 
 final class GameTestScriptRunLogger extends ScriptRunLogger {
     
-    GameTestScriptRunLogger(Function<SourceFile, OptionalInt> priorityGetter) {
+    GameTestScriptRunLogger(final Logger logger, Function<SourceFile, OptionalInt> priorityGetter) {
         
-        super(priorityGetter);
+        super(logger, priorityGetter);
     }
     
     @Override

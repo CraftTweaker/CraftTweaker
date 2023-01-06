@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker.impl.plugin.crafttweaker;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.api.annotation.BracketDumper;
 import com.blamejared.crafttweaker.api.annotation.BracketResolver;
 import com.blamejared.crafttweaker.api.annotation.BracketValidator;
@@ -125,7 +125,8 @@ final class BracketParserRegistrationManager {
     private void addBracketResolver(final BracketData data, final Method method) {
         
         if(!Modifier.isPublic(method.getModifiers()) && !Modifier.isStatic(method.getModifiers())) {
-            CraftTweakerAPI.LOGGER.warn("Method '{}' is marked as a bracket resolver, but it is not public and static.", method.toString());
+            CraftTweakerCommon.logger()
+                    .warn("Method '{}' is marked as a bracket resolver, but it is not public and static.", method.toString());
             return;
         }
         
@@ -133,13 +134,15 @@ final class BracketParserRegistrationManager {
         final String name = method.getAnnotation(BracketResolver.class).value();
         
         if(parameters.length != 1 || !parameters[0].equals(String.class)) {
-            CraftTweakerAPI.LOGGER.error("Method '{}' is marked as a bracket resolver, but it does not have a String as it's only parameter.", method.toString());
+            CraftTweakerCommon.logger()
+                    .error("Method '{}' is marked as a bracket resolver, but it does not have a String as it's only parameter.", method.toString());
             return;
         }
         
         if(data.brackets().getOrDefault(name, BracketHandle.EMPTY).resolver() != null) {
             final Method current = data.brackets().get(name).resolver();
-            CraftTweakerAPI.LOGGER.error("Bracket resolver '{}' was already registered: current {}, attempt {}", name, current, method);
+            CraftTweakerCommon.logger()
+                    .error("Bracket resolver '{}' was already registered: current {}, attempt {}", name, current, method);
             return;
         }
         
@@ -157,19 +160,22 @@ final class BracketParserRegistrationManager {
     private void addBracketDumper(final Map<String, BracketHandle> targetMap, final Method method) {
         
         if(!Modifier.isPublic(method.getModifiers()) && !Modifier.isStatic(method.getModifiers())) {
-            CraftTweakerAPI.LOGGER.warn("Method '{}' is marked as a bracket dumper, but it is not public and static.", method.toString());
+            CraftTweakerCommon.logger()
+                    .warn("Method '{}' is marked as a bracket dumper, but it is not public and static.", method.toString());
             return;
         }
         
         if(method.getParameterCount() != 0) {
-            CraftTweakerAPI.LOGGER.warn("Method '{}' is marked as bracket dumper but does not have 0 parameters.", method.toString());
+            CraftTweakerCommon.logger()
+                    .warn("Method '{}' is marked as bracket dumper but does not have 0 parameters.", method.toString());
             return;
         }
         
         if(!Collection.class.isAssignableFrom(method.getReturnType()) ||
                 !(method.getGenericReturnType() instanceof final ParameterizedType param) ||
                 param.getActualTypeArguments()[0] != String.class) {
-            CraftTweakerAPI.LOGGER.warn("Method '{}' is marked as bracket dumper but does not have 'Collection<String>' as return type.", method.toGenericString());
+            CraftTweakerCommon.logger()
+                    .warn("Method '{}' is marked as bracket dumper but does not have 'Collection<String>' as return type.", method.toGenericString());
             return;
         }
         
@@ -183,7 +189,8 @@ final class BracketParserRegistrationManager {
     private void addBracketValidator(final Map<String, BracketHandle> targetMap, final Method method) {
         
         if(!Modifier.isPublic(method.getModifiers()) && !Modifier.isStatic(method.getModifiers())) {
-            CraftTweakerAPI.LOGGER.warn("Method '{}' is marked as a bracket validator, but it is not public and static.", method.toString());
+            CraftTweakerCommon.logger()
+                    .warn("Method '{}' is marked as a bracket validator, but it is not public and static.", method.toString());
             return;
         }
         
@@ -192,18 +199,21 @@ final class BracketParserRegistrationManager {
         final Class<?>[] parameters = method.getParameterTypes();
         
         if(parameters.length != 1 || !parameters[0].equals(String.class)) {
-            CraftTweakerAPI.LOGGER.error("Method '{}' is marked as a bracket validator, but it does not have a String as it's only parameter.", method.toString());
+            CraftTweakerCommon.logger()
+                    .error("Method '{}' is marked as a bracket validator, but it does not have a String as it's only parameter.", method.toString());
             return;
         }
         
         if(targetMap.getOrDefault(name, BracketHandle.EMPTY).validator() != null) {
             final Method current = targetMap.get(name).resolver();
-            CraftTweakerAPI.LOGGER.error("Bracket resolver '{}' was already registered: current {}, attempt {}", name, current, method);
+            CraftTweakerCommon.logger()
+                    .error("Bracket resolver '{}' was already registered: current {}, attempt {}", name, current, method);
             return;
         }
         
         if(method.getReturnType() != boolean.class) {
-            CraftTweakerAPI.LOGGER.error("Method '{}' is marked as a bracket validator, so it must return a boolean", method);
+            CraftTweakerCommon.logger()
+                    .error("Method '{}' is marked as a bracket validator, so it must return a boolean", method);
             return;
         }
         
@@ -225,7 +235,7 @@ final class BracketParserRegistrationManager {
                 .filter(it -> it.getValue().validator() != null)
                 .filter(it -> it.getValue().resolver() == null)
                 .map(Map.Entry::getKey)
-                .forEach(it -> CraftTweakerAPI.LOGGER.info("BEP '{}' has a validator but no BEP method", it));
+                .forEach(it -> CraftTweakerCommon.logger().info("BEP '{}' has a validator but no BEP method", it));
     }
     
     private void register(final Map<String, BracketData> data, final IBracketParserRegistrationHandler handler) {

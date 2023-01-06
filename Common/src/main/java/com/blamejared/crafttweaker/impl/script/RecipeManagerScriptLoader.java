@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.script;
 
+import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceManager;
@@ -90,7 +91,7 @@ public class RecipeManagerScriptLoader {
             executeScriptRecipes(scriptRecipes, configuration);
         } catch(final Throwable e) {
             
-            CraftTweakerAPI.LOGGER.error("Unable to execute script run", e);
+            CraftTweakerCommon.logger().error("Unable to execute script run", e);
         }
     }
     

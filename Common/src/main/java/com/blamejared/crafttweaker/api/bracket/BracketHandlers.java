@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.bracket;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.BracketResolver;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
@@ -27,6 +28,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
+import org.apache.logging.log4j.Logger;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
@@ -43,12 +45,14 @@ import java.util.Optional;
 @Document("vanilla/api/BracketHandlers")
 public class BracketHandlers {
     
+    private static final Logger LOGGER = CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME + "-ZenCode");
+    
     @ZenCodeType.Method
     @BracketResolver("attribute")
     public static Attribute getAttribute(String tokens) {
         
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CraftTweakerAPI.LOGGER.warn("Attribute BEP <attribute:{}> does not seem to be lower-cased!", tokens);
+            LOGGER.warn("Attribute BEP <attribute:{}> does not seem to be lower-cased!", tokens);
         }
         
         final String[] split = tokens.split(":");
@@ -75,7 +79,7 @@ public class BracketHandlers {
     public static Block getBlock(String tokens) {
         
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CraftTweakerAPI.LOGGER.warn("Block BEP <block:{}> does not seem to be lower-cased!", tokens);
+            LOGGER.warn("Block BEP <block:{}> does not seem to be lower-cased!", tokens);
         }
         
         final String[] split = tokens.split(":");
@@ -122,7 +126,7 @@ public class BracketHandlers {
     public static BlockState getBlockState(String tokens) {
         
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CraftTweakerAPI.LOGGER.warn("BlockState BEP <blockstate:{}> does not seem to be lower-cased!", tokens);
+            LOGGER.warn("BlockState BEP <blockstate:{}> does not seem to be lower-cased!", tokens);
         }
         String[] split = tokens.split(":", 4);
         
@@ -132,12 +136,12 @@ public class BracketHandlers {
             
             Optional<Block> found = Registry.BLOCK.getOptional(new ResourceLocation(blockName));
             if(found.isEmpty()) {
-                CraftTweakerAPI.LOGGER.error("Error creating BlockState!", new IllegalArgumentException("Could not get BlockState from: <blockstate:" + tokens + ">! The block does not appear to exist!"));
+                LOGGER.error("Error creating BlockState!", new IllegalArgumentException("Could not get BlockState from: <blockstate:" + tokens + ">! The block does not appear to exist!"));
             } else {
                 return getBlockState(found.get(), blockName, properties);
             }
         }
-        CraftTweakerAPI.LOGGER.error("Error creating BlockState!", new IllegalArgumentException("Could not get BlockState from: <blockstate:" + tokens + ">!"));
+        LOGGER.error("Error creating BlockState!", new IllegalArgumentException("Could not get BlockState from: <blockstate:" + tokens + ">!"));
         return null;
     }
     
@@ -153,7 +157,7 @@ public class BracketHandlers {
             for(String propertyPair : properties.split(",")) {
                 String[] splitPair = propertyPair.split("=");
                 if(splitPair.length != 2) {
-                    CraftTweakerAPI.LOGGER.warn("Invalid blockstate property format '{}'. Using default property value.", propertyPair);
+                    LOGGER.warn("Invalid blockstate property format '{}'. Using default property value.", propertyPair);
                     continue;
                 }
                 blockState = ExpandBlockState.withProperty(blockState, splitPair[0], splitPair[1]);
@@ -177,7 +181,7 @@ public class BracketHandlers {
     public static MobEffect getMobEffect(String tokens) {
         
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CraftTweakerAPI.LOGGER.warn("MobEffect BEP <mobeffect:{}> does not seem to be lower-cased!", tokens);
+            LOGGER.warn("MobEffect BEP <mobeffect:{}> does not seem to be lower-cased!", tokens);
         }
         
         final String[] split = tokens.split(":");
@@ -202,7 +206,7 @@ public class BracketHandlers {
     public static Enchantment getEnchantment(String tokens) {
         
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CraftTweakerAPI.LOGGER.warn("Enchantment BEP <enchantment:{}> does not seem to be lower-case!", tokens);
+            LOGGER.warn("Enchantment BEP <enchantment:{}> does not seem to be lower-case!", tokens);
         }
         
         final String[] split = tokens.split(":");
@@ -257,7 +261,7 @@ public class BracketHandlers {
     public static IItemStack getItem(String tokens) {
         
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CraftTweakerAPI.LOGGER.warn("Item BEP <item:{}> does not seem to be lower-cased!", tokens);
+            LOGGER.warn("Item BEP <item:{}> does not seem to be lower-cased!", tokens);
         }
         
         final String[] split = tokens.split(":");
@@ -278,7 +282,7 @@ public class BracketHandlers {
     public static Potion getPotion(String tokens) {
         
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CraftTweakerAPI.LOGGER.warn("Potion BEP <potion:{}> does not seem to be lower-cased!", tokens);
+            LOGGER.warn("Potion BEP <potion:{}> does not seem to be lower-cased!", tokens);
         }
         
         final String[] split = tokens.split(":");
@@ -309,7 +313,7 @@ public class BracketHandlers {
     public static IRecipeManager<?> getRecipeManager(String tokens) {
         
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CraftTweakerAPI.LOGGER.warn("RecipeType BEP <recipetype:{}> does not seem to be lower-cased!", tokens);
+            LOGGER.warn("RecipeType BEP <recipetype:{}> does not seem to be lower-cased!", tokens);
         }
         if(tokens.equalsIgnoreCase("crafttweaker:scripts")) {
             // This is bound to cause issues, like: <recipetype:crafttweaker:scripts>.removeAll(); Best to just fix it now
@@ -444,7 +448,7 @@ public class BracketHandlers {
     public static ITargetingStrategy getTargetingStrategy(final String tokens) {
         
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CraftTweakerAPI.LOGGER.warn("Targeting strategy BEP <targetingstrategy:{}> does not seem to be lower-cased!", tokens);
+            LOGGER.warn("Targeting strategy BEP <targetingstrategy:{}> does not seem to be lower-cased!", tokens);
         }
         
         final String[] split = tokens.split(":");
