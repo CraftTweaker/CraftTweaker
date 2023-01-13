@@ -38,7 +38,7 @@ public class CrTGlobalEnvironment implements IEnvironmentGlobal {
     
     @Override
     public TypeExpansion getExpansion(String name) {
-        return GlobalRegistry.getExpansions().get(name);
+        return GlobalRegistry.getExpansions().computeIfAbsent(name, TypeExpansion::new);
     }
     
     @Override
