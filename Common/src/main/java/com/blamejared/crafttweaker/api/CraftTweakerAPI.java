@@ -108,7 +108,7 @@ public final class CraftTweakerAPI {
     }
     
     /**
-     * Obtains a new {@link Logger} for logging CraftTweaker-specific messages.
+     * Obtains a new {@link Logger} for logging CraftTweaker-specific messages related to the given system.
      *
      * <p>The given logger is automatically configured to output messages to {@code crafttweaker.log} with the correct
      * format. It can be therefore used directly.</p>
