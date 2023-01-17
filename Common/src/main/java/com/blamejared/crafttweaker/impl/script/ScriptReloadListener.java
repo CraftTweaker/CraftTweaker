@@ -7,12 +7,11 @@ import com.blamejared.crafttweaker.api.ingredient.IngredientCacheBuster;
 import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceManager;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRun;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptDiscoveryConfiguration;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
-import com.blamejared.crafttweaker.impl.helper.FileGathererHelper;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.blamejared.crafttweaker.mixin.common.access.tag.AccessTagManager;
 import com.blamejared.crafttweaker.platform.helper.IAccessibleServerElementsProvider;
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -27,10 +26,7 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.PathMatcher;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -39,7 +35,9 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 
-public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
+public final class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
+    
+    private record RunPreparation(IScriptRun run, Path root, List<Path> scripts) {}
     
     private static final MutableComponent MSG_RELOAD_STARTING = Component.translatable("crafttweaker.reload.start");
     private static final MutableComponent MSG_RELOAD_COMPLETE = Component.translatable("crafttweaker.reload.complete");
@@ -76,11 +74,10 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
         
         this.feedbackConsumer.accept(MSG_RELOAD_STARTING);
         this.fixRecipeManager(manager);
-        final Pair<Path, List<Path>> scripts = this.gatherScripts();
-        final IScriptRun preparedRun = this.prepareRun(scripts);
+        final RunPreparation runPreparation = this.prepareRun();
         
         try {
-            preparedRun.execute();
+            runPreparation.run().execute();
         } catch(final Throwable e) {
             CraftTweakerAPI.LOGGER.error("Unable to execute script run", e);
             return;
@@ -88,10 +85,10 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
             IngredientCacheBuster.release();
         }
         
-        this.storeScriptsInRecipes(manager, scripts);
+        this.storeScriptsInRecipes(manager, runPreparation.root(), runPreparation.scripts());
         
         this.feedbackConsumer.accept(MSG_RELOAD_COMPLETE);
-        if(!scripts.getSecond().isEmpty() && preparedRun.specificRunInfo().displayBranding()) {
+        if(!runPreparation.scripts().isEmpty() && runPreparation.run().specificRunInfo().displayBranding()) {
             
             this.displayPatreonBranding();
         }
@@ -108,37 +105,44 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
         CraftTweakerAPI.getAccessibleElementsProvider().recipeManager(manager);
     }
     
-    private Pair<Path, List<Path>> gatherScripts() {
+    private RunPreparation prepareRun() {
         
-        final Path root = CraftTweakerAPI.getScriptsDirectory();
-        final PathMatcher matcher = root.getFileSystem().getPathMatcher("glob:**.zs");
-        final List<Path> children = new ArrayList<>();
-        try {
-            Files.walkFileTree(root, FileGathererHelper.of(matcher, children::add));
-        } catch(final IOException e) {
-            CraftTweakerAPI.LOGGER.error("Unable to read script files! This is serious", e);
+        class Retainer implements ScriptDiscoveryConfiguration.DiscoveryRetainer {
+            
+            Path root;
+            List<Path> scripts;
+            
+            @Override
+            public void retain(final Path root, final List<Path> discoveryResults) {
+                
+                this.root = root;
+                this.scripts = discoveryResults;
+            }
+            
         }
-        return Pair.of(root, Collections.unmodifiableList(children));
-    }
-    
-    private IScriptRun prepareRun(final Pair<Path, List<Path>> scripts) {
         
-        final ScriptRunConfiguration configuration = new ScriptRunConfiguration(
+        final Retainer retainer = new Retainer();
+        final ScriptDiscoveryConfiguration discoveryConfiguration = new ScriptDiscoveryConfiguration(
+                ScriptDiscoveryConfiguration.SuspiciousNamesBehavior.WARN,
+                retainer
+        );
+        final ScriptRunConfiguration runConfiguration = new ScriptRunConfiguration(
                 CraftTweakerConstants.DEFAULT_LOADER_NAME,
                 CraftTweakerConstants.RELOAD_LISTENER_SOURCE_ID,
                 ScriptRunConfiguration.RunKind.EXECUTE
         );
-        return CraftTweakerAPI.getScriptRunManager()
-                .createScriptRun(scripts.getFirst(), scripts.getSecond(), configuration);
+        
+        final IScriptRun run = CraftTweakerAPI.getScriptRunManager()
+                .createScriptRun(CraftTweakerAPI.getScriptsDirectory(), discoveryConfiguration, runConfiguration);
+        
+        return new RunPreparation(run, retainer.root, retainer.scripts);
     }
     
-    private void storeScriptsInRecipes(final RecipeManager manager, final Pair<Path, List<Path>> scripts) {
+    private void storeScriptsInRecipes(final RecipeManager manager, final Path root, final List<Path> scripts) {
         
         final Map<ResourceLocation, Recipe<?>> recipes = ((AccessRecipeManager) manager).crafttweaker$getRecipes()
                 .computeIfAbsent(ScriptRecipeType.INSTANCE, it -> new HashMap<>());
-        final Path root = scripts.getFirst();
-        
-        scripts.getSecond().stream()
+        scripts.stream()
                 .map(it -> this.buildScriptRecipe(it, root))
                 .forEach(it -> recipes.put(it.getId(), it));
     }
