@@ -24,6 +24,7 @@ public class ItemCapabilityTest implements CraftTweakerGameTest {
         
         builder.file("capability/item_handler_test.zs");
         
+        // TODO("Tests will fail")
         GameTestLoggerAppender.QueryableLog log = GameTestScriptRunner.runScripts(helper, builder);
         log.assertNoErrors();
         log.assertNoWarnings();
