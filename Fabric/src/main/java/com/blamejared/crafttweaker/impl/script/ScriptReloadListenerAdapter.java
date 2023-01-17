@@ -68,7 +68,7 @@ public final class ScriptReloadListenerAdapter implements IdentifiableResourceRe
             return false;
         }).ifPresent(sent -> {
             if(!sent) {
-                CraftTweakerCommon.LOG.info(msg.getString());
+                CraftTweakerCommon.logger().info(msg.getString());
             }
         });
     }
