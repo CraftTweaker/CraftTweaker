@@ -24,4 +24,5 @@ object Versions {
     const val FAUX_CUSTOM_ENTITY_DATA = "2.0.2"
     const val INGREDIENT_EXTENSION_API = "3.0.5"
     const val JEI = "11.3.0.262"
+    const val NEVERWINTER = "1.0.0"
 }

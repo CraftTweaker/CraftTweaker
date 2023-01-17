@@ -38,6 +38,8 @@ dependencies {
     Dependencies.ZENCODE_TEST.forEach {
         gametestImplementation(project(it).dependencyProject.sourceSets.test.get().output)
     }
+
+    include("com.dwarveddonuts.neverwinter:NeverWinter:${Versions.NEVERWINTER}")
 }
 
 loom {

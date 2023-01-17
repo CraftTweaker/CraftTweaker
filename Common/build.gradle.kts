@@ -14,4 +14,5 @@ minecraft {
 
 dependencies {
     compileOnly("org.spongepowered:mixin:${Versions.MIXIN}")
+    api("com.dwarveddonuts.neverwinter:NeverWinter:${Versions.NEVERWINTER}")
 }

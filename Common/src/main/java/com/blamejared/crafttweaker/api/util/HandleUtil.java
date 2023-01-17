@@ -2,14 +2,15 @@ package com.blamejared.crafttweaker.api.util;
 
 
 import com.blamejared.crafttweaker.platform.Services;
+import com.dwarveddonuts.neverwinter.handle.AccessType;
+import com.dwarveddonuts.neverwinter.handle.HandleInvoker;
+import com.dwarveddonuts.neverwinter.handle.Handles;
+import com.dwarveddonuts.neverwinter.handle.RequestType;
 import org.apache.logging.log4j.core.util.ObjectArrayIterator;
 
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.invoke.VarHandle;
-import java.lang.invoke.WrongMethodTypeException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -29,6 +30,7 @@ import java.util.Set;
  * @since 9.0.0
  */
 public final class HandleUtil {
+    
     
     /**
      * Indicates that an error occurred while attempting to build a {@link MethodHandle} or {@link VarHandle}.
@@ -56,83 +58,6 @@ public final class HandleUtil {
             super(message, cause);
         }
         
-    }
-    
-    /**
-     * Represents the invocation to be carried out on the method handle.
-     *
-     * <p>This is effectively a {@link java.util.function.Supplier}, except it can {@linkplain Throwable throw}.</p>
-     *
-     * <p>This is a {@link FunctionalInterface} whose functional method is {@link #invoke()}.</p>
-     *
-     * @param <R> The type returned by the method handle invocation.
-     *
-     * @since 9.0.0
-     */
-    @FunctionalInterface
-    public interface MethodHandleInvoker<R> {
-        
-        /**
-         * Executes the method handle and returns the result.
-         *
-         * @return The result of the method handle invocation.
-         *
-         * @throws Throwable If an exception is thrown during invocation.
-         * @since 9.0.0
-         */
-        R invoke() throws Throwable;
-        
-    }
-    
-    /**
-     * Represents the invocation to be carried out on the method handle.
-     *
-     * <p>This is effectively a {@link Runnable}, except it can {@linkplain Throwable throw}.</p>
-     *
-     * <p>This is a {@link FunctionalInterface} whose functional method is {@link #invoke()}.</p>
-     *
-     * @since 9.0.0
-     */
-    public interface MethodHandleVoidInvoker {
-        
-        /**
-         * Executes the method handle.
-         *
-         * @throws Throwable If an exception is thrown during invocation.
-         * @since 9.0.0
-         */
-        void invoke() throws Throwable;
-        
-    }
-    
-    /**
-     * Indicates which type of access needs to be performed on the method or field.
-     *
-     * <p>The access type determines whether the lookup will require an object on which the method is invoked or the
-     * field is accessed, or whether the resolution will occur statically.</p>
-     *
-     * @since 10.0.0
-     */
-    public enum AccessType {
-        /**
-         * Indicates that the access must be virtual.
-         *
-         * <p>Virtual access indicates that the built handle requires an object context to obtain the value or invoke
-         * the method. This in turn allows for polymorphism to occur. It is used for any non-{@code static} methods and
-         * fields.</p>
-         *
-         * @since 10.0.0
-         */
-        VIRTUAL,
-        /**
-         * Indicates that the access must be static.
-         *
-         * <p>Static access indicates that there is no context required and the value can be resolved directly, without
-         * involving an object. It is used for {@code static} methods and fields.</p>
-         *
-         * @since 10.0.0
-         */
-        STATIC
     }
     
     /**
@@ -183,8 +108,6 @@ public final class HandleUtil {
         
     }
     
-    private static final MethodHandles.Lookup LOOKUP = findLookup();
-    
     private HandleUtil() {}
     
     /**
@@ -207,7 +130,7 @@ public final class HandleUtil {
      * @throws UnableToLinkHandleException If linkage fails due to no method found with the given name or the method
      *                                     was found, but it was unable to be accessed. The latter situation should
      *                                     never occur.
-     * @since 10.0.0
+     * @since 10.1.0
      */
     public static MethodHandle linkMethod(final Class<?> type, final AccessType accessType, final String methodName, final Class<?> returnType, final Class<?>... arguments) {
         
@@ -234,26 +157,20 @@ public final class HandleUtil {
      * @throws UnableToLinkHandleException If linkage fails due to no method found with the given names or a method
      *                                     was found, but it was unable to be accessed. The latter situation should
      *                                     never occur.
-     * @since 10.0.0
+     * @since 10.1.0
      */
     public static MethodHandle linkMethod(final Class<?> type, final AccessType accessType, final Names methodNames, final Class<?> returnType, final Class<?>... arguments) {
         
         final MethodType signature = MethodType.methodType(returnType, arguments);
-        List<NoSuchMethodException> exceptions = null;
+        List<com.dwarveddonuts.neverwinter.handle.UnableToLinkHandleException> exceptions = null;
         
         for(final String methodName : methodNames) {
             
             try {
                 final String targetName = Services.PLATFORM.findMappedMethodName(type, methodName, returnType, arguments);
-                
-                return switch(accessType) {
-                    case STATIC -> LOOKUP.findStatic(type, targetName, signature);
-                    case VIRTUAL -> LOOKUP.findVirtual(type, targetName, signature);
-                };
-            } catch(final NoSuchMethodException e) {
+                return Handles.linkMethod(RequestType.trusted(), accessType, type, targetName, signature);
+            } catch(final com.dwarveddonuts.neverwinter.handle.UnableToLinkHandleException e) {
                 (exceptions == null ? (exceptions = new ArrayList<>()) : exceptions).add(e);
-            } catch(final IllegalAccessException e) {
-                throw new UnableToLinkHandleException("Unable to access method " + StringUtil.quoteAndEscape(methodName), e);
             }
         }
         
@@ -286,7 +203,7 @@ public final class HandleUtil {
      * @throws UnableToLinkHandleException If linkage fails due to no field found with the given name or the field was
      *                                     found, but it was unable to be accessed. The latter situation should never
      *                                     occur.
-     * @since 10.0.0
+     * @since 10.1.0
      */
     public static VarHandle linkField(final Class<?> owner, final AccessType accessType, final String fieldName, final Class<?> type) {
         
@@ -312,25 +229,19 @@ public final class HandleUtil {
      * @throws UnableToLinkHandleException If linkage fails due to no field found with the given names or a field was
      *                                     found, but it was unable to be accessed. The latter situation should never
      *                                     occur.
-     * @since 10.0.0
+     * @since 10.1.0
      */
     public static VarHandle linkField(final Class<?> owner, final AccessType accessType, final Names fieldNames, final Class<?> type) {
         
-        List<NoSuchFieldException> exceptions = null;
+        List<com.dwarveddonuts.neverwinter.handle.UnableToLinkHandleException> exceptions = null;
         
         for(final String fieldName : fieldNames) {
             
             try {
                 final String targetName = Services.PLATFORM.findMappedFieldName(owner, fieldName, type);
-                
-                return switch(accessType) {
-                    case STATIC -> LOOKUP.findStaticVarHandle(owner, targetName, type);
-                    case VIRTUAL -> LOOKUP.findVarHandle(owner, targetName, type);
-                };
-            } catch(final NoSuchFieldException e) {
+                return Handles.linkField(RequestType.trusted(), accessType, owner, targetName, type);
+            } catch(final com.dwarveddonuts.neverwinter.handle.UnableToLinkHandleException e) {
                 (exceptions == null ? (exceptions = new ArrayList<>()) : exceptions).add(e);
-            } catch(final IllegalAccessException e) {
-                throw new UnableToLinkHandleException("Unable to access field " + StringUtil.quoteAndEscape(fieldName), e);
             }
         }
         
@@ -351,10 +262,10 @@ public final class HandleUtil {
      * automatically catches and rethrows exceptions as needed. See further in the documentation for more information on
      * the exception contract of this method.</p>
      *
-     * <p>If the method to invoke returns nothing (i.e. {@code void}), use {@link #invokeVoid(MethodHandleVoidInvoker)}
+     * <p>If the method to invoke returns nothing (i.e. {@code void}), use {@link #invokeVoid(HandleInvoker.Void)}
      * instead.</p>
      *
-     * @param invoker The {@link MethodHandleInvoker} responsible for invoking the actual handle.
+     * @param invoker The {@link HandleInvoker} responsible for invoking the actual handle.
      * @param <R>     The type of the value returned by the invocation of the method handle.
      *
      * @return The result of the method invocation.
@@ -364,20 +275,11 @@ public final class HandleUtil {
      * @throws RuntimeException          If any other exception occurs. Namely, if the exception is already a subclass
      *                                   of {@code RuntimeException}, the exception will be rethrown as is. Otherwise,
      *                                   it will be wrapped in a {@code RuntimeException} and rethrown.
-     * @since 9.0.0
+     * @since 10.1.0
      */
-    public static <R> R invoke(final MethodHandleInvoker<R> invoker) {
+    public static <R> R invoke(final HandleInvoker<R> invoker) {
         
-        try {
-            return invoker.invoke();
-        } catch(final WrongMethodTypeException e) {
-            throw new FailedInvocationException("Unable to invoke target handle: check your arguments", e);
-        } catch(final Throwable throwable) {
-            if(throwable instanceof RuntimeException) {
-                throw (RuntimeException) throwable;
-            }
-            throw new RuntimeException("Invoked handle threw an exception", throwable);
-        }
+        return Handles.invokeHandle(invoker);
     }
     
     /**
@@ -387,68 +289,20 @@ public final class HandleUtil {
      * automatically catches and rethrows exceptions as needed. See further in the documentation for more information on
      * the exception contract of this method.</p>
      *
-     * <p>If the method to invoke returns something, use {@link #invoke(MethodHandleInvoker)} instead.</p>
+     * <p>If the method to invoke returns something, use {@link #invoke(HandleInvoker)} instead.</p>
      *
-     * @param invoker The {@link MethodHandleVoidInvoker} responsible for invoking the actual handle.
+     * @param invoker The {@link HandleInvoker.Void} responsible for invoking the actual handle.
      *
      * @throws FailedInvocationException If the invocation fails due to a mismatch between the invocation in the
      *                                   {@code invoker} and the one expected by the handle/
      * @throws RuntimeException          If any other exception occurs. Namely, if the exception is already a subclass
      *                                   of {@code RuntimeException}, the exception will be rethrown as is. Otherwise,
      *                                   it will be wrapped in a {@code RuntimeException} and rethrown.
-     * @since 9.0.0
+     * @since 10.1.0
      */
-    public static void invokeVoid(final MethodHandleVoidInvoker invoker) {
+    public static void invokeVoid(final HandleInvoker.Void invoker) {
         
-        try {
-            invoker.invoke();
-        } catch(final WrongMethodTypeException e) {
-            throw new FailedInvocationException("Unable to invoke target handle: check your arguments", e);
-        } catch(final Throwable throwable) {
-            if(throwable instanceof RuntimeException) {
-                throw (RuntimeException) throwable;
-            }
-            throw new RuntimeException("Invoked handle threw an exception", throwable);
-        }
-    }
-    
-    private static MethodHandles.Lookup findLookup() {
-        
-        try {
-            final Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
-            final MethodHandles.Lookup unsafeLookup = MethodHandles.privateLookupIn(unsafeClass, MethodHandles.lookup());
-            final VarHandle unsafeField = unsafeLookup.findStaticVarHandle(unsafeClass, "theUnsafe", unsafeClass);
-            final MethodHandle staticFieldBase = unsafeLookup.findVirtual(unsafeClass, "staticFieldBase", MethodType.methodType(Object.class, Field.class));
-            final MethodHandle staticFieldOffset = unsafeLookup.findVirtual(unsafeClass, "staticFieldOffset", MethodType.methodType(long.class, Field.class));
-            final MethodHandle getObject = unsafeLookup.findVirtual(unsafeClass, "getObject", MethodType.methodType(Object.class, Object.class, long.class));
-            
-            final Object unsafe = unsafeField.get();
-            
-            final Class<?> methodHandlesLookupClass = MethodHandles.Lookup.class;
-            final Field[] declaredFields = methodHandlesLookupClass.getDeclaredFields();
-            
-            for(final Field declaredField : declaredFields) {
-                if(declaredField.getType() != MethodHandles.Lookup.class) {
-                    continue;
-                }
-                
-                final Object base = staticFieldBase.invoke(unsafe, declaredField);
-                final long offset = (long) staticFieldOffset.invoke(unsafe, declaredField);
-                final Object lookupObject = getObject.invoke(unsafe, base, offset);
-                final MethodHandles.Lookup lookup = GenericUtil.uncheck(lookupObject);
-                
-                if(lookup.lookupModes() != 127) {
-                    continue;
-                }
-                
-                return lookup;
-            }
-            
-        } catch(final Throwable e) {
-            throw new IllegalStateException("Unable to find lookup", e);
-        }
-        
-        throw new IllegalStateException("Unable to find lookup");
+        Handles.invokeVoidHandle(invoker);
     }
     
 }

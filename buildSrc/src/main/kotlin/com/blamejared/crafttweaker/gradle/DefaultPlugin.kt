@@ -79,6 +79,12 @@ class DefaultPlugin : Plugin<Project> {
                     includeGroup("dev.architectury")
                 }
             })
+            this.add(this.maven("https://gitlab.com/api/v4/projects/40584103/packages/maven") {
+                name = "NeverWinter"
+                content {
+                    includeGroup("com.dwarveddonuts.neverwinter")
+                }
+            })
         }
 
     }
@@ -158,7 +164,7 @@ class DefaultPlugin : Plugin<Project> {
 
                 inputs.property("version", project.version)
                 filesMatching("*.mixins.json") {
-                    if(project.name.equals("Fabric")){
+                    if (project.name.equals("Fabric")) {
                         expand("refmap_target" to "${project.extensions.getByType(BasePluginExtension::class.java).archivesName.get()}-")
                     } else {
                         expand("refmap_target" to "${Properties.MOD_ID}.")

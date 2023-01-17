@@ -17,6 +17,7 @@ import com.blamejared.crafttweaker.mixin.common.access.food.AccessFoodProperties
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessBasicTrade;
 import com.blamejared.crafttweaker.platform.helper.inventory.IItemHandlerWrapper;
 import com.blamejared.crafttweaker.platform.services.IPlatformHelper;
+import com.dwarveddonuts.neverwinter.handle.AccessType;
 import com.google.common.base.Suppliers;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
@@ -78,14 +79,14 @@ public class ForgePlatformHelper implements IPlatformHelper {
         
         private static final MethodHandle LMM_GETTER = HandleUtil.linkMethod(
                 ForgeInternalHandler.class,
-                HandleUtil.AccessType.STATIC,
+                AccessType.staticAccess(),
                 "getLootModifierManager",
                 LootModifierManager.class
         );
         
         private static final VarHandle LMM_MAP = HandleUtil.linkField(
                 LootModifierManager.class,
-                HandleUtil.AccessType.VIRTUAL,
+                AccessType.directAccess(),
                 "registeredLootModifiers",
                 Map.class
         );

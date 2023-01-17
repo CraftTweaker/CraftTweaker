@@ -3,6 +3,7 @@ import com.blamejared.crafttweaker.gradle.Properties
 import com.blamejared.crafttweaker.gradle.Versions
 import com.blamejared.modtemplate.Utils
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
+import net.minecraftforge.gradle.userdev.tasks.JarJar
 import net.darkhax.curseforgegradle.Constants as CFG_Contants
 
 plugins {
@@ -22,7 +23,7 @@ mixin {
 }
 
 dependencies {
-    "minecraft"("net.minecraftforge:forge:${Versions.MINECRAFT}-${Versions.FORGE}")
+    minecraft("net.minecraftforge:forge:${Versions.MINECRAFT}-${Versions.FORGE}")
     compileOnly(project(":Common"))
 
     compileOnly(fg.deobf("mezz.jei:jei-${Versions.MINECRAFT}-common-api:${Versions.JEI}"))
@@ -30,6 +31,9 @@ dependencies {
     runtimeOnly(fg.deobf("mezz.jei:jei-${Versions.MINECRAFT}-forge:${Versions.JEI}"))
 
     annotationProcessor("org.spongepowered:mixin:${Versions.MIXIN}-SNAPSHOT:processor")
+
+    library("com.dwarveddonuts.neverwinter:NeverWinter:${Versions.NEVERWINTER}")
+    jarJar("com.dwarveddonuts.neverwinter:NeverWinter:[${Versions.NEVERWINTER}]")
 }
 
 minecraft {
@@ -39,10 +43,8 @@ minecraft {
     runs {
         all {
             lazyToken("minecraft_classpath") {
-                configurations.library.get().copyRecursive().resolve()
-                        .joinToString(File.pathSeparator) { it.absolutePath }
-
-                configurations.gametestLibrary.get().copyRecursive().resolve()
+                sequenceOf(configurations.library, configurations.gametestLibrary)
+                        .flatMap { it.get().copyRecursive().resolve() }
                         .joinToString(File.pathSeparator) { it.absolutePath }
             }
         }
@@ -107,7 +109,7 @@ minecraft {
             workingDirectory(project.file("run_game_test"))
             ideaModule("${rootProject.name}.${project.name}.main")
             property("forge.enabledGameTestNamespaces", Properties.MOD_ID)
-            setForceExit(false)
+            forceExit = false
             args("-mixin.config=${Properties.MOD_ID}.mixins.json", "-mixin.config=${Properties.MOD_ID}.forge.mixins.json")
             mods {
                 create(Properties.MOD_ID) {
@@ -129,17 +131,35 @@ minecraft {
     }
 }
 
-tasks.create<TaskPublishCurseForge>("publishCurseForge") {
-    apiToken = Utils.locateProperty(project, "curseforgeApiToken") ?: 0
+jarJar {
+    enable()
+}
 
-    val mainFile = upload(Properties.CURSE_PROJECT_ID, file("${project.buildDir}/libs/${base.archivesName.get()}-$version.jar"))
-    mainFile.changelogType = "markdown"
-    mainFile.changelog = Utils.getFullChangelog(project)
-    mainFile.releaseType = CFG_Contants.RELEASE_TYPE_RELEASE
-    mainFile.addJavaVersion("Java ${Versions.MOD_JAVA}")
-//    mainFile.addRequirement("jeitweaker")
+reobf {
+    create("jarJar")
+}
 
-    doLast {
-        project.ext.set("curse_file_url", "${Properties.CURSE_HOMEPAGE_LINK}/files/${mainFile.curseFileId}")
+tasks {
+    create<TaskPublishCurseForge>("publishCurseForge") {
+        apiToken = Utils.locateProperty(project, "curseforgeApiToken") ?: 0
+
+        val mainFile = upload(Properties.CURSE_PROJECT_ID, file("${project.buildDir}/libs/${base.archivesName.get()}-$version.jar"))
+        mainFile.changelogType = "markdown"
+        mainFile.changelog = Utils.getFullChangelog(project)
+        mainFile.releaseType = CFG_Contants.RELEASE_TYPE_RELEASE
+        mainFile.addJavaVersion("Java ${Versions.MOD_JAVA}")
+//      mainFile.addRequirement("jeitweaker")
+
+        doLast {
+            project.ext.set("curse_file_url", "${Properties.CURSE_HOMEPAGE_LINK}/files/${mainFile.curseFileId}")
+        }
+    }
+
+    jar {
+        archiveClassifier.set("thin")
+    }
+
+    named<JarJar>("jarJar") {
+        archiveClassifier.set("")
     }
 }
