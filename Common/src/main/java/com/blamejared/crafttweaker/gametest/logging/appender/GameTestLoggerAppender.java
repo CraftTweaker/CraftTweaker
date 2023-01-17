@@ -20,6 +20,9 @@ import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 @Plugin(name = "PlayerAppender", category = Core.CATEGORY_NAME, elementType = Appender.ELEMENT_TYPE)
 public class GameTestLoggerAppender extends AbstractAppender {
@@ -56,7 +59,7 @@ public class GameTestLoggerAppender extends AbstractAppender {
     
     public QueryableLog query() {
         
-        return new QueryableLog(this.messages);
+        return new QueryableLog(List.copyOf(this.messages));
     }
     
     public static final class QueryableLog {
@@ -86,18 +89,13 @@ public class GameTestLoggerAppender extends AbstractAppender {
         
         public void assertOutput(int index, String message) {
             
-            LogMessage logMessage = this.log.get(index);
-            if(logMessage == null || !logMessage.message().equals(message)) {
-                throw new GameTestAssertException("Expected line '" + index + "' to equal '" + message + "', but found '" + (logMessage == null ? null : logMessage.message()) + "'");
-            }
+            this.assertOutputFor(index, () -> "equal '" + message + '\'', Objects.requireNonNull(message)::equals);
         }
         
         public void assertOutputContains(int index, String message) {
             
-            LogMessage logMessage = this.log.get(index);
-            if(logMessage == null || !logMessage.message().contains(message)) {
-                throw new GameTestAssertException("Expected line '" + index + "' to contain '" + message + "', but found '" + (logMessage == null ? null : logMessage.message()) + "'");
-            }
+            Objects.requireNonNull(message);
+            this.assertOutputFor(index, () -> "contain '" + message + '\'', it -> it.contains(message));
         }
         
         public void dump() {
@@ -105,6 +103,23 @@ public class GameTestLoggerAppender extends AbstractAppender {
             for(int i = 0; i < this.log.size(); i++) {
                 CraftTweakerCommon.logger()
                         .info("{}: {} '{}'", i, this.log.get(i).level, this.log.get(i).actualMessage);
+            }
+        }
+        
+        private void assertOutputFor(final int index, final Supplier<String> what, final Predicate<String> checker) {
+            
+            if(index >= this.log.size()) {
+                throw new GameTestAssertException("Expected line " + index + " to " + what.get() + ", but the line does not exist");
+            }
+            
+            final LogMessage logMessage = this.log.get(index);
+            if(logMessage == null) {
+                throw new GameTestAssertException("Expected line " + index + " to " + what.get() + ", but the line was logged as 'null': this is critical!");
+            }
+            
+            final String message = logMessage.message();
+            if(!checker.test(message)) {
+                throw new GameTestAssertException("Expected line " + index + " to " + what.get() + ", but found '" + message + '\'');
             }
         }
         
