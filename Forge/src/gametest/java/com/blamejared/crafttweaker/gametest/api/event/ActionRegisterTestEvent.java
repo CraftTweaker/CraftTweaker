@@ -43,4 +43,10 @@ public class ActionRegisterTestEvent<T extends Event> implements IUndoableAction
         return "null";
     }
     
+    @Override
+    public String systemName() {
+        
+        return "CraftTweaker-Tests";
+    }
+    
 }
