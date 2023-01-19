@@ -8,6 +8,7 @@ import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.compiler.*;
 import stanhebben.zenscript.parser.Token;
 import stanhebben.zenscript.symbols.*;
+import stanhebben.zenscript.type.ZenTypeIntRange;
 import stanhebben.zenscript.type.ZenTypeNative;
 import stanhebben.zenscript.type.natives.*;
 import stanhebben.zenscript.util.Pair;
@@ -39,6 +40,8 @@ public class GlobalRegistry {
         registerGlobal("max", getStaticFunction(Math.class, "max", int.class, int.class));
         registerGlobal("min", getStaticFunction(Math.class, "min", int.class, int.class));
         registerGlobal("pow", getStaticFunction(Math.class, "pow", double.class, double.class));
+
+        root.put(ZenTypeIntRange.INTRANGE.getName(), new SymbolType(ZenTypeIntRange.INSTANCE), errors);
     }
     
     private GlobalRegistry() {
