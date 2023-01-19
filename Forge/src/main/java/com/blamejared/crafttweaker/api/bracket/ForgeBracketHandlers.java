@@ -50,7 +50,7 @@ public final class ForgeBracketHandlers {
             throw new IllegalArgumentException("Could not get fluid for <fluid:" + tokens + ">. Fluid does not appear to exist!");
         }
         
-        return new MCFluidStack(new FluidStack(Registry.FLUID.get(resourceLocation), 1));
+        return IFluidStack.of(new FluidStack(Registry.FLUID.get(resourceLocation), 1));
     }
     
 }

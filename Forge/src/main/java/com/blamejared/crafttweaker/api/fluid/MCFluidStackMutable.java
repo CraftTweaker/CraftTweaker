@@ -19,7 +19,6 @@ public class MCFluidStackMutable implements IFluidStack {
         this.stack = stack;
     }
     
-    
     @Override
     public IFluidStack setAmount(int amount) {
         
@@ -42,7 +41,7 @@ public class MCFluidStackMutable implements IFluidStack {
     @Override
     public IFluidStack asImmutable() {
         
-        return new MCFluidStack(getInternal().copy());
+        return IFluidStack.of(getInternal().copy());
     }
     
     @Override
@@ -79,7 +78,7 @@ public class MCFluidStackMutable implements IFluidStack {
     @Override
     public IFluidStack copy() {
         
-        return new MCFluidStackMutable(getInternal().copy());
+        return IFluidStack.ofMutable(getInternal().copy());
     }
     
     @Override

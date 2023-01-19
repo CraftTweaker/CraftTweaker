@@ -51,7 +51,7 @@ public class MCFluidStack implements IFluidStack {
         
         final FluidStack copy = getInternal().copy();
         copy.setAmount(amount);
-        return new MCFluidStack(copy);
+        return IFluidStack.of(copy);
     }
     
     @Override
@@ -64,7 +64,7 @@ public class MCFluidStack implements IFluidStack {
     @Override
     public IFluidStack mutable() {
         
-        return new MCFluidStackMutable(getInternal());
+        return IFluidStack.ofMutable(getInternal());
     }
     
     @Override
@@ -82,7 +82,7 @@ public class MCFluidStack implements IFluidStack {
     @Override
     public IFluidStack copy() {
         //We have to copy, in case someone calls ".copy().mutable"
-        return new MCFluidStack(getInternal().copy());
+        return IFluidStack.of(getInternal().copy());
     }
     
     @Override
@@ -90,7 +90,6 @@ public class MCFluidStack implements IFluidStack {
         
         return getInternal().getFluid();
     }
-    
     
     @Override
     public IFluidStack withTag(@ZenCodeType.Nullable IData tag) {
@@ -103,7 +102,7 @@ public class MCFluidStack implements IFluidStack {
             copy.setTag(null);
         }
         
-        return new MCFluidStack(copy);
+        return IFluidStack.of(copy);
     }
     
     @Override

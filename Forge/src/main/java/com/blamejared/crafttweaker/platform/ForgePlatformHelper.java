@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.platform;
 
 import com.blamejared.crafttweaker.CraftTweakerCommon;
-import com.blamejared.crafttweaker.api.fluid.MCFluidStack;
+import com.blamejared.crafttweaker.api.fluid.IFluidStack;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.MCItemStack;
 import com.blamejared.crafttweaker.api.item.MCItemStackMutable;
@@ -276,7 +276,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
         cap.ifPresent(handler -> {
             int tanks = handler.getTanks();
             for(int i = 0; i < tanks; i++) {
-                components.add(Component.literal(new MCFluidStack(handler.getFluidInTank(i)).getCommandString()));
+                components.add(Component.literal(IFluidStack.of(handler.getFluidInTank(i)).getCommandString()));
             }
         });
         return components;

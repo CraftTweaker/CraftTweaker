@@ -40,7 +40,7 @@ public class ExpandIFluidHandler {
     @ZenCodeType.Operator(ZenCodeType.OperatorType.INDEXGET)
     public static IFluidStack getFluidInTank(IFluidHandler internal, int tank) {
         
-        return new MCFluidStack(internal.getFluidInTank(tank));
+        return IFluidStack.of(internal.getFluidInTank(tank));
     }
     
     /**
@@ -106,7 +106,7 @@ public class ExpandIFluidHandler {
     @ZenCodeType.Method
     public static IFluidStack drain(IFluidHandler internal, IFluidStack resource, IFluidHandler.FluidAction action) {
         
-        return new MCFluidStack(internal.drain(resource.getInternal(), action));
+        return IFluidStack.of(internal.drain(resource.getInternal(), action));
     }
     
     /**
@@ -123,7 +123,7 @@ public class ExpandIFluidHandler {
     @ZenCodeType.Method
     public static IFluidStack drain(IFluidHandler internal, int maxDrain, IFluidHandler.FluidAction action) {
         
-        return new MCFluidStack(internal.drain(maxDrain, action));
+        return IFluidStack.of(internal.drain(maxDrain, action));
     }
     
 }
