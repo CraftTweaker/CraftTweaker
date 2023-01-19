@@ -131,7 +131,11 @@ public final class BuiltinRecipeComponents {
      * @since 10.0.0
      */
     public static final class Output {
-        
+    
+        /**
+         * Replaced by {@link BuiltinRecipeComponents.Output#CHANCED_ITEMS_SINGLE}
+         */
+        @Deprecated(forRemoval = true)
         public static final IRecipeComponent<List<Percentaged<IItemStack>>> CHANCED_ITEMS = IRecipeComponent.composite(
                 CraftTweakerConstants.rl("output/chanced_items"),
                 new TypeToken<>() {},
@@ -142,6 +146,13 @@ public final class BuiltinRecipeComponents {
                         (list, element) -> Util.make(list, l -> l.addAll(element)),
                         (firstList, secondList) -> Util.make(firstList, l -> l.addAll(secondList))
                 )
+        );
+        
+        //TODO rename to "CHANCED_ITEMS"
+        public static final IRecipeComponent<Percentaged<IItemStack>> CHANCED_ITEMS_SINGLE = IRecipeComponent.simple(
+                CraftTweakerConstants.rl("output/single_chanced_items"),
+                new TypeToken<>() {},
+                RecipeComponentEqualityCheckers::areStacksEqual
         );
         
         public static final IRecipeComponent<Float> EXPERIENCE = IRecipeComponent.simple(
