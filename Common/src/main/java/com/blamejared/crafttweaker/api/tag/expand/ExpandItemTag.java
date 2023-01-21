@@ -1,7 +1,5 @@
 package com.blamejared.crafttweaker.api.tag.expand;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
@@ -9,6 +7,7 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredientWithAmount;
 import com.blamejared.crafttweaker.api.ingredient.type.IIngredientEmpty;
 import com.blamejared.crafttweaker.api.ingredient.type.TagIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -35,7 +34,7 @@ public class ExpandItemTag {
         
         TagKey<?> tagKey = internal.getTagKey();
         if(!internal.exists() && !Services.PLATFORM.isDataGen()) {
-            CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME)
+            CommonLoggers.own()
                     .warn("Tag '{}' does not exist, replacing with empty IIngredient", internal.getCommandString());
             return IIngredientEmpty.INSTANCE;
         }

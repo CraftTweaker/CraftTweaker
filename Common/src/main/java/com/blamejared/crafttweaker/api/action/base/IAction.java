@@ -219,7 +219,7 @@ public interface IAction {
      *
      * @implNote Invoking this method is equivalent to calling {@link CraftTweakerAPI#getLogger(String)} with the
      * system name of {@link #systemName()}.
-     * @since 1.0.0
+     * @since 10.1.0
      */
     default Logger logger() {
         

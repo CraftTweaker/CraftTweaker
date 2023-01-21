@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
+import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.CraftTweakerEarlyInit;
 import com.blamejared.crafttweaker.impl.command.CtCommands;
@@ -27,8 +28,6 @@ import java.util.stream.Collectors;
 
 public class CraftTweakerCommon {
     
-    // This must be a supplier because we can only run after CraftTweakerEarlyInit has done what it needs to do
-    private static final Supplier<Logger> LOGGER = Suppliers.memoize(() -> CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME));
     private static Set<String> PATRON_LIST = new HashSet<>();
     
     private static final Supplier<PluginManager> PLUGIN_MANAGER = Suppliers.memoize(PluginManager::of);
@@ -60,7 +59,7 @@ public class CraftTweakerCommon {
                 e.printStackTrace();
             }
         });
-        patronThread.setName("Patron-List-Downloader");
+        patronThread.setName(CraftTweakerConstants.MOD_NAME + "-Patron-List-Downloader");
         patronThread.setDaemon(true); // Just in case MC crashes while we're doing this, it makes no sense to stall
         patronThread.start();
     }
@@ -72,7 +71,7 @@ public class CraftTweakerCommon {
     
     public static Logger logger() {
         
-        return LOGGER.get();
+        return CommonLoggers.own();
     }
     
     public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, Commands.CommandSelection environment) {

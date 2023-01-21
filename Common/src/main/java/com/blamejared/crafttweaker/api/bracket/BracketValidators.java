@@ -1,15 +1,13 @@
 package com.blamejared.crafttweaker.api.bracket;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.BracketValidator;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.state.BlockState;
-import org.apache.logging.log4j.Logger;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
@@ -20,8 +18,6 @@ import java.util.function.Function;
 @ZenCodeType.Name("crafttweaker.api.BracketValidators")
 @Document("vanilla/api/BracketValidators")
 public class BracketValidators {
-    
-    private static final Logger LOGGER = CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME + "-ZenCode");
     
     private BracketValidators() {
     
@@ -47,13 +43,15 @@ public class BracketValidators {
         
         final String[] split = tokens.split(":");
         if(split.length > 4 || split.length < 2) {
-            LOGGER.error("Invalid BEP Syntax: <blockstate:{}>! Correct syntax is <blockstate:modid:block_name:properties> or <blockstate:modid:block_name>!", tokens);
+            CommonLoggers.zenCode()
+                    .error("Invalid BEP Syntax: <blockstate:{}>! Correct syntax is <blockstate:modid:block_name:properties> or <blockstate:modid:block_name>!", tokens);
             return false;
         }
         
         final String resourceLocation = split[0] + ":" + split[1];
         if(ResourceLocation.tryParse(resourceLocation) == null) {
-            LOGGER.error("Invalid Block name for Blockstate BEP. '{}' does not appear to be a valid resource location!", resourceLocation);
+            CommonLoggers.zenCode()
+                    .error("Invalid Block name for Blockstate BEP. '{}' does not appear to be a valid resource location!", resourceLocation);
             return false;
         }
         
@@ -68,7 +66,8 @@ public class BracketValidators {
     public static boolean validateEffectBracket(String tokens) {
         
         if(tokens.split(":").length != 2) {
-            LOGGER.error("Invalid Bracket Syntax: <effect:" + tokens + ">! Syntax is <effect:modid:potionname>");
+            CommonLoggers.zenCode()
+                    .error("Invalid Bracket Syntax: <effect:" + tokens + ">! Syntax is <effect:modid:potionname>");
             return false;
         }
         
@@ -80,18 +79,19 @@ public class BracketValidators {
     public static boolean validateEnchantment(String tokens) {
         
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            LOGGER.warn("Enchantment BEP <enchantment:{}> does not seem to be lower-case!", tokens);
+            CommonLoggers.zenCode().warn("Enchantment BEP <enchantment:{}> does not seem to be lower-case!", tokens);
         }
         
         final String[] split = tokens.split(":");
         if(split.length != 2) {
-            LOGGER.error("Could not get enchantment '{}': not a valid bracket handler, syntax is <enchantment:modid:name>", tokens);
+            CommonLoggers.zenCode()
+                    .error("Could not get enchantment '{}': not a valid bracket handler, syntax is <enchantment:modid:name>", tokens);
             return false;
         }
         
         final ResourceLocation key = new ResourceLocation(split[0], split[1]);
         if(!Registry.ENCHANTMENT.containsKey(key)) {
-            LOGGER.error("Could not get enchantment '{}': the enchantment isn't registered", tokens);
+            CommonLoggers.zenCode().error("Could not get enchantment '{}': the enchantment isn't registered", tokens);
             return false;
         }
         
@@ -103,7 +103,8 @@ public class BracketValidators {
     public static boolean validateEntityType(String tokens) {
         
         if(ResourceLocation.tryParse(tokens) == null) {
-            LOGGER.error("Invalid Bracket Syntax: <entitytype:" + tokens + ">! Syntax is <entitytype:modid:entity_type_name>");
+            CommonLoggers.zenCode()
+                    .error("Invalid Bracket Syntax: <entitytype:" + tokens + ">! Syntax is <entitytype:modid:entity_type_name>");
             return false;
         }
         
@@ -115,18 +116,20 @@ public class BracketValidators {
     public static boolean validateItemBracket(String tokens) {
         
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            LOGGER.warn("Item BEP <item:{}> does not seem to be lower-cased!", tokens);
+            CommonLoggers.zenCode().warn("Item BEP <item:{}> does not seem to be lower-cased!", tokens);
         }
         
         final String[] split = tokens.split(":");
         if(split.length != 2) {
-            LOGGER.error("Could not get item with name: <item:" + tokens + ">! Syntax is <item:modid:itemname>");
+            CommonLoggers.zenCode()
+                    .error("Could not get item with name: <item:" + tokens + ">! Syntax is <item:modid:itemname>");
             return false;
         }
         ResourceLocation key = new ResourceLocation(split[0], split[1]);
         
         if(!Registry.ITEM.containsKey(key)) {
-            LOGGER.error("Could not get item with name: <item:" + tokens + ">! Item does not appear to exist!");
+            CommonLoggers.zenCode()
+                    .error("Could not get item with name: <item:" + tokens + ">! Item does not appear to exist!");
             return false;
         }
         
@@ -138,7 +141,8 @@ public class BracketValidators {
     public static boolean validateProfessionBracket(String tokens) {
         
         if(tokens.split(":").length != 2) {
-            LOGGER.error("Invalid Bracket Syntax: <profession:" + tokens + ">! Syntax is <profession:modid:profession_name>");
+            CommonLoggers.zenCode()
+                    .error("Invalid Bracket Syntax: <profession:" + tokens + ">! Syntax is <profession:modid:profession_name>");
             return false;
         }
         
@@ -165,7 +169,7 @@ public class BracketValidators {
             return bracketMethod.apply(tokens) != null;
         } catch(Exception e) {
             if(logError) {
-                LOGGER.error("Error validating BEP <{}:{}>", bracketName, tokens, e);
+                CommonLoggers.zenCode().error("Error validating BEP <{}:{}>", bracketName, tokens, e);
             }
             return false;
         }
@@ -181,7 +185,8 @@ public class BracketValidators {
     public static boolean validateSoundEvent(String tokens) {
         
         if(tokens.split(":").length != 2) {
-            LOGGER.error("Invalid Bracket Syntax: <soundevent:" + tokens + ">! Syntax is <soundevent:modid:name>");
+            CommonLoggers.zenCode()
+                    .error("Invalid Bracket Syntax: <soundevent:" + tokens + ">! Syntax is <soundevent:modid:name>");
             return false;
         }
         
@@ -193,7 +198,8 @@ public class BracketValidators {
     public static boolean validateTargetingStrategy(final String tokens) {
         
         if(tokens.split(":").length != 2) {
-            LOGGER.error("Invalid Bracket Syntax <targetingstrategy:" + tokens + ">! Syntax is <targetingstrategy:modid:name>");
+            CommonLoggers.zenCode()
+                    .error("Invalid Bracket Syntax <targetingstrategy:" + tokens + ">! Syntax is <targetingstrategy:modid:name>");
             return false;
         }
         

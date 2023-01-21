@@ -1,9 +1,8 @@
 package com.blamejared.crafttweaker.api.recipe;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -122,7 +121,8 @@ public class RecipeList<T extends Recipe<?>> {
     public void add(ResourceLocation id, T recipe) {
         
         if(getByName().containsKey(recipe.getId())) {
-            CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME).warn(
+            // TODO("Or CommonLoggers.zenCode()?")
+            CommonLoggers.own().warn(
                     "A recipe with the name '{}' already exists and will be overwritten: this is most likely an error in your scripts",
                     recipe.getId().getPath()
             );

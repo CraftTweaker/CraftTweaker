@@ -15,6 +15,7 @@ import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.visitor.DataToJsonStringVisitor;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.api.recipe.RecipeList;
 import com.blamejared.crafttweaker.api.util.NameUtil;
 import com.blamejared.crafttweaker.api.zencode.util.PositionUtil;
@@ -294,7 +295,8 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
         CodePosition position = PositionUtil.getZCScriptPositionFromStackTrace();
         return NameUtil.fixing(
                 name,
-                (fixed, mistakes) -> CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME).warn(
+                // TODO("Or CommonLoggers.zenCode()?")
+                (fixed, mistakes) -> CommonLoggers.own().warn(
                         "{}Invalid recipe name '{}', mistakes:\n{}\nNew recipe name: {}",
                         position == CodePosition.UNKNOWN ? "" : position + ": ",
                         name,

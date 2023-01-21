@@ -1,8 +1,8 @@
 package com.blamejared.crafttweaker.impl.event;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.entity.NameTagResult;
+import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.impl.script.RecipeManagerScriptLoader;
 import com.blamejared.crafttweaker.natives.entity.ExpandEntityType;
 import com.blamejared.crafttweaker.platform.Services;
@@ -49,7 +49,7 @@ public class CTClientEventHandler {
                     e.setResult(nameTagResult.getResult() == null ? Event.Result.DEFAULT : nameTagResult.getResult() ? Event.Result.ALLOW : Event.Result.DENY);
                     e.setContent(nameTagResult.getContent());
                 } catch(final Exception exception) {
-                    CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME).error(
+                    CommonLoggers.own().error(
                             "Unable to run one of the name tag functions for {} due to an error (for experts, refer to {})",
                             ExpandEntityType.getCommandString(entity.getType()),
                             Services.CLIENT.NAMETAGS.get(predicate).getClass().getName()

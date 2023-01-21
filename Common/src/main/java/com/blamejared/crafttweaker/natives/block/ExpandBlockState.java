@@ -1,10 +1,10 @@
 package com.blamejared.crafttweaker.natives.block;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.action.block.ActionSetBlockProperty;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.block.CTBlockIngredient;
+import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.mixin.common.access.block.AccessBlockStateBase;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 
 /**
  * @docParam this <blockstate:minecraft:grass>
@@ -137,13 +136,13 @@ public class ExpandBlockState {
         
         Property property = internal.getBlock().getStateDefinition().getProperty(name);
         if(property == null) {
-            CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME).warn("Invalid property name");
+            CommonLoggers.own().warn("Invalid property name");
         } else {
             Optional<Comparable> propValue = property.getValue(value);
             if(propValue.isPresent()) {
                 return internal.setValue(property, propValue.get());
             }
-            CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME).warn("Invalid property value");
+            CommonLoggers.own().warn("Invalid property value");
         }
         return internal;
     }
@@ -178,7 +177,7 @@ public class ExpandBlockState {
         if(prop != null) {
             return internal.getValue(prop).toString();
         }
-        CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME).warn("Invalid property name");
+        CommonLoggers.own().warn("Invalid property name");
         return "";
     }
     
@@ -200,7 +199,7 @@ public class ExpandBlockState {
             prop.getPossibleValues().forEach(v -> values.add(v.toString()));
             return values;
         }
-        CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME).warn("Invalid property name");
+        CommonLoggers.own().warn("Invalid property name");
         return ImmutableList.of();
     }
     

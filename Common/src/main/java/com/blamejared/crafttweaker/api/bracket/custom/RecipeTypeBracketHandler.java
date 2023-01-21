@@ -2,11 +2,12 @@ package com.blamejared.crafttweaker.api.bracket.custom;
 
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ICraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.api.recipe.manager.RecipeManagerWrapper;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.InstantiationUtil;
 import com.blamejared.crafttweaker.api.util.ParseUtil;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipeType;
@@ -16,7 +17,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import org.apache.logging.log4j.Logger;
 import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.shared.CodePosition;
 import org.openzen.zenscript.lexer.ParseException;
@@ -52,8 +52,6 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     private static final Map<RecipeType<Recipe<?>>, IRecipeManager<Recipe<?>>> registeredTypes = new HashMap<>();
     private static final Map<Class<? extends IRecipeManager<Recipe<?>>>, IRecipeManager<Recipe<?>>> managerInstances = new HashMap<>();
     
-    private static final Logger LOGGER = CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME + "-ZenCode");
-    
     private static volatile Runnable enqueuedRegistration = null;
     
     public RecipeTypeBracketHandler() {
@@ -69,7 +67,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
                             .getImplementationsOf(it, IRecipeManager.class))
                     .flatMap(List::stream)
                     .filter(it -> RecipeManagerWrapper.class != it)
-                    .map(it -> (Class<? extends IRecipeManager<Recipe<?>>>) it)
+                    .map(GenericUtil::<Class<? extends IRecipeManager<Recipe<?>>>>uncheck)
                     .forEach(this::registerRecipeManager);
         };
     }
@@ -151,7 +149,9 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
         
         final IRecipeManager<Recipe<?>> manager = InstantiationUtil.getOrCreateInstance(managerClass);
         if(manager == null) {
-            LOGGER.error("Could not add RecipeManager for {}, please report to the author", managerClass);
+            // TODO("Maybe plugins subsystem instead?")
+            CommonLoggers.zenCode()
+                    .error("Could not add RecipeManager for {}, please report to the author", managerClass);
             return;
         }
         
@@ -166,7 +166,9 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
         
         if(managerClass.getAnnotation(ZenCodeType.Name.class) == null) {
             final String canonicalName = managerClass.getCanonicalName();
-            LOGGER.warn("No Name Annotation found on manager '{}', it will not be registered!", canonicalName);
+            // TODO("Maybe plugins subsystem instead?")
+            CommonLoggers.zenCode()
+                    .warn("No Name Annotation found on manager '{}', it will not be registered!", canonicalName);
             return;
         }
         
@@ -226,7 +228,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     
     private static RecipeType<Recipe<?>> lookup(final ResourceLocation location) {
         
-        return (RecipeType<Recipe<?>>) Registry.RECIPE_TYPE.get(location);
+        return GenericUtil.uncheck(Registry.RECIPE_TYPE.get(location));
     }
     
     public static Supplier<Stream<String>> getDumperData() {

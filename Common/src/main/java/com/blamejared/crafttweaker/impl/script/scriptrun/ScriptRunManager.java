@@ -1,9 +1,9 @@
 package com.blamejared.crafttweaker.impl.script.scriptrun;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.action.base.IAction;
 import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
+import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
@@ -53,7 +53,7 @@ public final class ScriptRunManager implements IScriptRunManager {
     
     private ScriptRunManager() {
         
-        this.logger = CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME + "-ZenCode");
+        this.logger = CommonLoggers.zenCode();
         this.previousRunQueues = new HashMap<>();
         this.nestingLevel = ThreadLocal.withInitial(() -> 0);
         this.currentRunInfo = null;
@@ -127,7 +127,7 @@ public final class ScriptRunManager implements IScriptRunManager {
     
     private IScriptRun createScriptRun(final List<SourceFile> sources, final RunInfo info) {
         
-        this.previousRunQueues.computeIfAbsent(info.loader(), it -> new RunInfoQueue(() -> this.logger.info("Undoing previous actions")));
+        this.previousRunQueues.computeIfAbsent(info.loader(), it -> this.makeRunInfoQueue());
         return new ScriptRun(
                 sources,
                 info,
@@ -135,6 +135,14 @@ public final class ScriptRunManager implements IScriptRunManager {
                 this::updateCurrentRunInfo,
                 loader -> this.previousRunQueues.get(loader).isFirstRun(),
                 loader -> this.previousRunQueues.get(loader).undoActions()
+        );
+    }
+    
+    private RunInfoQueue makeRunInfoQueue() {
+        
+        return new RunInfoQueue(
+                () -> this.logger.info("Undoing previous actions"),
+                this::determineLoggerForAction
         );
     }
     
@@ -207,8 +215,7 @@ public final class ScriptRunManager implements IScriptRunManager {
         
         final RunInfo info = Objects.requireNonNull(this.currentRunInfo);
         
-        final String systemName = this.checkSystemName(action);
-        final Logger logger = CraftTweakerAPI.getLogger(systemName);
+        final Logger logger = this.determineLoggerForAction(action);
         
         try {
             
@@ -236,6 +243,12 @@ public final class ScriptRunManager implements IScriptRunManager {
         } catch(final Exception e) {
             logger.error("Unable to run action due to an error", e);
         }
+    }
+    
+    private Logger determineLoggerForAction(final IAction action) {
+        
+        // Do not use action.logger(), as malicious mods might override it to make stuff not show up in our logger
+        return CraftTweakerAPI.getLogger(this.checkSystemName(action));
     }
     
     private String checkSystemName(final IAction action) {
