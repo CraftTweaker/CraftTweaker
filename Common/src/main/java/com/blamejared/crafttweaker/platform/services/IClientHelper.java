@@ -1,11 +1,10 @@
 package com.blamejared.crafttweaker.platform.services;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.entity.INameTagFunction;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
+import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -65,7 +64,7 @@ public interface IClientHelper {
                 try {
                     function.apply(ctStack, lines, context);
                 } catch(final Exception exception) {
-                    CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME).error(
+                    CommonLoggers.own().error(
                             "Unable to run one of the tooltip functions for {} on {} due to an error (for experts, refer to {})",
                             ingredient.getCommandString(),
                             ctStack.getCommandString(),

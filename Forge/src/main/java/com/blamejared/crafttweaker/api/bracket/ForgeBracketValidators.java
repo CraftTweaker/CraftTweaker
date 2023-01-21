@@ -1,9 +1,8 @@
 package com.blamejared.crafttweaker.api.bracket;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.BracketValidator;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -12,10 +11,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("forge/api/ForgeBracketValidators")
 public final class ForgeBracketValidators {
 
-    private static final Logger LOGGER = CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME + "-ZenCode");
-
     private ForgeBracketValidators() {
-
     }
 
     @ZenCodeType.StaticExpansionMethod

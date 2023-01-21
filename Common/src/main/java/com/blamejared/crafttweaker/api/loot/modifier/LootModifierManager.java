@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.action.loot.ActionRegisterLootModifier;
 import com.blamejared.crafttweaker.api.action.loot.ActionRemoveLootModifier;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.api.loot.condition.LootConditions;
 import com.blamejared.crafttweaker.api.util.NameUtil;
 import com.blamejared.crafttweaker.platform.Services;
@@ -160,7 +161,8 @@ public enum LootModifierManager {
         
         return NameUtil.fromFixedName(
                 name,
-                (fixed, mistakes) -> CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME).warn(
+                // TODO("Or CommonLoggers.zenCode()?")
+                (fixed, mistakes) -> CommonLoggers.own().warn(
                         "The given loot modifier name '{}' isn't valid due to:\n{}\nThe name was changed to '{}'",
                         name,
                         String.join("\n", mistakes),

@@ -1,8 +1,13 @@
 package com.blamejared.crafttweaker.api.recipe.type;
 
+<<<<<<< HEAD:Common/src/main/java/com/blamejared/crafttweaker/api/recipe/type/CTShapelessRecipe.java
 import com.blamejared.crafttweaker.api.*;
+=======
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
+>>>>>>> 10ed8b8b (Add common loggers for code cleanup):Common/src/main/java/com/blamejared/crafttweaker/api/recipe/type/CTShapelessRecipeBase.java
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction1D;
 import com.blamejared.crafttweaker.api.recipe.serializer.CTShapelessRecipeSerializer;
 import com.blamejared.crafttweaker.platform.Services;
@@ -38,7 +43,7 @@ public class CTShapelessRecipe extends ShapelessRecipe {
         boolean containsNull = false;
         for(IIngredient ingredient : ingredients) {
             if(ingredient == null || ingredient.asVanillaIngredient().isEmpty()) {
-                CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME).warn("Shapeless recipe with ID '{}' contains null or empty ingredients, removing entries!", this.getId());
+                CommonLoggers.own().warn("Shapeless recipe with ID '{}' contains null or empty ingredients, removing entries!", getId());
                 containsNull = true;
                 break;
             }

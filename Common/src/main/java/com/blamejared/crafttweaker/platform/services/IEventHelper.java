@@ -1,7 +1,5 @@
 package com.blamejared.crafttweaker.platform.services;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.command.CommandUtilities;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.MapData;
@@ -9,6 +7,7 @@ import com.blamejared.crafttweaker.api.data.visitor.DataToTextComponentVisitor;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.attribute.ItemAttributeModifierBase;
+import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.api.util.AttributeUtil;
 import com.blamejared.crafttweaker.natives.block.ExpandBlock;
 import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
@@ -161,7 +160,7 @@ public interface IEventHelper {
     private static void sendAndLog(Player player, MutableComponent component) {
         
         ExpandPlayer.sendMessage(player, component);
-        CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME).info(component.getString());
+        CommonLoggers.own().info(component.getString());
     }
     
 }

@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.impl.registry.zencode;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
+import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.api.natives.INativeTypeRegistry;
 import com.blamejared.crafttweaker.api.natives.NativeTypeInfo;
 import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
@@ -263,7 +262,7 @@ final class LoaderSpecificZenClassRegistry {
         
         this.nativeTypeRegistry.addNativeType(info);
         this.data.classes().put(info.name(), info.targetedType());
-        CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME + "-ZenCode")
+        CommonLoggers.zenCode()
                 .debug("Registering {} for native type '{}'", info.name(), info.targetedType().getName());
     }
     
@@ -303,25 +302,23 @@ final class LoaderSpecificZenClassRegistry {
         
         final Class<?> other = this.data.classes().get(name);
         if(other != null) {
-            CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME + "-ZenCode")
+            CommonLoggers.zenCode()
                     .error("Duplicate ZenCode Name '{}' in classes '{}' and '{}'", name, other.getName(), clazz.getName());
             return;
         }
         
         this.data.classes().put(name, clazz);
-        CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME + "-ZenCode")
-                .debug("Registering '{}' to '{}'", name, clazz);
+        CommonLoggers.zenCode().debug("Registering '{}' to '{}'", name, clazz);
     }
     
     private void registerZenExpansion(final Class<?> clazz, final String expansionTarget) {
         
         if(!VERIFIER.isTypeKnown(expansionTarget, this.data.classes().keySet())) {
-            CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME + "-ZenCode")
+            CommonLoggers.zenCode()
                     .warn("Attempting to register expansion for unknown type '{}', carrying on anyways", expansionTarget);
         }
         this.data.expansions().put(expansionTarget, clazz);
-        CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME + "-ZenCode")
-                .debug("Registering expansion '{}' to '{}'", clazz.getName(), expansionTarget);
+        CommonLoggers.zenCode().debug("Registering expansion '{}' to '{}'", clazz.getName(), expansionTarget);
     }
     
     private void registerGlobals(final Class<?> clazz, final ZenTypeInfo info) {

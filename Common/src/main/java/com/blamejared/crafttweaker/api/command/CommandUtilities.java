@@ -1,8 +1,8 @@
 package com.blamejared.crafttweaker.api.command;
 
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
+import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.impl.network.message.MessageCopy;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.ChatFormatting;
@@ -20,7 +20,7 @@ import java.nio.file.Path;
 
 public final class CommandUtilities {
     
-    public static final Logger COMMAND_LOGGER = CraftTweakerAPI.getLogger(CraftTweakerConstants.MOD_NAME + "-Commands");
+    public static final Logger COMMAND_LOGGER = CommonLoggers.commands();
     
     private CommandUtilities() {}
     
