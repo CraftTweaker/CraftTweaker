@@ -17,9 +17,9 @@ CTTestEventManager.register<TestEvent>((event) => {
 
         var itemHandler = blockEntity.getCapability<IItemHandler>(Capabilities.ITEM);
         if itemHandler != null {
-            println(itemHandler.getStackInSlot(2).commandString);
+            event.printf(itemHandler.getStackInSlot(2).commandString);
             itemHandler.insertItem(1, <item:minecraft:dirt>, false);
-            println(itemHandler.getStackInSlot(1).commandString);
+            event.printf(itemHandler.getStackInSlot(1).commandString);
         }
     }
 

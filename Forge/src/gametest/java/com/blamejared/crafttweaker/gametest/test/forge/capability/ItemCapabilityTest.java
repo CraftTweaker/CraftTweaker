@@ -15,6 +15,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.MinecraftForge;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @CraftTweakerGameTestHolder
 public class ItemCapabilityTest implements CraftTweakerGameTest {
     
@@ -24,13 +27,17 @@ public class ItemCapabilityTest implements CraftTweakerGameTest {
         
         builder.file("capability/item_handler_test.zs");
         
-        // TODO("Tests will fail")
         GameTestLoggerAppender.QueryableLog log = GameTestScriptRunner.runScripts(helper, builder);
         log.assertNoErrors();
         log.assertNoWarnings();
-        MinecraftForge.EVENT_BUS.post(new TestEvent("testItemHandler", helper.getLevel(), helper.absolutePos(BlockPos.ZERO), helper.makeMockPlayer()));
-        log.assertOutput(2, IItemStack.of(new ItemStack(Items.DIAMOND, 2)).getCommandString());
-        log.assertOutput(3, IItemStack.of(new ItemStack(Items.DIRT)).getCommandString());
+        
+        final List<String> prints = new ArrayList<>();
+        MinecraftForge.EVENT_BUS.post(new TestEvent("testItemHandler", helper.getLevel(), helper.absolutePos(BlockPos.ZERO), helper.makeMockPlayer(), prints::add));
+        
+        final GameTestLoggerAppender.QueryableLog newLog = GameTestLoggerAppender.QueryableLog.mock(prints);
+        newLog.assertOutput(0, IItemStack.of(new ItemStack(Items.DIAMOND, 2)).getCommandString());
+        newLog.assertOutput(1, IItemStack.of(new ItemStack(Items.DIRT)).getCommandString());
+        newLog.dump();
     }
     
 }

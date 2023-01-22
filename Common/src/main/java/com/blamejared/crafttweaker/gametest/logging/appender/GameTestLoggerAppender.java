@@ -49,7 +49,14 @@ public class GameTestLoggerAppender extends AbstractAppender {
         return new GameTestLoggerAppender(name, filter, layout, true, Property.EMPTY_ARRAY);
     }
     
-    private record LogMessage(String message, String actualMessage, Level level) {}
+    private record LogMessage(String message, String actualMessage, Level level) {
+        
+        static LogMessage mock(final String message) {
+            
+            return new LogMessage(message, message, Level.INFO);
+        }
+        
+    }
     
     
     public void claim() {
@@ -66,9 +73,14 @@ public class GameTestLoggerAppender extends AbstractAppender {
         
         private final List<LogMessage> log;
         
-        public QueryableLog(List<LogMessage> log) {
+        QueryableLog(List<LogMessage> log) {
             
             this.log = log;
+        }
+        
+        public static QueryableLog mock(final List<String> mockMessages) {
+            
+            return new QueryableLog(mockMessages.stream().map(LogMessage::mock).toList());
         }
         
         public void assertNoErrors() {
