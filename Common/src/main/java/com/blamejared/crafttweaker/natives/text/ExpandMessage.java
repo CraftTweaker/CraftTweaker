@@ -12,6 +12,7 @@ import org.openzen.zencode.java.ZenCodeType;
 public class ExpandMessage {
     
     @ZenCodeType.Method
+    @ZenCodeType.Caster(implicit = true)
     public static String getString(Message internal) {
         
         return internal.getString();
