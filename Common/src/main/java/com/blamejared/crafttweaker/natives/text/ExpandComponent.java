@@ -36,6 +36,12 @@ public class ExpandComponent {
     }
     
     @ZenCodeType.StaticExpansionMethod
+    public static MutableComponent translatable(String content, Component... args) {
+        
+        return Component.translatable(content, (Object[]) args);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
     public static MutableComponent empty() {
         
         return Component.empty();
