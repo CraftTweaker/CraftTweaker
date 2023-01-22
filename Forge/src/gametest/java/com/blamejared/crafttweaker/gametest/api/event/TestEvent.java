@@ -7,6 +7,8 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.Event;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.function.Consumer;
+
 @ZenRegister
 @ZenCodeType.Name("test.api.TestEvent")
 public class TestEvent extends Event {
@@ -15,13 +17,15 @@ public class TestEvent extends Event {
     private final Level level;
     private final BlockPos pos;
     private final Player player;
+    private final Consumer<String> printf;
     
-    public TestEvent(String testName, Level level, BlockPos pos, Player player) {
+    public TestEvent(String testName, Level level, BlockPos pos, Player player, Consumer<String> printf) {
         
         this.testName = testName;
         this.level = level;
         this.pos = pos;
         this.player = player;
+        this.printf = printf;
     }
     
     @ZenCodeType.Method
@@ -57,6 +61,12 @@ public class TestEvent extends Event {
     public Player player() {
         
         return player;
+    }
+    
+    @ZenCodeType.Method
+    public void printf(final String str) {
+        
+        this.printf.accept(str);
     }
     
 }
