@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.action.item.ActionSetFood;
 import com.blamejared.crafttweaker.api.action.item.ActionSetItemProperty;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.IntData;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
@@ -905,6 +906,15 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     default IItemStack getIngredient() {
         
         return this;
+    }
+    
+    @Override
+    default IData asIData() {
+        
+        final IData data = IIngredient.super.asIData();
+        assert data instanceof MapData;
+        data.put("count", new IntData(this.getAmount()));
+        return data;
     }
     
     IItemStack modify(Consumer<ItemStack> stackModifier);
