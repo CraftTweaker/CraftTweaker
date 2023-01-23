@@ -75,7 +75,7 @@ public final class RecipeCommands {
         handler.registerSubCommand(
                 "recipes",
                 "manager",
-                Component.translatable("crafttweaker.command.description.recipes.manager"),
+                new TranslatableComponent("crafttweaker.command.description.recipes.manager"),
                 builder -> builder.then(Commands.argument("type", RecipeTypeArgument.get()).executes(context -> {
                     final ServerPlayer player = context.getSource().getPlayerOrException();
                     return dumpRecipes(player, context.getArgument("type", IRecipeManager.class));
@@ -89,8 +89,7 @@ public final class RecipeCommands {
         
         dumpRecipes(player, it -> true);
         
-        CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.recipes.list")), CommandUtilities.getFormattedLogFile())
-                .withStyle(ChatFormatting.GREEN)), player);
+        CommandUtilities.send(CommandUtilities.openingLogFile(new TranslatableComponent("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(new TranslatableComponent("crafttweaker.command.misc.recipes.list")), CommandUtilities.getFormattedLogFile()).withStyle(ChatFormatting.GREEN)), player);
         return Command.SINGLE_SUCCESS;
     }
     
