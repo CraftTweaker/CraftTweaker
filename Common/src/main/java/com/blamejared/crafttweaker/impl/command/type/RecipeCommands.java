@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.command.type;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.command.CommandUtilities;
+import com.blamejared.crafttweaker.api.command.argument.RecipeTypeArgument;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandlerRegistry;
@@ -12,6 +13,7 @@ import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.mojang.brigadier.Command;
 import net.minecraft.ChatFormatting;
+import net.minecraft.commands.Commands;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -74,14 +76,34 @@ public final class RecipeCommands {
                     return RecipeCommands.dump(player, stacks);
                 })
         );
+        handler.registerSubCommand(
+                "recipes",
+                "manager",
+                Component.translatable("crafttweaker.command.description.recipes.manager"),
+                builder -> builder.then(Commands.argument("type", RecipeTypeArgument.get()).executes(context -> {
+                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    return dumpRecipes(player, context.getArgument("type", IRecipeManager.class));
+                }))
+        );
     }
     
     private static int dumpRecipes(final Player player) {
         
         CraftTweakerAPI.LOGGER.info("Dumping all recipes!");
         
-        ((AccessRecipeManager) player.level.getRecipeManager()).crafttweaker$getRecipes()
-                .forEach((recipeType, map) -> dumpRecipe(recipeType, map.values(), it -> true, false));
+        dumpRecipes(player, it -> true);
+        
+        CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.recipes.list")), CommandUtilities.getFormattedLogFile())
+                .withStyle(ChatFormatting.GREEN)), player);
+        return Command.SINGLE_SUCCESS;
+    }
+    
+    private static int dumpRecipes(final Player player, final IRecipeManager<?> manager) {
+        
+        CraftTweakerAPI.LOGGER.info("Dumping recipes for manager " + manager.getCommandString() + "!");
+        
+        final RecipeType<?> type = manager.getRecipeType();
+        dumpRecipes(player, it -> Objects.equals(it, type));
         
         CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.recipes.list")), CommandUtilities.getFormattedLogFile())
                 .withStyle(ChatFormatting.GREEN)), player);
@@ -115,6 +137,15 @@ public final class RecipeCommands {
         CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.recipes.list")), CommandUtilities.getFormattedLogFile())
                 .withStyle(ChatFormatting.GREEN)), player);
         return Command.SINGLE_SUCCESS;
+    }
+    
+    private static void dumpRecipes(final Player player, final Predicate<RecipeType<?>> typeFilter) {
+        
+        ((AccessRecipeManager) player.level.getRecipeManager()).crafttweaker$getRecipes()
+                .entrySet()
+                .stream()
+                .filter(it -> typeFilter.test(it.getKey()))
+                .forEach(it -> dumpRecipe(it.getKey(), it.getValue().values(), recipe -> true, false));
     }
     
     private static void dumpRecipe(final RecipeType<?> type, final Collection<Recipe<?>> recipes, final Predicate<Recipe<?>> filter, final boolean hideEmpty) {

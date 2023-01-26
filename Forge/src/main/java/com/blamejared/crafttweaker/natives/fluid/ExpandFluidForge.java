@@ -35,7 +35,7 @@ public class ExpandFluidForge {
     @ZenCodeType.Method
     public static IFluidStack makeStack(Fluid internal, int amount) {
         
-        return new MCFluidStack(new FluidStack(internal, amount));
+        return IFluidStack.of(new FluidStack(internal, amount));
     }
     
 }

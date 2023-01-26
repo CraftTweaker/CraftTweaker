@@ -84,6 +84,8 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
         } catch(final Throwable e) {
             CraftTweakerAPI.LOGGER.error("Unable to execute script run", e);
             return;
+        } finally {
+            IngredientCacheBuster.release();
         }
         
         this.storeScriptsInRecipes(manager, scripts);
@@ -93,7 +95,6 @@ public class ScriptReloadListener extends SimplePreparableReloadListener<Void> {
             
             this.displayPatreonBranding();
         }
-        IngredientCacheBuster.release();
     }
     
     private void fixRecipeManager(final RecipeManager manager) {

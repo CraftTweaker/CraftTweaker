@@ -107,22 +107,6 @@ public class ListData implements IData {
         return false;
     }
     
-    private boolean containsList(List<IData> dataValues) {
-        
-        outer:
-        for(IData dataValue : dataValues) {
-            for(Tag value : getInternal()) {
-                if(TagToDataConverter.convert(value).contains(dataValue)) {
-                    continue outer;
-                }
-            }
-            
-            return false;
-        }
-        
-        return true;
-    }
-    
     @Override
     public boolean equalTo(IData other) {
         

@@ -59,6 +59,11 @@ public class IntArrayData implements IData {
     
     @Override
     public boolean contains(IData other) {
+    
+        if(other.isListable()) {
+            List<IData> dataValues = other.asList();
+            return dataValues != null && containsList(dataValues);
+        }
         
         return getInternal().contains(IntTag.valueOf(other.asInt()));
     }

@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
 import org.openzen.zencode.java.ZenCodeType;
@@ -16,6 +17,12 @@ import java.util.List;
 @NativeTypeRegistration(value = Potion.class, zenCodeName = "crafttweaker.api.item.alchemy.Potion")
 @TaggableElement("minecraft:potion")
 public class ExpandPotion {
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("registryName")
+    public static ResourceLocation getRegistryName(Potion internal){
+        return Registry.POTION.getKey(internal);
+    }
     
     @ZenCodeType.Method
     public static String getName(Potion internal, String prefix) {

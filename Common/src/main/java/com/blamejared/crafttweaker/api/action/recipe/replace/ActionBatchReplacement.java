@@ -49,7 +49,9 @@ public final class ActionBatchReplacement implements IRuntimeAction {
         
         final Collector<CharSequence, ?, String> joiner = Collectors.joining(",", "{", "}");
         return "Replacing in %s according to requests %s".formatted(
-                this.targetingRules.stream().map(IFilteringRule::describe).collect(joiner),
+                this.targetingRules.isEmpty() ? "everything" : this.targetingRules.stream()
+                        .map(IFilteringRule::describe)
+                        .collect(joiner),
                 this.requests.stream().map(ReplacementRequest::describe).collect(joiner)
         );
     }

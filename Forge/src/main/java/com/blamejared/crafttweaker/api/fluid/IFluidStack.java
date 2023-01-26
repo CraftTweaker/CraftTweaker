@@ -12,11 +12,34 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.fluid.IFluidStack")
 @Document("forge/api/fluid/IFluidStack")
 public interface IFluidStack extends CommandStringDisplayable {
+    
+    static Supplier<IFluidStack> EMPTY = () -> new MCFluidStack(FluidStack.EMPTY);
+    
+    static IFluidStack empty() {
+        
+        return EMPTY.get();
+    }
+    
+    static IFluidStack of(final FluidStack stack) {
+        
+        return new MCFluidStack(stack);
+    }
+    
+    static IFluidStack of(final FluidStack stack, final boolean mutable) {
+        
+        return mutable ? ofMutable(stack) : of(stack);
+    }
+    
+    static IFluidStack ofMutable(final FluidStack stack) {
+        
+        return new MCFluidStackMutable(stack);
+    }
     
     /**
      * Gets the registry name for the fluid this stack is representing.

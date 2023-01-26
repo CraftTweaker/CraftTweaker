@@ -33,7 +33,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -87,12 +86,16 @@ public interface IEventHelper {
             }
         }
         
-        Services.EVENT.getAttributeModifiers().keySet()
-                .stream()
-                .filter(ingredient -> ingredient.matches(IItemStack.of(stack)))
-                .map(Services.EVENT.getAttributeModifiers()::get)
-                .flatMap(Collection::stream)
-                .forEach(consumer -> consumer.accept(modifierBase));
+        IItemStack keyStack = IItemStack.of(stack);
+        for(Map.Entry<IIngredient, List<Consumer<ItemAttributeModifierBase>>> entry : Services.EVENT.getAttributeModifiers()
+                .entrySet()) {
+            
+            if(entry.getKey().matches(keyStack)) {
+                for(Consumer<ItemAttributeModifierBase> modifiers : entry.getValue()) {
+                    modifiers.accept(modifierBase);
+                }
+            }
+        }
     }
     
     
@@ -117,7 +120,8 @@ public interface IEventHelper {
                     
                     sendAndLog(player, Component.translatable("crafttweaker.command.info.block.properties"));
                     state.getProperties()
-                            .forEach(property -> sendAndLog(player, Component.literal("    " + property.getName()).withStyle(ChatFormatting.YELLOW)
+                            .forEach(property -> sendAndLog(player, Component.literal("    " + property.getName())
+                                    .withStyle(ChatFormatting.YELLOW)
                                     .append(Component.literal(": ").withStyle(ChatFormatting.WHITE))
                                     .append(Component.literal(state.getValue(property)
                                             .toString()).withStyle(ChatFormatting.AQUA))));

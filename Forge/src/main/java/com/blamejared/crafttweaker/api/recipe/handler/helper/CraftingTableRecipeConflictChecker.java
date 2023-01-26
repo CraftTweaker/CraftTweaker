@@ -9,7 +9,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 
-import java.util.BitSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -96,33 +95,7 @@ public final class CraftingTableRecipeConflictChecker {
             return false;
         }
         
-        return craftShapelessRecipeVirtually(first, second);
-    }
-    
-    private static boolean craftShapelessRecipeVirtually(final List<Ingredient> first, final List<Ingredient> second) {
-        
-        final BitSet visitData = new BitSet(second.size());
-        
-        for(final Ingredient target : first) {
-            
-            for(int j = 0; j < second.size(); ++j) {
-                
-                if(visitData.get(j)) {
-                    continue;
-                }
-                
-                final Ingredient attempt = second.get(j);
-                
-                if(IngredientUtil.canConflict(target, attempt)) {
-                    
-                    visitData.set(j);
-                    break;
-                }
-            }
-        }
-        
-        // Since all ingredients must have been used, visitData must have been set fully to 1
-        return visitData.nextClearBit(0) == second.size();
+        return IngredientUtil.doIngredientsConflict(first, second);
     }
     
 }

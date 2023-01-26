@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker.api.bracket;
 
 import com.blamejared.crafttweaker.api.annotation.BracketDumper;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.fluid.MCFluidStack;
+import com.blamejared.crafttweaker.api.fluid.IFluidStack;
 import com.blamejared.crafttweaker.natives.tool.ExpandToolAction;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraftforge.common.ToolAction;
@@ -32,7 +32,7 @@ public final class ForgeBracketDumpers {
         
         return ForgeRegistries.FLUIDS.getValues()
                 .stream()
-                .map(fluid -> new MCFluidStack(new FluidStack(fluid, 1)).getCommandString())
+                .map(fluid -> IFluidStack.of(new FluidStack(fluid, 1)).getCommandString())
                 .collect(Collectors.toList());
     }
     
