@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
  *
  * <p>An instance of this class can be obtained through {@link com.blamejared.crafttweaker.api.CraftTweakerAPI}.</p>
  *
- * @since 10.1.0
+ * @since 11.0.0
  */
 public interface ILoggerRegistry {
     
@@ -27,7 +27,7 @@ public interface ILoggerRegistry {
      *
      * @return A {@link Logger} instance tailored to the given system.
      *
-     * @since 10.1.0
+     * @since 11.0.0
      */
     Logger getLoggerFor(final String system);
     

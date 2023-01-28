@@ -14,15 +14,31 @@ import java.util.function.Supplier;
  * documentation of the various methods for additional details relating to the specific system.</p>
  *
  * @see CraftTweakerAPI#getLogger(String)
- * @since 10.1.0
+ * @since 11.0.0
  */
 public final class CommonLoggers {
     
+    private static final Supplier<Logger> API = loggerSupplier(CraftTweakerConstants.MOD_NAME);
     private static final Supplier<Logger> COMMANDS = loggerSupplier(ctSystem("Commands"));
-    private static final Supplier<Logger> OWN = loggerSupplier(CraftTweakerConstants.MOD_NAME);
     private static final Supplier<Logger> ZEN_CODE = loggerSupplier(ctSystem("ZenCode"));
     
     private CommonLoggers() {}
+    
+    /**
+     * Obtains the logger used by the CraftTweaker API.
+     *
+     * <p>Integration writers should <strong><em>NEVER</em></strong> need usage of this logger: it is merely provided as
+     * a way for the CraftTweaker API to log messages safely. Integration writers should instead prefer their own
+     * logger, for ease of system tracking.</p>
+     *
+     * @return The logger specifically used by the CraftTweaker API.
+     *
+     * @since 11.0.0
+     */
+    public static Logger own() {
+        
+        return API.get();
+    }
     
     /**
      * Obtains the logger for the command system.
@@ -37,27 +53,11 @@ public final class CommonLoggers {
      *
      * @return The logger for the command system.
      *
-     * @since 10.1.0
+     * @since 11.0.0
      */
     public static Logger commands() {
         
         return COMMANDS.get();
-    }
-    
-    /**
-     * Obtains the logger used by the CraftTweaker API.
-     *
-     * <p>Integration writers should <strong><em>NEVER</em></strong> need usage of this logger: it is merely provided as
-     * a way for the CraftTweaker API to log messages safely. Integration writers should instead prefer their own
-     * logger, for ease of system tracking.</p>
-     *
-     * @return The CraftTweaker API's own logger.
-     *
-     * @since 10.1.0
-     */
-    public static Logger own() {
-        
-        return OWN.get();
     }
     
     /**
@@ -70,7 +70,7 @@ public final class CommonLoggers {
      *
      * @return The logger for the ZenCode system.
      *
-     * @since 10.1.0
+     * @since 11.0.0
      */
     public static Logger zenCode() {
         

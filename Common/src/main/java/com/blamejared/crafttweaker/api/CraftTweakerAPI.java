@@ -75,7 +75,7 @@ public final class CraftTweakerAPI {
      *
      * @return The logger registry.
      *
-     * @since 10.1.0
+     * @since 11.0.0
      */
     public static ILoggerRegistry getLoggerRegistry() {
         
@@ -118,7 +118,7 @@ public final class CraftTweakerAPI {
      * @return A {@link Logger} instance tailored to the given system.
      *
      * @see ILoggerRegistry#getLoggerFor(String)
-     * @since 10.1.0
+     * @since 11.0.0
      */
     public static Logger getLogger(final String systemName) {
         

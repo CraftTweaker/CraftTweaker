@@ -62,7 +62,7 @@ public interface IAction {
      *
      * @return The name of the system that is responsible for this action.
      *
-     * @since 10.1.0
+     * @since 11.0.0
      */
     String systemName();
     
@@ -123,7 +123,7 @@ public interface IAction {
      * the client thread when joining a server.
      * @implSpec By default, scripts are applied if the load source's ID matches
      * {@link CraftTweakerConstants#RELOAD_LISTENER_SOURCE_ID}.
-     * @since 10.1.0
+     * @since 11.0.0
      */
     default boolean shouldApplyOn(final IScriptLoadSource source, final Logger logger) {
         
@@ -188,7 +188,7 @@ public interface IAction {
      *
      * @return If this loader matches the one specified as a parameter.
      *
-     * @since 10.1.0
+     * @since 11.0.0
      */
     default boolean assertLoader(final IScriptLoader loader, final Logger logger) {
         
@@ -219,7 +219,7 @@ public interface IAction {
      *
      * @implNote Invoking this method is equivalent to calling {@link CraftTweakerAPI#getLogger(String)} with the
      * system name of {@link #systemName()}.
-     * @since 10.1.0
+     * @since 11.0.0
      */
     default Logger logger() {
         

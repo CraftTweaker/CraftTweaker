@@ -49,7 +49,7 @@ public interface IPreprocessor extends Comparator<IScriptFile> {
     /**
      * Logger that can be used within a preprocessor to log messages.
      *
-     * @since 10.1.0
+     * @since 11.0.0
      */
     Logger PREPROCESSOR_LOGGER = CommonLoggers.zenCode();
     
