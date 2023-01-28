@@ -55,7 +55,9 @@ public interface IAction {
      * <p>The system usually corresponds to the name of the mod that created the action and is thus attempting to apply
      * it. For example, adding a recipe is done through CraftTweaker, so the system name is {@code "CraftTweaker"}. Mods
      * that have various components or would like to separate various integrations from each other can return more
-     * complex strings.</p>
+     * complex strings. In other words, if the class that implements this interface belongs to mod <em>Foo</em>, then
+     * the system name should be {@code "Foo"} (or {@code "Foo-Bar"} where <em>Bar</em> is the name of the subsystem) in
+     * almost all cases.</p>
      *
      * <p>Note that the system name will be used for logging, therefore it is suggested to avoid overly verbose names or
      * acronyms that are not widely known. Returning {@code null} or an empty name is disallowed.</p>
