@@ -71,7 +71,7 @@ public class CraftTweakerCommon {
     
     public static Logger logger() {
         
-        return CommonLoggers.own();
+        return CommonLoggers.api();
     }
     
     public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, Commands.CommandSelection environment) {

@@ -40,7 +40,7 @@ public class CTShapelessRecipeBase implements CraftingRecipe {
         boolean containsNull = false;
         for(IIngredient ingredient : ingredients) {
             if(ingredient == null || ingredient.asVanillaIngredient().isEmpty()) {
-                CommonLoggers.own()
+                CommonLoggers.api()
                         .warn("Shapeless recipe with ID '{}' contains null or empty ingredients, removing entries!", resourceLocation);
                 containsNull = true;
                 break;

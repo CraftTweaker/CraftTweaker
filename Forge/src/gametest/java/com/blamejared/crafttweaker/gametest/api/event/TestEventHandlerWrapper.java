@@ -21,7 +21,7 @@ public class TestEventHandlerWrapper<T extends Event> implements Consumer<T> {
         try {
             consumer.accept(t);
         } catch(Throwable throwable) {
-            CommonLoggers.own().error("Error occurred in event handler", throwable);
+            CommonLoggers.api().error("Error occurred in event handler", throwable);
         }
         MinecraftForge.EVENT_BUS.unregister(this);
     }

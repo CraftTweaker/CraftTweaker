@@ -136,13 +136,13 @@ public class ExpandBlockState {
         
         Property property = internal.getBlock().getStateDefinition().getProperty(name);
         if(property == null) {
-            CommonLoggers.own().warn("Invalid property name");
+            CommonLoggers.api().warn("Invalid property name");
         } else {
             Optional<Comparable> propValue = property.getValue(value);
             if(propValue.isPresent()) {
                 return internal.setValue(property, propValue.get());
             }
-            CommonLoggers.own().warn("Invalid property value");
+            CommonLoggers.api().warn("Invalid property value");
         }
         return internal;
     }
@@ -177,7 +177,7 @@ public class ExpandBlockState {
         if(prop != null) {
             return internal.getValue(prop).toString();
         }
-        CommonLoggers.own().warn("Invalid property name");
+        CommonLoggers.api().warn("Invalid property name");
         return "";
     }
     
@@ -199,7 +199,7 @@ public class ExpandBlockState {
             prop.getPossibleValues().forEach(v -> values.add(v.toString()));
             return values;
         }
-        CommonLoggers.own().warn("Invalid property name");
+        CommonLoggers.api().warn("Invalid property name");
         return ImmutableList.of();
     }
     

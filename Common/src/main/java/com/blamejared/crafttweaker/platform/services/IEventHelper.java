@@ -158,7 +158,7 @@ public interface IEventHelper {
     private static void sendAndLog(Player player, MutableComponent component) {
         
         ExpandPlayer.sendMessage(player, component);
-        CommonLoggers.own().info(component.getString());
+        CommonLoggers.api().info(component.getString());
     }
     
 }

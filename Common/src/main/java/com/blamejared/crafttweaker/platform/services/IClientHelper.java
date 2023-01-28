@@ -64,7 +64,7 @@ public interface IClientHelper {
                 try {
                     function.apply(ctStack, lines, context);
                 } catch(final Exception exception) {
-                    CommonLoggers.own().error(
+                    CommonLoggers.api().error(
                             "Unable to run one of the tooltip functions for {} on {} due to an error (for experts, refer to {})",
                             ingredient.getCommandString(),
                             ctStack.getCommandString(),
