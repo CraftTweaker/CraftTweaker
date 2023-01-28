@@ -13,6 +13,7 @@ import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunManager;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptDiscoveryConfiguration;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.helper.FileGathererHelper;
+import com.blamejared.crafttweaker.platform.Services;
 import com.google.common.base.Suppliers;
 import org.apache.logging.log4j.Logger;
 import org.openzen.zencode.shared.SourceFile;
@@ -45,6 +46,8 @@ public final class ScriptRunManager implements IScriptRunManager {
                 .reduce(noop, Comparator::thenComparing, Comparator::thenComparing)
                 .thenComparing(IScriptFile::name);
     });
+    
+    private static final boolean DEVELOPMENT = Services.PLATFORM.isDevelopmentEnvironment();
     
     private final Logger logger;
     private final Map<IScriptLoader, RunInfoQueue> previousRunQueues;
@@ -248,7 +251,12 @@ public final class ScriptRunManager implements IScriptRunManager {
     private Logger determineLoggerForAction(final IAction action) {
         
         // Do not use action.logger(), as malicious mods might override it to make stuff not show up in our logger
-        return CraftTweakerAPI.getLogger(this.checkSystemName(action));
+        final Logger logger = CraftTweakerAPI.getLogger(this.checkSystemName(action));
+        if(DEVELOPMENT && logger != action.logger()) {
+            final String message = "Action %s attempted to hijack the logger instance: expected %s, got %s".formatted(action, logger, action.logger());
+            throw new IllegalStateException(message);
+        }
+        return logger;
     }
     
     private String checkSystemName(final IAction action) {
