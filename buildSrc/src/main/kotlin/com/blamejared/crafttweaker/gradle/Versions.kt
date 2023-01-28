@@ -2,7 +2,7 @@ package com.blamejared.crafttweaker.gradle
 
 object Versions {
 
-    const val MOD = "10.0"
+    const val MOD = "10.1"
     const val MOD_JAVA = "17"
     const val ZENCODE = "0.3.8"
     const val ZENCODE_JAVA = "8"

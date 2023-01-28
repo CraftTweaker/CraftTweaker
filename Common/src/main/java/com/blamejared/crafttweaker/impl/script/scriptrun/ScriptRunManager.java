@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRun;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunInfo;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunManager;
+import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptDiscoveryConfiguration;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.blamejared.crafttweaker.impl.helper.FileGathererHelper;
 import com.google.common.base.Suppliers;
@@ -16,16 +17,17 @@ import org.openzen.zencode.shared.SourceFile;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public final class ScriptRunManager implements IScriptRunManager {
@@ -67,7 +69,13 @@ public final class ScriptRunManager implements IScriptRunManager {
     @Override
     public IScriptRun createScriptRun(final Path root, final ScriptRunConfiguration configuration) {
         
-        return this.createScriptRun(root, this.lookupScriptFiles(root), configuration);
+        return this.createScriptRun(root, new ScriptDiscoveryConfiguration(ScriptDiscoveryConfiguration.SuspiciousNamesBehavior.WARN), configuration);
+    }
+    
+    @Override
+    public IScriptRun createScriptRun(final Path root, final ScriptDiscoveryConfiguration discoveryConfiguration, final ScriptRunConfiguration runConfiguration) {
+        
+        return this.createScriptRun(root, this.lookupScriptFiles(root, discoveryConfiguration), runConfiguration);
     }
     
     @Override
@@ -125,16 +133,35 @@ public final class ScriptRunManager implements IScriptRunManager {
         );
     }
     
-    private List<Path> lookupScriptFiles(final Path root) {
+    private List<Path> lookupScriptFiles(final Path root, final ScriptDiscoveryConfiguration discoveryConfiguration) {
         
         try {
-            final List<Path> files = new ArrayList<>();
-            final PathMatcher matcher = root.getFileSystem().getPathMatcher("glob:**.zs");
-            Files.walkFileTree(root, FileGathererHelper.of(matcher, files::add));
+            final FileSystem fs = root.getFileSystem();
+            
+            final PathMatcher correctMatcher = fs.getPathMatcher("glob:**.zs");
+            final PathMatcher suspiciousMatcher = fs.getPathMatcher("glob:**.zs.txt");
+            final PathMatcher combinedMatcher = it -> correctMatcher.matches(it) || suspiciousMatcher.matches(it);
+            
+            final List<Path> files = SuspiciousAwarePathList.of(suspiciousMatcher, this.makeSuspiciousConsumer(root, discoveryConfiguration));
+            Files.walkFileTree(root, FileGathererHelper.of(combinedMatcher, files::add));
+            
+            discoveryConfiguration.retainer().retain(root, files);
+            
             return files;
         } catch(final IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+    
+    private Consumer<Path> makeSuspiciousConsumer(final Path root, final ScriptDiscoveryConfiguration configuration) {
+        
+        return switch(configuration.suspiciousNamesBehavior()) {
+            case IGNORE -> it -> {};
+            case WARN -> it -> CraftTweakerAPI.LOGGER.warn(
+                    "Identified file with suspicious name '{}': ignoring; if this is supposed to be a script, please correct the name",
+                    root.toAbsolutePath().relativize(it.toAbsolutePath())
+            );
+        };
     }
     
     private void updateCurrentRunInfo(final RunInfo current) {
