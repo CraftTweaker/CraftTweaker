@@ -297,7 +297,7 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
         return NameUtil.fixing(
                 name,
                 // TODO("Or CommonLoggers.zenCode()?")
-                (fixed, mistakes) -> CommonLoggers.own().warn(
+                (fixed, mistakes) -> CommonLoggers.api().warn(
                         "{}Invalid recipe name '{}', mistakes:\n{}\nNew recipe name: {}",
                         position == CodePosition.UNKNOWN ? "" : position + ": ",
                         name,

@@ -34,7 +34,7 @@ public class ExpandItemTag {
         
         TagKey<?> tagKey = internal.getTagKey();
         if(!internal.exists() && !Services.PLATFORM.isDataGen()) {
-            CommonLoggers.own()
+            CommonLoggers.api()
                     .warn("Tag '{}' does not exist, replacing with empty IIngredient", internal.getCommandString());
             return IIngredientEmpty.INSTANCE;
         }

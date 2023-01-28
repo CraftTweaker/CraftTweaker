@@ -35,7 +35,7 @@ public final class CommonLoggers {
      *
      * @since 11.0.0
      */
-    public static Logger own() {
+    public static Logger api() {
         
         return API.get();
     }

@@ -43,7 +43,7 @@ public class CTShapelessRecipe extends ShapelessRecipe {
         boolean containsNull = false;
         for(IIngredient ingredient : ingredients) {
             if(ingredient == null || ingredient.asVanillaIngredient().isEmpty()) {
-                CommonLoggers.own().warn("Shapeless recipe with ID '{}' contains null or empty ingredients, removing entries!", getId());
+                CommonLoggers.api().warn("Shapeless recipe with ID '{}' contains null or empty ingredients, removing entries!", getId());
                 containsNull = true;
                 break;
             }

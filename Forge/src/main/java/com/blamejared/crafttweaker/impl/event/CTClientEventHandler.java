@@ -49,7 +49,7 @@ public class CTClientEventHandler {
                     e.setResult(nameTagResult.getResult() == null ? Event.Result.DEFAULT : nameTagResult.getResult() ? Event.Result.ALLOW : Event.Result.DENY);
                     e.setContent(nameTagResult.getContent());
                 } catch(final Exception exception) {
-                    CommonLoggers.own().error(
+                    CommonLoggers.api().error(
                             "Unable to run one of the name tag functions for {} due to an error (for experts, refer to {})",
                             ExpandEntityType.getCommandString(entity.getType()),
                             Services.CLIENT.NAMETAGS.get(predicate).getClass().getName()
