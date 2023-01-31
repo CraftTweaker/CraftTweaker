@@ -4,7 +4,10 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.action.item.ActionSetFood;
 import com.blamejared.crafttweaker.api.action.item.ActionSetItemProperty;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.data.IntData;
 import com.blamejared.crafttweaker.api.data.MapData;
+import com.blamejared.crafttweaker.api.data.base.IData;
+import com.blamejared.crafttweaker.api.data.base.converter.JSONConverter;
 import com.blamejared.crafttweaker.api.data.base.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.IIngredientWithAmount;
@@ -895,6 +898,14 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
             return Ingredient.of(getImmutableInternal());
         }
         return Services.REGISTRY.getIngredientPartialTag(getImmutableInternal());
+    }
+    
+    @Override
+    default IData asIData() {
+        
+        final MapData data = (MapData) JSONConverter.convert(this.asVanillaIngredient().toJson());
+        data.put("count", new IntData(this.getAmount()));
+        return data;
     }
     
     @ZenCodeType.Method
