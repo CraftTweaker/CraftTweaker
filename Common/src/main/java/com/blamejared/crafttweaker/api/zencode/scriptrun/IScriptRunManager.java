@@ -21,6 +21,10 @@ public interface IScriptRunManager {
      * report a {@linkplain java.nio.file.attribute.BasicFileAttributes#isRegularFile() regular file} and whose
      * {@linkplain Path#getFileName() file name} ends with {@code .zs}.</p>
      *
+     * <p>During the discovery phase, any file with a
+     * {@linkplain ScriptDiscoveryConfiguration.SuspiciousNamesBehavior suspicious name} will raise a warning in the
+     * logs.</p>
+     *
      * @param configuration The configuration of the script run.
      *
      * @return A script run that carries out the specified operations.
@@ -38,6 +42,10 @@ public interface IScriptRunManager {
      * {@linkplain java.nio.file.attribute.BasicFileAttributes#isRegularFile() regular file} and whose
      * {@linkplain Path#getFileName() file name} ends with {@code .zs}.</p>
      *
+     * <p>During the discovery phase, any file with a
+     * {@linkplain ScriptDiscoveryConfiguration.SuspiciousNamesBehavior suspicious name} will raise a warning in the
+     * logs.</p>
+     *
      * @param root          The root {@link Path} from which CraftTweaker should look for scripts.
      * @param configuration The configuration of the script run.
      *
@@ -46,6 +54,25 @@ public interface IScriptRunManager {
      * @since 9.1.0
      */
     IScriptRun createScriptRun(final Path root, final ScriptRunConfiguration configuration);
+    
+    /**
+     * Creates an {@link IScriptRun} with the specified {@link ScriptRunConfiguration} executing all valid scripts
+     * discovered according to the given {@link ScriptDiscoveryConfiguration} from the given {@code root}.
+     *
+     * <p>In this instance, a valid script file is identified by a {@link Path} whose
+     * {@link java.nio.file.attribute.BasicFileAttributes} report a
+     * {@linkplain java.nio.file.attribute.BasicFileAttributes#isRegularFile() regular file} and whose
+     * {@linkplain Path#getFileName() file name} ends with {@code .zs}.</p>
+     *
+     * @param root                   The root {@link Path} from which CraftTweaker should look for scripts.
+     * @param discoveryConfiguration The configuration for the discovery process.
+     * @param runConfiguration       The configuration of the script run.
+     *
+     * @return A script run that carries out the specified operations.
+     *
+     * @since 10.1.0
+     */
+    IScriptRun createScriptRun(final Path root, final ScriptDiscoveryConfiguration discoveryConfiguration, final ScriptRunConfiguration runConfiguration);
     
     /**
      * Creates an {@link IScriptRun} with the specified {@link ScriptRunConfiguration} executing the script files in

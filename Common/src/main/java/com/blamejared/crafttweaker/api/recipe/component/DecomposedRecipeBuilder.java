@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.recipe.component;
 
 import com.blamejared.crafttweaker.api.util.GenericUtil;
+import com.blamejared.crafttweaker.platform.Services;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,8 @@ import java.util.Set;
 public final class DecomposedRecipeBuilder {
     
     private static final class SimpleDecomposedRecipe implements IDecomposedRecipe {
+        
+        private static final boolean FAST_PATH = !Services.PLATFORM.isDevelopmentEnvironment();
         
         private final Map<IRecipeComponent<?>, List<?>> components;
         
@@ -46,6 +49,10 @@ public final class DecomposedRecipeBuilder {
         }
         
         private <C> IRecipeComponent<C> verify(final IRecipeComponent<C> component) {
+            
+            if(FAST_PATH) {
+                return component;
+            }
             
             try {
                 return IRecipeComponent.find(component.id());
