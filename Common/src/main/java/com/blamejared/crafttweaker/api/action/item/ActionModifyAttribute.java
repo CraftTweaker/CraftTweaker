@@ -38,12 +38,9 @@ public class ActionModifyAttribute implements IUndoableAction {
     @Override
     public void undo() {
         
-        Services.EVENT.getAttributeModifiers().keySet()
-                .stream()
-                .filter(ingredient::contains).forEach(key -> {
-                    Services.EVENT.getAttributeModifiers().get(key).removeIf(consumer::equals);
-                });
-        
+        Services.EVENT.getAttributeModifiers().keySet().stream().filter(ingredient::contains).forEach(key -> {
+            Services.EVENT.getAttributeModifiers().getOrDefault(key, new ArrayList<>()).removeIf(consumer::equals);
+        });
     }
     
     @Override

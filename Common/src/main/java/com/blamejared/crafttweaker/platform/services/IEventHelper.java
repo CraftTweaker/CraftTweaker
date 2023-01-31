@@ -33,7 +33,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public interface IEventHelper {
@@ -84,12 +89,16 @@ public interface IEventHelper {
             }
         }
         
-        Services.EVENT.getAttributeModifiers().keySet()
-                .stream()
-                .filter(ingredient -> ingredient.matches(Services.PLATFORM.createMCItemStackMutable(stack)))
-                .map(Services.EVENT.getAttributeModifiers()::get)
-                .flatMap(Collection::stream)
-                .forEach(consumer -> consumer.accept(modifierBase));
+        IItemStack keyStack = Services.PLATFORM.createMCItemStack(stack);
+        for(Map.Entry<IIngredient, List<Consumer<ItemAttributeModifierBase>>> entry : Services.EVENT.getAttributeModifiers()
+                .entrySet()) {
+            
+            if(entry.getKey().matches(keyStack)) {
+                for(Consumer<ItemAttributeModifierBase> modifiers : entry.getValue()) {
+                    modifiers.accept(modifierBase);
+                }
+            }
+        }
     }
     
     
