@@ -3,6 +3,9 @@ package com.blamejared.crafttweaker.api.ingredient;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
+import com.blamejared.crafttweaker.api.data.IntData;
+import com.blamejared.crafttweaker.api.data.MapData;
+import com.blamejared.crafttweaker.api.data.base.IData;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -28,4 +31,11 @@ public interface IIngredientWithAmount extends CommandStringDisplayable {
     @ZenCodeType.Getter("amount")
     int getAmount();
     
+    @ZenCodeType.Method
+    @ZenCodeType.Caster(implicit = true)
+    default IData asIData() {
+        MapData data = this.getIngredient().asMapData();
+        data.put("count", new IntData(this.getAmount()));
+        return data;
+    }
 }
