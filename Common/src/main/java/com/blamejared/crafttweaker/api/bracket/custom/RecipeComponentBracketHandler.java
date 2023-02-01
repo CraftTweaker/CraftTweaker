@@ -7,10 +7,13 @@ import com.blamejared.crafttweaker.api.util.ParseUtil;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.IZenClassRegistry;
 import com.google.gson.reflect.TypeToken;
+import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.minecraft.ResourceLocationException;
+import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.shared.CodePosition;
+import org.openzen.zenscript.codemodel.type.BasicTypeID;
 import org.openzen.zenscript.lexer.ParseException;
 import org.openzen.zenscript.lexer.ZSTokenParser;
 import org.openzen.zenscript.parser.BracketExpressionParser;
@@ -25,6 +28,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -35,6 +39,24 @@ import java.util.stream.Stream;
 public final class RecipeComponentBracketHandler implements BracketExpressionParser {
     
     private static final String BRACKET_METHOD_NAME = "bracket";
+    private static final Map<Class<?>, String> STDLIB_TYPES = Util.make(() -> {
+        final Map<Class<?>, String> m = new Object2ObjectArrayMap<>(); // Brute-force works better for small data-sets
+        
+        m.put(List.class, "stdlib.List");
+        m.put(String.class, "string");
+        
+        put(m, Void.class, void.class, BasicTypeID.VOID);
+        put(m, Boolean.class, boolean.class, BasicTypeID.BOOL);
+        put(m, Byte.class, byte.class, BasicTypeID.SBYTE);
+        put(m, Short.class, short.class, BasicTypeID.SHORT);
+        put(m, Integer.class, int.class, BasicTypeID.INT);
+        put(m, Long.class, long.class, BasicTypeID.LONG);
+        put(m, Float.class, float.class, BasicTypeID.FLOAT);
+        put(m, Double.class, double.class, BasicTypeID.DOUBLE);
+        put(m, Character.class, char.class, BasicTypeID.CHAR);
+        
+        return m;
+    });
     
     public RecipeComponentBracketHandler() {}
     
@@ -51,6 +73,12 @@ public final class RecipeComponentBracketHandler implements BracketExpressionPar
                 .stream()
                 .map(IRecipeComponent::getCommandString)
                 .distinct();
+    }
+    
+    private static void put(final Map<Class<?>, String> m, final Class<?> boxed, final Class<?> primitive, final BasicTypeID id) {
+        
+        m.put(primitive, id.name);
+        m.put(boxed, id.name + '?');
     }
     
     @Override
@@ -121,8 +149,10 @@ public final class RecipeComponentBracketHandler implements BracketExpressionPar
     
     private String className(final Class<?> clazz) {
         
-        if(clazz == List.class) { // TODO("Find a way to obtain full ZenCode type information within BEPs: ZenCode change?")
-            return "stdlib.List";
+        // TODO("Find a way to obtain full ZenCode type information within BEPs: ZenCode change?")
+        final String stdlibType = STDLIB_TYPES.get(clazz);
+        if(stdlibType != null) {
+            return stdlibType;
         }
         
         final IScriptLoader loader = CraftTweakerAPI.getScriptRunManager().currentRunInfo().loader();
