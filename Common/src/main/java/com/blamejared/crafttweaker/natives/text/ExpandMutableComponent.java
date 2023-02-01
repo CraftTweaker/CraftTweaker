@@ -34,6 +34,12 @@ public class ExpandMutableComponent {
         return internal.append(component);
     }
     
+    @ZenCodeType.Method
+    public static MutableComponent append(MutableComponent internal, MutableComponent component) {
+        
+        return internal.append(component);
+    }
+    
     @ZenCodeType.Operator(ZenCodeType.OperatorType.CAT)
     public static MutableComponent opCatString(MutableComponent internal, String content) {
         
@@ -42,6 +48,12 @@ public class ExpandMutableComponent {
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.CAT)
     public static MutableComponent opCatComponent(MutableComponent internal, Component content) {
+        
+        return append(internal, content);
+    }
+    
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.CAT)
+    public static MutableComponent opCatMutableComponent(MutableComponent internal, MutableComponent content) {
         
         return append(internal, content);
     }
@@ -58,6 +70,12 @@ public class ExpandMutableComponent {
         return append(internal, content);
     }
     
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.ADD)
+    public static MutableComponent opAddMutableComponent(MutableComponent internal, MutableComponent content) {
+        
+        return append(internal, content);
+    }
+    
     @ZenCodeType.Operator(ZenCodeType.OperatorType.SHL)
     public static MutableComponent opShiftLeftString(MutableComponent internal, String content) {
         
@@ -66,6 +84,12 @@ public class ExpandMutableComponent {
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.SHL)
     public static MutableComponent opShiftLeftComponent(MutableComponent internal, Component content) {
+        
+        return append(internal, content);
+    }
+    
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.SHL)
+    public static MutableComponent opShiftLeftMutableComponent(MutableComponent internal, MutableComponent content) {
         
         return append(internal, content);
     }
