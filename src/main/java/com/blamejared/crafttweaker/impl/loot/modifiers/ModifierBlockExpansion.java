@@ -5,12 +5,14 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.loot.modifiers.ILootModifier;
 import com.blamejared.crafttweaker.impl.loot.CTLootManager;
 import com.blamejared.crafttweaker.impl.loot.conditions.CTLootConditionBuilder;
+import com.blamejared.crafttweaker.impl.loot.conditions.crafttweaker.NotLootConditionTypeBuilder;
 import com.blamejared.crafttweaker.impl.loot.conditions.crafttweaker.ToolTypeLootConditionTypeBuilder;
 import com.blamejared.crafttweaker.impl.loot.conditions.vanilla.BlockStatePropertyLootConditionTypeBuilder;
 import com.blamejared.crafttweaker.impl.loot.conditions.vanilla.MatchToolLootConditionBuilder;
 import com.blamejared.crafttweaker.impl.predicate.StatePropertiesPredicate;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.block.Block;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraftforge.common.ToolType;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -111,6 +113,26 @@ public final class ModifierBlockExpansion {
                                 .withStatePropertiesPredicate(statePredicate)),
                 modifier
         );
+    }
+    
+    /**
+     * Adds an {@link ILootModifier} to the current block, only if it is not harvested with the silk touch enchantment.
+     *
+     * @param internal The block to add the drops to.
+     * @param name     The name of the loot modifier.
+     * @param modifier The loot modifier to add to the block.
+     */
+    @ZenCodeType.Method
+    public static void addNoSilkTouchLootModifier(final Block internal, final String name, final ILootModifier modifier) {
+        
+        CTLootManager.LOOT_MANAGER.getModifierManager().register(
+                name,
+                CTLootConditionBuilder.create()
+                        .add(BlockStatePropertyLootConditionTypeBuilder.class, bs -> bs.withBlock(internal))
+                        .add(NotLootConditionTypeBuilder.class, not -> not.withCondition(MatchToolLootConditionBuilder.class, matchTool ->
+                                matchTool.withPredicate(predicate ->
+                                        predicate.withEnchantmentPredicate(Enchantments.SILK_TOUCH, ignored -> {})))),
+                modifier);
     }
     
     /**
