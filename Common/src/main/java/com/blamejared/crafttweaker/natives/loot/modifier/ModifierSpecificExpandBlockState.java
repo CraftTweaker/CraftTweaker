@@ -5,8 +5,10 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.loot.LootManager;
 import com.blamejared.crafttweaker.api.loot.condition.LootConditions;
 import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
+import com.blamejared.crafttweaker.natives.loot.condition.ExpandInvertedLootItemCondition;
 import com.blamejared.crafttweaker.natives.loot.condition.ExpandLootItemBlockStatePropertyCondition;
 import com.blamejared.crafttweaker.natives.loot.condition.ExpandMatchTool;
+import com.blamejared.crafttweaker.natives.predicate.ExpandEnchantmentPredicate;
 import com.blamejared.crafttweaker.natives.predicate.ExpandItemPredicate;
 import com.blamejared.crafttweaker.natives.predicate.ExpandMinMaxBoundsInts;
 import com.blamejared.crafttweaker.natives.predicate.ExpandStatePropertiesPredicate;
@@ -14,6 +16,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.state.BlockState;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -56,6 +59,31 @@ public final class ModifierSpecificExpandBlockState {
                 LootConditions.only(
                         ExpandLootItemBlockStatePropertyCondition.create(internal.getBlock()).setProperties(properties)
                 ),
+                modifier
+        );
+    }
+    
+    /**
+     * Adds an {@link ILootModifier} to this block, with the given name, only if it is not harvested with the silk touch enchantment.
+     *
+     * @param internal The block to add the loot modifier to.
+     * @param name     The name of the loot modifier to add.
+     * @param modifier The loot modifier to add.
+     */
+    @ZenCodeType.Method
+    public static void addNoSilkTouchLootModifier(final BlockState internal, final String name, final ILootModifier modifier) {
+        
+        final StatePropertiesPredicate.Builder properties = ExpandStatePropertiesPredicate.create();
+        internal.getProperties().forEach(it -> properties.hasProperty(it, internal.getValue(it).toString()));
+        
+        LootManager.INSTANCE.getModifierManager().register(
+                name,
+                LootConditions.allOf(
+                        ExpandLootItemBlockStatePropertyCondition.create(internal.getBlock()).setProperties(properties),
+                        ExpandInvertedLootItemCondition.create(ExpandMatchTool.create(ExpandItemPredicate.create()
+                                .hasEnchantment(ExpandEnchantmentPredicate.create(Enchantments.SILK_TOUCH))))
+                ),
+                
                 modifier
         );
     }
