@@ -52,6 +52,11 @@ public class ListData implements ICollectionData {
         this(getArraySafe(array));
     }
     
+    @ZenCodeType.Method
+    public static ListData create() {
+        return new ListData();
+    }
+    
     private static List<IData> getArraySafe(IData... array) {
         
         if(array == null) {
