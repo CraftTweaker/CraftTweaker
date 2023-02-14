@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -21,6 +22,13 @@ public class ExpandItem {
     public static IItemStack getDefaultInstance(Item internal) {
         
         return IItemStack.of(internal.getDefaultInstance());
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("registryName")
+    public static ResourceLocation getRegistryName(Item internal) {
+        
+        return Registry.ITEM.getKey(internal);
     }
     
     @ZenCodeType.Method

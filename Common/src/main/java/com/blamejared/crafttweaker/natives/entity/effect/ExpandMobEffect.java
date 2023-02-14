@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Entity;
@@ -113,6 +114,13 @@ public class ExpandMobEffect {
     public static boolean isBeneficial(MobEffect internal) {
         
         return internal.isBeneficial();
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("registryName")
+    public static ResourceLocation getRegistryName(MobEffect internal) {
+        
+        return Registry.MOB_EFFECT.getKey(internal);
     }
     
     @ZenCodeType.Getter("commandString")

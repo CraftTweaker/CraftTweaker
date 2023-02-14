@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -51,6 +52,13 @@ public class ExpandAttribute {
     public static boolean isClientSyncable(Attribute internal) {
         
         return internal.isClientSyncable();
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("registryName")
+    public static ResourceLocation getRegistryName(Attribute internal) {
+        
+        return Registry.ATTRIBUTE.getKey(internal);
     }
     
     /**

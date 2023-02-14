@@ -141,6 +141,13 @@ public class ExpandEntityType {
             return internal.is(tag.getTagKey());
         }
     
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("registryName")
+    public static ResourceLocation getRegistryName(EntityType internal) {
+        
+        return Registry.ENTITY_TYPE.getKey(internal);
+    }
+    
     @ZenCodeType.Getter("commandString")
     public static String getCommandString(EntityType internal) {
         

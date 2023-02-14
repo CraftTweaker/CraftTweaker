@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -137,6 +138,13 @@ public class ExpandEnchantment {
     public static boolean isDiscoverable(Enchantment internal) {
         
         return internal.isDiscoverable();
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("registryName")
+    public static ResourceLocation getRegistryName(Enchantment internal) {
+        
+        return Registry.ENCHANTMENT.getKey(internal);
     }
     
     @ZenCodeType.Getter("commandString")

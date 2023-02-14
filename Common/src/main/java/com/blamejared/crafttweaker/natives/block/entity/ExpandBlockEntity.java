@@ -6,6 +6,8 @@ import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -71,6 +73,13 @@ public class ExpandBlockEntity {
     public static BlockState getBlockState(BlockEntity internal) {
         
         return internal.getBlockState();
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("registryName")
+    public static ResourceLocation getRegistryName(BlockEntity internal) {
+        
+        return Registry.BLOCK_ENTITY_TYPE.getKey(internal.getType());
     }
     
 }

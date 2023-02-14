@@ -7,8 +7,10 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -1164,6 +1166,13 @@ public class ExpandEntity {
     public static void setDeltaMovement(Entity internal, double xDelta, double yDelta, double zDelta) {
         
         internal.setDeltaMovement(xDelta, yDelta, zDelta);
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("registryName")
+    public static ResourceLocation getRegistryName(Entity internal) {
+        
+        return Registry.ENTITY_TYPE.getKey(internal.getType());
     }
     
 }
