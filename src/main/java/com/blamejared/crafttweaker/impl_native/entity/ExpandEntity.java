@@ -259,6 +259,15 @@ public class ExpandEntity {
         
         return internal.getTags();
     }
+
+    @ZenCodeType.Method
+    public static boolean hasTag(Entity internal, String tag) {
+       static boolean result;
+       for (String tags : internal.getTags()) {
+         if (tag == tags) { result = true; } else { result = false; }
+       }
+       return result;
+    }
     
     /**
      * Adds a new tag to the Entity.
