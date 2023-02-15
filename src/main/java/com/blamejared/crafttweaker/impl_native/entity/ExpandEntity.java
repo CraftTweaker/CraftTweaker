@@ -262,11 +262,7 @@ public class ExpandEntity {
 
     @ZenCodeType.Method
     public static boolean hasTag(Entity internal, String tag) {
-       static boolean result;
-       for (String tags : internal.getTags()) {
-         if (tag == tags) { result = true; } else { result = false; }
-       }
-       return result;
+       return internal.getTags().contains(tag);
     }
     
     /**
