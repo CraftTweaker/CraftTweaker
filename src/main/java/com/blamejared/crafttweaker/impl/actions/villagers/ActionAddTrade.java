@@ -8,7 +8,13 @@ import java.util.List;
 
 public class ActionAddTrade extends ActionTradeBase {
     
-    private final BasicTrade trade;
+    private final VillagerTrades.ITrade trade;
+    
+    public ActionAddTrade(VillagerProfession profession, int level, VillagerTrades.ITrade trade) {
+        
+        super(profession, level);
+        this.trade = trade;
+    }
     
     public ActionAddTrade(VillagerProfession profession, int level, BasicTrade trade) {
         

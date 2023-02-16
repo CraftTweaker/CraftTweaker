@@ -15,11 +15,13 @@ import com.blamejared.crafttweaker.impl.actions.villagers.ActionTradeBase;
 import com.blamejared.crafttweaker.impl.item.MCItemStack;
 import com.blamejared.crafttweaker.impl.item.MCItemStackMutable;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.MerchantOffer;
 import net.minecraft.util.Util;
 import net.minecraftforge.common.BasicTrade;
 import net.minecraftforge.common.MinecraftForge;
@@ -29,10 +31,13 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -179,6 +184,33 @@ public class CTVillagerTrades {
         });
     }
     
+    /**
+     * Adds a new custom trade with the selling and buying items determined by the custom MCMerchantOffer generator.
+     *
+     * The function will only run when the villager resolves the trade.
+     *
+     * @param profession     What profession this trade should be for.
+     * @param villagerLevel  The level the Villager needs to be.
+     * @param offerGenerator A generator method to make a new MerchantOffer.
+     *
+     * @docParam profession <profession:minecraft:farmer>
+     * @docParam villagerLevel 1
+     * @docParam offerGenerator (entity, random) => {
+     * return new MCMerchantOffer(<item:minecraft:dirt>, <item:minecraft:diamond>, 16, 0, 5);
+     * }
+     */
+    @ZenCodeType.Method
+    public void addTrade(VillagerProfession profession, int villagerLevel, BiFunction<Entity, Random, @ZenCodeType.Nullable MerchantOffer> offerGenerator) {
+        
+        addTradeInternal(profession, villagerLevel, new VillagerTrades.ITrade() {
+            @Nullable
+            @Override
+            public MerchantOffer getOffer(Entity trader, Random rand) {
+        
+                return offerGenerator.apply(trader, rand);
+            }
+        });
+    }
     
     /**
      * Adds a Villager Trade for emeralds for an Item. An example being, giving a villager 2 emeralds for an arrow.
@@ -724,6 +756,11 @@ public class CTVillagerTrades {
     public void removeAllWanderingTrades(int rarity) {
         
         removeWanderingTradeInternal(rarity, trade -> true);
+    }
+    
+    private void addTradeInternal(VillagerProfession profession, int villagerLevel, VillagerTrades.ITrade trade) {
+        
+        apply(new ActionAddTrade(profession, villagerLevel, trade), false);
     }
     
     private void addTradeInternal(VillagerProfession profession, int villagerLevel, BasicTrade trade) {
