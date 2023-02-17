@@ -25,6 +25,7 @@ public class IngredientTooltips {
     private static final IngredientMap<Pair<ITooltipFunction, ITooltipFunction>> TOOLTIP_FUNCTIONS = new IngredientMap<>();
     private static final IngredientMap<Pair<ITooltipFunction, ITooltipFunction>> SHIFT_TOOLTIP_FUNCTIONS = new IngredientMap<>();
     private static final IngredientMap<Pattern> REMOVED_TOOLTIPS = new IngredientMap<>();
+    private static final IngredientMap<Integer> REMOVED_TOOLTIPS_LINE = new IngredientMap<>();
     
     @ZenMethod
     public static void addTooltip(IIngredient ingredient, IFormattedText tooltip) {
@@ -55,6 +56,11 @@ public class IngredientTooltips {
     public static void removeTooltip(IIngredient ingredient, String regex) {
         CraftTweakerAPI.apply(new RemoveTooltipAction(ingredient, regex));
     }
+
+    @ZenMethod
+    public static void removeTooltip(IIngredient ingredient, int line)  {
+        CraftTweakerAPI.apply(new RemoveTooltipLineAction(ingredient, line));
+    }
     
     public static List<Pair<IFormattedText, IFormattedText>> getTooltips(IItemStack item) {
         return TOOLTIPS.getEntries(item);
@@ -74,6 +80,10 @@ public class IngredientTooltips {
     
     public static List<Pattern> getTooltipsToRemove(IItemStack item) {
         return REMOVED_TOOLTIPS.getEntries(item);
+    }
+
+    public static List<Integer> getTooltipLinesToRemove(IItemStack item) {
+        return REMOVED_TOOLTIPS_LINE.getEntries(item);
     }
     
     public static boolean shouldClearToolTip(IItemStack item) {
@@ -185,5 +195,26 @@ public class IngredientTooltips {
             return "Clearing tooltip for " + ingredient;
         }
         
+    }
+
+    private static class RemoveTooltipLineAction implements IAction {
+
+        private final IIngredient ingredient;
+        private final int line;
+
+        public RemoveTooltipLineAction(IIngredient ingredient, int line) {
+            this.ingredient = ingredient;
+            this.line = line;
+        }
+
+        @Override
+        public void apply() {
+            REMOVED_TOOLTIPS_LINE.register(ingredient, line);
+        }
+
+        @Override
+        public String describe() {
+            return "Removing tooltip for " + ingredient + " at line " + line;
+        }
     }
 }

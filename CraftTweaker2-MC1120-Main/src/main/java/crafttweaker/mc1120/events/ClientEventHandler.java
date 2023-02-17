@@ -28,6 +28,11 @@ public class ClientEventHandler {
             }
             
             List<String> toRemove = new ArrayList<>();
+            for (Integer line : IngredientTooltips.getTooltipLinesToRemove(itemStack)) {
+                if (line > 0 && line < ev.getToolTip().size()) {
+                    toRemove.add(ev.getToolTip().get(line));
+                }
+            }
             for(Pattern regex : IngredientTooltips.getTooltipsToRemove(itemStack)) {
                 for(String s : ev.getToolTip()) {
                     if(regex.matcher(s).find()) {
