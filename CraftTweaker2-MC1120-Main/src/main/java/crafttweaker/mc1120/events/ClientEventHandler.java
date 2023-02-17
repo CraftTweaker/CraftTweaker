@@ -24,6 +24,7 @@ public class ClientEventHandler {
             IItemStack itemStack = CraftTweakerMC.getIItemStack(ev.getItemStack());
             if(IngredientTooltips.shouldClearToolTip(itemStack)) {
                 ev.getToolTip().clear();
+                ev.getToolTip().add(ev.getItemStack().getDisplayName());
             }
             
             List<String> toRemove = new ArrayList<>();

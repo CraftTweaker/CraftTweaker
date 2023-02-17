@@ -176,7 +176,7 @@ public class IngredientTooltips {
         
         @Override
         public void apply() {
-            ingredient.getItems().forEach(item -> CLEARED_TOOLTIPS.add(item));
+            CLEARED_TOOLTIPS.addAll(ingredient.getItems());
         }
         
         
