@@ -20,48 +20,49 @@ public class ClientEventHandler {
     
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onItemTooltip(ItemTooltipEvent ev) {
+        List<String> tooltipList = ev.getToolTip();
         if(!ev.getItemStack().isEmpty()) {
-            IItemStack itemStack = CraftTweakerMC.getIItemStack(ev.getItemStack());
-            if(IngredientTooltips.shouldClearToolTip(itemStack)) {
-                ev.getToolTip().clear();
-                ev.getToolTip().add(ev.getItemStack().getDisplayName());
+            IItemStack itemStack = CraftTweakerMC.getIItemStackForMatching(ev.getItemStack());
+            Boolean clearTooltipFlag = IngredientTooltips.shouldClearToolTip(itemStack);
+            if(clearTooltipFlag != null) {
+                (clearTooltipFlag ? tooltipList.subList(1, tooltipList.size()) : tooltipList).clear();
             }
             
             List<String> toRemove = new ArrayList<>();
             for (Integer line : IngredientTooltips.getTooltipLinesToRemove(itemStack)) {
-                if (line > 0 && line < ev.getToolTip().size()) {
-                    toRemove.add(ev.getToolTip().get(line));
+                if (line > 0 && line < tooltipList.size()) {
+                    toRemove.add(tooltipList.get(line));
                 }
             }
             for(Pattern regex : IngredientTooltips.getTooltipsToRemove(itemStack)) {
-                for(String s : ev.getToolTip()) {
+                for(String s : tooltipList) {
                     if(regex.matcher(s).find()) {
                         toRemove.add(s);
                     }
                 }
             }
-            ev.getToolTip().removeAll(toRemove);
+            tooltipList.removeAll(toRemove);
             
             for(Pair<IFormattedText, IFormattedText> tooltip : IngredientTooltips.getTooltips(itemStack)) {
-                ev.getToolTip().add(((IMCFormattedString) tooltip.getKey()).getTooltipString());
+                tooltipList.add(((IMCFormattedString) tooltip.getKey()).getTooltipString());
             }
             for(Pair<ITooltipFunction, ITooltipFunction> tooltip : IngredientTooltips.getAdvancedTooltips(itemStack)) {
-                    ev.getToolTip().add(tooltip.getKey().process(itemStack));
+                    tooltipList.add(tooltip.getKey().process(itemStack));
             }
             
             boolean pressed = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
             for(Pair<IFormattedText, IFormattedText> tooltip : IngredientTooltips.getShiftTooltips(itemStack)) {
                 if(pressed) {
-                    ev.getToolTip().add(((IMCFormattedString) tooltip.getKey()).getTooltipString());
+                    tooltipList.add(((IMCFormattedString) tooltip.getKey()).getTooltipString());
                 } else if(tooltip.getValue() != null) {
-                    ev.getToolTip().add(((IMCFormattedString) tooltip.getValue()).getTooltipString());
+                    tooltipList.add(((IMCFormattedString) tooltip.getValue()).getTooltipString());
                 }
             }
             for(Pair<ITooltipFunction, ITooltipFunction> tooltip : IngredientTooltips.getAdvancedShiftTooltips(itemStack)) {
                 if(pressed) {
-                    ev.getToolTip().add(tooltip.getKey().process(itemStack));
+                    tooltipList.add(tooltip.getKey().process(itemStack));
                 } else if(tooltip.getValue() != null) {
-                    ev.getToolTip().add(tooltip.getValue().process(itemStack));
+                    tooltipList.add(tooltip.getValue().process(itemStack));
                 }
             }
         }

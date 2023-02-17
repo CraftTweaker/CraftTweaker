@@ -21,7 +21,7 @@ public class IngredientTooltips {
     
     private static final IngredientMap<Pair<IFormattedText, IFormattedText>> TOOLTIPS = new IngredientMap<>();
     private static final IngredientMap<Pair<IFormattedText, IFormattedText>> SHIFT_TOOLTIPS = new IngredientMap<>();
-    private static final List<IIngredient> CLEARED_TOOLTIPS = new LinkedList<>();
+    private static final IngredientMap<Boolean> CLEARED_TOOLTIPS = new IngredientMap<>();
     private static final IngredientMap<Pair<ITooltipFunction, ITooltipFunction>> TOOLTIP_FUNCTIONS = new IngredientMap<>();
     private static final IngredientMap<Pair<ITooltipFunction, ITooltipFunction>> SHIFT_TOOLTIP_FUNCTIONS = new IngredientMap<>();
     private static final IngredientMap<Pattern> REMOVED_TOOLTIPS = new IngredientMap<>();
@@ -48,8 +48,8 @@ public class IngredientTooltips {
     }
     
     @ZenMethod
-    public static void clearTooltip(IIngredient ingredient) {
-        CraftTweakerAPI.apply(new ClearTooltipAction(ingredient));
+    public static void clearTooltip(IIngredient ingredient, @Optional boolean leaveName) {
+        CraftTweakerAPI.apply(new ClearTooltipAction(ingredient, leaveName));
     }
     
     @ZenMethod
@@ -85,14 +85,13 @@ public class IngredientTooltips {
     public static List<Integer> getTooltipLinesToRemove(IItemStack item) {
         return REMOVED_TOOLTIPS_LINE.getEntries(item);
     }
-    
-    public static boolean shouldClearToolTip(IItemStack item) {
-        for(IIngredient cleared : CLEARED_TOOLTIPS) {
-            if(cleared.matches(item)) {
-                return true;
-            }
-        }
-        return false;
+
+    // Boolean wrapper as 3 status flag
+    // null -> don't clear tooltip, FALSE -> clear tooltip, TRUE -> clear tooltip but leave name
+    // a little dirty, but making an enum for the small thing is annoying
+    public static Boolean shouldClearToolTip(IItemStack item) {
+        List<Boolean> entries = CLEARED_TOOLTIPS.getEntries(item);
+        return entries.isEmpty() ? null : entries.get(0);
     }
     
     // ######################
@@ -179,14 +178,16 @@ public class IngredientTooltips {
     private static class ClearTooltipAction implements IAction {
         
         private final IIngredient ingredient;
-        
-        public ClearTooltipAction(IIngredient ingredient) {
+        private final boolean leaveName;
+
+        public ClearTooltipAction(IIngredient ingredient, boolean leaveItemName) {
             this.ingredient = ingredient;
+            this.leaveName = leaveItemName;
         }
-        
+
         @Override
         public void apply() {
-            CLEARED_TOOLTIPS.addAll(ingredient.getItems());
+            CLEARED_TOOLTIPS.register(ingredient, leaveName);
         }
         
         
