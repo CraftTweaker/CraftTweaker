@@ -21,10 +21,11 @@ public class IngredientTooltips {
     
     private static final IngredientMap<Pair<IFormattedText, IFormattedText>> TOOLTIPS = new IngredientMap<>();
     private static final IngredientMap<Pair<IFormattedText, IFormattedText>> SHIFT_TOOLTIPS = new IngredientMap<>();
-    private static final List<IIngredient> CLEARED_TOOLTIPS = new LinkedList<>();
+    private static final IngredientMap<Boolean> CLEARED_TOOLTIPS = new IngredientMap<>();
     private static final IngredientMap<Pair<ITooltipFunction, ITooltipFunction>> TOOLTIP_FUNCTIONS = new IngredientMap<>();
     private static final IngredientMap<Pair<ITooltipFunction, ITooltipFunction>> SHIFT_TOOLTIP_FUNCTIONS = new IngredientMap<>();
     private static final IngredientMap<Pattern> REMOVED_TOOLTIPS = new IngredientMap<>();
+    private static final IngredientMap<Integer> REMOVED_TOOLTIPS_LINE = new IngredientMap<>();
     
     @ZenMethod
     public static void addTooltip(IIngredient ingredient, IFormattedText tooltip) {
@@ -45,15 +46,25 @@ public class IngredientTooltips {
     public static void addShiftTooltip(IIngredient ingredient, ITooltipFunction function, @Optional ITooltipFunction showMessage) {
         CraftTweakerAPI.apply(new AddAdvancedTooltipAction(ingredient, function, true, showMessage));
     }
-    
+
     @ZenMethod
     public static void clearTooltip(IIngredient ingredient) {
-        CraftTweakerAPI.apply(new ClearTooltipAction(ingredient));
+        clearTooltip(ingredient, false);
+    }
+    
+    @ZenMethod
+    public static void clearTooltip(IIngredient ingredient, boolean leaveName) {
+        CraftTweakerAPI.apply(new ClearTooltipAction(ingredient, leaveName));
     }
     
     @ZenMethod
     public static void removeTooltip(IIngredient ingredient, String regex) {
         CraftTweakerAPI.apply(new RemoveTooltipAction(ingredient, regex));
+    }
+
+    @ZenMethod
+    public static void removeTooltip(IIngredient ingredient, int line)  {
+        CraftTweakerAPI.apply(new RemoveTooltipLineAction(ingredient, line));
     }
     
     public static List<Pair<IFormattedText, IFormattedText>> getTooltips(IItemStack item) {
@@ -75,14 +86,17 @@ public class IngredientTooltips {
     public static List<Pattern> getTooltipsToRemove(IItemStack item) {
         return REMOVED_TOOLTIPS.getEntries(item);
     }
-    
-    public static boolean shouldClearToolTip(IItemStack item) {
-        for(IIngredient cleared : CLEARED_TOOLTIPS) {
-            if(cleared.matches(item)) {
-                return true;
-            }
-        }
-        return false;
+
+    public static List<Integer> getTooltipLinesToRemove(IItemStack item) {
+        return REMOVED_TOOLTIPS_LINE.getEntries(item);
+    }
+
+    // Boolean wrapper as 3 status flag
+    // null -> don't clear tooltip, FALSE -> clear tooltip, TRUE -> clear tooltip but leave name
+    // a little dirty, but making an enum for the small thing is annoying
+    public static Boolean shouldClearToolTip(IItemStack item) {
+        List<Boolean> entries = CLEARED_TOOLTIPS.getEntries(item);
+        return entries.isEmpty() ? null : entries.get(0);
     }
     
     // ######################
@@ -169,14 +183,20 @@ public class IngredientTooltips {
     private static class ClearTooltipAction implements IAction {
         
         private final IIngredient ingredient;
-        
+        private final boolean leaveName;
+
         public ClearTooltipAction(IIngredient ingredient) {
-            this.ingredient = ingredient;
+            this(ingredient, false);
         }
-        
+
+        public ClearTooltipAction(IIngredient ingredient, boolean leaveItemName) {
+            this.ingredient = ingredient;
+            this.leaveName = leaveItemName;
+        }
+
         @Override
         public void apply() {
-            ingredient.getItems().forEach(item -> CLEARED_TOOLTIPS.add(item));
+            CLEARED_TOOLTIPS.register(ingredient, leaveName);
         }
         
         
@@ -185,5 +205,26 @@ public class IngredientTooltips {
             return "Clearing tooltip for " + ingredient;
         }
         
+    }
+
+    private static class RemoveTooltipLineAction implements IAction {
+
+        private final IIngredient ingredient;
+        private final int line;
+
+        public RemoveTooltipLineAction(IIngredient ingredient, int line) {
+            this.ingredient = ingredient;
+            this.line = line;
+        }
+
+        @Override
+        public void apply() {
+            REMOVED_TOOLTIPS_LINE.register(ingredient, line);
+        }
+
+        @Override
+        public String describe() {
+            return "Removing tooltip for " + ingredient + " at line " + line;
+        }
     }
 }
