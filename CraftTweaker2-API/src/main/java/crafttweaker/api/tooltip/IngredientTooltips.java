@@ -46,9 +46,14 @@ public class IngredientTooltips {
     public static void addShiftTooltip(IIngredient ingredient, ITooltipFunction function, @Optional ITooltipFunction showMessage) {
         CraftTweakerAPI.apply(new AddAdvancedTooltipAction(ingredient, function, true, showMessage));
     }
+
+    @ZenMethod
+    public static void clearTooltip(IIngredient ingredient) {
+        clearTooltip(ingredient, false);
+    }
     
     @ZenMethod
-    public static void clearTooltip(IIngredient ingredient, @Optional boolean leaveName) {
+    public static void clearTooltip(IIngredient ingredient, boolean leaveName) {
         CraftTweakerAPI.apply(new ClearTooltipAction(ingredient, leaveName));
     }
     
@@ -179,6 +184,10 @@ public class IngredientTooltips {
         
         private final IIngredient ingredient;
         private final boolean leaveName;
+
+        public ClearTooltipAction(IIngredient ingredient) {
+            this(ingredient, false);
+        }
 
         public ClearTooltipAction(IIngredient ingredient, boolean leaveItemName) {
             this.ingredient = ingredient;
