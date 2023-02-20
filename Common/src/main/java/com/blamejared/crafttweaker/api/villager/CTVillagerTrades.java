@@ -156,6 +156,23 @@ public class CTVillagerTrades {
     }
     
     /**
+     * Adds the specified {@link VillagerTrades.ItemListing} trade.
+     *
+     * @param profession    What profession this trade should be for.
+     * @param villagerLevel The level the Villager needs to be.
+     * @param trade         The trade to add.
+     *
+     * @docParam profession <profession:minecraft:farmer>
+     * @docParam villagerLevel 1
+     * @docParam trade TreasureMapForEmeralds.create(1, <resource:minecraft:ruined_portal>, "display Name", <constant:minecraft:world/map/decorationtype:mansion>, 16, 8)
+     */
+    @ZenCodeType.Method
+    public void addTrade(VillagerProfession profession, int villagerLevel, VillagerTrades.ItemListing trade) {
+        
+        addTradeInternal(profession, villagerLevel, trade);
+    }
+    
+    /**
      * Removes a `BasicTrade` Villager trade. `BasicTrades` are trades that allow any item, to any other item. It is only really used for mod recipes and is not used for any vanilla villager trade.
      *
      * @param profession    What profession this trade should be for.
@@ -508,6 +525,20 @@ public class CTVillagerTrades {
         });
     }
     
+    /**
+     * Adds the specific {@link VillagerTrades.ItemListing} trade to the Wandering Trader
+     *
+     * @param rarity The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
+     * @param trade  The trade to add.
+     *
+     * @docParam rarity 1
+     * @docParam trade TreasureMapForEmeralds.create(1, <resource:minecraft:ruined_portal>, "display Name", <constant:minecraft:world/map/decorationtype:mansion>, 16, 8)
+     */
+    @ZenCodeType.Method
+    public void addWanderingTrade(int rarity, VillagerTrades.ItemListing trade) {
+        
+        addWanderingTradeInternal(rarity, trade);
+    }
     
     /**
      * Adds a Wandering Trader Trade for emeralds for an Item. An example being, giving a Wandering Trader 2 emeralds for an arrow.
