@@ -11,6 +11,7 @@ import com.blamejared.crafttweaker.natives.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.natives.world.damage.ExpandDamageSource;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -18,6 +19,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
@@ -424,4 +426,26 @@ public class BracketHandlers {
                 .orElseThrow(() -> new IllegalArgumentException("Could not get sound event with name: <soundevent:" + tokens + ">! Sound event does not appear to exist!"));
     }
     
+    /**
+     * Gets the villager profession based on registry name. Throws an exception if it can't find the profession.
+     *
+     * @param tokens The profession's resource location
+     *
+     * @return The found profession
+     *
+     * @docParam tokens "minecraft:armorer"
+     */
+    @ZenCodeType.Method
+    @BracketResolver("villagertype")
+    public static VillagerType getVillagerType(String tokens) {
+        
+        final int length = tokens.split(":").length;
+        if(length == 0 || length > 2) {
+            throw new IllegalArgumentException("Could not get profession <villagertype:" + tokens + ">");
+        }
+        final ResourceLocation resourceLocation = new ResourceLocation(tokens);
+        
+        return Registry.VILLAGER_TYPE.getOptional(resourceLocation)
+                .orElseThrow(() -> new IllegalArgumentException("Could not get villagertype with name: <villagertype:" + tokens + ">! Villager Type does not appear to exist!"));
+    }
 }

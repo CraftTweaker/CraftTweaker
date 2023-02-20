@@ -1,14 +1,20 @@
 package com.blamejared.crafttweaker.api.villager;
 
+import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
-import javax.annotation.Nullable;
+import org.openzen.zencode.java.ZenCodeType;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
+@ZenRegister
+@ZenCodeType.Name("crafttweaker.api.villager.trade.type.BasicTradeListing")
+@Document("vanilla/api/villager/trade/type/BasicTradeListing")
 public class BasicTradeListing implements VillagerTrades.ItemListing, IBasicItemListing {
     
     protected final ItemStack price;
@@ -18,6 +24,7 @@ public class BasicTradeListing implements VillagerTrades.ItemListing, IBasicItem
     protected final int xp;
     protected final float priceMult;
     
+    @ZenCodeType.Constructor
     public BasicTradeListing(ItemStack price, ItemStack price2, ItemStack forSale, int maxTrades, int xp, float priceMult) {
         
         this.price = price;
@@ -28,16 +35,19 @@ public class BasicTradeListing implements VillagerTrades.ItemListing, IBasicItem
         this.priceMult = priceMult;
     }
     
+    @ZenCodeType.Constructor
     public BasicTradeListing(ItemStack price, ItemStack forSale, int maxTrades, int xp, float priceMult) {
         
         this(price, ItemStack.EMPTY, forSale, maxTrades, xp, priceMult);
     }
     
+    @ZenCodeType.Constructor
     public BasicTradeListing(int emeralds, ItemStack forSale, int maxTrades, int xp, float mult) {
         
         this(new ItemStack(Items.EMERALD, emeralds), forSale, maxTrades, xp, mult);
     }
     
+    @ZenCodeType.Constructor
     public BasicTradeListing(int emeralds, ItemStack forSale, int maxTrades, int xp) {
         
         this(new ItemStack(Items.EMERALD, emeralds), forSale, maxTrades, xp, 1);
@@ -50,31 +60,43 @@ public class BasicTradeListing implements VillagerTrades.ItemListing, IBasicItem
         return new MerchantOffer(price, price2, forSale, maxTrades, xp, priceMult);
     }
     
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("price")
     public ItemStack getPrice() {
         
         return price;
     }
     
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("price2")
     public ItemStack getPrice2() {
         
         return price2;
     }
     
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("forSale")
     public ItemStack getForSale() {
         
         return forSale;
     }
     
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("maxTrades")
     public int getMaxTrades() {
         
         return maxTrades;
     }
     
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("xp")
     public int getXp() {
         
         return xp;
     }
     
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("priceMult")
     public float getPriceMult() {
         
         return priceMult;

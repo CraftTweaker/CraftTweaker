@@ -32,6 +32,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.ItemLike;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.ArrayList;
@@ -773,6 +774,13 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     @ZenCodeType.Getter("definition")
     @ZenCodeType.Caster(implicit = true)
     default Item getDefinition() {
+        
+        return getInternal().getItem();
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Caster(implicit = true)
+    default ItemLike asItemLike() {
         
         return getInternal().getItem();
     }
