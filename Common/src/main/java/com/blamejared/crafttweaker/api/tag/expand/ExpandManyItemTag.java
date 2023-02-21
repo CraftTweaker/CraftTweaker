@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.tag.expand;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.IIngredientWithAmount;
 import com.blamejared.crafttweaker.api.tag.type.KnownTag;
@@ -26,6 +27,12 @@ public class ExpandManyItemTag {
         
         final IIngredient iIngredient = ExpandItemTag.asIIngredient(internal.getData());
         return iIngredient.mul(internal.getAmount());
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Caster(implicit = true)
+    public static IData asIData(Many<KnownTag<Item>> internal) {
+        return asIngredient(internal).asIData();
     }
     
 }

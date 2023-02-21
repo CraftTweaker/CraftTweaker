@@ -3,6 +3,9 @@ package com.blamejared.crafttweaker.api.fluid;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.IntData;
+import com.blamejared.crafttweaker.api.data.MapData;
+import com.blamejared.crafttweaker.natives.resource.ExpandResourceLocation;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -200,4 +203,13 @@ public interface IFluidStack extends CommandStringDisplayable {
         return new CTFluidIngredient.CompoundFluidIngredient(elements);
     }
     
+    @ZenCodeType.Method
+    @ZenCodeType.Caster(implicit = true)
+    default IData asIData() {
+        MapData data = new MapData();
+        data.put("fluid", ExpandResourceLocation.asData(this.getRegistryName()));
+        data.put("amount", new IntData(this.getAmount()));
+        if (this.getTag() != null) data.put("nbt", this.getTag());
+        return data;
+    }
 }
