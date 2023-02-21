@@ -30,7 +30,6 @@ public class ItemCapabilityTest implements CraftTweakerGameTest {
         MinecraftForge.EVENT_BUS.post(new TestEvent("testItemHandler", helper.getLevel(), helper.absolutePos(BlockPos.ZERO), helper.makeMockPlayer()));
         log.assertOutput(2, IItemStack.of(new ItemStack(Items.DIAMOND, 2)).getCommandString());
         log.assertOutput(3, IItemStack.of(new ItemStack(Items.DIRT)).getCommandString());
-        log.dump();
     }
     
 }
