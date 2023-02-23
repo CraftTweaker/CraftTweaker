@@ -16,10 +16,16 @@ import java.util.List;
 @NativeTypeRegistration(value = Effect.class, zenCodeName = "crafttweaker.api.potion.MCPotionEffect")
 public class ExpandEffect {
     
-    @ZenCodeType.Method
+    //Not registered so as not to break binary compat,
     public static EffectInstance newInstance(Effect internal, int duration, @ZenCodeType.OptionalInt int amplifier) {
         
         return new EffectInstance(internal, duration, amplifier);
+    }
+    
+    @ZenCodeType.Method
+    public static EffectInstance newInstance(Effect internal, int duration, @ZenCodeType.OptionalInt int amplifier, @ZenCodeType.OptionalBoolean boolean ambient, @ZenCodeType.OptionalBoolean(true) boolean showParticles) {
+        
+        return new EffectInstance(internal, duration, amplifier, ambient, showParticles);
     }
     
     @ZenCodeType.Method
