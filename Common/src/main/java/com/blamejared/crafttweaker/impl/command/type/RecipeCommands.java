@@ -99,7 +99,7 @@ public final class RecipeCommands {
     
     private static int dumpRecipes(final Player player, final IRecipeManager<?> manager) {
         
-        CraftTweakerAPI.LOGGER.info("Dumping recipes for manager " + manager.getCommandString() + "!");
+        CommandUtilities.COMMAND_LOGGER.info("Dumping recipes for manager " + manager.getCommandString() + "!");
         
         final RecipeType<?> type = manager.getRecipeType();
         dumpRecipes(player, it -> Objects.equals(it, type));

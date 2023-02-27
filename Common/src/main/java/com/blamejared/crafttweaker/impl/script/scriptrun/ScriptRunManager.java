@@ -175,7 +175,7 @@ public final class ScriptRunManager implements IScriptRunManager {
         
         return switch(configuration.suspiciousNamesBehavior()) {
             case IGNORE -> it -> {};
-            case WARN -> it -> CraftTweakerAPI.LOGGER.warn(
+            case WARN -> it -> this.logger.warn(
                     "Identified file with suspicious name '{}': ignoring; if this is supposed to be a script, please correct the name",
                     root.toAbsolutePath().relativize(it.toAbsolutePath())
             );

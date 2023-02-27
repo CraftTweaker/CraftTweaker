@@ -33,7 +33,7 @@ public class GameTestScriptRunner {
                 ScriptRunConfiguration.RunKind.GAME_TEST
         );
         
-        
+        // TODO("Move this to in-memory FS")
         IScriptRun scriptRun = CraftTweakerAPI.getScriptRunManager()
                 .createScriptRun(builder.build()
                         .stream()
