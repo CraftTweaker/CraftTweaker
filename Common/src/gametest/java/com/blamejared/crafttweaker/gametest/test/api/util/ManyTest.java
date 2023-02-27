@@ -9,7 +9,7 @@ import com.blamejared.crafttweaker.gametest.framework.ScriptBuilder;
 import com.blamejared.crafttweaker.gametest.framework.annotation.CraftTweakerGameTestHolder;
 import com.blamejared.crafttweaker.gametest.framework.annotation.TestModifier;
 import com.blamejared.crafttweaker.gametest.framework.zencode.GameTestGlobals;
-import com.blamejared.crafttweaker.gametest.logger.appender.GameTestLoggerAppender;
+import com.blamejared.crafttweaker.gametest.logging.appender.GameTestLoggerAppender;
 import com.blamejared.crafttweaker.impl.script.scriptrun.GameTestScriptRunner;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -45,8 +45,9 @@ public class ManyTest implements CraftTweakerGameTest {
         log.assertNoErrors();
         log.assertNoWarnings();
         IData iData = GameTestGlobals.data().get(0);
-    
+        
         IData expected = new MapData(Map.of("count", new IntData(2), "tag", new StringData("minecraft:wool")));
         assertThat(iData, is(expected));
     }
+    
 }
