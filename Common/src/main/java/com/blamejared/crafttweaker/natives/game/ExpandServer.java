@@ -1,18 +1,15 @@
 package com.blamejared.crafttweaker.natives.game;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.level.CraftTweakerSavedData;
-import com.blamejared.crafttweaker.api.level.CraftTweakerSavedDataHolder;
-import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import com.blamejared.crafttweaker.api.level.*;
+import com.blamejared.crafttweaker_annotations.annotations.*;
 import com.mojang.brigadier.ParseResults;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.*;
+import net.minecraft.resources.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
@@ -24,6 +21,14 @@ import java.util.List;
 @Document("vanilla/api/game/Server")
 @NativeTypeRegistration(value = MinecraftServer.class, zenCodeName = "crafttweaker.api.game.Server")
 public class ExpandServer {
+    
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("playerList")
+    public static PlayerList getPlayerList(MinecraftServer internal) {
+        
+        return internal.getPlayerList();
+    }
     
     /**
      * Gets the custom data of the overworld.
@@ -363,7 +368,7 @@ public class ExpandServer {
     }
     
     private static int executeCommandInternal(MinecraftServer internal, String command, CommandSourceStack source) {
-    
+        
         ParseResults<CommandSourceStack> parsedResults = internal.getCommands().getDispatcher().parse(command, source);
         return internal.getCommands().performCommand(parsedResults, command);
     }
