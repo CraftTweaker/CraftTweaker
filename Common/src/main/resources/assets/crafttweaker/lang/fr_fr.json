@@ -65,7 +65,7 @@
   "crafttweaker.command.info.block.deactivated" : "Mode info bloc désactivé",
   "crafttweaker.command.info.block.entity.data" : "Données d'entité du bloc : %s",
   "crafttweaker.command.info.block.name" : "Nom du bloc : %s",
-  "crafttweaker.command.info.block.properties" : "Properties: ",
+  "crafttweaker.command.info.block.properties" : "Propriétés : ",
   "crafttweaker.command.info.entity.activated" : "Mode info entité activé. Cliquez avec le bouton droit sur une entité pour afficher ses données.",
   "crafttweaker.command.info.entity.data" : "Données de l'entité : %s",
   "crafttweaker.command.info.entity.deactivated" : "Mode info entité désactivé",
