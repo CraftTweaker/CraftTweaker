@@ -720,6 +720,24 @@ public class CommonEventHandler {
     }
 
     @SubscribeEvent
+    public void onPotionEffectRemove(PotionEvent.PotionRemoveEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasPotionEffectRemoveEvent())
+            CrafttweakerImplementationAPI.events.publishPotionEffectRemoveEvent(new MCPotionEffectRemoveEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onPotionEffectApplicable(PotionEvent.PotionApplicableEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasPotionEffectApplicableEvent())
+            CrafttweakerImplementationAPI.events.publishPotionEffectApplicableEvent(new MCPotionEffectApplicableEvent(ev));
+    }
+
+    @SubscribeEvent
+    public void onPotionEffectExpiry(PotionEvent.PotionExpiryEvent ev) {
+        if (CrafttweakerImplementationAPI.events.hasPotionEffectExpiryEvent())
+            CrafttweakerImplementationAPI.events.publishPotionEffectExpiryEvent(new MCPotionEffectExpiryEvent(ev));
+    }
+
+    @SubscribeEvent
     public void onPlayerClone(net.minecraftforge.event.entity.player.PlayerEvent.Clone ev) {
         if (CrafttweakerImplementationAPI.events.hasPlayerCloneEvent())
             CrafttweakerImplementationAPI.events.publishPlayerCloneEvent(new MCPlayerCloneEvent(ev));

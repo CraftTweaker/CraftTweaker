@@ -67,7 +67,6 @@ public class MTEventManager implements IEventManager {
     @Override
     public void clear() {
         elPlayerCrafted.clear();
-        elPlayerCrafted.clear();
         elPlayerInteract.clear();
         elPlayerOpenContainer.clear();
         elPlayerPickupXp.clear();
@@ -158,6 +157,9 @@ public class MTEventManager implements IEventManager {
         elEntityLivingHeal.clear();
         elEntityLivingUpdateEvent.clear();
         elPotionEffectAdded.clear();
+        elPotionEffectRemove.clear();
+        elPotionEffectApplicable.clear();
+        elPotionEffectExpiry.clear();
         elPlayerCloneEvent.clear();
         elBlockNeighborNotify.clear();
         elPortalSpawn.clear();
@@ -1936,6 +1938,63 @@ public class MTEventManager implements IEventManager {
 
     public void publishPotionEffectAdded(PotionEffectAddedEvent event) {
         elPotionEffectAdded.publish(event);
+    }
+
+    // ##########################
+    // ### PotionEffectRemove ###
+    // ##########################
+
+    private final EventList<PotionEffectRemoveEvent> elPotionEffectRemove = new EventList<>();
+
+    @Override
+    public IEventHandle onPotionEffectRemove(IEventHandler<PotionEffectRemoveEvent> ev) {
+        return elPotionEffectRemove.add(ev);
+    }
+
+    public boolean hasPotionEffectRemoveEvent() {
+        return elPotionEffectRemove.hasHandlers();
+    }
+
+    public void publishPotionEffectRemoveEvent(PotionEffectRemoveEvent event) {
+        elPotionEffectRemove.publish(event);
+    }
+
+    // ##############################
+    // ### PotionEffectApplicable ###
+    // ##############################
+
+    private final EventList<PotionEffectApplicableEvent> elPotionEffectApplicable = new EventList<>();
+
+    @Override
+    public IEventHandle onPotionEffectApplicable(IEventHandler<PotionEffectApplicableEvent> ev) {
+        return elPotionEffectApplicable.add(ev);
+    }
+
+    public boolean hasPotionEffectApplicableEvent() {
+        return elPotionEffectApplicable.hasHandlers();
+    }
+
+    public void publishPotionEffectApplicableEvent(PotionEffectApplicableEvent event) {
+        elPotionEffectApplicable.publish(event);
+    }
+
+    // ##########################
+    // ### PotionEffectExpiry ###
+    // ##########################
+
+    private final EventList<PotionEffectExpiryEvent> elPotionEffectExpiry = new EventList<>();
+
+    @Override
+    public IEventHandle onPotionEffectExpiry(IEventHandler<PotionEffectExpiryEvent> ev) {
+        return elPotionEffectExpiry.add(ev);
+    }
+
+    public boolean hasPotionEffectExpiryEvent() {
+        return elPotionEffectExpiry.hasHandlers();
+    }
+
+    public void publishPotionEffectExpiryEvent(PotionEffectExpiryEvent event) {
+        elPotionEffectExpiry.publish(event);
     }
 
     // ########################
