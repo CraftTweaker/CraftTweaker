@@ -14,6 +14,7 @@ import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -101,8 +102,9 @@ public class CTCommonEventHandler {
     @SubscribeEvent
     public static void burnTimeTweaker(FurnaceFuelBurnTimeEvent e) {
         
+        final RecipeType<?> recipeType = e.getRecipeType() != null ? e.getRecipeType() : RecipeType.SMELTING;
         Services.EVENT.getBurnTimes()
-                .getOrDefault(e.getRecipeType(), List.of())
+                .getOrDefault(recipeType, List.of())
                 .stream()
                 .filter(pair -> pair.getFirst().matches(IItemStack.of(e.getItemStack())))
                 // This should use the burn time of the last matching ingredient
