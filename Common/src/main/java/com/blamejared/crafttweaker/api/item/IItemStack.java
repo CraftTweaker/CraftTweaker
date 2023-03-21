@@ -44,7 +44,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     
     static IItemStack empty() {
         
-        return ItemStackUtil.EMPTY_STACK.get();
+        return IItemStackConstants.EMPTY_STACK.get();
     }
     
     static IItemStack of(final ItemStack stack) {
