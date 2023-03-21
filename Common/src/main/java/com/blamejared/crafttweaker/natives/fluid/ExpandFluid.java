@@ -1,11 +1,9 @@
 package com.blamejared.crafttweaker.natives.fluid;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.fluid.IFluidStack;
 import com.blamejared.crafttweaker.api.tag.type.KnownTag;
-import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
-import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
-import net.minecraft.core.Registry;
+import com.blamejared.crafttweaker_annotations.annotations.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -17,6 +15,34 @@ import org.openzen.zencode.java.ZenCodeType;
 @NativeTypeRegistration(value = Fluid.class, zenCodeName = "crafttweaker.api.fluid.Fluid")
 @TaggableElement("minecraft:fluid")
 public class ExpandFluid {
+    
+    
+    /**
+     * Creates a new {@link IFluidStack} with the given amount of fluid.
+     *
+     * @return a new (immutable) {@link IFluidStack}
+     *
+     * @docParam amount 1000
+     */
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.MUL)
+    public static IFluidStack multiply(Fluid internal, int amount) {
+        
+        return makeStack(internal, amount);
+    }
+    
+    
+    /**
+     * Creates a new {@link IFluidStack} with the given amount of fluid.
+     *
+     * @return a new (immutable) {@link IFluidStack}
+     *
+     * @docParam amount 1000
+     */
+    @ZenCodeType.Method
+    public static IFluidStack makeStack(Fluid internal, int amount) {
+        
+        return IFluidStack.of(internal, amount);
+    }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("bucket")
@@ -34,7 +60,7 @@ public class ExpandFluid {
     
     @ZenCodeType.Method
     public static boolean isIn(Fluid internal, KnownTag<Fluid> tag) {
-
+        
         return internal.is(tag.getTagKey());
     }
     

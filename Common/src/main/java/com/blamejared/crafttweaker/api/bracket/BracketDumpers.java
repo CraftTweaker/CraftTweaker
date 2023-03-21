@@ -4,6 +4,7 @@ package com.blamejared.crafttweaker.api.bracket;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.BracketDumper;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.fluid.IFluidStack;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.natives.block.ExpandBlock;
 import com.blamejared.crafttweaker.natives.block.material.ExpandMaterial;
@@ -46,6 +47,15 @@ public class BracketDumpers {
                 .stream()
                 .map(ExpandBlock::getCommandString)
                 .collect(Collectors.toSet());
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    @BracketDumper("fluid")
+    public static Collection<String> getFluidStackDump() {
+        
+        return BuiltInRegistries.FLUID.stream()
+                .map(fluid -> IFluidStack.of(fluid, 1).getCommandString())
+                .collect(Collectors.toList());
     }
     
     @ZenCodeType.Method

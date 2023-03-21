@@ -1,8 +1,7 @@
 package com.blamejared.crafttweaker.api.bracket;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.annotation.BracketValidator;
-import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.annotation.*;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -26,6 +25,13 @@ public class BracketValidators {
     public static boolean validateBlockBracket(String tokens) {
         
         return validateBracket("block", tokens, BracketHandlers::getBlock);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    @BracketValidator("fluid")
+    public static boolean validateFluidStack(String tokens) {
+    
+        return validateBracket("fluid", tokens, BracketHandlers::getFluidStack);
     }
     
     @ZenCodeType.Method
@@ -120,7 +126,7 @@ public class BracketValidators {
         ResourceLocation key = new ResourceLocation(split[0], split[1]);
         
         if(!BuiltInRegistries.ITEM.containsKey(key)) {
-            CraftTweakerAPI.LOGGER.error("Could not get item with name: <item:" + tokens + ">! Item does not appear to exist!");
+            CommonLoggers.zenCode().error("Could not get item with name: <item:" + tokens + ">! Item does not appear to exist!");
             return false;
         }
         

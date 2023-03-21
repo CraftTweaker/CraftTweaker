@@ -1,6 +1,8 @@
 package com.blamejared.crafttweaker.api.recipe.component;
 
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
+import com.blamejared.crafttweaker.api.fluid.CTFluidIngredient;
+import com.blamejared.crafttweaker.api.fluid.IFluidStack;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.type.IIngredientEmpty;
 import com.blamejared.crafttweaker.api.item.IItemStack;
@@ -11,14 +13,11 @@ import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction2D;
 import com.blamejared.crafttweaker.api.util.random.Percentaged;
 import com.google.gson.reflect.TypeToken;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.Util;
 import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Holds all {@link IRecipeComponent}s that CraftTweaker makes available directly.
@@ -49,6 +48,18 @@ public final class BuiltinRecipeComponents {
                 Object::equals
         );
     
+        public static final IRecipeComponent<CraftingBookCategory> CRAFTING_BOOK_CATEGORY = IRecipeComponent.simple(
+                CraftTweakerConstants.rl("metadata/crafting_book_category"),
+                new TypeToken<>() {},
+                Object::equals
+        );
+        
+        public static final IRecipeComponent<CookingBookCategory> COOKING_BOOK_CATEGORY = IRecipeComponent.simple(
+                CraftTweakerConstants.rl("metadata/cooking_book_category"),
+                new TypeToken<>() {},
+                Object::equals
+        );
+        
         public static final IRecipeComponent<CraftingBookCategory> CRAFTING_BOOK_CATEGORY = IRecipeComponent.simple(
                 CraftTweakerConstants.rl("metadata/crafting_book_category"),
                 new TypeToken<>() {},
@@ -89,6 +100,16 @@ public final class BuiltinRecipeComponents {
                 ingredient -> Arrays.asList(ingredient.getItems()),
                 items -> items.size() < 1 ? IIngredientEmpty.getInstance() : items.stream()
                         .reduce(IIngredient::or)
+                        .orElseThrow()
+        );
+        
+        public static final IRecipeComponent<CTFluidIngredient> FLUID_INGREDIENTS = IRecipeComponent.composite(
+                CraftTweakerConstants.rl("input/fluid_ingredients"),
+                new TypeToken<>() {},
+                RecipeComponentEqualityCheckers::areFluidIngredientsEqual,
+                ingredient -> ingredient instanceof CTFluidIngredient.CompoundFluidIngredient cfi ? cfi.getElements() : List.of(ingredient),
+                items -> items.size() < 1 ? CTFluidIngredient.EMPTY.get() : items.stream()
+                        .reduce(CTFluidIngredient::asCompound)
                         .orElseThrow()
         );
         
@@ -145,7 +166,7 @@ public final class BuiltinRecipeComponents {
      * @since 10.0.0
      */
     public static final class Output {
-    
+        
         public static final IRecipeComponent<Percentaged<IItemStack>> CHANCED_ITEMS = IRecipeComponent.simple(
                 CraftTweakerConstants.rl("output/chanced_items"),
                 new TypeToken<>() {},
@@ -158,11 +179,18 @@ public final class BuiltinRecipeComponents {
                 RecipeComponentEqualityCheckers::areNumbersEqual
         );
         
+        public static final IRecipeComponent<IFluidStack> FLUIDS = IRecipeComponent.simple(
+                CraftTweakerConstants.rl("output/fluids"),
+                new TypeToken<>() {},
+                RecipeComponentEqualityCheckers::areFluidStacksEqual
+        );
+        
         public static final IRecipeComponent<IItemStack> ITEMS = IRecipeComponent.simple(
                 CraftTweakerConstants.rl("output/items"),
                 new TypeToken<>() {},
                 RecipeComponentEqualityCheckers::areStacksEqual
         );
+        
         
         private Output() {}
         

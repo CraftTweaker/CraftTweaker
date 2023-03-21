@@ -6,9 +6,6 @@ import com.blamejared.crafttweaker.api.command.CommandUtilities;
 import com.blamejared.crafttweaker.api.plugin.CraftTweakerPlugin;
 import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin;
-import com.blamejared.crafttweaker.api.plugin.IRecipeComponentRegistrationHandler;
-import com.blamejared.crafttweaker.api.recipe.component.BuiltinForgeRecipeComponents;
-import com.blamejared.crafttweaker.api.recipe.component.BuiltinRecipeComponents;
 import com.blamejared.crafttweaker.mixin.common.access.entity.AccessFakePlayerFactory;
 import com.mojang.brigadier.Command;
 import net.minecraft.ChatFormatting;
@@ -19,13 +16,6 @@ import java.util.stream.Stream;
 
 @CraftTweakerPlugin(CraftTweakerConstants.MOD_ID + ":builtin_forge")
 public class CraftTweakerPluginForge implements ICraftTweakerPlugin {
-    
-    @Override
-    public void registerRecipeComponents(IRecipeComponentRegistrationHandler handler) {
-    
-        handler.registerRecipeComponent(BuiltinForgeRecipeComponents.Input.FLUID_INGREDIENTS);
-        handler.registerRecipeComponent(BuiltinForgeRecipeComponents.Output.FLUIDS);
-    }
     
     @Override
     public void registerCommands(ICommandRegistrationHandler handler) {

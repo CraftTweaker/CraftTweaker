@@ -1,5 +1,7 @@
 package com.blamejared.crafttweaker.api.recipe.component;
 
+import com.blamejared.crafttweaker.api.fluid.CTFluidIngredient;
+import com.blamejared.crafttweaker.api.fluid.IFluidStack;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.util.random.Percentaged;
@@ -40,4 +42,13 @@ public final class RecipeComponentEqualityCheckers {
         throw new UnsupportedOperationException("Cannot compare " + a + " and " + b);
     }
     
+    public static boolean areFluidIngredientsEqual(final CTFluidIngredient a, final CTFluidIngredient b) {
+        
+        return Objects.equals(a, b) || (a.contains(b) && b.contains(a));
+    }
+    
+    public static boolean areFluidStacksEqual(final IFluidStack a, final IFluidStack b) {
+        
+        return a.matches(b);
+    }
 }

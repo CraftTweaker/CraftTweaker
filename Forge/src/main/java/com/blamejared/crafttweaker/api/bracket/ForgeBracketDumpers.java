@@ -26,15 +26,4 @@ public final class ForgeBracketDumpers {
         return ToolAction.getActions().stream().map(ExpandToolAction::getCommandString).toList();
     }
     
-    @ZenCodeType.StaticExpansionMethod
-    @BracketDumper("fluid")
-    public static Collection<String> getFluidStackDump() {
-        
-        return ForgeRegistries.FLUIDS.getValues()
-                .stream()
-                .map(fluid -> IFluidStack.of(new FluidStack(fluid, 1)).getCommandString())
-                .collect(Collectors.toList());
-    }
-    
-    
 }

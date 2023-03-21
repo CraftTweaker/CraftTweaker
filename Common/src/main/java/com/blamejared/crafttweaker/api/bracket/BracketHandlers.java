@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.BracketResolver;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
+import com.blamejared.crafttweaker.api.fluid.IFluidStack;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.replacement.ITargetingStrategy;
@@ -11,7 +12,6 @@ import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
 import com.blamejared.crafttweaker.natives.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.natives.world.damage.ExpandDamageSource;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -84,6 +84,32 @@ public class BracketHandlers {
         ResourceLocation key = new ResourceLocation(split[0], split[1]);
         return BuiltInRegistries.BLOCK.getOptional(key)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get block with name: <block:" + tokens + ">! Block does not appear to exist!"));
+    }
+    
+    
+    /**
+     * Gets the fluid Stack based on registry name. Throws an error if it can't find the fluid.
+     *
+     * @param tokens The Fluid's resource location
+     *
+     * @return A stack of the liquid with amount == 1mb
+     *
+     * @docParam tokens "minecraft:water"
+     */
+    @ZenCodeType.Method
+    @BracketResolver("fluid")
+    public static IFluidStack getFluidStack(String tokens) {
+        
+        final ResourceLocation resourceLocation = ResourceLocation.tryParse(tokens);
+        if(resourceLocation == null) {
+            throw new IllegalArgumentException("Could not get fluid for <fluid:" + tokens + ">. Syntax is <fluid:modid:fluidname>");
+        }
+        
+        if(!BuiltInRegistries.FLUID.containsKey(resourceLocation)) {
+            throw new IllegalArgumentException("Could not get fluid for <fluid:" + tokens + ">. Fluid does not appear to exist!");
+        }
+        
+        return IFluidStack.of(BuiltInRegistries.FLUID.get(resourceLocation), 1);
     }
     
     /**

@@ -1,7 +1,8 @@
-package com.blamejared.crafttweaker.gametest.test.forge.fluid;
+package com.blamejared.crafttweaker.gametest.test.api.fluid;
 
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.IntData;
+import com.blamejared.crafttweaker.api.data.LongData;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.StringData;
 import com.blamejared.crafttweaker.gametest.CraftTweakerGameTest;
@@ -11,6 +12,7 @@ import com.blamejared.crafttweaker.gametest.framework.annotation.TestModifier;
 import com.blamejared.crafttweaker.gametest.framework.zencode.GameTestGlobals;
 import com.blamejared.crafttweaker.gametest.logger.appender.GameTestLoggerAppender;
 import com.blamejared.crafttweaker.impl.script.scriptrun.GameTestScriptRunner;
+import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 
@@ -33,7 +35,8 @@ public class FluidStackTest implements CraftTweakerGameTest {
         log.assertNoWarnings();
         IData iData = GameTestGlobals.data().get(0);
         
-        IData expected = new MapData(Map.of("amount", new IntData(2), "fluid", new StringData("minecraft:water")));
+        IData expected = new MapData(Map.of("amount", Services.PLATFORM.getPlatformName()
+                .equals("Forge") ? new IntData(2) : new LongData(2), "fluid", new StringData("minecraft:water")));
         assertThat(iData, is(expected));
         
     }

@@ -2,129 +2,129 @@ package com.blamejared.crafttweaker.api.fluid;
 
 import com.blamejared.crafttweaker.api.data.*;
 import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
+import com.blamejared.crafttweaker.impl.fluid.SimpleFluidStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Objects;
 
 public class MCFluidStackMutable implements IFluidStack {
-
-    private final FluidStack stack;
-
-    public MCFluidStackMutable(FluidStack stack) {
-
+    
+    private final SimpleFluidStack stack;
+    
+    public MCFluidStackMutable(SimpleFluidStack stack) {
+        
         this.stack = stack;
     }
-
+    
     @Override
     public boolean isEmpty() {
-
+        
         return getInternal().isEmpty();
     }
-
+    
     @Override
     public long getAmount() {
-
-        return getInternal().getAmount();
+        
+        return getInternal().amount();
     }
-
+    
     @Override
     public IFluidStack setAmount(int amount) {
-
-        getInternal().setAmount(amount);
+        
+        getInternal().amount(amount);
         return this;
     }
-
+    
     @Override
     public boolean isImmutable() {
-
+        
         return false;
     }
-
+    
     @Override
     public Fluid getFluid() {
-
-        return getInternal().getFluid();
+        
+        return getInternal().fluid();
     }
-
+    
     @Override
     public IFluidStack withTag(IData tag) {
-
-        if (tag != null) {
+        
+        if(tag != null) {
             MapData map = new MapData(tag.asMap());
-            getInternal().setTag(map.getInternal());
+            getInternal().tag(map.getInternal());
         } else {
-            getInternal().setTag(null);
+            getInternal().tag(null);
         }
-
+        
         return this;
     }
-
+    
     @Override
     public boolean hasTag() {
-
-        return getInternal().hasTag();
+        
+        return getInternal().tag() != null;
     }
-
+    
     @Override
     public CompoundTag getInternalTag() {
-
-        return getInternal().getTag();
+        
+        return getInternal().tag();
     }
-
+    
     @Override
     public IData getTag() {
-
-        return TagToDataConverter.convert(getInternal().getTag());
+        
+        return TagToDataConverter.convert(getInternal().tag());
     }
-
+    
     @Override
-    public FluidStack getInternal() {
-
+    public SimpleFluidStack getInternal() {
+        
         return stack;
     }
-
+    
     @Override
-    public FluidStack getImmutableInternal() {
-
+    public SimpleFluidStack getImmutableInternal() {
+        
         return stack.copy();
     }
-
+    
     @Override
     @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
     public boolean equals(Object o) {
-
-        if (this == o) {
+        
+        if(this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if(o == null || getClass() != o.getClass()) {
             return false;
         }
-
-        final FluidStack thatStack = ((MCFluidStackMutable) o).getInternal();
-        final FluidStack thisStack = getInternal();
-
-        if (thisStack.isEmpty()) {
+        
+        final SimpleFluidStack thatStack = ((MCFluidStackMutable) o).getInternal();
+        final SimpleFluidStack thisStack = getInternal();
+        
+        if(thisStack.isEmpty()) {
             return thatStack.isEmpty();
         }
-
-        if (thisStack.getAmount() != thatStack.getAmount()) {
+        
+        if(thisStack.amount() != thatStack.amount()) {
             return false;
         }
-
-        if (!Objects.equals(thisStack.getFluid(), thatStack.getFluid())) {
+        
+        if(!Objects.equals(thisStack.fluid(), thatStack.fluid())) {
             return false;
         }
-
-        return Objects.equals(thisStack.getTag(), thatStack.getTag());
+        
+        return Objects.equals(thisStack.tag(), thatStack.tag());
     }
-
+    
     @Override
     public int hashCode() {
-
-        return Objects.hash(getInternal().getAmount(), getInternal().getFluid(), getInternal().getTag());
+        
+        return Objects.hash(getInternal().amount(), getInternal().fluid(), getInternal().tag());
     }
-
+    
 }

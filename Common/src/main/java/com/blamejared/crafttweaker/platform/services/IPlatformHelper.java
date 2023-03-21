@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.platform.services;
 
+import com.blamejared.crafttweaker.api.fluid.IFluidStack;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
 import com.blamejared.crafttweaker.api.mod.Mod;
@@ -25,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.material.Fluid;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.nio.file.Path;
@@ -62,6 +64,14 @@ public interface IPlatformHelper {
     IItemStack createItemStack(ItemStack stack);
     
     IItemStack createItemStackMutable(ItemStack stack);
+    
+    IFluidStack createFluidStack(Fluid fluid, long amount, @Nullable CompoundTag tag);
+    
+    IFluidStack createFluidStackMutable(Fluid fluid, long amount, @Nullable CompoundTag tag);
+    
+    <T> IFluidStack createFluidStack(T stack);
+    
+    <T> IFluidStack createFluidStackMutable(T stack);
     
     Fluid getBucketContent(BucketItem item);
     

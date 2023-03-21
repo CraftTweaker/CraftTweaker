@@ -7,18 +7,11 @@ import com.blamejared.crafttweaker.api.util.Many;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.*;
+import java.util.function.*;
+import java.util.stream.*;
 
 /**
  * FluidIngredient that facilitates accepting either a single, or multiple {@link IFluidStack}s, {@link KnownTag <Fluid>}s
@@ -35,14 +28,15 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
     
     public abstract String getCommandString();
     
-    public abstract <T> T mapTo(Function<FluidStack, T> fluidMapper,
+    public abstract <T> T mapTo(Function<IFluidStack, T> fluidMapper,
                                 BiFunction<TagKey<Fluid>, Integer, T> tagMapper,
                                 Function<Stream<T>, T> compoundMapper);
     
     @ZenCodeType.Method
     public abstract boolean matches(Fluid fluid);
     
-    public abstract boolean matches(FluidStack fluidStack);
+    @ZenCodeType.Method
+    public abstract boolean matches(IFluidStack fluidStack);
     
     public abstract boolean matches(TagKey<Fluid> fluidTag);
     
@@ -54,7 +48,9 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
     
     public boolean contains(CTFluidIngredient other) {
         
-        return other.getMatchingStacks().stream().allMatch(iFluidStack -> matches(iFluidStack.getInternal()));
+        return other.getMatchingStacks()
+                .stream()
+                .allMatch(this::matches);
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)
@@ -91,20 +87,20 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
         @Override
         public boolean matches(Fluid fluid) {
             
-            return this.fluidStack.getInternal().getFluid() == fluid;
+            return this.fluidStack.getFluid() == fluid;
         }
         
         @Override
-        public boolean matches(FluidStack fluidStack) {
+        public boolean matches(IFluidStack fluidStack) {
             
-            FluidStack internal = this.fluidStack.getInternal();
+            IFluidStack internal = this.fluidStack.getInternal();
             return internal.isFluidEqual(fluidStack) && internal.getAmount() <= fluidStack.getAmount();
         }
         
         @Override
         public boolean matches(TagKey<Fluid> fluidTag) {
             
-            return this.fluidStack.getInternal().getFluid().is(fluidTag);
+            return this.fluidStack.getFluid().is(fluidTag);
         }
         
         @Override
@@ -120,7 +116,7 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
         }
         
         @Override
-        public <T> T mapTo(Function<FluidStack, T> fluidMapper, BiFunction<TagKey<Fluid>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
+        public <T> T mapTo(Function<IFluidStack, T> fluidMapper, BiFunction<TagKey<Fluid>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
             
             return fluidMapper.apply(fluidStack.getImmutableInternal());
         }
@@ -160,7 +156,7 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
         }
         
         @Override
-        public <T> T mapTo(Function<FluidStack, T> fluidMapper, BiFunction<TagKey<Fluid>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
+        public <T> T mapTo(Function<IFluidStack, T> fluidMapper, BiFunction<TagKey<Fluid>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
             
             return tagMapper.apply(tag.getData().getTagKey(), tag.getAmount());
         }
@@ -172,7 +168,7 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
         }
         
         @Override
-        public boolean matches(FluidStack fluidStack) {
+        public boolean matches(IFluidStack fluidStack) {
             
             return this.tag.getData().contains(fluidStack.getFluid()) && this.tag.getAmount() <= fluidStack.getAmount();
         }
@@ -195,8 +191,7 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
                 matchingStacks = tag.getData()
                         .elements()
                         .stream()
-                        .map(fluid -> new FluidStack(fluid, tag.getAmount()))
-                        .map(IFluidStack::of)
+                        .map(fluid -> IFluidStack.of(fluid, tag.getAmount()))
                         .toList();
             }
         }
@@ -230,7 +225,7 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
         }
         
         @Override
-        public <T> T mapTo(Function<FluidStack, T> fluidMapper, BiFunction<TagKey<Fluid>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
+        public <T> T mapTo(Function<IFluidStack, T> fluidMapper, BiFunction<TagKey<Fluid>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
             
             Stream<T> stream = elements.stream()
                     .map(element -> element.mapTo(fluidMapper, tagMapper, compoundMapper));
@@ -244,7 +239,7 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
         }
         
         @Override
-        public boolean matches(FluidStack fluidStack) {
+        public boolean matches(IFluidStack fluidStack) {
             
             return this.elements.stream().anyMatch(ingr -> ingr.matches(fluidStack));
         }

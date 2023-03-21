@@ -1,13 +1,13 @@
 package com.blamejared.crafttweaker.platform;
 
-import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.api.item.MCItemStack;
-import com.blamejared.crafttweaker.api.item.MCItemStackMutable;
+import com.blamejared.crafttweaker.api.fluid.*;
+import com.blamejared.crafttweaker.api.item.*;
 import com.blamejared.crafttweaker.api.loot.LootModifierManager;
 import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
 import com.blamejared.crafttweaker.api.mod.Mod;
 import com.blamejared.crafttweaker.api.recipe.handler.helper.CraftingTableRecipeConflictChecker;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
+import com.blamejared.crafttweaker.impl.fluid.SimpleFluidStack;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessBucketItem;
 import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
 import com.blamejared.crafttweaker.platform.helper.world.inventory.TAInventoryWrapper;
@@ -16,51 +16,34 @@ import com.faux.customentitydata.api.CustomDataHelper;
 import com.google.common.base.Suppliers;
 import com.mojang.datafixers.util.Either;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.fluid.*;
 import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.MappingResolver;
-import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.fabric.api.transfer.v1.storage.*;
+import net.fabricmc.loader.api.*;
 import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.material.Fluid;
+import org.jetbrains.annotations.Nullable;
 import org.reflections.Reflections;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.*;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.*;
+import java.util.function.*;
+import java.util.stream.*;
 
 public class FabricPlatformHelper implements IPlatformHelper {
     
@@ -137,6 +120,36 @@ public class FabricPlatformHelper implements IPlatformHelper {
     public IItemStack createItemStackMutable(ItemStack stack) {
         
         return new MCItemStackMutable(stack);
+    }
+    
+    @Override
+    public IFluidStack createFluidStack(Fluid fluid, long amount, @Nullable CompoundTag tag) {
+        
+        return new MCFluidStack(new SimpleFluidStack(fluid, Math.toIntExact(amount), tag));
+    }
+    
+    @Override
+    public IFluidStack createFluidStackMutable(Fluid fluid, long amount, @Nullable CompoundTag tag) {
+        
+        return new MCFluidStackMutable(new SimpleFluidStack(fluid, Math.toIntExact(amount), tag));
+    }
+    
+    @Override
+    public <T> IFluidStack createFluidStack(T stack) {
+        
+        if(stack instanceof SimpleFluidStack fluidStack) {
+            return new MCFluidStack(fluidStack);
+        }
+        throw new IllegalArgumentException("Unable to create IFluidStack from '" + stack + "'!");
+    }
+    
+    @Override
+    public <T> IFluidStack createFluidStackMutable(T stack) {
+        
+        if(stack instanceof SimpleFluidStack fluidStack) {
+            return new MCFluidStackMutable(fluidStack);
+        }
+        throw new IllegalArgumentException("Unable to create IFluidStack from '" + stack + "'!");
     }
     
     @Override
