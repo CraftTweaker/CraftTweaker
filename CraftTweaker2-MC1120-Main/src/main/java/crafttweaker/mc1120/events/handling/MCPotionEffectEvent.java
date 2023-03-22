@@ -1,5 +1,6 @@
 package crafttweaker.mc1120.events.handling;
 
+import crafttweaker.api.entity.IEntityLivingBase;
 import crafttweaker.api.event.IPotionEffectEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.potions.IPotionEffect;
@@ -15,5 +16,10 @@ public class MCPotionEffectEvent implements IPotionEffectEvent {
     @Override
     public IPotionEffect getPotionEffect() {
         return CraftTweakerMC.getIPotionEffect(event.getPotionEffect());
+    }
+
+    @Override
+    public IEntityLivingBase getEntityLivingBase() {
+        return CraftTweakerMC.getIEntityLivingBase(event.getEntityLiving());
     }
 }
