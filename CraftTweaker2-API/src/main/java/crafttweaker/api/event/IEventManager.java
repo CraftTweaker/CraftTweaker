@@ -308,6 +308,15 @@ public interface IEventManager {
     IEventHandle onPotionEffectAdded(IEventHandler<PotionEffectAddedEvent> ev);
 
     @ZenMethod
+    IEventHandle onPotionEffectRemove(IEventHandler<PotionEffectRemoveEvent> ev);
+
+    @ZenMethod
+    IEventHandle onPotionEffectApplicable(IEventHandler<PotionEffectApplicableEvent> ev);
+
+    @ZenMethod
+    IEventHandle onPotionEffectExpiry(IEventHandler<PotionEffectExpiryEvent> ev);
+
+    @ZenMethod
     IEventHandle onPlayerClone(IEventHandler<PlayerCloneEvent> ev);
 
     @ZenMethod

@@ -7,7 +7,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
 
 @ZenClass("crafttweaker.event.IPotionEffectEvent")
 @ZenRegister
-public interface IPotionEffectEvent  {
+public interface IPotionEffectEvent extends ILivingEvent {
 
     @ZenGetter("potionEffect")
     IPotionEffect getPotionEffect();
