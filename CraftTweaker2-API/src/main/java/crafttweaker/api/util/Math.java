@@ -128,11 +128,6 @@ public class Math {
     }
 
     @ZenMethod
-    public static double random() {
-        return java.lang.Math.random();
-    }
-
-    @ZenMethod
     public static int round(float f1) {
         return java.lang.Math.round(f1);
     }
