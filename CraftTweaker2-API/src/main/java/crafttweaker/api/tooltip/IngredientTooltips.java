@@ -63,7 +63,7 @@ public class IngredientTooltips {
     }
 
     @ZenMethod
-    public static void removeTooltip(IIngredient ingredient, int line)  {
+    public static void removeTooltipLine(IIngredient ingredient, int line)  {
         CraftTweakerAPI.apply(new RemoveTooltipLineAction(ingredient, line));
     }
     
