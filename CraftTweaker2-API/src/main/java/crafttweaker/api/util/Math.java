@@ -4,7 +4,7 @@ import crafttweaker.annotations.ZenRegister;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-@ZenClass("crafttweaker.util.Math")
+@ZenClass("crafttweaker.util.MathUtil")
 @ZenRegister
 public class Math {
     @ZenMethod
