@@ -262,12 +262,13 @@ public final class DumpCommands {
                     CraftTweakerAPI.LOGGER.info("All Tag Contents");
                     CraftTweakerTagRegistry.INSTANCE.managers()
                             .stream()
-                            .sorted(Comparator.comparing(ITagManager::tagFolder))
+                            .sorted(ITagManager::compareTo)
                             .peek(it -> CraftTweakerAPI.LOGGER.info("Contents of '{}' tags:", it.tagFolder()))
-                            .flatMap(it -> it.tags().stream())
+                            .flatMap(it -> it.tags().stream().sorted(MCTag::compareTo))
                             .peek(it -> CraftTweakerAPI.LOGGER.info(it.getCommandString()))
                             .flatMap(it -> it.idElements()
                                     .stream()
+                                    .sorted(Comparator.comparing((ResourceLocation rl) -> rl.getPath()).thenComparing(rl -> rl.getNamespace()))
                                     .map(o -> getTagAsString(player, it, o)))
                             .forEach(it -> CraftTweakerAPI.LOGGER.info("\t- {}", it));
                     

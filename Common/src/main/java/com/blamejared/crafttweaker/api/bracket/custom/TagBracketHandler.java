@@ -18,6 +18,7 @@ import org.openzen.zenscript.parser.expression.ParsedExpressionMember;
 import org.openzen.zenscript.parser.expression.ParsedNewExpression;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -63,6 +64,7 @@ public class TagBracketHandler implements BracketExpressionParser {
                 .managers()
                 .stream()
                 .flatMap(iTagManager -> iTagManager.tags().stream())
+                .sorted(MCTag::compareTo)
                 .map(MCTag::getCommandString)
                 .distinct();
     }

@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @ZenRegister(loaders = {CraftTweakerConstants.DEFAULT_LOADER_NAME, CraftTweakerConstants.TAGS_LOADER_NAME})
 @Document("vanilla/api/tag/manager/ITagManager")
 @ZenCodeType.Name("crafttweaker.api.tag.manager.ITagManager")
-public interface ITagManager<T extends MCTag> extends CommandStringDisplayable, Iterable<T> {
+public interface ITagManager<T extends MCTag> extends CommandStringDisplayable, Iterable<T>, Comparable<ITagManager<?>> {
     
     /**
      * Gets the tagFolder of this manager.
@@ -317,6 +317,12 @@ public interface ITagManager<T extends MCTag> extends CommandStringDisplayable, 
     default Iterator<T> iterator() {
         
         return tags().iterator();
+    }
+    
+    @Override
+    default int compareTo(@Nonnull ITagManager<?> o) {
+        
+        return this.tagFolder().compareTo(o.tagFolder());
     }
     
 }

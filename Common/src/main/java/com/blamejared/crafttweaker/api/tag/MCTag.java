@@ -16,6 +16,7 @@ import org.openzen.zencode.java.ZenCodeType;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -25,6 +26,10 @@ import java.util.List;
 @Document("vanilla/api/tag/MCTag")
 @ZenCodeType.Name("crafttweaker.api.tag.MCTag")
 public interface MCTag extends CommandStringDisplayable, Comparable<MCTag> {
+    
+    Comparator<MCTag> COMPARATOR = Comparator.comparing(MCTag::manager)
+            .thenComparing(mcTag -> mcTag.id().getNamespace())
+            .thenComparing(mcTag -> mcTag.id().getPath());
     
     /**
      * Checks if this tag exists.
@@ -195,7 +200,7 @@ public interface MCTag extends CommandStringDisplayable, Comparable<MCTag> {
     @Override
     default int compareTo(@Nonnull MCTag o) {
         
-        return this.id().compareTo(o.id());
+        return COMPARATOR.compare(this, o);
     }
     
     default String getCommandString() {

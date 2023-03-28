@@ -21,6 +21,7 @@ import org.openzen.zenscript.parser.type.IParsedType;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -127,6 +128,7 @@ public class TagManagerBracketHandler implements BracketExpressionParser {
         
         return () -> CraftTweakerTagRegistry.INSTANCE.managers()
                 .stream()
+                .sorted(ITagManager::compareTo)
                 .map(ITagManager::getCommandString)
                 .distinct();
     }
