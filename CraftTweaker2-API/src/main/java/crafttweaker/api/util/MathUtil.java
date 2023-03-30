@@ -4,9 +4,9 @@ import crafttweaker.annotations.ZenRegister;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-@ZenClass("crafttweaker.util.MathUtil")
+@ZenClass("crafttweaker.util.Math")
 @ZenRegister
-public class Math {
+public class MathUtil {
     @ZenMethod
     public static double max(double d1, double d2) {
         return java.lang.Math.max(d1, d2);
