@@ -72,7 +72,6 @@ final class ArrayBackedDispatcher<T extends IEvent<T>> implements BusDispatcher<
         return event;
     }
     
-    @SuppressWarnings("unchecked")
     private HandlerToken<T> doRegister(final boolean listenToCanceled, final Phase phase, final Consumer<T> consumer, final boolean exception) {
         
         final HandlerToken<T> token = new HandlerToken<>();
@@ -80,7 +79,7 @@ final class ArrayBackedDispatcher<T extends IEvent<T>> implements BusDispatcher<
         final int firstIndex = phase.ordinal() * 10;
         for(int i = firstIndex, s = firstIndex + DEFAULT_PER_PHASE_QUANTITY; i < s; ++i) {
             if(this.consumers[i] == null || this.consumers[i] == UNREGISTERED) {
-                this.consumers[i] = new Dispatcher<>(this.accountForCancellation ? (Consumer<T>) BusDispatcher.wrap(listenToCanceled, consumer) : consumer);
+                this.consumers[i] = new Dispatcher<>(this.accountForCancellation, listenToCanceled, consumer);
                 this.tokens[i] = token;
                 return token;
             }

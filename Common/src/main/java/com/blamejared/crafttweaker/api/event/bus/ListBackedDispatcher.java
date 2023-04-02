@@ -27,7 +27,7 @@ final class ListBackedDispatcher<T extends IEvent<T>> implements BusDispatcher<T
     @Override
     public HandlerToken<T> register(final boolean listenToCanceled, final Phase phase, final Consumer<T> consumer) {
         
-        @SuppressWarnings("unchecked") final Consumer<T> wrapped = new Dispatcher<>(this.accountForCancellation ? (Consumer<T>) BusDispatcher.wrap(listenToCanceled, consumer) : consumer);
+        final Consumer<T> wrapped = new Dispatcher<>(this.accountForCancellation, listenToCanceled, consumer);
         final HandlerToken<T> token = new HandlerToken<>();
         
         this.consumers.put(phase, wrapped);
