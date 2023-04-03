@@ -21,7 +21,7 @@ final class SelectiveBackingDispatcher<T> implements BusDispatcher<T> {
         
     }
     
-    private static final int THRESHOLD = 10;
+    private static final int THRESHOLD = 30;
     
     private final boolean allowCancellation;
     
