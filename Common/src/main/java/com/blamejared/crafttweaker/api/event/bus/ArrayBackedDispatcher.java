@@ -1,12 +1,11 @@
 package com.blamejared.crafttweaker.api.event.bus;
 
-import com.blamejared.crafttweaker.api.event.IEvent;
 import com.blamejared.crafttweaker.api.event.Phase;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 
 import java.util.function.Consumer;
 
-final class ArrayBackedDispatcher<T extends IEvent<T>> implements BusDispatcher<T> {
+final class ArrayBackedDispatcher<T> implements BusDispatcher<T> {
     
     private static final int DEFAULT_PER_PHASE_QUANTITY = 5;
     private static final Consumer<Object> UNREGISTERED = it -> {};

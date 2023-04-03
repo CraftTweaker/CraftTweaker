@@ -1,9 +1,7 @@
 package com.blamejared.crafttweaker.api.event.bus;
 
 import com.blamejared.crafttweaker.api.event.ICancelableEvent;
-import com.blamejared.crafttweaker.api.event.IEvent;
 import com.blamejared.crafttweaker.api.event.Phase;
-import com.blamejared.crafttweaker.platform.Services;
 import com.google.common.reflect.TypeToken;
 
 import java.util.Arrays;
@@ -16,9 +14,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
 
-public final class EventBus<T extends IEvent<T>> {
-    
-    private static final boolean DEVELOPMENT = Services.PLATFORM.isDevelopmentEnvironment();
+public final class EventBus<T> {
     
     private final TypeToken<T> eventType;
     private final Set<EventBusCharacteristic> characteristics;
@@ -33,7 +29,7 @@ public final class EventBus<T extends IEvent<T>> {
         this.lock = new ReentrantReadWriteLock();
     }
     
-    public static <T extends IEvent<T>> EventBus<T> of(final TypeToken<T> eventType, final EventBusCharacteristic... characteristics) {
+    public static <T> EventBus<T> of(final TypeToken<T> eventType, final EventBusCharacteristic... characteristics) {
         
         Objects.requireNonNull(eventType, "eventType");
         Objects.requireNonNull(characteristics, "characteristics");
@@ -42,7 +38,7 @@ public final class EventBus<T extends IEvent<T>> {
         return new EventBus<>(eventType, characteristicSet, dispatcher);
     }
     
-    private static <T extends IEvent<T>> Set<EventBusCharacteristic> verify(final TypeToken<T> type, final EventBusCharacteristic... characteristics) {
+    private static <T> Set<EventBusCharacteristic> verify(final TypeToken<T> type, final EventBusCharacteristic... characteristics) {
         
         final Set<EventBusCharacteristic> characteristicSet = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(characteristics)));
         
@@ -57,7 +53,7 @@ public final class EventBus<T extends IEvent<T>> {
         return characteristicSet;
     }
     
-    private static <T extends IEvent<T>> BusDispatcher<T> findDispatcher(final Set<EventBusCharacteristic> characteristics) {
+    private static <T> BusDispatcher<T> findDispatcher(final Set<EventBusCharacteristic> characteristics) {
         
         final boolean cancellation = characteristics.contains(EventBusCharacteristic.SUPPORTS_CANCELLATION);
         
@@ -118,10 +114,6 @@ public final class EventBus<T extends IEvent<T>> {
     }
     
     public T post(final T event) {
-        
-        if(DEVELOPMENT && !event.type().isSubtypeOf(this.eventType)) {
-            throw new IllegalArgumentException("Attempted to post invalid event on bus");
-        }
         
         try {
             // TODO("Evaluate performance")

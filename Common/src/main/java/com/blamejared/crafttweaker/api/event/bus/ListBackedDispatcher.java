@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.api.event.bus;
 
-import com.blamejared.crafttweaker.api.event.IEvent;
 import com.blamejared.crafttweaker.api.event.Phase;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
@@ -11,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-final class ListBackedDispatcher<T extends IEvent<T>> implements BusDispatcher<T> {
+final class ListBackedDispatcher<T> implements BusDispatcher<T> {
     
     private final boolean accountForCancellation;
     private final Multimap<Phase, Consumer<T>> consumers;

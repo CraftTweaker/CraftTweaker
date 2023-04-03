@@ -1,16 +1,14 @@
 package com.blamejared.crafttweaker.api.event.bus;
 
-import com.blamejared.crafttweaker.api.event.IEvent;
 import com.blamejared.crafttweaker.api.event.Phase;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-final class SelectiveBackingDispatcher<T extends IEvent<T>> implements BusDispatcher<T> {
+final class SelectiveBackingDispatcher<T> implements BusDispatcher<T> {
     
-    private record Command<T extends IEvent<T>>(boolean listenToCanceled, Phase phase, Consumer<T> consumer,
-                                                HandlerToken<T> token) {
+    private record Command<T>(boolean listenToCanceled, Phase phase, Consumer<T> consumer, HandlerToken<T> token) {
         
         void execute(final BusDispatcher<T> dispatcher) {
             

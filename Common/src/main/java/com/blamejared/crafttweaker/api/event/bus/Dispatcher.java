@@ -1,12 +1,11 @@
 package com.blamejared.crafttweaker.api.event.bus;
 
 import com.blamejared.crafttweaker.api.event.ICancelableEvent;
-import com.blamejared.crafttweaker.api.event.IEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-final class Dispatcher<T extends IEvent<T>> implements Consumer<T> {
+final class Dispatcher<T> implements Consumer<T> {
     
     private final Consumer<T> delegate;
     private final boolean listenToCanceled;
@@ -23,7 +22,7 @@ final class Dispatcher<T extends IEvent<T>> implements Consumer<T> {
     public void accept(final T t) {
         
         try {
-            if(!this.acceptCanceled || (!((ICancelableEvent<?>) t).canceled() || this.listenToCanceled)) {
+            if(!this.acceptCanceled || (!((ICancelableEvent) t).canceled() || this.listenToCanceled)) {
                 this.delegate.accept(t);
             }
         } catch(final Throwable e) {
