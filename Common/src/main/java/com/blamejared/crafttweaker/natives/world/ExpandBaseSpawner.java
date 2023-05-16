@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 public class ExpandBaseSpawner {
     
     @ZenCodeType.Method
-    public static void setEntityId(BaseSpawner internal, EntityType type, @Nullable Level level, RandomSource random, BlockPos position) {
+    public static void setEntityId(BaseSpawner internal, EntityType<Entity> type, @Nullable Level level, RandomSource random, BlockPos position) {
         
         internal.setEntityId(type, level, random, position);
     }

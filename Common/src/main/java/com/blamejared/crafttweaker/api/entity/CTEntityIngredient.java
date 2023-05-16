@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.entity;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.tag.type.KnownTag;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.Many;
 import com.blamejared.crafttweaker.natives.entity.ExpandEntityType;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -74,7 +75,7 @@ public abstract class CTEntityIngredient implements CommandStringDisplayable {
         @Override
         public String getCommandString() {
             
-            return ExpandEntityType.getCommandString(entityType);
+            return ExpandEntityType.getCommandString(GenericUtil.uncheck(entityType));
         }
         
         @Override

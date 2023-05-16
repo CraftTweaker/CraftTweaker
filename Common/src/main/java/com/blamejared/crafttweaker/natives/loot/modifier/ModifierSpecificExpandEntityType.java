@@ -14,6 +14,7 @@ import com.blamejared.crafttweaker.natives.predicate.ExpandMinMaxBoundsInts;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
@@ -23,8 +24,7 @@ import org.openzen.zencode.java.ZenCodeType;
  * Additional methods for easier modification of entity-related loot tables.
  */
 @Document("vanilla/api/loot/modifier/EntityLootModifiers")
-@SuppressWarnings("rawtypes")
-@ZenCodeType.Expansion("crafttweaker.api.entity.EntityType")
+@ZenCodeType.Expansion("crafttweaker.api.entity.EntityType<crafttweaker.api.entity.Entity>")
 @ZenRegister
 public class ModifierSpecificExpandEntityType {
     
@@ -36,7 +36,7 @@ public class ModifierSpecificExpandEntityType {
      * @param modifier The loot modifier to add to the entity.
      */
     @ZenCodeType.Method
-    public static void addLootModifier(final EntityType internal, final String name, final ILootModifier modifier) {
+    public static void addLootModifier(final EntityType<Entity> internal, final String name, final ILootModifier modifier) {
         
         LootManager.INSTANCE.getModifierManager().register(
                 name,
@@ -53,7 +53,7 @@ public class ModifierSpecificExpandEntityType {
      * @param modifier The loot modifier to add to the entity.
      */
     @ZenCodeType.Method
-    public static void addPlayerOnlyLootModifier(final EntityType internal, final String name, final ILootModifier modifier) {
+    public static void addPlayerOnlyLootModifier(final EntityType<Entity> internal, final String name, final ILootModifier modifier) {
         
         LootManager.INSTANCE.getModifierManager().register(
                 name,
@@ -74,7 +74,7 @@ public class ModifierSpecificExpandEntityType {
      * @param modifier The loot modifier to add to the entity.
      */
     @ZenCodeType.Method
-    public static void addWeaponOnlyLootModifier(final EntityType internal, final String name, final IItemStack weapon, final ILootModifier modifier) {
+    public static void addWeaponOnlyLootModifier(final EntityType<Entity> internal, final String name, final IItemStack weapon, final ILootModifier modifier) {
         
         addWeaponOnlyLootModifier(internal, name, weapon, false, modifier);
     }
@@ -92,7 +92,7 @@ public class ModifierSpecificExpandEntityType {
      * @param modifier    The loot modifier to add to the entity.
      */
     @ZenCodeType.Method
-    public static void addWeaponOnlyLootModifier(final EntityType internal, final String name, final IItemStack weapon, final boolean matchDamage, final ILootModifier modifier) {
+    public static void addWeaponOnlyLootModifier(final EntityType<Entity> internal, final String name, final IItemStack weapon, final boolean matchDamage, final ILootModifier modifier) {
         
         addWeaponOnlyLootModifier(internal, name, weapon, matchDamage, false, modifier);
     }
@@ -111,7 +111,7 @@ public class ModifierSpecificExpandEntityType {
      * @param modifier    The loot modifier to add to the entity.
      */
     @ZenCodeType.Method
-    public static void addWeaponOnlyLootModifier(final EntityType internal, final String name, final IItemStack weapon,
+    public static void addWeaponOnlyLootModifier(final EntityType<Entity> internal, final String name, final IItemStack weapon,
                                                  final boolean matchDamage, final boolean matchNbt, final ILootModifier modifier) {
         
         LootManager.INSTANCE.getModifierManager().register(
@@ -133,7 +133,7 @@ public class ModifierSpecificExpandEntityType {
      * @param modifier The loot modifier to add to the entity.
      */
     @ZenCodeType.Method
-    public static void addWeaponAndPlayerOnlyLootModifier(final EntityType internal, final String name, final IItemStack weapon, final ILootModifier modifier) {
+    public static void addWeaponAndPlayerOnlyLootModifier(final EntityType<Entity> internal, final String name, final IItemStack weapon, final ILootModifier modifier) {
         
         addWeaponAndPlayerOnlyLootModifier(internal, name, weapon, false, modifier);
     }
@@ -151,7 +151,7 @@ public class ModifierSpecificExpandEntityType {
      * @param modifier    The loot modifier to add to the entity.
      */
     @ZenCodeType.Method
-    public static void addWeaponAndPlayerOnlyLootModifier(final EntityType internal, final String name, final IItemStack weapon, final boolean matchDamage, final ILootModifier modifier) {
+    public static void addWeaponAndPlayerOnlyLootModifier(final EntityType<Entity> internal, final String name, final IItemStack weapon, final boolean matchDamage, final ILootModifier modifier) {
         
         addWeaponAndPlayerOnlyLootModifier(internal, name, weapon, matchDamage, false, modifier);
     }
@@ -170,7 +170,7 @@ public class ModifierSpecificExpandEntityType {
      * @param modifier    The loot modifier to add to the entity.
      */
     @ZenCodeType.Method
-    public static void addWeaponAndPlayerOnlyLootModifier(final EntityType internal, final String name, final IItemStack weapon,
+    public static void addWeaponAndPlayerOnlyLootModifier(final EntityType<Entity> internal, final String name, final IItemStack weapon,
                                                           final boolean matchDamage, final boolean matchNbt, final ILootModifier modifier) {
         
         LootManager.INSTANCE.getModifierManager().register(
@@ -184,7 +184,7 @@ public class ModifierSpecificExpandEntityType {
         );
     }
     
-    private static LootItemCondition.Builder makeForType(final EntityType type) {
+    private static LootItemCondition.Builder makeForType(final EntityType<Entity> type) {
         
         return ExpandLootItemEntityPropertyCondition.create(
                 LootContext.EntityTarget.THIS,

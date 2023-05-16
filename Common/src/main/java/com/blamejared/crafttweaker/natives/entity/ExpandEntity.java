@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.natives.entity;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.MapData;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
@@ -76,9 +77,9 @@ public class ExpandEntity {
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("type")
-    public static EntityType getType(Entity internal) {
+    public static EntityType<Entity> getType(Entity internal) {
         
-        return internal.getType();
+        return GenericUtil.uncheck(internal.getType());
     }
     
     @ZenCodeType.Method

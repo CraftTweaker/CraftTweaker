@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.attribute.ItemAttributeModifierBase;
 import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.api.util.AttributeUtil;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.natives.block.ExpandBlock;
 import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
 import com.blamejared.crafttweaker.natives.entity.ExpandEntity;
@@ -145,7 +146,7 @@ public interface IEventHelper {
         if(ENTITY_INFO_PLAYERS.contains(player)) {
             if(!world.isClientSide() && hand == InteractionHand.MAIN_HAND) {
                 sendAndLog(player, Component.translatable("crafttweaker.command.info.entity.name", ExpandEntity.getName(target)));
-                sendAndLog(player, Component.translatable("crafttweaker.command.info.entity.type.bracket", ExpandEntityType.getCommandString(target.getType())));
+                sendAndLog(player, Component.translatable("crafttweaker.command.info.entity.type.bracket", ExpandEntityType.getCommandString(GenericUtil.uncheck(target.getType()))));
                 
                 MapData data = ExpandEntity.getData(target);
                 if(!data.isEmpty()) {

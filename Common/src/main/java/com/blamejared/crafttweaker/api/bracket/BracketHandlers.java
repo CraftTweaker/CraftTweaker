@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.replacement.ITargetingStrategy;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
 import com.blamejared.crafttweaker.natives.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.natives.world.damage.ExpandDamageSource;
@@ -17,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.npc.VillagerProfession;
@@ -258,7 +260,7 @@ public class BracketHandlers {
      */
     @ZenCodeType.Method
     @BracketResolver("entitytype")
-    public static EntityType getEntityType(String tokens) {
+    public static EntityType<Entity> getEntityType(String tokens) {
         
         final int length = tokens.split(":").length;
         if(length == 0 || length > 2) {
@@ -266,8 +268,8 @@ public class BracketHandlers {
         }
         final ResourceLocation resourceLocation = new ResourceLocation(tokens);
         
-        return BuiltInRegistries.ENTITY_TYPE.getOptional(resourceLocation)
-                .orElseThrow(() -> new IllegalArgumentException("Could not get entitytype <entitytype:" + tokens + ">"));
+        return GenericUtil.uncheck(BuiltInRegistries.ENTITY_TYPE.getOptional(resourceLocation)
+                .orElseThrow(() -> new IllegalArgumentException("Could not get entitytype <entitytype:" + tokens + ">")));
     }
     
     

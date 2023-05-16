@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.natives.world;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.level.CraftTweakerSavedData;
 import com.blamejared.crafttweaker.api.level.CraftTweakerSavedDataHolder;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.core.BlockPos;
@@ -152,7 +153,7 @@ public class ExpandServerLevel {
     }
     
     /**
-     * Gets entities in the world that match the given Predicate and the given MCEntityType (if provided).
+     * Gets entities in the world that match the given Predicate and the given EntityType (if provided).
      *
      * @param predicate The predicate to check against.
      *
@@ -162,9 +163,9 @@ public class ExpandServerLevel {
      * @docParam type <entitytype:minecraft:sheep>
      */
     @ZenCodeType.Method
-    public static List<Entity> getEntities(ServerLevel internal, Predicate<Entity> predicate, @ZenCodeType.Optional EntityType type) {
+    public static List<Entity> getEntities(ServerLevel internal, Predicate<Entity> predicate, @ZenCodeType.Optional EntityType<Entity> type) {
         
-        return internal.getEntities(type, predicate);
+        return GenericUtil.uncheck(internal.getEntities(type, predicate));
     }
     
 }

@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.BracketDumper;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.fluid.IFluidStack;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.natives.block.ExpandBlock;
 import com.blamejared.crafttweaker.natives.block.material.ExpandMaterial;
@@ -18,6 +19,7 @@ import com.blamejared.crafttweaker.natives.villager.ExpandVillagerProfession;
 import com.blamejared.crafttweaker.natives.world.damage.ExpandDamageSource;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -94,7 +96,7 @@ public class BracketDumpers {
         
         return BuiltInRegistries.ENTITY_TYPE
                 .stream()
-                .map(ExpandEntityType::getCommandString)
+                .map(internal -> ExpandEntityType.getCommandString(GenericUtil.uncheck(internal)))
                 .collect(Collectors.toList());
     }
     
