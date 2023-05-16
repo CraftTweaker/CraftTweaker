@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.action.internal.CraftTweakerAction;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import net.minecraft.world.level.block.ComposterBlock;
+import org.apache.logging.log4j.Logger;
 
 public class ActionSetCompostable extends CraftTweakerAction implements IUndoableAction {
     
@@ -53,7 +54,7 @@ public class ActionSetCompostable extends CraftTweakerAction implements IUndoabl
     
     
     @Override
-    public boolean shouldApplyOn(final IScriptLoadSource source) {
+    public boolean shouldApplyOn(final IScriptLoadSource source, final Logger logger) {
         
         return true;
     }

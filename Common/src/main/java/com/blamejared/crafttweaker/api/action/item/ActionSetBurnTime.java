@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.world.item.crafting.RecipeType;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class ActionSetBurnTime extends CraftTweakerAction implements IUndoableAc
     }
     
     @Override
-    public boolean shouldApplyOn(final IScriptLoadSource source) {
+    public boolean shouldApplyOn(final IScriptLoadSource source, final Logger logger) {
         
         return true;
     }

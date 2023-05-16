@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.entity.INameTagFunction;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.world.entity.Entity;
+import org.apache.logging.log4j.Logger;
 
 import java.util.function.Predicate;
 
@@ -45,7 +46,7 @@ public class ActionSetNameTag extends CraftTweakerAction implements IUndoableAct
     }
     
     @Override
-    public boolean shouldApplyOn(IScriptLoadSource source) {
+    public boolean shouldApplyOn(IScriptLoadSource source, Logger logger) {
         
         return Services.DISTRIBUTION.isClient();
     }

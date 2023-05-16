@@ -54,18 +54,6 @@ public final class BuiltinRecipeComponents {
                 Object::equals
         );
         
-        public static final IRecipeComponent<CookingBookCategory> COOKING_BOOK_CATEGORY = IRecipeComponent.simple(
-                CraftTweakerConstants.rl("metadata/cooking_book_category"),
-                new TypeToken<>() {},
-                Object::equals
-        );
-        
-        public static final IRecipeComponent<CraftingBookCategory> CRAFTING_BOOK_CATEGORY = IRecipeComponent.simple(
-                CraftTweakerConstants.rl("metadata/crafting_book_category"),
-                new TypeToken<>() {},
-                Object::equals
-        );
-        
         public static final IRecipeComponent<MirrorAxis> MIRROR_AXIS = IRecipeComponent.simple(
                 CraftTweakerConstants.rl("metadata/mirror_axis"),
                 new TypeToken<>() {},

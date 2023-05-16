@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.natives.block.ExpandBlock;
 import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -86,7 +87,7 @@ public class ActionSetBlockProperty<T> extends CraftTweakerAction implements IUn
     }
     
     @Override
-    public boolean shouldApplyOn(IScriptLoadSource source) {
+    public boolean shouldApplyOn(IScriptLoadSource source, final Logger logger) {
         
         return true;
     }

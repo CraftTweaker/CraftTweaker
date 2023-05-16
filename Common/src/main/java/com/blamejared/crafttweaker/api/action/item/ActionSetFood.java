@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessItem;
 import net.minecraft.world.food.FoodProperties;
+import org.apache.logging.log4j.Logger;
 
 public class ActionSetFood extends CraftTweakerAction implements IUndoableAction {
     
@@ -50,7 +51,7 @@ public class ActionSetFood extends CraftTweakerAction implements IUndoableAction
     }
     
     @Override
-    public boolean shouldApplyOn(final IScriptLoadSource source) {
+    public boolean shouldApplyOn(final IScriptLoadSource source, final Logger logger) {
         
         return true;
     }

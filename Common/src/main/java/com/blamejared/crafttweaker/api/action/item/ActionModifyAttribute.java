@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.attribute.ItemAttributeModifierBase;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.platform.Services;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -51,7 +52,7 @@ public class ActionModifyAttribute extends CraftTweakerAction implements IUndoab
     }
     
     @Override
-    public boolean shouldApplyOn(final IScriptLoadSource source) {
+    public boolean shouldApplyOn(final IScriptLoadSource source, final Logger logger) {
         
         return true;
     }

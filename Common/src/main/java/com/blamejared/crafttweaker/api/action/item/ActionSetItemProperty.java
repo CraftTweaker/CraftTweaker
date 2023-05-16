@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
 import com.blamejared.crafttweaker.api.action.internal.CraftTweakerAction;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
+import org.apache.logging.log4j.Logger;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -68,7 +69,7 @@ public class ActionSetItemProperty<T> extends CraftTweakerAction implements IUnd
     }
     
     @Override
-    public boolean shouldApplyOn(IScriptLoadSource source) {
+    public boolean shouldApplyOn(IScriptLoadSource source, Logger logger) {
         
         return true;
     }

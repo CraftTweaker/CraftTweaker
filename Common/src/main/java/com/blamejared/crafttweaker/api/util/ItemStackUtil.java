@@ -3,21 +3,13 @@ package com.blamejared.crafttweaker.api.util;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
 public final class ItemStackUtil {
-    
-    /**
-     * Do not use, use {@link IItemStack#empty()} instead
-     */
-    @ApiStatus.Internal
-    @Deprecated(forRemoval = true)
-    public static final Supplier<IItemStack> EMPTY_STACK = Suppliers.memoize(() -> IItemStack.of(ItemStack.EMPTY));
     
     public static String getCommandString(final ItemStack stack) {
         
