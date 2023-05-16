@@ -27,7 +27,7 @@ public abstract class ActionTooltipBase extends CraftTweakerAction implements IU
     @Override
     public boolean shouldApplyOn(final IScriptLoadSource source, final Logger logger) {
         
-        return Services.DISTRIBUTION.isClient();
+        return true;
     }
     
 }

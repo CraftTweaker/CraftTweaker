@@ -52,7 +52,6 @@ public class ActionSetCompostable extends CraftTweakerAction implements IUndoabl
         return "Undoing setting Composter value of: " + stack.getCommandString() + ", to: " + newValue + ", reverting to: " + oldValue;
     }
     
-    
     @Override
     public boolean shouldApplyOn(final IScriptLoadSource source, final Logger logger) {
         

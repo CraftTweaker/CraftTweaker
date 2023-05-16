@@ -87,7 +87,7 @@ public class ActionSetBlockProperty<T> extends CraftTweakerAction implements IUn
     }
     
     @Override
-    public boolean shouldApplyOn(IScriptLoadSource source, final Logger logger) {
+    public boolean shouldApplyOn(final IScriptLoadSource source, final Logger logger) {
         
         return true;
     }

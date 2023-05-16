@@ -56,5 +56,4 @@ public class ActionSetFood extends CraftTweakerAction implements IUndoableAction
         return true;
     }
     
-    
 }
