@@ -93,28 +93,6 @@ public interface IAction {
      * Determines whether an action should be applied for scripts loading in the given {@link IScriptLoadSource}.
      *
      * @param source The {@link IScriptLoadSource} responsible for loading the scripts.
-     *
-     * @return If the action should be applied.
-     *
-     * @apiNote CraftTweaker provides two load sources by default:
-     * {@link CraftTweakerConstants#RELOAD_LISTENER_SOURCE_ID} allows to identify scripts being loaded on the server
-     * thread, {@link CraftTweakerConstants#CLIENT_RECIPES_UPDATED_SOURCE_ID} allows identification of scripts loaded on
-     * the client thread when joining a server.
-     * @implSpec By default, scripts are applied if the load source's ID matches
-     * {@link CraftTweakerConstants#RELOAD_LISTENER_SOURCE_ID}.
-     * @since 9.1.0
-     * @deprecated Override {@link #shouldApplyOn(IScriptLoadSource, Logger)} instead.
-     */
-    @Deprecated
-    default boolean shouldApplyOn(final IScriptLoadSource source) {
-        
-        return source.id().equals(CraftTweakerConstants.RELOAD_LISTENER_SOURCE_ID);
-    }
-    
-    /**
-     * Determines whether an action should be applied for scripts loading in the given {@link IScriptLoadSource}.
-     *
-     * @param source The {@link IScriptLoadSource} responsible for loading the scripts.
      * @param logger The {@link Logger} instance that should be used to log error messages if needed.
      *
      * @return If the action should be applied.
@@ -129,7 +107,7 @@ public interface IAction {
      */
     default boolean shouldApplyOn(final IScriptLoadSource source, final Logger logger) {
         
-        return this.shouldApplyOn(source);
+        return source.id().equals(CraftTweakerConstants.RELOAD_LISTENER_SOURCE_ID);
     }
     
     /**
@@ -156,30 +134,7 @@ public interface IAction {
      * Ensures that an action is only applied on a certain loader.
      *
      * <p>This method is <strong>not meant to be overridden</strong>, but rather used as an additional check in
-     * {@link IAction#shouldApplyOn(IScriptLoadSource)} if needed.</p>
-     *
-     * <p>If the check fails, this method will also log a warning stating the script position where the error occurred
-     * if possible (see {@link #getDeclaredScriptPosition()}) and which loader is the one the action is supposed to be
-     * ran on.</p>
-     *
-     * @param loader The {@link IScriptLoader} the action should be only applied on.
-     *
-     * @return If this loader matches the one specified as a parameter.
-     *
-     * @since 9.1.0
-     * @deprecated Use {@link #assertLoader(IScriptLoader, Logger)} instead.
-     */
-    @Deprecated
-    default boolean assertLoader(final IScriptLoader loader) {
-        
-        return this.assertLoader(loader, this.logger());
-    }
-    
-    /**
-     * Ensures that an action is only applied on a certain loader.
-     *
-     * <p>This method is <strong>not meant to be overridden</strong>, but rather used as an additional check in
-     * {@link IAction#shouldApplyOn(IScriptLoadSource)} if needed.</p>
+     * {@link IAction#shouldApplyOn(IScriptLoadSource, Logger)} if needed.</p>
      *
      * <p>If the check fails, this method will also log a warning stating the script position where the error occurred
      * if possible (see {@link #getDeclaredScriptPosition()}) and which loader is the one the action is supposed to be

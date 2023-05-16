@@ -161,7 +161,6 @@ public enum LootModifierManager {
         
         return NameUtil.fromFixedName(
                 name,
-                // TODO("Or CommonLoggers.zenCode()?")
                 (fixed, mistakes) -> CommonLoggers.api().warn(
                         "The given loot modifier name '{}' isn't valid due to:\n{}\nThe name was changed to '{}'",
                         name,

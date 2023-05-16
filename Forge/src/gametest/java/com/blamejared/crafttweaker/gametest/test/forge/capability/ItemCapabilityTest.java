@@ -37,7 +37,6 @@ public class ItemCapabilityTest implements CraftTweakerGameTest {
         final GameTestLoggerAppender.QueryableLog newLog = GameTestLoggerAppender.QueryableLog.mock(prints);
         newLog.assertOutput(0, IItemStack.of(new ItemStack(Items.DIAMOND, 2)).getCommandString());
         newLog.assertOutput(1, IItemStack.of(new ItemStack(Items.DIRT)).getCommandString());
-        newLog.dump();
     }
     
 }

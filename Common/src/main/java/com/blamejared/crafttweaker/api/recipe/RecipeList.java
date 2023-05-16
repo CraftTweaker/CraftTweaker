@@ -121,7 +121,6 @@ public class RecipeList<T extends Recipe<?>> {
     public void add(ResourceLocation id, T recipe) {
         
         if(getByName().containsKey(recipe.getId())) {
-            // TODO("Or CommonLoggers.zenCode()?")
             CommonLoggers.api().warn(
                     "A recipe with the name '{}' already exists and will be overwritten: this is most likely an error in your scripts",
                     recipe.getId().getPath()

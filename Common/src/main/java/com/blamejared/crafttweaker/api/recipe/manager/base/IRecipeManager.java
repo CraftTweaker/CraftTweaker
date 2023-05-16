@@ -17,6 +17,7 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.api.recipe.RecipeList;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.NameUtil;
 import com.blamejared.crafttweaker.api.zencode.util.PositionUtil;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -92,7 +93,7 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
                         """.formatted(recipeTypeKey));
             }
         }
-        T iRecipe = (T) RecipeManager.fromJson(new ResourceLocation(CraftTweakerConstants.MOD_ID, name), recipeObject);
+        T iRecipe = GenericUtil.uncheck(RecipeManager.fromJson(new ResourceLocation(CraftTweakerConstants.MOD_ID, name), recipeObject));
         RecipeType<?> recipeType = iRecipe.getType();
         if(recipeType != getRecipeType()) {
             throw new IllegalArgumentException("""
@@ -262,10 +263,12 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
      */
     default Map<ResourceLocation, T> getRecipes() {
         
-        return (Map<ResourceLocation, T>) CraftTweakerAPI.getAccessibleElementsProvider()
-                .accessibleRecipeManager()
-                .crafttweaker$getRecipes()
-                .computeIfAbsent(getRecipeType(), key -> new HashMap<>());
+        return GenericUtil.uncheck(
+                CraftTweakerAPI.getAccessibleElementsProvider()
+                        .accessibleRecipeManager()
+                        .crafttweaker$getRecipes()
+                        .computeIfAbsent(getRecipeType(), key -> new HashMap<>())
+        );
     }
     
     /**
@@ -296,7 +299,6 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
         CodePosition position = PositionUtil.getZCScriptPositionFromStackTrace();
         return NameUtil.fixing(
                 name,
-                // TODO("Or CommonLoggers.zenCode()?")
                 (fixed, mistakes) -> CommonLoggers.api().warn(
                         "{}Invalid recipe name '{}', mistakes:\n{}\nNew recipe name: {}",
                         position == CodePosition.UNKNOWN ? "" : position + ": ",
