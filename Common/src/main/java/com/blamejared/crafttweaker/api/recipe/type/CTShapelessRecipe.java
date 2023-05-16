@@ -1,10 +1,6 @@
 package com.blamejared.crafttweaker.api.recipe.type;
 
-<<<<<<< HEAD:Common/src/main/java/com/blamejared/crafttweaker/api/recipe/type/CTShapelessRecipe.java
-import com.blamejared.crafttweaker.api.*;
-=======
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
->>>>>>> 10ed8b8b (Add common loggers for code cleanup):Common/src/main/java/com/blamejared/crafttweaker/api/recipe/type/CTShapelessRecipeBase.java
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.logging.CommonLoggers;
@@ -175,6 +171,7 @@ public class CTShapelessRecipe extends ShapelessRecipe {
         return this.output;
     }
     
+    @FunctionalInterface
     private interface ForAllUniqueAction {
         
         void accept(int ingredientIndex, int matchingSlot, IItemStack stack);
