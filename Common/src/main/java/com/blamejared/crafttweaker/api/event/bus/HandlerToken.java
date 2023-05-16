@@ -1,3 +1,3 @@
 package com.blamejared.crafttweaker.api.event.bus;
 
-public final class HandlerToken<T> {}
+public sealed interface HandlerToken<T> permits ArrayBackedDispatcher.ArrayHandlerToken {}

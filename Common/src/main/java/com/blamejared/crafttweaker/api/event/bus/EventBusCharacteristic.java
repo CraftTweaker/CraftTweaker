@@ -4,9 +4,7 @@ import com.google.common.base.CaseFormat;
 
 public enum EventBusCharacteristic {
     SUPPORTS_CANCELLATION,
-    IGNORE_PHASES,
-    FORCE_ARRAY_DISPATCHING,
-    FORCE_LIST_DISPATCHING;
+    IGNORE_PHASES;
     
     
     @Override

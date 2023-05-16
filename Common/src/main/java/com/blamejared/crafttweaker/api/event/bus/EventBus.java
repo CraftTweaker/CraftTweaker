@@ -42,10 +42,6 @@ public final class EventBus<T> {
         
         final Set<EventBusCharacteristic> characteristicSet = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(characteristics)));
         
-        if(characteristicSet.contains(EventBusCharacteristic.FORCE_ARRAY_DISPATCHING) && characteristicSet.contains(EventBusCharacteristic.FORCE_LIST_DISPATCHING)) {
-            throw new IllegalArgumentException("Unable to force both array and list dispatching in event bus characteristics");
-        }
-        
         if(characteristicSet.contains(EventBusCharacteristic.SUPPORTS_CANCELLATION) && !type.isSubtypeOf(ICancelableEvent.class)) {
             throw new IllegalArgumentException("Unable to support cancellation for an event that is not cancelable");
         }
@@ -56,13 +52,7 @@ public final class EventBus<T> {
     private static <T> BusDispatcher<T> findDispatcher(final Set<EventBusCharacteristic> characteristics) {
         
         final boolean cancellation = characteristics.contains(EventBusCharacteristic.SUPPORTS_CANCELLATION);
-        
-        if(characteristics.contains(EventBusCharacteristic.FORCE_LIST_DISPATCHING)) {
-            return new ListBackedDispatcher<>(cancellation);
-        } else if(characteristics.contains(EventBusCharacteristic.FORCE_ARRAY_DISPATCHING)) {
-            return new ArrayBackedDispatcher<>(cancellation);
-        }
-        return new SelectiveBackingDispatcher<>(cancellation);
+        return new ArrayBackedDispatcher<>(cancellation);
     }
     
     public HandlerToken<T> registerHandler(final Consumer<T> handler) {

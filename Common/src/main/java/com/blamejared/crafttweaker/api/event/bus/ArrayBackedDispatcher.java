@@ -7,21 +7,49 @@ import java.util.function.Consumer;
 
 final class ArrayBackedDispatcher<T> implements BusDispatcher<T> {
     
-    private static final int DEFAULT_PER_PHASE_QUANTITY = 5;
+    static final class ArrayHandlerToken<T> implements HandlerToken<T> {
+        private final long positions;
+        private boolean valid;
+        
+        private ArrayHandlerToken(final long positions) {
+            this.positions = positions;
+            this.valid = true;
+        }
+        
+        static <T> ArrayHandlerToken<T> of(final Phase phase, final int index) {
+            return new ArrayHandlerToken<>(((long) phase.ordinal()) << 32L | ((long) index));
+        }
+        
+        int phase() {
+            this.valid();
+            return (int) (this.positions >>> 32L);
+        }
+        
+        int index() {
+            this.valid();
+            return (int) this.positions;
+        }
+        
+        void invalidate() {
+            this.valid = false;
+        }
+        
+        private void valid() {
+            if (!this.valid) {
+                throw new IllegalStateException("Token has been invalidated");
+            }
+        }
+    }
+    
     private static final Consumer<Object> UNREGISTERED = it -> {};
     
     private final boolean accountForCancellation;
-    
-    private int perPhaseQuantity;
-    private Consumer<?>[] consumers;
-    private HandlerToken<?>[] tokens;
+    private final Consumer<T>[][] consumers;
     
     ArrayBackedDispatcher(final boolean accountForCancellation) {
         
         this.accountForCancellation = accountForCancellation;
-        this.perPhaseQuantity = DEFAULT_PER_PHASE_QUANTITY;
-        this.consumers = new Consumer<?>[Phase.values().length * this.perPhaseQuantity];
-        this.tokens = new HandlerToken<?>[this.consumers.length];
+        this.consumers = GenericUtil.uncheck(new Consumer<?>[Phase.values().length][0]);
     }
     
     @Override
@@ -33,89 +61,68 @@ final class ArrayBackedDispatcher<T> implements BusDispatcher<T> {
         }
         
         // Not enough space: bigger!
-        this.grow();
+        this.grow(phase);
         return this.doRegister(listenToCanceled, phase, consumer, true);
     }
     
     @Override
     public void unregister(final HandlerToken<T> token) {
         
-        for(int i = 0, s = this.tokens.length; i < s; ++i) {
-            
-            if(this.tokens[i] == token) {
-                final int next = i + 1;
-                final Consumer<T> consumer = next == s || this.consumers[next] == null ? null : GenericUtil.uncheck(UNREGISTERED);
-                this.consumers[i] = consumer;
-                return;
-            }
+        if (!(token instanceof ArrayBackedDispatcher.ArrayHandlerToken<T> arrayToken)) {
+            throw new IllegalArgumentException("Invalid token object for dispatcher");
         }
         
-        throw new IllegalArgumentException("Unknown token");
+        final Consumer<T>[] consumers = this.consumers[arrayToken.phase()];
+        final int next = arrayToken.index() + 1;
+        final Consumer<T> newConsumer = next == consumers.length || consumers[next] == null? null : GenericUtil.uncheck(UNREGISTERED);
+        consumers[arrayToken.index()] = newConsumer;
+        
+        arrayToken.invalidate();
     }
     
     @Override
     public T dispatch(final T event) {
         
-        final Consumer<?>[] consumers = this.consumers;
-        for(int i = 0, s = consumers.length; i < s; ++i) {
-            
-            @SuppressWarnings("unchecked") final Consumer<T> consumer = (Consumer<T>) consumers[i];
-            
-            if(consumer == null) {
-                i = ((i / this.perPhaseQuantity) + 1) * this.perPhaseQuantity - 1;
-            } else {
+        final Consumer<T>[][] consumers = this.consumers;
+        for(final Consumer<T>[] phasedConsumers : consumers) {
+            for(final Consumer<T> phasedConsumer : phasedConsumers) {
+                final Consumer<T> consumer = GenericUtil.uncheck(phasedConsumer);
+                if(consumer == null) {
+                    break;
+                }
                 consumer.accept(event);
             }
         }
-        
         return event;
     }
     
     private HandlerToken<T> doRegister(final boolean listenToCanceled, final Phase phase, final Consumer<T> consumer, final boolean exception) {
         
-        final HandlerToken<T> token = new HandlerToken<>();
-        
-        final int firstIndex = phase.ordinal() * 10;
-        for(int i = firstIndex, s = firstIndex + DEFAULT_PER_PHASE_QUANTITY; i < s; ++i) {
-            if(this.consumers[i] == null || this.consumers[i] == UNREGISTERED) {
-                this.consumers[i] = new Dispatcher<>(this.accountForCancellation, listenToCanceled, consumer);
-                this.tokens[i] = token;
-                return token;
+        final Consumer<T>[] candidates = this.consumers[phase.ordinal()];
+        for (int i = 0, s = candidates.length; i < s; ++i) {
+            if (candidates[i] == null || candidates[i] == UNREGISTERED) {
+                candidates[i] = new Dispatcher<>(this.accountForCancellation, listenToCanceled, consumer);
+                return ArrayHandlerToken.of(phase, i);
             }
         }
         
-        if(exception) {
-            throw new IllegalStateException();
+        if (exception) {
+            throw new IllegalStateException("Unable to registert handler");
         }
         
         return null;
     }
     
-    private void grow() {
+    private void grow(final Phase phase) {
         
-        final int oldSize = this.perPhaseQuantity;
-        final int newSize = oldSize * 3 / 2;
-        final Phase[] phases = Phase.values();
+        final int target = phase.ordinal();
+        final Consumer<T>[] original = this.consumers[target];
+        final int length = original.length;
         
-        final Consumer<?>[] newConsumers = new Consumer<?>[newSize * phases.length];
-        final HandlerToken<?>[] newTokens = new HandlerToken<?>[newConsumers.length];
+        final Consumer<T>[] replacement = GenericUtil.uncheck(new Consumer<?>[(length * 3 / 2) + 1]);
+        System.arraycopy(original, 0, replacement, 0, length);
         
-        for(int p = 0, l = phases.length; p < l; ++p) {
-            final int newP = p * newSize;
-            final int oldP = p * oldSize;
-            
-            for(int i = 0; i < oldSize; ++i) {
-                final int newI = newP + i;
-                final int oldI = oldP + i;
-                
-                newConsumers[newI] = this.consumers[oldI];
-                newTokens[newI] = this.tokens[oldI];
-            }
-        }
-        
-        this.perPhaseQuantity = newSize;
-        this.consumers = newConsumers;
-        this.tokens = newTokens;
+        this.consumers[target] = replacement;
     }
     
 }
