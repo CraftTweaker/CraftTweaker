@@ -104,6 +104,10 @@ public final class EventBus<T> {
     }
     
     public T post(final T event) {
+        return this.postCatching(event, e -> { throw e; });
+    }
+    
+    public T postCatching(final T event, final Consumer<BusHandlingException> exceptionHandler) {
         
         try {
             // TODO("Evaluate performance")
@@ -115,7 +119,7 @@ public final class EventBus<T> {
                 readLock.unlock();
             }
         } catch(final BusHandlingException e) {
-            // TODO("Log exception")
+            exceptionHandler.accept(e);
             return event;
         }
     }

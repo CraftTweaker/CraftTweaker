@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker.api.event.bus;
 
-final class BusHandlingException extends RuntimeException {
+public final class BusHandlingException extends RuntimeException {
     
     BusHandlingException(final Throwable t) {
         
