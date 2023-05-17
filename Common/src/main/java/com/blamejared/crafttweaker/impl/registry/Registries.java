@@ -12,6 +12,7 @@ import com.blamejared.crafttweaker.impl.registry.zencode.ZenClassRegistry;
 record Registries(
         BracketResolverRegistry bracketResolverRegistry,
         EnumBracketRegistry enumBracketRegistry,
+        EventRegistry eventRegistry,
         LoaderRegistry loaderRegistry,
         LoadSourceRegistry loadSourceRegistry,
         PreprocessorRegistry preprocessorRegistry,

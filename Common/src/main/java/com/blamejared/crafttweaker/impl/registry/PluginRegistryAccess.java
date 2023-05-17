@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.registry;
 
+import com.blamejared.crafttweaker.api.event.bus.EventBus;
 import com.blamejared.crafttweaker.api.natives.NativeTypeInfo;
 import com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler;
 import com.blamejared.crafttweaker.api.recipe.component.IRecipeComponent;
@@ -14,6 +15,7 @@ import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.ZenTypeInfo;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
 import com.blamejared.crafttweaker.impl.plugin.core.IPluginRegistryAccess;
+import com.google.common.reflect.TypeToken;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
@@ -21,7 +23,6 @@ import org.openzen.zenscript.parser.BracketExpressionParser;
 
 import java.util.Collection;
 
-@SuppressWarnings("ClassCanBeRecord")
 final class PluginRegistryAccess implements IPluginRegistryAccess {
     
     private final Registries registries;
@@ -103,6 +104,12 @@ final class PluginRegistryAccess implements IPluginRegistryAccess {
     public void registerComponents(final Collection<IRecipeComponent<?>> components) {
         
         this.registries.recipeComponentRegistry().registerComponents(components);
+    }
+    
+    @Override
+    public <T> void registerEventBusMapping(final TypeToken<T> token, final EventBus<T> bus) {
+        
+        this.registries.eventRegistry().registerBusMapping(token, bus);
     }
     
     @Override

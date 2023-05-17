@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api;
 
 import com.blamejared.crafttweaker.api.command.type.IBracketDumperInfo;
+import com.blamejared.crafttweaker.api.event.IEventRegistry;
 import com.blamejared.crafttweaker.api.recipe.component.IRecipeComponent;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipe.replacement.IReplacerRegistry;
@@ -260,6 +261,22 @@ public interface ICraftTweakerRegistry {
      */
     Set<String> getAllEnumStringsForEnumBracket(final IScriptLoader loader);
     
+    /**
+     * Offers access to the {@link IReplacerRegistry}.
+     *
+     * @return The {@link IReplacerRegistry}.
+     *
+     * @since 10.0.0
+     */
     IReplacerRegistry getReplacerRegistry();
+    
+    /**
+     * Provides access to the global {@link IEventRegistry}.
+     *
+     * @return The {@link IEventRegistry}.
+     *
+     * @since 11.0.0
+     */
+    IEventRegistry getEventRegistry();
     
 }

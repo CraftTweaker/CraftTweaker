@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.plugin.core;
 
+import com.blamejared.crafttweaker.api.event.bus.EventBus;
 import com.blamejared.crafttweaker.api.natives.NativeTypeInfo;
 import com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler;
 import com.blamejared.crafttweaker.api.recipe.component.IRecipeComponent;
@@ -13,6 +14,7 @@ import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoader;
 import com.blamejared.crafttweaker.api.zencode.ZenTypeInfo;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptRunModuleConfigurator;
+import com.google.common.reflect.TypeToken;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
@@ -48,6 +50,8 @@ public interface IPluginRegistryAccess {
     <T, U extends ITagManager<?>> void registerTaggableElementManager(final ResourceKey<T> key, final TagManagerFactory<T, U> factory);
     
     void registerComponents(final Collection<IRecipeComponent<?>> components);
+    
+    <T> void registerEventBusMapping(final TypeToken<T> token, final EventBus<T> bus);
     
     <T extends Recipe<?>> void registerHandler(final Class<? extends T> clazz, final IRecipeHandler<T> handler);
     

@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.impl.registry;
 
 import com.blamejared.crafttweaker.api.ICraftTweakerRegistry;
 import com.blamejared.crafttweaker.api.command.type.IBracketDumperInfo;
+import com.blamejared.crafttweaker.api.event.IEventRegistry;
 import com.blamejared.crafttweaker.api.recipe.component.IRecipeComponent;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipe.replacement.IReplacerRegistry;
@@ -57,6 +58,7 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
         this.registries = new Registries(
                 new BracketResolverRegistry(),
                 new EnumBracketRegistry(),
+                new EventRegistry(),
                 new LoaderRegistry(),
                 new LoadSourceRegistry(),
                 new PreprocessorRegistry(),
@@ -206,6 +208,12 @@ public final class CraftTweakerRegistry implements ICraftTweakerRegistry {
     public IReplacerRegistry getReplacerRegistry() {
         
         return this.registries.replacerRegistry();
+    }
+    
+    @Override
+    public IEventRegistry getEventRegistry() {
+        
+        return this.registries.eventRegistry();
     }
     
 }

@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.plugin.core;
 import com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin;
+import com.blamejared.crafttweaker.api.plugin.IEventRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IJavaNativeIntegrationRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IListenerRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ILoaderRegistrationHandler;
@@ -86,13 +87,19 @@ record DecoratedCraftTweakerPlugin(ResourceLocation id, ICraftTweakerPlugin plug
     @Override
     public void registerTaggableElements(final ITaggableElementRegistrationHandler handler) {
         
-        this.plugin.registerTaggableElements(handler);
+        this.plugin().registerTaggableElements(handler);
     }
     
     @Override
     public void registerReplacerComponents(final IReplacerComponentRegistrationHandler handler) {
         
         this.plugin().registerReplacerComponents(handler);
+    }
+    
+    @Override
+    public void registerEvents(final IEventRegistrationHandler handler) {
+        
+        this.plugin().registerEvents(handler);
     }
     
     @Override

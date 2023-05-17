@@ -11,6 +11,7 @@ import com.blamejared.crafttweaker.api.plugin.CraftTweakerPlugin;
 import com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin;
+import com.blamejared.crafttweaker.api.plugin.IEventRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IJavaNativeIntegrationRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ILoaderRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.IRecipeComponentRegistrationHandler;
@@ -51,6 +52,7 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
     
     private final BracketParserRegistrationManager bracketParserRegistrationManager;
     private final EnumBracketParserRegistrationManager enumBracketParserRegistrationManager;
+    private final EventRegistrationManager eventRegistrationManager;
     private final RecipeHandlerGatherer handlerGatherer;
     private final TaggableElementsRegistrationManager taggableElementsRegistrationManager;
     private final ZenClassGatherer zenGatherer;
@@ -60,6 +62,7 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         
         this.bracketParserRegistrationManager = new BracketParserRegistrationManager();
         this.enumBracketParserRegistrationManager = new EnumBracketParserRegistrationManager();
+        this.eventRegistrationManager = new EventRegistrationManager();
         this.handlerGatherer = new RecipeHandlerGatherer();
         this.taggableElementsRegistrationManager = new TaggableElementsRegistrationManager();
         this.zenGatherer = new ZenClassGatherer();
@@ -235,6 +238,12 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         
         handler.registerTargetingStrategy(ITargetingStrategy.DEFAULT_STRATEGY_ID, DefaultTargetingStrategies::shallow);
         handler.registerTargetingStrategy(CraftTweakerConstants.rl("deep"), DefaultTargetingStrategies::deep);
+    }
+    
+    @Override
+    public void registerEvents(final IEventRegistrationHandler handler) {
+        
+        this.zenGatherer.onCandidates(candidate -> this.eventRegistrationManager.attemptRegistration(candidate.clazz(), handler));
     }
     
 }

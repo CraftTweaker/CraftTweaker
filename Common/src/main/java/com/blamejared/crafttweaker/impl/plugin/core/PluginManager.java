@@ -238,6 +238,12 @@ public final class PluginManager {
                 "registering recipe replacement components",
                 () -> this.manageReplacerRegistration(access, ReplacerComponentsRegistrationHandler.of(this.onEach(ICraftTweakerPlugin::registerReplacerComponents)))
         );
+        
+        this.verifying(
+                "registering events",
+                () -> EventRegistrationHandler.gather(this.onEach(ICraftTweakerPlugin::registerEvents))
+                        .forEach((token, bus) -> access.registerEventBusMapping(GenericUtil.uncheck(token), bus))
+        );
     }
     
     private void manageZenRegistration(final IPluginRegistryAccess access, final JavaNativeIntegrationRegistrationHandler handler, final Function<String, IScriptLoader> loaderGetter) {

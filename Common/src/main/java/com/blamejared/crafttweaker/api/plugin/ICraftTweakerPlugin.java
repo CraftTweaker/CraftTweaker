@@ -151,4 +151,6 @@ public interface ICraftTweakerPlugin {
      */
     default void registerReplacerComponents(final IReplacerComponentRegistrationHandler handler) {}
     
+    default void registerEvents(final IEventRegistrationHandler handler) {}
+    
 }
