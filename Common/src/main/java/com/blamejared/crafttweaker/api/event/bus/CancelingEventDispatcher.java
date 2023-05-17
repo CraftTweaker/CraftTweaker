@@ -5,24 +5,22 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-final class Dispatcher<T> implements Consumer<T> {
+final class CancelingEventDispatcher<T extends ICancelableEvent> implements EventDispatcher<T> {
     
     private final Consumer<T> delegate;
     private final boolean listenToCanceled;
-    private final boolean acceptCanceled;
     
-    Dispatcher(final boolean listenToCanceled, final boolean acceptCanceled, final Consumer<T> delegate) {
+    CancelingEventDispatcher(final boolean listenToCanceled, final Consumer<T> delegate) {
         
         this.delegate = delegate;
         this.listenToCanceled = listenToCanceled;
-        this.acceptCanceled = acceptCanceled;
     }
     
     @Override
     public void accept(final T t) {
         
         try {
-            if(!this.acceptCanceled || (!((ICancelableEvent) t).canceled() || this.listenToCanceled)) {
+            if(this.listenToCanceled || !t.canceled()) {
                 this.delegate.accept(t);
             }
         } catch(final Throwable e) {
@@ -34,7 +32,7 @@ final class Dispatcher<T> implements Consumer<T> {
     @Override
     public Consumer<T> andThen(@NotNull final Consumer<? super T> after) {
         
-        return new Dispatcher<>(this.listenToCanceled, this.acceptCanceled, this.delegate.andThen(after));
+        return new CancelingEventDispatcher<>(this.listenToCanceled, this.delegate.andThen(after));
     }
     
 }

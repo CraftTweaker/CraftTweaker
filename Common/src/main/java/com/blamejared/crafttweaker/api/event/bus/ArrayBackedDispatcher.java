@@ -49,7 +49,7 @@ final class ArrayBackedDispatcher<T> implements BusDispatcher<T> {
     ArrayBackedDispatcher(final boolean accountForCancellation) {
         
         this.accountForCancellation = accountForCancellation;
-        this.consumers = GenericUtil.uncheck(new Consumer<?>[Phase.values().length][0]);
+        this.consumers = GenericUtil.uncheck(new Consumer<?>[Phase.values().length][]);
     }
     
     @Override
@@ -85,6 +85,10 @@ final class ArrayBackedDispatcher<T> implements BusDispatcher<T> {
         
         final Consumer<T>[][] consumers = this.consumers;
         for(final Consumer<T>[] phasedConsumers : consumers) {
+            if (phasedConsumers == null) {
+                continue;
+            }
+            
             for(final Consumer<T> phasedConsumer : phasedConsumers) {
                 final Consumer<T> consumer = GenericUtil.uncheck(phasedConsumer);
                 if(consumer == null) {
@@ -99,15 +103,15 @@ final class ArrayBackedDispatcher<T> implements BusDispatcher<T> {
     private HandlerToken<T> doRegister(final boolean listenToCanceled, final Phase phase, final Consumer<T> consumer, final boolean exception) {
         
         final Consumer<T>[] candidates = this.consumers[phase.ordinal()];
-        for (int i = 0, s = candidates.length; i < s; ++i) {
+        for (int i = 0, s = candidates == null? 0 : candidates.length; i < s; ++i) {
             if (candidates[i] == null || candidates[i] == UNREGISTERED) {
-                candidates[i] = new Dispatcher<>(this.accountForCancellation, listenToCanceled, consumer);
+                candidates[i] = this.makeDispatcher(listenToCanceled, consumer);
                 return ArrayHandlerToken.of(phase, i);
             }
         }
         
         if (exception) {
-            throw new IllegalStateException("Unable to registert handler");
+            throw new IllegalStateException("Unable to register handler");
         }
         
         return null;
@@ -117,12 +121,22 @@ final class ArrayBackedDispatcher<T> implements BusDispatcher<T> {
         
         final int target = phase.ordinal();
         final Consumer<T>[] original = this.consumers[target];
-        final int length = original.length;
+        final int length = original == null? 0 : original.length;
         
         final Consumer<T>[] replacement = GenericUtil.uncheck(new Consumer<?>[(length * 3 / 2) + 1]);
-        System.arraycopy(original, 0, replacement, 0, length);
+        if (original != null) {
+            System.arraycopy(original, 0, replacement, 0, length);
+        }
         
         this.consumers[target] = replacement;
+    }
+    
+    private EventDispatcher<T> makeDispatcher(final boolean listenToCanceled, final Consumer<T> consumer) {
+        if (this.accountForCancellation) {
+            return GenericUtil.uncheck(new CancelingEventDispatcher<>(listenToCanceled, GenericUtil.uncheck(consumer)));
+        }
+        
+        return new DirectEventDispatcher<>(consumer);
     }
     
 }
