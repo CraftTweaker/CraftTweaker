@@ -3,8 +3,7 @@ package com.blamejared.crafttweaker.impl.event;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.action.event.ActionRegisterEvent;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.event.bus.EventBus;
-import com.blamejared.crafttweaker.api.event.bus.HandlerToken;
+import com.blamejared.crafttweaker.api.event.bus.IHandlerToken;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.common.reflect.TypeToken;
 import org.openzen.zencode.java.ZenCodeGlobals;
@@ -46,7 +45,7 @@ public final class ZenEventManager {
     private <T> void registerOnBus(
             final Class<T> typeOfT,
             final Consumer<T> consumer,
-            final BiFunction<EventBus<T>, Consumer<T>, HandlerToken<T>> regFun
+            final BiFunction<EventBus<T>, Consumer<T>, IHandlerToken<T>> regFun
     ) {
         
         CraftTweakerAPI.apply(ActionRegisterEvent.of(TypeToken.of(typeOfT), consumer, regFun));

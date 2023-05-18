@@ -1,33 +1,25 @@
 package com.blamejared.crafttweaker.api.event.bus;
 
-import com.blamejared.crafttweaker.api.event.Phase;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 
-import java.util.function.Consumer;
-
-final class ArrayBackedDispatcher<T> implements BusDispatcher<T> {
+final class ArrayBackedDispatcher<T> {
     
-    static final class ArrayHandlerToken<T> implements HandlerToken<T> {
-        private final long positions;
+    private static final class ArrayHandlerToken<T> implements IHandlerToken<T> {
+        private final int index;
         private boolean valid;
         
-        private ArrayHandlerToken(final long positions) {
-            this.positions = positions;
+        private ArrayHandlerToken(final int index) {
+            this.index = index;
             this.valid = true;
         }
         
-        static <T> ArrayHandlerToken<T> of(final Phase phase, final int index) {
-            return new ArrayHandlerToken<>(((long) phase.ordinal()) << 32L | ((long) index));
-        }
-        
-        int phase() {
-            this.valid();
-            return (int) (this.positions >>> 32L);
+        static <T> ArrayHandlerToken<T> of(final int index) {
+            return new ArrayHandlerToken<>(index);
         }
         
         int index() {
             this.valid();
-            return (int) this.positions;
+            return this.index;
         }
         
         void invalidate() {
@@ -41,72 +33,69 @@ final class ArrayBackedDispatcher<T> implements BusDispatcher<T> {
         }
     }
     
-    private static final Consumer<Object> UNREGISTERED = it -> {};
-    
-    private final boolean accountForCancellation;
-    private final Consumer<T>[][] consumers;
-    
-    ArrayBackedDispatcher(final boolean accountForCancellation) {
+    private record CatchingDispatcher<T>(IEventDispatcher<T> dispatcher) implements IEventDispatcher<T> {
         
-        this.accountForCancellation = accountForCancellation;
-        this.consumers = GenericUtil.uncheck(new Consumer<?>[Phase.values().length][]);
+        @Override
+        public void dispatch(final T event) {
+            try {
+                this.dispatcher().dispatch(event);
+            } catch (final Exception e) {
+                throw new BusHandlingException(e);
+            }
+        }
+        
     }
     
-    @Override
-    public HandlerToken<T> register(final boolean listenToCanceled, final Phase phase, final Consumer<T> consumer) {
+    private static final IEventDispatcher<Object> UNREGISTERED = it -> {};
+    
+    private IEventDispatcher<T>[] dispatchers;
+    
+    ArrayBackedDispatcher() {
         
-        final HandlerToken<T> token = this.doRegister(listenToCanceled, phase, consumer, false);
+        this.dispatchers = GenericUtil.uncheck(new IEventDispatcher<?>[0]);
+    }
+    
+    public IHandlerToken<T> register(final IEventDispatcher<T> dispatcher) {
+        
+        final IHandlerToken<T> token = this.doRegister(dispatcher, false);
         if(token != null) {
             return token;
         }
         
         // Not enough space: bigger!
-        this.grow(phase);
-        return this.doRegister(listenToCanceled, phase, consumer, true);
+        this.grow();
+        return this.doRegister(dispatcher, true);
     }
     
-    @Override
-    public void unregister(final HandlerToken<T> token) {
+    public void unregister(final IHandlerToken<T> token) {
         
         if (!(token instanceof ArrayBackedDispatcher.ArrayHandlerToken<T> arrayToken)) {
             throw new IllegalArgumentException("Invalid token object for dispatcher");
         }
         
-        final Consumer<T>[] consumers = this.consumers[arrayToken.phase()];
         final int next = arrayToken.index() + 1;
-        final Consumer<T> newConsumer = next == consumers.length || consumers[next] == null? null : GenericUtil.uncheck(UNREGISTERED);
-        consumers[arrayToken.index()] = newConsumer;
+        final IEventDispatcher<T> newConsumer = next == this.dispatchers.length || this.dispatchers[next] == null? null : GenericUtil.uncheck(UNREGISTERED);
+        this.dispatchers[arrayToken.index()] = newConsumer;
         
         arrayToken.invalidate();
     }
     
-    @Override
-    public T dispatch(final T event) {
+    public void dispatch(final T event) {
         
-        final Consumer<T>[][] consumers = this.consumers;
-        for(final Consumer<T>[] phasedConsumers : consumers) {
-            if (phasedConsumers == null) {
-                continue;
+        for(final IEventDispatcher<T> dispatcher : this.dispatchers) {
+            if(dispatcher == null) {
+                break;
             }
-            
-            for(final Consumer<T> phasedConsumer : phasedConsumers) {
-                final Consumer<T> consumer = GenericUtil.uncheck(phasedConsumer);
-                if(consumer == null) {
-                    break;
-                }
-                consumer.accept(event);
-            }
+            dispatcher.dispatch(event);
         }
-        return event;
     }
     
-    private HandlerToken<T> doRegister(final boolean listenToCanceled, final Phase phase, final Consumer<T> consumer, final boolean exception) {
+    private IHandlerToken<T> doRegister(final IEventDispatcher<T> dispatcher, final boolean exception) {
         
-        final Consumer<T>[] candidates = this.consumers[phase.ordinal()];
-        for (int i = 0, s = candidates == null? 0 : candidates.length; i < s; ++i) {
-            if (candidates[i] == null || candidates[i] == UNREGISTERED) {
-                candidates[i] = this.makeDispatcher(listenToCanceled, consumer);
-                return ArrayHandlerToken.of(phase, i);
+        for (int i = 0, s = this.dispatchers.length; i < s; ++i) {
+            if (this.dispatchers[i] == null || this.dispatchers[i] == UNREGISTERED) {
+                this.dispatchers[i] = new CatchingDispatcher<>(dispatcher);
+                return ArrayHandlerToken.of(i);
             }
         }
         
@@ -117,26 +106,14 @@ final class ArrayBackedDispatcher<T> implements BusDispatcher<T> {
         return null;
     }
     
-    private void grow(final Phase phase) {
+    private void grow() {
         
-        final int target = phase.ordinal();
-        final Consumer<T>[] original = this.consumers[target];
-        final int length = original == null? 0 : original.length;
+        final int length = this.dispatchers.length;
         
-        final Consumer<T>[] replacement = GenericUtil.uncheck(new Consumer<?>[(length * 3 / 2) + 1]);
-        if (original != null) {
-            System.arraycopy(original, 0, replacement, 0, length);
-        }
+        final IEventDispatcher<T>[] replacement = GenericUtil.uncheck(new IEventDispatcher<?>[(length * 3 / 2) + 1]);
+        System.arraycopy(this.dispatchers, 0, replacement, 0, length);
         
-        this.consumers[target] = replacement;
-    }
-    
-    private EventDispatcher<T> makeDispatcher(final boolean listenToCanceled, final Consumer<T> consumer) {
-        if (this.accountForCancellation) {
-            return GenericUtil.uncheck(new CancelingEventDispatcher<>(listenToCanceled, GenericUtil.uncheck(consumer)));
-        }
-        
-        return new DirectEventDispatcher<>(consumer);
+        this.dispatchers = replacement;
     }
     
 }

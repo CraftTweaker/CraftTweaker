@@ -3,8 +3,8 @@ package com.blamejared.crafttweaker.api.action.event;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
 import com.blamejared.crafttweaker.api.action.internal.CraftTweakerAction;
-import com.blamejared.crafttweaker.api.event.bus.EventBus;
-import com.blamejared.crafttweaker.api.event.bus.HandlerToken;
+import com.blamejared.crafttweaker.api.event.bus.IEventBus;
+import com.blamejared.crafttweaker.api.event.bus.IHandlerToken;
 import com.google.common.reflect.TypeToken;
 
 import java.util.function.BiFunction;
@@ -14,13 +14,13 @@ import java.util.function.Function;
 public final class ActionRegisterEvent<T> extends CraftTweakerAction implements IUndoableAction {
     
     private final TypeToken<T> typeOfT;
-    private final Function<EventBus<T>, HandlerToken<T>> function;
+    private final Function<IEventBus<T>, IHandlerToken<T>> function;
     
-    private HandlerToken<T> token;
+    private IHandlerToken<T> token;
     
     private ActionRegisterEvent(
             final TypeToken<T> typeOfT,
-            final Function<EventBus<T>, HandlerToken<T>> function
+            final Function<IEventBus<T>, IHandlerToken<T>> function
     ) {
         
         this.typeOfT = typeOfT;
@@ -31,7 +31,7 @@ public final class ActionRegisterEvent<T> extends CraftTweakerAction implements 
     public static <T> ActionRegisterEvent<T> of(
             final TypeToken<T> token,
             final Consumer<T> consumer,
-            final BiFunction<EventBus<T>, Consumer<T>, HandlerToken<T>> registrationFunction
+            final BiFunction<IEventBus<T>, Consumer<T>, IHandlerToken<T>> registrationFunction
     ) {
         
         // Just in case we want to add additional behavior to the consumer in the meantime

@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker.impl.plugin.core;
 
-import com.blamejared.crafttweaker.api.event.bus.EventBus;
+import com.blamejared.crafttweaker.api.event.bus.IEventBus;
 import com.blamejared.crafttweaker.api.plugin.IEventRegistrationHandler;
 import com.google.common.reflect.TypeToken;
 
@@ -11,14 +11,14 @@ import java.util.function.Consumer;
 
 final class EventRegistrationHandler implements IEventRegistrationHandler {
     
-    private final Map<TypeToken<?>, EventBus<?>> eventBuses;
+    private final Map<TypeToken<?>, IEventBus<?>> eventBuses;
     
     private EventRegistrationHandler() {
         
         this.eventBuses = new HashMap<>();
     }
     
-    static Map<TypeToken<?>, EventBus<?>> gather(final Consumer<IEventRegistrationHandler> populatingConsumer) {
+    static Map<TypeToken<?>, IEventBus<?>> gather(final Consumer<IEventRegistrationHandler> populatingConsumer) {
         
         final EventRegistrationHandler handler = new EventRegistrationHandler();
         populatingConsumer.accept(handler);
@@ -26,7 +26,7 @@ final class EventRegistrationHandler implements IEventRegistrationHandler {
     }
     
     @Override
-    public <T> void registerEventMapping(final TypeToken<T> event, final EventBus<T> bus) {
+    public <T> void registerEventMapping(final TypeToken<T> event, final IEventBus<T> bus) {
         
         if (this.eventBuses.containsKey(event)) {
             throw new IllegalArgumentException("Event " + event + " was already registered with a different bus");

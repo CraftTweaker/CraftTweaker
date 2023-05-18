@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker.impl.registry;
 
-import com.blamejared.crafttweaker.api.event.bus.EventBus;
+import com.blamejared.crafttweaker.api.event.bus.IEventBus;
 import com.blamejared.crafttweaker.api.natives.NativeTypeInfo;
 import com.blamejared.crafttweaker.api.plugin.IBracketParserRegistrationHandler;
 import com.blamejared.crafttweaker.api.recipe.component.IRecipeComponent;
@@ -107,7 +107,7 @@ final class PluginRegistryAccess implements IPluginRegistryAccess {
     }
     
     @Override
-    public <T> void registerEventBusMapping(final TypeToken<T> token, final EventBus<T> bus) {
+    public <T> void registerEventBusMapping(final TypeToken<T> token, final IEventBus<T> bus) {
         
         this.registries.eventRegistry().registerBusMapping(token, bus);
     }

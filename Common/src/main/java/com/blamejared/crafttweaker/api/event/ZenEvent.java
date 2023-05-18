@@ -11,6 +11,12 @@ public @interface ZenEvent {
     
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
-    @interface Bus {}
+    @interface Bus {
+        Class<?> value() default Auto.class;
+        
+        @Target({})
+        @Retention(RetentionPolicy.SOURCE)
+        @interface Auto {}
+    }
     
 }
