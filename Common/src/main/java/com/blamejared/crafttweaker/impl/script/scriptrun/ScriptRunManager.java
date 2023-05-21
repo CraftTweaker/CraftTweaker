@@ -18,10 +18,12 @@ import org.openzen.zencode.shared.SourceFile;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.FileSystem;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -143,7 +145,7 @@ public final class ScriptRunManager implements IScriptRunManager {
             final PathMatcher combinedMatcher = it -> correctMatcher.matches(it) || suspiciousMatcher.matches(it);
             
             final List<Path> files = SuspiciousAwarePathList.of(suspiciousMatcher, this.makeSuspiciousConsumer(root, discoveryConfiguration));
-            Files.walkFileTree(root, FileGathererHelper.of(combinedMatcher, files::add));
+            Files.walkFileTree(root, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, FileGathererHelper.of(combinedMatcher, files::add));
             
             discoveryConfiguration.retainer().retain(root, files);
             

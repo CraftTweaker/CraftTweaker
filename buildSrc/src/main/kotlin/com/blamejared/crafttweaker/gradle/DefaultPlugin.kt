@@ -65,12 +65,6 @@ class DefaultPlugin : Plugin<Project> {
             this.add(this.maven("https://maven.parchmentmc.org/") {
                 name = "ParchmentMC"
             })
-            this.add(this.maven("https://dvs1.progwml6.com/files/maven/") {
-                name = "JEI"
-                content {
-                    includeGroup("mezz.jei")
-                }
-            })
             this.add(this.maven("https://maven.shedaniel.me/") {
                 name = "REI"
                 content {
