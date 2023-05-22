@@ -59,7 +59,7 @@ abstract class PhasedEventBus<T> implements IEventBus<T> {
         Objects.requireNonNull(phase, "phase");
         Objects.requireNonNull(handler, "handler");
         return this.modifyHandlers(() -> {
-            final ArrayBackedDispatcher<T> dispatcher = this.phasedDispatchers[phase.ordinal()];
+            final ArrayBackedDispatcher<T> dispatcher = this.dispatcherAt(phase);
             final IHandlerToken<T> token = this.registerPhased(dispatcher, listenToCanceled, handler);
             return new PhasedHandlerToken<>(token, phase);
         });
@@ -73,7 +73,7 @@ abstract class PhasedEventBus<T> implements IEventBus<T> {
         }
         
         this.modifyHandlers(() -> {
-            this.phasedDispatchers[phasedToken.phase().ordinal()].unregister(phasedToken.delegate());
+            this.dispatcherAt(phasedToken.phase()).unregister(phasedToken.delegate());
             return null;
         });
     }
@@ -130,6 +130,17 @@ abstract class PhasedEventBus<T> implements IEventBus<T> {
         } finally {
             writeLock.unlock();
         }
+    }
+    
+    private ArrayBackedDispatcher<T> dispatcherAt(final Phase phase) {
+        final int phaseIndex = phase.ordinal();
+        final ArrayBackedDispatcher<T> dispatcher = this.phasedDispatchers[phaseIndex];
+        if (dispatcher != null) {
+            return dispatcher;
+        }
+        final ArrayBackedDispatcher<T> newDispatcher = new ArrayBackedDispatcher<>();
+        this.phasedDispatchers[phaseIndex] = newDispatcher;
+        return newDispatcher;
     }
     
 }
