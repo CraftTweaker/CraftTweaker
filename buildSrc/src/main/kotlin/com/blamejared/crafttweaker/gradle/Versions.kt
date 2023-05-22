@@ -14,7 +14,7 @@ object Versions {
     const val PARCHMENT = "2023.02.05"
     const val MIXIN = "0.8.5"
 
-    const val CRAFTTWEAKER_ANNOTATION_PROCESSOR = "3.0.0.10"
+    const val CRAFTTWEAKER_ANNOTATION_PROCESSOR = "3.0.0.12"
     const val HAMCREST = "2.2"
     const val JUPITER_ENGINE = "5.8.2"
     const val JUNIT_PLATFORM_LAUNCHER = "1.8.2"
