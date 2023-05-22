@@ -93,7 +93,9 @@ abstract class PhasedEventBus<T> implements IEventBus<T> {
             readLock.lock();
             try {
                 for (final ArrayBackedDispatcher<T> dispatcher : this.phasedDispatchers) {
-                    dispatcher.dispatch(event);
+                    if (dispatcher != null) {
+                        dispatcher.dispatch(event);
+                    }
                 }
                 return event;
             } finally {
