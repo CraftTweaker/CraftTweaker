@@ -2,6 +2,9 @@ package com.blamejared.crafttweaker.natives.event.entity.player;
 
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.event.ZenEvent;
+import com.blamejared.crafttweaker.api.event.bus.ForgeEventBusWire;
+import com.blamejared.crafttweaker.api.event.bus.IEventBus;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
@@ -20,10 +23,14 @@ import java.util.List;
  *
  * @docParam this event
  */
-@ZenRegister
 @Document("forge/api/event/entity/player/ItemTooltipEvent")
 @NativeTypeRegistration(value = ItemTooltipEvent.class, zenCodeName = "crafttweaker.api.event.entity.player.ItemTooltipEvent")
+@ZenEvent
+@ZenRegister
 public class ExpandItemTooltipEvent {
+    
+    @ZenEvent.Bus
+    public static final IEventBus<ItemTooltipEvent> BUS = IEventBus.direct(ItemTooltipEvent.class, ForgeEventBusWire.of());
     
     /**
      * Gets the extra tooltip flags, such as if advanced tooltips should be displayed.
