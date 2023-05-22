@@ -39,7 +39,7 @@ public final class ForgeEventBusWire implements IEventBusWire {
     
     private ForgeEventBusWire() {}
     
-    public static IEventBusWire forge() {
+    public static IEventBusWire of() {
         return INSTANCE.get();
     }
     
