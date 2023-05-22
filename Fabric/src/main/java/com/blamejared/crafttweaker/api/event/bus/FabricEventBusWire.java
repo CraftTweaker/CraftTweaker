@@ -278,8 +278,8 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
     private static MethodHandle wrapHandle(final Method wrap) {
         final MethodHandle handle = handle(wrap);
         final MethodHandle objectReturning = handle.asType(handle.type().changeReturnType(Object.class));
-        final MethodHandle spreader = objectReturning.asSpreader(1, Object[].class, objectReturning.type().parameterCount());
-        return spreader.asType(MethodType.methodType(Object.class, Object.class, Object[].class));
+        final MethodHandle spreader = objectReturning.asSpreader(Object[].class, objectReturning.type().parameterCount());
+        return spreader.asType(MethodType.methodType(Object.class, Object[].class));
     }
     
     private static MethodHandle revealHandle(final Method reveal) {
@@ -304,7 +304,7 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
     
     @Override
     public <T> void registerBusForDispatch(final TypeToken<T> eventType, final IEventBus<T> bus) {
-        if (this.wrappedEventClass.equals(eventType)) {
+        if (!this.wrappedEventClass.equals(eventType)) {
             throw new IllegalStateException("Invalid event type");
         }
         
