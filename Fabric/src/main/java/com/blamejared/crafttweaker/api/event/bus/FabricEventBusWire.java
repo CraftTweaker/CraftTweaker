@@ -114,6 +114,34 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
     public static <E, S> FabricEventBusWire<E, S> of(
             final Event<E> event,
             final Class<E> originalEventClass,
+            final Class<S> wrappedEventClass
+    ) {
+        
+        return of(event, originalEventClass, TypeToken.of(wrappedEventClass));
+    }
+    
+    public static <E, S> FabricEventBusWire<E, S> of(
+            final Event<E> event,
+            final Class<E> originalEventClass,
+            final TypeToken<S> wrappedEventClass
+    ) {
+        
+        return of(event, originalEventClass, wrappedEventClass, FabricEventPhaseMapper.of());
+    }
+    
+    public static <E, S> FabricEventBusWire<E, S> of(
+            final Event<E> event,
+            final Class<E> originalEventClass,
+            final Class<S> wrappedEventClass,
+            final FabricEventPhaseMapper mapper
+    ) {
+        
+        return of(event, originalEventClass, TypeToken.of(wrappedEventClass), mapper);
+    }
+    
+    public static <E, S> FabricEventBusWire<E, S> of(
+            final Event<E> event,
+            final Class<E> originalEventClass,
             final TypeToken<S> wrappedEventClass,
             final FabricEventPhaseMapper mapper
     ) {
