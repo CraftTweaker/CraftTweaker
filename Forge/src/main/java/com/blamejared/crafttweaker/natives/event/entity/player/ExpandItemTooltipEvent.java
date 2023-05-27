@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.natives.event.entity.player;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.event.ZenEvent;
+import com.blamejared.crafttweaker.api.event.bus.CommonAdaptingEventBusWire;
 import com.blamejared.crafttweaker.api.event.bus.ForgeEventBusWire;
 import com.blamejared.crafttweaker.api.event.bus.IEventBus;
 import com.blamejared.crafttweaker.api.item.IItemStack;
@@ -23,14 +24,21 @@ import java.util.List;
  *
  * @docParam this event
  */
-@Document("forge/api/event/entity/player/ItemTooltipEvent")
-@NativeTypeRegistration(value = ItemTooltipEvent.class, zenCodeName = "crafttweaker.api.event.entity.player.ItemTooltipEvent")
+@Document("forge/api/event/forge/entity/player/ForgeItemTooltipEvent")
+@NativeTypeRegistration(value = ItemTooltipEvent.class, zenCodeName = "crafttweaker.api.event.forge.entity.player.ForgeItemTooltipEvent")
 @ZenEvent
 @ZenRegister
 public class ExpandItemTooltipEvent {
     
     @ZenEvent.Bus
-    public static final IEventBus<ItemTooltipEvent> BUS = IEventBus.direct(ItemTooltipEvent.class, ForgeEventBusWire.of());
+    public static final IEventBus<ItemTooltipEvent> BUS = IEventBus.direct(
+            ItemTooltipEvent.class,
+            CommonAdaptingEventBusWire.of(
+                    ForgeEventBusWire.of(),
+                    com.blamejared.crafttweaker.api.event.type.ItemTooltipEvent.BUS,
+                    (ItemTooltipEvent e) -> com.blamejared.crafttweaker.api.event.type.ItemTooltipEvent.of(getItemStack(e), getFlags(e), getToolTip(e))
+            )
+    );
     
     /**
      * Gets the extra tooltip flags, such as if advanced tooltips should be displayed.
