@@ -12,8 +12,8 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
 
-@Document("common/api/event/common/ItemTooltipEvent")
-@ZenCodeType.Name("crafttweaker.api.event.common.ItemTooltipEvent")
+@Document("vanilla/api/event/common/ItemTooltipEvent")
+@ZenCodeType.Name("crafttweaker.api.event.ItemTooltipEvent")
 @ZenEvent
 @ZenRegister
 public final class ItemTooltipEvent {

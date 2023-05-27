@@ -6,11 +6,23 @@ import com.google.common.reflect.TypeToken;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public final class CommonAdaptingEventBusWire<P, C> implements IEventBusWire {
-    private interface PlatformToCommonConverter<Q, D> extends Function<Q, D> {}
-    private interface CommonToPlatformConverter<D, Q> extends BiConsumer<D, Q> {}
+    private record ListenerRedirector<Q, D>(Phase phase, CommonAdaptingEventBusWire<Q, D> wire) implements Consumer<Q> {
+        
+        @Override
+        public void accept(final Q platform) {
+            final D common = this.wire.platformToCommon.apply(platform);
+            this.wire.commonBus.post(this.phase, common);
+            this.wire.commonToPlatform.accept(common, platform);
+        }
+        
+    }
+    
+    @FunctionalInterface private interface PlatformToCommonConverter<Q, D> extends Function<Q, D> {}
+    @FunctionalInterface private interface CommonToPlatformConverter<D, Q> extends BiConsumer<D, Q> {}
     
     private static final CommonToPlatformConverter<?, ?> NOTHING = (a, b) -> {};
     
@@ -62,14 +74,8 @@ public final class CommonAdaptingEventBusWire<P, C> implements IEventBusWire {
     
     private <T> void setUpListenerRedirector(final IEventBus<T> bus) {
         for (final Phase phase : Phase.values()) {
-            bus.registerHandler(phase, true, event -> this.postCommon(GenericUtil.uncheck(event), phase));
+            bus.registerHandler(phase, true, GenericUtil.uncheck(new ListenerRedirector<>(phase, this)));
         }
-    }
-    
-    private void postCommon(final P platform, final Phase phase) {
-        final C common = this.platformToCommon.apply(platform);
-        this.commonBus.post(phase, common);
-        this.commonToPlatform.accept(common, platform);
     }
     
 }
