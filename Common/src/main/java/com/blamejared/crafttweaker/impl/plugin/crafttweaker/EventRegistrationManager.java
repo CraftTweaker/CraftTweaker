@@ -20,7 +20,7 @@ final class EventRegistrationManager {
     private static final MethodHandles.Lookup PUBLIC_LOOKUP = MethodHandles.publicLookup();
     
     void attemptRegistration(final Class<?> clazz, final IEventRegistrationHandler handler) {
-        if (!clazz.isAnnotationPresent(ZenEvent.class)) {
+        if (!clazz.isAnnotationPresent(ZenEvent.class) && !clazz.isAnnotationPresent(ZenEvent.BusCarrier.class)) {
             return;
         }
         
@@ -30,7 +30,7 @@ final class EventRegistrationManager {
     private void attemptEventRegistration(final Class<?> clazz, final IEventRegistrationHandler handler) {
         final List<Field> busCandidates = this.findBuses(clazz);
         if (busCandidates.isEmpty()) {
-            throw new NoSuchElementException("Class " + clazz.getName() + " is annotated with @ZenEvent, but carries no buses");
+            throw new NoSuchElementException("Class " + clazz.getName() + " is annotated with @ZenEvent or @ZenEvent.BusCarrier, but carries no buses");
         }
         
         this.attemptEventRegistration(clazz, busCandidates, handler);
@@ -61,13 +61,15 @@ final class EventRegistrationManager {
             return potentialTarget;
         }
         
-        if (owner.isAnnotationPresent(ZenCodeType.Name.class)) {
-            return owner;
-        }
-        
-        if (owner.isAnnotationPresent(NativeTypeRegistration.class)) {
-            final NativeTypeRegistration registration = owner.getAnnotation(NativeTypeRegistration.class);
-            return registration.value();
+        if (owner.isAnnotationPresent(ZenEvent.class)) {
+            if (owner.isAnnotationPresent(ZenCodeType.Name.class)) {
+                return owner;
+            }
+            
+            if (owner.isAnnotationPresent(NativeTypeRegistration.class)) {
+                final NativeTypeRegistration registration = owner.getAnnotation(NativeTypeRegistration.class);
+                return registration.value();
+            }
         }
         
         throw new IllegalStateException("Automatic determination of target failed");
