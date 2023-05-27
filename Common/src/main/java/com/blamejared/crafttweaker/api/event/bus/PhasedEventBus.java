@@ -1,8 +1,10 @@
 package com.blamejared.crafttweaker.api.event.bus;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.event.Phase;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.google.common.reflect.TypeToken;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
 import java.util.concurrent.locks.Lock;
@@ -15,8 +17,8 @@ abstract class PhasedEventBus<T> implements IEventBus<T> {
     
     private record PhasedHandlerToken<T>(IHandlerToken<T> delegate, Phase phase) implements IHandlerToken<T> {}
     
+    private static final Logger LOGGER = CraftTweakerAPI.getLogger("Event");
     private static final Phase[] PHASES = Phase.values();
-    private static final Consumer<BusHandlingException> DEFAULT_HANDLER = PhasedEventBus::onException;
     
     private final TypeToken<T> eventType;
     private final IEventBusWire wire;
@@ -28,11 +30,6 @@ abstract class PhasedEventBus<T> implements IEventBus<T> {
         this.wire = Objects.requireNonNull(wire, "wire");
         this.phasedDispatchers = GenericUtil.uncheck(new ArrayBackedDispatcher<?>[PHASES.length]);
         this.lock = new ReentrantReadWriteLock();
-    }
-    
-    private static void onException(final BusHandlingException e) {
-        // TODO("")
-        throw e;
     }
     
     @Override
@@ -81,7 +78,7 @@ abstract class PhasedEventBus<T> implements IEventBus<T> {
     @Override
     public final T post(final Phase phase, final T event) {
         
-        return this.postCatching(phase, event, DEFAULT_HANDLER);
+        return this.postCatching(phase, event, this::onException);
     }
     
     @Override
@@ -143,6 +140,13 @@ abstract class PhasedEventBus<T> implements IEventBus<T> {
         final ArrayBackedDispatcher<T> newDispatcher = new ArrayBackedDispatcher<>();
         this.phasedDispatchers[phaseIndex] = newDispatcher;
         return newDispatcher;
+    }
+    
+    private void onException(final BusHandlingException e) {
+        LOGGER.error(
+                () -> "An error occurred while attempting to dispatch an event of type " + this.eventType,
+                e.original()
+        );
     }
     
 }
