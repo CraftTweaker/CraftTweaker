@@ -16,6 +16,47 @@ import java.lang.reflect.Proxy;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+/**
+ * Wires the given {@link IEventBus} on the corresponding Fabric event bus.
+ *
+ * <p>Given the different nature of events, this wire is also responsible for performing conversions between the Fabric
+ * representation of events and the one used by {@code IEventBus}. In fact, Fabric represents events as functional
+ * interfaces, whereas the bus expects a fully built object that encapsulates state and can be manipulated, therefore a
+ * conversion step is required.</p>
+ *
+ * <p>This class relies on knowing the original Fabric event bus, represented in Fabric by {@link Event}, along with the
+ * functional interface representing the Fabric event, and the wrapper class used to post the event onto the
+ * {@link IEventBus}. Special methods, called the <em>wrap method</em> and the <em>reveal method</em> have to also be
+ * present in the wrapper class to allow for proper wiring to take place. In the following discourse, the single
+ * {@code abstract} method of the functional interface that represents the event in Fabric will be referred to as
+ * <em>function</em>.</p>
+ *
+ * <p>The <em>wrap method</em> is a mandatory method that must be present and annotated with {@link FabricWiredWrap}. It
+ * is responsible for receiving the parameters of the function in the same order and produce an object of the class that
+ * owns it. Refer to the documentation of the annotation for more information and examples.</p>
+ *
+ * <p>The <em>reveal method</em>, on the other hand, is responsible for receiving the object and using it to compute a
+ * return value that is suitable for the original function. This method must be present if the return type of the
+ * function is not {@code void}, and must thus be annotated with {@link FabricWiredReveal}. If the return type is
+ * {@code void}, on the other hand, the method must be absent. Refer to the documentation of the annotation for more
+ * information and examples.</p>
+ *
+ * <p>Both the wrap and reveal methods are automatically discovered and their validity is checked at runtime, during the
+ * construction of the wiring. Invalid constructs will thus cause the construction to fail immediately during the
+ * initialization phase. Moreover, it is not possible for the wrap method and the reveal method to be the same method.
+ * Although not explicitly disallowed, the differing requirements effectively prevent it.</p>
+ *
+ * <p>The wire also has a {@link FabricEventPhaseMapper} associated to it, which handles the translation between Fabric
+ * event phases and the {@link Phase} of {@link IEventBus}. Refer to that class for further information.</p>
+ *
+ * <p>Although different implementations are allowed, it is highly suggested to rely on this wire as a matter of both
+ * convention and ease of use, as future improvements will thus be automatically applied.</p>
+ *
+ * @param <E> The type of the functional interface that represents the Fabric event.
+ * @param <S> The type of the class that wraps the Fabric event in order to make it compatible with the event bus.
+ *
+ * @since 11.0.0
+ */
 public final class FabricEventBusWire<E, S> implements IEventBusWire {
     @SuppressWarnings("ClassCanBeRecord")
     private static final class PostingInvocationHandler<T> implements InvocationHandler {
@@ -111,6 +152,28 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
         this.reveal = reveal;
     }
     
+    /**
+     * Constructs a new {@link FabricEventBusWire} for the given event bus, functional interface, and wrapper.
+     *
+     * <p>The {@linkplain FabricEventPhaseMapper mapping} between Fabric phases and {@link Phase}s will be carried out
+     * accordingly to the default mapper behavior. Refer to {@link FabricEventPhaseMapper#of()} for further
+     * information.</p>
+     *
+     * <p>The wrap and reveal methods will be automatically determined according to the rules outlined in the class
+     * documentation.</p>
+     *
+     * @param event The {@link Event} class that represents the bus to wire the event to.
+     * @param originalEventClass The functional interface that represents the Fabric event.
+     * @param wrappedEventClass The wrapper class that bridges the Fabric event and the {@link IEventBus}.
+     * @return A {@link FabricEventBusWire} that carries out the required operations.
+     * @param <E> The type of the functional interface.
+     * @param <S> The type of the wrapper class.
+     * @throws IllegalArgumentException If the given event class is not a functional interface, or the class is missing
+     * a wrap method or a mandatory reveal method, or if the wrap and/or reveal method are incompatible with the
+     * specified original and wrapped classes.
+     *
+     * @since 11.0.0
+     */
     public static <E, S> FabricEventBusWire<E, S> of(
             final Event<E> event,
             final Class<E> originalEventClass,
@@ -120,6 +183,29 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
         return of(event, originalEventClass, TypeToken.of(wrappedEventClass));
     }
     
+    /**
+     * Constructs a new {@link FabricEventBusWire} for the given event bus, functional interface, and wrapper.
+     *
+     * <p>The {@linkplain FabricEventPhaseMapper mapping} between Fabric phases and {@link Phase}s will be carried out
+     * accordingly to the default mapper behavior. Refer to {@link FabricEventPhaseMapper#of()} for further
+     * information.</p>
+     *
+     * <p>The wrap and reveal methods will be automatically determined according to the rules outlined in the class
+     * documentation.</p>
+     *
+     * @param event The {@link Event} class that represents the bus to wire the event to.
+     * @param originalEventClass The functional interface that represents the Fabric event.
+     * @param wrappedEventClass The wrapper class that bridges the Fabric event and the {@link IEventBus} as a
+     *                          {@link TypeToken} to support generic events.
+     * @return A {@link FabricEventBusWire} that carries out the required operations.
+     * @param <E> The type of the functional interface.
+     * @param <S> The type of the wrapper class.
+     * @throws IllegalArgumentException If the given event class is not a functional interface, or the class is missing
+     * a wrap method or a mandatory reveal method, or if the wrap and/or reveal method are incompatible with the
+     * specified original and wrapped classes.
+     *
+     * @since 11.0.0
+     */
     public static <E, S> FabricEventBusWire<E, S> of(
             final Event<E> event,
             final Class<E> originalEventClass,
@@ -129,6 +215,27 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
         return of(event, originalEventClass, wrappedEventClass, FabricEventPhaseMapper.of());
     }
     
+    /**
+     * Constructs a new {@link FabricEventBusWire} for the given event bus, functional interface, and wrapper,
+     * leveraging the provided {@link FabricEventPhaseMapper} for phase mapping.
+     *
+     * <p>The wrap and reveal methods will be automatically determined according to the rules outlined in the class
+     * documentation.</p>
+     *
+     * @param event The {@link Event} class that represents the bus to wire the event to.
+     * @param originalEventClass The functional interface that represents the Fabric event.
+     * @param wrappedEventClass The wrapper class that bridges the Fabric event and the {@link IEventBus}.
+     * @param mapper The {@link FabricEventPhaseMapper} that is responsible for converting Fabric event phases to
+     *               {@link Phase}s.
+     * @return A {@link FabricEventBusWire} that carries out the required operations.
+     * @param <E> The type of the functional interface.
+     * @param <S> The type of the wrapper class.
+     * @throws IllegalArgumentException If the given event class is not a functional interface, or the class is missing
+     * a wrap method or a mandatory reveal method, or if the wrap and/or reveal method are incompatible with the
+     * specified original and wrapped classes.
+     *
+     * @since 11.0.0
+     */
     public static <E, S> FabricEventBusWire<E, S> of(
             final Event<E> event,
             final Class<E> originalEventClass,
@@ -139,6 +246,28 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
         return of(event, originalEventClass, TypeToken.of(wrappedEventClass), mapper);
     }
     
+    /**
+     * Constructs a new {@link FabricEventBusWire} for the given event bus, functional interface, and wrapper,
+     * leveraging the provided {@link FabricEventPhaseMapper} for phase mapping.
+     *
+     * <p>The wrap and reveal methods will be automatically determined according to the rules outlined in the class
+     * documentation.</p>
+     *
+     * @param event The {@link Event} class that represents the bus to wire the event to.
+     * @param originalEventClass The functional interface that represents the Fabric event.
+     * @param wrappedEventClass The wrapper class that bridges the Fabric event and the {@link IEventBus} as a
+     *                          {@link TypeToken} to support generic events.
+     * @param mapper The {@link FabricEventPhaseMapper} that is responsible for converting Fabric event phases to
+     *               {@link Phase}s.
+     * @return A {@link FabricEventBusWire} that carries out the required operations.
+     * @param <E> The type of the functional interface.
+     * @param <S> The type of the wrapper class.
+     * @throws IllegalArgumentException If the given event class is not a functional interface, or the class is missing
+     * a wrap method or a mandatory reveal method, or if the wrap and/or reveal method are incompatible with the
+     * specified original and wrapped classes.
+     *
+     * @since 11.0.0
+     */
     public static <E, S> FabricEventBusWire<E, S> of(
             final Event<E> event,
             final Class<E> originalEventClass,
@@ -248,7 +377,7 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
             final Parameter functionalParameter = functionalParameters[i];
             final Parameter wrapParameter = wrapParameters[i];
             
-            if (functionalParameter.getType() != wrapParameter.getType()) {
+            if (!functionalParameter.getType().equals(wrapParameter.getType())) {
                 final String message = "Incompatible wrapper: type mismatch at parameter " + i + "; got " + wrapParameter + ", expected " + functionalParameter;
                 throw new IllegalArgumentException(message);
             }

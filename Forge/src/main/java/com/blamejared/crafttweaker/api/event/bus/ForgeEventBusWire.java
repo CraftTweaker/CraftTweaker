@@ -23,6 +23,16 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/**
+ * Wires the given {@link IEventBus} onto the default Forge's {@link net.minecraftforge.eventbus.api.IEventBus}.
+ *
+ * <p>The default event bus is {@link MinecraftForge#EVENT_BUS}.</p>
+ *
+ * <p>By default, all even {@link Phase}s are automatically wired according to the various {@link EventPriority} values
+ * provided by Forge.</p>
+ *
+ * @since 11.0.0
+ */
 public final class ForgeEventBusWire implements IEventBusWire {
     
     @FunctionalInterface
@@ -39,6 +49,13 @@ public final class ForgeEventBusWire implements IEventBusWire {
     
     private ForgeEventBusWire() {}
     
+    /**
+     * Obtains an instance of this class.
+     *
+     * @return An instance of this class.
+     *
+     * @since 11.0.0
+     */
     public static IEventBusWire of() {
         return INSTANCE.get();
     }

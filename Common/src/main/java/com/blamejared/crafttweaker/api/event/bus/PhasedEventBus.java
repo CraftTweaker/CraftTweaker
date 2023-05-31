@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 
 abstract class PhasedEventBus<T> implements IEventBus<T> {
     
-    private record PhasedHandlerToken<T>(IHandlerToken<T> delegate, Phase phase) implements IHandlerToken<T> {}
+    private record PhasedHandlerToken<T>(IHandlerToken<T> delegate, Phase phase, IEventBus<T> bus) implements IHandlerToken<T> {}
     
     private static final Logger LOGGER = CraftTweakerAPI.getLogger("Event");
     private static final Phase[] PHASES = Phase.values();
@@ -58,7 +58,7 @@ abstract class PhasedEventBus<T> implements IEventBus<T> {
         return this.modifyHandlers(() -> {
             final ArrayBackedDispatcher<T> dispatcher = this.dispatcherAt(phase);
             final IHandlerToken<T> token = this.registerPhased(dispatcher, listenToCanceled, handler);
-            return new PhasedHandlerToken<>(token, phase);
+            return new PhasedHandlerToken<>(token, phase, this);
         });
     }
     
@@ -67,6 +67,10 @@ abstract class PhasedEventBus<T> implements IEventBus<T> {
         
         if (!(token instanceof PhasedEventBus.PhasedHandlerToken<T> phasedToken)) {
             throw new IllegalArgumentException("Unknown token");
+        }
+        
+        if (phasedToken.bus() != this) {
+            throw new IllegalArgumentException("Cross-bus token referencing is disallowed");
         }
         
         this.modifyHandlers(() -> {

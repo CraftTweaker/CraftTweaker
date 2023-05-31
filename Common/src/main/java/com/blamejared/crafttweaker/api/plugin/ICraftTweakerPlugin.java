@@ -151,6 +151,13 @@ public interface ICraftTweakerPlugin {
      */
     default void registerReplacerComponents(final IReplacerComponentRegistrationHandler handler) {}
     
+    /**
+     * Manages the registration of events and {@link com.blamejared.crafttweaker.api.event.bus.IEventBus}es.
+     *
+     * @param handler The handler responsible for registration.
+     * @since 11.0.0
+     * @see IEventRegistrationHandler
+     */
     default void registerEvents(final IEventRegistrationHandler handler) {}
     
 }
