@@ -12,6 +12,8 @@ import com.blamejared.crafttweaker.api.util.random.Percentaged;
 import com.google.gson.reflect.TypeToken;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.Util;
+import net.minecraft.world.item.crafting.CookingBookCategory;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,6 +39,18 @@ public final class BuiltinRecipeComponents {
         
         public static final IRecipeComponent<String> GROUP = IRecipeComponent.simple(
                 CraftTweakerConstants.rl("metadata/group"),
+                new TypeToken<>() {},
+                Object::equals
+        );
+    
+        public static final IRecipeComponent<CookingBookCategory> COOKING_BOOK_CATEGORY = IRecipeComponent.simple(
+                CraftTweakerConstants.rl("metadata/cooking_book_category"),
+                new TypeToken<>() {},
+                Object::equals
+        );
+    
+        public static final IRecipeComponent<CraftingBookCategory> CRAFTING_BOOK_CATEGORY = IRecipeComponent.simple(
+                CraftTweakerConstants.rl("metadata/crafting_book_category"),
                 new TypeToken<>() {},
                 Object::equals
         );
@@ -132,25 +146,8 @@ public final class BuiltinRecipeComponents {
      */
     public static final class Output {
     
-        /**
-         * Replaced by {@link BuiltinRecipeComponents.Output#CHANCED_ITEMS_SINGLE}
-         */
-        @Deprecated(forRemoval = true)
-        public static final IRecipeComponent<List<Percentaged<IItemStack>>> CHANCED_ITEMS = IRecipeComponent.composite(
+        public static final IRecipeComponent<Percentaged<IItemStack>> CHANCED_ITEMS = IRecipeComponent.simple(
                 CraftTweakerConstants.rl("output/chanced_items"),
-                new TypeToken<>() {},
-                Objects::equals,
-                it -> it.stream().map(List::of).toList(),
-                it -> it.stream().reduce(
-                        new ArrayList<>(),
-                        (list, element) -> Util.make(list, l -> l.addAll(element)),
-                        (firstList, secondList) -> Util.make(firstList, l -> l.addAll(secondList))
-                )
-        );
-        
-        //TODO rename to "CHANCED_ITEMS"
-        public static final IRecipeComponent<Percentaged<IItemStack>> CHANCED_ITEMS_SINGLE = IRecipeComponent.simple(
-                CraftTweakerConstants.rl("output/single_chanced_items"),
                 new TypeToken<>() {},
                 RecipeComponentEqualityCheckers::areStacksEqual
         );

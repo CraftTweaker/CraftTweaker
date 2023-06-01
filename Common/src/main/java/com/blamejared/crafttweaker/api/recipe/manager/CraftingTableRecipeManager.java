@@ -7,21 +7,16 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.type.IIngredientEmpty;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.MirrorAxis;
-import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction1D;
-import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction2D;
+import com.blamejared.crafttweaker.api.recipe.fun.*;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
-import com.blamejared.crafttweaker.platform.Services;
+import com.blamejared.crafttweaker.api.recipe.type.*;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.RecipeType;
-import org.openzen.zencode.java.ZenCodeGlobals;
-import org.openzen.zencode.java.ZenCodeType;
+import net.minecraft.world.item.crafting.*;
+import org.openzen.zencode.java.*;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @docParam this craftingTable
@@ -39,7 +34,7 @@ public enum CraftingTableRecipeManager implements IRecipeManager<CraftingRecipe>
     public void addShaped(String recipeName, IItemStack output, IIngredient[][] ingredients, @ZenCodeType.Optional RecipeFunction2D recipeFunction) {
         
         recipeName = fixRecipeName(recipeName);
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, Services.REGISTRY.createCTShapedRecipe(recipeName, output, ingredients, MirrorAxis.NONE, recipeFunction), "shaped"));
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, new CTShapedRecipe(recipeName, output, ingredients, MirrorAxis.NONE, recipeFunction), "shaped"));
     }
     
     @ZenCodeType.Method
@@ -53,7 +48,7 @@ public enum CraftingTableRecipeManager implements IRecipeManager<CraftingRecipe>
         
         IIngredient[][] ingredients = dissolvePattern(pattern, keys, width, height);
         
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, Services.REGISTRY.createCTShapedRecipe(recipeName, output, ingredients, MirrorAxis.NONE, recipeFunction), "shaped"));
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, new CTShapedRecipe(recipeName, output, ingredients, MirrorAxis.NONE, recipeFunction), "shaped"));
     }
     
     /**
@@ -78,14 +73,14 @@ public enum CraftingTableRecipeManager implements IRecipeManager<CraftingRecipe>
     public void addShapedMirrored(String recipeName, MirrorAxis mirrorAxis, IItemStack output, IIngredient[][] ingredients, @ZenCodeType.Optional RecipeFunction2D recipeFunction) {
         
         recipeName = fixRecipeName(recipeName);
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, Services.REGISTRY.createCTShapedRecipe(recipeName, output, ingredients, mirrorAxis, recipeFunction), "mirroring shaped"));
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, new CTShapedRecipe(recipeName, output, ingredients, mirrorAxis, recipeFunction), "mirroring shaped"));
     }
     
     @ZenCodeType.Method
     public void addShapeless(String recipeName, IItemStack output, IIngredient[] ingredients, @ZenCodeType.Optional RecipeFunction1D recipeFunction) {
         
         recipeName = fixRecipeName(recipeName);
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, Services.REGISTRY.createCTShapelessRecipe(recipeName, output, ingredients, recipeFunction), "shapeless"));
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, new CTShapelessRecipe(recipeName, output, ingredients, recipeFunction), "shapeless"));
     }
     
     @Override

@@ -7,6 +7,8 @@ import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.PlayerPredicate;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stat;
@@ -30,7 +32,7 @@ public final class ExpandPlayerPredicateBuilder {
     @ZenCodeType.Method
     public static PlayerPredicate.Builder statistic(final PlayerPredicate.Builder internal, final ResourceLocation type, final ResourceLocation name, final MinMaxBounds.Ints value) {
         
-        final StatType<?> statType = Registry.STAT_TYPE.getOrThrow(ResourceKey.create(Registry.STAT_TYPE_REGISTRY, type));
+        final StatType<?> statType = BuiltInRegistries.STAT_TYPE.getOrThrow(ResourceKey.create(Registries.STAT_TYPE, type));
         return internal.addStat(statistic(statType, name), value);
     }
     

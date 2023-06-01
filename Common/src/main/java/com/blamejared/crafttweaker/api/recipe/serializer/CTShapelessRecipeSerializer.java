@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker.api.recipe.serializer;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction1D;
-import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipeBase;
+import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipe;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -16,9 +16,12 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 
-import javax.annotation.Nullable;
 
-public interface ICTShapelessRecipeBaseSerializer extends RecipeSerializer<CTShapelessRecipeBase> {
+public class CTShapelessRecipeSerializer implements RecipeSerializer<CTShapelessRecipe> {
+    
+    public static final CTShapelessRecipeSerializer INSTANCE = new CTShapelessRecipeSerializer();
+    
+    private CTShapelessRecipeSerializer() {}
     
     private static NonNullList<Ingredient> readIngredients(JsonArray p_199568_0_) {
         
@@ -35,7 +38,7 @@ public interface ICTShapelessRecipeBaseSerializer extends RecipeSerializer<CTSha
     }
     
     @Override
-    default CTShapelessRecipeBase fromJson(ResourceLocation recipeId, JsonObject jsonObject) {
+    public CTShapelessRecipe fromJson(ResourceLocation recipeId, JsonObject jsonObject) {
         
         NonNullList<Ingredient> nonnulllist = readIngredients(GsonHelper.getAsJsonArray(jsonObject, "ingredients"));
         IIngredient[] ingredients = new IIngredient[nonnulllist.size()];
@@ -52,9 +55,8 @@ public interface ICTShapelessRecipeBaseSerializer extends RecipeSerializer<CTSha
         }
     }
     
-    @Nullable
     @Override
-    default CTShapelessRecipeBase fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+    public CTShapelessRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
         
         int i = buffer.readVarInt();
         IIngredient[] ingredients = new IIngredient[i];
@@ -68,7 +70,7 @@ public interface ICTShapelessRecipeBaseSerializer extends RecipeSerializer<CTSha
     }
     
     @Override
-    default void toNetwork(FriendlyByteBuf buffer, CTShapelessRecipeBase recipe) {
+    public void toNetwork(FriendlyByteBuf buffer, CTShapelessRecipe recipe) {
         
         
         buffer.writeVarInt(recipe.getIngredients().size());
@@ -78,9 +80,9 @@ public interface ICTShapelessRecipeBaseSerializer extends RecipeSerializer<CTSha
         buffer.writeItem(recipe.getResultItem());
     }
     
-    default CTShapelessRecipeBase makeRecipe(ResourceLocation recipeId, IItemStack output, IIngredient[] ingredients, @javax.annotation.Nullable RecipeFunction1D function) {
+    public CTShapelessRecipe makeRecipe(ResourceLocation recipeId, IItemStack output, IIngredient[] ingredients, @javax.annotation.Nullable RecipeFunction1D function) {
         
-        return new CTShapelessRecipeBase(recipeId.getPath(), output, ingredients, function);
+        return new CTShapelessRecipe(recipeId.getPath(), output, ingredients, function);
     }
     
 }

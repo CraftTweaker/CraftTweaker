@@ -1,5 +1,4 @@
-//TODO move this to the com.blamejared.crafttweaker.api.villager.trade.type package next breaking change
-package com.blamejared.crafttweaker.api.villager;
+package com.blamejared.crafttweaker.api.villager.trade.type;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;

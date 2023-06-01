@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.manager.base.ICookingRecipeManager;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.world.item.crafting.BlastingRecipe;
+import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.RecipeType;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
@@ -24,9 +25,9 @@ public enum BlastFurnaceRecipeManager implements ICookingRecipeManager<BlastingR
     INSTANCE;
     
     @Override
-    public BlastingRecipe makeRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime) {
+    public BlastingRecipe makeRecipe(String name, CookingBookCategory category, IItemStack output, IIngredient input, float xp, int cookTime) {
         
-        return new BlastingRecipe(CraftTweakerConstants.rl(name), "", input.asVanillaIngredient(), output.getInternal(), xp, cookTime);
+        return new BlastingRecipe(CraftTweakerConstants.rl(name), "", category, input.asVanillaIngredient(), output.getInternal(), xp, cookTime);
     }
     
     @Override

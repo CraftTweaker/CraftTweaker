@@ -13,14 +13,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.BlastingRecipe;
-import net.minecraft.world.item.crafting.CampfireCookingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
-import net.minecraft.world.item.crafting.SmokingRecipe;
+import net.minecraft.world.item.crafting.*;
 
 import java.util.Map;
 import java.util.Optional;
@@ -34,7 +27,7 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
     @FunctionalInterface
     private interface CookingRecipeFactory<T extends AbstractCookingRecipe> {
         
-        T create(final ResourceLocation id, final String group, final Ingredient ingredient, final ItemStack result, final float experience, final int cookTime);
+        T create(final ResourceLocation id, final String group, final CookingBookCategory category, final Ingredient ingredient, final ItemStack result, final float experience, final int cookTime);
         
     }
     
@@ -72,6 +65,7 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
         final IIngredient ingredient = IIngredient.fromIngredient(recipe.getIngredients().get(0));
         final IDecomposedRecipe decomposition = IDecomposedRecipe.builder()
                 .with(BuiltinRecipeComponents.Metadata.GROUP, recipe.getGroup())
+                .with(BuiltinRecipeComponents.Metadata.COOKING_BOOK_CATEGORY, recipe.category())
                 .with(BuiltinRecipeComponents.Input.INGREDIENTS, ingredient)
                 .with(BuiltinRecipeComponents.Processing.TIME, recipe.getCookingTime())
                 .with(BuiltinRecipeComponents.Output.EXPERIENCE, recipe.getExperience())
@@ -84,6 +78,7 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
     public Optional<AbstractCookingRecipe> recompose(final IRecipeManager<? super AbstractCookingRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
         
         final String group = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.GROUP);
+        final CookingBookCategory category = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.COOKING_BOOK_CATEGORY);
         final IIngredient input = recipe.getOrThrowSingle(BuiltinRecipeComponents.Input.INGREDIENTS);
         final int cookTime = recipe.getOrThrowSingle(BuiltinRecipeComponents.Processing.TIME);
         final float experience = recipe.getOrThrowSingle(BuiltinRecipeComponents.Output.EXPERIENCE);
@@ -103,7 +98,7 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
         }
         
         final CookingRecipeFactory<?> factory = LOOKUP.get(manager.getRecipeType()).getSecond();
-        return Optional.of(factory.create(name, group, input.asVanillaIngredient(), output.getInternal(), experience, cookTime));
+        return Optional.of(factory.create(name, group, category, input.asVanillaIngredient(), output.getInternal(), experience, cookTime));
     }
     
 }

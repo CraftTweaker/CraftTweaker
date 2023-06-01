@@ -138,19 +138,6 @@ public class ExpandMobEffectInstance {
     }
     
     @ZenCodeType.Method
-    public static void setNoCounter(MobEffectInstance internal, boolean noCounter) {
-        
-        internal.setNoCounter(noCounter);
-    }
-    
-    @ZenCodeType.Method
-    @ZenCodeType.Getter("isNoCounter")
-    public static boolean isNoCounter(MobEffectInstance internal) {
-        
-        return internal.isNoCounter();
-    }
-    
-    @ZenCodeType.Method
     @ZenCodeType.Operator(ZenCodeType.OperatorType.COMPARE)
     public static int compareTo(MobEffectInstance internal, MobEffectInstance other) {
         

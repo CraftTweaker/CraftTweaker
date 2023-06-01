@@ -12,6 +12,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -58,7 +59,7 @@ public final class InventoryCommands {
                     final String inventoryContents = IntStream.range(0, inventory.getContainerSize())
                             .mapToObj(inventory::getItem)
                             .filter(it -> !it.isEmpty())
-                            .map(it -> Pair.of(ItemStackUtil.getCommandString(it), CraftTweakerTagRegistry.INSTANCE.knownTagManager(Registry.ITEM_REGISTRY)
+                            .map(it -> Pair.of(ItemStackUtil.getCommandString(it), CraftTweakerTagRegistry.INSTANCE.knownTagManager(Registries.ITEM)
                                     .getTagsFor(it.getItem())))
                             .map(it -> it.getFirst() + '\n' + stringify(it.getSecond()))
                             .collect(Collectors.joining("\n", "Inventory item tags\n", ""));

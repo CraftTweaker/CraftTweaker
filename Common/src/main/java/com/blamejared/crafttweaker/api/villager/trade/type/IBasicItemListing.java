@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.api.villager;
+package com.blamejared.crafttweaker.api.villager.trade.type;
 
 import net.minecraft.world.item.ItemStack;
 

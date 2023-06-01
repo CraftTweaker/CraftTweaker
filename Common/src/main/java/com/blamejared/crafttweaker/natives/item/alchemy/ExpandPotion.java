@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
@@ -21,7 +22,7 @@ public class ExpandPotion {
     @ZenCodeType.Method
     @ZenCodeType.Getter("registryName")
     public static ResourceLocation getRegistryName(Potion internal){
-        return Registry.POTION.getKey(internal);
+        return BuiltInRegistries.POTION.getKey(internal);
     }
     
     @ZenCodeType.Method
@@ -47,7 +48,7 @@ public class ExpandPotion {
     @ZenCodeType.Getter("commandString")
     public static String getCommandString(Potion internal) {
         
-        return "<potion:" + Registry.POTION.getKey(internal) + ">";
+        return "<potion:" + BuiltInRegistries.POTION.getKey(internal) + ">";
     }
     
 }

@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraft.advancements.critereon.EntitySubPredicate;
 import net.minecraft.advancements.critereon.EntityVariantPredicate;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -19,7 +20,7 @@ public final class ExpandEntityVariantPredicate {
     @ZenCodeType.StaticExpansionMethod
     public static EntitySubPredicate catVariant(final ResourceLocation variant) {
         
-        return EntitySubPredicate.variant(Objects.requireNonNull(Registry.CAT_VARIANT.get(variant)));
+        return EntitySubPredicate.variant(Objects.requireNonNull(BuiltInRegistries.CAT_VARIANT.get(variant)));
     }
     
     @ZenCodeType.StaticExpansionMethod
@@ -31,7 +32,7 @@ public final class ExpandEntityVariantPredicate {
     @ZenCodeType.StaticExpansionMethod
     public static EntitySubPredicate frogVariant(final ResourceLocation variant) {
         
-        return EntitySubPredicate.variant(Objects.requireNonNull(Registry.FROG_VARIANT.get(variant)));
+        return EntitySubPredicate.variant(Objects.requireNonNull(BuiltInRegistries.FROG_VARIANT.get(variant)));
     }
     
     @ZenCodeType.StaticExpansionMethod

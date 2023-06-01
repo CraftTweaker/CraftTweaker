@@ -5,6 +5,7 @@ import com.google.common.base.Suppliers;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -21,7 +22,7 @@ import java.util.stream.Stream;
 public class IngredientAny extends Ingredient implements IngredientSingleton<IIngredientAny> {
     
     public static final IngredientAny INSTANCE = new IngredientAny();
-    private static final Supplier<ItemStack[]> ALL_ITEMS = Suppliers.memoize(() -> Registry.ITEM
+    private static final Supplier<ItemStack[]> ALL_ITEMS = Suppliers.memoize(() -> BuiltInRegistries.ITEM
             .stream()
             .map(Item::getDefaultInstance)
             .filter(Predicate.not(ItemStack::isEmpty))

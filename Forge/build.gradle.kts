@@ -3,7 +3,8 @@ import com.blamejared.crafttweaker.gradle.Properties
 import com.blamejared.crafttweaker.gradle.Versions
 import com.blamejared.gradle.mod.utils.GMUtils
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
-import net.darkhax.curseforgegradle.Constants as CFG_Contants
+import org.gradle.kotlin.dsl.publishing
+import net.darkhax.curseforgegradle.Constants as CFG_Constants
 
 plugins {
     id("com.blamejared.crafttweaker.default")
@@ -28,25 +29,16 @@ dependencies {
 
     compileOnly(fg.deobf("mezz.jei:jei-${Versions.MINECRAFT}-common-api:${Versions.JEI}"))
     compileOnly(fg.deobf("mezz.jei:jei-${Versions.MINECRAFT}-forge-api:${Versions.JEI}"))
-    runtimeOnly(fg.deobf("mezz.jei:jei-${Versions.MINECRAFT}-forge:${Versions.JEI}"))
+    localOnlyRuntime(fg.deobf("mezz.jei:jei-${Versions.MINECRAFT}-forge:${Versions.JEI}"))
 
     annotationProcessor("org.spongepowered:mixin:${Versions.MIXIN}-SNAPSHOT:processor")
 }
 
 minecraft {
-    mappings("parchment", "1.19.2-${Versions.PARCHMENT}-${Versions.MINECRAFT}")
+    mappings("parchment", "${Versions.MINECRAFT}-${Versions.PARCHMENT}-${Versions.MINECRAFT}")
     accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg"))
 
     runs {
-        all {
-            lazyToken("minecraft_classpath") {
-                configurations.library.get().copyRecursive().resolve()
-                        .joinToString(File.pathSeparator) { it.absolutePath }
-
-                configurations.gametestLibrary.get().copyRecursive().resolve()
-                        .joinToString(File.pathSeparator) { it.absolutePath }
-            }
-        }
         create("client") {
             taskName("Client")
             workingDirectory(project.file("run"))
@@ -130,13 +122,21 @@ minecraft {
     }
 }
 
+publishing {
+    publications {
+        named("mavenJava", MavenPublication::class) {
+            fg.component(this)
+        }
+    }
+}
+
 tasks.create<TaskPublishCurseForge>("publishCurseForge") {
     apiToken = GMUtils.locateProperty(project, "curseforgeApiToken") ?: 0
 
     val mainFile = upload(Properties.CURSE_PROJECT_ID, file("${project.buildDir}/libs/${base.archivesName.get()}-$version.jar"))
     mainFile.changelogType = "markdown"
     mainFile.changelog = GMUtils.smallChangelog(project, Properties.GIT_REPO)
-    mainFile.releaseType = CFG_Contants.RELEASE_TYPE_RELEASE
+    mainFile.releaseType = CFG_Constants.RELEASE_TYPE_RELEASE
     mainFile.addJavaVersion("Java ${Versions.MOD_JAVA}")
 //    mainFile.addRequirement("jeitweaker")
 

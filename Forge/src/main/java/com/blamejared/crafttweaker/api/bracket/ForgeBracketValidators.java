@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.annotation.BracketValidator;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -34,7 +35,7 @@ public final class ForgeBracketValidators {
             return false;
         }
         
-        if(Registry.FLUID.containsKey(resourceLocation)) {
+        if(BuiltInRegistries.FLUID.containsKey(resourceLocation)) {
             return true;
         }
         

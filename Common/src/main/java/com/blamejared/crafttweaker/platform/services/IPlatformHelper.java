@@ -63,9 +63,6 @@ public interface IPlatformHelper {
     
     IItemStack createItemStackMutable(ItemStack stack);
     
-    IItemStack getEmptyItemStack();
-    
-    
     Fluid getBucketContent(BucketItem item);
     
     Path getGameDirectory();
@@ -73,8 +70,8 @@ public interface IPlatformHelper {
     /**
      * Finds classes with the given annotation and applies a filter.
      *
-     * @param annotationCls    The annotation class to look for.
-     * @param consumer         Consumer to collect the given mod that added the class if available.
+     * @param annotationClass    The annotation class to look for.
+     * @param classProviderConsumer         Consumer to collect the given mod that added the class if available.
      * @param annotationFilter A filter to apply to the search.
      *
      * @return A stream of classes with the annotation

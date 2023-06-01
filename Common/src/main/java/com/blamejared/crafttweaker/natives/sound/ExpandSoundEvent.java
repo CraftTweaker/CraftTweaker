@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import org.openzen.zencode.java.ZenCodeType;
@@ -19,7 +20,7 @@ public class ExpandSoundEvent {
     @ZenCodeType.Getter("registryName")
     public static ResourceLocation getRegistryName(SoundEvent internal) {
         
-        return Registry.SOUND_EVENT.getKey(internal);
+        return BuiltInRegistries.SOUND_EVENT.getKey(internal);
     }
     
     @ZenCodeType.Method

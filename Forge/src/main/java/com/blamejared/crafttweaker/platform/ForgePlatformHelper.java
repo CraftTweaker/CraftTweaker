@@ -41,18 +41,17 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.BasicItemListing;
 import net.minecraftforge.common.ForgeInternalHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifierManager;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.data.loading.DatagenModLoader;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.forgespi.language.ModFileScanData;
-import net.minecraftforge.items.CapabilityItemHandler;
 import org.objectweb.asm.Type;
 
 import java.lang.annotation.Annotation;
@@ -159,12 +158,6 @@ public class ForgePlatformHelper implements IPlatformHelper {
     }
     
     @Override
-    public IItemStack getEmptyItemStack() {
-        
-        return MCItemStack.EMPTY.get();
-    }
-    
-    @Override
     public Fluid getBucketContent(BucketItem item) {
         
         return item.getFluid();
@@ -244,7 +237,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
     public IItemHandlerWrapper getPlayerInventory(Player player) {
         
         //First try getting the forge one, if that fails use the default vanilla one
-        return player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+        return player.getCapability(ForgeCapabilities.ITEM_HANDLER)
                 .map(IItemHandlerWrapper::new)
                 .orElseThrow(() -> new RuntimeException("Player does not have the Item Handler capability, this is probably wrong!"));
     }
@@ -268,7 +261,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public Set<MutableComponent> getFluidsForDump(ItemStack stack, Player player, InteractionHand hand) {
         
-        LazyOptional<IFluidHandlerItem> cap = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+        LazyOptional<IFluidHandlerItem> cap = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
         if(!cap.isPresent()) {
             return Set.of();
         }

@@ -4,9 +4,8 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.condition.IIngredientCondition;
 import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientConditionedSerializer;
 import com.blamejared.crafttweaker.api.item.MCItemStackMutable;
-import com.faux.ingredientextension.api.ingredient.serializer.IIngredientSerializer;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 
 import javax.annotation.Nullable;
 
@@ -23,9 +22,8 @@ public class IngredientConditioned<I extends IIngredient, T extends IIngredientC
         return stack != null && getCrTIngredient().matches(new MCItemStackMutable(stack), true);
     }
     
-    
     @Override
-    public IIngredientSerializer<? extends Ingredient> getSerializer() {
+    public CustomIngredientSerializer<IngredientConditioned<?, ?>> getSerializer() {
         
         return IngredientConditionedSerializer.INSTANCE;
     }

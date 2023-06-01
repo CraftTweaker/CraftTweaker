@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import org.openzen.zencode.java.ZenCodeType;
@@ -58,7 +59,7 @@ public class ExpandAttribute {
     @ZenCodeType.Getter("registryName")
     public static ResourceLocation getRegistryName(Attribute internal) {
         
-        return Registry.ATTRIBUTE.getKey(internal);
+        return BuiltInRegistries.ATTRIBUTE.getKey(internal);
     }
     
     /**
@@ -74,7 +75,7 @@ public class ExpandAttribute {
     @ZenCodeType.Caster
     public static String getCommandString(Attribute internal) {
         
-        return "<attribute:" + Registry.ATTRIBUTE.getKey(internal) + ">";
+        return "<attribute:" + BuiltInRegistries.ATTRIBUTE.getKey(internal) + ">";
     }
     
 }

@@ -4,13 +4,11 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.BracketValidator;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.state.BlockState;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.function.Function;
 
@@ -86,7 +84,7 @@ public class BracketValidators {
         }
         
         final ResourceLocation key = new ResourceLocation(split[0], split[1]);
-        if(!Registry.ENCHANTMENT.containsKey(key)) {
+        if(!BuiltInRegistries.ENCHANTMENT.containsKey(key)) {
             CraftTweakerAPI.LOGGER.error("Could not get enchantment '{}': the enchantment isn't registered", tokens);
             return false;
         }
@@ -121,7 +119,7 @@ public class BracketValidators {
         }
         ResourceLocation key = new ResourceLocation(split[0], split[1]);
         
-        if(!Registry.ITEM.containsKey(key)) {
+        if(!BuiltInRegistries.ITEM.containsKey(key)) {
             CraftTweakerAPI.LOGGER.error("Could not get item with name: <item:" + tokens + ">! Item does not appear to exist!");
             return false;
         }
@@ -146,13 +144,6 @@ public class BracketValidators {
     public static boolean validateResourceBracket(String tokens) {
         
         return ResourceLocation.tryParse(tokens) != null;
-    }
-    
-    @ZenCodeType.Method
-    @BracketValidator("creativemodetab")
-    public static boolean validateCreativeModeTabBracket(String tokens) {
-        
-        return Arrays.stream(CreativeModeTab.TABS).anyMatch(group -> group.getRecipeFolderName().equals(tokens));
     }
     
     public static boolean validateBracket(String bracketName, String tokens, Function<String, ?> bracketMethod, boolean logError) {

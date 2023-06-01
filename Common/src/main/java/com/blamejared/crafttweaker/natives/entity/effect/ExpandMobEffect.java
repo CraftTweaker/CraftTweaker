@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
@@ -120,13 +121,13 @@ public class ExpandMobEffect {
     @ZenCodeType.Getter("registryName")
     public static ResourceLocation getRegistryName(MobEffect internal) {
         
-        return Registry.MOB_EFFECT.getKey(internal);
+        return BuiltInRegistries.MOB_EFFECT.getKey(internal);
     }
     
     @ZenCodeType.Getter("commandString")
     public static String getCommandString(MobEffect internal) {
         
-        return "<mobeffect:" + Registry.MOB_EFFECT.getKey(internal) + ">";
+        return "<mobeffect:" + BuiltInRegistries.MOB_EFFECT.getKey(internal) + ">";
     }
     
 }

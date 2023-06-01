@@ -1,46 +1,44 @@
 package com.blamejared.crafttweaker.api.recipe.type;
 
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
+import com.blamejared.crafttweaker.api.*;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction1D;
+import com.blamejared.crafttweaker.api.recipe.serializer.CTShapelessRecipeSerializer;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 
-public class CTShapelessRecipeBase implements CraftingRecipe {
+public class CTShapelessRecipe extends ShapelessRecipe {
     
-    
-    private final IIngredient[] ingredients;
+    private final IIngredient[] ctIngredients;
     private final IItemStack output;
     @Nullable
     private final RecipeFunction1D function;
-    private final ResourceLocation resourceLocation;
     
-    
-    public CTShapelessRecipeBase(String name, IItemStack output, IIngredient[] ingredients, @Nullable RecipeFunction1D function) {
+    public CTShapelessRecipe(String name, IItemStack output, IIngredient[] ingredients, @Nullable RecipeFunction1D function) {
         
-        this.resourceLocation = CraftTweakerConstants.rl(name);
+        this(name, CraftingBookCategory.MISC, output, ingredients, function);
+    }
+    
+    public CTShapelessRecipe(String name, CraftingBookCategory category, IItemStack output, IIngredient[] ingredients, @Nullable RecipeFunction1D function) {
+        
+        super(CraftTweakerConstants.rl(name), "", category, output.getInternal(), NonNullList.create());
+        
         this.output = output;
         this.function = function;
         
         boolean containsNull = false;
         for(IIngredient ingredient : ingredients) {
             if(ingredient == null || ingredient.asVanillaIngredient().isEmpty()) {
-                CraftTweakerAPI.LOGGER.warn("Shapeless recipe with ID '{}' contains null or empty ingredients, removing entries!", resourceLocation);
+                CraftTweakerAPI.LOGGER.warn("Shapeless recipe with ID '{}' contains null or empty ingredients, removing entries!", getId());
                 containsNull = true;
                 break;
             }
@@ -51,8 +49,8 @@ public class CTShapelessRecipeBase implements CraftingRecipe {
                     .filter(iIngredient -> !iIngredient.asVanillaIngredient().isEmpty())
                     .toArray(IIngredient[]::new);
         }
-        this.ingredients = ingredients;
-        
+        this.ctIngredients = ingredients;
+        this.getIngredients().addAll(Arrays.stream(this.ctIngredients).map(IIngredient::asVanillaIngredient).toList());
     }
     
     @Override
@@ -68,7 +66,7 @@ public class CTShapelessRecipeBase implements CraftingRecipe {
                 return false;
             }
         }
-        return visitedCount == this.ingredients.length;
+        return visitedCount == this.ctIngredients.length;
     }
     
     
@@ -79,7 +77,7 @@ public class CTShapelessRecipeBase implements CraftingRecipe {
             return this.output.getInternal().copy();
         }
         
-        final IItemStack[] stacks = new IItemStack[this.ingredients.length];
+        final IItemStack[] stacks = new IItemStack[this.ctIngredients.length];
         
         forAllUniqueMatches(inv, (ingredientIndex, matchingSlot, stack) -> stacks[ingredientIndex] = stack.setAmount(1));
         
@@ -94,12 +92,6 @@ public class CTShapelessRecipeBase implements CraftingRecipe {
     }
     
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        
-        return width * height >= this.ingredients.length;
-    }
-    
-    @Override
     public ItemStack getResultItem() {
         
         return output.getInternal().copy();
@@ -109,7 +101,7 @@ public class CTShapelessRecipeBase implements CraftingRecipe {
     public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
         
         final NonNullList<ItemStack> remainingItems = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
-        forAllUniqueMatches(inv, (ingredientIndex, matchingSlot, stack) -> remainingItems.set(matchingSlot, this.ingredients[ingredientIndex]
+        forAllUniqueMatches(inv, (ingredientIndex, matchingSlot, stack) -> remainingItems.set(matchingSlot, this.ctIngredients[ingredientIndex]
                 .getRemainingItem(stack)
                 .getInternal()));
         return remainingItems;
@@ -129,8 +121,8 @@ public class CTShapelessRecipeBase implements CraftingRecipe {
         final boolean[] visited = new boolean[inv.getContainerSize()];
         
         outer:
-        for(int ingredientIndex = 0; ingredientIndex < this.ingredients.length; ingredientIndex++) {
-            IIngredient ingredient = this.ingredients[ingredientIndex];
+        for(int ingredientIndex = 0; ingredientIndex < this.ctIngredients.length; ingredientIndex++) {
+            IIngredient ingredient = this.ctIngredients[ingredientIndex];
             for(int i = 0; i < inv.getContainerSize(); i++) {
                 if(visited[i]) {
                     continue;
@@ -156,40 +148,21 @@ public class CTShapelessRecipeBase implements CraftingRecipe {
     public NonNullList<Ingredient> getIngredients() {
         
         NonNullList<Ingredient> ingredients = NonNullList.create();
-        for(IIngredient ingredient : this.ingredients) {
+        for(IIngredient ingredient : this.ctIngredients) {
             ingredients.add(ingredient.asVanillaIngredient());
         }
         return ingredients;
     }
     
     @Override
-    public String getGroup() {
+    public RecipeSerializer<CTShapelessRecipe> getSerializer() {
         
-        return CraftingRecipe.super.getGroup();
-    }
-    
-    @Override
-    public ResourceLocation getId() {
-        
-        return resourceLocation;
-    }
-    
-    @Override
-    public RecipeSerializer<CTShapelessRecipeBase> getSerializer() {
-        
-        return Services.REGISTRY.getCTShapelessRecipeSerializer();
-    }
-    
-    
-    @Override
-    public RecipeType<?> getType() {
-        
-        return RecipeType.CRAFTING;
+        return CTShapelessRecipeSerializer.INSTANCE;
     }
     
     public IIngredient[] getCtIngredients() {
         
-        return this.ingredients;
+        return this.ctIngredients;
     }
     
     public IItemStack getCtOutput() {

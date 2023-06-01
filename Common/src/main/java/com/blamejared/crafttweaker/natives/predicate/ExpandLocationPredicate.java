@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
@@ -37,7 +38,7 @@ public final class ExpandLocationPredicate {
     @ZenCodeType.StaticExpansionMethod
     public static LocationPredicate inBiome(final ResourceLocation biome) {
         
-        return LocationPredicate.inBiome(ResourceKey.create(Registry.BIOME_REGISTRY, biome));
+        return LocationPredicate.inBiome(ResourceKey.create(Registries.BIOME, biome));
     }
     
     @SuppressWarnings("SpellCheckingInspection")
@@ -50,7 +51,7 @@ public final class ExpandLocationPredicate {
     @ZenCodeType.StaticExpansionMethod
     public static LocationPredicate inDimension(final ResourceLocation dimension) {
         
-        return LocationPredicate.inDimension(ResourceKey.create(Registry.DIMENSION_REGISTRY, dimension));
+        return LocationPredicate.inDimension(ResourceKey.create(Registries.DIMENSION, dimension));
     }
     
     @ZenCodeType.StaticExpansionMethod
@@ -62,7 +63,7 @@ public final class ExpandLocationPredicate {
     @ZenCodeType.StaticExpansionMethod
     public static LocationPredicate inStructure(final ResourceLocation structure) {
         
-        return LocationPredicate.inStructure(ResourceKey.create(Registry.STRUCTURE_REGISTRY, structure));
+        return LocationPredicate.inStructure(ResourceKey.create(Registries.STRUCTURE, structure));
     }
     
     @ZenCodeType.StaticExpansionMethod

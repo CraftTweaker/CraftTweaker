@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.api.ingredient.type;
 
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.MapData;
@@ -8,6 +9,7 @@ import com.blamejared.crafttweaker.api.ingredient.transform.IIngredientTransform
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -15,6 +17,8 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.ingredient.type.IIngredientTransformed")
 @Document("vanilla/api/ingredient/type/IIngredientTransformed")
 public class IIngredientTransformed<T extends IIngredient> implements IIngredient {
+    
+    public static final ResourceLocation ID = CraftTweakerConstants.rl("transformed");
     
     private final T base;
     private final IIngredientTransformer<T> transformer;

@@ -3,10 +3,10 @@ import com.blamejared.crafttweaker.gradle.Properties
 import com.blamejared.crafttweaker.gradle.Versions
 import com.blamejared.gradle.mod.utils.GMUtils
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
-import net.darkhax.curseforgegradle.Constants as CFG_Contants
+import net.darkhax.curseforgegradle.Constants as CFG_Constants
 
 plugins {
-    id("fabric-loom") version "0.12-SNAPSHOT"
+    id("fabric-loom") version "1.1-SNAPSHOT"
     id("com.blamejared.crafttweaker.default")
     id("com.blamejared.crafttweaker.loader")
     id("net.darkhax.curseforgegradle")
@@ -17,23 +17,24 @@ dependencies {
     minecraft("com.mojang:minecraft:${Versions.MINECRAFT}")
     mappings(loom.layered {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.19.2:${Versions.PARCHMENT}@zip")
+        parchment("org.parchmentmc.data:parchment-${Versions.MINECRAFT}:${Versions.PARCHMENT}@zip")
     })
     implementation("org.jetbrains:annotations:23.0.0")
     modImplementation("net.fabricmc:fabric-loader:${Versions.FABRIC_LOADER}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${Versions.FABRIC}")
-    implementation(project(":Common"))
+    compileOnly(project(":Common"))
 
-    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${Versions.REI}")
-    modLocalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${Versions.REI}")
-    modCompileOnly("me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:${Versions.REI}")
-    modLocalRuntime("dev.architectury:architectury-fabric:6.0.37")
+    modLocalRuntime("me.shedaniel:RoughlyEnoughItems-api-fabric:${Versions.REI}") {
+        exclude("net.fabricmc", "fabric-loader")
+    }
+    modLocalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${Versions.REI}") {
+        exclude("net.fabricmc", "fabric-loader")
+    }
 
     implementation("org.reflections:reflections:${Versions.REFLECTIONS}")?.let { include(it) }
     implementation("org.javassist:javassist:${Versions.JAVA_ASSIST}")?.let { include(it) } // required for reflections
 
-    modImplementation("com.faux.fauxcustomentitydata:FauxCustomEntityData-fabric-1.19.2:${Versions.FAUX_CUSTOM_ENTITY_DATA}")
-    modImplementation("com.faux.ingredientextension:IngredientExtensionAPI-fabric-1.19.2:${Versions.INGREDIENT_EXTENSION_API}")
+    modImplementation("com.faux.fauxcustomentitydata:FauxCustomEntityData-fabric-1.19.3:${Versions.FAUX_CUSTOM_ENTITY_DATA}")
 
     gametestCompileOnly(files(project(":Common").dependencyProject.sourceSets.gametest.get().java.srcDirs))
     Dependencies.ZENCODE_TEST.forEach {
@@ -43,6 +44,9 @@ dependencies {
 
 loom {
     accessWidenerPath.set(project(":Common").file("src/main/resources/${Properties.MOD_ID}.accesswidener"))
+    mixin {
+        this.defaultRefmapName.set("${Properties.MOD_ID}.refmap.json")
+    }
     mods {
         register("crafttweaker") {
             sourceSet(sourceSets.main.get())
@@ -88,10 +92,9 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
     val mainFile = upload(Properties.CURSE_PROJECT_ID, file("${project.buildDir}/libs/${base.archivesName.get()}-$version.jar"))
     mainFile.changelogType = "markdown"
     mainFile.changelog = GMUtils.smallChangelog(project, Properties.GIT_REPO)
-    mainFile.releaseType = CFG_Contants.RELEASE_TYPE_RELEASE
+    mainFile.releaseType = CFG_Constants.RELEASE_TYPE_RELEASE
     mainFile.addGameVersion(Versions.MINECRAFT)
     mainFile.addJavaVersion("Java ${Versions.MOD_JAVA}")
-    mainFile.addRequirement("ingredient-extension-api")
     mainFile.addRequirement("faux-custom-entity-data")
     mainFile.addRequirement("fabric-api")
 

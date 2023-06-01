@@ -4,10 +4,9 @@ import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.transform.IIngredientTransformer;
 import com.blamejared.crafttweaker.api.ingredient.transform.serializer.IIngredientTransformerSerializer;
-import com.blamejared.crafttweaker.api.ingredient.type.IIngredientTransformed;
-import com.blamejared.crafttweaker.api.ingredient.type.IngredientTransformed;
-import com.faux.ingredientextension.api.ingredient.serializer.IIngredientSerializer;
+import com.blamejared.crafttweaker.api.ingredient.type.*;
 import com.google.gson.JsonObject;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -17,11 +16,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @SuppressWarnings("rawtypes")
 @ParametersAreNonnullByDefault
-public enum IngredientTransformedSerializer implements IIngredientSerializer<IngredientTransformed<?, ?>> {
+public enum IngredientTransformedSerializer implements CustomIngredientSerializer<IngredientTransformed<?, ?>> {
     INSTANCE;
     
     public @NotNull
-    JsonObject toJson(IngredientTransformed<?, ?> ingredientVanillaPlus) {
+    JsonObject write(IngredientTransformed<?, ?> ingredientVanillaPlus) {
         
         final JsonObject jsonObject = new JsonObject();
         jsonObject.add("base", ingredientVanillaPlus.getCrTIngredient()
@@ -39,7 +38,7 @@ public enum IngredientTransformedSerializer implements IIngredientSerializer<Ing
     }
     
     @Override
-    public IngredientTransformed<?, ?> fromNetwork(FriendlyByteBuf buffer) {
+    public IngredientTransformed<?, ?> read(FriendlyByteBuf buffer) {
         
         final IIngredient base = IIngredient.fromIngredient(Ingredient.fromNetwork(buffer));
         final ResourceLocation type = buffer.readResourceLocation();
@@ -52,7 +51,7 @@ public enum IngredientTransformedSerializer implements IIngredientSerializer<Ing
     }
     
     @Override
-    public void toJson(JsonObject json, IngredientTransformed<?, ?> ingredient) {
+    public void write(JsonObject json, IngredientTransformed<?, ?> ingredient) {
         
         json.add("base", ingredient.getCrTIngredient()
                 .getBaseIngredient()
@@ -68,7 +67,13 @@ public enum IngredientTransformedSerializer implements IIngredientSerializer<Ing
     }
     
     @Override
-    public IngredientTransformed<?, ?> fromJson(JsonObject json) {
+    public ResourceLocation getIdentifier() {
+        
+        return IIngredientTransformed.ID;
+    }
+    
+    @Override
+    public IngredientTransformed<?, ?> read(JsonObject json) {
         
         final JsonObject base = json.getAsJsonObject("base");
         final IIngredient baseIngredient = IIngredient.fromIngredient(Ingredient.fromJson(base));
@@ -84,7 +89,7 @@ public enum IngredientTransformedSerializer implements IIngredientSerializer<Ing
     }
     
     @Override
-    public void toNetwork(FriendlyByteBuf buffer, IngredientTransformed<?, ?> ingredient) {
+    public void write(FriendlyByteBuf buffer, IngredientTransformed<?, ?> ingredient) {
         
         final Ingredient baseIngredient = ingredient.getCrTIngredient().getBaseIngredient().asVanillaIngredient();
         baseIngredient.toNetwork(buffer);

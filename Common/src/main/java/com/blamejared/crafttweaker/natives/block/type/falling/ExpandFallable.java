@@ -42,10 +42,9 @@ public class ExpandFallable {
      * @return The damage source used when this block falls on an entity.
      */
     @ZenCodeType.Method
-    @ZenCodeType.Getter("fallDamageSource")
-    public static DamageSource getFallDamageSource(Fallable internal) {
+    public static DamageSource getFallDamageSource(Fallable internal, Entity entity) {
         
-        return internal.getFallDamageSource();
+        return internal.getFallDamageSource(entity);
     }
     
     /**

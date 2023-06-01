@@ -2,29 +2,26 @@ package com.blamejared.crafttweaker.api.ingredient.type;
 
 
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
-import com.faux.ingredientextension.api.ingredient.IngredientExtendable;
-import com.faux.ingredientextension.api.ingredient.serializer.IIngredientSerializer;
-import net.minecraft.world.item.crafting.Ingredient;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredient;
+import net.minecraft.world.item.ItemStack;
 
-import java.util.stream.Stream;
+import java.util.*;
 
-public abstract class IngredientCraftTweaker<T extends IIngredient> extends IngredientExtendable implements IngredientCraftTweakerBase {
+public abstract class IngredientCraftTweaker<T extends IIngredient> implements CustomIngredient, IngredientCraftTweakerBase {
     
     private final T crtIngredient;
     
-    protected IngredientCraftTweaker(T crtIngredient, Stream<? extends Value> itemLists) {
+    protected IngredientCraftTweaker(T crtIngredient) {
         
-        super(itemLists);
         this.crtIngredient = crtIngredient;
     }
     
-    protected IngredientCraftTweaker(T crtIngredient) {
-        
-        this(crtIngredient, IngredientCraftTweakerBase.getValues(crtIngredient.getItems()));
-    }
-    
     @Override
-    public abstract IIngredientSerializer<? extends Ingredient> getSerializer();
+    public boolean test(ItemStack stack) {
+        
+        return IngredientCraftTweakerBase.super.test(stack);
+    }
     
     @Override
     public T getCrTIngredient() {
@@ -33,9 +30,16 @@ public abstract class IngredientCraftTweaker<T extends IIngredient> extends Ingr
     }
     
     @Override
-    public boolean isSimple() {
+    public List<ItemStack> getMatchingStacks() {
         
-        return IngredientCraftTweakerBase.super.isSimple();
+        return Arrays.stream(getCrTIngredient().getItems()).map(IItemStack::getInternal).toList();
     }
+    
+    @Override
+    public boolean requiresTesting() {
+        
+        return true;
+    }
+    
     
 }

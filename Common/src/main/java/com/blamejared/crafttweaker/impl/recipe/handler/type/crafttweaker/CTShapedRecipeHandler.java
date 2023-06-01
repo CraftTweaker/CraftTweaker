@@ -8,7 +8,7 @@ import com.blamejared.crafttweaker.api.recipe.component.IDecomposedRecipe;
 import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction2D;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
-import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipeBase;
+import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipe;
 import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.datafixers.util.Pair;
@@ -20,11 +20,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@IRecipeHandler.For(CTShapedRecipeBase.class)
-public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecipeBase> {
+@IRecipeHandler.For(CTShapedRecipe.class)
+public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecipe> {
     
     @Override
-    public String dumpToCommandString(final IRecipeManager<? super CTShapedRecipeBase> manager, final CTShapedRecipeBase recipe) {
+    public String dumpToCommandString(final IRecipeManager<? super CTShapedRecipe> manager, final CTShapedRecipe recipe) {
         
         return String.format(
                 "craftingTable.addShaped(%s, %s, %s%s);",
@@ -40,16 +40,16 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecip
     }
     
     @Override
-    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super CTShapedRecipeBase> manager, final CTShapedRecipeBase firstRecipe, final U secondRecipe) {
+    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super CTShapedRecipe> manager, final CTShapedRecipe firstRecipe, final U secondRecipe) {
         
         return Services.PLATFORM.doCraftingTableRecipesConflict(manager, firstRecipe, secondRecipe);
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super CTShapedRecipeBase> manager, final CTShapedRecipeBase recipe) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super CTShapedRecipe> manager, final CTShapedRecipe recipe) {
         
-        final int width = recipe.getRecipeWidth();
-        final int height = recipe.getRecipeHeight();
+        final int width = recipe.getWidth();
+        final int height = recipe.getHeight();
         final RecipeFunction2D function = recipe.getFunction();
         final List<IIngredient> ingredients = this.flatten(recipe.getCtIngredients(), width, height);
         
@@ -68,7 +68,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecip
     }
     
     @Override
-    public Optional<CTShapedRecipeBase> recompose(final IRecipeManager<? super CTShapedRecipeBase> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<CTShapedRecipe> recompose(final IRecipeManager<? super CTShapedRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
         
         final Pair<Integer, Integer> size = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D);
         final MirrorAxis axis = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.MIRROR_AXIS);
@@ -91,7 +91,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecip
         
         final IIngredient[][] matrix = this.inflate(ingredients, width, height);
         final RecipeFunction2D recipeFunction = function == null ? null : function.get(0);
-        return Optional.of(Services.REGISTRY.createCTShapedRecipe(name.getPath(), output, matrix, axis, recipeFunction));
+        return Optional.of(new CTShapedRecipe(name.getPath(), output, matrix, axis, recipeFunction));
     }
     
     private List<IIngredient> flatten(final IIngredient[][] ingredients, final int width, final int height) {

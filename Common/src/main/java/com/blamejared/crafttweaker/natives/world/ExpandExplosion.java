@@ -94,11 +94,11 @@ public class ExpandExplosion {
      * @return The LivingEntity that caused this Explosion. `null` if no LivingEntity caused it.
      */
     @ZenCodeType.Method
-    @ZenCodeType.Getter("sourceMob")
+    @ZenCodeType.Getter("indirectSourceEntity")
     @ZenCodeType.Nullable
-    public static LivingEntity getSourceMob(Explosion internal) {
+    public static LivingEntity getIndirectSourceEntity(Explosion internal) {
         
-        return internal.getSourceMob();
+        return internal.getIndirectSourceEntity();
     }
     
     /**

@@ -10,19 +10,16 @@ import com.blamejared.crafttweaker.natives.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.natives.entity.ExpandEntityType;
 import com.blamejared.crafttweaker.natives.entity.attribute.ExpandAttribute;
 import com.blamejared.crafttweaker.natives.entity.effect.ExpandMobEffect;
-import com.blamejared.crafttweaker.natives.item.ExpandCreativeModeTab;
 import com.blamejared.crafttweaker.natives.item.alchemy.ExpandPotion;
 import com.blamejared.crafttweaker.natives.item.enchantment.ExpandEnchantment;
 import com.blamejared.crafttweaker.natives.sound.ExpandSoundEvent;
 import com.blamejared.crafttweaker.natives.villager.ExpandVillagerProfession;
 import com.blamejared.crafttweaker.natives.world.damage.ExpandDamageSource;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.core.Registry;
-import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -35,7 +32,7 @@ public class BracketDumpers {
     @BracketDumper("attribute")
     public static Collection<String> getAttributeDump() {
         
-        return Registry.ATTRIBUTE
+        return BuiltInRegistries.ATTRIBUTE
                 .stream()
                 .map(ExpandAttribute::getCommandString)
                 .collect(Collectors.toSet());
@@ -45,7 +42,7 @@ public class BracketDumpers {
     @BracketDumper("block")
     public static Collection<String> getBlockDump() {
         
-        return Registry.BLOCK
+        return BuiltInRegistries.BLOCK
                 .stream()
                 .map(ExpandBlock::getCommandString)
                 .collect(Collectors.toSet());
@@ -65,7 +62,7 @@ public class BracketDumpers {
     @BracketDumper("mobeffect")
     public static Collection<String> getEffectDump() {
         
-        return Registry.MOB_EFFECT
+        return BuiltInRegistries.MOB_EFFECT
                 .stream()
                 .map(ExpandMobEffect::getCommandString)
                 .collect(Collectors.toSet());
@@ -75,7 +72,7 @@ public class BracketDumpers {
     @BracketDumper("enchantment")
     public static Collection<String> getEnchantmentDump() {
         
-        return Registry.ENCHANTMENT
+        return BuiltInRegistries.ENCHANTMENT
                 .stream()
                 .map(ExpandEnchantment::getCommandString)
                 .collect(Collectors.toList());
@@ -85,7 +82,7 @@ public class BracketDumpers {
     @BracketDumper("entitytype")
     public static Collection<String> getEntityTypeDump() {
         
-        return Registry.ENTITY_TYPE
+        return BuiltInRegistries.ENTITY_TYPE
                 .stream()
                 .map(ExpandEntityType::getCommandString)
                 .collect(Collectors.toList());
@@ -95,7 +92,7 @@ public class BracketDumpers {
     @BracketDumper("item")
     public static Collection<String> getItemBracketDump() {
         
-        return Registry.ITEM
+        return BuiltInRegistries.ITEM
                 .stream()
                 .map(Item::getDefaultInstance)
                 .map(ItemStackUtil::getCommandString)
@@ -106,7 +103,7 @@ public class BracketDumpers {
     @BracketDumper("potion")
     public static Collection<String> getPotionTypeDump() {
         
-        return Registry.POTION
+        return BuiltInRegistries.POTION
                 .stream()
                 .map(ExpandPotion::getCommandString)
                 .collect(Collectors.toList());
@@ -116,7 +113,7 @@ public class BracketDumpers {
     @BracketDumper("profession")
     public static Collection<String> getProfessionDump() {
         
-        return Registry.VILLAGER_PROFESSION
+        return BuiltInRegistries.VILLAGER_PROFESSION
                 .stream()
                 .map(ExpandVillagerProfession::getCommandString)
                 .collect(Collectors.toList());
@@ -133,19 +130,10 @@ public class BracketDumpers {
     }
     
     @ZenCodeType.Method
-    @BracketDumper("creativemodetab")
-    public static Collection<String> getCreativeModeTabBracketDump() {
-        
-        return Arrays.stream(CreativeModeTab.TABS)
-                .map(ExpandCreativeModeTab::getCommandString)
-                .collect(Collectors.toList());
-    }
-    
-    @ZenCodeType.Method
     @BracketDumper("soundevent")
     public static Collection<String> getSoundEventDump() {
         
-        return Registry.SOUND_EVENT
+        return BuiltInRegistries.SOUND_EVENT
                 .stream()
                 .map(ExpandSoundEvent::getCommandString)
                 .collect(Collectors.toList());

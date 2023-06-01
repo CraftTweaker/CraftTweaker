@@ -18,6 +18,8 @@ import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -98,7 +100,7 @@ public final class DumpCommands {
                 builder -> builder.executes(context -> {
                     
                     final ServerPlayer player = context.getSource().getPlayerOrException();
-                    Registry.RECIPE_TYPE.stream()
+                    BuiltInRegistries.RECIPE_TYPE.stream()
                             .peek(type -> CraftTweakerAPI.LOGGER.info(type.toString()))
                             .map(it -> ((AccessRecipeManager) player.level.getRecipeManager()).crafttweaker$getRecipes()
                                     .getOrDefault(it, Collections.emptyMap())
@@ -157,41 +159,19 @@ public final class DumpCommands {
                     
                     final ServerPlayer player = context.getSource().getPlayerOrException();
                     final MinecraftServer server = context.getSource().getServer();
-                    server.registryAccess().registry(Registry.BIOME_REGISTRY).ifPresent(biomes -> {
+                    server.registryAccess().registry(Registries.BIOME).ifPresent(biomes -> {
                         biomes.stream()
                                 .map(ExpandBiome::getCommandString)
                                 .sorted()
                                 .forEach(CraftTweakerAPI.LOGGER::info);
                     });
-                    
+    
                     CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.biomes")), CommandUtilities.getFormattedLogFile())
                             .withStyle(ChatFormatting.GREEN)), player);
                     
                     return Command.SINGLE_SUCCESS;
                 })
         );
-        
-        //TODO Forge specific
-        //        CTCommands.registerPlayerDump("fake_players", "Outputs the data for all currently available fake players", (player, stack) -> {
-        //            try {
-        //                final Field map = FakePlayerFactory.class.getDeclaredField("fakePlayers");
-        //                map.setAccessible(true);
-        //                final Field mc = FakePlayerFactory.class.getDeclaredField("MINECRAFT");
-        //                mc.setAccessible(true);
-        //
-        //                //noinspection unchecked
-        //                Stream.concat(((Map<GameProfile, ?>) map.get(null)).keySet()
-        //                                .stream(), Stream.of((GameProfile) mc.get(null)))
-        //                        .map(it -> it.getName() + " -> " + it.getId())
-        //                        .forEach(CraftTweakerAPI::logDump);
-        //
-        //                CommandUtilities.send(CommandUtilities.color("Fake player data list generated! Check the crafttweaker.log.file!", TextFormatting.GREEN), player);
-        //            } catch(final ReflectiveOperationException e) {
-        //                CommandUtilities.send(CommandUtilities.color("An error occurred while generating the data list", TextFormatting.RED), player);
-        //                CraftTweakerAPI.logThrowing("Error while generating fake player list", e);
-        //            }
-        //            return 0;
-        //        });
         
         handler.registerDump(
                 "villager_trades",

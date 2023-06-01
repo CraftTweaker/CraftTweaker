@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.item;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -15,8 +16,6 @@ import java.util.function.Supplier;
 @Document("fabric/api/item/MCItemStack")
 public class MCItemStack implements FabricItemStack {
     
-    // TODO move this somewhere else
-    public static Supplier<MCItemStack> EMPTY = () -> new MCItemStack(ItemStack.EMPTY);
     private final ItemStack internal;
     
     public MCItemStack(ItemStack internal) {
@@ -39,7 +38,7 @@ public class MCItemStack implements FabricItemStack {
     @Override
     public IItemStack asMutable() {
         
-        if(this == EMPTY.get() || this.getInternal() == ItemStack.EMPTY) { // Check both just in case
+        if(this == IItemStack.empty() || this.getInternal() == ItemStack.EMPTY) { // Check both just in case
             // We don't want to allow mutations to the empty stack, so we just replace it with a stack of air. The game
             // treats air stacks as mostly the same as the empty stack, so this should be transparent to the user
             return new MCItemStackMutable(new ItemStack(Items.AIR));

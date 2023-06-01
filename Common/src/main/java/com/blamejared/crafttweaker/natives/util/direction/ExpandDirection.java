@@ -4,10 +4,10 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.BracketEnum;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -18,7 +18,7 @@ public class ExpandDirection {
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("rotation")
-    public static Quaternion getRotation(Direction internal) {
+    public static Quaternionf getRotation(Direction internal) {
         
         return internal.getRotation();
     }

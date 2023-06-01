@@ -13,6 +13,7 @@ import com.blamejared.crafttweaker.platform.Services;
 import com.google.common.base.Suppliers;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.RegistrySynchronization;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagManager;
@@ -266,7 +267,7 @@ public final class CraftTweakerTagRegistry {
             
         });
         registryAccess
-                .networkSafeRegistries()
+                .registries()
                 .forEach(registryEntry -> {
                     if(knownKeys.contains(registryEntry.key())) {
                         return;

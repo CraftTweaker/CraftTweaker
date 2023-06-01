@@ -1,33 +1,40 @@
 package com.blamejared.crafttweaker.api.ingredient.serializer;
 
+import com.blamejared.crafttweaker.api.ingredient.type.IIngredientAny;
 import com.blamejared.crafttweaker.api.ingredient.type.IngredientAny;
-import com.faux.ingredientextension.api.ingredient.serializer.IIngredientSerializer;
 import com.google.gson.JsonObject;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 
-public enum IngredientAnySerializer implements IIngredientSerializer<IngredientAny> {
+public enum IngredientAnySerializer implements CustomIngredientSerializer<IngredientAny> {
     INSTANCE;
     
     @Override
-    public IngredientAny fromNetwork(FriendlyByteBuf bytebuf) {
+    public ResourceLocation getIdentifier() {
         
+        return IIngredientAny.ID;
+    }
+    
+    @Override
+    public IngredientAny read(JsonObject json) {
+    
         return IngredientAny.INSTANCE;
     }
     
     @Override
-    public void toJson(JsonObject json, IngredientAny ingredient) {
+    public void write(JsonObject json, IngredientAny ingredient) {
     
     }
     
     @Override
-    public IngredientAny fromJson(JsonObject json) {
-        
+    public IngredientAny read(FriendlyByteBuf buf) {
+    
         return IngredientAny.INSTANCE;
     }
     
     @Override
-    public void toNetwork(FriendlyByteBuf bytebuf, IngredientAny ingredient) {
+    public void write(FriendlyByteBuf buf, IngredientAny ingredient) {
     
     }
-    
 }

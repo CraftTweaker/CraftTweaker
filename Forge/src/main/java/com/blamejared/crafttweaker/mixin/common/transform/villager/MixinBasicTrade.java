@@ -1,6 +1,6 @@
 package com.blamejared.crafttweaker.mixin.common.transform.villager;
 
-import com.blamejared.crafttweaker.api.villager.IBasicItemListing;
+import com.blamejared.crafttweaker.api.villager.trade.type.IBasicItemListing;
 import net.minecraftforge.common.BasicItemListing;
 import org.spongepowered.asm.mixin.Mixin;
 

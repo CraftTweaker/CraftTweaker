@@ -54,7 +54,9 @@ cauldron.addEmptyInteraction(<item:minecraft:dirt>, (blockState, cLevel, bPos, p
                     // Stores the data for the entity
                     val data = {EntityTag: {LifeTime:10,FireworksItem:{id:"firework_rocket",Count:1,tag:{Fireworks:{Explosions:[{Type:1,Trail:1,Colors:[2651799],FadeColors:[14602026, 6719955, 12801229]}],Flight:1}}}}} as IData;
                     // Spawn a firework rocket above the cauldron.
-                    <entitytype:minecraft:firework_rocket>.spawn(level, data, null, null, pos.above(), MobSpawnType.TRIGGERED, false, true);
+                    <entitytype:minecraft:firework_rocket>.spawn(level, null, (entity) => {
+                        entity.updateCustomEntityTag(entity.level, null, data);
+                    }, pos.above(), MobSpawnType.TRIGGERED, false, true);
                 })
                 // Start the sequence
                 .start();
@@ -238,7 +240,9 @@ cauldron.addEmptyInteraction(<item:minecraft:stick>, (blockState, cLevel, bPos, 
                     // Stores the data for the entity
                     val data = {EntityTag: {LifeTime:10,FireworksItem:{id:"firework_rocket",Count:1,tag:{Fireworks:{Explosions:[{Type:1,Trail:1,Colors:[2651799],FadeColors:[14602026, 6719955, 12801229]}],Flight:1}}}}} as IData;
                     // Spawn a firework rocket above the cauldron.
-                    <entitytype:minecraft:firework_rocket>.spawn(level, data, null, null, pos.above(), MobSpawnType.TRIGGERED, false, true);
+                    <entitytype:minecraft:firework_rocket>.spawn(level, null, (entity) => {
+                        entity.updateCustomEntityTag(entity.level, null, data);
+                    }, pos.above(), MobSpawnType.TRIGGERED, false, true);
                 })
                 // Start the sequence
                 .start();

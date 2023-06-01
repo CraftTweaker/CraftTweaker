@@ -5,6 +5,9 @@ import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
 import com.blamejared.crafttweaker.gametest.CraftTweakerGameTests;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.RegistrySynchronization;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.tags.TagManager;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.RegisterGameTestsEvent;
@@ -32,10 +35,11 @@ public class CTModEventHandler {
         
         if(event.includeServer()) {
             List<TagManager.LoadResult<?>> loadResults = new ArrayList<>();
-            for(RegistryAccess.RegistryData<?> registry : RegistryAccess.knownRegistries()) {
-                loadResults.add(new TagManager.LoadResult<>(registry.key(), new HashMap<>()));
+            
+            for(RegistryDataLoader.RegistryData<?> data : RegistryDataLoader.WORLDGEN_REGISTRIES) {
+                loadResults.add(new TagManager.LoadResult<>(data.key(), new HashMap<>()));
             }
-            for(Registry<?> registry : Registry.REGISTRY) {
+            for(Registry<?> registry : BuiltInRegistries.REGISTRY) {
                 loadResults.add(new TagManager.LoadResult<>(registry.key(), new HashMap<>()));
             }
             CraftTweakerTagRegistry.INSTANCE.bind(loadResults);

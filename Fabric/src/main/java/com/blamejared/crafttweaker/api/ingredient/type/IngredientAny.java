@@ -1,27 +1,26 @@
 package com.blamejared.crafttweaker.api.ingredient.type;
 
 import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientAnySerializer;
-import com.faux.ingredientextension.api.ingredient.IngredientExtendable;
-import com.faux.ingredientextension.api.ingredient.serializer.IIngredientSerializer;
-import net.minecraft.core.Registry;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
+import com.google.common.base.Suppliers;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.*;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.*;
 
 import javax.annotation.Nullable;
-import java.util.function.Predicate;
+import java.util.List;
+import java.util.function.*;
 
-public class IngredientAny extends IngredientExtendable implements IngredientSingleton<IIngredientAny> {
+public class IngredientAny implements CustomIngredient, IngredientSingleton<IIngredientAny> {
     
     public static final IngredientAny INSTANCE = new IngredientAny();
     
+    private static final Supplier<List<ItemStack>> matchingStacks = Suppliers.memoize(() -> BuiltInRegistries.ITEM
+            .stream()
+            .map(Item::getDefaultInstance)
+            .filter(Predicate.not(ItemStack::isEmpty)).toList());
+    
     protected IngredientAny() {
         
-        super(Registry.ITEM
-                .stream()
-                .map(Item::getDefaultInstance)
-                .filter(Predicate.not(ItemStack::isEmpty))
-                .toArray(ItemStack[]::new));
     }
     
     @Override
@@ -31,7 +30,19 @@ public class IngredientAny extends IngredientExtendable implements IngredientSin
     }
     
     @Override
-    public IIngredientSerializer<? extends Ingredient> getSerializer() {
+    public List<ItemStack> getMatchingStacks() {
+        
+        return matchingStacks.get();
+    }
+    
+    @Override
+    public boolean requiresTesting() {
+        
+        return true;
+    }
+    
+    @Override
+    public CustomIngredientSerializer<IngredientAny> getSerializer() {
         
         return IngredientAnySerializer.INSTANCE;
     }

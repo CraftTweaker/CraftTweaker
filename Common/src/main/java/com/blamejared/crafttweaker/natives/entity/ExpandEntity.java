@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -35,6 +36,11 @@ import java.util.function.Predicate;
 @NativeTypeRegistration(value = Entity.class, zenCodeName = "crafttweaker.api.entity.Entity")
 public class ExpandEntity {
     
+    @ZenCodeType.Method
+    public static void updateCustomEntityTag(Entity internal, Level level, @ZenCodeType.Nullable Player player, MapData data) {
+        
+        EntityType.updateCustomEntityTag(level, player, internal, data.getInternal());
+    }
     @ZenCodeType.Method
     public static boolean isColliding(Entity internal, BlockPos pos, BlockState state) {
         
@@ -1172,7 +1178,7 @@ public class ExpandEntity {
     @ZenCodeType.Getter("registryName")
     public static ResourceLocation getRegistryName(Entity internal) {
         
-        return Registry.ENTITY_TYPE.getKey(internal.getType());
+        return BuiltInRegistries.ENTITY_TYPE.getKey(internal.getType());
     }
     
 }

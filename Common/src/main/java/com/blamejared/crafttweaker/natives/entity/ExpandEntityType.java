@@ -3,27 +3,22 @@ package com.blamejared.crafttweaker.natives.entity;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.entity.CTEntityIngredient;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.tag.type.KnownTag;
-import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
-import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
+import com.blamejared.crafttweaker_annotations.annotations.*;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.function.Consumer;
 
 @ZenRegister
 @Document("vanilla/api/entity/EntityType")
@@ -33,16 +28,23 @@ public class ExpandEntityType {
     
     @ZenCodeType.Method
     @ZenCodeType.Nullable
-    public static Entity spawn(EntityType internal, ServerLevel level, @ZenCodeType.Nullable MapData data, @ZenCodeType.Nullable Component displayName, @ZenCodeType.Nullable Player spawningPlayer, BlockPos pos, MobSpawnType spawnType, boolean alignPosition, boolean invertY) {
+    public static Entity spawn(EntityType internal, ServerLevel level, @ZenCodeType.Nullable IItemStack spawnStack, @ZenCodeType.Nullable Player spawningPlayer, BlockPos position, MobSpawnType spawnType, boolean alignPosition, boolean invertY) {
         
-        return internal.spawn(level, data.getInternal(), displayName, spawningPlayer, pos, spawnType, alignPosition, invertY);
+        return internal.spawn(level, spawnStack == null ? null : spawnStack.getInternal(), spawningPlayer, position, spawnType, alignPosition, invertY);
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Nullable
-    public static Entity create(EntityType internal, ServerLevel level, @ZenCodeType.Nullable MapData data, @ZenCodeType.Nullable Component displayName, @ZenCodeType.Nullable Player spawningPlayer, BlockPos pos, MobSpawnType spawnType, boolean alignPosition, boolean invertY) {
+    public static Entity spawn(EntityType internal, ServerLevel level, BlockPos position, MobSpawnType spawnType) {
         
-        return internal.create(level, data.getInternal(), displayName, spawningPlayer, pos, spawnType, alignPosition, invertY);
+        return internal.spawn(level, position, spawnType);
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Nullable
+    public static Entity spawn(EntityType internal, ServerLevel level, @ZenCodeType.Nullable MapData data, @ZenCodeType.Nullable Consumer<Entity> onSpawn, BlockPos position, MobSpawnType spawnType, boolean alignPosition, boolean invertY) {
+        
+        return internal.spawn(level, data == null ? null : data.getInternal(), onSpawn, position, spawnType, alignPosition, invertY);
     }
     
     @ZenCodeType.Method
@@ -135,23 +137,23 @@ public class ExpandEntityType {
         return internal.getDimensions();
     }
     
-        @ZenCodeType.Method
-        public static boolean isIn(EntityType internal, KnownTag<EntityType<Entity>> tag) {
-
-            return internal.is(tag.getTagKey());
-        }
+    @ZenCodeType.Method
+    public static boolean isIn(EntityType internal, KnownTag<EntityType<Entity>> tag) {
+        
+        return internal.is(tag.getTagKey());
+    }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("registryName")
     public static ResourceLocation getRegistryName(EntityType internal) {
         
-        return Registry.ENTITY_TYPE.getKey(internal);
+        return BuiltInRegistries.ENTITY_TYPE.getKey(internal);
     }
     
     @ZenCodeType.Getter("commandString")
     public static String getCommandString(EntityType internal) {
         
-        return "<entitytype:" + Registry.ENTITY_TYPE.getKey(internal) + ">";
+        return "<entitytype:" + BuiltInRegistries.ENTITY_TYPE.getKey(internal) + ">";
     }
     
     @ZenCodeType.Caster(implicit = true)

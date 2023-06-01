@@ -1,47 +1,43 @@
 {
-    "schemaVersion": 1,
-    "id": "crafttweaker",
-    "version": "${version}",
-    "name": "CraftTweaker",
-    "description": "Customize your minecraft experience!",
-    "authors": [
-        "Jaredlll08",
-        "Kindlich",
-        "StanHebben",
-        "TheSilkMiner"
+  "schemaVersion": 1,
+  "id": "crafttweaker",
+  "version": "${version}",
+  "name": "CraftTweaker",
+  "description": "Customize your minecraft experience!",
+  "authors": [
+    "Jaredlll08",
+    "Kindlich",
+    "StanHebben",
+    "TheSilkMiner"
+  ],
+  "contact": {
+    "homepage": "https://minecraft.curseforge.com/projects/crafttweaker",
+    "sources": "https://github.com/CraftTweaker/CraftTweaker"
+  },
+  "license": "MIT",
+  "icon": "assets/crafttweaker/logo.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.blamejared.crafttweaker.CraftTweakerFabric"
     ],
-    "contact": {
-        "homepage": "https://minecraft.curseforge.com/projects/crafttweaker",
-        "sources": "https://github.com/CraftTweaker/CraftTweaker"
-    },
-    "license": "MIT",
-    "icon": "assets/crafttweaker/logo.png",
-    "environment": "*",
-    "entrypoints": {
-        "main": [
-            "com.blamejared.crafttweaker.CraftTweakerFabric"
-        ],
-        "client": [
-            "com.blamejared.crafttweaker.CraftTweakerFabricClient"
-        ],
-        "fabric-gametest": [
-            "com.blamejared.crafttweaker.gametest.CraftTweakerGameTests"
-        ],
-        "rei_client": [
-            "com.blamejared.crafttweaker.impl.compat.rei.CraftTweakerPlugin"
-        ]
-    },
-    "mixins": [
-        "crafttweaker.mixins.json",
-        "crafttweaker.fabric.mixins.json"
+    "client": [
+      "com.blamejared.crafttweaker.CraftTweakerFabricClient"
     ],
-    "depends": {
-        "fabricloader": ">=0.14.8",
-        "fabric": "*",
-        "minecraft": "1.19.x",
-        "java": ">=17",
-        "ingredient-extension-api": "*"
-    },
-    "accessWidener": "crafttweaker.accesswidener"
+    "fabric-gametest": [
+      "com.blamejared.crafttweaker.gametest.CraftTweakerGameTests"
+    ]
+  },
+  "mixins": [
+    "crafttweaker.mixins.json",
+    "crafttweaker.fabric.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.8",
+    "fabric": "*",
+    "minecraft": "1.19.x",
+    "java": ">=17"
+  },
+  "accessWidener": "crafttweaker.accesswidener"
 }
   

@@ -1,24 +1,20 @@
 package com.blamejared.crafttweaker.api.ingredient.serializer;
 
-import com.blamejared.crafttweaker.api.ingredient.type.IngredientList;
-import com.faux.ingredientextension.api.ingredient.serializer.IIngredientSerializer;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.blamejared.crafttweaker.api.ingredient.type.*;
+import com.google.gson.*;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.*;
+import java.util.stream.*;
 
-public enum IngredientListSerializer implements IIngredientSerializer<IngredientList> {
+public enum IngredientListSerializer implements CustomIngredientSerializer<IngredientList> {
     INSTANCE;
     
     @Override
-    public IngredientList fromNetwork(FriendlyByteBuf buffer) {
+    public IngredientList read(FriendlyByteBuf buffer) {
         
         return new IngredientList(Stream.generate(() -> Ingredient.fromNetwork(buffer))
                 .limit(buffer.readVarInt())
@@ -26,7 +22,7 @@ public enum IngredientListSerializer implements IIngredientSerializer<Ingredient
     }
     
     @Override
-    public void toJson(JsonObject json, IngredientList ingredient) {
+    public void write(JsonObject json, IngredientList ingredient) {
         
         JsonElement element;
         if(ingredient.getChildren().size() == 1) {
@@ -40,7 +36,13 @@ public enum IngredientListSerializer implements IIngredientSerializer<Ingredient
     }
     
     @Override
-    public IngredientList fromJson(JsonObject json) {
+    public ResourceLocation getIdentifier() {
+        
+        return IIngredientList.ID;
+    }
+    
+    @Override
+    public IngredientList read(JsonObject json) {
         
         if(!(json.get("ingredients") instanceof JsonArray)) {
             throw new JsonParseException("No 'ingredients' array to parse!");
@@ -54,7 +56,7 @@ public enum IngredientListSerializer implements IIngredientSerializer<Ingredient
     
     
     @Override
-    public void toNetwork(FriendlyByteBuf buffer, IngredientList ingredient) {
+    public void write(FriendlyByteBuf buffer, IngredientList ingredient) {
         
         buffer.writeVarInt(ingredient.getChildren().size());
         ingredient.getChildren().forEach(c -> c.toNetwork(buffer));

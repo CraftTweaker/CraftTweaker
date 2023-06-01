@@ -30,8 +30,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class DefaultPlugin : Plugin<Project> {
-    private lateinit var gametestLibrary: Configuration;
-    private lateinit var library: Configuration;
+    private lateinit var gametestLibrary: Configuration
+    private lateinit var library: Configuration
+    private lateinit var localOnlyRuntime: Configuration
 
     override fun apply(project: Project): Unit = project.run {
 
@@ -95,8 +96,8 @@ class DefaultPlugin : Plugin<Project> {
                     resources {
                         srcDirs.add(project.file("src/gametest/resources"))
                     }
-                    compileClasspath += sourceSets.get("main").runtimeClasspath
-                    runtimeClasspath += sourceSets.get("main").runtimeClasspath
+                    compileClasspath += sourceSets["main"].runtimeClasspath
+                    runtimeClasspath += sourceSets["main"].runtimeClasspath
                 }
             }
         }
@@ -107,8 +108,8 @@ class DefaultPlugin : Plugin<Project> {
                 this.options.compilerArgs.add("-XDenableSunApiLintControl")
             }
 
-            withType<JavaCompile>() {
-                this.options.encoding = StandardCharsets.UTF_8.toString();
+            withType<JavaCompile> {
+                this.options.encoding = StandardCharsets.UTF_8.toString()
                 this.options.release.set(Versions.MOD_JAVA.toInt())
 
                 this.options.compilerArgs.add("-Acrafttweaker.processor.document.output_directory=${project.rootProject.file(Properties.DOCS_OUTPUT_DIR)}")
@@ -120,7 +121,7 @@ class DefaultPlugin : Plugin<Project> {
 
             }
 
-            withType<Javadoc>() {
+            withType<Javadoc> {
                 this.options.encoding = StandardCharsets.UTF_8.toString()
                 options {
                     // Javadoc defines this specifically as StandardJavadocDocletOptions
@@ -145,19 +146,13 @@ class DefaultPlugin : Plugin<Project> {
                 outputs.upToDateWhen { false }
             }
 
+            @Suppress("UnstableApiUsage")
             withType(ProcessResources::class.java) {
                 outputs.upToDateWhen { false }
                 dependsOn(":StdLibs:zipItUp")
                 from(project.files(project.evaluationDependsOn(":StdLibs").tasks.getByName("zipItUp").outputs))
 
                 inputs.property("version", project.version)
-                filesMatching("*.mixins.json") {
-                    if(project.name.equals("Fabric")){
-                        expand("refmap_target" to "${project.extensions.getByType(BasePluginExtension::class.java).archivesName.get()}-")
-                    } else {
-                        expand("refmap_target" to "${Properties.MOD_ID}.")
-                    }
-                }
                 filesMatching("fabric.mod.json") {
                     expand("version" to project.version)
                 }
@@ -183,22 +178,24 @@ class DefaultPlugin : Plugin<Project> {
 
 
     private fun createConfigurations(project: Project) {
-        this.gametestLibrary = project.configurations.create("gametestLibrary");
-        this.library = project.configurations.create("library");
-
+        this.gametestLibrary = project.configurations.create("gametestLibrary")
+        this.library = project.configurations.create("library")
+        this.localOnlyRuntime = project.configurations.create("localOnlyRuntime")
         project.configurations.getByName("gametestImplementation").extendsFrom(gametestLibrary)
-        project.configurations.getByName("implementation").extendsFrom(library);
+        project.configurations.getByName("implementation").extendsFrom(library)
+
+        project.configurations.getByName("runtimeClasspath").extendsFrom(localOnlyRuntime)
     }
 
     private fun applyDependencies(project: Project) {
         val implementation = project.configurations.getByName("implementation")
         val gametestImplementation = project.configurations.getByName("gametestImplementation")
 
-        project.configurations.getByName("annotationProcessor").dependencies.add(project.dependencies.create("com.blamejared.crafttweaker:Crafttweaker_Annotation_Processors:${Versions.CRAFTTWEAKER_ANNOTATION_PROCESSOR}"));
+        project.configurations.getByName("annotationProcessor").dependencies.add(project.dependencies.create("com.blamejared.crafttweaker:Crafttweaker_Annotation_Processors:${Versions.CRAFTTWEAKER_ANNOTATION_PROCESSOR}"))
 
-        gametestLibrary.dependencies.add(project.dependencies.create("org.hamcrest:hamcrest:${Versions.HAMCREST}"));
-        gametestLibrary.dependencies.add(project.dependencies.create("org.junit.jupiter:junit-jupiter-engine:${Versions.JUPITER_ENGINE}"));
-        gametestLibrary.dependencies.add(project.dependencies.create("org.junit.platform:junit-platform-launcher:${Versions.JUNIT_PLATFORM_LAUNCHER}"));
+        gametestLibrary.dependencies.add(project.dependencies.create("org.hamcrest:hamcrest:${Versions.HAMCREST}"))
+        gametestLibrary.dependencies.add(project.dependencies.create("org.junit.jupiter:junit-jupiter-engine:${Versions.JUPITER_ENGINE}"))
+        gametestLibrary.dependencies.add(project.dependencies.create("org.junit.platform:junit-platform-launcher:${Versions.JUNIT_PLATFORM_LAUNCHER}"))
 
         Dependencies.ZENCODE.forEach {
             val projectDep = project.dependencies.project(it)
@@ -225,32 +222,18 @@ class DefaultPlugin : Plugin<Project> {
         project.plugins.apply(MavenPublishPlugin::class.java)
 
         val publishing = project.extensions.getByType<PublishingExtension>()
-        project.afterEvaluate {
             val base = project.extensions.getByType<BasePluginExtension>()
             publishing.publications.register("mavenJava", MavenPublication::class.java) {
                 artifactId = base.archivesName.get()
                 from(project.components.getByName("java"))
-
-                if (project.name.equals("Forge")) {
-                    pom.withXml {
-                        val depNodeList = asNode()["dependencies"] as NodeList
-                        depNodeList.map { it as Node }.forEach { depList ->
-                            val deps = depList.getAt(QName("http://maven.apache.org/POM/4.0.0", "dependency"))
-                            deps.map { it as Node }.forEach { dep ->
-                                dep.parent().remove(dep)
-                            }
-                        }
-                    }
-                }
             }
-        }
         publishing.repositories {
             maven("file:///${System.getenv("local_maven")}")
         }
     }
 
     private fun common(project: Project): Project {
-        return project.project(":Common");
+        return project.project(":Common")
     }
 
     private fun commonJava(project: Project): JavaPluginExtension {

@@ -12,6 +12,7 @@ import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapedRecipe;
@@ -56,6 +57,7 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
                 .toList();
         final IDecomposedRecipe decomposedRecipe = IDecomposedRecipe.builder()
                 .with(BuiltinRecipeComponents.Metadata.GROUP, recipe.getGroup())
+                .with(BuiltinRecipeComponents.Metadata.CRAFTING_BOOK_CATEGORY, recipe.category())
                 .with(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D, Pair.of(recipe.getWidth(), recipe.getHeight()))
                 .with(BuiltinRecipeComponents.Input.INGREDIENTS, ingredients)
                 .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(recipe.getResultItem()))
@@ -67,6 +69,7 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
     public Optional<ShapedRecipe> recompose(final IRecipeManager<? super ShapedRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
         
         final String group = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.GROUP);
+        final CraftingBookCategory category = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.CRAFTING_BOOK_CATEGORY);
         final Pair<Integer, Integer> size = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D);
         final List<IIngredient> ingredients = recipe.getOrThrow(BuiltinRecipeComponents.Input.INGREDIENTS);
         final IItemStack output = recipe.getOrThrowSingle(BuiltinRecipeComponents.Output.ITEMS);
@@ -87,7 +90,7 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
         final NonNullList<Ingredient> recipeIngredients = ingredients.stream()
                 .map(IIngredient::asVanillaIngredient)
                 .collect(NonNullList::create, NonNullList::add, NonNullList::addAll);
-        return Optional.of(new ShapedRecipe(name, group, width, height, recipeIngredients, output.getInternal()));
+        return Optional.of(new ShapedRecipe(name, group, category, width, height, recipeIngredients, output.getInternal()));
     }
     
 }

@@ -5,8 +5,11 @@ import com.blamejared.crafttweaker.api.level.*;
 import com.blamejared.crafttweaker_annotations.annotations.*;
 import com.mojang.brigadier.ParseResults;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.core.*;
-import net.minecraft.resources.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.PlayerList;
@@ -97,7 +100,7 @@ public class ExpandServer {
     @ZenCodeType.Nullable
     public static ServerLevel getLevel(MinecraftServer internal, ResourceLocation location) {
         
-        return internal.getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, location));
+        return internal.getLevel(ResourceKey.create(Registries.DIMENSION, location));
     }
     
     @ZenCodeType.Method

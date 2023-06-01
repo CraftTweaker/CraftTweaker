@@ -15,8 +15,6 @@ import java.util.function.Supplier;
 @Document("forge/api/item/MCItemStack")
 public class MCItemStack implements ForgeItemStack {
     
-    // TODO move this somewhere else
-    public static Supplier<MCItemStack> EMPTY = () -> new MCItemStack(ItemStack.EMPTY);
     private final ItemStack internal;
     
     public MCItemStack(ItemStack internal) {
@@ -39,7 +37,7 @@ public class MCItemStack implements ForgeItemStack {
     @Override
     public IItemStack asMutable() {
         
-        if(this == EMPTY.get() || this.getInternal() == ItemStack.EMPTY) { // Check both just in case
+        if(this == IItemStack.empty() || this.getInternal() == ItemStack.EMPTY) { // Check both just in case
             // We don't want to allow mutations to the empty stack, so we just replace it with a stack of air. The game
             // treats air stacks as mostly the same as the empty stack, so this should be transparent to the user
             return new MCItemStackMutable(new ItemStack(Items.AIR));

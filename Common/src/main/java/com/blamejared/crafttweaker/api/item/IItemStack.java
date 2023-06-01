@@ -1,45 +1,30 @@
 package com.blamejared.crafttweaker.api.item;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.action.item.ActionSetFood;
-import com.blamejared.crafttweaker.api.action.item.ActionSetItemProperty;
+import com.blamejared.crafttweaker.api.action.item.*;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.data.IData;
-import com.blamejared.crafttweaker.api.data.IntData;
-import com.blamejared.crafttweaker.api.data.MapData;
+import com.blamejared.crafttweaker.api.data.*;
 import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
-import com.blamejared.crafttweaker.api.ingredient.IIngredient;
-import com.blamejared.crafttweaker.api.ingredient.IIngredientWithAmount;
-import com.blamejared.crafttweaker.api.util.AttributeUtil;
-import com.blamejared.crafttweaker.api.util.EnchantmentUtil;
-import com.blamejared.crafttweaker.api.util.ItemStackUtil;
+import com.blamejared.crafttweaker.api.ingredient.*;
+import com.blamejared.crafttweaker.api.util.*;
 import com.blamejared.crafttweaker.api.util.random.Percentaged;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessItem;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.core.Registry;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.*;
 import net.minecraft.world.level.ItemLike;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -59,7 +44,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     
     static IItemStack empty() {
         
-        return Services.PLATFORM.getEmptyItemStack();
+        return ItemStackUtil.EMPTY_STACK.get();
     }
     
     static IItemStack of(final ItemStack stack) {
@@ -91,7 +76,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     @ZenCodeType.Getter("registryName")
     default ResourceLocation getRegistryName() {
         
-        return Registry.ITEM.getKey(getInternal().getItem());
+        return BuiltInRegistries.ITEM.getKey(getInternal().getItem());
     }
     
     /**
@@ -797,12 +782,6 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         
         return getInternal().getDamageValue();
     }
-    
-    //    @ZenCodeType.Getter("toolTypes")
-    //    default ToolType[] getToolTypes() {
-    //
-    //        return getInternal().getToolTypes().toArray(new ToolType[0]);
-    //    }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("enchantments")

@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.api.villager;
+package com.blamejared.crafttweaker.api.villager.trade.type;
 
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;

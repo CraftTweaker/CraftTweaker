@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.MirrorAxis;
 import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction2D;
-import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipeBase;
+import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipe;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -16,10 +16,14 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import javax.annotation.Nullable;
 
-public interface ICTShapedRecipeBaseSerializer extends RecipeSerializer<CTShapedRecipeBase> {
+public class CTShapedRecipeSerializer implements RecipeSerializer<CTShapedRecipe> {
+    
+    public static final CTShapedRecipeSerializer INSTANCE = new CTShapedRecipeSerializer();
+    
+    private CTShapedRecipeSerializer() {}
     
     @Override
-    default CTShapedRecipeBase fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
+    public CTShapedRecipe fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
         
         // People shouldn't be making our recipes from json :eyes:
         return makeRecipe(
@@ -31,9 +35,8 @@ public interface ICTShapedRecipeBaseSerializer extends RecipeSerializer<CTShaped
         );
     }
     
-    @Nullable
     @Override
-    default CTShapedRecipeBase fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+    public CTShapedRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
         
         int height = buffer.readVarInt();
         int width = buffer.readVarInt();
@@ -51,10 +54,10 @@ public interface ICTShapedRecipeBaseSerializer extends RecipeSerializer<CTShaped
     }
     
     @Override
-    default void toNetwork(FriendlyByteBuf buffer, CTShapedRecipeBase recipe) {
+    public void toNetwork(FriendlyByteBuf buffer, CTShapedRecipe recipe) {
         
-        buffer.writeVarInt(recipe.getRecipeHeight());
-        buffer.writeVarInt(recipe.getRecipeWidth());
+        buffer.writeVarInt(recipe.getHeight());
+        buffer.writeVarInt(recipe.getWidth());
         
         for(Ingredient ingredient : recipe.getIngredients()) {
             ingredient.toNetwork(buffer);
@@ -65,9 +68,9 @@ public interface ICTShapedRecipeBaseSerializer extends RecipeSerializer<CTShaped
         buffer.writeItem(recipe.getResultItem());
     }
     
-    default CTShapedRecipeBase makeRecipe(ResourceLocation recipeId, IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunction2D function) {
+    public CTShapedRecipe makeRecipe(ResourceLocation recipeId, IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunction2D function) {
         
-        return new CTShapedRecipeBase(recipeId.getPath(), output, ingredients, mirrorAxis, function);
+        return new CTShapedRecipe(recipeId.getPath(), output, ingredients, mirrorAxis, function);
     }
     
 }

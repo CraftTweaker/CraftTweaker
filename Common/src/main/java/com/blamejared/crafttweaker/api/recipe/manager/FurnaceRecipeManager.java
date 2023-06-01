@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.manager.base.ICookingRecipeManager;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import org.openzen.zencode.java.ZenCodeGlobals;
@@ -24,9 +25,9 @@ public enum FurnaceRecipeManager implements ICookingRecipeManager<SmeltingRecipe
     INSTANCE;
     
     @Override
-    public SmeltingRecipe makeRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime) {
+    public SmeltingRecipe makeRecipe(String name, CookingBookCategory category, IItemStack output, IIngredient input, float xp, int cookTime) {
         
-        return new SmeltingRecipe(CraftTweakerConstants.rl(name), "", input.asVanillaIngredient(), output.getInternal(), xp, cookTime);
+        return new SmeltingRecipe(CraftTweakerConstants.rl(name), "", category, input.asVanillaIngredient(), output.getInternal(), xp, cookTime);
     }
     
     @Override

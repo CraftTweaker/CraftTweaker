@@ -43,13 +43,10 @@ public class ExpandDamageSource {
         temp.put("generic", DamageSource.GENERIC);
         temp.put("magic", DamageSource.MAGIC);
         temp.put("wither", DamageSource.WITHER);
-        temp.put("anvil", DamageSource.ANVIL);
-        temp.put("fallingBlock", DamageSource.FALLING_BLOCK);
         temp.put("dragonBreath", DamageSource.DRAGON_BREATH);
         temp.put("dryout", DamageSource.DRY_OUT);
         temp.put("sweetBerryBush", DamageSource.SWEET_BERRY_BUSH);
         temp.put("freeze", DamageSource.FREEZE);
-        temp.put("fallingStalactite", DamageSource.FALLING_STALACTITE);
         temp.put("stalagmite", DamageSource.STALAGMITE);
         return temp;
     });
@@ -297,15 +294,9 @@ public class ExpandDamageSource {
     }
     
     @ZenCodeType.StaticExpansionMethod
-    public static DamageSource explosion(@ZenCodeType.Optional @ZenCodeType.Nullable LivingEntity owner) {
+    public static DamageSource badRespawnPointExplosion(Vec3 position) {
         
-        return DamageSource.explosion(owner);
-    }
-    
-    @ZenCodeType.StaticExpansionMethod
-    public static DamageSource badRespawnPointExplosion() {
-        
-        return DamageSource.badRespawnPointExplosion();
+        return DamageSource.badRespawnPointExplosion(position);
     }
     
 }

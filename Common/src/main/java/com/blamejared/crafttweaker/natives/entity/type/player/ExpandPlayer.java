@@ -35,7 +35,6 @@ public class ExpandPlayer {
     @ZenCodeType.Method
     @ZenCodeType.Getter("abilities")
     public static Abilities getAbilities(Player internal) {
-        
         return internal.getAbilities();
     }
     

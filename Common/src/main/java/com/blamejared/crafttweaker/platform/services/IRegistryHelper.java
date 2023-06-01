@@ -1,62 +1,39 @@
 package com.blamejared.crafttweaker.platform.services;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.condition.serializer.IIngredientConditionSerializer;
 import com.blamejared.crafttweaker.api.ingredient.transform.serializer.IIngredientTransformerSerializer;
-import com.blamejared.crafttweaker.api.ingredient.type.IIngredientConditioned;
-import com.blamejared.crafttweaker.api.ingredient.type.IIngredientTransformed;
-import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.api.recipe.MirrorAxis;
-import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction1D;
-import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction2D;
-import com.blamejared.crafttweaker.api.recipe.serializer.ICTShapedRecipeBaseSerializer;
-import com.blamejared.crafttweaker.api.recipe.serializer.ICTShapelessRecipeBaseSerializer;
-import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipeBase;
-import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipeBase;
+import com.blamejared.crafttweaker.api.ingredient.type.*;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
+import com.blamejared.crafttweaker.mixin.AccessRegistrySynchronization;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Lifecycle;
-import net.minecraft.core.DefaultedRegistry;
-import net.minecraft.core.Holder;
-import net.minecraft.core.MappedRegistry;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.WritableRegistry;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.*;
+import net.minecraft.core.registries.*;
+import net.minecraft.resources.*;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.npc.VillagerProfession;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public interface IRegistryHelper {
     
     default Set<ResourceKey<?>> serverOnlyRegistries() {
         
-        return StreamSupport.stream(RegistryAccess.knownRegistries().spliterator(), false)
-                .filter(registryData -> !registryData.sendToClient())
-                .map(RegistryAccess.RegistryData::key)
-                .collect(Collectors.toSet());
+        return AccessRegistrySynchronization.crafttweaker$callOwnedNetworkableRegistries(CraftTweakerAPI.getAccessibleElementsProvider()
+                .registryAccess()).map(RegistryAccess.RegistryEntry::key).collect(Collectors.toSet());
     }
     
     default void registerSerializer(MappedRegistry<IIngredientTransformerSerializer<?>> registry, IIngredientTransformerSerializer<?> serializer) {
@@ -69,31 +46,7 @@ public interface IRegistryHelper {
         registry.register(ResourceKey.create(registry.key(), serializer.getType()), serializer, Lifecycle.stable());
     }
     
-    default <T> MappedRegistry<T> registerVanillaRegistry(ResourceLocation location) {
-        
-        WritableRegistry registry = (WritableRegistry) Registry.REGISTRY;
-        ResourceKey<Registry<T>> regKey = ResourceKey.createRegistryKey(location);
-        Lifecycle stable = Lifecycle.stable();
-        MappedRegistry<T> mappedReg = new MappedRegistry<>(regKey, stable, null);
-        registry.register(regKey, mappedReg, stable);
-        return mappedReg;
-    }
-    
     void init();
-    
-    ICTShapedRecipeBaseSerializer getCTShapedRecipeSerializer();
-    
-    ICTShapelessRecipeBaseSerializer getCTShapelessRecipeSerializer();
-    
-    default CTShapedRecipeBase createCTShapedRecipe(String name, IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunction2D function) {
-        
-        return getCTShapedRecipeSerializer().makeRecipe(CraftTweakerConstants.rl(name), output, ingredients, mirrorAxis, function);
-    }
-    
-    default CTShapelessRecipeBase createCTShapelessRecipe(String name, IItemStack output, IIngredient[] ingredients, @javax.annotation.Nullable RecipeFunction1D function) {
-        
-        return getCTShapelessRecipeSerializer().makeRecipe(CraftTweakerConstants.rl(name), output, ingredients, function);
-    }
     
     Ingredient getIngredientAny();
     
@@ -111,33 +64,33 @@ public interface IRegistryHelper {
     default Optional<ResourceLocation> maybeGetRegistryKey(Object object) {
         
         if(object instanceof Item obj) {
-            return nonDefaultKey(Registry.ITEM, obj);
+            return nonDefaultKey(BuiltInRegistries.ITEM, obj);
         } else if(object instanceof Potion obj) {
-            return nonDefaultKey(Registry.POTION, obj);
+            return nonDefaultKey(BuiltInRegistries.POTION, obj);
         } else if(object instanceof EntityType<?> obj) {
-            return nonDefaultKey(Registry.ENTITY_TYPE, obj);
+            return nonDefaultKey(BuiltInRegistries.ENTITY_TYPE, obj);
         } else if(object instanceof RecipeType<?> obj) {
-            return nonDefaultKey(Registry.RECIPE_TYPE, obj);
+            return nonDefaultKey(BuiltInRegistries.RECIPE_TYPE, obj);
         } else if(object instanceof RecipeSerializer<?> obj) {
-            return nonDefaultKey(Registry.RECIPE_SERIALIZER, obj);
+            return nonDefaultKey(BuiltInRegistries.RECIPE_SERIALIZER, obj);
         } else if(object instanceof Attribute obj) {
-            return nonDefaultKey(Registry.ATTRIBUTE, obj);
+            return nonDefaultKey(BuiltInRegistries.ATTRIBUTE, obj);
         } else if(object instanceof Fluid obj) {
-            return nonDefaultKey(Registry.FLUID, obj);
+            return nonDefaultKey(BuiltInRegistries.FLUID, obj);
         } else if(object instanceof Enchantment obj) {
-            return nonDefaultKey(Registry.ENCHANTMENT, obj);
+            return nonDefaultKey(BuiltInRegistries.ENCHANTMENT, obj);
         } else if(object instanceof Block obj) {
-            return nonDefaultKey(Registry.BLOCK, obj);
+            return nonDefaultKey(BuiltInRegistries.BLOCK, obj);
         } else if(object instanceof MobEffect obj) {
-            return nonDefaultKey(Registry.MOB_EFFECT, obj);
+            return nonDefaultKey(BuiltInRegistries.MOB_EFFECT, obj);
         } else if(object instanceof VillagerProfession obj) {
-            return nonDefaultKey(Registry.VILLAGER_PROFESSION, obj);
+            return nonDefaultKey(BuiltInRegistries.VILLAGER_PROFESSION, obj);
         } else if(object instanceof Biome obj) {
             return nonDefaultKey(CraftTweakerAPI.getAccessibleElementsProvider()
                     .registryAccess()
-                    .registryOrThrow(Registry.BIOME_REGISTRY), obj);
+                    .registryOrThrow(Registries.BIOME), obj);
         } else if(object instanceof SoundEvent obj) {
-            return nonDefaultKey(Registry.SOUND_EVENT, obj);
+            return nonDefaultKey(BuiltInRegistries.SOUND_EVENT, obj);
         }
         
         return Optional.empty();
@@ -158,7 +111,7 @@ public interface IRegistryHelper {
         
         return CraftTweakerAPI.getAccessibleElementsProvider()
                 .registryAccess()
-                .registryOrThrow(Registry.BIOME_REGISTRY);
+                .registryOrThrow(Registries.BIOME);
     }
     
     default <T> Holder<T> makeHolder(ResourceKey<?> resourceKey, Either<T, ResourceLocation> objectOrKey) {

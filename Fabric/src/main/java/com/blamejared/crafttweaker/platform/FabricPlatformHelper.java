@@ -26,7 +26,7 @@ import net.fabricmc.loader.api.MappingResolver;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.Util;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -140,12 +140,6 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
     
     @Override
-    public IItemStack getEmptyItemStack() {
-        
-        return MCItemStack.EMPTY.get();
-    }
-    
-    @Override
     public Fluid getBucketContent(BucketItem item) {
         
         return ((AccessBucketItem) item).crafttweaker$getContent();
@@ -241,7 +235,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
         Set<MutableComponent> components = new HashSet<>();
         for(StorageView<FluidVariant> view : storage) {
             if(!view.isResourceBlank()) {
-                components.add(Component.literal(Registry.FLUID.getKey(view.getResource()
+                components.add(Component.literal(BuiltInRegistries.FLUID.getKey(view.getResource()
                         .getFluid()) + " * " + view.getAmount()));
             }
         }

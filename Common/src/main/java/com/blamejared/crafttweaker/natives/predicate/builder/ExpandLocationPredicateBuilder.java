@@ -9,6 +9,8 @@ import net.minecraft.advancements.critereon.LightPredicate;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
@@ -40,7 +42,7 @@ public final class ExpandLocationPredicateBuilder {
     @ZenCodeType.Method
     public static LocationPredicate.Builder biome(final LocationPredicate.Builder internal, final ResourceLocation biome) {
         
-        return internal.setBiome(ResourceKey.create(Registry.BIOME_REGISTRY, biome));
+        return internal.setBiome(ResourceKey.create(Registries.BIOME, biome));
     }
     
     @SuppressWarnings("SpellCheckingInspection")
@@ -53,7 +55,7 @@ public final class ExpandLocationPredicateBuilder {
     @ZenCodeType.Method
     public static LocationPredicate.Builder structure(final LocationPredicate.Builder internal, final ResourceLocation structure) {
         
-        return internal.setStructure(ResourceKey.create(Registry.STRUCTURE_REGISTRY, structure));
+        return internal.setStructure(ResourceKey.create(Registries.STRUCTURE, structure));
     }
     
     @ZenCodeType.Method
@@ -65,7 +67,7 @@ public final class ExpandLocationPredicateBuilder {
     @ZenCodeType.Method
     public static LocationPredicate.Builder dimension(final LocationPredicate.Builder internal, final ResourceLocation dimension) {
         
-        return internal.setDimension(ResourceKey.create(Registry.DIMENSION_REGISTRY, dimension));
+        return internal.setDimension(ResourceKey.create(Registries.DIMENSION, dimension));
     }
     
     @ZenCodeType.Method

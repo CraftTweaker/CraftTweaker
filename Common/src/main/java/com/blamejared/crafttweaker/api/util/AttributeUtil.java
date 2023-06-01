@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.util;
 
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -29,7 +30,7 @@ public class AttributeUtil {
         
         ListTag listnbt = tag.getList("AttributeModifiers", Tag.TAG_COMPOUND);
         CompoundTag compoundnbt = modifier.save();
-        compoundnbt.putString("AttributeName", Registry.ATTRIBUTE.getKey(attributeName)
+        compoundnbt.putString("AttributeName", BuiltInRegistries.ATTRIBUTE.getKey(attributeName)
                 .toString());
         if(equipmentSlot != null) {
             compoundnbt.putString("Slot", equipmentSlot.getName());
@@ -50,7 +51,7 @@ public class AttributeUtil {
             CompoundTag compoundnbt = listnbt.getCompound(i);
             if(!compoundnbt.contains("Slot", Tag.TAG_STRING) || compoundnbt.getString("Slot")
                     .equals(equipmentSlot.getName())) {
-                Optional<Attribute> optional = Registry.ATTRIBUTE
+                Optional<Attribute> optional = BuiltInRegistries.ATTRIBUTE
                         .getOptional(ResourceLocation.tryParse(compoundnbt.getString("AttributeName")));
                 optional.ifPresent(attribute -> {
                     AttributeModifier attributemodifier = AttributeModifier.load(compoundnbt);

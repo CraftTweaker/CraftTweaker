@@ -26,7 +26,6 @@ public interface IngredientCraftTweakerBase extends Predicate<ItemStack> {
     
     static Stream<Ingredient.Value> getValues(IItemStack[] items) {
         
-        // TODO This may cause issues since we have such a big value array, it needs more investigation
         return Arrays.stream(items)
                 .map(IIngredient::getItems)
                 .flatMap(Arrays::stream)

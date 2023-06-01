@@ -6,8 +6,7 @@ import com.blamejared.crafttweaker.api.action.villager.ActionTradeBase;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.attribute.ItemAttributeModifierBase;
 import com.blamejared.crafttweaker.api.logger.CraftTweakerLogger;
-import com.blamejared.crafttweaker.api.util.sequence.SequenceManager;
-import com.blamejared.crafttweaker.api.util.sequence.SequenceType;
+import com.blamejared.crafttweaker.api.util.sequence.*;
 import com.blamejared.crafttweaker.api.villager.CTVillagerTrades;
 import com.blamejared.crafttweaker.impl.script.ScriptReloadListener;
 import com.blamejared.crafttweaker.platform.Services;
@@ -15,22 +14,15 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.ItemAttributeModifierEvent;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.*;
+import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
-import net.minecraftforge.event.village.VillagerTradesEvent;
-import net.minecraftforge.event.village.WandererTradesEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.event.village.*;
+import net.minecraftforge.eventbus.api.*;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Mod.EventBusSubscriber(modid = CraftTweakerConstants.MOD_ID)
 public class CTCommonEventHandler {

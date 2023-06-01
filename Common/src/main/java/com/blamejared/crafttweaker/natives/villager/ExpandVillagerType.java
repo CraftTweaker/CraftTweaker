@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.npc.VillagerType;
 import org.openzen.zencode.java.ZenCodeType;
@@ -19,7 +20,7 @@ public class ExpandVillagerType {
     @ZenCodeType.Getter("registryName")
     public static ResourceLocation getRegistryName(VillagerType internal) {
         
-        return Registry.VILLAGER_TYPE.getKey(internal);
+        return BuiltInRegistries.VILLAGER_TYPE.getKey(internal);
     }
     
 }

@@ -49,7 +49,7 @@ public class ListData implements IData {
     
     @ZenCodeType.Constructor
     public ListData(IData[] array) {
-        //TODO 1.19 confirm
+        
         this(Arrays.asList(array));
     }
     

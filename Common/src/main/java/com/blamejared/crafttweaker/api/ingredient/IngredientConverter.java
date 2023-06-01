@@ -9,7 +9,7 @@ import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
 import com.blamejared.crafttweaker.api.tag.expand.ExpandItemTag;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessIngredient;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessIngredientTagValue;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -19,16 +19,16 @@ public class IngredientConverter {
     
     public static IIngredient fromIngredient(Ingredient ingredient) {
         
+        // TODO: this needs to be overhauled to handle empty values and the fabric ingredient system
         //noinspection ConstantConditions
         if(((Object) ingredient) instanceof IngredientCraftTweakerBase base) {
             return base.getCrTIngredient();
         }
         
         //noinspection ConstantConditions
-        if(((Object) ingredient) instanceof IngredientSingleton single) {
+        if(((Object) ingredient) instanceof IngredientSingleton<?> single) {
             return single.getInstance();
         }
-        
         
         if(ingredient == Ingredient.EMPTY) {
             return empty();
@@ -70,7 +70,7 @@ public class IngredientConverter {
     private static IIngredient fromTagList(Ingredient.TagValue value) {
         
         final ResourceLocation location = ((AccessIngredientTagValue) value).crafttweaker$getTag().location();
-        return CraftTweakerTagRegistry.INSTANCE.findKnownManager(Registry.ITEM_REGISTRY)
+        return CraftTweakerTagRegistry.INSTANCE.findKnownManager(Registries.ITEM)
                 .map(mcTags -> mcTags.tag(location))
                 .map(ExpandItemTag::asIIngredient)
                 .orElseThrow(() -> new RuntimeException("Error while converting ingredient: '" + value + "' to an IIngredient!"));

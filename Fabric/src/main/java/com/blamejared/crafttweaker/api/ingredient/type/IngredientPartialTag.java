@@ -3,22 +3,20 @@ package com.blamejared.crafttweaker.api.ingredient.type;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientPartialTagSerializer;
-import com.faux.ingredientextension.api.ingredient.IngredientExtendable;
-import com.faux.ingredientextension.api.ingredient.serializer.IIngredientSerializer;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredient;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 
 import javax.annotation.Nullable;
-import java.util.stream.Stream;
+import java.util.List;
 
-public class IngredientPartialTag extends IngredientExtendable {
+public class IngredientPartialTag implements CustomIngredient {
     
     private final ItemStack stack;
     
     public IngredientPartialTag(ItemStack stack) {
         
-        super(Stream.of(new Ingredient.ItemValue(stack)));
         this.stack = stack;
     }
     
@@ -48,9 +46,15 @@ public class IngredientPartialTag extends IngredientExtendable {
     }
     
     @Override
+    public List<ItemStack> getMatchingStacks() {
+        
+        return List.of(stack);
+    }
+    
+    @Override
     public boolean requiresTesting() {
         
-        return false;
+        return true;
     }
     
     public ItemStack getStack() {
@@ -59,7 +63,7 @@ public class IngredientPartialTag extends IngredientExtendable {
     }
     
     @Override
-    public IIngredientSerializer<? extends Ingredient> getSerializer() {
+    public CustomIngredientSerializer<IngredientPartialTag> getSerializer() {
         
         return IngredientPartialTagSerializer.INSTANCE;
     }

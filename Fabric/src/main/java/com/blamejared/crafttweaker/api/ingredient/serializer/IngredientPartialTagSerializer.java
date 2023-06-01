@@ -1,31 +1,33 @@
 package com.blamejared.crafttweaker.api.ingredient.serializer;
 
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.type.IngredientPartialTag;
-import com.faux.ingredientextension.api.ingredient.serializer.IIngredientSerializer;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.core.Registry;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.TagParser;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.*;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 
-public enum IngredientPartialTagSerializer implements IIngredientSerializer<IngredientPartialTag> {
+public enum IngredientPartialTagSerializer implements CustomIngredientSerializer<IngredientPartialTag> {
     INSTANCE;
     
+    public static final ResourceLocation ID = CraftTweakerConstants.rl("partial_tag");
+    
     @Override
-    public IngredientPartialTag fromNetwork(FriendlyByteBuf buffer) {
+    public IngredientPartialTag read(FriendlyByteBuf buffer) {
         
         return new IngredientPartialTag(buffer.readItem());
     }
     
     @Override
-    public void toJson(JsonObject json, IngredientPartialTag ingredient) {
+    public void write(JsonObject json, IngredientPartialTag ingredient) {
         
-        json.addProperty("item", Registry.ITEM.getKey(ingredient.getStack().getItem()).toString());
+        json.addProperty("item", BuiltInRegistries.ITEM.getKey(ingredient.getStack().getItem()).toString());
         json.addProperty("count", ingredient.getStack().getCount());
         if(ingredient.getStack().hasTag()) {
             json.addProperty("nbt", ingredient.getStack().getTag().toString());
@@ -33,7 +35,7 @@ public enum IngredientPartialTagSerializer implements IIngredientSerializer<Ingr
     }
     
     @Override
-    public IngredientPartialTag fromJson(JsonObject json) {
+    public IngredientPartialTag read(JsonObject json) {
         
         ItemStack stack = ShapedRecipe.itemStackFromJson(json);
         if(json.has("nbt")) {
@@ -49,10 +51,15 @@ public enum IngredientPartialTagSerializer implements IIngredientSerializer<Ingr
     }
     
     @Override
-    public void toNetwork(FriendlyByteBuf buffer, IngredientPartialTag ingredient) {
+    public void write(FriendlyByteBuf buffer, IngredientPartialTag ingredient) {
         
         buffer.writeItem(ingredient.getStack());
     }
     
     
+    @Override
+    public ResourceLocation getIdentifier() {
+        
+        return IngredientPartialTagSerializer.ID;
+    }
 }

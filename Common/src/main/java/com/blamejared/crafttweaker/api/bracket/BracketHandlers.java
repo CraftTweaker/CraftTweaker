@@ -12,6 +12,7 @@ import com.blamejared.crafttweaker.natives.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.natives.world.damage.ExpandDamageSource;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -20,7 +21,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -29,7 +29,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -57,7 +56,7 @@ public class BracketHandlers {
         }
         ResourceLocation key = new ResourceLocation(split[0], split[1]);
         
-        return Registry.ATTRIBUTE.getOptional(key)
+        return BuiltInRegistries.ATTRIBUTE.getOptional(key)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get attribute with name: <attribute:" + tokens + ">! Attribute does not appear to exist!"));
     }
     
@@ -83,7 +82,7 @@ public class BracketHandlers {
             throw new IllegalArgumentException("Could not get block with name: <block:" + tokens + ">! Syntax is <block:modid:itemname>");
         }
         ResourceLocation key = new ResourceLocation(split[0], split[1]);
-        return Registry.BLOCK.getOptional(key)
+        return BuiltInRegistries.BLOCK.getOptional(key)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get block with name: <block:" + tokens + ">! Block does not appear to exist!"));
     }
     
@@ -130,7 +129,7 @@ public class BracketHandlers {
             String blockName = split[0] + ":" + split[1];
             String properties = split.length > 2 ? split[2] : "";
             
-            Optional<Block> found = Registry.BLOCK.getOptional(new ResourceLocation(blockName));
+            Optional<Block> found = BuiltInRegistries.BLOCK.getOptional(new ResourceLocation(blockName));
             if(found.isEmpty()) {
                 CraftTweakerAPI.LOGGER.error("Error creating BlockState!", new IllegalArgumentException("Could not get BlockState from: <blockstate:" + tokens + ">! The block does not appear to exist!"));
             } else {
@@ -143,7 +142,7 @@ public class BracketHandlers {
     
     public static BlockState getBlockState(String name, String properties) {
         
-        return getBlockState(Registry.BLOCK.get(new ResourceLocation(name)), name, properties);
+        return getBlockState(BuiltInRegistries.BLOCK.get(new ResourceLocation(name)), name, properties);
     }
     
     public static BlockState getBlockState(Block block, String name, String properties) {
@@ -184,7 +183,7 @@ public class BracketHandlers {
         if(split.length != 2) {
             throw new IllegalArgumentException("Could not get effect with name: <mobeffect:" + tokens + ">! Syntax is <effect:modid:mobeffect>");
         }
-        return Registry.MOB_EFFECT.getOptional(new ResourceLocation(split[0], split[1]))
+        return BuiltInRegistries.MOB_EFFECT.getOptional(new ResourceLocation(split[0], split[1]))
                 .orElseThrow(() -> new IllegalArgumentException("Could not get effect with name: <mobeffect:" + tokens + ">! Effect does not appear to exist!"));
     }
     
@@ -211,7 +210,7 @@ public class BracketHandlers {
         }
         
         final ResourceLocation key = new ResourceLocation(split[0], split[1]);
-        Optional<Enchantment> found = Registry.ENCHANTMENT.getOptional(key);
+        Optional<Enchantment> found = BuiltInRegistries.ENCHANTMENT.getOptional(key);
         if(found.isEmpty()) {
             throw new IllegalArgumentException("Could not get enchantment '" + tokens + "': the enchantment does not appear to exist");
         }
@@ -238,7 +237,7 @@ public class BracketHandlers {
         }
         final ResourceLocation resourceLocation = new ResourceLocation(tokens);
         
-        return Registry.ENTITY_TYPE.getOptional(resourceLocation)
+        return BuiltInRegistries.ENTITY_TYPE.getOptional(resourceLocation)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get entitytype <entitytype:" + tokens + ">"));
     }
     
@@ -266,7 +265,7 @@ public class BracketHandlers {
         }
         ResourceLocation key = new ResourceLocation(split[0], split[1]);
         
-        ItemStack stack = Registry.ITEM.getOptional(key)
+        ItemStack stack = BuiltInRegistries.ITEM.getOptional(key)
                 .map(ItemStack::new)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get item with name: <item:" + tokens + ">! Item does not appear to exist!"));
         return IItemStack.of(stack);
@@ -286,7 +285,7 @@ public class BracketHandlers {
             throw new IllegalArgumentException("Could not get potion with name: <potion:" + tokens + ">! Syntax is <potion:modid:potionname>");
         }
         ResourceLocation key = new ResourceLocation(split[0], split[1]);
-        return Registry.POTION.getOptional(key)
+        return BuiltInRegistries.POTION.getOptional(key)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get potion with name: <potion:" + tokens + ">! Potion does not appear to exist!"));
     }
     
@@ -363,7 +362,7 @@ public class BracketHandlers {
         }
         final ResourceLocation resourceLocation = new ResourceLocation(tokens);
         
-        return Registry.VILLAGER_PROFESSION.getOptional(resourceLocation)
+        return BuiltInRegistries.VILLAGER_PROFESSION.getOptional(resourceLocation)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get profession with name: <profession:" + tokens + ">! Profession does not appear to exist!"));
     }
     
@@ -385,26 +384,6 @@ public class BracketHandlers {
     }
     
     /**
-     * Gets an CreativeModeTab by name.
-     * Will throw an error if the tab could not be found!
-     *
-     * @param tokens The CreativeModeTab's name.
-     *
-     * @return The found ItemGroup
-     *
-     * @docParam tokens misc
-     */
-    @ZenCodeType.Method
-    @BracketResolver("creativemodetab")
-    public static CreativeModeTab getCreativeModeTab(String tokens) {
-        
-        return Arrays.stream(CreativeModeTab.TABS)
-                .filter(g -> g.getRecipeFolderName().equals(tokens))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("Could not find creativemodetab for '<creativemodetab:" + tokens + ">'!"));
-    }
-    
-    /**
      * Gets a sound event based on registry name. Throws an exception if it can't find the sound event.
      *
      * @param tokens The sound event's resource location
@@ -423,7 +402,7 @@ public class BracketHandlers {
         }
         final ResourceLocation resourceLocation = new ResourceLocation(tokens);
         
-        return Registry.SOUND_EVENT.getOptional(resourceLocation)
+        return BuiltInRegistries.SOUND_EVENT.getOptional(resourceLocation)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get sound event with name: <soundevent:" + tokens + ">! Sound event does not appear to exist!"));
     }
     
@@ -475,7 +454,7 @@ public class BracketHandlers {
         }
         final ResourceLocation resourceLocation = new ResourceLocation(tokens);
         
-        return Registry.VILLAGER_TYPE.getOptional(resourceLocation)
+        return BuiltInRegistries.VILLAGER_TYPE.getOptional(resourceLocation)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get villagertype with name: <villagertype:" + tokens + ">! Villager Type does not appear to exist!"));
     }
 }

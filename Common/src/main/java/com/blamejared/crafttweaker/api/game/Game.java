@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.locale.Language;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
@@ -39,21 +40,21 @@ public class Game {
     @ZenCodeType.Getter("effects")
     public Collection<MobEffect> getMobEffects() {
         
-        return Registry.MOB_EFFECT.stream().toList();
+        return BuiltInRegistries.MOB_EFFECT.stream().toList();
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("enchantments")
     public Collection<Enchantment> getEnchantments() {
         
-        return Registry.ENCHANTMENT.stream().toList();
+        return BuiltInRegistries.ENCHANTMENT.stream().toList();
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("entityTypes")
     public Collection<EntityType> getEntityTypes() {
         
-        return (Collection) Registry.ENTITY_TYPE
+        return (Collection) BuiltInRegistries.ENTITY_TYPE
                 .stream()
                 .toList();
     }
@@ -62,14 +63,14 @@ public class Game {
     @ZenCodeType.Getter("fluids")
     public Collection<Fluid> getFluids() {
         
-        return Registry.FLUID.stream().toList();
+        return BuiltInRegistries.FLUID.stream().toList();
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("items")
     public Collection<IItemStack> getItemStacks() {
         
-        return Registry.ITEM.stream()
+        return BuiltInRegistries.ITEM.stream()
                 .map(Item::getDefaultInstance)
                 .filter(Predicate.not(ItemStack::isEmpty))
                 .map(IItemStack::of)
@@ -80,14 +81,14 @@ public class Game {
     @ZenCodeType.Getter("potions")
     public Collection<Potion> getPotions() {
         
-        return Registry.POTION.stream().toList();
+        return BuiltInRegistries.POTION.stream().toList();
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("recipeTypes")
     public Collection<IRecipeManager> getRecipeTypes() {
         
-        return Registry.RECIPE_TYPE
+        return BuiltInRegistries.RECIPE_TYPE
                 .stream()
                 .map(RecipeTypeBracketHandler::getOrDefault)
                 .filter(Objects::nonNull)
@@ -98,14 +99,14 @@ public class Game {
     @ZenCodeType.Getter("blocks")
     public Collection<Block> getBlocks() {
         
-        return Registry.BLOCK.stream().toList();
+        return BuiltInRegistries.BLOCK.stream().toList();
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("blockStates")
     public Collection<BlockState> getBlockStates() {
         
-        return Registry.BLOCK
+        return BuiltInRegistries.BLOCK
                 .stream()
                 .flatMap(block -> block.getStateDefinition().getPossibleStates().stream())
                 .collect(Collectors.toList());
@@ -115,7 +116,7 @@ public class Game {
     @ZenCodeType.Getter("villagerProfessions")
     public Collection<VillagerProfession> getVillagerProfessions() {
         
-        return Registry.VILLAGER_PROFESSION.stream().toList();
+        return BuiltInRegistries.VILLAGER_PROFESSION.stream().toList();
     }
     
     /**

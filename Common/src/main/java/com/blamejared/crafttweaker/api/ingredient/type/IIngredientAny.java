@@ -1,10 +1,12 @@
 package com.blamejared.crafttweaker.api.ingredient.type;
 
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -19,6 +21,8 @@ import org.openzen.zencode.java.ZenCodeType;
 public enum IIngredientAny implements IIngredient {
     
     INSTANCE;
+    
+    public static final ResourceLocation ID = CraftTweakerConstants.rl("any");
     
     @ZenCodeType.Method
     public static IIngredientAny getInstance() {

@@ -3,8 +3,7 @@ package com.blamejared.crafttweaker.api.ingredient.type;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientTransformedSerializer;
 import com.blamejared.crafttweaker.api.ingredient.transform.IIngredientTransformer;
-import com.faux.ingredientextension.api.ingredient.serializer.IIngredientSerializer;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 
 public class IngredientTransformed<I extends IIngredient, T extends IIngredientTransformed<I>> extends IngredientCraftTweaker<T> {
     
@@ -19,7 +18,7 @@ public class IngredientTransformed<I extends IIngredient, T extends IIngredientT
     }
     
     @Override
-    public IIngredientSerializer<? extends Ingredient> getSerializer() {
+    public CustomIngredientSerializer<IngredientTransformed<?, ?>> getSerializer() {
         
         return IngredientTransformedSerializer.INSTANCE;
     }

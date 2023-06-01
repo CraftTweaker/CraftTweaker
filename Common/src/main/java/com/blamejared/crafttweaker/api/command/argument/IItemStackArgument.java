@@ -18,6 +18,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import org.openzen.zenscript.lexer.ParseException;
 
@@ -59,7 +60,7 @@ public class IItemStackArgument implements ArgumentType<IItemStack> {
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
         
-        return SharedSuggestionProvider.suggest(Registry.ITEM.keySet()
+        return SharedSuggestionProvider.suggest(BuiltInRegistries.ITEM.keySet()
                 .stream()
                 .map(it -> String.format("<item:%s>", it)), builder);
     }

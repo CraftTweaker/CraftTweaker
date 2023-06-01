@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -61,7 +62,7 @@ public final class Mod {
     @ZenCodeType.Getter("items")
     public Collection<Item> getItems() {
         
-        return getRegistryObjects(Registry.ITEM);
+        return getRegistryObjects(BuiltInRegistries.ITEM);
     }
     
     
@@ -90,7 +91,7 @@ public final class Mod {
     @ZenCodeType.Getter("potions")
     public Collection<Potion> getPotions() {
         
-        return getRegistryObjects(Registry.POTION);
+        return getRegistryObjects(BuiltInRegistries.POTION);
     }
     
     /**
@@ -102,7 +103,7 @@ public final class Mod {
     @ZenCodeType.Getter("attributes")
     public Collection<Attribute> getAttributes() {
         
-        return getRegistryObjects(Registry.ATTRIBUTE);
+        return getRegistryObjects(BuiltInRegistries.ATTRIBUTE);
     }
     
     /**
@@ -114,7 +115,7 @@ public final class Mod {
     @ZenCodeType.Getter("fluids")
     public Collection<Fluid> getFluids() {
         
-        return getRegistryObjects(Registry.FLUID);
+        return getRegistryObjects(BuiltInRegistries.FLUID);
     }
     
     /**
@@ -126,7 +127,7 @@ public final class Mod {
     @ZenCodeType.Getter("enchantments")
     public Collection<Enchantment> getEnchantments() {
         
-        return getRegistryObjects(Registry.ENCHANTMENT);
+        return getRegistryObjects(BuiltInRegistries.ENCHANTMENT);
     }
     
     /**
@@ -138,7 +139,7 @@ public final class Mod {
     @ZenCodeType.Getter("blocks")
     public Collection<Block> getBlocks() {
         
-        return getRegistryObjects(Registry.BLOCK);
+        return getRegistryObjects(BuiltInRegistries.BLOCK);
     }
     
     /**
@@ -150,7 +151,7 @@ public final class Mod {
     @ZenCodeType.Getter("mobEffects")
     public Collection<MobEffect> getMobEffects() {
         
-        return getRegistryObjects(Registry.MOB_EFFECT);
+        return getRegistryObjects(BuiltInRegistries.MOB_EFFECT);
     }
     
     /**
@@ -162,7 +163,7 @@ public final class Mod {
     @ZenCodeType.Getter("villagerProfessions")
     public Collection<VillagerProfession> getVillagerProfessions() {
         
-        return getRegistryObjects(Registry.VILLAGER_PROFESSION);
+        return getRegistryObjects(BuiltInRegistries.VILLAGER_PROFESSION);
     }
     
     /**
@@ -174,7 +175,7 @@ public final class Mod {
     @ZenCodeType.Getter("soundEvents")
     public Collection<SoundEvent> getSoundEvents() {
         
-        return getRegistryObjects(Registry.SOUND_EVENT);
+        return getRegistryObjects(BuiltInRegistries.SOUND_EVENT);
     }
     
     /**

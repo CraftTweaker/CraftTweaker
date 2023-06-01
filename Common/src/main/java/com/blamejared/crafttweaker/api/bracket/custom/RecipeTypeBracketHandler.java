@@ -12,6 +12,7 @@ import com.blamejared.crafttweaker.impl.script.ScriptRecipeType;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -182,7 +183,7 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
             return getCall(name, registeredTypes().get(lookup(resourceLocation)), position);
         }
         
-        if(Registry.RECIPE_TYPE.keySet().contains(resourceLocation)) {
+        if(BuiltInRegistries.RECIPE_TYPE.keySet().contains(resourceLocation)) {
             return getCallFallback(name, position);
         }
         
@@ -222,12 +223,12 @@ public class RecipeTypeBracketHandler implements BracketExpressionParser {
     
     private static RecipeType<Recipe<?>> lookup(final ResourceLocation location) {
         
-        return (RecipeType<Recipe<?>>) Registry.RECIPE_TYPE.get(location);
+        return (RecipeType<Recipe<?>>) BuiltInRegistries.RECIPE_TYPE.get(location);
     }
     
     public static Supplier<Stream<String>> getDumperData() {
         
-        return () -> Registry.RECIPE_TYPE.keySet().stream()
+        return () -> BuiltInRegistries.RECIPE_TYPE.keySet().stream()
                 .filter(rl -> !rl.equals(ScriptRecipeType.INSTANCE.id()))
                 .map(rl -> String.format(Locale.ENGLISH, "<recipetype:%s>", rl));
     }

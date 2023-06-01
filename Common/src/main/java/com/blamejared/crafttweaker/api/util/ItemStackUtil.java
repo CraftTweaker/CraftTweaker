@@ -2,14 +2,23 @@ package com.blamejared.crafttweaker.api.util;
 
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
-import net.minecraft.core.Registry;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.google.common.base.Suppliers;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.*;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public final class ItemStackUtil {
+    
+    /**
+     * Do not use, use {@link IItemStack#empty()} instead
+     */
+    @ApiStatus.Internal
+    public static final Supplier<IItemStack> EMPTY_STACK = Suppliers.memoize(() -> IItemStack.of(ItemStack.EMPTY));
     
     public static String getCommandString(final ItemStack stack) {
         
@@ -18,7 +27,8 @@ public final class ItemStackUtil {
     
     public static String getCommandString(final ItemStack stack, final boolean mutable) {
         
-        final StringBuilder sb = new StringBuilder("<item:").append(Registry.ITEM.getKey(stack.getItem())).append('>');
+        final StringBuilder sb = new StringBuilder("<item:").append(BuiltInRegistries.ITEM.getKey(stack.getItem()))
+                .append('>');
         
         final CompoundTag tag;
         if((tag = stack.getTag()) != null) {

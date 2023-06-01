@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.fluid.IFluidStack;
 import com.blamejared.crafttweaker.api.fluid.MCFluidStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.fluids.FluidStack;
@@ -46,11 +47,11 @@ public final class ForgeBracketHandlers {
             throw new IllegalArgumentException("Could not get fluid for <fluid:" + tokens + ">. Syntax is <fluid:modid:fluidname>");
         }
         
-        if(!Registry.FLUID.containsKey(resourceLocation)) {
+        if(!BuiltInRegistries.FLUID.containsKey(resourceLocation)) {
             throw new IllegalArgumentException("Could not get fluid for <fluid:" + tokens + ">. Fluid does not appear to exist!");
         }
         
-        return IFluidStack.of(new FluidStack(Registry.FLUID.get(resourceLocation), 1));
+        return IFluidStack.of(new FluidStack(BuiltInRegistries.FLUID.get(resourceLocation), 1));
     }
     
 }

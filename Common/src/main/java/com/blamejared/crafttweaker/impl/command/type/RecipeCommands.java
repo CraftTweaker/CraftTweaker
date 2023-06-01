@@ -14,7 +14,7 @@ import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManage
 import com.mojang.brigadier.Command;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.Commands;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -69,7 +69,7 @@ public final class RecipeCommands {
                             .mapToObj(player.getInventory()::getItem)
                             .filter(itemStack -> !itemStack.isEmpty())
                             .forEach(itemStack -> {
-                                if(stacks.stream().noneMatch(itemStack::sameItemStackIgnoreDurability)) {
+                                if(stacks.stream().noneMatch(itemStack::sameItem)) {
                                     stacks.add(itemStack);
                                 }
                             });
@@ -171,7 +171,7 @@ public final class RecipeCommands {
     
     private static ResourceLocation serializer(final Recipe<?> recipe) {
         
-        return Objects.requireNonNull(Registry.RECIPE_SERIALIZER.getKey(recipe.getSerializer()));
+        return Objects.requireNonNull(BuiltInRegistries.RECIPE_SERIALIZER.getKey(recipe.getSerializer()));
     }
     
     private static <T extends Recipe<?>> String dump(final IRecipeManager<? super T> manager, final T recipe) {

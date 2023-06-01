@@ -5,23 +5,20 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.MirrorAxis;
 import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction2D;
+import com.blamejared.crafttweaker.api.recipe.serializer.CTShapedRecipeSerializer;
 import com.blamejared.crafttweaker.api.util.ArrayUtil;
 import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-public class CTShapedRecipeBase implements CraftingRecipe {
-    
+public class CTShapedRecipe extends ShapedRecipe {
     
     private static final Pair<Integer, Integer> INVALID = Pair.of(-1, -1);
     
@@ -31,31 +28,34 @@ public class CTShapedRecipeBase implements CraftingRecipe {
     private final MirrorAxis mirrorAxis;
     @Nullable
     private final RecipeFunction2D function;
-    private final ResourceLocation resourceLocation;
     
-    private final int width;
-    private final int height;
-    
-    
-    public CTShapedRecipeBase(String name, IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunction2D function) {
+    public CTShapedRecipe(String name, IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunction2D function) {
         
-        this.resourceLocation = CraftTweakerConstants.rl(name);
+        this(name, CraftingBookCategory.MISC, output, ingredients, mirrorAxis, function);
+    }
+    
+    public CTShapedRecipe(String name, CraftingBookCategory category, IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunction2D function) {
+        
+        super(CraftTweakerConstants.rl(name), "", category, getMaxWidth(ingredients), ingredients.length, NonNullList.create(), output.getInternal());
         this.output = output;
         this.ingredients = ingredients;
         this.mirrorAxis = mirrorAxis;
         this.function = function;
-        this.height = ingredients.length;
-        this.width = Arrays.stream(ingredients)
-                .mapToInt(row -> row.length)
-                .max()
-                .orElse(0);
         this.mirroredIngredients = new IIngredient[MirrorAxis.values().length][][];
         for(int index = 0; index < this.ingredients.length; index++) {
-            if(this.ingredients[index].length < width) {
-                this.ingredients[index] = ArrayUtil.copyOf(this.ingredients[index], width, IItemStack.empty());
+            if(this.ingredients[index].length < getWidth()) {
+                this.ingredients[index] = ArrayUtil.copyOf(this.ingredients[index], getWidth(), IItemStack.empty());
             }
         }
         initMirroredIngredients();
+    }
+    
+    private static int getMaxWidth(IIngredient[][] array) {
+        
+        return Arrays.stream(array)
+                .mapToInt(row -> row.length)
+                .max()
+                .orElse(0);
     }
     
     private void initMirroredIngredients() {
@@ -169,7 +169,7 @@ public class CTShapedRecipeBase implements CraftingRecipe {
             columnOffset = offset.getSecond();
         }
         
-        IItemStack[][] stacks = new IItemStack[height][width];
+        IItemStack[][] stacks = new IItemStack[getHeight()][getWidth()];
         for(int rowIndex = 0; rowIndex < this.ingredients.length; rowIndex++) {
             final IIngredient[] row = this.ingredients[rowIndex];
             for(int columnIndex = 0; columnIndex < row.length; columnIndex++) {
@@ -182,12 +182,6 @@ public class CTShapedRecipeBase implements CraftingRecipe {
             }
         }
         return function.process(this.output, stacks).getImmutableInternal();
-    }
-    
-    @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        
-        return width >= this.width && height >= this.height;
     }
     
     @Override
@@ -261,38 +255,20 @@ public class CTShapedRecipeBase implements CraftingRecipe {
     @Override
     public NonNullList<Ingredient> getIngredients() {
         
-        NonNullList<Ingredient> ingredients = NonNullList.withSize(this.height * this.width, Ingredient.EMPTY);
+        NonNullList<Ingredient> ingredients = NonNullList.withSize(getHeight() * getWidth(), Ingredient.EMPTY);
         for(int row = 0; row < this.ingredients.length; row++) {
             IIngredient[] ingredientRow = this.ingredients[row];
             for(int column = 0; column < ingredientRow.length; column++) {
-                ingredients.set(row * width + column, ingredientRow[column].asVanillaIngredient());
+                ingredients.set(row * getWidth() + column, ingredientRow[column].asVanillaIngredient());
             }
         }
         return ingredients;
     }
     
     @Override
-    public ResourceLocation getId() {
+    public RecipeSerializer<CTShapedRecipe> getSerializer() {
         
-        return resourceLocation;
-    }
-    
-    @Override
-    public RecipeSerializer<CTShapedRecipeBase> getSerializer() {
-        
-        return Services.REGISTRY.getCTShapedRecipeSerializer();
-    }
-    
-    // Partialially overriding the Forge IShapedRecipe class
-    public int getRecipeWidth() {
-        
-        return width;
-    }
-    
-    // Partialially overriding the Forge IShapedRecipe class
-    public int getRecipeHeight() {
-        
-        return height;
+        return CTShapedRecipeSerializer.INSTANCE;
     }
     
     public IIngredient[][] getCtIngredients() {
@@ -320,7 +296,6 @@ public class CTShapedRecipeBase implements CraftingRecipe {
         
         return mirrorAxis;
     }
-    
     
     private boolean isValidOffset(Pair<Integer, Integer> pair) {
         

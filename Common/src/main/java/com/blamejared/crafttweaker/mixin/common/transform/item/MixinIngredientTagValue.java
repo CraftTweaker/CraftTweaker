@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.ingredient.IngredientCacheBuster;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.tags.TagManager;
 import net.minecraft.world.item.Item;
@@ -36,7 +37,7 @@ public class MixinIngredientTagValue {
                     .server()
                     .accessibleResources()
                     .crafttweaker$getTagManager().getResult().stream()
-                    .filter(loadResult -> loadResult.key().equals(Registry.ITEM_REGISTRY))
+                    .filter(loadResult -> loadResult.key().equals(Registries.ITEM))
                     .map(GenericUtil::<TagManager.LoadResult<Item>>uncheck)
                     .map(TagManager.LoadResult::tags)
                     .map(map -> map.get(this.tag.location()))
