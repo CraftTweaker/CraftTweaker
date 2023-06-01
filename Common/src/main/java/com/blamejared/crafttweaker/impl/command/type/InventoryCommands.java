@@ -10,7 +10,6 @@ import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
 import com.mojang.brigadier.Command;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

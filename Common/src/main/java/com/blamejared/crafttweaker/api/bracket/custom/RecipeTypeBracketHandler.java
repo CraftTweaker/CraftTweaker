@@ -13,7 +13,6 @@ import com.blamejared.crafttweaker.api.util.ParseUtil;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipeType;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;

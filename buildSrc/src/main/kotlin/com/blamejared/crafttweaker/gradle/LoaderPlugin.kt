@@ -29,11 +29,11 @@ class LoaderPlugin : Plugin<Project> {
         val commonJava = commonJava(project)
 
         project.tasks {
-            withType<ProcessResources>() {
+            withType<ProcessResources> {
                 from(commonJava.sourceSets.getByName("main").resources)
             }
 
-            withType<JavaCompile>() {
+            withType<JavaCompile> {
                 source(commonJava(project).sourceSets.getByName("main").allSource)
             }
 
@@ -58,7 +58,7 @@ class LoaderPlugin : Plugin<Project> {
                 from(commonJava.sourceSets.getByName("main").resources)
             }
 
-            if (project.name.equals("Forge")) {
+            if (project.name == "Forge") {
                 withType(Jar::class.java) {
                     finalizedBy("reobfJar")
                 }
@@ -88,10 +88,6 @@ class LoaderPlugin : Plugin<Project> {
         }
     }
 
-    private fun notCommon(project: Project): Boolean {
-        return !project.name.equals("Common")
-    }
-
     private fun common(project: Project): Project {
         return project.project(":Common")
     }
@@ -100,7 +96,4 @@ class LoaderPlugin : Plugin<Project> {
         return common(project).extensions.getByType(JavaPluginExtension::class.java)
     }
 
-    private fun depJava(project: Project, other: String): JavaPluginExtension {
-        return project.project(other).extensions.getByType(JavaPluginExtension::class.java)
-    }
 }

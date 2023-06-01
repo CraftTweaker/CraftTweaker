@@ -8,16 +8,11 @@ import net.minecraft.client.Minecraft;
 
 public class ActionModifyShiftedTooltip extends ActionTooltipBase {
     
-    private final ITooltipFunction shiftedFunction;
-    private final ITooltipFunction unshiftedFunction;
-    
     private final ITooltipFunction function;
     
     public ActionModifyShiftedTooltip(IIngredient stack, ITooltipFunction shiftedFunction, ITooltipFunction unshiftedFunction) {
         
         super(stack);
-        this.shiftedFunction = shiftedFunction;
-        this.unshiftedFunction = unshiftedFunction;
         this.function = (stack1, tooltip, context) -> {
             
             final KeyMapping keyBindSneak = Minecraft.getInstance().options.keyShift;

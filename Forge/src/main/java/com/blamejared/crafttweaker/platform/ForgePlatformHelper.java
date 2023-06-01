@@ -92,14 +92,14 @@ public class ForgePlatformHelper implements IPlatformHelper {
                 Map.class);
 
     }
-
-    public Supplier<List<Mod>> modList = Suppliers.memoize(() -> ModList.get()
+    
+    public final Supplier<List<Mod>> modList = Suppliers.memoize(() -> ModList.get()
             .getMods()
             .stream()
             .map(iModInfo -> new Mod(iModInfo.getModId(), iModInfo.getDisplayName(), iModInfo.getVersion().toString()))
             .toList());
-
-    public Function<String, Optional<Mod>> modFinder = Util.memoize(modid -> modList.get()
+    
+    public final Function<String, Optional<Mod>> modFinder = Util.memoize(modid -> modList.get()
             .stream()
             .filter(modObject -> modObject.id().equals(modid))
             .findFirst());

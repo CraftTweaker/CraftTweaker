@@ -47,7 +47,7 @@ import java.util.stream.*;
 
 public class FabricPlatformHelper implements IPlatformHelper {
     
-    public Supplier<List<Mod>> modList = Suppliers.memoize(() -> FabricLoader.getInstance()
+    public final Supplier<List<Mod>> modList = Suppliers.memoize(() -> FabricLoader.getInstance()
             .getAllMods()
             .stream()
             .map(ModContainer::getMetadata)
@@ -55,7 +55,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
                     .getFriendlyString()))
             .toList());
     
-    public Function<String, Optional<Mod>> modFinder = Util.memoize(modid -> modList.get()
+    public final Function<String, Optional<Mod>> modFinder = Util.memoize(modid -> modList.get()
             .stream()
             .filter(modObject -> modObject.id().equals(modid))
             .findFirst());

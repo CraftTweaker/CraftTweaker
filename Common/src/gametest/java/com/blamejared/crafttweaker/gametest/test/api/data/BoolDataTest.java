@@ -50,7 +50,7 @@ public class BoolDataTest implements CraftTweakerGameTest {
         log.assertOutput(0, "true");
         IData iData = GameTestGlobals.data().get(0);
         
-        assertThat(iData.asBool() == true, is(true));
+        assertThat(iData.asBool(), is(true));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -155,7 +155,7 @@ public class BoolDataTest implements CraftTweakerGameTest {
         log.assertOutput(0, "true");
         IData iData = GameTestGlobals.data().get(0);
         
-        assertThat(iData.and(BoolData.FALSE).asBool() == false, is(true));
+        assertThat(!iData.and(BoolData.FALSE).asBool(), is(true));
     }
     
     @GameTest(template = "crafttweaker:empty")

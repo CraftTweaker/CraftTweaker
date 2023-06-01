@@ -4,8 +4,6 @@ import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
 import com.blamejared.crafttweaker.gametest.CraftTweakerGameTests;
 import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.RegistrySynchronization;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.tags.TagManager;

@@ -95,7 +95,7 @@ public class IngredientConverter {
     
     private static boolean notEmptyStack(IIngredient iIngredient) {
         
-        return !(iIngredient instanceof IItemStack && ((IItemStack) iIngredient).isEmpty());
+        return !(iIngredient instanceof IItemStack && iIngredient.isEmpty());
     }
     
 }

@@ -262,7 +262,6 @@ public final class CommonLootModifiers {
                 } else {
                     final int oldAmount = stack.getAmount();
                     final int newAmount = oldAmount + context.getRandom().nextInt(multiplier * enchantmentLevel + 1);
-                    ;
                     loot.add(stack.copy().setAmount(newAmount));
                 }
             }

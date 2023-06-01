@@ -4,7 +4,6 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.ingredient.IngredientCacheBuster;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.tags.TagManager;

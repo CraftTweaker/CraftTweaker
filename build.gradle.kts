@@ -18,7 +18,7 @@ buildscript {
 }
 
 plugins {
-    `java`
+    java
     idea
 }
 
@@ -112,7 +112,7 @@ tasks.create("postDiscord") {
 
 }
 
-val apDir = "CraftTweaker-Annotation-Processors";
+val apDir = "CraftTweaker-Annotation-Processors"
 
 tasks.create("checkoutAP") {
     doFirst {

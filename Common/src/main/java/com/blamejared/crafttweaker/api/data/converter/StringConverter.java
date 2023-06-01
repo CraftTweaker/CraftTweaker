@@ -63,27 +63,36 @@ public class StringConverter {
         if(parser.optional(K_AS) != null) {
             final ZSToken token = parser.next();
             switch(token.getType()) {
-                case K_BOOL:
+                case K_BOOL -> {
                     return new BoolData(base.asBool());
-                case K_BYTE:
+                }
+                case K_BYTE -> {
                     return new ByteData(base.asByte());
-                case K_SHORT:
+                }
+                case K_SHORT -> {
                     return new ShortData(base.asShort());
-                case K_INT:
+                }
+                case K_INT -> {
                     return new IntData(base.asInt());
-                case K_LONG:
+                }
+                case K_LONG -> {
                     return new LongData(base.asLong());
-                case K_FLOAT:
+                }
+                case K_FLOAT -> {
                     return new FloatData(base.asFloat());
-                case K_DOUBLE:
+                }
+                case K_DOUBLE -> {
                     return new DoubleData(base.asDouble());
-                case K_STRING:
+                }
+                case K_STRING -> {
                     if(base instanceof StringData) {
                         return base;
                     }
                     return new StringData(base.accept(DataToJsonStringVisitor.INSTANCE));
-                case T_IDENTIFIER:
+                }
+                case T_IDENTIFIER -> {
                     return base;
+                }
             }
         }
         return base;

@@ -4,7 +4,6 @@ import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientAnySerial
 import com.google.common.base.Suppliers;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

@@ -5,7 +5,6 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -34,14 +33,12 @@ public final class ExpandLocationPredicate {
         return create().setX(x).setY(y).setZ(z).build();
     }
     
-    @SuppressWarnings("SpellCheckingInspection")
     @ZenCodeType.StaticExpansionMethod
     public static LocationPredicate inBiome(final ResourceLocation biome) {
         
         return LocationPredicate.inBiome(ResourceKey.create(Registries.BIOME, biome));
     }
     
-    @SuppressWarnings("SpellCheckingInspection")
     @ZenCodeType.StaticExpansionMethod
     public static LocationPredicate inBiome(final String biome) {
         

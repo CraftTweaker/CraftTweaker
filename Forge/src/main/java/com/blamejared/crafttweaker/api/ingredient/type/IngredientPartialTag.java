@@ -5,7 +5,6 @@ import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker.api.ingredient.serializer.IngredientPartialTagSerializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;

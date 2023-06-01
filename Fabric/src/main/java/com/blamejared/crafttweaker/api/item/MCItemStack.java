@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.api.item;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -9,7 +8,6 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.item.MCItemStack")

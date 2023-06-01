@@ -7,10 +7,8 @@ import com.blamejared.crafttweaker.api.data.visitor.DataToStringVisitor;
 import com.blamejared.crafttweaker.api.data.visitor.DataToTextComponentVisitor;
 import com.blamejared.crafttweaker.api.data.visitor.DataVisitor;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.Util;
 import net.minecraft.nbt.CollectionTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.world.level.storage.DataVersion;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.openzen.zencode.java.ZenCodeType;
@@ -779,7 +777,7 @@ public interface IData extends Comparable<IData>, Iterable<IData> {
      * See {@link DataToTextComponentVisitor#DATA_TO_COMPONENT}
      */
     enum Type {
-        BOOL, BYTE_ARRAY, BYTE, DOUBLE, FLOAT, INT_ARRAY, INT, LIST, LONG_ARRAY, LONG, MAP, SHORT, STRING;
+        BOOL, BYTE_ARRAY, BYTE, DOUBLE, FLOAT, INT_ARRAY, INT, LIST, LONG_ARRAY, LONG, MAP, SHORT, STRING
     }
     
 }

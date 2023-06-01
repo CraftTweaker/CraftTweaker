@@ -13,7 +13,6 @@ import com.blamejared.crafttweaker.platform.Services;
 import com.google.common.base.Suppliers;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.RegistrySynchronization;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagManager;
@@ -233,7 +232,6 @@ public final class CraftTweakerTagRegistry {
      *
      * @param tags The map to bind.
      */
-    @SuppressWarnings("rawtypes")
     public void bind(Map<ResourceKey<? extends Registry<?>>, TagNetworkSerialization.NetworkPayload> tags) {
         
         bind(tags, new BindContext());
@@ -284,7 +282,6 @@ public final class CraftTweakerTagRegistry {
      *
      * @param results The results to bind.
      */
-    @SuppressWarnings("rawtypes")
     public void bind(List<TagManager.LoadResult<?>> results) {
         
         bind(results, new BindContext());

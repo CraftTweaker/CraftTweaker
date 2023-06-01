@@ -9,6 +9,7 @@ import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -24,18 +25,18 @@ public class PacketHandler {
     public static void init() {
         
         for(ClientMessages msg : ClientMessages.values()) {
-            registerMessage(msg.getMessageClass(), msg.getMessageFactory(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+            registerMessage(msg.getMessageClass(), msg.getMessageFactory(), NetworkDirection.PLAY_TO_CLIENT);
         }
     }
     
-    private static <MSG extends IMessage<MSG>> void registerMessage(Class<MSG> messageType, Function<FriendlyByteBuf, MSG> decoder, Optional<NetworkDirection> direction) {
+    private static <MSG extends IMessage<MSG>> void registerMessage(Class<MSG> messageType, Function<FriendlyByteBuf, MSG> decoder, @SuppressWarnings("SameParameterValue") @Nullable NetworkDirection direction) {
         
         registerMessage(messageType, decoder, (messageCopy, contextSupplier) -> andHandling(contextSupplier, messageCopy::handle), direction);
     }
     
-    private static <MSG extends IMessage<MSG>> void registerMessage(Class<MSG> messageType, Function<FriendlyByteBuf, MSG> decoder, BiConsumer<MSG, Supplier<NetworkEvent.Context>> messageConsumer, Optional<NetworkDirection> direction) {
+    private static <MSG extends IMessage<MSG>> void registerMessage(Class<MSG> messageType, Function<FriendlyByteBuf, MSG> decoder, BiConsumer<MSG, Supplier<NetworkEvent.Context>> messageConsumer, @Nullable NetworkDirection direction) {
         
-        CHANNEL.registerMessage(ID++, messageType, IMessage::serialize, decoder, messageConsumer, direction);
+        CHANNEL.registerMessage(ID++, messageType, IMessage::serialize, decoder, messageConsumer, Optional.ofNullable(direction));
     }
     
     private static void andHandling(final Supplier<NetworkEvent.Context> contextSupplier, final Runnable enqueuedWork) {

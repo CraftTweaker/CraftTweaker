@@ -19,7 +19,6 @@ import com.blamejared.crafttweaker.natives.villager.ExpandVillagerProfession;
 import com.blamejared.crafttweaker.natives.world.damage.ExpandDamageSource;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import org.openzen.zencode.java.ZenCodeType;
 

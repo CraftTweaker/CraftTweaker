@@ -27,7 +27,7 @@ class ZenCodePlugin : Plugin<Project> {
         }
 
         project.repositories {
-            mavenCentral();
+            mavenCentral()
         }
 
     }
@@ -42,7 +42,7 @@ class ZenCodePlugin : Plugin<Project> {
 
         project.tasks {
             withType<JavaCompile>().configureEach {
-                this.options.encoding = StandardCharsets.UTF_8.toString();
+                this.options.encoding = StandardCharsets.UTF_8.toString()
             }
         }
     }

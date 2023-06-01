@@ -22,7 +22,6 @@ import org.openzen.zenscript.parser.expression.ParsedExpressionMap;
 import java.util.Arrays;
 import java.util.List;
 
-@SuppressWarnings("Duplicates")
 public class IDataRewrites {
     
     

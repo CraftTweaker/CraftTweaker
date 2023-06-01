@@ -8,8 +8,6 @@ import net.minecraft.advancements.critereon.FluidPredicate;
 import net.minecraft.advancements.critereon.LightPredicate;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -38,14 +36,12 @@ public final class ExpandLocationPredicateBuilder {
         return internal.setZ(z);
     }
     
-    @SuppressWarnings("SpellCheckingInspection")
     @ZenCodeType.Method
     public static LocationPredicate.Builder biome(final LocationPredicate.Builder internal, final ResourceLocation biome) {
         
         return internal.setBiome(ResourceKey.create(Registries.BIOME, biome));
     }
     
-    @SuppressWarnings("SpellCheckingInspection")
     @ZenCodeType.Method
     public static LocationPredicate.Builder biome(final LocationPredicate.Builder internal, final String biome) {
         

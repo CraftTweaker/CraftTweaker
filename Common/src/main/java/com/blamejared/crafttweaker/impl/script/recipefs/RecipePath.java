@@ -299,9 +299,7 @@ final class RecipePath implements Path {
             if(theirComponents < ourComponents) {
                 final int walkUpLength = ourComponents - theirComponents;
                 final String[] newComponents = new String[walkUpLength];
-                for(int i = 0; i < walkUpLength; ++i) {
-                    newComponents[i] = "..";
-                }
+                Arrays.fill(newComponents, "..");
                 
                 return of(this.fs, this.computeSubPath(0, walkUpLength, false, newComponents));
             }

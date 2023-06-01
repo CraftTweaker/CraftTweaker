@@ -18,7 +18,6 @@ import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.brigadier.Command;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.Tag;
@@ -192,7 +191,7 @@ public final class HandCommands {
                                         .toString());
                                 sendAttributePropertyInformation(player, "Operation", attributeModifier.getOperation()
                                         .name());
-                                sendAttributePropertyInformation(player, "Amount", attributeModifier.getAmount() + "");
+                                sendAttributePropertyInformation(player, "Amount", String.valueOf(attributeModifier.getAmount()));
                                 sendAttributePropertyInformation(player, "IData", new MapData(attributeModifier.save()).asString());
                             });
                         });
@@ -353,7 +352,7 @@ public final class HandCommands {
     private static void sendTagHand(final Player receiver, final String tag) {
         
         CommandUtilities.sendCopying(
-                Component.translatable("    ").append(Component.literal("- ").withStyle(ChatFormatting.YELLOW))
+                Component.literal("    ").append(Component.literal("- ").withStyle(ChatFormatting.YELLOW))
                         .append(" ")
                         .append(Component.literal(tag).withStyle(ChatFormatting.AQUA)),
                 tag,

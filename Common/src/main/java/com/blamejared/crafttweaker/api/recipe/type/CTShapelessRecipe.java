@@ -6,7 +6,6 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction1D;
 import com.blamejared.crafttweaker.api.recipe.serializer.CTShapelessRecipeSerializer;
-import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.CraftingContainer;

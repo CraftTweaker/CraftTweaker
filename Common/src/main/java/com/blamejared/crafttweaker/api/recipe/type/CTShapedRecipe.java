@@ -7,7 +7,6 @@ import com.blamejared.crafttweaker.api.recipe.MirrorAxis;
 import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction2D;
 import com.blamejared.crafttweaker.api.recipe.serializer.CTShapedRecipeSerializer;
 import com.blamejared.crafttweaker.api.util.ArrayUtil;
-import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.inventory.CraftingContainer;
