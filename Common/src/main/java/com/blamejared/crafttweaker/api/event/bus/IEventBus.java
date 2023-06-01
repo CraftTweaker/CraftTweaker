@@ -216,6 +216,22 @@ public interface IEventBus<T> {
     void unregisterHandler(final IHandlerToken<T> token);
     
     /**
+     * Posts the given event to all handlers on all {@link Phase}s.
+     *
+     * <p>The event will be dispatched on the various phases according to their
+     * {@linkplain Phase#ordinal() natural ordering}. Moreover, any {@link BusHandlingException} that might be raised
+     * during the posting of the event will be automatically handled according to an internal policy specified by the
+     * event bus itself. An event bus implementation need not raise the exception. If a custom policy is desired, then
+     * refer to {@link #postCatching(Object, Consumer)} instead.</p>
+     *
+     * @param event The event object that should be posted to the various listeners.
+     * @return {@code event}, for easier chaining.
+     *
+     * @since 11.0.0
+     */
+    T post(final T event);
+    
+    /**
      * Posts the given event to all handlers listening on the specified {@link Phase}.
      *
      * <p>Only the handlers listening to the given phase will be notified, no other handlers will. Moreover, any
@@ -231,6 +247,23 @@ public interface IEventBus<T> {
      * @since 11.0.0
      */
     T post(final Phase phase, final T event);
+    
+    /**
+     * Posts the given event to all handlers on all {@link Phase}s.
+     *
+     * <p>The event will be dispatched on the various phases according to their
+     * {@linkplain Phase#ordinal() natural ordering}.</p>
+     *
+     * <p>Any {@link BusHandlingException} that might be raised during dispatching will be caught and provided to the
+     * specified {@code exceptionHandler} {@link Consumer} for additional processing.</p>
+     *
+     * @param event The event object that should be posted to the various listeners.
+     * @param exceptionHandler The {@link Consumer} responsible for the handling of dispatch errors, if any.
+     * @return {@code event}, for easier chaining.
+     *
+     * @since 11.0.0
+     */
+    T postCatching(final T event, final Consumer<BusHandlingException> exceptionHandler);
     
     /**
      * Posts the given event to all handlers listening on the specified {@link Phase}.

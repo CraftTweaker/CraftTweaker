@@ -80,32 +80,27 @@ abstract class PhasedEventBus<T> implements IEventBus<T> {
     }
     
     @Override
+    public T post(final T event) {
+        
+        return this.postCatching(event, this::onException);
+    }
+    
+    @Override
     public final T post(final Phase phase, final T event) {
         
         return this.postCatching(phase, event, this::onException);
     }
     
     @Override
+    public T postCatching(final T event, final Consumer<BusHandlingException> exceptionHandler) {
+        
+        return this.dispatch(event, exceptionHandler, this.phasedDispatchers);
+    }
+    
+    @Override
     public final T postCatching(final Phase phase, final T event, final Consumer<BusHandlingException> exceptionHandler) {
         
-        try {
-            // TODO("Evaluate performance")
-            final Lock readLock = this.lock.readLock();
-            readLock.lock();
-            try {
-                for (final ArrayBackedDispatcher<T> dispatcher : this.phasedDispatchers) {
-                    if (dispatcher != null) {
-                        dispatcher.dispatch(event);
-                    }
-                }
-                return event;
-            } finally {
-                readLock.unlock();
-            }
-        } catch(final BusHandlingException e) {
-            exceptionHandler.accept(e);
-            return event;
-        }
+        return this.dispatch(event, exceptionHandler, this.phasedDispatchers[phase.ordinal()]);
     }
     
     @Override
@@ -124,6 +119,25 @@ abstract class PhasedEventBus<T> implements IEventBus<T> {
         this.wire.registerBusForDispatch(this.eventType(), this);
     }
     
+    private <R> R dispatch(final R event, final Consumer<BusHandlingException> exceptionHandler, final ArrayBackedDispatcher<R> dispatcher) {
+        return this.queryHandlers(event, exceptionHandler, it -> {
+            if (dispatcher != null) {
+                dispatcher.dispatch(it);
+            }
+        });
+    }
+    
+    @SafeVarargs
+    private <R> R dispatch(final R event, final Consumer<BusHandlingException> exceptionHandler, final ArrayBackedDispatcher<R>... dispatchers) {
+        return this.queryHandlers(event, exceptionHandler, it -> {
+            for (final ArrayBackedDispatcher<R> dispatcher : dispatchers) {
+                if (dispatcher != null) {
+                    dispatcher.dispatch(it);
+                }
+            }
+        });
+    }
+    
     private <R> R modifyHandlers(final Supplier<R> block) {
         // TODO("Evaluate performance")
         final Lock writeLock = this.lock.writeLock();
@@ -132,6 +146,23 @@ abstract class PhasedEventBus<T> implements IEventBus<T> {
             return block.get();
         } finally {
             writeLock.unlock();
+        }
+    }
+    
+    private <R> R queryHandlers(final R event, final Consumer<BusHandlingException> exceptionHandler, final Consumer<R> block) {
+        try {
+            // TODO("Evaluate performance")
+            final Lock readLock = this.lock.readLock();
+            readLock.lock();
+            try {
+                block.accept(event);
+                return event;
+            } finally {
+                readLock.lock();
+            }
+        } catch (final BusHandlingException e) {
+            exceptionHandler.accept(e);
+            return event;
         }
     }
     
