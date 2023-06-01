@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.event.Phase;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.google.common.reflect.TypeToken;
 import net.fabricmc.fabric.api.event.Event;
+import net.minecraft.resources.ResourceLocation;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -46,7 +47,7 @@ import java.util.stream.Stream;
  * initialization phase. Moreover, it is not possible for the wrap method and the reveal method to be the same method.
  * Although not explicitly disallowed, the differing requirements effectively prevent it.</p>
  *
- * <p>The wire also has a {@link FabricEventPhaseMapper} associated to it, which handles the translation between Fabric
+ * <p>The wire also has a {@link IFabricPhaseMapper} associated to it, which handles the translation between Fabric
  * event phases and the {@link Phase} of {@link IEventBus}. Refer to that class for further information.</p>
  *
  * <p>Although different implementations are allowed, it is highly suggested to rely on this wire as a matter of both
@@ -62,19 +63,22 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
     private static final class PostingInvocationHandler<T> implements InvocationHandler {
         private final Method targetMethod;
         private final MethodHandle wrapper;
-        private final Phase phase;
+        private final IFabricPhaseMapper mapper;
+        private final ResourceLocation phase;
         private final MethodHandle reveal;
         private final IEventBus<T> bus;
         
         PostingInvocationHandler(
                 final Method targetMethod,
                 final MethodHandle wrapper,
-                final Phase phase,
+                final IFabricPhaseMapper mapper,
+                final ResourceLocation phase,
                 final MethodHandle reveal,
                 final IEventBus<T> bus
         ) {
             this.targetMethod = targetMethod;
             this.wrapper = wrapper;
+            this.mapper = mapper;
             this.phase = phase;
             this.reveal = reveal;
             this.bus = bus;
@@ -84,6 +88,12 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
         public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
             
             final String methodName = method.getName();
+            if (this.targetMethod.equals(method)) {
+                return this.$invoke(proxy, args);
+            }
+            if (method.isDefault()) {
+                return InvocationHandler.invokeDefault(proxy, method, args);
+            }
             if ("equals".equals(methodName)) {
                 return this.$equals(proxy, args[0]);
             }
@@ -92,12 +102,6 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
             }
             if ("hashCode".equals(methodName)) {
                 return this.$hashCode(proxy);
-            }
-            if (method.isDefault()) {
-                return InvocationHandler.invokeDefault(proxy, method, args);
-            }
-            if (this.targetMethod.equals(method)) {
-                return this.$invoke(proxy, args);
             }
             throw new IllegalArgumentException("Unknown method to proxy " + methodName);
         }
@@ -116,7 +120,7 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
         
         private Object $invoke(@SuppressWarnings("unused") final Object $this, final Object[] args) throws Throwable {
             final T object = GenericUtil.uncheck(this.wrapper.invokeExact(args));
-            this.bus.post(this.phase, object);
+            this.mapper.dispatch(this.bus, object, this.phase);
             return this.reveal == null? null : this.reveal.invokeExact(object);
         }
         
@@ -129,7 +133,7 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
     private final Event<E> event;
     private final Class<E> originalEventClass;
     private final TypeToken<S> wrappedEventClass;
-    private final FabricEventPhaseMapper mapper;
+    private final IFabricPhaseMapper mapper;
     private final Method functionalMethod;
     private final MethodHandle wrapper;
     private final MethodHandle reveal;
@@ -138,7 +142,7 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
             final Event<E> event,
             final Class<E> originalEventClass,
             final TypeToken<S> wrappedEventClass,
-            final FabricEventPhaseMapper mapper,
+            final IFabricPhaseMapper mapper,
             final Method functionalMethod,
             final MethodHandle wrapper,
             final MethodHandle reveal
@@ -155,8 +159,8 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
     /**
      * Constructs a new {@link FabricEventBusWire} for the given event bus, functional interface, and wrapper.
      *
-     * <p>The {@linkplain FabricEventPhaseMapper mapping} between Fabric phases and {@link Phase}s will be carried out
-     * accordingly to the default mapper behavior. Refer to {@link FabricEventPhaseMapper#of()} for further
+     * <p>The {@linkplain IFabricPhaseMapper mapping} between Fabric phases and {@link Phase}s will be carried out
+     * accordingly to the default mapper behavior. Refer to {@link IFabricPhaseMapper#defaultToAll()} for further
      * information.</p>
      *
      * <p>The wrap and reveal methods will be automatically determined according to the rules outlined in the class
@@ -186,8 +190,8 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
     /**
      * Constructs a new {@link FabricEventBusWire} for the given event bus, functional interface, and wrapper.
      *
-     * <p>The {@linkplain FabricEventPhaseMapper mapping} between Fabric phases and {@link Phase}s will be carried out
-     * accordingly to the default mapper behavior. Refer to {@link FabricEventPhaseMapper#of()} for further
+     * <p>The {@linkplain IFabricPhaseMapper mapping} between Fabric phases and {@link Phase}s will be carried out
+     * accordingly to the default mapper behavior. Refer to {@link IFabricPhaseMapper#defaultToAll()} for further
      * information.</p>
      *
      * <p>The wrap and reveal methods will be automatically determined according to the rules outlined in the class
@@ -212,12 +216,12 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
             final TypeToken<S> wrappedEventClass
     ) {
         
-        return of(event, originalEventClass, wrappedEventClass, FabricEventPhaseMapper.of());
+        return of(event, originalEventClass, wrappedEventClass, IFabricPhaseMapper.defaultToAll());
     }
     
     /**
      * Constructs a new {@link FabricEventBusWire} for the given event bus, functional interface, and wrapper,
-     * leveraging the provided {@link FabricEventPhaseMapper} for phase mapping.
+     * leveraging the provided {@link IFabricPhaseMapper} for phase mapping.
      *
      * <p>The wrap and reveal methods will be automatically determined according to the rules outlined in the class
      * documentation.</p>
@@ -225,7 +229,7 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
      * @param event The {@link Event} class that represents the bus to wire the event to.
      * @param originalEventClass The functional interface that represents the Fabric event.
      * @param wrappedEventClass The wrapper class that bridges the Fabric event and the {@link IEventBus}.
-     * @param mapper The {@link FabricEventPhaseMapper} that is responsible for converting Fabric event phases to
+     * @param mapper The {@link IFabricPhaseMapper} that is responsible for converting Fabric event phases to
      *               {@link Phase}s.
      * @return A {@link FabricEventBusWire} that carries out the required operations.
      * @param <E> The type of the functional interface.
@@ -240,7 +244,7 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
             final Event<E> event,
             final Class<E> originalEventClass,
             final Class<S> wrappedEventClass,
-            final FabricEventPhaseMapper mapper
+            final IFabricPhaseMapper mapper
     ) {
         
         return of(event, originalEventClass, TypeToken.of(wrappedEventClass), mapper);
@@ -248,7 +252,7 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
     
     /**
      * Constructs a new {@link FabricEventBusWire} for the given event bus, functional interface, and wrapper,
-     * leveraging the provided {@link FabricEventPhaseMapper} for phase mapping.
+     * leveraging the provided {@link IFabricPhaseMapper} for phase mapping.
      *
      * <p>The wrap and reveal methods will be automatically determined according to the rules outlined in the class
      * documentation.</p>
@@ -257,7 +261,7 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
      * @param originalEventClass The functional interface that represents the Fabric event.
      * @param wrappedEventClass The wrapper class that bridges the Fabric event and the {@link IEventBus} as a
      *                          {@link TypeToken} to support generic events.
-     * @param mapper The {@link FabricEventPhaseMapper} that is responsible for converting Fabric event phases to
+     * @param mapper The {@link IFabricPhaseMapper} that is responsible for converting Fabric event phases to
      *               {@link Phase}s.
      * @return A {@link FabricEventBusWire} that carries out the required operations.
      * @param <E> The type of the functional interface.
@@ -272,7 +276,7 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
             final Event<E> event,
             final Class<E> originalEventClass,
             final TypeToken<S> wrappedEventClass,
-            final FabricEventPhaseMapper mapper
+            final IFabricPhaseMapper mapper
     ) {
        
         Objects.requireNonNull(event, "event");
@@ -437,12 +441,15 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
             throw new IllegalStateException("Invalid event type");
         }
         
+        this.mapper.prepareEvent(this.event);
+        
         final Class<?>[] classes = Stream.of(this.originalEventClass).toArray(Class<?>[]::new);
-        this.mapper.phases().forEach(phase -> {
-            final InvocationHandler handler = new PostingInvocationHandler<T>(
+        this.mapper.targetPhases().forEach(phase -> {
+            final InvocationHandler handler = new PostingInvocationHandler<>(
                     this.functionalMethod,
                     this.wrapper,
-                    this.mapper.apply(phase),
+                    this.mapper,
+                    phase,
                     this.reveal,
                     bus
             );
