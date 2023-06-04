@@ -77,7 +77,7 @@ public class DataList implements IData {
             } else {
                 output.append(", ");
             }
-            output.append(value.toString());
+            output.append(value);
         }
         output.append(']');
         return output.toString();
@@ -169,6 +169,7 @@ public class DataList implements IData {
     @Override
     public boolean equals(IData data) {
         List<IData> otherValues = data.asList();
+        if (data.asList() == null) return false;
         if(otherValues.size() != values.size())
             return false;
         

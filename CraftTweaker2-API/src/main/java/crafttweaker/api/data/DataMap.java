@@ -154,7 +154,7 @@ public class DataMap implements IData {
             }
             
             result.append(": ");
-            result.append(entry.getValue().toString());
+            result.append(entry.getValue());
         }
         result.append('}');
         return result.toString();
@@ -245,6 +245,7 @@ public class DataMap implements IData {
             return true;
         
         Map<String, IData> dataMap = data.asMap();
+        if (dataMap == null) return false;
         if(dataMap.size() != this.data.size())
             return false;
         
