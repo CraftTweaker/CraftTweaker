@@ -158,7 +158,7 @@ abstract class PhasedEventBus<T> implements IEventBus<T> {
                 block.accept(event);
                 return event;
             } finally {
-                readLock.lock();
+                readLock.unlock();
             }
         } catch (final BusHandlingException e) {
             exceptionHandler.accept(e);
