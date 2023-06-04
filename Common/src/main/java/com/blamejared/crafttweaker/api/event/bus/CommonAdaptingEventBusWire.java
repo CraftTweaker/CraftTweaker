@@ -54,8 +54,16 @@ public final class CommonAdaptingEventBusWire<P, C> implements IEventBusWire {
         @Override
         public void accept(final Q platform) {
             final D common = this.platformToCommon().apply(platform);
-            this.commonBus().post(this.phase(), common);
+            this.commonBus().postCatching(this.phase(), common, this::rethrow);
             this.commonToPlatform().accept(common, platform);
+        }
+        
+        // Given that this "redirect" is essentially subordinated to the original event dispatch, we do not want to eat
+        // potential information nor override error handling decisions, as the real event whose dispatch is failing is
+        // the platform-specific one. Therefore, we want to rethrow the exception and have the main event handler handle
+        // it as it sees fit.
+        private void rethrow(final BusHandlingException e) {
+            throw e;
         }
         
     }
