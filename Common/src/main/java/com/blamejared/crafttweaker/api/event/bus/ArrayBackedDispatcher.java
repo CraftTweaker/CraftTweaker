@@ -73,9 +73,19 @@ final class ArrayBackedDispatcher<T> {
             throw new IllegalArgumentException("Invalid token object for dispatcher");
         }
         
-        final int next = arrayToken.index() + 1;
+        final int position = arrayToken.index();
+        final int next = position + 1;
         final IEventDispatcher<T> newConsumer = next == this.dispatchers.length || this.dispatchers[next] == null? null : GenericUtil.uncheck(UNREGISTERED);
-        this.dispatchers[arrayToken.index()] = newConsumer;
+        this.dispatchers[position] = newConsumer;
+        
+        if (newConsumer == null) {
+            for (int i = position - 1; i >= 0; --i) {
+                if (this.dispatchers[i] != UNREGISTERED) {
+                    break;
+                }
+                this.dispatchers[i] = null;
+            }
+        }
         
         arrayToken.invalidate();
     }
