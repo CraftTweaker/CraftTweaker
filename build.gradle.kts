@@ -7,16 +7,6 @@ import com.diluv.schoomp.message.embed.Embed
 import java.io.IOException
 import java.util.*
 
-// Not sure how to do this without the buildscript block
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("com.diluv.schoomp:Schoomp:1.2.6")
-    }
-}
-
 plugins {
     java
     idea
@@ -26,7 +16,7 @@ version = GMUtils.updatingVersion(Versions.MOD)
 
 tasks.wrapper {
     //Define wrapper values here to not have to always do so when updating gradlew.properties
-    gradleVersion = "7.4.1"
+    gradleVersion = "8.1.1"
     distributionType = Wrapper.DistributionType.BIN
 }
 
@@ -63,31 +53,20 @@ tasks.create("postDiscord") {
             val embed = Embed()
             val downloadSources = StringJoiner("\n")
 
-            if (project(":Fabric").ext.has("curse_file_url")) {
+            mapOf(Pair("Fabric", "<:fabric:932163720568782878>"), Pair("Forge", "<:forge:932163698003443804>"))
+                    .filter {
+                        project(":${it.key}").ext.has("curse_file_url")
+                    }.map {
+                        val capitalizedName = it.key.replaceFirstChar { ch -> if (ch.isLowerCase()) ch.titlecase(Locale.ENGLISH) else it.toString() }
+                        "${it.value} [$capitalizedName](${project(":${it.key}").ext.get("curse_file_url")})"
+                    }
+                    .forEach { downloadSources.add(it) }
 
-                downloadSources.add("<:fabric:932163720568782878> [Fabric](${project(":Fabric").ext.get("curse_file_url")})")
-            }
+            listOf("Common", "Fabric", "Forge")
+                    .map { project(":${it}") }
+                    .map { "<:maven:932165250738970634> `\"${it.group}:${it.base.archivesName.get()}:${it.version}\"`" }
+                    .forEach { downloadSources.add(it) }
 
-            if (project(":Forge").ext.has("curse_file_url")) {
-
-                downloadSources.add("<:forge:932163698003443804> [Forge](${project(":Forge").ext.get("curse_file_url")})")
-            }
-
-            downloadSources.add(
-                    "<:maven:932165250738970634> `\"${project(":Common").group}:${project(":Common").base.archivesName.get()}:${
-                        project(":Common").version
-                    }\"`"
-            )
-            downloadSources.add(
-                    "<:maven:932165250738970634> `\"${project(":Fabric").group}:${project(":Fabric").base.archivesName.get()}:${
-                        project(":Fabric").version
-                    }\"`"
-            )
-            downloadSources.add(
-                    "<:maven:932165250738970634> `\"${project(":Forge").group}:${project(":Forge").base.archivesName.get()}:${
-                        project(":Forge").version
-                    }\"`"
-            )
 
             // Add Curseforge DL link if available.
             val downloadString = downloadSources.toString()

@@ -8,6 +8,7 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
+import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.plugins.BasePluginExtension
 import org.gradle.api.plugins.JavaLibraryPlugin
@@ -44,36 +45,75 @@ class DefaultPlugin : Plugin<Project> {
         applyMavenPlugin(project)
     }
 
+
     private fun setupDefaults(project: Project) {
         project.plugins.apply(BasePlugin::class.java)
         val base = project.extensions.getByType(BasePluginExtension::class.java)
 
-        base.archivesName.set("${Properties.MOD_NAME}-${project.name.toLowerCase()}-${Versions.MINECRAFT}")
+        base.archivesName.set("${Properties.MOD_NAME}-${project.name.lowercase()}-${Versions.MINECRAFT}")
         project.version = GMUtils.updatingVersion(Versions.MOD)
         project.group = Properties.GROUP
 
         project.tasks.withType<GenerateModuleMetadata>().all {
             enabled = false
         }
-
+        @Suppress("UnstableApiUsage")
         project.repositories {
+            this.mavenCentral()
             this.add(this.maven("https://repo.spongepowered.org/repository/maven-public/") {
                 name = "Sponge"
+                content {
+                    includeGroupAndSubgroups("org.spongepowered")
+                }
             })
             this.add(this.maven("https://maven.blamejared.com/") {
                 name = "BlameJared"
+                content {
+                    includeGroupAndSubgroups("com.blamejared")
+                    includeGroupAndSubgroups("mezz.jei")
+                    includeGroupAndSubgroups("com.faux")
+                    includeGroupAndSubgroups("org.openzen")
+                }
             })
             this.add(this.maven("https://maven.parchmentmc.org/") {
                 name = "ParchmentMC"
+                content {
+                    includeGroupAndSubgroups("org.parchmentmc")
+                }
             })
             this.add(this.maven("https://maven.shedaniel.me/") {
                 name = "REI"
                 content {
-                    includeGroup("me.shedaniel")
-                    includeGroup("me.shedaniel.cloth")
-                    includeGroup("dev.architectury")
+                    includeGroupAndSubgroups("me.shedaniel")
+                    includeGroupAndSubgroups("dev.architectury")
                 }
             })
+            configureEach {
+                if (this is MavenArtifactRepository) {
+                    when (this.url.toString()) {
+                        "https://maven.minecraftforge.net",
+                        "https://libraries.minecraft.net",
+                        "https://repo.maven.apache.org/maven2",
+                        "https://maven.fabricmc.net" -> {
+                            try {
+                                content {
+                                    excludeGroup("curse.maven")
+                                    excludeGroup("mezz.jei")
+                                    excludeGroupAndSubgroups("com.blamejared")
+                                    excludeGroupAndSubgroups("com.faux")
+                                    excludeGroupAndSubgroups("org.openzen")
+                                    excludeGroupAndSubgroups("me.shedaniel")
+                                    excludeGroup("dev.architectury")
+                                    excludeGroupAndSubgroups("org.parchmentmc")
+                                    excludeGroupAndSubgroups("org.spongepowered")
+                                }
+                                println("Adding exclusions to $url")
+                            } catch (ignored: Exception) {
+                            }
+                        }
+                    }
+                }
+            }
         }
 
     }
@@ -107,14 +147,14 @@ class DefaultPlugin : Plugin<Project> {
                 this.options.isFork = true
                 this.options.compilerArgs.add("-XDenableSunApiLintControl")
             }
+            named<JavaCompile>("compileJava") {
+                this.options.compilerArgs.add("-Acrafttweaker.processor.document.output_directory=${project.rootProject.file(Properties.DOCS_OUTPUT_DIR)}")
+                this.options.compilerArgs.add("-Acrafttweaker.processor.document.multi_source=true")
+            }
 
             withType<JavaCompile> {
                 this.options.encoding = StandardCharsets.UTF_8.toString()
                 this.options.release.set(Versions.MOD_JAVA.toInt())
-
-                this.options.compilerArgs.add("-Acrafttweaker.processor.document.output_directory=${project.rootProject.file(Properties.DOCS_OUTPUT_DIR)}")
-                this.options.compilerArgs.add("-Acrafttweaker.processor.document.multi_source=true")
-
                 Dependencies.ZENCODE.forEach {
                     source(depJava(project, it).sourceSets.getByName("main").allSource)
                 }
@@ -122,8 +162,8 @@ class DefaultPlugin : Plugin<Project> {
             }
 
             withType<Javadoc> {
-                this.options.encoding = StandardCharsets.UTF_8.toString()
                 options {
+                    encoding = StandardCharsets.UTF_8.toString()
                     // Javadoc defines this specifically as StandardJavadocDocletOptions
                     // but only has a getter for MinimalJavadocOptions, but let's just make sure to be safe
                     if (this is StandardJavadocDocletOptions) {
@@ -222,11 +262,11 @@ class DefaultPlugin : Plugin<Project> {
         project.plugins.apply(MavenPublishPlugin::class.java)
 
         val publishing = project.extensions.getByType<PublishingExtension>()
-            val base = project.extensions.getByType<BasePluginExtension>()
-            publishing.publications.register("mavenJava", MavenPublication::class.java) {
-                artifactId = base.archivesName.get()
-                from(project.components.getByName("java"))
-            }
+        val base = project.extensions.getByType<BasePluginExtension>()
+        publishing.publications.register("mavenJava", MavenPublication::class.java) {
+            artifactId = base.archivesName.get()
+            from(project.components.getByName("java"))
+        }
         publishing.repositories {
             maven("file:///${System.getenv("local_maven")}")
         }

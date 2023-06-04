@@ -9,7 +9,7 @@ import net.darkhax.curseforgegradle.Constants as CFG_Constants
 plugins {
     id("com.blamejared.crafttweaker.default")
     id("com.blamejared.crafttweaker.loader")
-    id("net.minecraftforge.gradle") version ("5.1.+")
+    id("net.minecraftforge.gradle") version ("[6.0,6.2)")
     id("org.parchmentmc.librarian.forgegradle") version ("1.+")
     id("org.spongepowered.mixin") version ("0.7-SNAPSHOT")
     id("net.darkhax.curseforgegradle")
@@ -102,7 +102,6 @@ minecraft {
             workingDirectory(project.file("run_game_test"))
             ideaModule("${rootProject.name}.${project.name}.main")
             property("forge.enabledGameTestNamespaces", Properties.MOD_ID)
-            setForceExit(false)
             args("-mixin.config=${Properties.MOD_ID}.mixins.json", "-mixin.config=${Properties.MOD_ID}.forge.mixins.json")
             mods {
                 create(Properties.MOD_ID) {
