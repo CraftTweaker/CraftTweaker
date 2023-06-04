@@ -28,6 +28,8 @@ public final class CraftTweakerConstants {
     public static final ResourceLocation RELOAD_LISTENER_SOURCE_ID = CraftTweakerConstants.rl("reload_listener");
     public static final ResourceLocation CLIENT_RECIPES_UPDATED_SOURCE_ID = CraftTweakerConstants.rl("client_recipes_updated");
     
+    
+    public static final String ENV_FORWARD_LOG_TO_LATEST_LOG = "crafttweaker.logger.forward_to_latest_log";
     public static ResourceLocation rl(String path) {
         
         return new ResourceLocation(MOD_ID, path);

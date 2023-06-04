@@ -68,12 +68,14 @@ loom {
             ideConfigGenerated(true)
             runDir("run")
             programArg("--username=Dev")
+            environmentVariable("crafttweaker.logger.forward_to_latest_log", true)
         }
         named("server") {
             server()
             configName = "Fabric Server"
             ideConfigGenerated(true)
             runDir("run_server")
+            environmentVariable("crafttweaker.logger.forward_to_latest_log", true)
         }
         create("GameTest") {
             server()

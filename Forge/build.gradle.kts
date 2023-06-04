@@ -44,6 +44,7 @@ minecraft {
             workingDirectory(project.file("run"))
             ideaModule("${rootProject.name}.${project.name}.main")
             args("-mixin.config=${Properties.MOD_ID}.mixins.json", "-mixin.config=${Properties.MOD_ID}.forge.mixins.json")
+            environment("crafttweaker.logger.forward_to_latest_log", "true")
             mods {
                 create(Properties.MOD_ID) {
                     source(sourceSets.main.get())
@@ -59,6 +60,7 @@ minecraft {
             workingDirectory(project.file("run_server"))
             ideaModule("${rootProject.name}.${project.name}.main")
             args("-mixin.config=${Properties.MOD_ID}.mixins.json", "-mixin.config=${Properties.MOD_ID}.forge.mixins.json", "nogui")
+            environment("crafttweaker.logger.forward_to_latest_log", "true")
             mods {
                 create(Properties.MOD_ID) {
                     source(sourceSets.main.get())
