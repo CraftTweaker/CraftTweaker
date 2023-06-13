@@ -33,8 +33,8 @@ final class PhaseInjectingMapper implements IFabricPhaseMapper {
                 final Class<?> arrayBackedEvent = Class.forName("net.fabricmc.fabric.impl.base.event.ArrayBackedEvent");
                 final Class<?> eventPhaseData = Class.forName("net.fabricmc.fabric.impl.base.event.EventPhaseData");
                 
-                final VarHandle sortedPhases = lookup.in(arrayBackedEvent).findVarHandle(arrayBackedEvent, "sortedPhases", List.class);
-                final VarHandle id = lookup.in(eventPhaseData).findVarHandle(eventPhaseData, "id", ResourceLocation.class);
+                final VarHandle sortedPhases = MethodHandles.privateLookupIn(arrayBackedEvent, lookup).findVarHandle(arrayBackedEvent, "sortedPhases", List.class);
+                final VarHandle id = MethodHandles.privateLookupIn(eventPhaseData, lookup).findVarHandle(eventPhaseData, "id", ResourceLocation.class);
                 
                 return new HackyPrepare(arrayBackedEvent, sortedPhases, id);
             } catch (final Throwable ignored) {
