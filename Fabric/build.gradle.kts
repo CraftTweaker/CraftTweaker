@@ -1,7 +1,7 @@
 import com.blamejared.crafttweaker.gradle.Dependencies
 import com.blamejared.crafttweaker.gradle.Properties
 import com.blamejared.crafttweaker.gradle.Versions
-import com.blamejared.modtemplate.Utils
+import com.blamejared.gradle.mod.utils.GMUtils
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
 import net.darkhax.curseforgegradle.Constants as CFG_Contants
 
@@ -10,6 +10,7 @@ plugins {
     id("com.blamejared.crafttweaker.default")
     id("com.blamejared.crafttweaker.loader")
     id("net.darkhax.curseforgegradle")
+    id("com.modrinth.minotaur")
 }
 
 dependencies {
@@ -86,7 +87,7 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
 
     val mainFile = upload(Properties.CURSE_PROJECT_ID, file("${project.buildDir}/libs/${base.archivesName.get()}-$version.jar"))
     mainFile.changelogType = "markdown"
-    mainFile.changelog = Utils.getFullChangelog(project)
+    mainFile.changelog = GMUtils.smallChangelog(project, Properties.GIT_REPO)
     mainFile.releaseType = CFG_Contants.RELEASE_TYPE_RELEASE
     mainFile.addGameVersion(Versions.MINECRAFT)
     mainFile.addJavaVersion("Java ${Versions.MOD_JAVA}")
@@ -96,5 +97,19 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
 
     doLast {
         project.ext.set("curse_file_url", "${Properties.CURSE_HOMEPAGE_LINK}/files/${mainFile.curseFileId}")
+    }
+}
+
+modrinth {
+    token.set(GMUtils.locateProperty(project, "modrinth_token"))
+    projectId.set(Properties.MODRINTH_PROJECT_ID)
+    changelog.set(GMUtils.smallChangelog(project, Properties.GIT_REPO))
+    versionName.set("Fabric-${Versions.MINECRAFT}-$version")
+    versionType.set("release")
+    uploadFile.set(tasks.remapJar.get())
+    dependencies {
+        required.project("ingredient-extension-api")
+        required.project("faux-custom-entity-data")
+        required.project("fabric-api")
     }
 }

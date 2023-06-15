@@ -1,7 +1,7 @@
 package com.blamejared.crafttweaker.gradle
 
-import com.blamejared.modtemplate.ModTemplatePlugin
-import com.blamejared.modtemplate.extensions.ModTemplateExtension
+import com.blamejared.gradle.mod.utils.GradleModUtilsPlugin
+import com.blamejared.gradle.mod.utils.extensions.VersionTrackerExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
@@ -22,7 +22,7 @@ class LoaderPlugin : Plugin<Project> {
 
         applyJavaPlugin(project)
         applyDependencies(project)
-        applyModTemplate(project)
+        applyGradleModUtils(project)
     }
 
     private fun applyJavaPlugin(project: Project) {
@@ -76,53 +76,16 @@ class LoaderPlugin : Plugin<Project> {
         gametestCompileOnly.dependencies.add(project.dependencies.create(project.files(commonJava.sourceSets.getByName("gametest").java.srcDirs)))
     }
 
-    private fun applyModTemplate(project: Project) {
+    private fun applyGradleModUtils(project: Project) {
 
-        project.plugins.apply(ModTemplatePlugin::class.java)
+        project.plugins.apply(GradleModUtilsPlugin::class.java)
 
-        with(project.extensions.getByType(ModTemplateExtension::class.java)) {
-            mcVersion(Versions.MINECRAFT)
-            curseHomepage(Properties.CURSE_HOMEPAGE_LINK)
-            displayName(Properties.MOD_NAME)
-            modLoader(project.name)
-            changelog {
-                // Don't register the task since we will never use it, but the properties are used
-                enabled(false)
-                firstCommit(Properties.GIT_FIRST_COMMIT)
-                repo(Properties.GIT_REPO)
-            }
-
-            versionTracker {
-                enabled(true)
-                endpoint(System.getenv("versionTrackerAPI"))
-                author(Properties.MOD_AUTHOR)
-                projectName("${Properties.MOD_NAME}-${project.name}")
-                homepage(Properties.CURSE_HOMEPAGE_LINK)
-                uid(System.getenv("versionTrackerKey"))
-            }
-
+        with(project.extensions.getByType(VersionTrackerExtension::class.java)) {
+            mcVersion.set(Versions.MINECRAFT)
+            homepage.set(Properties.CURSE_HOMEPAGE_LINK)
+            author.set(Properties.MOD_AUTHOR)
+            projectName.set(Properties.MOD_NAME)
         }
-//
-//        final modTemplate = project . extensions . findByType ModTemplateExtension
-//        modTemplate.mcVersion(ext['minecraft.version'])
-//        modTemplate.curseHomepage(ext['mod.curse'])
-//        modTemplate.displayName(ext['mod.name'])
-//        modTemplate.changelog.with {
-//            firstCommit(ext['mod.first-commit'])
-//            repo(ext['mod.repo'])
-//            changelogFile('changelog.md')
-//        }
-//        modTemplate.versionTracker.with {
-//            endpoint(System.getenv('versionTrackerAPI'))
-//            author(ext['mod.author'])
-//            projectName(ext['mod.name'])
-//            homepage(ext['mod.curse'])
-//        }
-//        modTemplate.webhook.with {
-//            url(System.getenv('discordCFWebhook'))
-//            curseId(ext['mod.curse-id'])
-//            avatarUrl(ext['mod.avatar'])
-//        }
     }
 
     private fun notCommon(project: Project): Boolean {

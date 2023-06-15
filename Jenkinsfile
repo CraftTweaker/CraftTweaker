@@ -18,6 +18,7 @@ pipeline {
     }
 
     environment {
+        modrinth_token = credentials('modrinth_token')
         curseforgeApiToken = credentials('curseforge_token')
         discordCFWebhook = credentials('discord_cf_webhook')
         versionTrackerKey = credentials('version_tracker_key')
@@ -45,12 +46,6 @@ pipeline {
             steps {
                 echo 'Running tests'
                 sh './gradlew check gameTest'
-            }
-        }
-
-        stage('Git Changelog') {
-            steps {
-                sh './gradlew genGitChangelog'
             }
         }
 
@@ -93,7 +88,7 @@ pipeline {
                                 echo 'Skipping CurseForge due to [skip deploy]'
                             } else {
                                 echo 'Deploying to CurseForge'
-                                sh './gradlew publishCurseForge postDiscord'
+                                sh './gradlew publishCurseForge modrinth postDiscord'
                             }
                         }
 

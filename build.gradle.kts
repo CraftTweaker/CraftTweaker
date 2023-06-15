@@ -1,6 +1,6 @@
 import com.blamejared.crafttweaker.gradle.Properties
 import com.blamejared.crafttweaker.gradle.Versions
-import com.blamejared.modtemplate.Utils
+import com.blamejared.gradle.mod.utils.GMUtils
 import com.diluv.schoomp.Webhook
 import com.diluv.schoomp.message.Message
 import com.diluv.schoomp.message.embed.Embed
@@ -20,10 +20,9 @@ buildscript {
 plugins {
     `java`
     idea
-    id("com.blamejared.modtemplate")
 }
 
-version = Utils.updatingVersion(Versions.MOD)
+version = GMUtils.updatingVersion(Versions.MOD)
 
 tasks.wrapper {
     //Define wrapper values here to not have to always do so when updating gradlew.properties
@@ -99,7 +98,7 @@ tasks.create("postDiscord") {
             }
 
             // Just use the Forge changelog for now, the files are the same anyway.
-            embed.addField("Changelog", Utils.getCIChangelog(project, Properties.GIT_REPO).take(1000), false)
+            embed.addField("Changelog", GMUtils.smallChangelog(project, Properties.GIT_REPO).take(1000), false)
 
             embed.color = 0xF16436
             message.addEmbed(embed)
