@@ -40,6 +40,7 @@
   "crafttweaker.command.description.info.entity" : "Activates or deactivates the entity reader. In entity info mode, right-clicking an entity will tell you it's name and data.",
   "crafttweaker.command.description.inventory" : "Outputs the names of the item in your inventory",
   "crafttweaker.command.description.inventory.tags" : "Outputs the tags of the items in your inventory",
+  "crafttweaker.command.description.inventory.registryNames" : "Outputs the registry names of the items in your inventory",
   "crafttweaker.command.description.issues" : "Opens a link to the issue tracker",
   "crafttweaker.command.description.log" : "Opens the log file",
   "crafttweaker.command.description.mods" : "Outputs the current modlist.",

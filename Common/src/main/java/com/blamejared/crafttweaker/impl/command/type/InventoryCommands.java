@@ -13,8 +13,10 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -63,6 +65,29 @@ public final class InventoryCommands {
                     
                     CraftTweakerAPI.LOGGER.info(inventoryContents);
                     CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.inventory.list.tag")), CommandUtilities.getFormattedLogFile())
+                            .withStyle(ChatFormatting.GREEN)), player);
+                    
+                    return Command.SINGLE_SUCCESS;
+                })
+        );
+        
+        handler.registerSubCommand(
+                "inventory",
+                "registryNames",
+                Component.translatable("crafttweaker.command.description.inventory.registryNames"),
+                builder -> builder.executes(context -> {
+                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    final IInventoryWrapper inventory = Services.PLATFORM.getPlayerInventory(player);
+                    final String inventoryContents = IntStream.range(0, inventory.getContainerSize())
+                            .mapToObj(inventory::getItem)
+                            .filter(it -> !it.isEmpty())
+                            .map(ItemStack::getItem)
+                            .map(Registry.ITEM::getKey)
+                            .map(ResourceLocation::toString)
+                            .collect(Collectors.joining("\n", "Inventory items\n", ""));
+                    
+                    CraftTweakerAPI.LOGGER.info(inventoryContents);
+                    CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.inventory.list")), CommandUtilities.getFormattedLogFile())
                             .withStyle(ChatFormatting.GREEN)), player);
                     
                     return Command.SINGLE_SUCCESS;
