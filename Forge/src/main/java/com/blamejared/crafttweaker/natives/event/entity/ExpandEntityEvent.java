@@ -9,10 +9,9 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @Document("forge/api/event/entity/EntityEvent")
-@NativeTypeRegistration(value = EntityEvent.class, zenCodeName = "crafttweaker.api.event.entity.EntityEvent")
+@NativeTypeRegistration(value = EntityEvent.class, zenCodeName = "crafttweaker.forge.api.event.entity.EntityEvent")
 public class ExpandEntityEvent {
     
-    @ZenCodeType.Method
     @ZenCodeType.Getter("entity")
     public static Entity getEntity(EntityEvent internal) {
         

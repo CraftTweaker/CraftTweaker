@@ -1,6 +1,10 @@
 package com.blamejared.crafttweaker.natives.event.entity.living;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.event.ForgeEventCancellationCarrier;
+import com.blamejared.crafttweaker.api.event.ZenEvent;
+import com.blamejared.crafttweaker.api.event.bus.ForgeEventBusWire;
+import com.blamejared.crafttweaker.api.event.bus.IEventBus;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -8,21 +12,26 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraftforge.event.entity.living.AnimalTameEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * @docEvent canceled the entity does not drop anything.
- */
 @ZenRegister
-@Document("forge/api/event/living/LivingDropsEvent")
-@NativeTypeRegistration(value = LivingDropsEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.LivingDropsEvent")
+@ZenEvent
+@Document("forge/api/event/entity/living/LivingDropsEvent")
+@NativeTypeRegistration(value = LivingDropsEvent.class, zenCodeName = "crafttweaker.forge.api.event.entity.living.LivingDropsEvent")
 public class ExpandLivingDropsEvent {
     
-    @ZenCodeType.Method
+    @ZenEvent.Bus
+    public static final IEventBus<LivingDropsEvent> BUS = IEventBus.cancelable(
+            LivingDropsEvent.class,
+            ForgeEventBusWire.of(),
+            ForgeEventCancellationCarrier.of()
+    );
+    
     @ZenCodeType.Getter("source")
     public static DamageSource getSource(LivingDropsEvent internal) {
         
@@ -34,7 +43,6 @@ public class ExpandLivingDropsEvent {
      * <p>
      * You should use the `drops` setter, `addDrop` or `removeDrop` method to change the drops.
      */
-    @ZenCodeType.Method
     @ZenCodeType.Getter("drops")
     public static List<IItemStack> getDrops(LivingDropsEvent internal) {
         
@@ -48,7 +56,6 @@ public class ExpandLivingDropsEvent {
     /**
      * Sets which items will be dropped.
      */
-    @ZenCodeType.Method
     @ZenCodeType.Setter("drops")
     public static void setDrops(LivingDropsEvent internal, List<IItemStack> drops) {
         
@@ -56,7 +63,6 @@ public class ExpandLivingDropsEvent {
         drops.forEach(drop -> addDrop(internal, drop));
     }
     
-    @ZenCodeType.Method
     @ZenCodeType.Getter("lootingLevel")
     public static int getLootingLevel(LivingDropsEvent internal) {
         
@@ -66,7 +72,6 @@ public class ExpandLivingDropsEvent {
     /**
      * Whether the Entity doing the drop has recently been damaged.
      */
-    @ZenCodeType.Method
     @ZenCodeType.Getter("isRecentlyHit")
     public static boolean isRecentlyHit(LivingDropsEvent internal) {
         

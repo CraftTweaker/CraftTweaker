@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker_annotations.annotations.BracketEnum;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraftforge.event.level.PistonEvent;
+import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @Document("forge/api/event/block/piston/PistonMoveType")
@@ -12,6 +13,10 @@ import net.minecraftforge.event.level.PistonEvent;
 @BracketEnum("forge:event/piston/move_type")
 public class ExpandPistonEventMoveType {
     
-    // There is a public field, but like, this == <constant:forge:event/piston/move_type:extend> does the same thing.
+    @ZenCodeType.Getter("extend")
+    public static boolean isExtend(PistonEvent.PistonMoveType internal) {
+        
+        return internal.isExtend;
+    }
     
 }

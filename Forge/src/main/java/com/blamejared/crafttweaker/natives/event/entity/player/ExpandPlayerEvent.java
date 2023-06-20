@@ -9,13 +9,11 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @Document("forge/api/event/entity/player/PlayerEvent")
-@NativeTypeRegistration(value = PlayerEvent.class, zenCodeName = "crafttweaker.api.event.entity.player.PlayerEvent")
+@NativeTypeRegistration(value = PlayerEvent.class, zenCodeName = "crafttweaker.forge.api.event.entity.player.PlayerEvent")
 public class ExpandPlayerEvent {
     
-    @ZenCodeType.Method
-    @ZenCodeType.Getter("player")
-    @ZenCodeType.Nullable
-    public static Player getPlayer(PlayerEvent internal) {
+    @ZenCodeType.Getter("entity")
+    public static Player getEntity(PlayerEvent internal) {
         
         return internal.getEntity();
     }

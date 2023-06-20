@@ -1,45 +1,50 @@
 package com.blamejared.crafttweaker.natives.event.entity.living;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.event.ForgeEventCancellationCarrier;
+import com.blamejared.crafttweaker.api.event.ZenEvent;
+import com.blamejared.crafttweaker.api.event.bus.ForgeEventBusWire;
+import com.blamejared.crafttweaker.api.event.bus.IEventBus;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
-/**
- * @docEvent canceled the Entity does not fall (no fall damage is inflicted).
- */
 @ZenRegister
+@ZenEvent
 @Document("forge/api/event/entity/living/LivingFallEvent")
-@NativeTypeRegistration(value = LivingFallEvent.class, zenCodeName = "crafttweaker.api.event.living.LivingFallEvent")
+@NativeTypeRegistration(value = LivingFallEvent.class, zenCodeName = "crafttweaker.forge.api.event.entity.living.LivingFallEvent")
 public class ExpandLivingFallEvent {
     
-    @ZenCodeType.Method
+    @ZenEvent.Bus
+    public static final IEventBus<LivingFallEvent> BUS = IEventBus.cancelable(
+            LivingFallEvent.class,
+            ForgeEventBusWire.of(),
+            ForgeEventCancellationCarrier.of()
+    );
+    
     @ZenCodeType.Getter("distance")
     public static float getDistance(LivingFallEvent internal) {
         
         return internal.getDistance();
     }
     
-    @ZenCodeType.Method
+    @ZenCodeType.Setter("distance")
+    public static void setDistance(LivingFallEvent internal, float distance) {
+        
+        internal.setDistance(distance);
+    }
+    
     @ZenCodeType.Getter("damageMultiplier")
     public static float getDamageMultiplier(LivingFallEvent internal) {
         
         return internal.getDamageMultiplier();
     }
     
-    @ZenCodeType.Method
-    @ZenCodeType.Setter("distance")
-    public static void setDistance(LivingFallEvent internal, int value) {
-        
-        internal.setDistance(value);
-    }
-    
-    @ZenCodeType.Method
     @ZenCodeType.Setter("damageMultiplier")
-    public static void setDamageMultiplier(LivingFallEvent internal, int value) {
+    public static void setDamageMultiplier(LivingFallEvent internal, float damageMultiplier) {
         
-        internal.setDamageMultiplier(value);
+        internal.setDamageMultiplier(damageMultiplier);
     }
     
 }

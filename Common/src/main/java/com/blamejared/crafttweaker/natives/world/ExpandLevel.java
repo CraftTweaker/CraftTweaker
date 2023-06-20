@@ -12,14 +12,13 @@ import com.google.common.base.Suppliers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -145,39 +144,6 @@ public class ExpandLevel {
     public static boolean isThundering(Level internal) {
         
         return internal.isThundering();
-    }
-    
-    /**
-     * Checks if hardcore mode is enabled.
-     *
-     * @return Whether hardcore mode is enabled.
-     */
-    @ZenCodeType.Getter("hardcore")
-    public static boolean isHardcore(Level internal) {
-        
-        return internal.getLevelData().isHardcore();
-    }
-    
-    /**
-     * Gets the difficulty setting for the world.
-     *
-     * @return The difficulty setting for the world.
-     */
-    @ZenCodeType.Getter("difficulty")
-    public static String getDifficulty(Level internal) {
-        
-        return internal.getLevelData().getDifficulty().getKey();
-    }
-    
-    /**
-     * Checks if the difficulty of the world has been locked.
-     *
-     * @return Whether the world difficulty has been locked.
-     */
-    @ZenCodeType.Getter("difficultyLocked")
-    public static boolean isDifficultyLocked(Level internal) {
-        
-        return internal.getLevelData().isDifficultyLocked();
     }
     
     /**
@@ -388,27 +354,6 @@ public class ExpandLevel {
     }
     
     /**
-     * Triggers a predetermined event on the client. Using this on a server
-     * or integrated server will send the event to all nearby players.
-     *
-     * @param excluded An excluded player who will not receive the event.
-     * @param eventId  The ID of the event to play.
-     * @param pos      The position of the event.
-     * @param data     Four bytes of additional data encoded as an integer. This
-     *                 is generally unused.
-     *
-     * @docParam excluded player
-     * @docParam eventId 2005
-     * @docParam pos new BlockPos(0, 1, 2)
-     * @docParam data 0
-     */
-    @ZenCodeType.Method
-    public static void levelEvent(Level internal, @ZenCodeType.Nullable Player excluded, int eventId, BlockPos pos, int data) {
-        
-        internal.levelEvent(excluded, eventId, pos, data);
-    }
-    
-    /**
      * Checks if the block at a given position is empty.
      *
      * @param pos The position to look up.
@@ -526,12 +471,6 @@ public class ExpandLevel {
     public static boolean addFreshEntity(Level internal, Entity entity) {
         
         return internal.addFreshEntity(entity);
-    }
-    
-    @ZenCodeType.Getter("random")
-    public static RandomSource getRandom(Level internal) {
-        
-        return internal.random;
     }
     
     /**

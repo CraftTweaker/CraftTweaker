@@ -1,30 +1,29 @@
 package com.blamejared.crafttweaker.natives.event.entity.living;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.event.ForgeEventCancellationCarrier;
+import com.blamejared.crafttweaker.api.event.ZenEvent;
+import com.blamejared.crafttweaker.api.event.bus.ForgeEventBusWire;
+import com.blamejared.crafttweaker.api.event.bus.IEventBus;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
-/**
- * This event is fired just before an entity is killed. This allows you to run
- * additional logic or prevent the death.
- *
- * @docParam this event
- * @docEvent canceled the entity does not die.
- */
 @ZenRegister
+@ZenEvent
 @Document("forge/api/event/entity/living/LivingDeathEvent")
-@NativeTypeRegistration(value = LivingDeathEvent.class, zenCodeName = "crafttweaker.api.event.entity.living.LivingDeathEvent")
+@NativeTypeRegistration(value = LivingDeathEvent.class, zenCodeName = "crafttweaker.forge.api.event.entity.living.LivingDeathEvent")
 public class ExpandLivingDeathEvent {
     
-    /**
-     * Gets the source of the damage that killed the entity.
-     *
-     * @return The source of the damage that killed the entity.
-     */
-    @ZenCodeType.Method
+    @ZenEvent.Bus
+    public static final IEventBus<LivingDeathEvent> BUS = IEventBus.cancelable(
+            LivingDeathEvent.class,
+            ForgeEventBusWire.of(),
+            ForgeEventCancellationCarrier.of()
+    );
+    
     @ZenCodeType.Getter("source")
     public static DamageSource getSource(LivingDeathEvent internal) {
         

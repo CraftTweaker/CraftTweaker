@@ -1,0 +1,33 @@
+package com.blamejared.crafttweaker.natives.event.entity.teleport;
+
+import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.event.ForgeEventCancellationCarrier;
+import com.blamejared.crafttweaker.api.event.ZenEvent;
+import com.blamejared.crafttweaker.api.event.bus.ForgeEventBusWire;
+import com.blamejared.crafttweaker.api.event.bus.IEventBus;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.event.entity.EntityTeleportEvent;
+import org.openzen.zencode.java.ZenCodeType;
+
+@ZenRegister
+@ZenEvent
+@Document("forge/api/event/entity/teleport/EnderEntityTeleportEvent")
+@NativeTypeRegistration(value = EntityTeleportEvent.EnderEntity.class, zenCodeName = "crafttweaker.forge.api.event.entity.teleport.EnderEntityTeleportEvent")
+public class ExpandEnderEntityTeleportEvent {
+    
+    @ZenEvent.Bus
+    public static final IEventBus<EntityTeleportEvent.EnderEntity> BUS = IEventBus.cancelable(
+            EntityTeleportEvent.EnderEntity.class,
+            ForgeEventBusWire.of(),
+            ForgeEventCancellationCarrier.of()
+    );
+    
+    @ZenCodeType.Getter("entity")
+    public static LivingEntity getEntity(EntityTeleportEvent.EnderEntity internal) {
+        
+        return internal.getEntityLiving();
+    }
+    
+}

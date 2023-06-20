@@ -8,7 +8,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @Document("forge/api/event/Event")
-@NativeTypeRegistration(value = Event.class, zenCodeName = "crafttweaker.api.event.Event")
+@NativeTypeRegistration(value = Event.class, zenCodeName = "crafttweaker.forge.api.event.Event")
 public class ExpandEvent {
     
     @ZenCodeType.Method
@@ -32,6 +32,15 @@ public class ExpandEvent {
         internal.setCanceled(cancel);
     }
     
+    /**
+     * Cancels the event. Same as `setCanceled(true)`
+     */
+    @ZenCodeType.Method
+    public static void cancel(Event internal) {
+        
+        setCanceled(internal, true);
+    }
+    
     @ZenCodeType.Method
     @ZenCodeType.Getter("hasResult")
     public static boolean hasResult(Event internal) {
@@ -51,15 +60,6 @@ public class ExpandEvent {
     public static void setResult(Event internal, Event.Result result) {
         
         internal.setResult(result);
-    }
-    
-    /**
-     * Cancels the event. Same as `setCanceled(true)`
-     */
-    @ZenCodeType.Method
-    public static void cancel(Event internal) {
-        
-        setCanceled(internal, true);
     }
     
     /**

@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.natives.world;
 
-
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.BracketEnum;
 import com.blamejared.crafttweaker_annotations.annotations.Document;

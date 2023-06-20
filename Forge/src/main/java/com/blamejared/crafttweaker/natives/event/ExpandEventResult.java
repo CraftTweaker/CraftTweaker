@@ -8,7 +8,7 @@ import net.minecraftforge.eventbus.api.Event;
 
 @ZenRegister
 @Document("forge/api/event/EventResult")
-@NativeTypeRegistration(value = Event.Result.class, zenCodeName = "crafttweaker.api.event.EventResult")
+@NativeTypeRegistration(value = Event.Result.class, zenCodeName = "crafttweaker.forge.api.event.EventResult")
 @BracketEnum("forge:event/result")
 public class ExpandEventResult {
 
