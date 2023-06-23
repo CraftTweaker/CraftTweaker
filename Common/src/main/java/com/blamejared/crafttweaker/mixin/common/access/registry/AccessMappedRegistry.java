@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.mixin;
+package com.blamejared.crafttweaker.mixin.common.access.registry;
 
 import net.minecraft.core.MappedRegistry;
 import org.spongepowered.asm.mixin.Mixin;

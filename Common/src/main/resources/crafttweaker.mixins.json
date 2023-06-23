@@ -5,8 +5,8 @@
   "refmap": "crafttweaker.refmap.json",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "AccessMappedRegistry",
-    "AccessRegistrySynchronization",
+    "common.access.registry.AccessMappedRegistry",
+    "common.access.registry.AccessRegistrySynchronization",
     "common.access.block.AccessAbstractCauldronBlock",
     "common.access.block.AccessBlockBehaviour",
     "common.access.block.AccessBlockStateBase",

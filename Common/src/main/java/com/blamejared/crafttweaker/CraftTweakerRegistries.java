@@ -4,7 +4,7 @@ package com.blamejared.crafttweaker;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.condition.serializer.*;
 import com.blamejared.crafttweaker.api.ingredient.transform.serializer.*;
-import com.blamejared.crafttweaker.mixin.AccessMappedRegistry;
+import com.blamejared.crafttweaker.mixin.common.access.registry.AccessMappedRegistry;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.core.*;
 import net.minecraft.core.registries.BuiltInRegistries;

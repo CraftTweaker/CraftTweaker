@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker.api.ingredient.condition.serializer.IIngredie
 import com.blamejared.crafttweaker.api.ingredient.transform.serializer.IIngredientTransformerSerializer;
 import com.blamejared.crafttweaker.api.ingredient.type.*;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
-import com.blamejared.crafttweaker.mixin.AccessRegistrySynchronization;
+import com.blamejared.crafttweaker.mixin.common.access.registry.AccessRegistrySynchronization;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.core.*;
