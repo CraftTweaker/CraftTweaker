@@ -5,7 +5,9 @@ import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
 import com.blamejared.crafttweaker.api.action.internal.CraftTweakerAction;
 import com.blamejared.crafttweaker.api.event.bus.IEventBus;
 import com.blamejared.crafttweaker.api.event.bus.IHandlerToken;
+import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.google.common.reflect.TypeToken;
+import org.apache.logging.log4j.Logger;
 
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -62,6 +64,12 @@ public final class ActionRegisterEvent<T> extends CraftTweakerAction implements 
     public String describeUndo() {
         
         return "Unregistering event listener for " + this.typeOfT;
+    }
+    
+    @Override
+    public boolean shouldApplyOn(IScriptLoadSource source, Logger logger) {
+        
+        return true;
     }
     
 }
