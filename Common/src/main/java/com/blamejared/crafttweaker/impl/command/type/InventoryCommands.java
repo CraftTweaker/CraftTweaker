@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
 import com.mojang.brigadier.Command;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -81,11 +82,11 @@ public final class InventoryCommands {
                             .mapToObj(inventory::getItem)
                             .filter(it -> !it.isEmpty())
                             .map(ItemStack::getItem)
-                            .map(Registry.ITEM::getKey)
+                            .map(BuiltInRegistries.ITEM::getKey)
                             .map(ResourceLocation::toString)
                             .collect(Collectors.joining("\n", "Inventory items\n", ""));
                     
-                    CraftTweakerAPI.LOGGER.info(inventoryContents);
+                    CommandUtilities.COMMAND_LOGGER.info(inventoryContents);
                     CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.inventory.list")), CommandUtilities.getFormattedLogFile())
                             .withStyle(ChatFormatting.GREEN)), player);
                     
