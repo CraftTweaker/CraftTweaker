@@ -33,11 +33,7 @@ public class ExpandItemTooltipEvent {
     @ZenEvent.Bus
     public static final IEventBus<ItemTooltipEvent> BUS = IEventBus.direct(
             ItemTooltipEvent.class,
-            CommonAdaptingEventBusWire.of(
-                    ForgeEventBusWire.of(),
-                    com.blamejared.crafttweaker.api.event.type.ItemTooltipEvent.BUS,
-                    (ItemTooltipEvent e) -> com.blamejared.crafttweaker.api.event.type.ItemTooltipEvent.of(getItemStack(e), getFlags(e), getToolTip(e))
-            )
+            ForgeEventBusWire.of()
     );
     
     /**
