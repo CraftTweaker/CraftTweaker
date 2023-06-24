@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 @ZenRegister
-@Preprocessor // TODO("Does it make sense to keep it given we have priority?")
+@Preprocessor
 public final class LoadLastPreprocessor implements IPreprocessor {
     
     public static final LoadLastPreprocessor INSTANCE = new LoadLastPreprocessor();

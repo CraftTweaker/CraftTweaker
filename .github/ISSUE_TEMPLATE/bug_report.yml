@@ -53,6 +53,7 @@ body:
                 
                 If you version isn't listed, then select "other" and list your version in the issue description.
             options:
+                - 1.19.3
                 - 1.19
                 - 1.18
                 - 1.16

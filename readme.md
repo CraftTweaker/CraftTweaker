@@ -3,8 +3,8 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [![GitHub issues](https://img.shields.io/github/issues/CraftTweaker/CraftTweaker?style=flat-square)](https://github.com/CraftTweaker/CraftTweaker/issues)
-[![GitHub license](https://img.shields.io/github/license/CraftTweaker/CraftTweaker?color=0690ff&style=flat-square)](https://github.com/CraftTweaker/CraftTweaker/blob/1.19/LICENSE)
-[![Jenkins](https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fci.blamejared.com%2Fjob%2FJared%2Fjob%2FMinecraft%2520Mods%2Fjob%2FCraftTweaker%2Fjob%2F1.19%2F&style=flat-square)](https://ci.blamejared.com/job/Jared/job/Minecraft%20Mods/job/CraftTweaker/job/1.19/)
+[![GitHub license](https://img.shields.io/github/license/CraftTweaker/CraftTweaker?color=0690ff&style=flat-square)](https://github.com/CraftTweaker/CraftTweaker/blob/1.19.3/LICENSE)
+[![Jenkins](https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fci.blamejared.com%2Fjob%2FJared%2Fjob%2FMinecraft%2520Mods%2Fjob%2FCraftTweaker%2Fjob%2F1.19.3%2F&style=flat-square)](https://ci.blamejared.com/job/Jared/job/Minecraft%20Mods/job/CraftTweaker/job/1.19.3/)
 [![Discord](https://img.shields.io/badge/Discord-%237289DA?style=flat-square&logo=Discord&logoColor=white)](https://discord.blamejared.com/)
 [![](http://cf.way2muchnoise.eu/crafttweaker.svg?badge_style=flat)](https://minecraft.curseforge.com/projects/crafttweaker)
 
@@ -28,7 +28,7 @@ If you're running into a bug or have a feature request, please don't be afraid t
 
 ## License
 
-Distributed under the MIT License. See the [LICENSE](https://github.com/CraftTweaker/CraftTweaker/blob/1.19/LICENSE) file for more information.
+Distributed under the MIT License. See the [LICENSE](https://github.com/CraftTweaker/CraftTweaker/blob/1.19.3/LICENSE) file for more information.
 
 ## Setup
 
@@ -80,7 +80,6 @@ dependencies {
 
 
 ```groovy
-dependencies {
     compileOnly(fg.deobf('com.blamejared.crafttweaker:CraftTweaker-forge-1.19.3:[VERSION]'))
     // Example:
     // compileOnly(fg.deobf('com.blamejared.crafttweaker:CraftTweaker-forge-1.19.3:11.0.0'))
