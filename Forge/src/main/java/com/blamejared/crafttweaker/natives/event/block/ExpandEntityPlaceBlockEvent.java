@@ -33,11 +33,12 @@ public class ExpandEntityPlaceBlockEvent {
         return internal.getEntity();
     }
     
-    @ZenCodeType.Getter("blockSnapshot")
-    public static BlockSnapshot getBlockSnapshot(BlockEvent.EntityPlaceEvent internal) {
-        
-        return internal.getBlockSnapshot();
-    }
+    //TODO expand
+//    @ZenCodeType.Getter("blockSnapshot")
+//    public static BlockSnapshot getBlockSnapshot(BlockEvent.EntityPlaceEvent internal) {
+//
+//        return internal.getBlockSnapshot();
+//    }
     
     @ZenCodeType.Getter("placedBlock")
     public static BlockState getPlacedBlock(BlockEvent.EntityPlaceEvent internal) {

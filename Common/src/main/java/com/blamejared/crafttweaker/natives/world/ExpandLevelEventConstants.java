@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.LevelEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
- * This is not an event that you can listen to, this just holds fields for use in {@link ExpandLevelAccessor#levelEvent(LevelAccessor, int, BlockPos, int)}
+ * This is not an event that you can listen to, this just holds fields for use in {@link LevelAccessor#levelEvent(int, BlockPos, int)}
  */
 @ZenRegister
 @Document("vanilla/api/world/LevelEventConstants")

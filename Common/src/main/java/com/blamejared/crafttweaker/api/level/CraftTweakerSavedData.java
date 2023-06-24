@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Data that is saved and loaded with the world when it is saved and loaded from disk.
  *
- * <p>Saved Data is only on the server side, so you can only get it from a {@link com.blamejared.crafttweaker.natives.world.ExpandServerLevel}.</p>
+ * <p>Saved Data is only on the server side, so you can only get it from a {@link net.minecraft.server.level.ServerLevel}.</p>
  *
  * @docParam this level.customData
  */

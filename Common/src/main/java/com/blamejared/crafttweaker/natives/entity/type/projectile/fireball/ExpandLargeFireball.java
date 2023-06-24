@@ -6,8 +6,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeConstructor;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.LargeFireball;
-
-import java.util.logging.Level;
+import net.minecraft.world.level.Level;
 
 @ZenRegister
 @Document("vanilla/api/entity/type/projectile/LargeFireball")
