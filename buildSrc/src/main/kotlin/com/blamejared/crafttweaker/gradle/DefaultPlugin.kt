@@ -229,7 +229,7 @@ class DefaultPlugin : Plugin<Project> {
 
     private fun applyDependencies(project: Project) {
         val implementation = project.configurations.getByName("implementation")
-        val gametestLibrary = project.configurations.getByName("gametestLibrary")
+        val gametestImplementation = project.configurations.getByName("gametestImplementation")
 
         project.configurations.getByName("annotationProcessor").dependencies.add(project.dependencies.create("com.blamejared.crafttweaker:Crafttweaker_Annotation_Processors:${Versions.CRAFTTWEAKER_ANNOTATION_PROCESSOR}"))
 
@@ -240,12 +240,12 @@ class DefaultPlugin : Plugin<Project> {
         Dependencies.ZENCODE.forEach {
             val projectDep = project.dependencies.project(it)
             implementation.dependencies.add(projectDep)
-            gametestLibrary.dependencies.add(projectDep)
+            gametestImplementation.dependencies.add(projectDep)
         }
 
         Dependencies.ZENCODE_TEST.forEach {
             val depJava = depJava(project, it)
-            gametestLibrary.dependencies.add(project.dependencies.create(depJava.sourceSets.getByName("test").output))
+            gametestImplementation.dependencies.add(project.dependencies.create(depJava.sourceSets.getByName("test").output))
         }
 
     }

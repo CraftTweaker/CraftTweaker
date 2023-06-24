@@ -39,6 +39,15 @@ minecraft {
     accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg"))
 
     runs {
+        all {
+            lazyToken("minecraft_classpath") {
+                configurations.library.get().copyRecursive().resolve()
+                        .joinToString(File.pathSeparator) { it.absolutePath }
+
+                configurations.gametestLibrary.get().copyRecursive().resolve()
+                        .joinToString(File.pathSeparator) { it.absolutePath }
+            }
+        }
         create("client") {
             taskName("Client")
             workingDirectory(project.file("run"))
