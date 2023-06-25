@@ -15,6 +15,7 @@ import com.blamejared.crafttweaker.api.data.visitor.DataToJsonStringVisitor;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
+import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
@@ -96,7 +97,7 @@ public enum GenericRecipesManager {
     public List<Recipe<?>> getRecipesByOutput(IIngredient output) {
         
         return getAllRecipes().stream()
-                .filter(iRecipe -> output.matches(IItemStack.of(iRecipe.getResultItem())))
+                .filter(recipe -> output.matches(IItemStack.of(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem))))
                 .collect(Collectors.toList());
     }
     

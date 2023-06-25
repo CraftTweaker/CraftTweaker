@@ -4,6 +4,8 @@ import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManage
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.crafting.RecipeManager;
 
+import java.util.function.Function;
+
 // TODO("Better package")
 public interface IAccessibleElementsProvider {
     
@@ -14,6 +16,10 @@ public interface IAccessibleElementsProvider {
     void recipeManager(final RecipeManager manager);
     
     RegistryAccess registryAccess();
+    
+    default <T> T registryAccess(Function<RegistryAccess, T> func){
+        return func.apply(registryAccess());
+    }
     
     boolean hasRegistryAccess();
     

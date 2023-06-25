@@ -6,17 +6,17 @@ import com.blamejared.crafttweaker.api.event.bus.ForgeEventBusWire;
 import com.blamejared.crafttweaker.api.event.bus.IEventBus;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
 
 @ZenRegister
 @ZenEvent
-@Document("forge/api/event/entity/living/spawn/LivingAllowDespawnEvent")
-@NativeTypeRegistration(value = LivingSpawnEvent.AllowDespawn.class, zenCodeName = "crafttweaker.forge.api.event.entity.living.spawn.LivingAllowDespawnEvent")
-public class ExpandLivingAllowDespawnEvent {
+@Document("forge/api/event/entity/living/spawn/AllowMobDespawnEvent")
+@NativeTypeRegistration(value = MobSpawnEvent.AllowDespawn.class, zenCodeName = "crafttweaker.forge.api.event.entity.living.spawn.AllowMobDespawnEvent")
+public class ExpandMobAllowDespawnEvent {
     
     @ZenEvent.Bus
-    public static final IEventBus<LivingSpawnEvent.AllowDespawn> BUS = IEventBus.direct(
-            LivingSpawnEvent.AllowDespawn.class,
+    public static final IEventBus<MobSpawnEvent.AllowDespawn> BUS = IEventBus.direct(
+            MobSpawnEvent.AllowDespawn.class,
             ForgeEventBusWire.of()
     );
     

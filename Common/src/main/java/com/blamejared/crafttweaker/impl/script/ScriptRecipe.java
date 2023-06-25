@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.script;
 
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -31,7 +32,7 @@ public class ScriptRecipe implements Recipe<Container> {
     }
     
     @Override
-    public ItemStack assemble(Container container) {
+    public ItemStack assemble(Container var1, RegistryAccess var2) {
         
         return ItemStack.EMPTY;
     }
@@ -43,7 +44,7 @@ public class ScriptRecipe implements Recipe<Container> {
     }
     
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess var1) {
         
         return ItemStack.EMPTY;
     }

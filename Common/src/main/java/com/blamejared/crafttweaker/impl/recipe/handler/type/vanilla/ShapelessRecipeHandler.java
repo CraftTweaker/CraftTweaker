@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.api.util.StringUtil;
+import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
@@ -29,7 +30,7 @@ public final class ShapelessRecipeHandler implements IRecipeHandler<ShapelessRec
         return String.format(
                 "craftingTable.addShapeless(%s, %s, %s);",
                 StringUtil.quoteAndEscape(recipe.getId()),
-                ItemStackUtil.getCommandString(recipe.getResultItem()),
+                ItemStackUtil.getCommandString(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)),
                 recipe.getIngredients().stream()
                         .map(IIngredient::fromIngredient)
                         .map(IIngredient::getCommandString)
@@ -53,7 +54,7 @@ public final class ShapelessRecipeHandler implements IRecipeHandler<ShapelessRec
                 .with(BuiltinRecipeComponents.Metadata.GROUP, recipe.getGroup())
                 .with(BuiltinRecipeComponents.Metadata.CRAFTING_BOOK_CATEGORY, recipe.category())
                 .with(BuiltinRecipeComponents.Input.INGREDIENTS, ingredients)
-                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(recipe.getResultItem()))
+                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)))
                 .build();
         return Optional.of(decomposedRecipe);
     }

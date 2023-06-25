@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.impl.command.type.conflict;
 
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
+import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -37,7 +38,7 @@ final class DescriptiveFilter implements Predicate<Map.Entry<ResourceLocation, R
     
     static DescriptiveFilter of(final ItemStack stack) {
         
-        return new DescriptiveFilter(it -> ItemStackUtil.areStacksTheSame(it.getResultItem(), stack), Component.translatable("crafttweaker.command.conflict.description.output", ItemStackUtil.getCommandString(stack)));
+        return new DescriptiveFilter(it -> ItemStackUtil.areStacksTheSame(AccessibleElementsProvider.get().registryAccess(it::getResultItem), stack), Component.translatable("crafttweaker.command.conflict.description.output", ItemStackUtil.getCommandString(stack)));
     }
     
     @Override

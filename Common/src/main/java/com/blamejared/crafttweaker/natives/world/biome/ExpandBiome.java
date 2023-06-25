@@ -29,36 +29,6 @@ public class ExpandBiome {
         return internal.getWaterFogColor();
     }
     
-    @ZenCodeType.Getter("downfall")
-    public static float getDownFall(Biome internal) {
-        
-        return internal.getDownfall();
-    }
-    
-    @ZenCodeType.Getter("isHumid")
-    public static boolean isHumid(Biome internal) {
-        
-        return internal.isHumid();
-    }
-    
-    @ZenCodeType.Getter("doesRain")
-    public static boolean doesRain(Biome internal) {
-        
-        return internal.getPrecipitation() == Biome.Precipitation.RAIN;
-    }
-    
-    @ZenCodeType.Getter("doesSnow")
-    public static boolean doesSnow(Biome internal) {
-        
-        return internal.getPrecipitation() == Biome.Precipitation.SNOW;
-    }
-    
-    @ZenCodeType.Getter("rainType")
-    public static String getRainType(Biome internal) {
-        
-        return internal.getPrecipitation().getName();
-    }
-    
     @ZenCodeType.Method
     public static boolean shouldFreeze(Biome internal, Level world, BlockPos pos) {
         

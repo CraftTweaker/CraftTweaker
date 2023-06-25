@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.natives.entity.effect;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,7 +15,7 @@ import org.openzen.zencode.java.ZenCodeType;
 public class ExpandMobEffectUtil {
     
     @ZenCodeType.StaticExpansionMethod
-    public static String formatDuration(MobEffectInstance instance, float durationFactor) {
+    public static Component formatDuration(MobEffectInstance instance, float durationFactor) {
         
         return MobEffectUtil.formatDuration(instance, durationFactor);
     }

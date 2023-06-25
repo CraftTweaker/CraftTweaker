@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -15,15 +15,15 @@ import org.openzen.zencode.java.ZenCodeType;
 public class ExpandArmorMaterial {
     
     @ZenCodeType.Method
-    public static int getDurabilityForSlot(ArmorMaterial internal, EquipmentSlot slot) {
+    public static int getDurabilityForType(ArmorMaterial internal, ArmorItem.Type type) {
         
-        return internal.getDurabilityForSlot(slot);
+        return internal.getDurabilityForType(type);
     }
     
     @ZenCodeType.Method
-    public static int getDefenseForSlot(ArmorMaterial internal, EquipmentSlot slot) {
+    public static int getDefenseForType(ArmorMaterial internal, ArmorItem.Type type) {
         
-        return internal.getDefenseForSlot(slot);
+        return internal.getDefenseForType(type);
     }
     
     @ZenCodeType.Method

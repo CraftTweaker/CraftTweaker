@@ -17,7 +17,7 @@ dependencies {
     minecraft("com.mojang:minecraft:${Versions.MINECRAFT}")
     mappings(loom.layered {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${Versions.MINECRAFT}:${Versions.PARCHMENT}@zip")
+        parchment("org.parchmentmc.data:parchment-1.19.3:${Versions.PARCHMENT}@zip")
     })
     implementation("org.jetbrains:annotations:23.0.0")
     modImplementation("net.fabricmc:fabric-loader:${Versions.FABRIC_LOADER}")
@@ -34,7 +34,7 @@ dependencies {
     implementation("org.reflections:reflections:${Versions.REFLECTIONS}")?.let { include(it) }
     implementation("org.javassist:javassist:${Versions.JAVA_ASSIST}")?.let { include(it) } // required for reflections
 
-    modImplementation("com.faux.fauxcustomentitydata:FauxCustomEntityData-fabric-1.19.3:${Versions.FAUX_CUSTOM_ENTITY_DATA}")
+    modImplementation("com.faux.fauxcustomentitydata:FauxCustomEntityData-fabric-1.19.4:${Versions.FAUX_CUSTOM_ENTITY_DATA}")
 
     gametestCompileOnly(files(project(":Common").dependencyProject.sourceSets.gametest.get().java.srcDirs))
     Dependencies.ZENCODE_TEST.forEach {

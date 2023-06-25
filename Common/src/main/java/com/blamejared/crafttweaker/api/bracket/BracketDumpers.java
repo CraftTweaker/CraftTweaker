@@ -131,16 +131,6 @@ public class BracketDumpers {
     }
     
     @ZenCodeType.Method
-    @BracketDumper("damagesource")
-    public static Collection<String> getDamageSourceDump() {
-        
-        return ExpandDamageSource.PRE_REGISTERED_DAMAGE_SOURCES.keySet()
-                .stream()
-                .map("<damagesource:%s>"::formatted)
-                .collect(Collectors.toList());
-    }
-    
-    @ZenCodeType.Method
     @BracketDumper("soundevent")
     public static Collection<String> getSoundEventDump() {
         

@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction1D;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipe;
+import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -77,7 +78,7 @@ public class CTShapelessRecipeSerializer implements RecipeSerializer<CTShapeless
         for(Ingredient ingredient : recipe.getIngredients()) {
             ingredient.toNetwork(buffer);
         }
-        buffer.writeItem(recipe.getResultItem());
+        buffer.writeItem(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem));
     }
     
     public CTShapelessRecipe makeRecipe(ResourceLocation recipeId, IItemStack output, IIngredient[] ingredients, @javax.annotation.Nullable RecipeFunction1D function) {

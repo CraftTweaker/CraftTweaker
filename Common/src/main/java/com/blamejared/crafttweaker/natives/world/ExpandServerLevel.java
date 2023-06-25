@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.levelgen.WorldgenRandom;
@@ -166,6 +167,12 @@ public class ExpandServerLevel {
     public static List<Entity> getEntities(ServerLevel internal, Predicate<Entity> predicate, @ZenCodeType.Optional EntityType<Entity> type) {
         
         return GenericUtil.uncheck(internal.getEntities(type, predicate));
+    }
+    
+    @ZenCodeType.Getter("damageSources")
+    public static DamageSources damageSources(ServerLevel level) {
+        
+        return level.damageSources();
     }
     
 }

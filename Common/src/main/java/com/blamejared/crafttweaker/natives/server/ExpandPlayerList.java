@@ -16,9 +16,9 @@ public class ExpandPlayerList {
     
     @ZenCodeType.Method
     @ZenCodeType.Nullable
-    public static ServerPlayer getPlayerByName(PlayerList internal, String $$0) {
+    public static ServerPlayer getPlayerByName(PlayerList internal, String name) {
         
-        return internal.getPlayerByName($$0);
+        return internal.getPlayerByName(name);
     }
     
     @ZenCodeType.Method

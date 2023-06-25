@@ -21,11 +21,6 @@ import org.openzen.zencode.java.ZenCodeType;
                 @NativeConstructor.ConstructorParameter(name = "z", type = int.class, description = "The z value of the blockpos", examples = "2")
         }, description = "Creates a new BlockPos using the provided values."),
         @NativeConstructor(value = {
-                @NativeConstructor.ConstructorParameter(name = "x", type = double.class, description = "The x value of the blockpos", examples = "0.25"),
-                @NativeConstructor.ConstructorParameter(name = "y", type = double.class, description = "The y value of the blockpos", examples = "1.84"),
-                @NativeConstructor.ConstructorParameter(name = "z", type = double.class, description = "The z value of the blockpos", examples = "2.34")
-        }, description = "Creates a new BlockPos using the provided values. Note, the values will be floored down, providing 0.85 is the same as providing 0."),
-        @NativeConstructor(value = {
                 @NativeConstructor.ConstructorParameter(name = "vector", type = Vec3.class, description = "The vector to copy the values of.", examples = "new Vec3(0, 1, 2)"),
         }, description = "Creates a new BlockPos using the values of the given vector. Note, the values will be floored down, providing 0.85 is the same as providing 0."),
         @NativeConstructor(value = {
@@ -37,16 +32,17 @@ import org.openzen.zencode.java.ZenCodeType;
 })
 public class ExpandBlockPos {
     
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static BlockPos containing(double x, double y, double z) {
+        
+        return BlockPos.containing(x, y, z);
+    }
+    
     @ZenCodeType.Method
     public static long asLong(BlockPos internal) {
         
         return internal.asLong();
-    }
-    
-    @ZenCodeType.Method
-    public static BlockPos offset(BlockPos internal, double x, double y, double z) {
-        
-        return internal.offset(x, y, z);
     }
     
     @ZenCodeType.Method

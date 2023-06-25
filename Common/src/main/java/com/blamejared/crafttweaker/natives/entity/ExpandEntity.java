@@ -552,11 +552,10 @@ public class ExpandEntity {
         return internal.isVehicle();
     }
     
-    @ZenCodeType.Method
-    @ZenCodeType.Getter("rideableUnderWater")
-    public static boolean rideableUnderWater(Entity internal) {
+    @ZenCodeType.Getter("dismountsUnderwater")
+    public static boolean dismountsUnderwater(Entity internal) {
         
-        return internal.rideableUnderWater();
+        return internal.dismountsUnderwater();
     }
     
     @ZenCodeType.Method

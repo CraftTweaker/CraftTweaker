@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.IngredientConverter;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.core.NonNullList;
@@ -75,7 +76,7 @@ public class ExpandRecipe {
     @ZenCodeType.Getter("resultItem")
     public static IItemStack getResultItem(Recipe internal) {
         
-        return IItemStack.of(internal.getResultItem());
+        return IItemStack.of(AccessibleElementsProvider.get().registryAccess(internal::getResultItem));
     }
     
 }

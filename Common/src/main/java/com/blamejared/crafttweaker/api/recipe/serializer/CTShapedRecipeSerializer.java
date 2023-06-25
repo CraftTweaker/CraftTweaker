@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.MirrorAxis;
 import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction2D;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipe;
+import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -65,7 +66,7 @@ public class CTShapedRecipeSerializer implements RecipeSerializer<CTShapedRecipe
         
         buffer.writeEnum(recipe.getMirrorAxis());
         
-        buffer.writeItem(recipe.getResultItem());
+        buffer.writeItem(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem));
     }
     
     public CTShapedRecipe makeRecipe(ResourceLocation recipeId, IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunction2D function) {

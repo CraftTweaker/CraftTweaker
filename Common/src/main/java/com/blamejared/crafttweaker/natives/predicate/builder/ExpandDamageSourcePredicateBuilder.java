@@ -5,6 +5,8 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.critereon.DamageSourcePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.TagPredicate;
+import net.minecraft.world.damagesource.DamageType;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -13,51 +15,9 @@ import org.openzen.zencode.java.ZenCodeType;
 public final class ExpandDamageSourcePredicateBuilder {
     
     @ZenCodeType.Method
-    public static DamageSourcePredicate.Builder isProjectile(final DamageSourcePredicate.Builder internal, @ZenCodeType.OptionalBoolean(true) final Boolean isProjectile) {
+    public static DamageSourcePredicate.Builder tag(DamageSourcePredicate.Builder internal, TagPredicate<DamageType> tag) {
         
-        return internal.isProjectile(isProjectile);
-    }
-    
-    @ZenCodeType.Method
-    public static DamageSourcePredicate.Builder isExplosion(final DamageSourcePredicate.Builder internal, @ZenCodeType.OptionalBoolean(true) final Boolean isExplosion) {
-        
-        return internal.isExplosion(isExplosion);
-    }
-    
-    @ZenCodeType.Method
-    public static DamageSourcePredicate.Builder bypassesArmor(final DamageSourcePredicate.Builder internal, @ZenCodeType.OptionalBoolean(true) final Boolean bypassesArmor) {
-        
-        return internal.bypassesArmor(bypassesArmor);
-    }
-    
-    @ZenCodeType.Method
-    public static DamageSourcePredicate.Builder bypassesInvulnerability(final DamageSourcePredicate.Builder internal, @ZenCodeType.OptionalBoolean(true) final Boolean bypassesInvulnerability) {
-        
-        return internal.bypassesInvulnerability(bypassesInvulnerability);
-    }
-    
-    @ZenCodeType.Method
-    public static DamageSourcePredicate.Builder bypassesMagic(final DamageSourcePredicate.Builder internal, @ZenCodeType.OptionalBoolean(true) final Boolean bypassesMagic) {
-        
-        return internal.bypassesMagic(bypassesMagic);
-    }
-    
-    @ZenCodeType.Method
-    public static DamageSourcePredicate.Builder isFire(final DamageSourcePredicate.Builder internal, @ZenCodeType.OptionalBoolean(true) final Boolean isFire) {
-        
-        return internal.isFire(isFire);
-    }
-    
-    @ZenCodeType.Method
-    public static DamageSourcePredicate.Builder isMagic(final DamageSourcePredicate.Builder internal, @ZenCodeType.OptionalBoolean(true) final Boolean isMagic) {
-        
-        return internal.isMagic(isMagic);
-    }
-    
-    @ZenCodeType.Method
-    public static DamageSourcePredicate.Builder isLightning(final DamageSourcePredicate.Builder internal, @ZenCodeType.OptionalBoolean(true) final Boolean isLightning) {
-        
-        return internal.isLightning(isLightning);
+        return internal.tag(tag);
     }
     
     @ZenCodeType.Method

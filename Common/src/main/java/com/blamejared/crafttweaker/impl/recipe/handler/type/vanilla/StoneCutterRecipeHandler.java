@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.api.util.StringUtil;
+import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.StonecutterRecipe;
@@ -24,7 +25,7 @@ public final class StoneCutterRecipeHandler implements IRecipeHandler<Stonecutte
         return String.format(
                 "stoneCutter.addRecipe(%s, %s, %s);",
                 StringUtil.quoteAndEscape(recipe.getId()),
-                ItemStackUtil.getCommandString(recipe.getResultItem()),
+                ItemStackUtil.getCommandString(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)),
                 IIngredient.fromIngredient(recipe.getIngredients().get(0)).getCommandString()
         );
     }
@@ -42,7 +43,7 @@ public final class StoneCutterRecipeHandler implements IRecipeHandler<Stonecutte
         final IDecomposedRecipe decomposedRecipe = IDecomposedRecipe.builder()
                 .with(BuiltinRecipeComponents.Metadata.GROUP, recipe.getGroup())
                 .with(BuiltinRecipeComponents.Input.INGREDIENTS, input)
-                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(recipe.getResultItem()))
+                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)))
                 .build();
         return Optional.of(decomposedRecipe);
     }

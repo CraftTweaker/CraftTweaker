@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.api.util.StringUtil;
+import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.NonNullList;
@@ -32,7 +33,7 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
         return String.format(
                 "craftingTable.addShaped(%s, %s, %s);",
                 StringUtil.quoteAndEscape(recipe.getId()),
-                ItemStackUtil.getCommandString(recipe.getResultItem()),
+                ItemStackUtil.getCommandString(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)),
                 IntStream.range(0, recipe.getHeight())
                         .mapToObj(y -> IntStream.range(0, recipe.getWidth())
                                 .mapToObj(x -> ingredients.get(y * recipe.getWidth() + x))
@@ -60,7 +61,7 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
                 .with(BuiltinRecipeComponents.Metadata.CRAFTING_BOOK_CATEGORY, recipe.category())
                 .with(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D, Pair.of(recipe.getWidth(), recipe.getHeight()))
                 .with(BuiltinRecipeComponents.Input.INGREDIENTS, ingredients)
-                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(recipe.getResultItem()))
+                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)))
                 .build();
         return Optional.of(decomposedRecipe);
     }

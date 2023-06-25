@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.IngredientUtil;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.api.util.StringUtil;
+import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
@@ -46,7 +47,7 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
                 "%s.addRecipe(%s, %s, %s, %s, %s);",
                 LOOKUP.get(recipe.getType()).getFirst(),
                 StringUtil.quoteAndEscape(recipe.getId()),
-                ItemStackUtil.getCommandString(recipe.getResultItem()),
+                ItemStackUtil.getCommandString(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)),
                 IIngredient.fromIngredient(recipe.getIngredients().get(0)).getCommandString(),
                 recipe.getExperience(),
                 recipe.getCookingTime()
@@ -69,7 +70,7 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
                 .with(BuiltinRecipeComponents.Input.INGREDIENTS, ingredient)
                 .with(BuiltinRecipeComponents.Processing.TIME, recipe.getCookingTime())
                 .with(BuiltinRecipeComponents.Output.EXPERIENCE, recipe.getExperience())
-                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(recipe.getResultItem()))
+                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)))
                 .build();
         return Optional.of(decomposition);
     }

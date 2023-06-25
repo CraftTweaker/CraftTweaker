@@ -32,10 +32,11 @@ dependencies {
     localOnlyRuntime(fg.deobf("mezz.jei:jei-${Versions.MINECRAFT}-forge:${Versions.JEI}"))
 
     annotationProcessor("org.spongepowered:mixin:${Versions.MIXIN}-SNAPSHOT:processor")
+
 }
 
 minecraft {
-    mappings("parchment", "${Versions.MINECRAFT}-${Versions.PARCHMENT}-${Versions.MINECRAFT}")
+    mappings("parchment", "1.19.3-${Versions.PARCHMENT}-1.19.4")
     accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg"))
 
     runs {

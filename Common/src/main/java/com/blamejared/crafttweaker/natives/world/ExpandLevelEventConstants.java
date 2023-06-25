@@ -53,9 +53,15 @@ public class ExpandLevelEventConstants {
     }
     
     @ZenCodeType.StaticExpansionMethod
-    public static int SOUND_PLAY_RECORDING() {
+    public static int SOUND_PLAY_JUKEBOX_SONG() {
         
-        return LevelEvent.SOUND_PLAY_RECORDING;
+        return LevelEvent.SOUND_PLAY_JUKEBOX_SONG;
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static int SOUND_STOP_JUKEBOX_SONG() {
+        
+        return LevelEvent.SOUND_STOP_JUKEBOX_SONG;
     }
     
     @ZenCodeType.StaticExpansionMethod
@@ -392,6 +398,12 @@ public class ExpandLevelEventConstants {
     public static int PARTICLES_SCULK_SHRIEK() {
         
         return LevelEvent.PARTICLES_SCULK_SHRIEK;
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static int PARTICLES_AND_SOUND_BRUSH_BLOCK_COMPLETE() {
+        
+        return LevelEvent.PARTICLES_AND_SOUND_BRUSH_BLOCK_COMPLETE;
     }
     
 }

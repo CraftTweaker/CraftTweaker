@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
+import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.mojang.brigadier.Command;
 import net.minecraft.ChatFormatting;
@@ -131,7 +132,7 @@ public final class RecipeCommands {
             
             ((AccessRecipeManager) player.level.getRecipeManager()).crafttweaker$getRecipes()
                     .forEach((recipeType, map) ->
-                            dumpRecipe(recipeType, map.values(), it -> workingStack.matches(IItemStack.of(it.getResultItem())), true));
+                            dumpRecipe(recipeType, map.values(), it -> workingStack.matches(IItemStack.of(AccessibleElementsProvider.get().registryAccess(it::getResultItem))), true));
         }
         CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.recipes.list")), CommandUtilities.getFormattedLogFile())
                 .withStyle(ChatFormatting.GREEN)), player);

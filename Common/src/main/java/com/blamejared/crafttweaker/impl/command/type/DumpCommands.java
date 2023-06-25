@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.api.tag.manager.ITagManager;
 import com.blamejared.crafttweaker.api.util.PathUtil;
 import com.blamejared.crafttweaker.api.villager.CTVillagerTrades;
 import com.blamejared.crafttweaker.impl.command.CtCommands;
+import com.blamejared.crafttweaker.mixin.common.access.level.damage.AccessDamageSources;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.blamejared.crafttweaker.natives.villager.ExpandVillagerProfession;
 import com.blamejared.crafttweaker.natives.world.biome.ExpandBiome;
@@ -70,6 +71,7 @@ public final class DumpCommands {
                     return Command.SINGLE_SUCCESS;
                 })
         );
+        
     }
     
     public static void registerDumpers(final ICommandRegistrationHandler handler) {
@@ -167,7 +169,7 @@ public final class DumpCommands {
                                 .sorted()
                                 .forEach(CommandUtilities.COMMAND_LOGGER::info);
                     });
-    
+                    
                     CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.biomes")), CommandUtilities.getFormattedLogFile())
                             .withStyle(ChatFormatting.GREEN)), player);
                     
@@ -250,12 +252,33 @@ public final class DumpCommands {
                             .peek(it -> CommandUtilities.COMMAND_LOGGER.info(it.getCommandString()))
                             .flatMap(it -> it.idElements()
                                     .stream()
-                                    .sorted(Comparator.comparing((ResourceLocation rl) -> rl.getPath()).thenComparing(rl -> rl.getNamespace()))
+                                    .sorted(Comparator.comparing((ResourceLocation rl) -> rl.getPath())
+                                            .thenComparing(rl -> rl.getNamespace()))
                                     .map(o -> getTagAsString(player, it, o)))
                             .forEach(it -> CommandUtilities.COMMAND_LOGGER.info("\t- {}", it));
                     
                     CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.tag.contents")), CommandUtilities.getFormattedLogFile())
                             .withStyle(ChatFormatting.GREEN)), player);
+                    return Command.SINGLE_SUCCESS;
+                })
+        );
+        
+        handler.registerDump(
+                "damage_sources",
+                Component.translatable("crafttweaker.command.description.dump.damage_sources"),
+                builder -> builder.executes(context -> {
+                    
+                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    //TODO what format should this print in??
+                    ((AccessDamageSources) player.getLevel().damageSources()).crafttweaker$getDamageTypes()
+                            .keySet()
+                            .stream()
+                            .sorted()
+                            .forEach(CommandUtilities.COMMAND_LOGGER::info);
+                    
+                    CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.biomes")), CommandUtilities.getFormattedLogFile())
+                            .withStyle(ChatFormatting.GREEN)), player);
+                    
                     return Command.SINGLE_SUCCESS;
                 })
         );

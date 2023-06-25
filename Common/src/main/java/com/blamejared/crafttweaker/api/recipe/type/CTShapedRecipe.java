@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.api.recipe.serializer.CTShapedRecipeSerialize
 import com.blamejared.crafttweaker.api.util.ArrayUtil;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
@@ -150,7 +151,7 @@ public class CTShapedRecipe extends ShapedRecipe {
     }
     
     @Override
-    public ItemStack assemble(CraftingContainer container) {
+    public ItemStack assemble(CraftingContainer container, RegistryAccess access) {
         
         final Pair<Integer, Integer> offset = calculateOffset(container);
         if(offset == INVALID) {
@@ -158,7 +159,7 @@ public class CTShapedRecipe extends ShapedRecipe {
         }
         
         if(function == null) {
-            return getResultItem();
+            return getResultItem(access);
         }
         
         final int rowOffset;
@@ -184,7 +185,7 @@ public class CTShapedRecipe extends ShapedRecipe {
     }
     
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess access) {
         
         return output.getInternal().copy();
     }

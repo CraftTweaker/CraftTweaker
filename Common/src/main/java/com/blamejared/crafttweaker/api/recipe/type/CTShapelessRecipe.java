@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction1D;
 import com.blamejared.crafttweaker.api.recipe.serializer.CTShapelessRecipeSerializer;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
@@ -71,7 +72,7 @@ public class CTShapelessRecipe extends ShapelessRecipe {
     
     
     @Override
-    public ItemStack assemble(CraftingContainer inv) {
+    public ItemStack assemble(CraftingContainer inv, RegistryAccess access) {
         
         if(this.function == null) {
             return this.output.getInternal().copy();
@@ -92,7 +93,7 @@ public class CTShapelessRecipe extends ShapelessRecipe {
     }
     
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess access) {
         
         return output.getInternal().copy();
     }

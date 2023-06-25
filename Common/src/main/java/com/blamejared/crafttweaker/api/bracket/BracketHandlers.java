@@ -11,12 +11,10 @@ import com.blamejared.crafttweaker.api.recipe.replacement.ITargetingStrategy;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
 import com.blamejared.crafttweaker.natives.block.material.ExpandMaterial;
-import com.blamejared.crafttweaker.natives.world.damage.ExpandDamageSource;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -398,23 +396,6 @@ public class BracketHandlers {
     }
     
     /**
-     * Gets a damage source based on type.
-     * If the damage source is not pre-registered, it will create a new one with the given name
-     *
-     * @param tokens the damage sources' type
-     *
-     * @return The found pre-registered damage source or a new one
-     *
-     * @docParam tokens "magic"
-     */
-    @ZenCodeType.Method
-    @BracketResolver("damagesource")
-    public static DamageSource getDamageSource(String tokens) {
-        
-        return ExpandDamageSource.PRE_REGISTERED_DAMAGE_SOURCES.getOrDefault(tokens, new DamageSource(tokens));
-    }
-    
-    /**
      * Gets a sound event based on registry name. Throws an exception if it can't find the sound event.
      *
      * @param tokens The sound event's resource location
@@ -489,4 +470,5 @@ public class BracketHandlers {
         return BuiltInRegistries.VILLAGER_TYPE.getOptional(resourceLocation)
                 .orElseThrow(() -> new IllegalArgumentException("Could not get villagertype with name: <villagertype:" + tokens + ">! Villager Type does not appear to exist!"));
     }
+    
 }

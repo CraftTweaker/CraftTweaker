@@ -41,12 +41,6 @@ public class ExpandVec3i {
     }
     
     @ZenCodeType.Method
-    public static Vec3i offset(Vec3i internal, double x, double y, double z) {
-        
-        return internal.offset(x, y, z);
-    }
-    
-    @ZenCodeType.Method
     public static Vec3i offset(Vec3i internal, int x, int y, int z) {
         
         return internal.offset(x, y, z);

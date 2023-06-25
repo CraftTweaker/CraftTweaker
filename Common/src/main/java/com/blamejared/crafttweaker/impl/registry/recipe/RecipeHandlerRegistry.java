@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
+import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
@@ -36,7 +37,7 @@ public final class RecipeHandlerRegistry implements IRecipeHandlerRegistry {
             return String.format(
                     "~~ Recipe name: %s, Outputs: %s, Inputs: [%s], Recipe Class: %s, Recipe Serializer: %s ~~",
                     recipe.getId(),
-                    ItemStackUtil.getCommandString(recipe.getResultItem()),
+                    ItemStackUtil.getCommandString(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)),
                     ingredients,
                     recipe.getClass().getName(),
                     BuiltInRegistries.RECIPE_SERIALIZER.getKey(recipe.getSerializer())

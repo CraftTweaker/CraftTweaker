@@ -2,6 +2,7 @@ package com.blamejared.crafttweaker.api.action.recipe;
 
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
+import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import net.minecraft.world.item.crafting.Recipe;
 
 public class ActionAddRecipe<T extends Recipe<?>> extends ActionRecipeBase<T> {
@@ -37,7 +38,7 @@ public class ActionAddRecipe<T extends Recipe<?>> extends ActionRecipeBase<T> {
     
     protected String describeOutputs() {
         
-        return ItemStackUtil.getCommandString(recipe.getResultItem());
+        return ItemStackUtil.getCommandString(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem));
     }
     
     private String getSubTypeDescription() {

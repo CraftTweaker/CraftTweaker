@@ -14,28 +14,24 @@ import org.openzen.zencode.java.ZenCodeType;
 @NativeTypeRegistration(value = ArmorItem.class, zenCodeName = "crafttweaker.api.item.type.armor.ArmorItem")
 public class ExpandArmorItem {
     
-    @ZenCodeType.Method
-    @ZenCodeType.Getter("slot")
-    public static EquipmentSlot getSlot(ArmorItem internal) {
+    @ZenCodeType.Getter("equipmentSlot")
+    public static EquipmentSlot getEquipmentSlot(ArmorItem internal) {
         
-        return internal.getSlot();
+        return internal.getEquipmentSlot();
     }
     
-    @ZenCodeType.Method
     @ZenCodeType.Getter("material")
     public static ArmorMaterial getMaterial(ArmorItem internal) {
         
         return internal.getMaterial();
     }
     
-    @ZenCodeType.Method
     @ZenCodeType.Getter("defense")
     public static int getDefense(ArmorItem internal) {
         
         return internal.getDefense();
     }
     
-    @ZenCodeType.Method
     @ZenCodeType.Getter("toughness")
     public static float getToughness(ArmorItem internal) {
         
@@ -43,7 +39,6 @@ public class ExpandArmorItem {
     }
     
     @ZenCodeType.Nullable
-    @ZenCodeType.Method
     @ZenCodeType.Getter("equipSound")
     public static SoundEvent getEquipSound(ArmorItem internal) {
         

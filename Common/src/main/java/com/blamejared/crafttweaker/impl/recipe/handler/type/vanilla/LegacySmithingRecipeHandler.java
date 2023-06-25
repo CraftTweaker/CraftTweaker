@@ -11,34 +11,38 @@ import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.IngredientUtil;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.api.util.StringUtil;
-import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessUpgradeRecipe;
+import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
+import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessLegacyUpgradeRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.LegacyUpgradeRecipe;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.UpgradeRecipe;
 
 import java.util.List;
 import java.util.Optional;
 
-@IRecipeHandler.For(UpgradeRecipe.class)
-public final class SmithingRecipeHandler implements IRecipeHandler<UpgradeRecipe> {
+@SuppressWarnings("removal")
+@IRecipeHandler.For(LegacyUpgradeRecipe.class)
+public final class LegacySmithingRecipeHandler implements IRecipeHandler<LegacyUpgradeRecipe> {
     
     @Override
-    public String dumpToCommandString(final IRecipeManager<? super UpgradeRecipe> manager, final UpgradeRecipe recipe) {
+    public String dumpToCommandString(final IRecipeManager<? super LegacyUpgradeRecipe> manager, final LegacyUpgradeRecipe recipe) {
         
         return String.format(
-                "smithing.addRecipe(%s, %s, %s, %s);",
+                "smithing.addLegacyRecipe(%s, %s, %s, %s);",
                 StringUtil.quoteAndEscape(recipe.getId()),
-                ItemStackUtil.getCommandString(recipe.getResultItem()),
-                IIngredient.fromIngredient(((AccessUpgradeRecipe) recipe).crafttweaker$getBase()).getCommandString(),
-                IIngredient.fromIngredient(((AccessUpgradeRecipe) recipe).crafttweaker$getAddition()).getCommandString()
+                ItemStackUtil.getCommandString(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)),
+                IIngredient.fromIngredient(((AccessLegacyUpgradeRecipe) recipe).crafttweaker$getBase())
+                        .getCommandString(),
+                IIngredient.fromIngredient(((AccessLegacyUpgradeRecipe) recipe).crafttweaker$getAddition())
+                        .getCommandString()
         );
     }
     
     @Override
-    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super UpgradeRecipe> manager, final UpgradeRecipe firstRecipe, final U secondRecipe) {
+    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super LegacyUpgradeRecipe> manager, final LegacyUpgradeRecipe firstRecipe, final U secondRecipe) {
         
-        if(!(secondRecipe instanceof UpgradeRecipe)) {
+        if(!(secondRecipe instanceof LegacyUpgradeRecipe)) {
             
             // If it is not an instanceof the normal recipe class, it means it has been added by a mod. To ensure symmetry,
             // we redirect to the other recipe handler. We are sure this cannot cause an infinite loop because recipe
@@ -49,29 +53,30 @@ public final class SmithingRecipeHandler implements IRecipeHandler<UpgradeRecipe
             return this.redirectNonVanilla(manager, secondRecipe, firstRecipe);
         }
         
-        final AccessUpgradeRecipe first = (AccessUpgradeRecipe) firstRecipe;
-        final AccessUpgradeRecipe second = (AccessUpgradeRecipe) secondRecipe; // It is an UpgradeRecipe, thus it also is our accessor
+        final AccessLegacyUpgradeRecipe first = (AccessLegacyUpgradeRecipe) firstRecipe;
+        final AccessLegacyUpgradeRecipe second = (AccessLegacyUpgradeRecipe) secondRecipe; // It is an UpgradeRecipe, thus it also is our accessor
         
         return IngredientUtil.canConflict(first.crafttweaker$getBase(), second.crafttweaker$getBase())
                 && IngredientUtil.canConflict(first.crafttweaker$getAddition(), second.crafttweaker$getAddition());
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super UpgradeRecipe> manager, final UpgradeRecipe recipe) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super LegacyUpgradeRecipe> manager, final LegacyUpgradeRecipe recipe) {
         
-        final AccessUpgradeRecipe access = (AccessUpgradeRecipe) recipe;
+        final AccessLegacyUpgradeRecipe access = (AccessLegacyUpgradeRecipe) recipe;
         final IIngredient base = IIngredient.fromIngredient(access.crafttweaker$getBase());
         final IIngredient addition = IIngredient.fromIngredient(access.crafttweaker$getAddition());
         final IDecomposedRecipe decomposed = IDecomposedRecipe.builder()
                 .with(BuiltinRecipeComponents.Input.INGREDIENTS, List.of(base, addition))
-                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(recipe.getResultItem()))
+                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(AccessibleElementsProvider.get()
+                        .registryAccess(recipe::getResultItem)))
                 .build();
         
         return Optional.of(decomposed);
     }
     
     @Override
-    public Optional<UpgradeRecipe> recompose(final IRecipeManager<? super UpgradeRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<LegacyUpgradeRecipe> recompose(final IRecipeManager<? super LegacyUpgradeRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
         
         final List<IIngredient> ingredients = recipe.getOrThrow(BuiltinRecipeComponents.Input.INGREDIENTS);
         final IItemStack output = recipe.getOrThrowSingle(BuiltinRecipeComponents.Output.ITEMS);
@@ -88,10 +93,11 @@ public final class SmithingRecipeHandler implements IRecipeHandler<UpgradeRecipe
         
         final Ingredient base = ingredients.get(0).asVanillaIngredient();
         final Ingredient addition = ingredients.get(1).asVanillaIngredient();
-        return Optional.of(new UpgradeRecipe(name, base, addition, output.getInternal()));
+        //noinspection removal
+        return Optional.of(new LegacyUpgradeRecipe(name, base, addition, output.getInternal()));
     }
     
-    private <T extends Recipe<?>> boolean redirectNonVanilla(final IRecipeManager<?> manager, final T second, final UpgradeRecipe first) {
+    private <T extends Recipe<?>> boolean redirectNonVanilla(final IRecipeManager<?> manager, final T second, final LegacyUpgradeRecipe first) {
         
         return IRecipeHandlerRegistry.getHandlerFor(second).doesConflict(GenericUtil.uncheck(manager), second, first);
     }
