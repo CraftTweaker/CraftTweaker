@@ -113,7 +113,6 @@ modrinth {
     versionType.set("release")
     uploadFile.set(tasks.remapJar.get())
     dependencies {
-        required.project("ingredient-extension-api")
         required.project("faux-custom-entity-data")
         required.project("fabric-api")
     }
