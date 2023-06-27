@@ -95,7 +95,7 @@ public final class ConflictCommand {
                 player
         );
         
-        runConflicts(player, player.level.getRecipeManager(), filter);
+        runConflicts(player, player.level().getRecipeManager(), filter);
         
         return 0;
     }

@@ -2,10 +2,12 @@ package com.blamejared.crafttweaker.natives.loot.table;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.mixin.common.access.loot.AccessLootTable;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.world.Container;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import org.openzen.zencode.java.ZenCodeType;
@@ -64,13 +66,12 @@ public final class ExpandLootTable {
         
         internal.getRandomItems(context, itemStack -> stackConsumer.accept(IItemStack.of(itemStack)));
     }
-    
     /**
      * Rolls this table and returns the rolled items in a list.
      *
      * <p>NOTE: The provided {@link LootContext} should not be reused from a loot modifier, if you want to reuse a context, look at {@link com.blamejared.crafttweaker.natives.loot.ExpandLootContextBuilder#copy(LootContext)}.</p>
      *
-     * @param context The context that this loot was generated.
+     * @param context The context that this loot was generated with.
      *
      * @return A list containing all the rolled items.
      *
@@ -79,7 +80,24 @@ public final class ExpandLootTable {
     @ZenCodeType.Method
     public static List<IItemStack> getRandomItems(LootTable internal, LootContext context) {
         
-        return internal.getRandomItems(context).stream().map(IItemStack::of).toList();
+        return ((AccessLootTable)internal).crafttweaker$callGetRandomItems(context).stream().map(IItemStack::of).toList();
+    }
+    
+    /**
+     * Rolls this table and returns the rolled items in a list.
+     *
+     * <p>NOTE: The provided {@link LootContext} should not be reused from a loot modifier, if you want to reuse a context, look at {@link com.blamejared.crafttweaker.natives.loot.ExpandLootContextBuilder#copy(LootContext)}.</p>
+     *
+     * @param params The params that this loot was generated with.
+     *
+     * @return A list containing all the rolled items.
+     *
+     * @docParam context new LootContextBuilder(level).withParameter<Vec3>(LootContextParams.origin(), player.position).withParameter<Entity>(LootContextParams.thisEntity(), player).create(LootContextParamSets.gift())
+     */
+    @ZenCodeType.Method
+    public static List<IItemStack> getRandomItems(LootTable internal, LootParams params) {
+        
+        return internal.getRandomItems(params).stream().map(IItemStack::of).toList();
     }
     
     /**
@@ -98,14 +116,15 @@ public final class ExpandLootTable {
      * Fills the given container with loot rolled by this table.
      *
      * @param container The container to fill.
-     * @param context   The context that will generate the loot.
+     * @param params    The params that will be used to generate the loot.
+     * @param seed      An Optional seed used to generate the loot, defaults to {@code 0} if not supplied.
      *
      * @docParam container container
      */
     @ZenCodeType.Method
-    public static void fill(LootTable internal, Container container, LootContext context) {
+    public static void fill(LootTable internal, Container container, LootParams params, @ZenCodeType.OptionalLong long seed) {
         
-        internal.fill(container, context);
+        internal.fill(container, params, seed);
     }
     
 }

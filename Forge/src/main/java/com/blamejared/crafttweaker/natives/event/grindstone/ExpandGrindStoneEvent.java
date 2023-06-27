@@ -44,24 +44,24 @@ public class ExpandGrindStoneEvent {
     @ZenRegister
     @ZenEvent
     @Document("forge/api/event/grindstone/GrindstoneOnPlaceItemEvent")
-    @NativeTypeRegistration(value = GrindstoneEvent.OnplaceItem.class, zenCodeName = "crafttweaker.forge.api.event.grindstone.GrindstoneOnPlaceItemEvent")
+    @NativeTypeRegistration(value = GrindstoneEvent.OnPlaceItem.class, zenCodeName = "crafttweaker.forge.api.event.grindstone.GrindstoneOnPlaceItemEvent")
     public static class ExpandGrindstoneOnPlaceItemEvent {
         
         @ZenEvent.Bus
-        public static final IEventBus<GrindstoneEvent.OnplaceItem> BUS = IEventBus.cancelable(
-                GrindstoneEvent.OnplaceItem.class,
+        public static final IEventBus<GrindstoneEvent.OnPlaceItem> BUS = IEventBus.cancelable(
+                GrindstoneEvent.OnPlaceItem.class,
                 ForgeEventBusWire.of(),
                 ForgeEventCancellationCarrier.of()
         );
         
         @ZenCodeType.Getter("output")
-        public static IItemStack getOutput(GrindstoneEvent.OnplaceItem internal) {
+        public static IItemStack getOutput(GrindstoneEvent.OnPlaceItem internal) {
             
             return IItemStack.of(internal.getOutput());
         }
         
         @ZenCodeType.Setter("output")
-        public static void setOutput(GrindstoneEvent.OnplaceItem internal, IItemStack output) {
+        public static void setOutput(GrindstoneEvent.OnPlaceItem internal, IItemStack output) {
             
             internal.setOutput(output.getInternal());
         }

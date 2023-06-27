@@ -34,7 +34,7 @@ dependencies {
     implementation("org.reflections:reflections:${Versions.REFLECTIONS}")?.let { include(it) }
     implementation("org.javassist:javassist:${Versions.JAVA_ASSIST}")?.let { include(it) } // required for reflections
 
-    modImplementation("com.faux.fauxcustomentitydata:FauxCustomEntityData-fabric-1.19.4:${Versions.FAUX_CUSTOM_ENTITY_DATA}")
+    modImplementation("com.faux.fauxcustomentitydata:FauxCustomEntityData-fabric-${Versions.MINECRAFT}:${Versions.FAUX_CUSTOM_ENTITY_DATA}")
 
     gametestCompileOnly(files(project(":Common").dependencyProject.sourceSets.gametest.get().java.srcDirs))
     Dependencies.ZENCODE_TEST.forEach {

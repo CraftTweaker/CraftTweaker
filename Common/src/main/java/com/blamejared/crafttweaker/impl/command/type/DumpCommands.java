@@ -26,6 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.level.storage.loot.LootDataType;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -104,7 +105,8 @@ public final class DumpCommands {
                     final ServerPlayer player = context.getSource().getPlayerOrException();
                     BuiltInRegistries.RECIPE_TYPE.stream()
                             .peek(type -> CommandUtilities.COMMAND_LOGGER.info(type.toString()))
-                            .map(it -> ((AccessRecipeManager) player.level.getRecipeManager()).crafttweaker$getRecipes()
+                            .map(it -> ((AccessRecipeManager) player.level()
+                                    .getRecipeManager()).crafttweaker$getRecipes()
                                     .getOrDefault(it, Collections.emptyMap())
                                     .keySet())
                             .flatMap(Collection::stream)
@@ -142,8 +144,8 @@ public final class DumpCommands {
                     
                     final ServerPlayer player = context.getSource().getPlayerOrException();
                     final MinecraftServer server = context.getSource().getServer();
-                    server.getLootTables()
-                            .getIds()
+                    //TODO 1.20 confirm
+                    server.getLootData().getKeys(LootDataType.TABLE)
                             .stream()
                             .map(ResourceLocation::toString)
                             .sorted()
@@ -270,7 +272,7 @@ public final class DumpCommands {
                     
                     final ServerPlayer player = context.getSource().getPlayerOrException();
                     //TODO what format should this print in??
-                    ((AccessDamageSources) player.getLevel().damageSources()).crafttweaker$getDamageTypes()
+                    ((AccessDamageSources) player.level().damageSources()).crafttweaker$getDamageTypes()
                             .keySet()
                             .stream()
                             .sorted()

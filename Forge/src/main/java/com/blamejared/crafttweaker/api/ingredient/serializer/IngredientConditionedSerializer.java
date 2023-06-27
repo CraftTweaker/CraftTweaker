@@ -55,7 +55,7 @@ public enum IngredientConditionedSerializer implements IIngredientSerializer<Ing
     public IngredientConditioned<?, ?> parse(JsonObject json) {
         
         final JsonObject base = json.getAsJsonObject("base");
-        final IIngredient baseIngredient = IIngredient.fromIngredient(CraftingHelper.getIngredient(base));
+        final IIngredient baseIngredient = IIngredient.fromIngredient(CraftingHelper.getIngredient(base, false));
         
         final JsonObject condition = json.getAsJsonObject("condition");
         final ResourceLocation type = new ResourceLocation(condition.get("type").getAsString());

@@ -26,7 +26,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 @ZenRegister
 @ZenEvent
 @Document("forge/api/event/interact/LeftClickEmptyEvent")
-@NativeTypeRegistration(value = PlayerInteractEvent.LeftClickEmpty.class, zenCodeName = "crafttweaker.api.event.interact.LeftClickEmptyEvent")
+@NativeTypeRegistration(value = PlayerInteractEvent.LeftClickEmpty.class, zenCodeName = "crafttweaker.forge.api.event.interact.LeftClickEmptyEvent")
 public class ExpandLeftClickEmptyEvent {
     
     @ZenEvent.Bus

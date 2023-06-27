@@ -22,7 +22,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenEvent
 @Document("forge/api/event/interact/RightClickBlockEvent")
-@NativeTypeRegistration(value = PlayerInteractEvent.RightClickBlock.class, zenCodeName = "crafttweaker.api.event.interact.RightClickBlockEvent")
+@NativeTypeRegistration(value = PlayerInteractEvent.RightClickBlock.class, zenCodeName = "crafttweaker.forge.api.event.interact.RightClickBlockEvent")
 public class ExpandRightClickBlockEvent {
     
     @ZenEvent.Bus

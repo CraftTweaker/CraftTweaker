@@ -35,7 +35,7 @@
   "depends": {
     "fabricloader": ">=0.14.8",
     "fabric": "*",
-    "minecraft": "1.19.x",
+    "minecraft": "1.20.x",
     "java": ">=17"
   },
   "accessWidener": "crafttweaker.accesswidener"

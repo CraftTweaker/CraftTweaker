@@ -33,7 +33,7 @@ public class ExpandTickEvent {
     
     @ZenRegister
     @Document("forge/api/event/tick/TickEventType")
-    @NativeTypeRegistration(value = TickEvent.Type.class, zenCodeName = "crafttweaker.api.event.tick.TickEventType")
+    @NativeTypeRegistration(value = TickEvent.Type.class, zenCodeName = "crafttweaker.forge.api.event.tick.TickEventType")
     @BracketEnum("forge:event/tick/type")
     public static class ExpandTickEventType {
     
@@ -41,7 +41,7 @@ public class ExpandTickEvent {
     
     @ZenRegister
     @Document("forge/api/event/tick/TickEventPhase")
-    @NativeTypeRegistration(value = TickEvent.Phase.class, zenCodeName = "crafttweaker.api.event.tick.TickEventPhase")
+    @NativeTypeRegistration(value = TickEvent.Phase.class, zenCodeName = "crafttweaker.forge.api.event.tick.TickEventPhase")
     @BracketEnum("forge:event/tick/phase")
     public static class ExpandTickEventPhase {
         

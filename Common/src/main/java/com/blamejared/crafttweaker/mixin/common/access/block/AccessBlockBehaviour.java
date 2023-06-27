@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.mixin.common.access.block;
 
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Material;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -43,13 +42,6 @@ public interface AccessBlockBehaviour {
     @Mutable
     @Accessor("explosionResistance")
     void crafttweaker$setExplosionResistance(float value);
-    
-    @Accessor("material")
-    Material crafttweaker$getMaterial();
-    
-    @Mutable
-    @Accessor("material")
-    void crafttweaker$setMaterial(Material value);
     
 }
 

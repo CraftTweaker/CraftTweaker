@@ -33,7 +33,7 @@ public class ExpandPlayerTickEvent {
     @ZenCodeType.Method
     public static void every(TickEvent.PlayerTickEvent internal, int ticks, Consumer<TickEvent.PlayerTickEvent> event) {
         
-        if(internal.player.getLevel().getGameTime() % ticks == 0) {
+        if(internal.player.level().getGameTime() % ticks == 0) {
             event.accept(internal);
         }
     }

@@ -42,9 +42,9 @@ public class ExpandLevel {
      * @docParam data {version: "1.0.0"}
      */
     @ZenCodeType.Method
-    public static SequenceBuilder<Level, MapData> sequence(Level internal, @ZenCodeType.Optional("new crafttweaker.api.data.MapData()") MapData data) {
+    public static SequenceBuilder<Level, IData> sequence(Level internal, @ZenCodeType.Optional("new crafttweaker.api.data.MapData()") IData data) {
         
-        return sequence(internal, MapData.class, data);
+        return sequence(internal, IData.class, data);
     }
     
     /**
@@ -61,13 +61,6 @@ public class ExpandLevel {
     public static <T> SequenceBuilder<Level, T> sequence(Level internal, Class<T> dataClass, T data) {
         
         return new SequenceBuilder<>(internal.isClientSide ? SequenceType.CLIENT_THREAD_LEVEL : SequenceType.SERVER_THREAD_LEVEL, Suppliers.memoize(() -> internal), data);
-    }
-    
-    @ZenCodeType.Method
-    @ZenCodeType.Getter("isClientSide")
-    public static boolean isClientSide(Level internal) {
-        
-        return internal.isClientSide();
     }
     
     @ZenCodeType.Method
@@ -98,17 +91,6 @@ public class ExpandLevel {
         return internal.getDayTime();
     }
     
-    
-    /**
-     * Gets the height of the sea level.
-     *
-     * @return The height of the sea level.
-     */
-    @ZenCodeType.Getter("seaLevel")
-    public static int getSeaLevel(Level internal) {
-        
-        return internal.getSeaLevel();
-    }
     
     /**
      * Checks if it is raining.
@@ -220,21 +202,7 @@ public class ExpandLevel {
         return internal.getBestNeighborSignal(pos);
     }
     
-    /**
-     * Gets the tile entity data for a tile entity at a given position.
-     *
-     * @param pos The position of the tile entity.
-     *
-     * @return The data of the tile entity.
-     *
-     * @docParam pos new BlockPos(0, 1, 2)
-     */
-    @ZenCodeType.Method
-    public static IData getBlockEntityData(Level internal, BlockPos pos) {
-        
-        BlockEntity te = internal.getBlockEntity(pos);
-        return te == null ? new MapData() : TagToDataConverter.convert(te.saveWithoutMetadata());
-    }
+
     
     /**
      * Sets the block and its state at a given position.
@@ -254,21 +222,6 @@ public class ExpandLevel {
     }
     
     /**
-     * Gets the block state at a given position.
-     *
-     * @param pos The position to look up.
-     *
-     * @return The block state at the position.
-     *
-     * @docParam pos new BlockPos(0, 1, 2)
-     */
-    @ZenCodeType.Method
-    public static BlockState getBlockState(Level internal, BlockPos pos) {
-        
-        return internal.getBlockState(pos);
-    }
-    
-    /**
      * Checks if a given position is receiving a redstone signal.
      *
      * @param pos The position to check.
@@ -281,21 +234,6 @@ public class ExpandLevel {
     public static boolean hasNeighborSignal(Level internal, BlockPos pos) {
         
         return internal.hasNeighborSignal(pos);
-    }
-    
-    /**
-     * Gets the biome at a given position.
-     *
-     * @param pos The position to look up.
-     *
-     * @return The biome at the given position.
-     *
-     * @docParam pos new BlockPos(0, 1, 2)
-     */
-    @ZenCodeType.Method
-    public static Biome getBiome(Level internal, BlockPos pos) {
-        
-        return internal.getBiome(pos).value();
     }
     
     /**
@@ -351,21 +289,6 @@ public class ExpandLevel {
     public static void globalLevelEvent(Level internal, int eventId, BlockPos pos, int data) {
         
         internal.globalLevelEvent(eventId, pos, data);
-    }
-    
-    /**
-     * Checks if the block at a given position is empty.
-     *
-     * @param pos The position to look up.
-     *
-     * @return Whether the block is empty.
-     *
-     * @docParam pos new BlockPos(0, 1, 2)
-     */
-    @ZenCodeType.Method
-    public static boolean isEmptyBlock(Level internal, BlockPos pos) {
-        
-        return internal.isEmptyBlock(pos);
     }
     
     /**

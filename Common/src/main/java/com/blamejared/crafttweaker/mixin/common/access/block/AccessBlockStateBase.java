@@ -1,8 +1,6 @@
 package com.blamejared.crafttweaker.mixin.common.access.block;
 
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -30,20 +28,6 @@ public interface AccessBlockStateBase {
     @Mutable
     @Accessor("isAir")
     void crafttweaker$setIsAir(boolean isAir);
-    
-    @Accessor("material")
-    Material crafttweaker$getMaterial();
-    
-    @Mutable
-    @Accessor("material")
-    void crafttweaker$setMaterial(Material material);
-    
-    @Accessor("materialColor")
-    MaterialColor crafttweaker$getMaterialColor();
-    
-    @Mutable
-    @Accessor("materialColor")
-    void crafttweaker$setMaterialColor(MaterialColor materialColor);
     
     @Accessor("destroySpeed")
     float crafttweaker$getDestroySpeed();

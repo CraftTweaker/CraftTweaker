@@ -93,10 +93,10 @@ public class ExpandDamageSources {
         return internal.flyIntoWall();
     }
     
-    @ZenCodeType.Getter("outOfWorld")
-    public static DamageSource outOfWorld(DamageSources internal) {
+    @ZenCodeType.Getter("fellOutOfWorld")
+    public static DamageSource fellOutOfWorld(DamageSources internal) {
         
-        return internal.outOfWorld();
+        return internal.fellOutOfWorld();
     }
     
     @ZenCodeType.Getter("generic")
@@ -265,6 +265,18 @@ public class ExpandDamageSources {
     public static DamageSource badRespawnPointExplosion(DamageSources internal, Vec3 position) {
         
         return internal.badRespawnPointExplosion(position);
+    }
+    
+    @ZenCodeType.Getter
+    public static DamageSource outOfBorder(DamageSources internal) {
+        
+        return internal.outOfBorder();
+    }
+    
+    @ZenCodeType.Getter
+    public static DamageSource genericKill(DamageSources internal) {
+        
+        return internal.genericKill();
     }
     
 }

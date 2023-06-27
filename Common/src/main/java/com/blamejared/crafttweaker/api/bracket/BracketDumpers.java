@@ -8,7 +8,6 @@ import com.blamejared.crafttweaker.api.fluid.IFluidStack;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.natives.block.ExpandBlock;
-import com.blamejared.crafttweaker.natives.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker.natives.entity.ExpandEntityType;
 import com.blamejared.crafttweaker.natives.entity.attribute.ExpandAttribute;
 import com.blamejared.crafttweaker.natives.entity.effect.ExpandMobEffect;
@@ -16,7 +15,6 @@ import com.blamejared.crafttweaker.natives.item.alchemy.ExpandPotion;
 import com.blamejared.crafttweaker.natives.item.enchantment.ExpandEnchantment;
 import com.blamejared.crafttweaker.natives.sound.ExpandSoundEvent;
 import com.blamejared.crafttweaker.natives.villager.ExpandVillagerProfession;
-import com.blamejared.crafttweaker.natives.world.damage.ExpandDamageSource;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
@@ -57,16 +55,6 @@ public class BracketDumpers {
         return BuiltInRegistries.FLUID.stream()
                 .map(fluid -> IFluidStack.of(fluid, 1).getCommandString())
                 .collect(Collectors.toList());
-    }
-    
-    @ZenCodeType.Method
-    @BracketDumper("material")
-    public static Collection<String> getMaterialDump() {
-        
-        return ExpandMaterial.VANILLA_MATERIALS.values()
-                .stream()
-                .map(ExpandMaterial::getCommandString)
-                .collect(Collectors.toSet());
     }
     
     @ZenCodeType.Method

@@ -47,12 +47,6 @@ public class ExpandLevelAccessor {
         return internal.getDifficulty();
     }
     
-    @ZenCodeType.Method
-    public static boolean hasChunk(LevelAccessor internal, int x, int y) {
-        
-        return internal.hasChunk(x, y);
-    }
-    
     @ZenCodeType.Getter("random")
     public static RandomSource getRandom(LevelAccessor internal) {
         

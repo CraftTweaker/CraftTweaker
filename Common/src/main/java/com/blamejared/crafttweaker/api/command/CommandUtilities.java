@@ -37,7 +37,7 @@ public final class CommandUtilities {
     
     public static void send(Component component, CommandSourceStack source) {
         
-        source.sendSuccess(component, true);
+        source.sendSuccess(() -> component, true);
         if(!component.getString().isBlank()) {
             COMMAND_LOGGER.info(component.getString());
         }

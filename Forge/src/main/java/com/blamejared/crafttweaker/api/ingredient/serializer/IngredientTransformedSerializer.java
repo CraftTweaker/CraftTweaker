@@ -56,7 +56,7 @@ public enum IngredientTransformedSerializer implements IIngredientSerializer<Ing
     public IngredientTransformed<?, ?> parse(JsonObject json) {
         
         final JsonObject base = json.getAsJsonObject("base");
-        final IIngredient baseIngredient = IIngredient.fromIngredient(CraftingHelper.getIngredient(base));
+        final IIngredient baseIngredient = IIngredient.fromIngredient(CraftingHelper.getIngredient(base, false));
         
         final JsonObject transformer = json.getAsJsonObject("transformer");
         final ResourceLocation type = new ResourceLocation(transformer.get("type").getAsString());

@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @ZenRegister
 @ZenEvent
 @Document("forge/api/event/item/ItemAttributeModifierEvent")
-@NativeTypeRegistration(value = ItemAttributeModifierEvent.class, zenCodeName = "crafttweaker.api.event.item.ItemAttributeModifierEvent")
+@NativeTypeRegistration(value = ItemAttributeModifierEvent.class, zenCodeName = "crafttweaker.forge.api.event.item.ItemAttributeModifierEvent")
 public class ExpandItemAttributeModifierEvent {
     
     @ZenEvent.Bus

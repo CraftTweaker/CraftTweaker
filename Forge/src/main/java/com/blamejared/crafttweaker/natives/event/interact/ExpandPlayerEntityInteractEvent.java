@@ -19,7 +19,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenEvent
 @Document("forge/api/event/interact/EntityInteractEvent")
-@NativeTypeRegistration(value = PlayerInteractEvent.EntityInteract.class, zenCodeName = "crafttweaker.api.event.interact.EntityInteractEvent")
+@NativeTypeRegistration(value = PlayerInteractEvent.EntityInteract.class, zenCodeName = "crafttweaker.forge.api.event.interact.EntityInteractEvent")
 public class ExpandPlayerEntityInteractEvent {
     
     @ZenEvent.Bus

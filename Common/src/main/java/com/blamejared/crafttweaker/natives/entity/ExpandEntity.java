@@ -47,11 +47,10 @@ public class ExpandEntity {
         return internal.isColliding(pos, state);
     }
     
-    @ZenCodeType.Method
     @ZenCodeType.Getter("level")
     public static Level getLevel(Entity internal) {
         
-        return internal.level;
+        return internal.level();
     }
     
     @ZenCodeType.Method
@@ -199,11 +198,10 @@ public class ExpandEntity {
         internal.setOnGround(onGround);
     }
     
-    @ZenCodeType.Method
-    @ZenCodeType.Getter("isOnGround")
-    public static boolean isOnGround(Entity internal) {
+    @ZenCodeType.Getter("onGround")
+    public static boolean onGround(Entity internal) {
         
-        return internal.isOnGround();
+        return internal.onGround();
     }
     
     @ZenCodeType.Method

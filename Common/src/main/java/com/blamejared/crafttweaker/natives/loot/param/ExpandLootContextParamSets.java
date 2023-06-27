@@ -204,6 +204,23 @@ public final class ExpandLootContextParamSets {
     }
     
     /**
+     * Gets the 'advancement_entity' param set.
+     *
+     * The 'advancement_entity' param set requires the following params:
+     * <ul>
+     * <li>{@code this_entity}</li>
+     * <li>{@code origin}</li>
+     * </ul>
+     *
+     * @return The 'advancement_entity' param set.
+     */
+    @ZenCodeType.StaticExpansionMethod
+    public static LootContextParamSet advancementLocation() {
+        
+        return LootContextParamSets.ADVANCEMENT_LOCATION;
+    }
+    
+    /**
      * Gets the 'generic' param set.
      *
      * The 'generic' param set requires the following params:

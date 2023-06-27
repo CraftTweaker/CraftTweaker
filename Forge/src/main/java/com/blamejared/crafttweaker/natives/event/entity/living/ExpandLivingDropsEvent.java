@@ -86,7 +86,7 @@ public class ExpandLivingDropsEvent {
         
         LivingEntity entity = internal.getEntity();
         internal.getDrops()
-                .add(new ItemEntity(entity.level, entity.getX() + 0.5, entity.getY() + 0.5, entity.getZ() + 0.5, stack.getImmutableInternal()));
+                .add(new ItemEntity(entity.level(), entity.getX() + 0.5, entity.getY() + 0.5, entity.getZ() + 0.5, stack.getImmutableInternal()));
     }
     
     /**

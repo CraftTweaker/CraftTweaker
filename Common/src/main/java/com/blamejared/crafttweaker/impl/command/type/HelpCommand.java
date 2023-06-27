@@ -63,12 +63,12 @@ public final class HelpCommand {
             final CommandImpl command = commands.get(allowedToUseCommands.get(i));
             
             String commandStr = "/ct " + command.name();
-            source.sendSuccess(CommandUtilities.run(Component.literal(commandStr), commandStr), true);
-            source.sendSuccess(Component.literal("- ").append(command.description()
+            source.sendSuccess(() -> CommandUtilities.run(Component.literal(commandStr), commandStr), true);
+            source.sendSuccess(() -> Component.literal("- ").append(command.description()
                     .withStyle(ChatFormatting.DARK_AQUA)), true);
         }
         
-        source.sendSuccess(Component.translatable("crafttweaker.command.help.page.info", clampedPage, maxPages), true);
+        source.sendSuccess(() -> Component.translatable("crafttweaker.command.help.page.info", clampedPage, maxPages), true);
         return Command.SINGLE_SUCCESS;
     }
     

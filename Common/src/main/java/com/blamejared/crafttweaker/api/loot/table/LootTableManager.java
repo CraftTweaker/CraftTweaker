@@ -5,10 +5,12 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.LootDataManager;
+import net.minecraft.world.level.storage.loot.LootDataType;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.LootTables;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -40,7 +42,7 @@ public enum LootTableManager {
     @ZenCodeType.Method
     public LootTable getTable(ResourceLocation name) {
         
-        return getLootTables().get(name);
+        return getLootData().getLootTable(name);
     }
     
     /**
@@ -52,15 +54,16 @@ public enum LootTableManager {
     @ZenCodeType.Getter("ids")
     public Set<ResourceLocation> getIds() {
         
-        return getLootTables().getIds();
+        return new HashSet<>(getLootData().getKeys(LootDataType.TABLE));
     }
     
-    private LootTables getLootTables() {
+    
+    private LootDataManager getLootData() {
         
         if(!CraftTweakerAPI.getAccessibleElementsProvider().server().hasResources()) {
             throw new IllegalStateException("Unable to get loot tables! Make sure that this method is only called from the server side!");
         }
-        return CraftTweakerAPI.getAccessibleElementsProvider().server().resources().getLootTables();
+        return CraftTweakerAPI.getAccessibleElementsProvider().server().resources().getLootData();
     }
     
 }

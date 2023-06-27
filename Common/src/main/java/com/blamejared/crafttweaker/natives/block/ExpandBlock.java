@@ -6,7 +6,6 @@ import com.blamejared.crafttweaker.api.action.block.ActionSetBlockProperty;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.block.CTBlockIngredient;
 import com.blamejared.crafttweaker.mixin.common.access.block.AccessBlockBehaviour;
-import com.blamejared.crafttweaker.natives.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
@@ -16,7 +15,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.ArrayList;
@@ -75,10 +73,9 @@ public class ExpandBlock {
      * @return True if an entity can be spawned in this Block. False Otherwise.
      */
     @ZenCodeType.Method
-    @ZenCodeType.Getter("isPossibleToRespawnInThis")
-    public static boolean isPossibleToRespawnInThis(Block internal) {
+    public static boolean isPossibleToRespawnInThis(Block internal, BlockState state) {
         
-        return internal.isPossibleToRespawnInThis();
+        return internal.isPossibleToRespawnInThis(state);
     }
     
     /**
@@ -308,34 +305,6 @@ public class ExpandBlock {
         
         CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal, "Explosion Resistance",
                 resistance, ((AccessBlockBehaviour) internal).crafttweaker$getExplosionResistance(), ((AccessBlockBehaviour) internal)::crafttweaker$setExplosionResistance));
-    }
-    
-    /**
-     * Gets the material of this Block.
-     *
-     * @return The material of this Block.
-     */
-    @ZenCodeType.Method
-    @ZenCodeType.Getter("material")
-    public static Material getMaterial(Block internal) {
-        
-        return ((AccessBlockBehaviour) internal).crafttweaker$getMaterial();
-    }
-    
-    /**
-     * Sets the material of this Block.
-     *
-     * @param material The new material of this Block.
-     *
-     * @docParam material <material:earth>
-     */
-    @ZenCodeType.Method
-    @ZenCodeType.Setter("material")
-    public static void setMaterial(Block internal, Material material) {
-        
-        CraftTweakerAPI.apply(new ActionSetBlockProperty<>(internal,
-                "Material", material, ((AccessBlockBehaviour) internal).crafttweaker$getMaterial(),
-                ((AccessBlockBehaviour) internal)::crafttweaker$setMaterial, ExpandMaterial::getCommandString));
     }
     
     @ZenCodeType.Caster(implicit = true)

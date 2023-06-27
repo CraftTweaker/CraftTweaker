@@ -69,7 +69,7 @@ public final class RecipeCommands {
                             .mapToObj(player.getInventory()::getItem)
                             .filter(itemStack -> !itemStack.isEmpty())
                             .forEach(itemStack -> {
-                                if(stacks.stream().noneMatch(itemStack::sameItem)) {
+                                if(stacks.stream().noneMatch(stack -> ItemStack.isSameItem(itemStack, stack))) {
                                     stacks.add(itemStack);
                                 }
                             });
@@ -130,7 +130,7 @@ public final class RecipeCommands {
             
             CommandUtilities.COMMAND_LOGGER.info("Dumping all recipes that output {}!", ItemStackUtil.getCommandString(workingStack.getInternal()));
             
-            ((AccessRecipeManager) player.level.getRecipeManager()).crafttweaker$getRecipes()
+            ((AccessRecipeManager) player.level().getRecipeManager()).crafttweaker$getRecipes()
                     .forEach((recipeType, map) ->
                             dumpRecipe(recipeType, map.values(), it -> workingStack.matches(IItemStack.of(AccessibleElementsProvider.get().registryAccess(it::getResultItem))), true));
         }
@@ -141,7 +141,7 @@ public final class RecipeCommands {
     
     private static void dumpRecipes(final Player player, final Predicate<RecipeType<?>> typeFilter) {
         
-        ((AccessRecipeManager) player.level.getRecipeManager()).crafttweaker$getRecipes()
+        ((AccessRecipeManager) player.level().getRecipeManager()).crafttweaker$getRecipes()
                 .entrySet()
                 .stream()
                 .filter(it -> typeFilter.test(it.getKey()))

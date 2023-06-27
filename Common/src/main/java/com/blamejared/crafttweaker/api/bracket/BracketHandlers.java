@@ -10,7 +10,6 @@ import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.replacement.ITargetingStrategy;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
-import com.blamejared.crafttweaker.natives.block.material.ExpandMaterial;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -26,7 +25,6 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Locale;
@@ -110,25 +108,6 @@ public class BracketHandlers {
         }
         
         return IFluidStack.of(BuiltInRegistries.FLUID.get(resourceLocation), 1);
-    }
-    
-    /**
-     * Gets the given {@link Material}. Throws an Exception if not found.
-     *
-     * @param tokens What you would write in the BEP call.
-     *
-     * @return The found {@link Material}
-     *
-     * @docParam tokens "earth"
-     */
-    @ZenCodeType.Method
-    @BracketResolver("material")
-    public static Material getMaterial(String tokens) {
-        
-        // 1.16 did look at the Material class to see its fields,
-        // but we can just add a test to make sure that ExpandMaterial.VANILLA_MATERIALS always contains the most upto date values
-        return ExpandMaterial.getOptionalMaterial(tokens)
-                .orElseThrow(() -> new IllegalArgumentException("Could not find material <material:" + tokens + ">!"));
     }
     
     /**

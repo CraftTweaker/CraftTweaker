@@ -19,26 +19,24 @@
  * Another example of a cancelable event is the EnderEntityTeleportEvent, which, if cancled, will prevent any forms of ender teleportation, namely Ender Pearls and Enderman teleporting away.
 */
 
-// First things first, you should import the CTEventManager, which allows you to register Events.
-import crafttweaker.api.events.CTEventManager;
-// We are also going to import other classes that are needed for this example.
+// We are going to import some classes that are needed for this example.
 import crafttweaker.api.text.Component;
-import crafttweaker.api.event.item.ItemTossEvent;
+import crafttweaker.forge.api.event.item.ItemTossEvent;
 
 // Now that we have imported the CTEventManager, we can use it to register an event.
 // This example will listen to the PlayerLoggedInEvent and send a message to the player when they log in.
-CTEventManager.register<crafttweaker.api.event.entity.player.PlayerLoggedInEvent>((event) => {
+events.register<crafttweaker.forge.api.event.entity.player.PlayerLoggedInEvent>((event) => {
     // You can find what members `event` has by looking on the CraftTweaker docs or by looking at the code
     // In this case, since PlayerLoggedInEvent extends PLayerEvent, we have access to the `player` object.
-    event.player.sendMessage("You have the CraftTweaker example scripts enabled!");
+    event.entity.sendMessage("You have the CraftTweaker example scripts enabled!");
     // Here we are using Component to make `deleting` red
     var message = Component.literal("You can disable them by ") + Component.literal("deleting").setStyle(<constant:formatting:red>) + Component.literal(" the ./scripts/examples folder!");
-    event.player.sendMessage(message);
+    event.entity.sendMessage(message);
 });
 
 // You don't always need to use the full event package and name, if you import the Event, then you can reference it by it's name.
 // This example will listen to the ItemTossEvent and if the player is standing on a Bookshelf, the dropped Item will turn into a Diamond.
-CTEventManager.register<ItemTossEvent>((event) => {
+events.register<ItemTossEvent>((event) => {
     // Here we are just storing the values so they are easier to reference.
     val player = event.player;
     val level = player.level;
@@ -50,6 +48,6 @@ CTEventManager.register<ItemTossEvent>((event) => {
     // Now we get the BlockState at the position below the player, check if it is a Bookshelf.
     if level.getBlockState(player.blockPosition.below()) == <blockstate:minecraft:bookshelf> {
         // If it is a Bookshelf, set the item to be a Diamond.
-        event.entityItem.item = <item:minecraft:diamond>;
+        event.entity.item = <item:minecraft:diamond>;
     }
 });

@@ -9,7 +9,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @Document("forge/api/event/block/piston/PistonMoveType")
-@NativeTypeRegistration(value = PistonEvent.PistonMoveType.class, zenCodeName = "crafttweaker.api.event.block.piston.PistonMoveType")
+@NativeTypeRegistration(value = PistonEvent.PistonMoveType.class, zenCodeName = "crafttweaker.forge.api.event.block.piston.PistonMoveType")
 @BracketEnum("forge:event/piston/move_type")
 public class ExpandPistonEventMoveType {
     

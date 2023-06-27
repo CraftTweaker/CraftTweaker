@@ -31,15 +31,8 @@ public class BracketValidators {
     @ZenCodeType.StaticExpansionMethod
     @BracketValidator("fluid")
     public static boolean validateFluidStack(String tokens) {
-    
-        return validateBracket("fluid", tokens, BracketHandlers::getFluidStack);
-    }
-    
-    @ZenCodeType.Method
-    @BracketValidator("material")
-    public static boolean validateBlockMaterialBracket(String tokens) {
         
-        return validateBracket("material", tokens, BracketHandlers::getMaterial);
+        return validateBracket("fluid", tokens, BracketHandlers::getFluidStack);
     }
     
     @ZenCodeType.Method

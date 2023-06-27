@@ -23,29 +23,6 @@ public enum SmithingRecipeManager implements IRecipeManager<SmithingRecipe> {
     @ZenCodeGlobals.Global("smithing")
     INSTANCE;
     
-    
-    /**
-     * Adds a recipe to the smithing table.
-     *
-     * @param recipeName Name of the recipe.
-     * @param result     The item created by the recipe.
-     * @param base       The initial ingredient for the recipe.
-     * @param addition   The item added to the base item.
-     *
-     * @docParam recipeName "recipe_name"
-     * @docParam result <item:minecraft:golden_apple>
-     * @docParam base <item:minecraft:apple>
-     * @docParam addition <tag:items:forge:ingots/gold>
-     */
-    @SuppressWarnings("removal")
-    @ZenCodeType.Method
-    public void addLegacyRecipe(String recipeName, IItemStack result, IIngredient base, IIngredient addition) {
-        
-        recipeName = fixRecipeName(recipeName);
-        final SmithingRecipe smithing = new LegacyUpgradeRecipe(CraftTweakerConstants.rl(recipeName), base.asVanillaIngredient(), addition.asVanillaIngredient(), result.getInternal());
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, smithing, ""));
-    }
-    
     /**
      * Adds a new trim recipe to the smithing table.
      *

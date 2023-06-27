@@ -47,16 +47,4 @@ public class ExpandFallable {
         return internal.getFallDamageSource(entity);
     }
     
-    /**
-     * Gets a predicate that determines if an entity should be damaged by this falling block.
-     *
-     * @return The predicate that determines if an entity should be damaged by this falling block.
-     */
-    @ZenCodeType.Method
-    @ZenCodeType.Getter("hurtsEntitySelector")
-    public static Predicate<Entity> getHurtsEntitySelector(Fallable internal) {
-        
-        return internal.getHurtsEntitySelector();
-    }
-    
 }

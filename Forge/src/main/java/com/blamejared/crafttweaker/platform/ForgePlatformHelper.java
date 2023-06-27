@@ -284,7 +284,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public boolean canItemStacksStack(ItemStack first, ItemStack second) {
 
-        if (first.isEmpty() || !first.sameItem(second) || first.hasTag() != second.hasTag()) {
+        if (first.isEmpty() || !ItemStack.isSameItem(first, second) || first.hasTag() != second.hasTag()) {
             return false;
         }
 

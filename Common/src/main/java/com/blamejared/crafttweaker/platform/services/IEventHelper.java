@@ -15,6 +15,7 @@ import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
 import com.blamejared.crafttweaker.natives.entity.ExpandEntity;
 import com.blamejared.crafttweaker.natives.entity.ExpandEntityType;
 import com.blamejared.crafttweaker.natives.entity.type.player.ExpandPlayer;
+import com.blamejared.crafttweaker.natives.world.ExpandBlockGetter;
 import com.blamejared.crafttweaker.natives.world.ExpandLevel;
 import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.datafixers.util.Pair;
@@ -102,7 +103,7 @@ public interface IEventHelper {
     
     default boolean onBlockInteract(Player player, InteractionHand hand, BlockHitResult hitResult) {
         
-        Level world = player.level;
+        Level world = player.level();
         BlockPos pos = hitResult.getBlockPos();
         
         if(BLOCK_INFO_PLAYERS.contains(player)) {
@@ -127,7 +128,7 @@ public interface IEventHelper {
                                     .append(Component.literal(state.getValue(property)
                                             .toString()).withStyle(ChatFormatting.AQUA))));
                 }
-                IData tileData = ExpandLevel.getBlockEntityData(world, pos);
+                IData tileData = ExpandBlockGetter.getBlockEntityData(world, pos);
                 if(!tileData.isEmpty()) {
                     sendAndLog(player, Component.translatable("crafttweaker.command.info.block.entity.data", tileData.accept(new DataToTextComponentVisitor("    ", 0))));
                 }
@@ -139,7 +140,7 @@ public interface IEventHelper {
     
     default boolean onEntityInteract(Player player, InteractionHand hand, Entity target) {
         
-        Level world = player.level;
+        Level world = player.level();
         
         if(ENTITY_INFO_PLAYERS.contains(player)) {
             if(!world.isClientSide() && hand == InteractionHand.MAIN_HAND) {
