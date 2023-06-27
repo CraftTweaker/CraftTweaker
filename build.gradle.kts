@@ -57,7 +57,7 @@ tasks.create("postDiscord") {
                     .filter {
                         project(":${it.key}").ext.has("curse_file_url")
                     }.map {
-                        val capitalizedName = it.key.replaceFirstChar { ch -> if (ch.isLowerCase()) ch.titlecase(Locale.ENGLISH) else it.toString() }
+                        val capitalizedName = it.key.replaceFirstChar { ch -> if (ch.isLowerCase()) ch.titlecase(Locale.ENGLISH) else it.key }
                         "${it.value} [$capitalizedName](${project(":${it.key}").ext.get("curse_file_url")})"
                     }
                     .forEach { downloadSources.add(it) }
