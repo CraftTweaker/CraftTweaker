@@ -27,6 +27,7 @@ body:
                 
                 If your request is not tied to a version or if the version isn't listed, then choose other and specify in the description.
             options:
+                - 1.20.1
                 - 1.20
                 - 1.19.4
                 - 1.19.3

@@ -144,7 +144,6 @@ public final class DumpCommands {
                     
                     final ServerPlayer player = context.getSource().getPlayerOrException();
                     final MinecraftServer server = context.getSource().getServer();
-                    //TODO 1.20 confirm
                     server.getLootData().getKeys(LootDataType.TABLE)
                             .stream()
                             .map(ResourceLocation::toString)
