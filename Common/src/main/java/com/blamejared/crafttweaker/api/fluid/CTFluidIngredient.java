@@ -118,7 +118,7 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
         @Override
         public <T> T mapTo(Function<IFluidStack, T> fluidMapper, BiFunction<TagKey<Fluid>, Integer, T> tagMapper, Function<Stream<T>, T> compoundMapper) {
             
-            return fluidMapper.apply(fluidStack.getImmutableInternal());
+            return fluidMapper.apply(fluidStack);
         }
         
         @Override
