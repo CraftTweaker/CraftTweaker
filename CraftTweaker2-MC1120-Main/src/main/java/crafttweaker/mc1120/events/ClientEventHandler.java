@@ -47,7 +47,10 @@ public class ClientEventHandler {
                 tooltipList.add(((IMCFormattedString) tooltip.getKey()).getTooltipString());
             }
             for(Pair<ITooltipFunction, ITooltipFunction> tooltip : IngredientTooltips.getAdvancedTooltips(itemStack)) {
-                    tooltipList.add(tooltip.getKey().process(itemStack));
+                String s = tooltip.getKey().process(itemStack);
+                if (s != null) {
+                    tooltipList.add(s);
+                }
             }
             
             boolean pressed = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
@@ -60,9 +63,15 @@ public class ClientEventHandler {
             }
             for(Pair<ITooltipFunction, ITooltipFunction> tooltip : IngredientTooltips.getAdvancedShiftTooltips(itemStack)) {
                 if(pressed) {
-                    tooltipList.add(tooltip.getKey().process(itemStack));
+                    String s = tooltip.getKey().process(itemStack);
+                    if (s != null) {
+                        tooltipList.add(s);
+                    }
                 } else if(tooltip.getValue() != null) {
-                    tooltipList.add(tooltip.getValue().process(itemStack));
+                    String s = tooltip.getValue().process(itemStack);
+                    if (s != null) {
+                        tooltipList.add(s);
+                    }
                 }
             }
         }
