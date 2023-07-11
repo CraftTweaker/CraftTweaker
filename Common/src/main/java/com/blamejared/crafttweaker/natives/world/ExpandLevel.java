@@ -237,42 +237,6 @@ public class ExpandLevel {
     }
     
     /**
-     * Destroys a block within the world.
-     *
-     * @param pos     The position of the block.
-     * @param doDrops Whether the block drops itself and it's loot.
-     *
-     * @return Whether the block was changed.
-     *
-     * @docParam pos new BlockPos(0, 1, 2)
-     * @docParam doDrops true
-     */
-    @ZenCodeType.Method
-    public static boolean destroyBlock(Level internal, BlockPos pos, boolean doDrops) {
-        
-        return internal.destroyBlock(pos, doDrops);
-    }
-    
-    /**
-     * Destroys a block within the world.
-     *
-     * @param pos     The position of the block.
-     * @param doDrops Whether the block drops itself and it's loot.
-     * @param breaker The entity to break the block.
-     *
-     * @return Whether the block was changed.
-     *
-     * @docParam pos new BlockPos(0, 1, 2)
-     * @docParam doDrops true
-     * @docParam breaker player
-     */
-    @ZenCodeType.Method
-    public static boolean destroyBlock(Level internal, BlockPos pos, boolean doDrops, @ZenCodeType.Nullable Entity breaker) {
-        
-        return internal.destroyBlock(pos, doDrops, breaker);
-    }
-    
-    /**
      * Triggers a predetermined event on the client. Using this on a server
      * or integrated server will send the event to all nearby players.
      *
@@ -385,15 +349,6 @@ public class ExpandLevel {
     public static BlockEntity getBlockEntity(Level internal, BlockPos pos) {
         
         return internal.getBlockEntity(pos);
-    }
-    
-    /**
-     * add an entity to the world, return if the entity is added successfully.
-     */
-    @ZenCodeType.Method
-    public static boolean addFreshEntity(Level internal, Entity entity) {
-        
-        return internal.addFreshEntity(entity);
     }
     
     /**

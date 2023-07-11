@@ -9,7 +9,10 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.PistonEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -17,6 +20,12 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("forge/api/event/block/piston/PistonEvent")
 @NativeTypeRegistration(value = PistonEvent.class, zenCodeName = "crafttweaker.forge.api.event.block.piston.PistonEvent")
 public class ExpandPistonEvent {
+    
+    @ZenCodeType.Getter("level")
+    public static Level getLevel(BlockEvent internal) {
+        // As long as PistonEvent constructor asks for a Level, this is fine
+        return (Level) internal.getLevel();
+    }
     
     /**
      * Gets the direction that the piston is facing.
