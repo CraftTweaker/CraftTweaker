@@ -8,7 +8,7 @@ object Versions {
     const val ZENCODE_JAVA = "8"
 
     const val MINECRAFT = "1.20.1"
-    const val FORGE = "47.0.19"
+    const val FORGE = "47.1.3"
     const val FABRIC = "0.84.0+1.20.1"
     const val FABRIC_LOADER = "0.14.21"
     const val PARCHMENT = "2023.02.05"

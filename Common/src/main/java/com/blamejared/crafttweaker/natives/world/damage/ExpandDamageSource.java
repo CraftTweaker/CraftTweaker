@@ -2,9 +2,12 @@ package com.blamejared.crafttweaker.natives.world.damage;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.tag.type.KnownTag;
+import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
+import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
@@ -21,13 +24,13 @@ public class ExpandDamageSource {
     @ZenCodeType.StaticExpansionMethod
     public static DamageSource create(DamageType type, @ZenCodeType.Optional Entity directEntity, @ZenCodeType.Optional Entity causingEntity) {
         
-        return new DamageSource(Holder.direct(type), directEntity, causingEntity);
+        return new DamageSource(Services.REGISTRY.makeHolder(Registries.DAMAGE_TYPE, type), directEntity, causingEntity);
     }
     
     @ZenCodeType.StaticExpansionMethod
     public static DamageSource create(DamageType type, Vec3 damageSourcePosition) {
         
-        return new DamageSource(Holder.direct(type), damageSourcePosition);
+        return new DamageSource(Services.REGISTRY.makeHolder(Registries.DAMAGE_TYPE, type), damageSourcePosition);
     }
     
     @ZenCodeType.Getter("foodExhaustion")
