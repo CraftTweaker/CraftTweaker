@@ -9,7 +9,7 @@
   "crafttweaker.command.conflict.description.output" : " per l'output %s",
   "crafttweaker.command.conflict.description.type" : " per il tipo %s",
   "crafttweaker.command.conflict.error" : "Si è verificato un errore durante il test sui conflitti: controlla i log",
-  "crafttweaker.command.conflict.hand.empty" : "Non ci sono oggetti nella mano: impossivile verificare la presenza di conflitti per un oggetto sconosciuto",
+  "crafttweaker.command.conflict.hand.empty" : "Non ci sono oggetti nella mano: impossibile verificare la presenza di conflitti per un oggetto sconosciuto",
   "crafttweaker.command.conflict.warnings" : "non usare il comando /reload e non chiudere il server durante l'esecuzione",
   "crafttweaker.command.description.conflicts" : "Identifica e segnala conflitti fra più ricette",
   "crafttweaker.command.description.ctgui" : "Fornisce informazioni sullo stato di CTGUI",
