@@ -57,7 +57,7 @@
   "crafttweaker.command.files.created" : "I file sono stati creati. Fai clic per aprire la cartella!",
   "crafttweaker.command.hand.header.attributes" : "Attributi di",
   "crafttweaker.command.hand.header.tags.block" : "Tag di blocchi",
-  "crafttweaker.command.hand.header.tags.item" : " Tag di oggetti",
+  "crafttweaker.command.hand.header.tags.item" : "Tag di oggetti",
   "crafttweaker.command.hand.no.data" : "L'oggetto non contiene dati",
   "crafttweaker.command.hand.no.tags" : "L'oggetto non ha tag",
   "crafttweaker.command.help.page.info" : "Pagina %s di %s",
