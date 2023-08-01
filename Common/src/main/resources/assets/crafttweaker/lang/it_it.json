@@ -32,7 +32,7 @@
   "crafttweaker.command.description.hand" : "Restituisce il nome e i tag (se esistono) dell'oggetto nella tua mano",
   "crafttweaker.command.description.hand.attributes" : "Restituisce i modificatori di attributi dell'oggetto nella tua mano",
   "crafttweaker.command.description.hand.data" : "Restituisce i dati formattati dell'oggetto nella tua mano",
-  "crafttweaker.command.description.hand.registryname" : "Restituisce il nome del registro dell'oggetto nella tua mano",
+  "crafttweaker.command.description.hand.registryname" : "Restituisce il nome di registro dell'oggetto nella tua mano",
   "crafttweaker.command.description.hand.tags" : "Restituisce i tag dell'oggetto nella tua mano",
   "crafttweaker.command.description.hand.vanilla" : "Restituisce il nome e i tag (se esistono) dell'oggetto nella tua mano nel formato vanilla",
   "crafttweaker.command.description.help" : "Trascrive la lista dei comandi",
