@@ -53,7 +53,7 @@
   "crafttweaker.command.description.syntax" : "Controlla la sintassi degli script",
   "crafttweaker.command.dump.generated" : "È stato generato un elenco delle espressioni tra parentesi uncinate di tipo '%s'!",
   "crafttweaker.command.dump.types" : "Salva tipi",
-  "crafttweaker.command.example.generated" : "Esempi salvati nella cartella 'examples' allinterno della cartella degli script. Fai clic per aprire la cartella!",
+  "crafttweaker.command.example.generated" : "Esempi salvati nella cartella 'examples' all'interno della cartella degli script. Fai clic per aprire la cartella!",
   "crafttweaker.command.files.created" : "I file sono stati creati. Fai clic per aprire la cartella!",
   "crafttweaker.command.hand.header.attributes" : "Attributi di",
   "crafttweaker.command.hand.header.tags.block" : "Tag di blocchi",
