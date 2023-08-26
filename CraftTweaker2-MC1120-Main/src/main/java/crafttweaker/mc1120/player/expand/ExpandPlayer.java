@@ -60,4 +60,10 @@ public class ExpandPlayer {
     public static int getSleepTimer(IPlayer player) {
         return getInternal(player).getSleepTimer();
     }
+
+    @ZenGetter("spectator")
+    @ZenMethod
+    public static boolean isSpectator(IPlayer player) {
+        return getInternal(player).isSpectator();
+    }
 }
