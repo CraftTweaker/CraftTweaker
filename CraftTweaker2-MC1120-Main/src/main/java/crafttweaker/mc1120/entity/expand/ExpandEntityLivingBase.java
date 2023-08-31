@@ -132,4 +132,16 @@ public class ExpandEntityLivingBase {
     public static void setMoveVertical(IEntityLivingBase entityLivingBase, float moveVertical) {
         CraftTweakerMC.getEntityLivingBase(entityLivingBase).moveVertical = moveVertical;
     }
+
+    @ZenGetter("absorptionAmount")
+    @ZenMethod
+    public static double getAbsorptionAmount(IEntityLivingBase entityLivingBase) {
+        return CraftTweakerMC.getEntityLivingBase(entityLivingBase).getAbsorptionAmount();
+    }
+
+    @ZenSetter("absorptionAmount")
+    @ZenMethod
+    public static void setAbsorptionAmount(IEntityLivingBase entityLivingBase, float amount) {
+        CraftTweakerMC.getEntityLivingBase(entityLivingBase).setAbsorptionAmount(amount);
+    }
 }
