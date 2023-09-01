@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.command.type;
 
+import com.blamejared.crafttweaker.CraftTweakerCommon;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.command.CommandUtilities;
 import com.blamejared.crafttweaker.api.loot.LootManager;
@@ -14,6 +15,7 @@ import com.blamejared.crafttweaker.mixin.common.access.level.damage.AccessDamage
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.blamejared.crafttweaker.natives.villager.ExpandVillagerProfession;
 import com.blamejared.crafttweaker.natives.world.biome.ExpandBiome;
+import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.ChatFormatting;
@@ -283,6 +285,21 @@ public final class DumpCommands {
                     return Command.SINGLE_SUCCESS;
                 })
         );
+        
+        handler.registerDump("fake_players", Component.translatable("crafttweaker.command.description.dump.fake_players"), builder -> {
+            builder.executes(context -> {
+                
+                Services.PLATFORM.fakePlayers()
+                        .map(it -> it.getName() + " -> " + it.getId())
+                        .forEach(it -> CraftTweakerCommon.logger().info(it));
+                
+                CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.fake_players")), CommandUtilities.getFormattedLogFile())
+                        .withStyle(ChatFormatting.GREEN)), context.getSource()
+                        .getPlayerOrException());
+                
+                return Command.SINGLE_SUCCESS;
+            });
+        });
     }
     
     private static String getTagAsString(ServerPlayer player, MCTag tag, Object o) {

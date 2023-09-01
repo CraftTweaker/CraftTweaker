@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.plugin.CraftTweakerPlugin;
 import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin;
 import com.blamejared.crafttweaker.mixin.common.access.entity.AccessFakePlayerFactory;
+import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.brigadier.Command;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -20,22 +21,6 @@ public class CraftTweakerPluginForge implements ICraftTweakerPlugin {
     
     @Override
     public void registerCommands(ICommandRegistrationHandler handler) {
-        
-        handler.registerDump("fake_players", Component.translatable("crafttweaker.command.description.dump.fake_players"), builder -> {
-            builder.executes(context -> {
-                
-                Stream.concat(AccessFakePlayerFactory.crafttweaker$getFakePlayers().keySet()
-                                .stream(), Stream.of(AccessFakePlayerFactory.crafttweaker$getMINECRAFT()))
-                        .map(it -> it.getName() + " -> " + it.getId())
-                        .forEach(it -> CraftTweakerCommon.logger().info(it));
-                
-                CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.fake_players")), CommandUtilities.getFormattedLogFile())
-                        .withStyle(ChatFormatting.GREEN)), context.getSource()
-                        .getPlayerOrException());
-                
-                return Command.SINGLE_SUCCESS;
-            });
-        });
         
         handler.registerDump("tool_tiers", Component.translatable("crafttweaker.command.description.dump.tool_tiers"), builder -> {
             builder.executes(context -> {

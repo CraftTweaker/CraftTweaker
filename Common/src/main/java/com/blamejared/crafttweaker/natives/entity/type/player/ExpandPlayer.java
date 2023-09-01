@@ -35,6 +35,7 @@ public class ExpandPlayer {
     @ZenCodeType.Method
     @ZenCodeType.Getter("abilities")
     public static Abilities getAbilities(Player internal) {
+        
         return internal.getAbilities();
     }
     
@@ -217,14 +218,14 @@ public class ExpandPlayer {
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("experienceLevel")
-    public static int getExperienceLevel(Player internal){
-    
+    public static int getExperienceLevel(Player internal) {
+        
         return internal.experienceLevel;
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Setter("experienceLevel")
-    public static void setExperienceLevel(Player internal, int level){
+    public static void setExperienceLevel(Player internal, int level) {
         
         internal.experienceLevel = level;
     }
@@ -395,5 +396,17 @@ public class ExpandPlayer {
         
         internal.sendSystemMessage(text);
     }
+    
+    /**
+     * Checks if this player is a fake player, mainly used for machines.
+     *
+     * @return true if this is a fake player, false otherwise.
+     */
+    @ZenCodeType.Getter("isFakePlayer")
+    public static boolean isFakePlayer(Player internal) {
+        
+        return Services.PLATFORM.isFakePlayer(internal);
+    }
+    
     
 }

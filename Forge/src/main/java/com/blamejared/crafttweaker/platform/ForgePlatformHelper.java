@@ -15,11 +15,13 @@ import com.blamejared.crafttweaker.api.util.HandleUtil;
 import com.blamejared.crafttweaker.api.villager.CTTradeObject;
 import com.blamejared.crafttweaker.impl.loot.CraftTweakerPrivilegedLootModifierMap;
 import com.blamejared.crafttweaker.impl.loot.ForgeLootModifierMapAdapter;
+import com.blamejared.crafttweaker.mixin.common.access.entity.AccessFakePlayerFactory;
 import com.blamejared.crafttweaker.mixin.common.access.food.AccessFoodPropertiesForge;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessBasicTrade;
 import com.blamejared.crafttweaker.platform.helper.inventory.IItemHandlerWrapper;
 import com.blamejared.crafttweaker.platform.services.IPlatformHelper;
 import com.google.common.base.Suppliers;
+import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import cpw.mods.modlauncher.api.INameMappingService;
@@ -46,6 +48,8 @@ import net.minecraftforge.common.ForgeInternalHandler;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifierManager;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.data.loading.DatagenModLoader;
 import net.minecraftforge.fluids.FluidStack;
@@ -387,5 +391,18 @@ public class ForgePlatformHelper implements IPlatformHelper {
         }
         ingredients.clear();
     }
-
+    
+    @Override
+    public Stream<GameProfile> fakePlayers() {
+        
+        return Stream.concat(AccessFakePlayerFactory.crafttweaker$getFakePlayers().keySet()
+                .stream(), Stream.of(AccessFakePlayerFactory.crafttweaker$getMINECRAFT()));
+    }
+    
+    @Override
+    public boolean isFakePlayer(Player player) {
+        
+        return player instanceof FakePlayer;
+    }
+    
 }

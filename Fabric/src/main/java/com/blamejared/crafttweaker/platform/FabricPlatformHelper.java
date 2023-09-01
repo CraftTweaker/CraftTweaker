@@ -8,13 +8,16 @@ import com.blamejared.crafttweaker.api.mod.Mod;
 import com.blamejared.crafttweaker.api.recipe.handler.helper.CraftingTableRecipeConflictChecker;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.impl.fluid.SimpleFluidStack;
+import com.blamejared.crafttweaker.mixin.AccessFakePlayer;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessBucketItem;
 import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
 import com.blamejared.crafttweaker.platform.helper.world.inventory.TAInventoryWrapper;
 import com.blamejared.crafttweaker.platform.services.IPlatformHelper;
 import com.faux.customentitydata.api.CustomDataHelper;
 import com.google.common.base.Suppliers;
+import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Either;
+import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.*;
 import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
@@ -266,6 +269,18 @@ public class FabricPlatformHelper implements IPlatformHelper {
     public CompoundTag getPersistentData(ServerPlayer player) {
         
         return CustomDataHelper.getPersistentData(player);
+    }
+    
+    @Override
+    public Stream<GameProfile> fakePlayers() {
+        
+        return Stream.concat(Stream.of(AccessFakePlayer.getDEFAULT_PROFILE()), AccessFakePlayer.getFAKE_PLAYER_MAP().values().stream().map(Player::getGameProfile));
+    }
+    
+    @Override
+    public boolean isFakePlayer(Player player) {
+        
+        return player instanceof FakePlayer;
     }
     
 }
