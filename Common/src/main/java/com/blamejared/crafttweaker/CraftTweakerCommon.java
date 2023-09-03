@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,8 +38,11 @@ public class CraftTweakerCommon {
         try {
             Files.createDirectories(CraftTweakerAPI.getScriptsDirectory());
         } catch(IOException e) {
-            final String path = CraftTweakerAPI.getScriptsDirectory().toAbsolutePath().toString();
-            throw new IllegalStateException("Could not create Directory " + path);
+            // We don't really care if it exists already
+            if (!(e instanceof FileAlreadyExistsException)) {
+                final String path = CraftTweakerAPI.getScriptsDirectory().toAbsolutePath().toString();
+                throw new IllegalStateException("Could not create Directory " + path);
+            }
         }
         CraftTweakerEarlyInit.run();
         
