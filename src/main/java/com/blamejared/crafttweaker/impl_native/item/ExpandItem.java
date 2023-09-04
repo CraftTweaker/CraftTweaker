@@ -11,7 +11,6 @@ import net.minecraft.item.Item;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ZenRegister
 @Document("vanilla/api/item/MCItemDefinition")
@@ -55,10 +54,7 @@ public class ExpandItem {
     @ZenCodeType.Method
     public static List<MCTag<Item>> getTags(Item internal) {
         
-        return internal.getTags()
-                .stream()
-                .map(resourceLocation -> new MCTag<>(resourceLocation, TagManagerItem.INSTANCE))
-                .collect(Collectors.toList());
+        return TagManagerItem.INSTANCE.getAllTagsFor(internal);
     }
     
 }

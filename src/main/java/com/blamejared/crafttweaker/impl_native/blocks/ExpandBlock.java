@@ -20,7 +20,6 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import java.lang.invoke.MethodHandle;
 import java.util.List;
-import java.util.stream.Collectors;
 
 //TODO breaking: move this to the `.block.` package
 
@@ -244,11 +243,7 @@ public class ExpandBlock {
     @ZenCodeType.Getter("tags")
     public static List<MCTag<Block>> getTags(Block internal) {
         
-        return internal.getTags()
-                .stream()
-                //Even though getTag doesn't create the tag, all of these tags should already exist
-                .map(TagManagerBlock.INSTANCE::getTag)
-                .collect(Collectors.toList());
+        return TagManagerBlock.INSTANCE.getAllTagsFor(internal);
     }
     
     /**
