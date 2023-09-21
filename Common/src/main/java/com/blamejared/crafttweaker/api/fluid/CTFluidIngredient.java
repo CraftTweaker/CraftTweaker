@@ -93,8 +93,7 @@ public abstract class CTFluidIngredient implements CommandStringDisplayable {
         @Override
         public boolean matches(IFluidStack fluidStack) {
             
-            IFluidStack internal = this.fluidStack.getInternal();
-            return internal.isFluidEqual(fluidStack) && internal.getAmount() <= fluidStack.getAmount();
+            return this.fluidStack.isFluidEqual(fluidStack) &&  this.fluidStack.getAmount() <= fluidStack.getAmount();
         }
         
         @Override
