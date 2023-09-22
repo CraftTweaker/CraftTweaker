@@ -3,7 +3,9 @@ package com.blamejared.crafttweaker.api.recipe.manager;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.action.recipe.ActionAddRecipe;
+import com.blamejared.crafttweaker.api.action.recipe.ActionRemoveRecipe;
 import com.blamejared.crafttweaker.api.action.recipe.generic.ActionRemoveAllGenericRecipes;
+import com.blamejared.crafttweaker.api.action.recipe.generic.ActionRemoveGenericRecipe;
 import com.blamejared.crafttweaker.api.action.recipe.generic.ActionRemoveGenericRecipeByModId;
 import com.blamejared.crafttweaker.api.action.recipe.generic.ActionRemoveGenericRecipeByName;
 import com.blamejared.crafttweaker.api.action.recipe.generic.ActionRemoveGenericRecipeByOutput;
@@ -154,6 +156,21 @@ public enum GenericRecipesManager {
     public void remove(IIngredient output) {
         
         CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByOutput(output));
+    }
+    
+    /**
+     * Removes all recipes where the input contains the given IItemStack.
+     *
+     * @param input The input IItemStack.
+     *
+     * @docParam input <item:minecraft:iron_ingot>
+     */
+    @ZenCodeType.Method
+    public void removeByInput(IItemStack input) {
+        
+        CraftTweakerAPI.apply(new ActionRemoveGenericRecipe(iRecipe -> iRecipe.getIngredients()
+                .stream()
+                .anyMatch(ingredient -> ingredient.test(input.getInternal()))));
     }
     
     /**
