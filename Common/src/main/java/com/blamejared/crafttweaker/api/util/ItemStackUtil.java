@@ -68,6 +68,10 @@ public final class ItemStackUtil {
     
     public static boolean areStacksTheSame(final ItemStack first, final ItemStack second, final boolean ignoreDamage, final boolean partial) {
         
+        //Sometimes mods are bad and use null itemstacks, so lets just sort that out here
+        if(first == null || second == null) {
+            return first == second;
+        }
         if(first.isEmpty() != second.isEmpty()) {
             return false;
         }
