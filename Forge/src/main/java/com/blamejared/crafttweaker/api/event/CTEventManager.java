@@ -43,9 +43,35 @@ public class CTEventManager {
     @ZenCodeType.Method
     public static <T extends Event> void register(Class<T> typeOfT, Consumer<T> consumer) {
         
-        register(typeOfT, EventPriority.NORMAL, consumer);
+        register(typeOfT, false,EventPriority.NORMAL, consumer);
     }
     
+    /**
+     * Registers a new Event listener.
+     *
+     * @param typeOfT  Internally used to determine the Event, invisible to scripts.
+     *                      * @param listenToCancelled should the event listen to cancelled events
+     * @param consumer The event handler as consumer
+     * @param <T>      The type of the event
+     *
+     * @docParam <T> crafttweaker.api.event.entity.player.MCAnvilRepairEvent
+     * @docParam listenToCancelled true
+     * @docParam consumer (event) => {
+     * var player = event.player;
+     * var result = event.itemResult;
+     * println("Player '" + player.name + "' crafted " + result.commandString);
+     * }
+     * @docParam <T> crafttweaker.api.event.MCEvent
+     * @docParam consumer (event) => {
+     * //Don't actually register a consumer for every event
+     * println("Some Event was captured");
+     * }
+     */
+    @ZenCodeType.Method
+    public static <T extends Event> void register(Class<T> typeOfT, boolean listenToCancelled, Consumer<T> consumer) {
+        
+        register(typeOfT, listenToCancelled,EventPriority.NORMAL, consumer);
+    }
     
     /**
      * Registers a new Event listener with a specific priority.
@@ -67,6 +93,30 @@ public class CTEventManager {
     public static <T extends Event> void register(Class<T> typeOfT, EventPriority priority, Consumer<T> consumer) {
         
         CraftTweakerAPI.apply(new ActionRegisterEvent<>(typeOfT, consumer, priority));
+    }
+    
+    /**
+     * Registers a new Event listener with a specific priority.
+     *
+     * @param typeOfT  Internally used to determine the Event, invisible to scripts.
+     * @param listenToCancelled should the event listen to cancelled events
+     * @param priority priority for this listener
+     * @param consumer The event handler as consumer
+     * @param <T>      The type of the event
+     *
+     * @docParam <T> crafttweaker.api.event.entity.player.MCAnvilRepairEvent
+     * @docParam listenToCancelled true
+     * @docParam priority EventPriority.HIGHEST
+     * @docParam consumer (event) => {
+     * var player = event.player;
+     * var result = event.itemResult;
+     * println("Player '" + player.name + "' crafted " + result.commandString);
+     * }
+     */
+    @ZenCodeType.Method
+    public static <T extends Event> void register(Class<T> typeOfT, boolean listenToCancelled, EventPriority priority, Consumer<T> consumer) {
+        
+        CraftTweakerAPI.apply(new ActionRegisterEvent<>(typeOfT, listenToCancelled, consumer, priority));
     }
     
 }

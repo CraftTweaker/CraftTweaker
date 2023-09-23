@@ -11,12 +11,22 @@ import java.util.function.Consumer;
 public class ActionRegisterEvent<T extends Event> implements IUndoableAction {
     
     private final Class<T> typeOfT;
+    private final boolean listenToCancelled;
     private final Consumer<T> consumer;
     private final EventPriority priority;
     
     public ActionRegisterEvent(Class<T> typeOfT, Consumer<T> consumer, EventPriority priority) {
         
         this.typeOfT = typeOfT;
+        this.listenToCancelled = false;
+        this.consumer = new EventHandlerWrapper<>(consumer);
+        this.priority = priority;
+    }
+    
+    public ActionRegisterEvent(Class<T> typeOfT, boolean listenToCancelled, Consumer<T> consumer, EventPriority priority) {
+        
+        this.typeOfT = typeOfT;
+        this.listenToCancelled = listenToCancelled;
         this.consumer = new EventHandlerWrapper<>(consumer);
         this.priority = priority;
     }
@@ -24,7 +34,7 @@ public class ActionRegisterEvent<T extends Event> implements IUndoableAction {
     @Override
     public void apply() {
         //Let's go completely safe and use the type
-        MinecraftForge.EVENT_BUS.addListener(priority, false, typeOfT, consumer);
+        MinecraftForge.EVENT_BUS.addListener(priority, listenToCancelled, typeOfT, consumer);
     }
     
     @Override
