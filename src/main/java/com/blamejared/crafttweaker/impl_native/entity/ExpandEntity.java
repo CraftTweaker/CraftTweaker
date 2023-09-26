@@ -250,7 +250,7 @@ public class ExpandEntity {
      * These are **not** tags like MCTag<EntityType>, these are tags that are added by the /tag command.
      *
      * You can read more about how they can be used here:
-     * https://minecraft.fandom.com/wiki/Commands/tag
+     * https://minecraft.wiki/w/Commands/tag
      *
      * @return A set of all the Tags that an Entity has.
      */
@@ -268,7 +268,7 @@ public class ExpandEntity {
      * These are **not** tags like MCTag<EntityType>, these are tags that are added by the /tag command.
      *
      * You can read more about how they can be used here:
-     * https://minecraft.fandom.com/wiki/Commands/tag
+     * https://minecraft.wiki/w/Commands/tag
      *
      * @param tag The name of the tag to add.
      *
@@ -288,7 +288,7 @@ public class ExpandEntity {
      * These are **not** tags like MCTag<EntityType>, these are tags that are added by the /tag command.
      *
      * You can read more about how they can be used here:
-     * https://minecraft.fandom.com/wiki/Commands/tag
+     * https://minecraft.wiki/w/Commands/tag
      *
      * @param tag The name of the tag to remove.
      *
