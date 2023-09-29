@@ -12,12 +12,6 @@ import org.openzen.zencode.java.ZenCodeType;
 public final class ExpandStatePropertiesPredicate {
     
     @ZenCodeType.StaticExpansionMethod
-    public static StatePropertiesPredicate any() {
-        
-        return StatePropertiesPredicate.ANY;
-    }
-    
-    @ZenCodeType.StaticExpansionMethod
     public static StatePropertiesPredicate.Builder create() {
         
         return StatePropertiesPredicate.Builder.properties();

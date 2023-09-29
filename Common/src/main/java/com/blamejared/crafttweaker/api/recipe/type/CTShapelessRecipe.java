@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.api.recipe.type;
 
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.logging.CommonLoggers;
@@ -11,11 +10,15 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class CTShapelessRecipe extends ShapelessRecipe {
     
@@ -24,14 +27,18 @@ public class CTShapelessRecipe extends ShapelessRecipe {
     @Nullable
     private final RecipeFunction1D function;
     
-    public CTShapelessRecipe(String name, IItemStack output, IIngredient[] ingredients, @Nullable RecipeFunction1D function) {
+    public CTShapelessRecipe(IItemStack output, IIngredient[] ingredients) {
         
-        this(name, CraftingBookCategory.MISC, output, ingredients, function);
+        this(CraftingBookCategory.MISC, output, ingredients, null);
+    }
+    public CTShapelessRecipe(IItemStack output, IIngredient[] ingredients, @Nullable RecipeFunction1D function) {
+        
+        this(CraftingBookCategory.MISC, output, ingredients, function);
     }
     
-    public CTShapelessRecipe(String name, CraftingBookCategory category, IItemStack output, IIngredient[] ingredients, @Nullable RecipeFunction1D function) {
+    public CTShapelessRecipe(CraftingBookCategory category, IItemStack output, IIngredient[] ingredients, @Nullable RecipeFunction1D function) {
         
-        super(CraftTweakerConstants.rl(name), "", category, output.getInternal(), NonNullList.create());
+        super("", category, output.getInternal(), NonNullList.create());
         
         this.output = output;
         this.function = function;
@@ -39,7 +46,9 @@ public class CTShapelessRecipe extends ShapelessRecipe {
         boolean containsNull = false;
         for(IIngredient ingredient : ingredients) {
             if(ingredient == null || ingredient.asVanillaIngredient().isEmpty()) {
-                CommonLoggers.api().warn("Shapeless recipe with ID '{}' contains null or empty ingredients, removing entries!", getId());
+                //TODO 1.20.2 print the name somehow, or just move this out somewhere else
+//                CommonLoggers.api()
+//                        .warn("Shapeless recipe with ID '{}' contains null or empty ingredients, removing entries!", getId());
                 containsNull = true;
                 break;
             }

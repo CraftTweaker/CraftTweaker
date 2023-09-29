@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.impl.script.ScriptRecipeType;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.Set;
@@ -27,14 +28,14 @@ public final class DefaultTargetingFilters {
     
     private DefaultTargetingFilters() {}
     
-    public static Stream<? extends Recipe<?>> vanillaSpecial(final Stream<? extends Recipe<?>> allRecipes) {
+    public static Stream< RecipeHolder<?>> vanillaSpecial(final Stream< RecipeHolder<?>> allRecipes) {
         
-        return allRecipes.filter(it -> !VANILLA_RECIPE_TYPES.get().contains(it.getType()) || !it.isSpecial());
+        return allRecipes.filter(it -> !VANILLA_RECIPE_TYPES.get().contains(it.value().getType()) || !it.value().isSpecial());
     }
     
-    public static Stream<? extends Recipe<?>> scripts(final Stream<? extends Recipe<?>> allRecipes) {
+    public static Stream< RecipeHolder<?>> scripts(final Stream<RecipeHolder<?>> allRecipes) {
         
-        return allRecipes.filter(it -> it.getType() != ScriptRecipeType.INSTANCE);
+        return allRecipes.filter(it -> it.value().getType() != ScriptRecipeType.INSTANCE);
     }
     
 }

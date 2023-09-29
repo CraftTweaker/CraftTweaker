@@ -13,12 +13,6 @@ import org.openzen.zencode.java.ZenCodeType;
 public final class ExpandLightPredicate {
     
     @ZenCodeType.StaticExpansionMethod
-    public static LightPredicate any() {
-        
-        return LightPredicate.ANY;
-    }
-    
-    @ZenCodeType.StaticExpansionMethod
     public static LightPredicate.Builder create() {
         
         return LightPredicate.Builder.light();

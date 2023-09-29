@@ -15,34 +15,34 @@ import java.util.Objects;
 @NativeTypeRegistration(value = StatePropertiesPredicate.Builder.class, zenCodeName = "crafttweaker.api.predicate.builder.StatePropertiesPredicateBuilder")
 public final class ExpandStatePropertiesPredicateBuilder {
     
-    @ZenCodeType.Method
-    public static StatePropertiesPredicate.Builder property(final StatePropertiesPredicate.Builder internal, final String name, final String value) {
-        
-        return matching(internal, new StatePropertiesPredicate.ExactPropertyMatcher(name, value));
-    }
+//    @ZenCodeType.Method
+//    public static StatePropertiesPredicate.Builder property(final StatePropertiesPredicate.Builder internal, final String name, final String value) {
+//
+//        return matching(internal, new StatePropertiesPredicate.ExactPropertyMatcher(name, value));
+//    }
+//
+//    @ZenCodeType.Method
+//    public static StatePropertiesPredicate.Builder property(final StatePropertiesPredicate.Builder internal, final String name, final int value) {
+//
+//        return matching(internal, new StatePropertiesPredicate.ExactPropertyMatcher(name, Integer.toString(value)));
+//    }
     
-    @ZenCodeType.Method
-    public static StatePropertiesPredicate.Builder property(final StatePropertiesPredicate.Builder internal, final String name, final int value) {
-        
-        return matching(internal, new StatePropertiesPredicate.ExactPropertyMatcher(name, Integer.toString(value)));
-    }
-    
-    @ZenCodeType.Method
-    public static StatePropertiesPredicate.Builder property(final StatePropertiesPredicate.Builder internal, final String name, final MinMaxBounds.Ints value) {
-        
-        return matching(internal, new StatePropertiesPredicate.RangedPropertyMatcher(name, Objects.toString(value.getMin()), Objects.toString(value.getMax())));
-    }
-    
-    @ZenCodeType.Method
-    public static StatePropertiesPredicate.Builder property(final StatePropertiesPredicate.Builder internal, final String name, final boolean value) {
-        
-        return matching(internal, new StatePropertiesPredicate.ExactPropertyMatcher(name, Boolean.toString(value)));
-    }
+//    @ZenCodeType.Method
+//    public static StatePropertiesPredicate.Builder property(final StatePropertiesPredicate.Builder internal, final String name, final MinMaxBounds.Ints value) {
+//
+//        return matching(internal, new StatePropertiesPredicate.RangedPropertyMatcher(name, Objects.toString(value.getMin()), Objects.toString(value.getMax())));
+//    }
+//
+//    @ZenCodeType.Method
+//    public static StatePropertiesPredicate.Builder property(final StatePropertiesPredicate.Builder internal, final String name, final boolean value) {
+//
+//        return matching(internal, new StatePropertiesPredicate.ExactPropertyMatcher(name, Boolean.toString(value)));
+//    }
     
     @ZenCodeType.Method
     public static StatePropertiesPredicate build(final StatePropertiesPredicate.Builder internal) {
         
-        return internal.build();
+        return internal.build().orElseThrow(() -> new RuntimeException("Error while building StatePropertiesPredicate!"));
     }
     
     private static StatePropertiesPredicate.Builder matching(final StatePropertiesPredicate.Builder internal, final StatePropertiesPredicate.PropertyMatcher matcher) {

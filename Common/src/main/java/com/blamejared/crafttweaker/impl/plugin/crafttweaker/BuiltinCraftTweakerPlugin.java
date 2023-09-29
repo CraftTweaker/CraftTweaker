@@ -168,7 +168,7 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
                 IItemStack.empty(),
                 IItemStack.of(((AccessDyedArmorForEmeralds) trade).crafttweaker$getItem().getDefaultInstance())));
         handler.registerTradeConverter(VillagerTrades.EmeraldForItems.class, trade -> new CTTradeObject(
-                IItemStack.of(((AccessEmeraldForItems) trade).crafttweaker$getItem().getDefaultInstance()),
+                IItemStack.of(((AccessEmeraldForItems) trade).crafttweaker$getItemStack()),
                 IItemStack.empty(),
                 emerald));
         handler.registerTradeConverter(VillagerTrades.TreasureMapForEmeralds.class, trade -> new CTTradeObject(

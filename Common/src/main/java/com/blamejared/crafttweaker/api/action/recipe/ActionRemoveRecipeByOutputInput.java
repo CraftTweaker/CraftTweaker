@@ -15,11 +15,11 @@ public class ActionRemoveRecipeByOutputInput<T extends Recipe<?>> extends Action
     
     public ActionRemoveRecipeByOutputInput(IRecipeManager<T> manager, IIngredient output, IIngredient input) {
         
-        super(manager, recipe -> {
-            ItemStack recipeOutput = AccessibleElementsProvider.get().registryAccess(recipe::getResultItem);
+        super(manager, holder -> {
+            ItemStack recipeOutput = AccessibleElementsProvider.get().registryAccess(holder.value()::getResultItem);
             if(output.matches(IItemStack.ofMutable(recipeOutput))) {
                 for(IItemStack item : input.getItems()) {
-                    if(recipe.getIngredients().get(0).test(item.getInternal())) {
+                    if(holder.value().getIngredients().get(0).test(item.getInternal())) {
                         return true;
                     }
                 }

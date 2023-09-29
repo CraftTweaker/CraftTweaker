@@ -110,12 +110,6 @@ public class ExpandMobEffectInstance {
     }
     
     @ZenCodeType.Method
-    public static void applyEffect(MobEffectInstance internal, LivingEntity entity) {
-        
-        internal.applyEffect(entity);
-    }
-    
-    @ZenCodeType.Method
     @ZenCodeType.Getter("descriptionId")
     public static String getDescriptionId(MobEffectInstance internal) {
         

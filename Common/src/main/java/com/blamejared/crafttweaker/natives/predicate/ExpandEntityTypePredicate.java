@@ -14,12 +14,6 @@ import org.openzen.zencode.java.ZenCodeType;
 public final class ExpandEntityTypePredicate {
     
     @ZenCodeType.StaticExpansionMethod
-    public static EntityTypePredicate any() {
-        
-        return EntityTypePredicate.ANY;
-    }
-    
-    @ZenCodeType.StaticExpansionMethod
     public static EntityTypePredicate create(final EntityType<?> type) {
         
         return EntityTypePredicate.of(type);

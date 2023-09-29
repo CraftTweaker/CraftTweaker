@@ -3,7 +3,7 @@ package com.blamejared.crafttweaker.api.recipe.replacement.type;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.recipe.replacement.IFilteringRule;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Set;
@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  * Filters recipes that match a specific pattern on their name.
  *
  * <p>This acts as a less specialized version of {@link ModsFilteringRule} as it allows custom matching on the entirety
- * of a recipe's name as determined by {@link Recipe#getId()}, at the cost of some efficiency.</p>
+ * of a recipe's name as determined by {@link RecipeHolder#id()}, at the cost of some efficiency.</p>
  *
  * @since 10.0.0
  */
@@ -152,9 +152,9 @@ public final class NameFilteringRule implements IFilteringRule {
     }
     
     @Override
-    public Stream<? extends Recipe<?>> castFilter(final Stream<? extends Recipe<?>> allRecipes) {
+    public Stream<RecipeHolder<?>> castFilter(final Stream<RecipeHolder<?>> allRecipes) {
         
-        return allRecipes.filter(it -> this.matcher.matches(it.getId().toString()));
+        return allRecipes.filter(it -> this.matcher.matches(it.id().toString()));
     }
     
     @Override

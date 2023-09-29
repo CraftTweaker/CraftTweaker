@@ -4,8 +4,11 @@ import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeType;
 
-public enum ScriptRecipeType implements RecipeType<ScriptRecipe> {
-    INSTANCE;
+public class ScriptRecipeType implements RecipeType<ScriptRecipe> {
+    
+    public static final ScriptRecipeType INSTANCE = new ScriptRecipeType();
+    
+    private ScriptRecipeType() {}
     
     public ResourceLocation id() {
         
@@ -17,4 +20,5 @@ public enum ScriptRecipeType implements RecipeType<ScriptRecipe> {
         
         return id().toString();
     }
+    
 }

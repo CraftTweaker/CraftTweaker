@@ -14,6 +14,7 @@ import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,30 +25,31 @@ import java.util.stream.Collectors;
 public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecipe> {
     
     @Override
-    public String dumpToCommandString(final IRecipeManager<? super CTShapedRecipe> manager, final CTShapedRecipe recipe) {
+    public String dumpToCommandString(final IRecipeManager<? super CTShapedRecipe> manager, final RecipeHolder<CTShapedRecipe> holder) {
         
         return String.format(
                 "craftingTable.addShaped(%s, %s, %s%s);",
-                StringUtil.quoteAndEscape(recipe.getId()),
-                recipe.getCtOutput().getCommandString(),
-                Arrays.stream(recipe.getCtIngredients())
+                StringUtil.quoteAndEscape(holder.id()),
+                holder.value().getCtOutput().getCommandString(),
+                Arrays.stream(holder.value().getCtIngredients())
                         .map(row -> Arrays.stream(row)
                                 .map(IIngredient::getCommandString)
                                 .collect(Collectors.joining(", ", "[", "]")))
                         .collect(Collectors.joining(", ", "[", "]")),
-                recipe.getFunction() == null ? "" : ", (usualOut, inputs) => { ... }"
+                holder.value().getFunction() == null ? "" : ", (usualOut, inputs) => { ... }"
         );
     }
     
     @Override
-    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super CTShapedRecipe> manager, final CTShapedRecipe firstRecipe, final U secondRecipe) {
+    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super CTShapedRecipe> manager, final RecipeHolder<CTShapedRecipe> firstHolder, final RecipeHolder<U> secondHolder) {
         
-        return Services.PLATFORM.doCraftingTableRecipesConflict(manager, firstRecipe, secondRecipe);
+        return Services.PLATFORM.doCraftingTableRecipesConflict(manager, firstHolder, secondHolder);
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super CTShapedRecipe> manager, final CTShapedRecipe recipe) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super CTShapedRecipe> manager, final RecipeHolder<CTShapedRecipe> holder) {
         
+        CTShapedRecipe recipe = holder.value();
         final int width = recipe.getWidth();
         final int height = recipe.getHeight();
         final RecipeFunction2D function = recipe.getFunction();
@@ -68,7 +70,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecip
     }
     
     @Override
-    public Optional<CTShapedRecipe> recompose(final IRecipeManager<? super CTShapedRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<RecipeHolder<CTShapedRecipe>> recompose(final IRecipeManager<? super CTShapedRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
         
         final Pair<Integer, Integer> size = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D);
         final MirrorAxis axis = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.MIRROR_AXIS);
@@ -91,7 +93,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecip
         
         final IIngredient[][] matrix = this.inflate(ingredients, width, height);
         final RecipeFunction2D recipeFunction = function == null ? null : function.get(0);
-        return Optional.of(new CTShapedRecipe(name.getPath(), output, matrix, axis, recipeFunction));
+        return Optional.of(new RecipeHolder<>(name, new CTShapedRecipe(output, matrix, axis, recipeFunction)));
     }
     
     private List<IIngredient> flatten(final IIngredient[][] ingredients, final int width, final int height) {

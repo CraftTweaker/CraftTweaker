@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.api.recipe.manager;
 
 
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
@@ -9,6 +8,7 @@ import com.blamejared.crafttweaker.api.recipe.manager.base.ICookingRecipeManager
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.world.item.crafting.CampfireCookingRecipe;
 import net.minecraft.world.item.crafting.CookingBookCategory;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
@@ -19,15 +19,17 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.recipe.CampFireRecipeManager")
 @Document("vanilla/api/recipe/manager/CampFireRecipeManager")
-public enum CampFireRecipeManager implements ICookingRecipeManager<CampfireCookingRecipe> {
+public class CampFireRecipeManager implements ICookingRecipeManager<CampfireCookingRecipe> {
     
     @ZenCodeGlobals.Global("campfire")
-    INSTANCE;
+    public static final CampFireRecipeManager INSTANCE = new CampFireRecipeManager();
+    
+    private CampFireRecipeManager() {}
     
     @Override
-    public CampfireCookingRecipe makeRecipe(String name, CookingBookCategory category, IItemStack output, IIngredient input, float xp, int cookTime) {
+    public RecipeHolder<CampfireCookingRecipe> makeRecipe(String name, CookingBookCategory category, IItemStack output, IIngredient input, float xp, int cookTime) {
         
-        return new CampfireCookingRecipe(CraftTweakerConstants.rl(name), "", category, input.asVanillaIngredient(), output.getInternal(), xp, cookTime);
+        return createHolder(fixRecipeId(name), new CampfireCookingRecipe("", category, input.asVanillaIngredient(), output.getInternal(), xp, cookTime));
     }
     
     @Override

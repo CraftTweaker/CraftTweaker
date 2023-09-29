@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.action.recipe.generic;
 import com.blamejared.crafttweaker.api.recipe.RecipeList;
 import com.blamejared.crafttweaker.api.recipe.manager.RecipeManagerWrapper;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.Map;
@@ -38,6 +39,6 @@ public abstract class ActionRemoveGenericRecipeBase extends ActionWholeRegistryB
         return initialSize - list.getSize();
     }
     
-    protected abstract boolean shouldRemove(Recipe<?> recipe);
+    protected abstract boolean shouldRemove(RecipeHolder<?> holder);
     
 }

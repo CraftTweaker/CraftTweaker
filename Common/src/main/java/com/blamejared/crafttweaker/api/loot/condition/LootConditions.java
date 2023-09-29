@@ -50,7 +50,7 @@ public class LootConditions {
     @ZenCodeType.Method
     public static LootConditions allOf(final LootItemCondition... conditions) {
         
-        return new LootConditions(LootItemConditions.andConditions(conditions));
+        return new LootConditions(LootItemConditions.andConditions(Arrays.asList(conditions)));
     }
     
     @ZenCodeType.Method
@@ -62,7 +62,7 @@ public class LootConditions {
     @ZenCodeType.Method
     public static LootConditions anyOf(final LootItemCondition... conditions) {
         
-        return new LootConditions(LootItemConditions.orConditions(conditions));
+        return new LootConditions(LootItemConditions.orConditions(Arrays.asList(conditions)));
     }
     
     @ZenCodeType.Method

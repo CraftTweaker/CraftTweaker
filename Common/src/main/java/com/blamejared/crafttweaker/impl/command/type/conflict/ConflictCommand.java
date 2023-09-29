@@ -20,6 +20,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 
@@ -104,26 +105,26 @@ public final class ConflictCommand {
         
         // Cloning the map to avoid /reload messing up with CMEs when looping on it from off-thread
         // Also, this deep copies only the two maps: the recipe type, RL, and recipe objects are not also deep copied
-        final Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> recipes = deepCopy(((AccessRecipeManager) manager).crafttweaker$getRecipes(), filter);
+        final Map<RecipeType<?>, Map<ResourceLocation, RecipeHolder<?>>> recipes = deepCopy(((AccessRecipeManager) manager).crafttweaker$getRecipes(), filter);
         CompletableFuture.supplyAsync(() -> computeConflicts(recipes), OFF_THREAD_SERVICE)
                 .thenAcceptAsync(message -> dispatchCompletionTo(message, player), OFF_THREAD_SERVICE)
                 .exceptionallyAsync(exception -> dispatchExceptionTo(exception, player), OFF_THREAD_SERVICE);
     }
     
-    private static Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> deepCopy(final Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> original, final DescriptiveFilter filter) {
+    private static Map<RecipeType<?>, Map<ResourceLocation, RecipeHolder<?>>> deepCopy(final Map<RecipeType<?>, Map<ResourceLocation, RecipeHolder<?>>> original, final DescriptiveFilter filter) {
         
-        final Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> clone = new HashMap<>();
+        final Map<RecipeType<?>, Map<ResourceLocation, RecipeHolder<?>>> clone = new HashMap<>();
         
         original.forEach((type, map) -> {
             
-            final Map<ResourceLocation, Recipe<?>> cloneMap = clone.computeIfAbsent(type, it -> new HashMap<>());
+            final Map<ResourceLocation, RecipeHolder<?>> cloneMap = clone.computeIfAbsent(type, it -> new HashMap<>());
             map.entrySet().stream().filter(filter).forEach(it -> cloneMap.put(it.getKey(), it.getValue()));
         });
         
         return clone;
     }
     
-    private static String computeConflicts(final Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> recipes) {
+    private static String computeConflicts(final Map<RecipeType<?>, Map<ResourceLocation, RecipeHolder<?>>> recipes) {
         
         return recipes.entrySet()
                 .stream()
@@ -132,7 +133,7 @@ public final class ConflictCommand {
                 .collect(Collectors.joining("\n"));
     }
     
-    private static Stream<String> computeConflictsFor(final Map.Entry<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> entry) {
+    private static Stream<String> computeConflictsFor(final Map.Entry<RecipeType<?>, Map<ResourceLocation, RecipeHolder<?>>> entry) {
         
         final IRecipeManager<?> manager = RecipeTypeBracketHandler.getOrDefault(entry.getKey());
         
@@ -140,7 +141,7 @@ public final class ConflictCommand {
             return Stream.empty();
         }
         
-        final List<Map.Entry<ResourceLocation, Recipe<?>>> recipes = new ArrayList<>(entry.getValue().entrySet());
+        final List<Map.Entry<ResourceLocation, RecipeHolder<?>>> recipes = new ArrayList<>(entry.getValue().entrySet());
         final RecipeLongIterator iterator = new RecipeLongIterator(recipes.size());
         final int characteristics = Spliterator.ORDERED | Spliterator.SORTED | Spliterator.NONNULL | Spliterator.IMMUTABLE;
         
@@ -151,9 +152,9 @@ public final class ConflictCommand {
                         .getKey(), recipes.get(RecipeLongIterator.second(it)).getKey()));
     }
     
-    private static <T extends Recipe<?>> boolean conflictsWith(final IRecipeManager<?> manager, final T first, final Recipe<?> second) {
+    private static <T extends Recipe<?>> boolean conflictsWith(final IRecipeManager<?> manager, final RecipeHolder<T> first, final RecipeHolder<?> second) {
         
-        return first != second && IRecipeHandlerRegistry.getHandlerFor(first)
+        return first != second && IRecipeHandlerRegistry.getHandlerFor(first.value())
                 .doesConflict(GenericUtil.uncheck(manager), first, second);
     }
     

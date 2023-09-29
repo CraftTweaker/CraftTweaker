@@ -33,31 +33,19 @@ public final class ExpandEntityPredicateBuilder {
     }
     
     @ZenCodeType.Method
-    public static EntityPredicate.Builder located(final EntityPredicate.Builder internal, final LocationPredicate predicate) {
+    public static EntityPredicate.Builder located(final EntityPredicate.Builder internal, final LocationPredicate.Builder predicate) {
         
         return internal.located(predicate);
     }
     
     @ZenCodeType.Method
-    public static EntityPredicate.Builder located(final EntityPredicate.Builder internal, final LocationPredicate.Builder predicate) {
-        
-        return located(internal, predicate.build());
-    }
-    
-    @ZenCodeType.Method
-    public static EntityPredicate.Builder steppingOn(final EntityPredicate.Builder internal, final LocationPredicate predicate) {
+    public static EntityPredicate.Builder steppingOn(final EntityPredicate.Builder internal, final LocationPredicate.Builder predicate) {
         
         return internal.steppingOn(predicate);
     }
     
     @ZenCodeType.Method
-    public static EntityPredicate.Builder steppingOn(final EntityPredicate.Builder internal, final LocationPredicate.Builder predicate) {
-        
-        return steppingOn(internal, predicate.build());
-    }
-    
-    @ZenCodeType.Method
-    public static EntityPredicate.Builder effects(final EntityPredicate.Builder internal, final MobEffectsPredicate predicate) {
+    public static EntityPredicate.Builder effects(final EntityPredicate.Builder internal, final MobEffectsPredicate.Builder predicate) {
         
         return internal.effects(predicate);
     }
@@ -68,16 +56,11 @@ public final class ExpandEntityPredicateBuilder {
         return internal.nbt(predicate);
     }
     
-    @ZenCodeType.Method
-    public static EntityPredicate.Builder flags(final EntityPredicate.Builder internal, final EntityFlagsPredicate predicate) {
-        
-        return internal.flags(predicate);
-    }
     
     @ZenCodeType.Method
     public static EntityPredicate.Builder flags(final EntityPredicate.Builder internal, final EntityFlagsPredicate.Builder predicate) {
         
-        return flags(internal, predicate.build());
+        return internal.flags(predicate);
     }
     
     @ZenCodeType.Method
@@ -105,39 +88,22 @@ public final class ExpandEntityPredicateBuilder {
     }
     
     @ZenCodeType.Method
-    public static EntityPredicate.Builder vehicle(final EntityPredicate.Builder internal, final EntityPredicate predicate) {
+    public static EntityPredicate.Builder vehicle(final EntityPredicate.Builder internal, final EntityPredicate.Builder predicate) {
         
         return internal.vehicle(predicate);
     }
     
     @ZenCodeType.Method
-    public static EntityPredicate.Builder vehicle(final EntityPredicate.Builder internal, final EntityPredicate.Builder predicate) {
-        
-        return vehicle(internal, predicate.build());
-    }
-    
-    @ZenCodeType.Method
-    public static EntityPredicate.Builder passenger(final EntityPredicate.Builder internal, final EntityPredicate predicate) {
+    public static EntityPredicate.Builder passenger(final EntityPredicate.Builder internal, final EntityPredicate.Builder predicate) {
         
         return internal.passenger(predicate);
     }
     
-    @ZenCodeType.Method
-    public static EntityPredicate.Builder passenger(final EntityPredicate.Builder internal, final EntityPredicate.Builder predicate) {
-        
-        return passenger(internal, predicate.build());
-    }
-    
-    @ZenCodeType.Method
-    public static EntityPredicate.Builder target(final EntityPredicate.Builder internal, final EntityPredicate predicate) {
-        
-        return internal.targetedEntity(predicate);
-    }
     
     @ZenCodeType.Method
     public static EntityPredicate.Builder target(final EntityPredicate.Builder internal, final EntityPredicate.Builder predicate) {
         
-        return target(internal, predicate.build());
+        return internal.targetedEntity(predicate);
     }
     
     @ZenCodeType.Method

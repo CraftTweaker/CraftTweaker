@@ -5,11 +5,14 @@ import com.blamejared.crafttweaker.api.recipe.component.IDecomposedRecipe;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
@@ -26,38 +29,40 @@ public final class RecipeHandlerRegistry implements IRecipeHandlerRegistry {
         private static final DefaultRecipeHandler INSTANCE = new DefaultRecipeHandler();
         
         @Override
-        public String dumpToCommandString(final IRecipeManager<? super Recipe<?>> manager, final Recipe<?> recipe) {
+        public String dumpToCommandString(final IRecipeManager<? super Recipe<?>> manager, final RecipeHolder<Recipe<?>> holder) {
             
+            Recipe<?> recipe = holder.value();
             final String ingredients = recipe.getIngredients()
                     .stream()
                     .map(IIngredient::fromIngredient)
                     .map(IIngredient::getCommandString)
                     .collect(Collectors.joining(", "));
-            
-            return String.format(
-                    "~~ Recipe name: %s, Outputs: %s, Inputs: [%s], Recipe Class: %s, Recipe Serializer: %s ~~",
-                    recipe.getId(),
-                    ItemStackUtil.getCommandString(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)),
-                    ingredients,
-                    recipe.getClass().getName(),
-                    BuiltInRegistries.RECIPE_SERIALIZER.getKey(recipe.getSerializer())
-            );
+            //TODO 1.20.2 confirm
+            return "~~ Recipe name: '%s', Json: %s".formatted(holder.id(), holder.value().getSerializer().codec().encodeStart(JsonOps.INSTANCE, GenericUtil.uncheck(holder.value())));
+//            return String.format(
+//                    "~~ Recipe name: %s, Outputs: %s, Inputs: [%s], Recipe Class: %s, Recipe Serializer: %s ~~",
+//                    holder.id(),
+//                    ItemStackUtil.getCommandString(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)),
+//                    ingredients,
+//                    recipe.getClass().getName(),
+//                    BuiltInRegistries.RECIPE_SERIALIZER.getKey(recipe.getSerializer())
+//            );
         }
         
         @Override
-        public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super Recipe<?>> manager, final Recipe<?> firstRecipe, final U secondRecipe) {
+        public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super Recipe<?>> manager, final RecipeHolder<Recipe<?>> firstHolder, final RecipeHolder<U> secondHolder) {
             
             return false;
         }
         
         @Override
-        public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super Recipe<?>> manager, final Recipe<?> recipe) {
+        public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super Recipe<?>> manager, final RecipeHolder<Recipe<?>> holder) {
             
             return Optional.empty();
         }
         
         @Override
-        public Optional<Recipe<?>> recompose(final IRecipeManager<? super Recipe<?>> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
+        public Optional<RecipeHolder<Recipe<?>>> recompose(final IRecipeManager<? super Recipe<?>> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
             
             return Optional.empty();
         }

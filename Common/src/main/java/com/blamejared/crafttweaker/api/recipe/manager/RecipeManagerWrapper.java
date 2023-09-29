@@ -25,7 +25,6 @@ public class RecipeManagerWrapper implements IRecipeManager<Recipe<?>> {
         return recipeType == null ? null : new RecipeManagerWrapper(recipeType);
     }
     
-    
     @Override
     public RecipeType<Recipe<?>> getRecipeType() {
         

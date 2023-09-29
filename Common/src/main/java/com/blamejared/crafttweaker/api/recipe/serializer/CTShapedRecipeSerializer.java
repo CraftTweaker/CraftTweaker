@@ -1,43 +1,49 @@
 package com.blamejared.crafttweaker.api.recipe.serializer;
 
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.MirrorAxis;
 import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction2D;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipe;
 import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 
 public class CTShapedRecipeSerializer implements RecipeSerializer<CTShapedRecipe> {
     
     public static final CTShapedRecipeSerializer INSTANCE = new CTShapedRecipeSerializer();
     
+    //TODO 1.20.2 test IItemStack to json
+    //TODO 1.20.2 test to make sure this works
+    private static final Codec<CTShapedRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            IItemStack.CODEC.fieldOf("output").forGetter(CTShapedRecipe::getCtOutput),
+            IIngredient.CODEC.listOf().listOf().fieldOf("ingredients")
+                    .xmap(lists -> lists.stream()
+                                    .map(ingredients -> ingredients.toArray(IIngredient[]::new))
+                                    .toArray(IIngredient[][]::new),
+                            ingredients -> Arrays.stream(ingredients)
+                                    .map(iIngredients -> Arrays.stream(iIngredients).toList())
+                                    .toList())
+                    .forGetter(CTShapedRecipe::getCtIngredients), MirrorAxis.CODEC.fieldOf("mirror_axis")
+                    .forGetter(CTShapedRecipe::getMirrorAxis)).apply(instance, CTShapedRecipe::new));
+    
     private CTShapedRecipeSerializer() {}
     
     @Override
-    public CTShapedRecipe fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
+    public Codec<CTShapedRecipe> codec() {
         
-        // People shouldn't be making our recipes from json :eyes:
-        return makeRecipe(
-                CraftTweakerConstants.rl("invalid_recipe"),
-                IItemStack.of(new ItemStack(Items.BARRIER)),
-                new IIngredient[][] {{IItemStack.of(new ItemStack(Items.BARRIER))}},
-                MirrorAxis.NONE,
-                null
-        );
+        return CODEC;
     }
     
     @Override
-    public CTShapedRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+    public CTShapedRecipe fromNetwork(FriendlyByteBuf buffer) {
         
         int height = buffer.readVarInt();
         int width = buffer.readVarInt();
@@ -51,7 +57,7 @@ public class CTShapedRecipeSerializer implements RecipeSerializer<CTShapedRecipe
         
         MirrorAxis mirrorAxis = buffer.readEnum(MirrorAxis.class);
         ItemStack output = buffer.readItem();
-        return makeRecipe(recipeId, IItemStack.of(output), inputs, mirrorAxis, null);
+        return makeRecipe(IItemStack.of(output), inputs, mirrorAxis, null);
     }
     
     @Override
@@ -69,9 +75,9 @@ public class CTShapedRecipeSerializer implements RecipeSerializer<CTShapedRecipe
         buffer.writeItem(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem));
     }
     
-    public CTShapedRecipe makeRecipe(ResourceLocation recipeId, IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunction2D function) {
+    private static CTShapedRecipe makeRecipe(IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunction2D function) {
         
-        return new CTShapedRecipe(recipeId.getPath(), output, ingredients, mirrorAxis, function);
+        return new CTShapedRecipe(output, ingredients, mirrorAxis, function);
     }
     
 }

@@ -21,6 +21,7 @@ import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.tags.TagManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 
 import java.io.IOException;
@@ -29,7 +30,6 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -140,19 +140,17 @@ public final class ScriptReloadListener extends SimplePreparableReloadListener<V
     
     private void storeScriptsInRecipes(final RecipeManager manager, final Path root, final List<Path> scripts) {
         
-        final Map<ResourceLocation, Recipe<?>> recipes = ((AccessRecipeManager) manager).crafttweaker$getRecipes()
+        final Map<ResourceLocation, RecipeHolder<?>> recipes = ((AccessRecipeManager) manager).crafttweaker$getRecipes()
                 .computeIfAbsent(ScriptRecipeType.INSTANCE, it -> new HashMap<>());
         scripts.stream()
                 .map(it -> this.buildScriptRecipe(it, root))
-                .forEach(it -> recipes.put(it.getId(), it));
+                .forEach(it -> recipes.put(it.getId(), new RecipeHolder<>(it.getId(), it)));
     }
     
     private ScriptRecipe buildScriptRecipe(final Path file, final Path root) {
         
         final String fileName = root.relativize(file).toString().replace('\\', '/');
-        final String sanitizedFileName = fileName.toLowerCase(Locale.ENGLISH).replaceAll("[^a-z0-9_.-]", "_");
-        final ResourceLocation id = CraftTweakerConstants.rl(sanitizedFileName);
-        return new ScriptRecipe(id, fileName, this.readContents(file));
+        return new ScriptRecipe(fileName, this.readContents(file));
     }
     
     private String readContents(final Path file) {

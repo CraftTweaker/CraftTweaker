@@ -13,12 +13,6 @@ import org.openzen.zencode.java.ZenCodeType;
 public final class ExpandDistancePredicate {
     
     @ZenCodeType.StaticExpansionMethod
-    public static DistancePredicate any() {
-        
-        return DistancePredicate.ANY;
-    }
-    
-    @ZenCodeType.StaticExpansionMethod
     public static DistancePredicate create(final MinMaxBounds.Doubles x, final MinMaxBounds.Doubles y, final MinMaxBounds.Doubles z,
                                            final MinMaxBounds.Doubles horizontal, final MinMaxBounds.Doubles absolute) {
         

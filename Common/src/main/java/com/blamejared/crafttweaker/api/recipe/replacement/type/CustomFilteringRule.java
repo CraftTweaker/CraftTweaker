@@ -4,10 +4,10 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.replacement.IFilteringRule;
-import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.function.BiPredicate;
@@ -24,10 +24,10 @@ import java.util.stream.Stream;
 @ZenRegister
 public final class CustomFilteringRule implements IFilteringRule {
     
-    private final BiPredicate<IRecipeManager<?>, Recipe<?>> predicate;
+    private final BiPredicate<IRecipeManager<?>, RecipeHolder<?>> predicate;
     private final boolean requiresComputation;
     
-    private CustomFilteringRule(final BiPredicate<IRecipeManager<?>, Recipe<?>> predicate, final boolean requiresComputation) {
+    private CustomFilteringRule(final BiPredicate<IRecipeManager<?>, RecipeHolder<?>> predicate, final boolean requiresComputation) {
         
         this.predicate = predicate;
         this.requiresComputation = requiresComputation;
@@ -46,7 +46,7 @@ public final class CustomFilteringRule implements IFilteringRule {
      * @since 10.0.0
      */
     @ZenCodeType.Method
-    public static CustomFilteringRule of(final Predicate<Recipe<?>> predicate) {
+    public static CustomFilteringRule of(final Predicate<RecipeHolder<?>> predicate) {
         
         return new CustomFilteringRule((a, b) -> predicate.test(b), false);
     }
@@ -65,13 +65,13 @@ public final class CustomFilteringRule implements IFilteringRule {
      * @since 10.0.0
      */
     @ZenCodeType.Method
-    public static CustomFilteringRule of(final BiPredicate<IRecipeManager<?>, Recipe<?>> predicate) {
+    public static CustomFilteringRule of(final BiPredicate<IRecipeManager<?>, RecipeHolder<?>> predicate) {
         
         return new CustomFilteringRule(predicate, true);
     }
     
     @Override
-    public Stream<? extends Recipe<?>> castFilter(final Stream<? extends Recipe<?>> allRecipes) {
+    public Stream<RecipeHolder<?>> castFilter(final Stream<RecipeHolder<?>> allRecipes) {
         
         return allRecipes.filter(this::castFilter);
     }
@@ -82,10 +82,11 @@ public final class CustomFilteringRule implements IFilteringRule {
         return "a custom set of recipes";
     }
     
-    private <C extends Container, T extends Recipe<C>> boolean castFilter(final T recipe) {
+    private <C extends Container, T extends Recipe<C>> boolean castFilter(final RecipeHolder<?> holder) {
         
-        final IRecipeManager<? super T> manager = this.requiresComputation ? GenericUtil.uncheck(RecipeTypeBracketHandler.getOrDefault(recipe.getType())) : null;
-        return this.predicate.test(manager, recipe);
+        final IRecipeManager<? super T> manager = this.requiresComputation ? RecipeTypeBracketHandler.getOrDefault(holder.value()
+                .getType()) : null;
+        return this.predicate.test(manager, holder);
     }
     
 }

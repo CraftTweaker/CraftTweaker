@@ -11,10 +11,4 @@ import org.openzen.zencode.java.ZenCodeType;
 @NativeTypeRegistration(value = EntitySubPredicate.class, zenCodeName = "crafttweaker.api.predicate.EntitySubPredicate")
 public final class ExpandEntitySubPredicate {
     
-    @ZenCodeType.StaticExpansionMethod
-    public static EntitySubPredicate any() {
-        
-        return EntitySubPredicate.ANY;
-    }
-    
 }

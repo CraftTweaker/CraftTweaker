@@ -3,12 +3,16 @@ package com.blamejared.crafttweaker.api.ingredient.type;
 
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.data.*;
+import com.blamejared.crafttweaker.api.data.IData;
+import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.condition.IIngredientCondition;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.openzen.zencode.java.ZenCodeType;
@@ -20,6 +24,11 @@ public class IIngredientConditioned<T extends IIngredient> implements IIngredien
     
     public static final ResourceLocation ID = CraftTweakerConstants.rl("conditioned");
     
+    public static final Codec<IIngredientConditioned<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                    IIngredient.CODEC.fieldOf("base").forGetter(IIngredientConditioned::getBaseIngredient),
+                    IIngredientCondition.CODEC.fieldOf("condition").forGetter(IIngredientConditioned::getCondition)
+            )
+            .apply(instance, (iIngredient, iIngredientCondition) -> new IIngredientConditioned<>(iIngredient, GenericUtil.uncheck(iIngredientCondition))));
     private final T base;
     private final IIngredientCondition<T> condition;
     

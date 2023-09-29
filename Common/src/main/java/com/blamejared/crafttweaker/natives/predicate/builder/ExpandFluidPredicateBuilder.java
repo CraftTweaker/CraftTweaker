@@ -33,12 +33,6 @@ public class ExpandFluidPredicateBuilder {
     }
     
     @ZenCodeType.Method
-    public static FluidPredicate.Builder properties(final FluidPredicate.Builder internal, final StatePropertiesPredicate.Builder predicate) {
-        
-        return properties(internal, predicate.build());
-    }
-    
-    @ZenCodeType.Method
     public static FluidPredicate build(final FluidPredicate.Builder internal) {
         
         return internal.build();

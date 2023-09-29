@@ -1,17 +1,31 @@
 package com.blamejared.crafttweaker.api.ingredient.serializer;
 
-import com.blamejared.crafttweaker.api.ingredient.type.*;
-import com.google.gson.*;
+import com.blamejared.crafttweaker.api.ingredient.type.IIngredientList;
+import com.blamejared.crafttweaker.api.ingredient.type.IngredientList;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public enum IngredientListSerializer implements CustomIngredientSerializer<IngredientList> {
-    INSTANCE;
+public class IngredientListSerializer implements CustomIngredientSerializer<IngredientList> {
+    
+    public static final IngredientListSerializer INSTANCE = new IngredientListSerializer();
+    public static final Codec<IngredientList> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                    Ingredient.CODEC.listOf().fieldOf("ingredients").forGetter(IngredientList::getChildren))
+            .apply(instance, IngredientList::new));
+    
+    private IngredientListSerializer() {}
+    
+    @Override
+    public Codec<IngredientList> getCodec(boolean allowEmpty) {
+        
+        return CODEC;
+    }
     
     @Override
     public IngredientList read(FriendlyByteBuf buffer) {
@@ -22,38 +36,10 @@ public enum IngredientListSerializer implements CustomIngredientSerializer<Ingre
     }
     
     @Override
-    public void write(JsonObject json, IngredientList ingredient) {
-        
-        JsonElement element;
-        if(ingredient.getChildren().size() == 1) {
-            element = ingredient.getChildren().get(0).toJson();
-        } else {
-            element = new JsonArray();
-            JsonArray elementArray = (JsonArray) element;
-            ingredient.getChildren().forEach(e -> elementArray.add(e.toJson()));
-        }
-        json.add("ingredients", element);
-    }
-    
-    @Override
     public ResourceLocation getIdentifier() {
         
         return IIngredientList.ID;
     }
-    
-    @Override
-    public IngredientList read(JsonObject json) {
-        
-        if(!(json.get("ingredients") instanceof JsonArray)) {
-            throw new JsonParseException("No 'ingredients' array to parse!");
-        }
-        List<Ingredient> ingredients = new ArrayList<>();
-        for(JsonElement jsonElement : json.getAsJsonArray("ingredients")) {
-            ingredients.add(Ingredient.fromJson(jsonElement));
-        }
-        return new IngredientList(ingredients);
-    }
-    
     
     @Override
     public void write(FriendlyByteBuf buffer, IngredientList ingredient) {

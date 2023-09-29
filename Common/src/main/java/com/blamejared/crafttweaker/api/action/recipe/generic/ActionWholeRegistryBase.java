@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.impl.script.ScriptRecipeType;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 
@@ -33,10 +34,10 @@ public abstract class ActionWholeRegistryBase extends CraftTweakerAction impleme
                 .collect(Collectors.toMap(RecipeList::getRecipeType, Function.identity()));
     }
     
-    protected Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> getRecipesByType() {
+    protected Map<RecipeType<?>, Map<ResourceLocation, RecipeHolder<?>>> getRecipesByType() {
         
         final AccessRecipeManager manager = CraftTweakerAPI.getAccessibleElementsProvider().accessibleRecipeManager();
-        final HashMap<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> result = new HashMap<>(manager.crafttweaker$getRecipes());
+        final Map<RecipeType<?>, Map<ResourceLocation, RecipeHolder<?>>> result = new HashMap<>(manager.crafttweaker$getRecipes());
         result.remove(ScriptRecipeType.INSTANCE);
         return result;
     }

@@ -2,23 +2,22 @@ package com.blamejared.crafttweaker.api.ingredient.condition.serializer;
 
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.condition.type.ConditionDamaged;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
-public enum ConditionDamagedSerializer implements IIngredientConditionSerializer<ConditionDamaged<?>> {
-    INSTANCE;
+public class ConditionDamagedSerializer implements IIngredientConditionSerializer<ConditionDamaged<?>> {
+    
+    public static final ConditionDamagedSerializer INSTANCE = new ConditionDamagedSerializer();
+    
+    public static final Codec<ConditionDamaged<?>> CODEC = Codec.unit(ConditionDamaged.INSTANCE_RAW);
+    
+    private ConditionDamagedSerializer() {}
     
     @Override
     public ConditionDamaged<?> fromNetwork(FriendlyByteBuf buffer) {
         
-        return new ConditionDamaged<>();
-    }
-    
-    @Override
-    public ConditionDamaged<?> fromJson(JsonObject json) {
-        
-        return new ConditionDamaged<>();
+        return ConditionDamaged.INSTANCE_RAW;
     }
     
     @Override
@@ -27,9 +26,9 @@ public enum ConditionDamagedSerializer implements IIngredientConditionSerializer
     }
     
     @Override
-    public JsonObject toJson(ConditionDamaged<?> transformer) {
+    public Codec<ConditionDamaged<?>> codec() {
         
-        return new JsonObject();
+        return CODEC;
     }
     
     @Override
@@ -37,4 +36,5 @@ public enum ConditionDamagedSerializer implements IIngredientConditionSerializer
         
         return new ResourceLocation(CraftTweakerConstants.MOD_ID, "only_damaged");
     }
+    
 }

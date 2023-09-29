@@ -11,6 +11,7 @@ import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManage
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 
@@ -67,17 +68,18 @@ public class RecipeManagerScriptLoader {
         
         fixRecipeManager(manager);
         
-        final Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> allRecipes = ((AccessRecipeManager) manager).crafttweaker$getRecipes();
-        final Map<ResourceLocation, Recipe<?>> recipes = allRecipes.remove(ScriptRecipeType.INSTANCE); // Why keep them around?
+        final Map<RecipeType<?>, Map<ResourceLocation, RecipeHolder<?>>> allRecipes = ((AccessRecipeManager) manager).crafttweaker$getRecipes();
+        final Map<ResourceLocation, RecipeHolder<?>> recipes = allRecipes.remove(ScriptRecipeType.INSTANCE); // Why keep them around?
         
         if(recipes == null || recipes.isEmpty()) {
             
             // The server does not have any scripts, so don't reload scripts!
             return;
         }
-        
+        //TODO 1.20.2 confirm this works
         final Collection<ScriptRecipe> scriptRecipes = recipes.values()
                 .stream()
+                .map(RecipeHolder::value)
                 .map(ScriptRecipe.class::cast)
                 .collect(Collectors.toCollection(ArrayList::new)); // We want it modifiable, so we can GC all of them fast
         final ScriptRunConfiguration configuration = new ScriptRunConfiguration(

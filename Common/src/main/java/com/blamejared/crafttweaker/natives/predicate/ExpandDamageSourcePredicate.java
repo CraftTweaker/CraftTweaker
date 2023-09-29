@@ -12,12 +12,6 @@ import org.openzen.zencode.java.ZenCodeType;
 public final class ExpandDamageSourcePredicate {
     
     @ZenCodeType.StaticExpansionMethod
-    public static DamageSourcePredicate any() {
-        
-        return DamageSourcePredicate.ANY;
-    }
-    
-    @ZenCodeType.StaticExpansionMethod
     public static DamageSourcePredicate.Builder create() {
         
         return DamageSourcePredicate.Builder.damageType();

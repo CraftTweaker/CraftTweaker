@@ -12,10 +12,10 @@ import org.jetbrains.annotations.Nullable;
 public final class SmithingRecipeConflictChecker {
     
     
-    public static boolean doesConflict(final IRecipeManager<?> manager, final SmithingRecipe first, final SmithingRecipe second) {
+    public static boolean doesConflict(final IRecipeManager<?> manager, final RecipeHolder<? extends SmithingRecipe> first, final RecipeHolder<? extends SmithingRecipe> second) {
         
-        BasicRecipe firstRecipe = BasicRecipe.from(first);
-        BasicRecipe secondRecipe = BasicRecipe.from(second);
+        BasicRecipe firstRecipe = BasicRecipe.from(first.value());
+        BasicRecipe secondRecipe = BasicRecipe.from(second.value());
         
         if(firstRecipe == null || secondRecipe == null) {
             return redirect(GenericUtil.uncheck(manager), second, first);
@@ -26,7 +26,7 @@ public final class SmithingRecipeConflictChecker {
                 && IngredientUtil.canConflict(firstRecipe.addition(), secondRecipe.addition());
     }
     
-    private static <T extends Recipe<?>> boolean redirect(final IRecipeManager<?> manager, final T second, final Recipe<?> first) {
+    private static <T extends Recipe<?>> boolean redirect(final IRecipeManager<?> manager, final RecipeHolder<T> second, final RecipeHolder<?> first) {
         
         return IRecipeHandlerRegistry.getHandlerFor(second)
                 .doesConflict(GenericUtil.uncheck(manager), second, first);

@@ -9,8 +9,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
+import org.jetbrains.annotations.Nullable;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -82,9 +84,9 @@ public final class ExpandLootContextBuilder {
      * @docParam contextParamSet LootContextParamSets.gift()
      */
     @ZenCodeType.Method
-    public static LootContext create(LootContext.Builder internal, @ZenCodeType.Optional ResourceLocation key) {
+    public static LootContext create(LootContext.Builder internal, @ZenCodeType.Optional @ZenCodeType.Nullable ResourceLocation key) {
         
-        return internal.create(key);
+        return internal.create(Optional.ofNullable(key));
     }
     
 }

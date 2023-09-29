@@ -1,8 +1,11 @@
 package com.blamejared.crafttweaker.natives.loot.param;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.mixin.AccessLootContextParamSets;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import com.mojang.serialization.DynamicOps;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -282,7 +285,7 @@ public final class ExpandLootContextParamSets {
     @ZenCodeType.StaticExpansionMethod
     public static LootContextParamSet get(ResourceLocation name) {
         
-        return Optional.ofNullable(LootContextParamSets.get(name))
+        return Optional.ofNullable(AccessLootContextParamSets.crafttweaker$getREGISTRY().get(name))
                 .orElseThrow(() -> new IllegalArgumentException("No loot context param set registered under the name: " + name));
     }
     

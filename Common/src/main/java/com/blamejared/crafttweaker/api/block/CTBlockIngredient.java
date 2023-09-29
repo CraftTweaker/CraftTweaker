@@ -206,19 +206,19 @@ public abstract class CTBlockIngredient implements CommandStringDisplayable {
         @Override
         public boolean matches(Block block, int amount) {
             
-            return this.tag.getData().contains(block) && this.tag.getAmount() <= amount ;
+            return this.tag.getData().contains(block) && this.tag.getAmount() <= amount;
         }
         
         @Override
         public boolean matches(BlockState blockState) {
             
-            return blockState.is((TagKey<Block>) this.tag.getData().getTagKey());
+            return blockState.is(this.tag.getData().<TagKey<Block>> getTagKey());
         }
         
         @Override
         public boolean matches(BlockState blockState, int amount) {
             
-            return blockState.is((TagKey<Block>) this.tag.getData().getTagKey()) && this.tag.getAmount() <= amount;
+            return blockState.is( this.tag.getData().<TagKey<Block>>getTagKey()) && this.tag.getAmount() <= amount;
         }
         
         @Override

@@ -12,12 +12,6 @@ import org.openzen.zencode.java.ZenCodeType;
 public final class ExpandEntityFlagsPredicate {
     
     @ZenCodeType.StaticExpansionMethod
-    public static EntityFlagsPredicate any() {
-        
-        return EntityFlagsPredicate.ANY;
-    }
-    
-    @ZenCodeType.StaticExpansionMethod
     public static EntityFlagsPredicate.Builder create() {
         
         return EntityFlagsPredicate.Builder.flags();

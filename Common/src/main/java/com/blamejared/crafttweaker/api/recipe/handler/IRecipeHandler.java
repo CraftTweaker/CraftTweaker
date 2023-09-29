@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.recipe.component.IDecomposedRecipe;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -98,13 +99,13 @@ public interface IRecipeHandler<T extends Recipe<?>> {
      * <p>All newlines added to either the start or the end of the string will be automatically trimmed.</p>
      *
      * @param manager The recipe manager responsible for this kind of recipes.
-     * @param recipe  The recipe that is currently being dumped.
+     * @param holder  The recipe that is currently being dumped.
      *
      * @return A String representing a {@code addRecipe} (or similar) call.
      *
      * @since 9.0.0
      */
-    String dumpToCommandString(final IRecipeManager<? super T> manager, final T recipe);
+    String dumpToCommandString(final IRecipeManager<? super T> manager, final RecipeHolder<T> holder);
     
     /**
      * Checks if the two recipes conflict with each other.
@@ -116,8 +117,8 @@ public interface IRecipeHandler<T extends Recipe<?>> {
      * conflicts with {@code secondRecipe}, the opposite is also true.</p>
      *
      * @param manager      The recipe manager responsible for this kind of recipes.
-     * @param firstRecipe  The recipe which should be checked for conflict.
-     * @param secondRecipe The other recipe which {@code firstRecipe} should be checked against. The recipe may or may
+     * @param firstHolder  The recipe which should be checked for conflict.
+     * @param secondHolder The other recipe which {@code firstRecipe} should be checked against. The recipe may or may
      *                     not be of the same type of {@code firstRecipe}. See the API note section for more details.
      * @param <U>          The type of {@code secondRecipe}.
      *
@@ -131,7 +132,7 @@ public interface IRecipeHandler<T extends Recipe<?>> {
      * {@code firstRecipe.getType() == secondRecipe.getType()}).
      * @since 9.0.0
      */
-    <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super T> manager, final T firstRecipe, final U secondRecipe);
+    <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super T> manager, final RecipeHolder<T> firstHolder, final RecipeHolder<U> secondHolder);
     
     /**
      * Decomposes a recipe from its complete form into an {@link IDecomposedRecipe}.
@@ -150,14 +151,14 @@ public interface IRecipeHandler<T extends Recipe<?>> {
      * {@code recompose(manager, name, decompose(manager, recipe).get())} must not return an empty optional.</p>
      *
      * @param manager The recipe manager responsible for this kind of recipes.
-     * @param recipe  The recipe that should be decomposed.
+     * @param holder  The recipe that should be decomposed.
      *
      * @return An {@link Optional} wrapping {@linkplain IDecomposedRecipe decomposed recipe}, or an empty one if need be
      * as specified above.
      *
      * @since 10.0.0
      */
-    Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super T> manager, final T recipe);
+    Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super T> manager, final RecipeHolder<T> holder);
     
     /**
      * Reconstructs a complete recipe from its {@linkplain IDecomposedRecipe decomposed form}.
@@ -173,13 +174,13 @@ public interface IRecipeHandler<T extends Recipe<?>> {
      * in vanilla.</p>
      *
      * <p>It is mandatory for a recipe handler that knows how to decompose a recipe to also know how to recompose it. In
-     * other words, if {@link #decompose(IRecipeManager, Recipe)} returns a non-empty {@code Optional}, then
+     * other words, if {@link #decompose(IRecipeManager, RecipeHolder)} returns a non-empty {@code Optional}, then
      * {@code recompose(manager, name, decompose(manager, recipe).get())} must not return an empty optional nor throw
      * an exception.</p>
      *
      * @param manager The recipe manager responsible for this kind of recipes.
      * @param name    The name to give to the recomposed recipe once it has been built. It is mandatory that
-     *                {@link T#getId()} and this parameter represent the same name.
+     *                {@link RecipeHolder<T>#getId()} and this parameter represent the same name.
      * @param recipe  The {@link IDecomposedRecipe} that should be recomposed back into a complete form.
      *
      * @return An {@link Optional} wrapping the complete form of the recipe, or an empty one if need be as specified
@@ -190,6 +191,6 @@ public interface IRecipeHandler<T extends Recipe<?>> {
      *                                  unknown component is present in the decomposed recipe.
      * @since 10.0.0
      */
-    Optional<T> recompose(final IRecipeManager<? super T> manager, final ResourceLocation name, final IDecomposedRecipe recipe);
+    Optional<RecipeHolder<T>> recompose(final IRecipeManager<? super T> manager, final ResourceLocation name, final IDecomposedRecipe recipe);
     
 }

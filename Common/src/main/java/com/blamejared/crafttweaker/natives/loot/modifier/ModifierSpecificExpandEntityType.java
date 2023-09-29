@@ -211,7 +211,7 @@ public class ModifierSpecificExpandEntityType {
         return ExpandLootItemEntityPropertyCondition.create(
                 LootContext.EntityTarget.KILLER,
                 ExpandEntityPredicate.create()
-                        .equipment(ExpandEntityEquipmentPredicate.create().mainhand(item.build()).build())
+                        .equipment(ExpandEntityEquipmentPredicate.create().mainhand(item).build())
         );
     }
     

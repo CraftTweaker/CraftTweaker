@@ -3,7 +3,6 @@ package com.blamejared.crafttweaker.api.recipe.manager;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.action.recipe.ActionAddRecipe;
-import com.blamejared.crafttweaker.api.action.recipe.ActionRemoveRecipe;
 import com.blamejared.crafttweaker.api.action.recipe.generic.ActionRemoveAllGenericRecipes;
 import com.blamejared.crafttweaker.api.action.recipe.generic.ActionRemoveGenericRecipe;
 import com.blamejared.crafttweaker.api.action.recipe.generic.ActionRemoveGenericRecipeByModId;
@@ -17,11 +16,15 @@ import com.blamejared.crafttweaker.api.data.visitor.DataToJsonStringVisitor;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
+import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import org.openzen.zencode.java.ZenCodeGlobals;
@@ -41,17 +44,20 @@ import java.util.stream.Collectors;
  *
  * @docParam this recipes
  */
+//TODO 1.20.2 confirm using container here is fine
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.GenericRecipesManager")
 @Document("vanilla/api/recipe/manager/GenericRecipesManager")
-public enum GenericRecipesManager {
+public class GenericRecipesManager {
     
     @ZenCodeGlobals.Global("recipes")
-    INSTANCE;
+    public static final GenericRecipesManager INSTANCE = new GenericRecipesManager();
+    
+    private GenericRecipesManager() {}
     
     /**
      * Add a new recipe based on the given recipe in a valid DataPack JSON format.
-     *
+     * <p>
      * Unlike the addJSONRecipe method in {@link IRecipeManager} you **must** set the type of the recipe within the JSON yourself.
      *
      * @param name The recipe's resource path
@@ -80,15 +86,15 @@ public enum GenericRecipesManager {
         }
         
         final ResourceLocation recipeName = CraftTweakerConstants.rl(name);
-        final Recipe<?> result = RecipeManager.fromJson(recipeName, recipeObject);
-        final RecipeManagerWrapper recipeManagerWrapper = new RecipeManagerWrapper((RecipeType<Recipe<?>>) result.getType());
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(recipeManagerWrapper, result, null));
+        final RecipeHolder<?> result = AccessRecipeManager.crafttweaker$callFromJson(recipeName, recipeObject);
+        final RecipeManagerWrapper recipeManagerWrapper = new RecipeManagerWrapper(GenericUtil.uncheck(result.value().getType()));
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(recipeManagerWrapper, GenericUtil.uncheck(result), null));
     }
     
     @ZenCodeType.Method
-    public Recipe<?> getRecipeByName(String name) {
+    public RecipeHolder<Recipe<Container>> getRecipeByName(String name) {
         
-        Recipe<?> recipe = getRecipeMap().get(new ResourceLocation(name));
+        RecipeHolder<Recipe<Container>> recipe = getRecipeMap().get(new ResourceLocation(name));
         if(recipe == null) {
             throw new IllegalArgumentException("No recipe found with name: \"" + name + "\"");
         }
@@ -96,16 +102,26 @@ public enum GenericRecipesManager {
     }
     
     @ZenCodeType.Method
-    public List<Recipe<?>> getRecipesByOutput(IIngredient output) {
+    public List<RecipeHolder<Recipe<Container>>> getRecipesByOutput(IIngredient output) {
         
         return getAllRecipes().stream()
-                .filter(recipe -> output.matches(IItemStack.of(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem))))
+                .filter(recipe -> output.matches(IItemStack.of(AccessibleElementsProvider.get()
+                        .registryAccess(recipe.value()::getResultItem))))
                 .collect(Collectors.toList());
     }
     
+    //TODO 1.20.2 confirm using container here is fine
     @ZenCodeType.Method
     @ZenCodeType.Getter("allRecipes")
-    public List<Recipe<?>> getAllRecipes() {
+    public List<RecipeHolder<Recipe<Container>>> getAllRecipes() {
+        
+        return GenericUtil.uncheck(getAllManagers().stream()
+                .map(IRecipeManager::getAllRecipes)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList()));
+    }
+    
+    public List<RecipeHolder<?>> getAllRecipesRaw() {
         
         return getAllManagers().stream()
                 .map(IRecipeManager::getAllRecipes)
@@ -113,6 +129,7 @@ public enum GenericRecipesManager {
                 .collect(Collectors.toList());
     }
     
+    //TODO 1.20.2 confirm using container here is fine
     /**
      * Returns a map of all known recipes.
      *
@@ -120,14 +137,14 @@ public enum GenericRecipesManager {
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("recipeMap")
-    public Map<ResourceLocation, Recipe<?>> getRecipeMap() {
+    public Map<ResourceLocation, RecipeHolder<Recipe<Container>>> getRecipeMap() {
         
-        return getAllManagers().stream()
+        return GenericUtil.uncheck(getAllManagers().stream()
                 .map(IRecipeManager::getRecipeMap)
                 .flatMap(recipeMap -> recipeMap
                         .entrySet()
                         .stream())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
     
     /**
@@ -168,7 +185,7 @@ public enum GenericRecipesManager {
     @ZenCodeType.Method
     public void removeByInput(IItemStack input) {
         
-        CraftTweakerAPI.apply(new ActionRemoveGenericRecipe(iRecipe -> iRecipe.getIngredients()
+        CraftTweakerAPI.apply(new ActionRemoveGenericRecipe(holder -> holder.value().getIngredients()
                 .stream()
                 .anyMatch(ingredient -> ingredient.test(input.getInternal()))));
     }

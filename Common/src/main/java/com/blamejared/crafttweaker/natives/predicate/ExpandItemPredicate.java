@@ -18,12 +18,6 @@ import java.util.Arrays;
 public final class ExpandItemPredicate {
     
     @ZenCodeType.StaticExpansionMethod
-    public static ItemPredicate any() {
-        
-        return ItemPredicate.ANY;
-    }
-    
-    @ZenCodeType.StaticExpansionMethod
     public static ItemPredicate.Builder create() {
         
         return ItemPredicate.Builder.item();

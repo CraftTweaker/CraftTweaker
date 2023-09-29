@@ -3,9 +3,11 @@ package com.blamejared.crafttweaker.api.recipe;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.logging.CommonLoggers;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.ArrayList;
@@ -25,19 +27,19 @@ import java.util.function.Predicate;
 public class RecipeList<T extends Recipe<?>> {
     
     private final RecipeType<T> recipeType;
-    private final Map<ResourceLocation, T> recipes;
-    private final Map<ResourceLocation, Recipe<?>> byName;
+    private final Map<ResourceLocation, RecipeHolder<T>> recipes;
+    private final Map<ResourceLocation, RecipeHolder<T>> byName;
     
-    private final Map<ResourceLocation, T> unmodifiableRecipes;
-    private final Map<ResourceLocation, Recipe<?>> unmodifiableByName;
+    private final Map<ResourceLocation, RecipeHolder<T>> unmodifiableRecipes;
+    private final Map<ResourceLocation, RecipeHolder<T>> unmodifiableByName;
     
-    public RecipeList(RecipeType<T> recipeType, Map<ResourceLocation, T> recipes, Map<ResourceLocation, Recipe<?>> byName) {
+    public RecipeList(RecipeType<T> recipeType, Map<ResourceLocation, RecipeHolder<T>> recipes, Map<ResourceLocation, RecipeHolder<?>> byName) {
         
         this.recipeType = recipeType;
         this.recipes = recipes;
-        this.byName = byName;
-        this.unmodifiableRecipes = Collections.unmodifiableMap(recipes);
-        this.unmodifiableByName = Collections.unmodifiableMap(byName);
+        this.byName = GenericUtil.uncheck(byName);
+        this.unmodifiableRecipes = Collections.unmodifiableMap(this.recipes);
+        this.unmodifiableByName = Collections.unmodifiableMap(this.byName);
     }
     
     /**
@@ -47,11 +49,11 @@ public class RecipeList<T extends Recipe<?>> {
      *
      * @return A List of recipes who's output matches the given IIngredient.
      */
-    public List<T> getRecipesByOutput(IIngredient output) {
+    public List<RecipeHolder<T>> getRecipesByOutput(IIngredient output) {
         
         return getRecipes().values()
                 .stream()
-                .filter(recipe -> output.matches(IItemStack.ofMutable(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem))))
+                .filter(recipe -> output.matches(IItemStack.ofMutable(AccessibleElementsProvider.get().registryAccess(recipe.value()::getResultItem))))
                 .toList();
     }
     
@@ -60,7 +62,7 @@ public class RecipeList<T extends Recipe<?>> {
      *
      * @return A view of the recipes in this RecipeList.
      */
-    public List<T> getAllRecipes() {
+    public List<RecipeHolder<T>> getAllRecipes() {
         
         return new ArrayList<>(getRecipes().values());
     }
@@ -72,7 +74,7 @@ public class RecipeList<T extends Recipe<?>> {
      *
      * @return Teh found recipe or null if not found.
      */
-    public T get(ResourceLocation id) {
+    public RecipeHolder<T> get(ResourceLocation id) {
         
         return getRecipes().get(id);
     }
@@ -84,7 +86,7 @@ public class RecipeList<T extends Recipe<?>> {
      *
      * @return Teh found recipe or null if not found.
      */
-    public T get(String id) {
+    public RecipeHolder<T> get(String id) {
         
         return get(ResourceLocation.tryParse(id));
     }
@@ -119,12 +121,12 @@ public class RecipeList<T extends Recipe<?>> {
      * @param id     The Id of the recipe.
      * @param recipe The recipe to add.
      */
-    public void add(ResourceLocation id, T recipe) {
+    public void add(ResourceLocation id, RecipeHolder<T> recipe) {
         
-        if(getByName().containsKey(recipe.getId())) {
+        if(getByName().containsKey(recipe.id())) {
             CommonLoggers.api().warn(
                     "A recipe with the name '{}' already exists and will be overwritten: this is most likely an error in your scripts",
-                    recipe.getId().getPath()
+                    recipe.id().getPath()
             );
         }
         
@@ -149,13 +151,13 @@ public class RecipeList<T extends Recipe<?>> {
      *
      * @param recipePredicate The predicate to check the recipes against.
      */
-    public void removeByRecipeTest(Predicate<T> recipePredicate) {
+    public void removeByRecipeTest(Predicate<RecipeHolder<T>> recipePredicate) {
         
         Iterator<ResourceLocation> iterator = recipes.keySet().iterator();
         
         while(iterator.hasNext()) {
             ResourceLocation next = iterator.next();
-            T recipe = recipes.get(next);
+            RecipeHolder<T> recipe = recipes.get(next);
             if(recipePredicate.test(recipe)) {
                 byName.remove(next);
                 iterator.remove();
@@ -216,7 +218,7 @@ public class RecipeList<T extends Recipe<?>> {
      *
      * @return An unmodifiable view of the recipe map in this list.
      */
-    public Map<ResourceLocation, T> getRecipes() {
+    public Map<ResourceLocation, RecipeHolder<T>> getRecipes() {
         
         return unmodifiableRecipes;
     }
@@ -226,7 +228,7 @@ public class RecipeList<T extends Recipe<?>> {
      *
      * @return An unmodifiable view of the byName map in this list.
      */
-    public Map<ResourceLocation, Recipe<?>> getByName() {
+    public Map<ResourceLocation, RecipeHolder<T>> getByName() {
         
         return unmodifiableByName;
     }

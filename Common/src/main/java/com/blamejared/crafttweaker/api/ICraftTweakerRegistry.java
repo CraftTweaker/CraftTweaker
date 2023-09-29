@@ -16,6 +16,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.openzen.zenscript.parser.BracketExpressionParser;
 
 import java.util.Collection;
@@ -151,6 +152,20 @@ public interface ICraftTweakerRegistry {
      * @since 9.1.0
      */
     <T extends Recipe<?>> IRecipeHandler<T> getRecipeHandlerFor(final T recipe);
+    
+    /**
+     * Obtains the {@link IRecipeHandler} responsible for the given recipe held by the holder.
+     *
+     * @param holder The recipe holder whose recipe handler should be identified.
+     * @param <T>    The type of the recipe whose handler should be identified.
+     *
+     * @return an {@link IRecipeHandler} that is able to deal with the given recipe.
+     *
+     * @since 15.0.0
+     */
+    default <T extends Recipe<?>> IRecipeHandler<T> getRecipeHandlerFor(final RecipeHolder<T> holder) {
+        return getRecipeHandlerFor(holder.value());
+    }
     
     /**
      * Obtains the {@link IRecipeHandler} responsible for the given recipe class.

@@ -23,13 +23,6 @@ public class ExpandFrameType {
     }
     
     @ZenCodeType.Method
-    @ZenCodeType.Getter("texture")
-    public static int getTexture(FrameType internal) {
-        
-        return internal.getTexture();
-    }
-    
-    @ZenCodeType.Method
     @ZenCodeType.Getter("chatColor")
     public static ChatFormatting getChatColor(FrameType internal) {
         

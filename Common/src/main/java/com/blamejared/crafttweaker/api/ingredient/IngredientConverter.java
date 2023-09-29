@@ -8,7 +8,6 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
 import com.blamejared.crafttweaker.api.tag.expand.ExpandItemTag;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessIngredient;
-import com.blamejared.crafttweaker.mixin.common.access.item.AccessIngredientTagValue;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -69,7 +68,7 @@ public class IngredientConverter {
     
     private static IIngredient fromTagList(Ingredient.TagValue value) {
         
-        final ResourceLocation location = ((AccessIngredientTagValue) value).crafttweaker$getTag().location();
+        final ResourceLocation location = value.tag().location();
         return CraftTweakerTagRegistry.INSTANCE.findKnownManager(Registries.ITEM)
                 .map(mcTags -> mcTags.tag(location))
                 .map(ExpandItemTag::asIIngredient)

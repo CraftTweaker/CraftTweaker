@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.CookingBookCategory;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.openzen.zencode.java.ZenCodeType;
 
 /**
@@ -46,7 +47,7 @@ public interface ICookingRecipeManager<T extends AbstractCookingRecipe> extends 
     default void addRecipe(String name, IItemStack output, IIngredient input, float xp, int cookTime) {
         
         name = fixRecipeName(name);
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, makeRecipe(name, CookingBookCategory.MISC, output, input, xp, cookTime), ""));
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, makeRecipe(name, CookingBookCategory.MISC, output, input, xp, cookTime)));
     }
     
     /**
@@ -76,7 +77,7 @@ public interface ICookingRecipeManager<T extends AbstractCookingRecipe> extends 
     default void addRecipe(String name, CookingBookCategory category, IItemStack output, IIngredient input, float xp, int cookTime) {
         
         name = fixRecipeName(name);
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, makeRecipe(name, category, output, input, xp, cookTime), ""));
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, makeRecipe(name, category, output, input, xp, cookTime)));
     }
     
     /**
@@ -95,6 +96,6 @@ public interface ICookingRecipeManager<T extends AbstractCookingRecipe> extends 
     }
     
     
-    T makeRecipe(String name, CookingBookCategory category, IItemStack output, IIngredient input, float xp, int cookTime);
+    RecipeHolder<T> makeRecipe(String name, CookingBookCategory category, IItemStack output, IIngredient input, float xp, int cookTime);
     
 }

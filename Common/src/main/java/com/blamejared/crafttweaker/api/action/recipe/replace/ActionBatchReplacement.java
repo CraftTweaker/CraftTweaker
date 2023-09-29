@@ -15,6 +15,7 @@ import com.blamejared.crafttweaker.api.util.GenericUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.Collection;
 import java.util.stream.Collector;
@@ -42,7 +43,7 @@ public final class ActionBatchReplacement extends CraftTweakerAction implements 
     @Override
     public void apply() {
         
-        this.castFilters(GenericRecipesManager.INSTANCE.getAllRecipes().stream()).forEach(this::replace);
+        this.castFilters(GenericRecipesManager.INSTANCE.getAllRecipesRaw().stream()).forEach(this::replace);
     }
     
     @Override
@@ -57,7 +58,7 @@ public final class ActionBatchReplacement extends CraftTweakerAction implements 
         );
     }
     
-    private Stream<? extends Recipe<?>> castFilters(final Stream<? extends Recipe<?>> recipeStream) {
+    private Stream< RecipeHolder<?>> castFilters(final Stream<RecipeHolder<?>> recipeStream) {
         
         return Stream.concat(this.registry.filters().stream(), this.targetingRules.stream())
                 .reduce((a, b) -> it -> b.castFilter(a.castFilter(it)))
@@ -65,11 +66,12 @@ public final class ActionBatchReplacement extends CraftTweakerAction implements 
                 .orElseGet(() -> GenericUtil.uncheck(recipeStream));
     }
     
-    private <C extends Container, T extends Recipe<C>> void replace(final T recipe) {
+    private <C extends Container, T extends Recipe<C>> void replace(final RecipeHolder<?> recipe) {
         
-        final IRecipeHandler<T> handler = CraftTweakerAPI.getRegistry().getRecipeHandlerFor(recipe);
-        final IRecipeManager<? super T> manager = GenericUtil.uncheck(RecipeTypeBracketHandler.getOrDefault(recipe.getType()));
-        handler.decompose(manager, recipe).ifPresent(it -> this.replace(manager, handler, recipe.getId(), it));
+        RecipeHolder<T> typedRecipe = GenericUtil.uncheck(recipe);
+        final IRecipeHandler<T> handler = CraftTweakerAPI.getRegistry().getRecipeHandlerFor(typedRecipe);
+        final IRecipeManager<? super T> manager = GenericUtil.uncheck(RecipeTypeBracketHandler.getOrDefault(recipe.value().getType()));
+        handler.decompose(manager, typedRecipe).ifPresent(it -> this.replace(manager, handler, recipe.id(), it));
     }
     
     private <C extends Container, T extends Recipe<C>> void replace(
@@ -80,8 +82,8 @@ public final class ActionBatchReplacement extends CraftTweakerAction implements 
     ) {
         
         if(this.apply(recipe)) {
-            
-            CraftTweakerAPI.apply(new ActionReplaceRecipe<>(name, manager, newName -> this.rebuild(recipe, manager, handler, newName)));
+            //TODO 1.20.2 confirm
+            CraftTweakerAPI.apply(new ActionReplaceRecipe<>(name, manager, newName -> GenericUtil.uncheck(this.rebuild(recipe, manager, handler, newName))));
         }
     }
     
@@ -94,7 +96,7 @@ public final class ActionBatchReplacement extends CraftTweakerAction implements 
         return any;
     }
     
-    private <C extends Container, T extends Recipe<C>> T rebuild(
+    private <C extends Container, T extends Recipe<C>> RecipeHolder<T> rebuild(
             final IDecomposedRecipe recipe,
             final IRecipeManager<? super T> manager,
             final IRecipeHandler<T> handler,

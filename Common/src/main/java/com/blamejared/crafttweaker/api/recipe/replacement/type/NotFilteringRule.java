@@ -4,7 +4,7 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.recipe.manager.GenericRecipesManager;
 import com.blamejared.crafttweaker.api.recipe.replacement.IFilteringRule;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Set;
@@ -47,12 +47,12 @@ public final class NotFilteringRule implements IFilteringRule {
     }
     
     @Override
-    public Stream<? extends Recipe<?>> castFilter(final Stream<? extends Recipe<?>> allRecipes) {
+    public Stream<RecipeHolder<?>> castFilter(final Stream<RecipeHolder<?>> allRecipes) {
         
-        final Set<? extends Recipe<?>> toYeet =
-                this.rule.castFilter(GenericRecipesManager.INSTANCE.getAllRecipes().stream())
-                        .collect(Collectors.toSet());
-        return allRecipes.filter(it -> !toYeet.contains(it));
+        final Set<RecipeHolder<?>> toRemove = this.rule.castFilter(GenericRecipesManager.INSTANCE.getAllRecipesRaw()
+                        .stream())
+                .collect(Collectors.toSet());
+        return allRecipes.filter(it -> !toRemove.contains(it));
     }
     
     @Override

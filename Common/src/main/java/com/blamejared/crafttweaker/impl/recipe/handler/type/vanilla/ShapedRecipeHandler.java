@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 
 import java.util.List;
@@ -27,12 +28,13 @@ import java.util.stream.IntStream;
 public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
     
     @Override
-    public String dumpToCommandString(final IRecipeManager<? super ShapedRecipe> manager, final ShapedRecipe recipe) {
+    public String dumpToCommandString(final IRecipeManager<? super ShapedRecipe> manager, final RecipeHolder<ShapedRecipe> holder) {
         
+        ShapedRecipe recipe = holder.value();
         final NonNullList<Ingredient> ingredients = recipe.getIngredients();
         return String.format(
                 "craftingTable.addShaped(%s, %s, %s);",
-                StringUtil.quoteAndEscape(recipe.getId()),
+                StringUtil.quoteAndEscape(holder.id()),
                 ItemStackUtil.getCommandString(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)),
                 IntStream.range(0, recipe.getHeight())
                         .mapToObj(y -> IntStream.range(0, recipe.getWidth())
@@ -45,14 +47,15 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
     }
     
     @Override
-    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super ShapedRecipe> manager, final ShapedRecipe firstRecipe, final U secondRecipe) {
+    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super ShapedRecipe> manager, final RecipeHolder<ShapedRecipe> firstHolder, final RecipeHolder<U> secondHolder) {
         
-        return Services.PLATFORM.doCraftingTableRecipesConflict(manager, firstRecipe, secondRecipe);
+        return Services.PLATFORM.doCraftingTableRecipesConflict(manager, firstHolder, secondHolder);
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super ShapedRecipe> manager, final ShapedRecipe recipe) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super ShapedRecipe> manager, final RecipeHolder<ShapedRecipe> holder) {
         
+        ShapedRecipe recipe = holder.value();
         final List<IIngredient> ingredients = recipe.getIngredients().stream()
                 .map(IIngredient::fromIngredient)
                 .toList();
@@ -67,7 +70,7 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
     }
     
     @Override
-    public Optional<ShapedRecipe> recompose(final IRecipeManager<? super ShapedRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<RecipeHolder<ShapedRecipe>> recompose(final IRecipeManager<? super ShapedRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
         
         final String group = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.GROUP);
         final CraftingBookCategory category = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.CRAFTING_BOOK_CATEGORY);
@@ -91,7 +94,7 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
         final NonNullList<Ingredient> recipeIngredients = ingredients.stream()
                 .map(IIngredient::asVanillaIngredient)
                 .collect(NonNullList::create, NonNullList::add, NonNullList::addAll);
-        return Optional.of(new ShapedRecipe(name, group, category, width, height, recipeIngredients, output.getInternal()));
+        return Optional.of(new RecipeHolder<>(name, new ShapedRecipe(group, category, width, height, recipeIngredients, output.getInternal())));
     }
     
 }

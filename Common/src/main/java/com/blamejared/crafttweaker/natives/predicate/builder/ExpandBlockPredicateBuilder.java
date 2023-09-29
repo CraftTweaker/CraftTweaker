@@ -25,7 +25,7 @@ public class ExpandBlockPredicateBuilder {
     @ZenCodeType.Method
     public static BlockPredicate.Builder tag(final BlockPredicate.Builder internal, final KnownTag<Block> tag) {
 
-        return internal.of((TagKey<Block>) tag.getTagKey());
+        return internal.of( tag.<TagKey<Block>>getTagKey());
     }
     
     @ZenCodeType.Method
@@ -41,15 +41,9 @@ public class ExpandBlockPredicateBuilder {
     }
     
     @ZenCodeType.Method
-    public static BlockPredicate.Builder properties(final BlockPredicate.Builder internal, final StatePropertiesPredicate predicate) {
-        
-        return internal.setProperties(predicate);
-    }
-    
-    @ZenCodeType.Method
     public static BlockPredicate.Builder properties(final BlockPredicate.Builder internal, final StatePropertiesPredicate.Builder predicate) {
         
-        return properties(internal, predicate.build());
+        return internal.setProperties(predicate);
     }
     
     @ZenCodeType.Method

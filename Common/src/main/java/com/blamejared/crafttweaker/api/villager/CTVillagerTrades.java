@@ -58,7 +58,7 @@ public class CTVillagerTrades {
     
     /**
      * Adds a new custom trade with the selling and buying items determined by the custom MerchantOffer generator.
-     *
+     * <p>
      * The function will only run when the villager resolves the trade.
      *
      * @param profession     What profession this trade should be for.
@@ -220,13 +220,13 @@ public class CTVillagerTrades {
      * @docParam tradeFor <item:minecraft:potato>.definition
      */
     @ZenCodeType.Method
-    public void removeEmeraldForItemsTrade(VillagerProfession profession, int villagerLevel, Item tradeFor) {
+    public void removeEmeraldForItemsTrade(VillagerProfession profession, int villagerLevel, IItemStack tradeFor) {
         
         removeTradeInternal(profession, villagerLevel, trade -> {
             if(trade instanceof VillagerTrades.EmeraldForItems) {
-                return ((AccessEmeraldForItems) trade).crafttweaker$getItem() == tradeFor;
+                return tradeFor.matches(IItemStack.of(((AccessEmeraldForItems)trade).crafttweaker$getItemStack()));
             } else if(trade instanceof IBasicItemListing basicTrade) {
-                return basicTrade.getForSale().getItem() == tradeFor;
+                return tradeFor.matches(IItemStack.of(basicTrade.getForSale()));
             }
             return false;
         });

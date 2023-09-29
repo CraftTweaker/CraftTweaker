@@ -64,13 +64,20 @@ public class ExpandAttributeInstance {
     
     @ZenCodeType.Method
     @ZenCodeType.Nullable
+    public static AttributeModifier getModifier(AttributeInstance internal, UUID uuid) {
+        
+        return internal.getModifier(uuid);
+    }
+    
+    @ZenCodeType.Method
+    @ZenCodeType.Nullable
     public static AttributeModifier getModifier(AttributeInstance internal, String uuid) {
         
         return internal.getModifier(UUID.fromString(uuid));
     }
     
     @ZenCodeType.Method
-    public static void removeModifier(AttributeInstance internal, AttributeModifier modifier) {
+    public static void removeModifier(AttributeInstance internal, UUID modifier) {
         
         internal.removeModifier(modifier);
     }

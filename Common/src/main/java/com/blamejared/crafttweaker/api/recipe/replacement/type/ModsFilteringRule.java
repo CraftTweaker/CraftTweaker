@@ -4,7 +4,7 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.mod.Mod;
 import com.blamejared.crafttweaker.api.recipe.replacement.IFilteringRule;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Set;
@@ -15,7 +15,7 @@ import java.util.stream.Stream;
  * Filters recipes that have been created by the given set of mods.
  *
  * <p>Every mod is identified according to its mod id. Recipes have been created by a mod if their name as determined
- * by {@link Recipe#getId()} has that mod id as the namespace.</p>
+ * by {@link RecipeHolder#id()} has that mod id as the namespace.</p>
  *
  * @since 10.0.0
  */
@@ -72,9 +72,9 @@ public final class ModsFilteringRule implements IFilteringRule {
     }
     
     @Override
-    public Stream<? extends Recipe<?>> castFilter(final Stream<? extends Recipe<?>> allRecipes) {
+    public Stream<RecipeHolder<?>> castFilter(final Stream<RecipeHolder<?>> allRecipes) {
         
-        return allRecipes.filter(it -> this.modIds.contains(it.getId().getNamespace()));
+        return allRecipes.filter(it -> this.modIds.contains(it.id().getNamespace()));
     }
     
     @Override

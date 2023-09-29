@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.api.recipe.manager;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.action.recipe.ActionAddRecipe;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
@@ -19,10 +18,12 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.recipe.StoneCutterManager")
 @Document("vanilla/api/recipe/manager/StoneCutterManager")
-public enum StoneCutterManager implements IRecipeManager<StonecutterRecipe> {
+public class StoneCutterManager implements IRecipeManager<StonecutterRecipe> {
     
     @ZenCodeGlobals.Global("stoneCutter")
-    INSTANCE;
+    public static final StoneCutterManager INSTANCE = new StoneCutterManager();
+    
+    private StoneCutterManager() {}
     
     /**
      * Adds a recipe to the stone cutter
@@ -38,8 +39,7 @@ public enum StoneCutterManager implements IRecipeManager<StonecutterRecipe> {
     @ZenCodeType.Method
     public void addRecipe(String recipeName, IItemStack output, IIngredient input) {
         
-        recipeName = fixRecipeName(recipeName);
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, new StonecutterRecipe(CraftTweakerConstants.rl(recipeName), "", input.asVanillaIngredient(), output.getInternal()), ""));
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, createHolder(fixRecipeId(recipeName), new StonecutterRecipe("", input.asVanillaIngredient(), output.getInternal()))));
     }
     
     @Override

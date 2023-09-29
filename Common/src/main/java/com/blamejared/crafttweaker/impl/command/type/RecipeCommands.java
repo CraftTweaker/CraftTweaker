@@ -21,6 +21,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.ArrayList;
@@ -132,7 +133,7 @@ public final class RecipeCommands {
             
             ((AccessRecipeManager) player.level().getRecipeManager()).crafttweaker$getRecipes()
                     .forEach((recipeType, map) ->
-                            dumpRecipe(recipeType, map.values(), it -> workingStack.matches(IItemStack.of(AccessibleElementsProvider.get().registryAccess(it::getResultItem))), true));
+                            dumpRecipe(recipeType, map.values(), it -> workingStack.matches(IItemStack.of(AccessibleElementsProvider.get().registryAccess(it.value()::getResultItem))), true));
         }
         CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.recipes.list")), CommandUtilities.getFormattedLogFile())
                 .withStyle(ChatFormatting.GREEN)), player);
@@ -148,7 +149,7 @@ public final class RecipeCommands {
                 .forEach(it -> dumpRecipe(it.getKey(), it.getValue().values(), recipe -> true, false));
     }
     
-    private static void dumpRecipe(final RecipeType<?> type, final Collection<Recipe<?>> recipes, final Predicate<Recipe<?>> filter, final boolean hideEmpty) {
+    private static void dumpRecipe(final RecipeType<?> type, final Collection<RecipeHolder<?>> recipes, final Predicate<RecipeHolder<?>> filter, final boolean hideEmpty) {
         
         final IRecipeManager<?> manager = RecipeTypeBracketHandler.getOrDefault(type);
         if(manager == null) {
@@ -158,7 +159,7 @@ public final class RecipeCommands {
         
         final String dumpResult = recipes.stream()
                 .filter(filter)
-                .sorted(Comparator.comparing(RecipeCommands::serializer).thenComparing(Recipe::getId))
+                .sorted(Comparator.comparing(RecipeCommands::serializer).thenComparing(RecipeHolder::id))
                 .map(it -> dump(GenericUtil.uncheck(manager), it))
                 .collect(Collectors.joining("\n  "));
         
@@ -169,12 +170,12 @@ public final class RecipeCommands {
         CommandUtilities.COMMAND_LOGGER.info("Recipe type: '{}'\n  {}\n", manager.getCommandString(), dumpResult.isEmpty() ? "No recipe found" : dumpResult);
     }
     
-    private static ResourceLocation serializer(final Recipe<?> recipe) {
+    private static ResourceLocation serializer(final RecipeHolder<?> recipe) {
         
-        return Objects.requireNonNull(BuiltInRegistries.RECIPE_SERIALIZER.getKey(recipe.getSerializer()));
+        return Objects.requireNonNull(BuiltInRegistries.RECIPE_SERIALIZER.getKey(recipe.value().getSerializer()));
     }
     
-    private static <T extends Recipe<?>> String dump(final IRecipeManager<? super T> manager, final T recipe) {
+    private static <T extends Recipe<?>> String dump(final IRecipeManager<? super T> manager, final RecipeHolder<T> recipe) {
         
         return IRecipeHandlerRegistry.getHandlerFor(recipe).dumpToCommandString(manager, recipe);
     }

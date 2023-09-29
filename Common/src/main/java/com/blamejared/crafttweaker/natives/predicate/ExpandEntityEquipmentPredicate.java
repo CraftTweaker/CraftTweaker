@@ -10,13 +10,6 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/predicate/EntityEquipmentPredicate")
 @NativeTypeRegistration(value = EntityEquipmentPredicate.class, zenCodeName = "crafttweaker.api.predicate.EntityEquipmentPredicate")
 public final class ExpandEntityEquipmentPredicate {
-    
-    @ZenCodeType.StaticExpansionMethod
-    public static EntityEquipmentPredicate any() {
-        
-        return EntityEquipmentPredicate.ANY;
-    }
-    
     @ZenCodeType.StaticExpansionMethod
     public static EntityEquipmentPredicate captain() {
         

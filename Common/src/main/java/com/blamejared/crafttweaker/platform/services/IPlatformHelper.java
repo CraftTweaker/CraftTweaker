@@ -27,6 +27,7 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.Nullable;
 
@@ -115,7 +116,7 @@ public interface IPlatformHelper {
         return (!first.hasTag() || first.getTag().equals(second.getTag()));
     }
     
-    boolean doCraftingTableRecipesConflict(final IRecipeManager<?> manager, final Recipe<?> first, final Recipe<?> second);
+    boolean doCraftingTableRecipesConflict(final IRecipeManager<?> manager, final RecipeHolder<?> first, final RecipeHolder<?> second);
     
     Set<MutableComponent> getFluidsForDump(ItemStack stack, Player player, InteractionHand hand);
     

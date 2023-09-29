@@ -1,14 +1,16 @@
 package com.blamejared.crafttweaker.api.recipe.manager;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.action.recipe.ActionAddRecipe;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
+import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessSmithingTrimRecipe;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmithingRecipe;
+import net.minecraft.world.item.crafting.SmithingTransformRecipe;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -18,10 +20,12 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.recipe.SmithingRecipeManager")
 @Document("vanilla/api/recipe/manager/SmithingRecipeManager")
-public enum SmithingRecipeManager implements IRecipeManager<SmithingRecipe> {
+public class SmithingRecipeManager implements IRecipeManager<SmithingRecipe> {
     
     @ZenCodeGlobals.Global("smithing")
-    INSTANCE;
+    public static final SmithingRecipeManager INSTANCE = new SmithingRecipeManager();
+    
+    private SmithingRecipeManager() {}
     
     /**
      * Adds a new trim recipe to the smithing table.
@@ -39,9 +43,8 @@ public enum SmithingRecipeManager implements IRecipeManager<SmithingRecipe> {
     @ZenCodeType.Method
     public void addTrimRecipe(String recipeName, IIngredient template, IIngredient base, IIngredient addition) {
         
-        recipeName = fixRecipeName(recipeName);
-        final SmithingRecipe smithing = new SmithingTrimRecipe(CraftTweakerConstants.rl(recipeName), template.asVanillaIngredient(), base.asVanillaIngredient(), addition.asVanillaIngredient());
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, smithing, ""));
+        final SmithingRecipe recipe = AccessSmithingTrimRecipe.crafttweaker$createSmithingTrimRecipe(template.asVanillaIngredient(), base.asVanillaIngredient(), addition.asVanillaIngredient());
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, createHolder(fixRecipeId(recipeName), recipe), "trim"));
     }
     
     /**
@@ -61,9 +64,8 @@ public enum SmithingRecipeManager implements IRecipeManager<SmithingRecipe> {
     @ZenCodeType.Method
     public void addTransformRecipe(String recipeName, IItemStack result, IIngredient template, IIngredient base, IIngredient addition) {
         
-        recipeName = fixRecipeName(recipeName);
-        final SmithingRecipe smithing = new SmithingTransformRecipe(CraftTweakerConstants.rl(recipeName), template.asVanillaIngredient(), base.asVanillaIngredient(), addition.asVanillaIngredient(), result.getInternal());
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, smithing, ""));
+        final SmithingRecipe recipe = new SmithingTransformRecipe(template.asVanillaIngredient(), base.asVanillaIngredient(), addition.asVanillaIngredient(), result.getInternal());
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, createHolder(fixRecipeId(recipeName), recipe), "transform"));
     }
     
     @Override

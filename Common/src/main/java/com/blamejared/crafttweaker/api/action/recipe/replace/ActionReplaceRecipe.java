@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.NameUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -23,7 +24,7 @@ public final class ActionReplaceRecipe<T extends Recipe<?>> extends CraftTweaker
     private final Supplier<ActionAddRecipe<T>> addRecipe;
     private final ActionRemoveRecipeByName<T> removeRecipe;
     
-    ActionReplaceRecipe(final ResourceLocation name, final IRecipeManager<T> manager, final Function<ResourceLocation, T> recipeCreator) {
+    ActionReplaceRecipe(final ResourceLocation name, final IRecipeManager<T> manager, final Function<ResourceLocation, RecipeHolder<T>> recipeCreator) {
         
         this.oldName = name;
         this.newName = this.createNewName();

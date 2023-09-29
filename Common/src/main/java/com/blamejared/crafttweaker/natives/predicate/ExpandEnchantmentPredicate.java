@@ -14,12 +14,6 @@ import org.openzen.zencode.java.ZenCodeType;
 public final class ExpandEnchantmentPredicate {
     
     @ZenCodeType.StaticExpansionMethod
-    public static EnchantmentPredicate any() {
-        
-        return EnchantmentPredicate.ANY;
-    }
-    
-    @ZenCodeType.StaticExpansionMethod
     public static EnchantmentPredicate create(final Enchantment enchantment) {
         
         return create(enchantment, MinMaxBounds.Ints.ANY);

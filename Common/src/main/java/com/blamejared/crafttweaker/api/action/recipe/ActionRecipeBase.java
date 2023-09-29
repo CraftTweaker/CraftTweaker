@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.Map;
@@ -34,7 +35,7 @@ public abstract class ActionRecipeBase<T extends Recipe<?>> extends CraftTweaker
      *
      * @return A map of name to recipe for the manager type.
      */
-    public Map<ResourceLocation, T> getRecipes() {
+    public Map<ResourceLocation, RecipeHolder<T>> getRecipes() {
         
         return this.getManager().getRecipes();
     }

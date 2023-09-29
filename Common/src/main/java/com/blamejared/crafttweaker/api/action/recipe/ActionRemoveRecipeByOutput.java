@@ -13,7 +13,7 @@ public class ActionRemoveRecipeByOutput<T extends Recipe<?>> extends ActionRemov
     
     public ActionRemoveRecipeByOutput(IRecipeManager<T> manager, IIngredient output) {
         
-        super(manager, recipe -> output.matches(IItemStack.ofMutable(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem))));
+        super(manager, recipe -> output.matches(IItemStack.ofMutable(AccessibleElementsProvider.get().registryAccess(recipe.value()::getResultItem))));
         this.output = output;
         describeDefaultRemoval(output);
     }

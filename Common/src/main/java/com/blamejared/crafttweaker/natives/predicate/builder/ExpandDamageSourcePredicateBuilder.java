@@ -21,21 +21,9 @@ public final class ExpandDamageSourcePredicateBuilder {
     }
     
     @ZenCodeType.Method
-    public static DamageSourcePredicate.Builder direct(final DamageSourcePredicate.Builder internal, final EntityPredicate entityPredicate) {
-        
-        return internal.direct(entityPredicate);
-    }
-    
-    @ZenCodeType.Method
     public static DamageSourcePredicate.Builder direct(final DamageSourcePredicate.Builder internal, final EntityPredicate.Builder entityPredicate) {
         
         return internal.direct(entityPredicate);
-    }
-    
-    @ZenCodeType.Method
-    public static DamageSourcePredicate.Builder source(final DamageSourcePredicate.Builder internal, final EntityPredicate entityPredicate) {
-        
-        return internal.source(entityPredicate);
     }
     
     @ZenCodeType.Method

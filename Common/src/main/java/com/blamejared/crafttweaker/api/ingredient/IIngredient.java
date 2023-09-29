@@ -32,6 +32,8 @@ import com.blamejared.crafttweaker.api.ingredient.type.IngredientWithAmount;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -58,6 +60,8 @@ import java.util.regex.Pattern;
 @ZenCodeType.Name("crafttweaker.api.ingredient.IIngredient")
 @Document("vanilla/api/ingredient/IIngredient")
 public interface IIngredient extends CommandStringDisplayable {
+    
+    Codec<IIngredient> CODEC = Ingredient.CODEC.flatComapMap(IIngredient::fromIngredient, ingredient -> DataResult.success(ingredient.asVanillaIngredient()));
     
     /**
      * Does the given stack match the ingredient?
@@ -384,7 +388,7 @@ public interface IIngredient extends CommandStringDisplayable {
     @ZenCodeType.Caster(implicit = true)
     default IData asIData() {
         
-        return JSONConverter.convert(this.asVanillaIngredient().toJson());
+        return JSONConverter.convert(this.asVanillaIngredient().toJson(false));
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)
@@ -456,7 +460,7 @@ public interface IIngredient extends CommandStringDisplayable {
     @ZenCodeType.Method
     default IIngredientConditioned<IIngredient> onlyDamaged() {
         
-        return new IIngredientConditioned<>(this, new ConditionDamaged<>());
+        return new IIngredientConditioned<>(this, ConditionDamaged.getInstance());
     }
     
     @ZenCodeType.Method
@@ -474,7 +478,7 @@ public interface IIngredient extends CommandStringDisplayable {
     @ZenCodeType.Method
     default IIngredientConditioned<IIngredient> anyDamage() {
         
-        return new IIngredientConditioned<>(this, new ConditionAnyDamage<>());
+        return new IIngredientConditioned<>(this, ConditionAnyDamage.getInstance());
     }
     
     @ZenCodeType.Method

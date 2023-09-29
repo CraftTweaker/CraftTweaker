@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.action.recipe.generic;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,9 +31,9 @@ public class ActionRemoveGenericRecipeByName extends ActionRemoveGenericRecipeBa
     }
     
     @Override
-    protected boolean shouldRemove(Recipe<?> recipe) {
+    protected boolean shouldRemove(RecipeHolder<?> holder) {
         
-        return this.names.contains(recipe.getId());
+        return this.names.contains(holder.id());
     }
     
 }

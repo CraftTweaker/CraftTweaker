@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.recipe.replacement;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.stream.Stream;
@@ -39,6 +40,6 @@ public interface ITargetingFilter {
      *
      * @since 10.0.0
      */
-    Stream<? extends Recipe<?>> castFilter(final Stream<? extends Recipe<?>> allRecipes);
+    Stream<RecipeHolder<?>> castFilter(final Stream<RecipeHolder<?>> allRecipes);
     
 }

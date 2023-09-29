@@ -14,7 +14,16 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.BlastingRecipe;
+import net.minecraft.world.item.crafting.CampfireCookingRecipe;
+import net.minecraft.world.item.crafting.CookingBookCategory;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.item.crafting.SmokingRecipe;
 
 import java.util.Map;
 import java.util.Optional;
@@ -28,7 +37,7 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
     @FunctionalInterface
     private interface CookingRecipeFactory<T extends AbstractCookingRecipe> {
         
-        T create(final ResourceLocation id, final String group, final CookingBookCategory category, final Ingredient ingredient, final ItemStack result, final float experience, final int cookTime);
+        T create(final String group, final CookingBookCategory category, final Ingredient ingredient, final ItemStack result, final float experience, final int cookTime);
         
     }
     
@@ -41,12 +50,13 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
             .build();
     
     @Override
-    public String dumpToCommandString(final IRecipeManager<? super AbstractCookingRecipe> manager, final AbstractCookingRecipe recipe) {
+    public String dumpToCommandString(final IRecipeManager<? super AbstractCookingRecipe> manager, final RecipeHolder<AbstractCookingRecipe> holder) {
         
+        AbstractCookingRecipe recipe = holder.value();
         return String.format(
                 "%s.addRecipe(%s, %s, %s, %s, %s);",
                 LOOKUP.get(recipe.getType()).getFirst(),
-                StringUtil.quoteAndEscape(recipe.getId()),
+                StringUtil.quoteAndEscape(holder.id()),
                 ItemStackUtil.getCommandString(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)),
                 IIngredient.fromIngredient(recipe.getIngredients().get(0)).getCommandString(),
                 recipe.getExperience(),
@@ -55,14 +65,17 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
     }
     
     @Override
-    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super AbstractCookingRecipe> manager, final AbstractCookingRecipe firstRecipe, final U secondRecipe) {
+    public <U extends Recipe<?>> boolean doesConflict(IRecipeManager<? super AbstractCookingRecipe> manager, RecipeHolder<AbstractCookingRecipe> firstHolder, RecipeHolder<U> secondHolder) {
         
-        return IngredientUtil.canConflict(firstRecipe.getIngredients().get(0), secondRecipe.getIngredients().get(0));
+        return IngredientUtil.canConflict(firstHolder.value().getIngredients().get(0), secondHolder.value()
+                .getIngredients()
+                .get(0));
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super AbstractCookingRecipe> manager, final AbstractCookingRecipe recipe) {
+    public Optional<IDecomposedRecipe> decompose(IRecipeManager<? super AbstractCookingRecipe> manager, RecipeHolder<AbstractCookingRecipe> holder) {
         
+        AbstractCookingRecipe recipe = holder.value();
         final IIngredient ingredient = IIngredient.fromIngredient(recipe.getIngredients().get(0));
         final IDecomposedRecipe decomposition = IDecomposedRecipe.builder()
                 .with(BuiltinRecipeComponents.Metadata.GROUP, recipe.getGroup())
@@ -70,13 +83,14 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
                 .with(BuiltinRecipeComponents.Input.INGREDIENTS, ingredient)
                 .with(BuiltinRecipeComponents.Processing.TIME, recipe.getCookingTime())
                 .with(BuiltinRecipeComponents.Output.EXPERIENCE, recipe.getExperience())
-                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)))
+                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(AccessibleElementsProvider.get()
+                        .registryAccess(recipe::getResultItem)))
                 .build();
         return Optional.of(decomposition);
     }
     
     @Override
-    public Optional<AbstractCookingRecipe> recompose(final IRecipeManager<? super AbstractCookingRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<RecipeHolder<AbstractCookingRecipe>> recompose(final IRecipeManager<? super AbstractCookingRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
         
         final String group = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.GROUP);
         final CookingBookCategory category = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.COOKING_BOOK_CATEGORY);
@@ -99,7 +113,7 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
         }
         
         final CookingRecipeFactory<?> factory = LOOKUP.get(manager.getRecipeType()).getSecond();
-        return Optional.of(factory.create(name, group, category, input.asVanillaIngredient(), output.getInternal(), experience, cookTime));
+        return Optional.of(new RecipeHolder<>(name, factory.create(group, category, input.asVanillaIngredient(), output.getInternal(), experience, cookTime)));
     }
     
 }

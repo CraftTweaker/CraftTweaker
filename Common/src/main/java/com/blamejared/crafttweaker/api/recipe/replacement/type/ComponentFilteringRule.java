@@ -14,6 +14,7 @@ import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
@@ -128,7 +129,7 @@ public final class ComponentFilteringRule<T> implements IFilteringRule {
     }
     
     @Override
-    public Stream<? extends Recipe<?>> castFilter(final Stream<? extends Recipe<?>> allRecipes) {
+    public Stream<RecipeHolder<?>> castFilter(final Stream<RecipeHolder<?>> allRecipes) {
         
         return allRecipes.filter(this::castFilter);
     }
@@ -145,11 +146,12 @@ public final class ComponentFilteringRule<T> implements IFilteringRule {
         );
     }
     
-    private <C extends Container, V extends Recipe<C>> boolean castFilter(final V recipe) {
+    private <C extends Container, V extends Recipe<C>> boolean castFilter(final RecipeHolder<?> recipe) {
         
-        final IRecipeHandler<V> handler = CraftTweakerAPI.getRegistry().getRecipeHandlerFor(recipe);
-        final IRecipeManager<? super V> manager = GenericUtil.uncheck(RecipeTypeBracketHandler.getOrDefault(recipe.getType()));
-        final Optional<IDecomposedRecipe> decomposedRecipe = handler.decompose(manager, recipe);
+        RecipeHolder<V> typedRecipe = GenericUtil.uncheck(recipe);
+        final IRecipeHandler<V> handler = CraftTweakerAPI.getRegistry().getRecipeHandlerFor(typedRecipe);
+        final IRecipeManager<? super V> manager = RecipeTypeBracketHandler.getOrDefault(recipe.value().getType());
+        final Optional<IDecomposedRecipe> decomposedRecipe = handler.decompose(manager, typedRecipe);
         return decomposedRecipe.isPresent() && this.castFilter(decomposedRecipe.get());
     }
     

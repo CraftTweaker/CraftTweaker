@@ -3,23 +3,22 @@ package com.blamejared.crafttweaker.api.ingredient.condition.serializer;
 
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.condition.type.ConditionAnyDamage;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
-public enum ConditionAnyDamagedSerializer implements IIngredientConditionSerializer<ConditionAnyDamage<?>> {
-    INSTANCE;
+public class ConditionAnyDamagedSerializer implements IIngredientConditionSerializer<ConditionAnyDamage<?>> {
+    
+    public static final ConditionAnyDamagedSerializer INSTANCE = new ConditionAnyDamagedSerializer();
+    
+    public static final Codec<ConditionAnyDamage<?>> CODEC = Codec.unit(ConditionAnyDamage.INSTANCE_RAW);
+    
+    private ConditionAnyDamagedSerializer() {}
     
     @Override
     public ConditionAnyDamage<?> fromNetwork(FriendlyByteBuf buffer) {
         
-        return new ConditionAnyDamage<>();
-    }
-    
-    @Override
-    public ConditionAnyDamage<?> fromJson(JsonObject json) {
-        
-        return new ConditionAnyDamage<>();
+        return ConditionAnyDamage.INSTANCE_RAW;
     }
     
     @Override
@@ -27,10 +26,11 @@ public enum ConditionAnyDamagedSerializer implements IIngredientConditionSeriali
     
     }
     
+    
     @Override
-    public JsonObject toJson(ConditionAnyDamage<?> transformer) {
+    public Codec<ConditionAnyDamage<?>> codec() {
         
-        return new JsonObject();
+        return CODEC;
     }
     
     @Override
@@ -38,4 +38,5 @@ public enum ConditionAnyDamagedSerializer implements IIngredientConditionSeriali
         
         return new ResourceLocation(CraftTweakerConstants.MOD_ID, "any_damage");
     }
+    
 }

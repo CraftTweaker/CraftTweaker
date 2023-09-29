@@ -32,10 +32,12 @@ public class TagIngredient implements IIngredient {
         return Arrays.stream(getItems()).anyMatch(item -> item.matches(stack, true));
     }
     
+    
     @Override
     public Ingredient asVanillaIngredient() {
         
-        return Ingredient.of((TagKey<Item>) internal.getTagKey());
+        //noinspection RedundantTypeArguments
+        return Ingredient.of(internal.<TagKey<Item>>getTagKey());
     }
     
     @Override

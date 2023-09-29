@@ -5,7 +5,7 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.condition.serializer.IIngredientConditionSerializer;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
@@ -14,6 +14,8 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.ingredient.condition.IIngredientCondition")
 @Document("vanilla/api/ingredient/condition/IIngredientCondition")
 public interface IIngredientCondition<T extends IIngredient> {
+    
+    Codec<IIngredientCondition<?>> CODEC = IIngredientConditionSerializer.CODEC.dispatch(IIngredientCondition::getSerializer, IIngredientConditionSerializer::codec);
     
     @ZenCodeType.Method
     boolean matches(IItemStack stack);
@@ -30,10 +32,6 @@ public interface IIngredientCondition<T extends IIngredient> {
         getSerializer().toNetwork(buffer, this);
     }
     
-    default JsonObject toJson() {
-        
-        return getSerializer().toJson(this);
-    }
     
     default ResourceLocation getType() {
         

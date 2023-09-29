@@ -15,12 +15,6 @@ import org.openzen.zencode.java.ZenCodeType;
 public final class ExpandBlockPredicate {
     
     @ZenCodeType.StaticExpansionMethod
-    public static BlockPredicate any() {
-        
-        return BlockPredicate.ANY;
-    }
-    
-    @ZenCodeType.StaticExpansionMethod
     public static BlockPredicate.Builder create() {
         
         return BlockPredicate.Builder.block();
@@ -34,8 +28,9 @@ public final class ExpandBlockPredicate {
     
     @ZenCodeType.StaticExpansionMethod
     public static BlockPredicate.Builder create(final KnownTag<Block> tag) {
-
-        return create().of((TagKey<Block>) tag.getTagKey());
+        
+        //noinspection RedundantTypeArguments
+        return create().of( tag.<TagKey<Block>>getTagKey());
     }
     
 }

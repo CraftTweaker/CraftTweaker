@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.advancements.CriterionProgress;
+import net.minecraft.network.chat.Component;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
@@ -54,7 +55,7 @@ public class ExpandAdvancementProgress {
     
     @ZenCodeType.Nullable
     @ZenCodeType.Getter("progressText")
-    public static String getProgressText(AdvancementProgress internal) {
+    public static Component getProgressText(AdvancementProgress internal) {
         
         return internal.getProgressText();
     }

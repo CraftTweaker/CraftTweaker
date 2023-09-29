@@ -59,13 +59,6 @@ public class ExpandRecipe {
     }
     
     @ZenCodeType.Method
-    @ZenCodeType.Getter("id")
-    public static ResourceLocation getId(Recipe internal) {
-        
-        return internal.getId();
-    }
-    
-    @ZenCodeType.Method
     @ZenCodeType.Getter("isIncomplete")
     public static boolean isIncomplete(Recipe internal) {
         

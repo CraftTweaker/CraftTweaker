@@ -7,6 +7,8 @@ import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.MobEffectsPredicate;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.Optional;
+
 @ZenRegister
 @Document("vanilla/api/predicate/MobEffectPredicate")
 @NativeTypeRegistration(value = MobEffectsPredicate.MobEffectInstancePredicate.class, zenCodeName = "crafttweaker.api.predicate.MobEffectPredicate")
@@ -19,9 +21,9 @@ public final class ExpandMobEffectsPredicateMobEffectInstancePredicate {
     }
     
     @ZenCodeType.StaticExpansionMethod
-    public static MobEffectsPredicate.MobEffectInstancePredicate create(final MinMaxBounds.Ints amplifier, final MinMaxBounds.Ints duration, final Boolean ambient, final Boolean visible) {
+    public static MobEffectsPredicate.MobEffectInstancePredicate create(final MinMaxBounds.Ints amplifier, final MinMaxBounds.Ints duration, @ZenCodeType.Nullable final Boolean ambient, @ZenCodeType.Nullable final Boolean visible) {
         
-        return new MobEffectsPredicate.MobEffectInstancePredicate(amplifier, duration, ambient, visible);
+        return new MobEffectsPredicate.MobEffectInstancePredicate(amplifier, duration, Optional.ofNullable(ambient), Optional.ofNullable(visible));
     }
     
     @ZenCodeType.StaticExpansionMethod

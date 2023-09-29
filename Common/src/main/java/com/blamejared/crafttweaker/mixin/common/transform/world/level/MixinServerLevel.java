@@ -8,11 +8,13 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.progress.ChunkProgressListener;
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.RandomSequences;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraft.world.level.storage.ServerLevelData;
@@ -46,9 +48,8 @@ public abstract class MixinServerLevel extends Level implements CraftTweakerSave
     
     @Inject(method = "<init>", at = @At(value = "TAIL"))
     public void crafttweaker$init(MinecraftServer $$0, Executor $$1, LevelStorageSource.LevelStorageAccess $$2, ServerLevelData $$3, ResourceKey $$4, LevelStem $$5, ChunkProgressListener $$6, boolean $$7, long $$8, List $$9, boolean $$10, RandomSequences $$11, CallbackInfo ci) {
-        
-        this.crafttweaker$crafttweakerSavedData = this.getDataStorage()
-                .computeIfAbsent(CraftTweakerSavedData::load, CraftTweakerSavedData::new, "crafttweaker_saved_data");
+        //TODO 1.20.2 this is just not going to work because of DataFixTypes.LEVEL, we need to make our own or something????
+        this.crafttweaker$crafttweakerSavedData = this.getDataStorage().computeIfAbsent(new SavedData.Factory<>(CraftTweakerSavedData::new, CraftTweakerSavedData::load, DataFixTypes.LEVEL), "crafttweaker_saved_data");
     }
     
     @Override

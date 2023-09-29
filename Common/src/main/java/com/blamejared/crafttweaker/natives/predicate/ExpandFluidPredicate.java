@@ -14,12 +14,6 @@ import org.openzen.zencode.java.ZenCodeType;
 public final class ExpandFluidPredicate {
     
     @ZenCodeType.StaticExpansionMethod
-    public static FluidPredicate any() {
-        
-        return FluidPredicate.ANY;
-    }
-    
-    @ZenCodeType.StaticExpansionMethod
     public static FluidPredicate.Builder create() {
         
         return FluidPredicate.Builder.fluid();

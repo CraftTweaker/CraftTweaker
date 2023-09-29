@@ -20,6 +20,7 @@ import com.blamejared.crafttweaker.api.recipe.RecipeList;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.NameUtil;
 import com.blamejared.crafttweaker.api.zencode.util.PositionUtil;
+import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -28,8 +29,9 @@ import net.minecraft.ResourceLocationException;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
+import org.jetbrains.annotations.NotNull;
 import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.shared.CodePosition;
 
@@ -38,6 +40,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -48,7 +51,7 @@ import java.util.function.Predicate;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.recipe.IRecipeManager")
 @Document("vanilla/api/recipe/manager/IRecipeManager")
-public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDisplayable, Iterable<T> {
+public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDisplayable, Iterable<RecipeHolder<T>> {
     
     Gson JSON_RECIPE_GSON = new GsonBuilder().create();
     
@@ -92,33 +95,34 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
                         """.formatted(recipeTypeKey));
             }
         }
-        T iRecipe = GenericUtil.uncheck(RecipeManager.fromJson(new ResourceLocation(CraftTweakerConstants.MOD_ID, name), recipeObject));
-        RecipeType<?> recipeType = iRecipe.getType();
+        RecipeHolder<T> holder = GenericUtil.uncheck(AccessRecipeManager.crafttweaker$callFromJson(new ResourceLocation(CraftTweakerConstants.MOD_ID, name), recipeObject));
+        RecipeType<?> recipeType = holder.value().getType();
         if(recipeType != getRecipeType()) {
             throw new IllegalArgumentException("""
                     Recipe Serializer "%s" resulted in Recipe Type "%s" but expected Recipe Type "%s"
-                    """.formatted(BuiltInRegistries.RECIPE_SERIALIZER.getKey(iRecipe.getSerializer()), BuiltInRegistries.RECIPE_TYPE
+                    """.formatted(BuiltInRegistries.RECIPE_SERIALIZER.getKey(holder.value()
+                    .getSerializer()), BuiltInRegistries.RECIPE_TYPE
                     .getKey(recipeType), recipeTypeKey));
         }
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, iRecipe, ""));
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, holder));
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Nullable
-    default T getRecipeByName(String name) {
+    default RecipeHolder<T> getRecipeByName(String name) {
         
         return getRecipeList().get(name);
     }
     
     @ZenCodeType.Method
-    default List<T> getRecipesByOutput(IIngredient output) {
+    default List<RecipeHolder<T>> getRecipesByOutput(IIngredient output) {
         
         return getRecipeList().getRecipesByOutput(output);
     }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("allRecipes")
-    default List<T> getAllRecipes() {
+    default List<RecipeHolder<T>> getAllRecipes() {
         
         return getRecipeList().getAllRecipes();
     }
@@ -130,7 +134,7 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
      */
     @ZenCodeType.Method
     @ZenCodeType.Getter("recipeMap")
-    default Map<ResourceLocation, T> getRecipeMap() {
+    default Map<ResourceLocation, RecipeHolder<T>> getRecipeMap() {
         
         return getRecipeList().getRecipes();
     }
@@ -158,7 +162,7 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
     @ZenCodeType.Method
     default void removeByInput(IItemStack input) {
         
-        CraftTweakerAPI.apply(new ActionRemoveRecipe<>(this, iRecipe -> iRecipe.getIngredients()
+        CraftTweakerAPI.apply(new ActionRemoveRecipe<>(this, holder -> holder.value().getIngredients()
                 .stream()
                 .anyMatch(ingredient -> ingredient.test(input.getInternal()))));
     }
@@ -260,7 +264,7 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
      *
      * @return A map of name to recipe for the manager type.
      */
-    default Map<ResourceLocation, T> getRecipes() {
+    default Map<ResourceLocation, RecipeHolder<T>> getRecipes() {
         
         return GenericUtil.uncheck(
                 CraftTweakerAPI.getAccessibleElementsProvider()
@@ -308,8 +312,52 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
         );
     }
     
+    /**
+     * Create a new {@link ResourceLocation} from the given name, the name is checked for common errors that are often ran into with recipe names, and logs them.
+     * <p>
+     * NOTE: The returned location is under the {@value CraftTweakerConstants#MOD_ID} namespace
+     *
+     * @param name name to check
+     *
+     * @return fixed name
+     *
+     * @since 15.0.0
+     */
+    default ResourceLocation fixRecipeId(String name) {
+        
+        return fixRecipeId(name, CraftTweakerConstants::rl);
+    }
+    
+    /**
+     * Create a new {@link ResourceLocation} from the given name, the name is checked for common errors that are often ran into with recipe names, and logs them.
+     *
+     * @param name    name to check
+     * @param idMaker a function to create a {@link ResourceLocation} from the name
+     *
+     * @return fixed name
+     *
+     * @since 15.0.0
+     */
+    default ResourceLocation fixRecipeId(String name, Function<String, ResourceLocation> idMaker) {
+        
+        return idMaker.apply(fixRecipeName(name));
+    }
+    
+    /**
+     * Creates a {@link RecipeHolder} to hold the given recipe.
+     *
+     * @param id     The id of the recipe
+     * @param recipe The recipe to hold
+     *
+     * @return a new {@link RecipeHolder}
+     */
+    default RecipeHolder<T> createHolder(ResourceLocation id, T recipe) {
+        
+        return new RecipeHolder<>(id, recipe);
+    }
+    
     @Override
-    default Iterator<T> iterator() {
+    default @NotNull Iterator<RecipeHolder<T>> iterator() {
         
         return getAllRecipes().iterator();
     }

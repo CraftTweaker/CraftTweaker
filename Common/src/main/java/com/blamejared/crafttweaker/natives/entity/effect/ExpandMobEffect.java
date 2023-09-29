@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker_annotations.annotations.TaggableElement;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.AttributeModifierTemplate;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Entity;
@@ -23,7 +24,7 @@ import java.util.Map;
 @NativeTypeRegistration(value = MobEffect.class, zenCodeName = "crafttweaker.api.entity.effect.MobEffect")
 @TaggableElement("minecraft:mob_effect")
 public class ExpandMobEffect {
-    
+    //TODO 1.20.2 check if == works on this
     @ZenCodeType.Method
     public static void applyEffectTick(MobEffect internal, LivingEntity entity, int amplifier) {
         
@@ -37,9 +38,9 @@ public class ExpandMobEffect {
     }
     
     @ZenCodeType.Method
-    public static boolean isDurationEffectTick(MobEffect internal, int duration, int amplifier) {
+    public static boolean shouldApplyEffectTickThisTick(MobEffect internal, int duration, int amplifier) {
         
-        return internal.isDurationEffectTick(duration, amplifier);
+        return internal.shouldApplyEffectTickThisTick(duration, amplifier);
     }
     
     @ZenCodeType.Method
@@ -84,7 +85,7 @@ public class ExpandMobEffect {
     }
     
     @ZenCodeType.Method
-    public static Map<Attribute, AttributeModifier> getAttributeModifiers(MobEffect internal) {
+    public static Map<Attribute, AttributeModifierTemplate> getAttributeModifiers(MobEffect internal) {
         
         return internal.getAttributeModifiers();
     }
@@ -102,12 +103,6 @@ public class ExpandMobEffect {
     //
     //        internal.addAttributeModifiers(entity, map, amplifier);
     //    }
-    
-    @ZenCodeType.Method
-    public static double getAttributeModifierValue(MobEffect internal, int amplifier, AttributeModifier modifier) {
-        
-        return internal.getAttributeModifierValue(amplifier, modifier);
-    }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("beneficial")

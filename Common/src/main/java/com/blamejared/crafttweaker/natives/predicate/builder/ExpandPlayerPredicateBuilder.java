@@ -1,16 +1,17 @@
 package com.blamejared.crafttweaker.natives.predicate.builder;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.PlayerPredicate;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatType;
 import net.minecraft.world.level.GameType;
 import org.openzen.zencode.java.ZenCodeType;
@@ -32,7 +33,8 @@ public final class ExpandPlayerPredicateBuilder {
     public static PlayerPredicate.Builder statistic(final PlayerPredicate.Builder internal, final ResourceLocation type, final ResourceLocation name, final MinMaxBounds.Ints value) {
         
         final StatType<?> statType = BuiltInRegistries.STAT_TYPE.getOrThrow(ResourceKey.create(Registries.STAT_TYPE, type));
-        return internal.addStat(statistic(statType, name), value);
+        final Holder.Reference<?> holder = statType.getRegistry().getHolderOrThrow(GenericUtil.uncheck(ResourceKey.create(statType.getRegistry().key(), name)));
+        return internal.addStat(GenericUtil.uncheck(statType), holder, value);
     }
     
     @ZenCodeType.Method
@@ -72,15 +74,9 @@ public final class ExpandPlayerPredicateBuilder {
     }
     
     @ZenCodeType.Method
-    public static PlayerPredicate.Builder lookingAt(final PlayerPredicate.Builder internal, final EntityPredicate predicate) {
-        
-        return internal.setLookingAt(predicate);
-    }
-    
-    @ZenCodeType.Method
     public static PlayerPredicate.Builder lookingAt(final PlayerPredicate.Builder internal, final EntityPredicate.Builder predicate) {
         
-        return lookingAt(internal, predicate.build());
+        return internal.setLookingAt(predicate);
     }
     
     @ZenCodeType.Method
@@ -125,11 +121,6 @@ public final class ExpandPlayerPredicateBuilder {
     public static PlayerPredicate build(final PlayerPredicate.Builder internal) {
         
         return internal.build();
-    }
-    
-    private static <T> Stat<T> statistic(final StatType<T> type, final ResourceLocation name) {
-        
-        return type.get(type.getRegistry().getOrThrow(ResourceKey.create(type.getRegistry().key(), name)));
     }
     
 }

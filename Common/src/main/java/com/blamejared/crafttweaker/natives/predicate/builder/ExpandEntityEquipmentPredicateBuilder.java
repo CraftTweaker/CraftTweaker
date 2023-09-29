@@ -13,75 +13,39 @@ import org.openzen.zencode.java.ZenCodeType;
 public final class ExpandEntityEquipmentPredicateBuilder {
     
     @ZenCodeType.Method
-    public static EntityEquipmentPredicate.Builder head(final EntityEquipmentPredicate.Builder internal, final ItemPredicate predicate) {
+    public static EntityEquipmentPredicate.Builder head(final EntityEquipmentPredicate.Builder internal, final ItemPredicate.Builder predicate) {
         
         return internal.head(predicate);
     }
     
     @ZenCodeType.Method
-    public static EntityEquipmentPredicate.Builder head(final EntityEquipmentPredicate.Builder internal, final ItemPredicate.Builder predicate) {
-        
-        return head(internal, predicate.build());
-    }
-    
-    @ZenCodeType.Method
-    public static EntityEquipmentPredicate.Builder chest(final EntityEquipmentPredicate.Builder internal, final ItemPredicate predicate) {
+    public static EntityEquipmentPredicate.Builder chest(final EntityEquipmentPredicate.Builder internal, final ItemPredicate.Builder predicate) {
         
         return internal.chest(predicate);
     }
     
     @ZenCodeType.Method
-    public static EntityEquipmentPredicate.Builder chest(final EntityEquipmentPredicate.Builder internal, final ItemPredicate.Builder predicate) {
-        
-        return chest(internal, predicate.build());
-    }
-    
-    @ZenCodeType.Method
-    public static EntityEquipmentPredicate.Builder legs(final EntityEquipmentPredicate.Builder internal, final ItemPredicate predicate) {
+    public static EntityEquipmentPredicate.Builder legs(final EntityEquipmentPredicate.Builder internal, final ItemPredicate.Builder predicate) {
         
         return internal.legs(predicate);
     }
     
     @ZenCodeType.Method
-    public static EntityEquipmentPredicate.Builder legs(final EntityEquipmentPredicate.Builder internal, final ItemPredicate.Builder predicate) {
-        
-        return legs(internal, predicate.build());
-    }
-    
-    @ZenCodeType.Method
-    public static EntityEquipmentPredicate.Builder feet(final EntityEquipmentPredicate.Builder internal, final ItemPredicate predicate) {
+    public static EntityEquipmentPredicate.Builder feet(final EntityEquipmentPredicate.Builder internal, final ItemPredicate.Builder predicate) {
         
         return internal.feet(predicate);
     }
     
     @ZenCodeType.Method
-    public static EntityEquipmentPredicate.Builder feet(final EntityEquipmentPredicate.Builder internal, final ItemPredicate.Builder predicate) {
-        
-        return feet(internal, predicate.build());
-    }
-    
-    @ZenCodeType.Method
-    public static EntityEquipmentPredicate.Builder mainHand(final EntityEquipmentPredicate.Builder internal, final ItemPredicate predicate) {
+    public static EntityEquipmentPredicate.Builder mainHand(final EntityEquipmentPredicate.Builder internal, final ItemPredicate.Builder predicate) {
         
         return internal.mainhand(predicate);
     }
     
     @ZenCodeType.Method
-    public static EntityEquipmentPredicate.Builder mainHand(final EntityEquipmentPredicate.Builder internal, final ItemPredicate.Builder predicate) {
-        
-        return mainHand(internal, predicate.build());
-    }
-    
-    @ZenCodeType.Method
-    public static EntityEquipmentPredicate.Builder offHand(final EntityEquipmentPredicate.Builder internal, final ItemPredicate predicate) {
-        
-        return internal.offhand(predicate);
-    }
-    
-    @ZenCodeType.Method
     public static EntityEquipmentPredicate.Builder offHand(final EntityEquipmentPredicate.Builder internal, final ItemPredicate.Builder predicate) {
         
-        return offHand(internal, predicate.build());
+        return internal.offhand(predicate);
     }
     
     @ZenCodeType.Method

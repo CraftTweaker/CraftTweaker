@@ -22,5 +22,5 @@ object Versions {
     const val REFLECTIONS = "0.10.2"
     const val JAVA_ASSIST = "3.29.0-GA"
     const val FAUX_CUSTOM_ENTITY_DATA = "7.0.1"
-    const val JEI = "15.2.0.22"
+    const val JEI = "16.0.0.28"
 }

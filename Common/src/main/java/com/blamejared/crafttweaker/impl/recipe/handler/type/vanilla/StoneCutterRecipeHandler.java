@@ -11,6 +11,7 @@ import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.StonecutterRecipe;
 
 import java.util.Optional;
@@ -20,41 +21,44 @@ import java.util.Optional;
 public final class StoneCutterRecipeHandler implements IRecipeHandler<StonecutterRecipe> {
     
     @Override
-    public String dumpToCommandString(final IRecipeManager<? super StonecutterRecipe> manager, final StonecutterRecipe recipe) {
+    public String dumpToCommandString(final IRecipeManager<? super StonecutterRecipe> manager, final RecipeHolder<StonecutterRecipe> holder) {
         
+        StonecutterRecipe recipe = holder.value();
         return String.format(
                 "stoneCutter.addRecipe(%s, %s, %s);",
-                StringUtil.quoteAndEscape(recipe.getId()),
+                StringUtil.quoteAndEscape(holder.id()),
                 ItemStackUtil.getCommandString(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)),
                 IIngredient.fromIngredient(recipe.getIngredients().get(0)).getCommandString()
         );
     }
     
     @Override
-    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super StonecutterRecipe> manager, final StonecutterRecipe firstRecipe, final U secondRecipe) {
+    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super StonecutterRecipe> manager, final RecipeHolder<StonecutterRecipe> firstRecipe, final RecipeHolder<U> secondRecipe) {
         
         return false;
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super StonecutterRecipe> manager, final StonecutterRecipe recipe) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super StonecutterRecipe> manager, final RecipeHolder<StonecutterRecipe> holder) {
         
+        StonecutterRecipe recipe = holder.value();
         final IIngredient input = IIngredient.fromIngredient(recipe.getIngredients().get(0));
         final IDecomposedRecipe decomposedRecipe = IDecomposedRecipe.builder()
                 .with(BuiltinRecipeComponents.Metadata.GROUP, recipe.getGroup())
                 .with(BuiltinRecipeComponents.Input.INGREDIENTS, input)
-                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)))
+                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(AccessibleElementsProvider.get()
+                        .registryAccess(recipe::getResultItem)))
                 .build();
         return Optional.of(decomposedRecipe);
     }
     
     @Override
-    public Optional<StonecutterRecipe> recompose(final IRecipeManager<? super StonecutterRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<RecipeHolder<StonecutterRecipe>> recompose(final IRecipeManager<? super StonecutterRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
         
         final String group = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.GROUP);
         final IIngredient input = recipe.getOrThrowSingle(BuiltinRecipeComponents.Input.INGREDIENTS);
         final IItemStack output = recipe.getOrThrowSingle(BuiltinRecipeComponents.Output.ITEMS);
-        return Optional.of(new StonecutterRecipe(name, group, input.asVanillaIngredient(), output.getInternal()));
+        return Optional.of(new RecipeHolder<>(name, new StonecutterRecipe(group, input.asVanillaIngredient(), output.getInternal())));
     }
     
 }

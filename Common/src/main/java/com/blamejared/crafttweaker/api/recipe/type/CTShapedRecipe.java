@@ -1,6 +1,5 @@
 package com.blamejared.crafttweaker.api.recipe.type;
 
-import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.MirrorAxis;
@@ -12,7 +11,10 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
@@ -29,14 +31,18 @@ public class CTShapedRecipe extends ShapedRecipe {
     @Nullable
     private final RecipeFunction2D function;
     
-    public CTShapedRecipe(String name, IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunction2D function) {
+    public CTShapedRecipe(IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis) {
         
-        this(name, CraftingBookCategory.MISC, output, ingredients, mirrorAxis, function);
+        this(CraftingBookCategory.MISC, output, ingredients, mirrorAxis, null);
+    }
+    public CTShapedRecipe(IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunction2D function) {
+        
+        this(CraftingBookCategory.MISC, output, ingredients, mirrorAxis, function);
     }
     
-    public CTShapedRecipe(String name, CraftingBookCategory category, IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunction2D function) {
+    public CTShapedRecipe(CraftingBookCategory category, IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunction2D function) {
         
-        super(CraftTweakerConstants.rl(name), "", category, getMaxWidth(ingredients), ingredients.length, NonNullList.create(), output.getInternal());
+        super("", category, getMaxWidth(ingredients), ingredients.length, NonNullList.create(), output.getInternal());
         this.output = output;
         this.ingredients = ingredients;
         this.mirrorAxis = mirrorAxis;

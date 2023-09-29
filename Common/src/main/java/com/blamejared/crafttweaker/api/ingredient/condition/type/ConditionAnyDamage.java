@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.ingredient.condition.IIngredientCondition
 import com.blamejared.crafttweaker.api.ingredient.condition.serializer.ConditionAnyDamagedSerializer;
 import com.blamejared.crafttweaker.api.ingredient.condition.serializer.IIngredientConditionSerializer;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -14,6 +15,15 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("crafttweaker.api.ingredient.condition.type.ConditionAnyDamage")
 @Document("vanilla/api/ingredient/condition/type/ConditionAnyDamage")
 public class ConditionAnyDamage<T extends IIngredient> implements IIngredientCondition<T> {
+    
+    public static final ConditionAnyDamage<?> INSTANCE_RAW = new ConditionAnyDamage<>();
+    
+    public static <T extends IIngredient> ConditionAnyDamage<T> getInstance() {
+        
+        return GenericUtil.uncheck(INSTANCE_RAW);
+    }
+    
+    private ConditionAnyDamage() {}
     
     @Override
     public boolean matches(IItemStack stack) {
@@ -34,7 +44,7 @@ public class ConditionAnyDamage<T extends IIngredient> implements IIngredientCon
     }
     
     @Override
-    public IIngredientConditionSerializer getSerializer() {
+    public IIngredientConditionSerializer<ConditionAnyDamage<?>> getSerializer() {
         
         return ConditionAnyDamagedSerializer.INSTANCE;
     }

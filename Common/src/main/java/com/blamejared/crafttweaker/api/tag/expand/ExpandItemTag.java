@@ -32,7 +32,6 @@ public class ExpandItemTag {
     @ZenCodeType.Caster(implicit = true)
     public static IIngredient asIIngredient(KnownTag<Item> internal) {
         
-        TagKey<?> tagKey = internal.getTagKey();
         if(!internal.exists() && !Services.PLATFORM.isDataGen()) {
             CommonLoggers.api()
                     .warn("Tag '{}' does not exist, replacing with empty IIngredient", internal.getCommandString());

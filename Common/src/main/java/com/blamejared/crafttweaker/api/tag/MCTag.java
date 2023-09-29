@@ -194,7 +194,7 @@ public interface MCTag extends CommandStringDisplayable, Comparable<MCTag> {
      */
     default <T extends TagKey<?>> T getTagKey() {
         
-        return (T) TagKey.create(GenericUtil.uncheck(manager().resourceKey()), this.id());
+        return GenericUtil.uncheck(TagKey.create(GenericUtil.uncheck(manager().resourceKey()), this.id()));
     }
     
     @Override

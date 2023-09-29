@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.action.recipe.generic;
 
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.regex.Pattern;
 
@@ -20,9 +21,9 @@ public class ActionRemoveGenericRecipeByRegex extends ActionRemoveGenericRecipeB
     }
     
     @Override
-    protected boolean shouldRemove(Recipe<?> recipe) {
+    protected boolean shouldRemove(RecipeHolder<?> holder) {
         
-        final String id = recipe.getId().toString();
+        final String id = holder.id().toString();
         return pattern.matcher(id).matches();
     }
     

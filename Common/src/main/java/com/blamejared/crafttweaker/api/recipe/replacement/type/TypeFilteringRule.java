@@ -4,7 +4,7 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.replacement.IFilteringRule;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -48,9 +48,9 @@ public final class TypeFilteringRule implements IFilteringRule {
     }
     
     @Override
-    public Stream<? extends Recipe<?>> castFilter(Stream<? extends Recipe<?>> allRecipes) {
+    public Stream<RecipeHolder<?>> castFilter(Stream<RecipeHolder<?>> allRecipes) {
         
-        return allRecipes.filter(it -> this.types.contains(it.getType()));
+        return allRecipes.filter(it -> this.types.contains(it.value().getType()));
     }
     
     @Override

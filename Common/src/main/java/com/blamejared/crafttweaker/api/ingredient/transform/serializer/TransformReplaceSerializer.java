@@ -5,6 +5,9 @@ import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.transform.type.TransformReplace;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.mojang.serialization.JsonOps;
+import net.minecraft.Util;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +26,7 @@ public enum TransformReplaceSerializer implements IIngredientTransformerSerializ
     @Override
     public TransformReplace<?> fromJson(JsonObject json) {
         
-        final Ingredient.Value iItemList = Ingredient.valueFromJson(json.getAsJsonObject("replaceWith"));
+        final Ingredient.Value iItemList = Util.getOrThrow(Ingredient.Value.CODEC.parse(JsonOps.INSTANCE, json.getAsJsonObject("replaceWith")), JsonParseException::new);
         final ItemStack replaceWith = iItemList.getItems().iterator().next();
         return new TransformReplace<>(IItemStack.of(replaceWith));
     }
@@ -39,7 +42,7 @@ public enum TransformReplaceSerializer implements IIngredientTransformerSerializ
         
         final JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("type", getType().toString());
-        jsonObject.add("replaceWith", transformer.getReplaceWith().asVanillaIngredient().toJson());
+        jsonObject.add("replaceWith", transformer.getReplaceWith().asVanillaIngredient().toJson(false));
         return jsonObject;
     }
     

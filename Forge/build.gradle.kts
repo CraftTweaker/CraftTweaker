@@ -26,10 +26,9 @@ mixin {
 dependencies {
     "minecraft"("net.minecraftforge:forge:${Versions.MINECRAFT}-${Versions.FORGE}")
     compileOnly(project(":Common"))
-    val jeiMC = "1.20.1"
-    compileOnly(fg.deobf("mezz.jei:jei-${jeiMC}-common-api:${Versions.JEI}"))
-    compileOnly(fg.deobf("mezz.jei:jei-${jeiMC}-forge-api:${Versions.JEI}"))
-    localOnlyRuntime(fg.deobf("mezz.jei:jei-${jeiMC}-forge:${Versions.JEI}"))
+    compileOnly(fg.deobf("mezz.jei:jei-${Versions.MINECRAFT}-common-api:${Versions.JEI}"))
+    compileOnly(fg.deobf("mezz.jei:jei-${Versions.MINECRAFT}-forge-api:${Versions.JEI}"))
+    localOnlyRuntime(fg.deobf("mezz.jei:jei-${Versions.MINECRAFT}-forge:${Versions.JEI}"))
 
     annotationProcessor("org.spongepowered:mixin:${Versions.MIXIN}-SNAPSHOT:processor")
 

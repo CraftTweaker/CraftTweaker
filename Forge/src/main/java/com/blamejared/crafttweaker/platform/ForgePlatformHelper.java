@@ -42,6 +42,7 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.BasicItemListing;
 import net.minecraftforge.common.ForgeInternalHandler;
@@ -296,7 +297,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public boolean doCraftingTableRecipesConflict(IRecipeManager<?> manager, Recipe<?> first, Recipe<?> second) {
+    public boolean doCraftingTableRecipesConflict(IRecipeManager<?> manager, RecipeHolder<?> first, RecipeHolder<?> second) {
 
         return CraftingTableRecipeConflictChecker.checkConflicts(manager, first, second);
     }

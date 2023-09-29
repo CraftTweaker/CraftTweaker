@@ -73,39 +73,22 @@ public final class ExpandLocationPredicateBuilder {
     }
     
     @ZenCodeType.Method
-    public static LocationPredicate.Builder light(final LocationPredicate.Builder internal, final LightPredicate predicate) {
+    public static LocationPredicate.Builder light(final LocationPredicate.Builder internal, final LightPredicate.Builder predicate) {
         
         return internal.setLight(predicate);
     }
     
     @ZenCodeType.Method
-    public static LocationPredicate.Builder light(final LocationPredicate.Builder internal, final LightPredicate.Builder predicate) {
-        
-        return light(internal, predicate.build());
-    }
-    
-    @ZenCodeType.Method
-    public static LocationPredicate.Builder block(final LocationPredicate.Builder internal, final BlockPredicate predicate) {
+    public static LocationPredicate.Builder block(final LocationPredicate.Builder internal, final BlockPredicate.Builder predicate) {
         
         return internal.setBlock(predicate);
     }
     
-    @ZenCodeType.Method
-    public static LocationPredicate.Builder block(final LocationPredicate.Builder internal, final BlockPredicate.Builder predicate) {
-        
-        return block(internal, predicate.build());
-    }
-    
-    @ZenCodeType.Method
-    public static LocationPredicate.Builder fluid(final LocationPredicate.Builder internal, final FluidPredicate predicate) {
-        
-        return internal.setFluid(predicate);
-    }
     
     @ZenCodeType.Method
     public static LocationPredicate.Builder fluid(final LocationPredicate.Builder internal, final FluidPredicate.Builder predicate) {
         
-        return fluid(internal, predicate.build());
+        return internal.setFluid(predicate);
     }
     
     @ZenCodeType.Method

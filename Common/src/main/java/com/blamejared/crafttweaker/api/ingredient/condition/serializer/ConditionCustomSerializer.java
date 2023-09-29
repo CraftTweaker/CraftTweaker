@@ -3,24 +3,24 @@ package com.blamejared.crafttweaker.api.ingredient.condition.serializer;
 
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.condition.type.ConditionCustom;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
-public enum ConditionCustomSerializer implements IIngredientConditionSerializer<ConditionCustom<?>> {
-    INSTANCE;
+public class ConditionCustomSerializer implements IIngredientConditionSerializer<ConditionCustom<?>> {
+    
+    public static final ConditionCustomSerializer INSTANCE = new ConditionCustomSerializer();
+    public static final Codec<ConditionCustom<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.STRING.fieldOf("uid").forGetter(ConditionCustom::getUid)
+    ).apply(instance, s -> new ConditionCustom<>(s, null)));
+    
+    private ConditionCustomSerializer() {}
     
     @Override
     public ConditionCustom<?> fromNetwork(FriendlyByteBuf buffer) {
         
         return new ConditionCustom<>(buffer.readUtf(), null);
-    }
-    
-    @Override
-    public ConditionCustom<?> fromJson(JsonObject json) {
-        
-        final String uid = json.getAsJsonPrimitive("uid").getAsString();
-        return new ConditionCustom<>(uid, null);
     }
     
     @Override
@@ -30,11 +30,9 @@ public enum ConditionCustomSerializer implements IIngredientConditionSerializer<
     }
     
     @Override
-    public JsonObject toJson(ConditionCustom<?> transformer) {
+    public Codec<ConditionCustom<?>> codec() {
         
-        final JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("uid", transformer.getUid());
-        return jsonObject;
+        return CODEC;
     }
     
     @Override
@@ -42,4 +40,5 @@ public enum ConditionCustomSerializer implements IIngredientConditionSerializer<
         
         return new ResourceLocation(CraftTweakerConstants.MOD_ID, "condition_custom");
     }
+    
 }

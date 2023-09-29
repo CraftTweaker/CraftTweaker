@@ -14,12 +14,6 @@ import org.openzen.zencode.java.ZenCodeType;
 public final class ExpandNbtPredicate {
     
     @ZenCodeType.StaticExpansionMethod
-    public static NbtPredicate any() {
-        
-        return NbtPredicate.ANY;
-    }
-    
-    @ZenCodeType.StaticExpansionMethod
     public static NbtPredicate create(final MapData data) {
         
         return new NbtPredicate(data.getInternal());
