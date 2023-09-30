@@ -23,69 +23,11 @@ public record NativeTypeInfo(String name, Class<?> targetedType, Constructor[] c
     /**
      * Holds information relative to a specific native constructor that should be exposed to ZenCode.
      *
-     * @param description        The description of the constructor, acting as documentation, or empty if no description
-     *                           is to be provided.
-     * @param sinceVersion       The first version of the API this constructor was exposed in, acting as documentation,
-     *                           or empty if no initial version is to be provided.
-     * @param deprecationMessage The message that accompanies a deprecation warning for this constructor, or empty if
-     *                           the constructor is not deprecated.
-     * @param parameters         The {@link Parameter}s accepted by this constructor.
+     * @param parameters The {@link Parameter}s accepted by this constructor.
      *
      * @since 9.1.0
      */
-    public record Constructor(String description, String sinceVersion, String deprecationMessage,
-                              Parameter... parameters) {
-        
-        /**
-         * Creates an instance holding information relative to a native constructor that should be exposed to ZenCode.
-         *
-         * <p>The created constructor is not deprecated.</p>
-         *
-         * @param description  The description of the constructor, acting as documentation, or empty if no description
-         *                     is to be provided.
-         * @param sinceVersion The first version of the API this constructor was exposed in, acting as documentation, or
-         *                     empty if no initial version is to be provided.
-         * @param parameters   The {@link Parameter}s accepted by this constructor.
-         *
-         * @since 9.1.0
-         */
-        public Constructor(final String description, final String sinceVersion, Parameter... parameters) {
-            
-            this(description, sinceVersion, "", parameters);
-        }
-        
-        /**
-         * Creates an instance holding information relative to a native constructor that should be exposed to ZenCode.
-         *
-         * <p>The created constructor is not deprecated and no initial exposure version is provided.</p>
-         *
-         * @param description The description of the constructor, acting as documentation, or empty if no description is
-         *                    to be provided.
-         * @param parameters  The {@link Parameter}s accepted by this constructor.
-         *
-         * @since 9.1.0
-         */
-        public Constructor(final String description, final Parameter... parameters) {
-            
-            this(description, "", parameters);
-        }
-        
-        /**
-         * Creates an instance holding information relative to a native constructor that should be exposed to ZenCode.
-         *
-         * <p>The created constructor is not deprecated, no initial exposure version is provided, and it has no
-         * description.</p>
-         *
-         * @param parameters The {@link Parameter}s accepted by this constructor.
-         *
-         * @since 9.1.0
-         */
-        public Constructor(final Parameter... parameters) {
-            
-            this("", parameters);
-        }
-        
-    }
+    public record Constructor(Parameter... parameters) {}
     
     /**
      * Holds information relative to a specific native method that should be exposed to ZenCode.
@@ -148,51 +90,12 @@ public record NativeTypeInfo(String name, Class<?> targetedType, Constructor[] c
      * Holds information relative to a specific parameter of a {@linkplain Method native method} or
      * {@linkplain Constructor native constructor} that is exposed to ZenCode.
      *
-     * @param type        The type of the parameter that should be exposed.
-     * @param name        The name of the parameter that is being targeted.
-     * @param description The description of the parameter, acting as documentation.
-     * @param examples    A series of strings that can be used to provide examples of valid arguments for this
-     *                    parameter, acting as documentation; or an empty array if no examples are to be provided.
+     * @param type The type of the parameter that should be exposed.
+     * @param name The name of the parameter that is being targeted.
      *
      * @since 9.1.0
      */
-    public record Parameter(Class<?> type, String name, String description, String... examples) {
-        
-        /**
-         * Constructs an instance holding information relative to a parameter of a method or constructor that is exposed
-         * to ZenCode.
-         *
-         * <p>The created parameter has no description.</p>
-         *
-         * @param type     The type of the parameter that should be exposed.
-         * @param name     The name of the parameter that is being targeted.
-         * @param examples A series of strings that can be used to provide examples of valid arguments for this
-         *                 parameter, acting as documentation; or an empty array if no examples are to be provided.
-         *
-         * @since 9.1.0
-         */
-        public Parameter(Class<?> type, String name, String... examples) {
-            
-            this(type, name, "", examples);
-        }
-        
-        /**
-         * Constructs an instance holding information relative to a parameter of a method or constructor that is exposed
-         * to ZenCode.
-         *
-         * <p>The created parameter has no description and no examples.</p>
-         *
-         * @param type The type of the parameter that should be exposed.
-         * @param name The name of the parameter that is being targeted.
-         *
-         * @since 9.1.0
-         */
-        public Parameter(Class<?> type, String name) {
-            
-            this(type, name, new String[0]);
-        }
-        
-    }
+    public record Parameter(Class<?> type, String name) {}
     
     /**
      * Creates an instance holding information relative to a specific native type that should be exposed to ZenCode.

@@ -8,7 +8,6 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
 
 final class AnnotationsToApiConverters {
     
@@ -40,9 +39,6 @@ final class AnnotationsToApiConverters {
     private NativeTypeInfo.Constructor toNativeConstructor(final NativeConstructor constructor) {
         
         return new NativeTypeInfo.Constructor(
-                constructor.description(),
-                constructor.getSinceVersion(),
-                constructor.deprecationMessage(),
                 this.toNativeParameters(constructor.value())
         );
     }
@@ -56,9 +52,7 @@ final class AnnotationsToApiConverters {
         
         return new NativeTypeInfo.Parameter(
                 parameter.type(),
-                parameter.name(),
-                parameter.description(),
-                parameter.examples()
+                parameter.name()
         );
     }
     
@@ -77,18 +71,11 @@ final class AnnotationsToApiConverters {
         );
     }
     
-    // TODO("Change API to allow specification of parameter names")
-    private NativeTypeInfo.Parameter[] toNativeParameters(final Class<?>... parameterTypes) {
+    private NativeTypeInfo.Parameter[] toNativeParameters(final NativeMethod.MethodParameter... parameterTypes) {
         
-        final AtomicInteger counter = new AtomicInteger(0);
         return Arrays.stream(parameterTypes)
-                .map(it -> this.toNativeParameter(it, counter.getAndIncrement()))
+                .map(it -> new NativeTypeInfo.Parameter(it.type(), it.name()))
                 .toArray(NativeTypeInfo.Parameter[]::new);
-    }
-    
-    private NativeTypeInfo.Parameter toNativeParameter(final Class<?> parameterType, final int counter) {
-        
-        return new NativeTypeInfo.Parameter(parameterType, "$$" + counter);
     }
     
 }

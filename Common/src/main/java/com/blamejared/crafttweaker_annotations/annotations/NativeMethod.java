@@ -13,11 +13,23 @@ public @interface NativeMethod {
     
     String name();
     
-    Class<?>[] parameters();
+    MethodParameter[] parameters();
     
     String getterName() default "";
     
     String setterName() default "";
+    
+    @interface MethodParameter {
+        
+        Class<?> type();
+        
+        String name();
+        
+        String description() default "";
+        
+        String[] examples() default {};
+        
+    }
     
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
