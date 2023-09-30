@@ -2,9 +2,12 @@ package com.blamejared.crafttweaker.natives.loot.table;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
+import com.blamejared.crafttweaker.impl.loot.ILootTableIdHolder;
 import com.blamejared.crafttweaker.mixin.common.access.loot.AccessLootTable;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -110,6 +113,18 @@ public final class ExpandLootTable {
     public static LootContextParamSet getParamSet(LootTable internal) {
         
         return internal.getParamSet();
+    }
+    
+    /**
+     * Gets the ID of this loot table.
+     *
+     * @return The ID of this loot table.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("id")
+    public static ResourceLocation getId(LootTable internal) {
+        
+        return GenericUtil.<ILootTableIdHolder>uncheck(internal).crafttweaker$tableId();
     }
     
     /**
