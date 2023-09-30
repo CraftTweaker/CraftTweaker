@@ -76,4 +76,9 @@ public class ExpandWorld {
     public static IRandom getRandom(IWorld world) {
         return new MCRandom(CraftTweakerMC.getWorld(world).rand);
     }
+
+    @ZenMethod
+    public static boolean isBlockLoaded(IWorld world, IBlockPos pos) {
+        return CraftTweakerMC.getWorld(world).isBlockLoaded(CraftTweakerMC.getBlockPos(pos));
+    }
 }
