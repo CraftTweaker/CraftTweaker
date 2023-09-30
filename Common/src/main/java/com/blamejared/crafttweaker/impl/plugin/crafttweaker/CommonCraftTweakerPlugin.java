@@ -46,34 +46,9 @@ import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-@CraftTweakerPlugin(CraftTweakerConstants.MOD_ID + ":builtin")
+@CraftTweakerPlugin(CraftTweakerConstants.MOD_ID + ":common")
 @SuppressWarnings("unused") // Autowired
-public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
-    
-    private final BracketParserRegistrationManager bracketParserRegistrationManager;
-    private final EnumBracketParserRegistrationManager enumBracketParserRegistrationManager;
-    private final EventRegistrationManager eventRegistrationManager;
-    private final RecipeHandlerGatherer handlerGatherer;
-    private final TaggableElementsRegistrationManager taggableElementsRegistrationManager;
-    private final ZenClassGatherer zenGatherer;
-    private final ZenClassRegistrationManager zenClassRegistrationManager;
-    
-    public BuiltinCraftTweakerPlugin() {
-        
-        this.bracketParserRegistrationManager = new BracketParserRegistrationManager();
-        this.enumBracketParserRegistrationManager = new EnumBracketParserRegistrationManager();
-        this.eventRegistrationManager = new EventRegistrationManager();
-        this.handlerGatherer = new RecipeHandlerGatherer();
-        this.taggableElementsRegistrationManager = new TaggableElementsRegistrationManager();
-        this.zenGatherer = new ZenClassGatherer();
-        this.zenClassRegistrationManager = new ZenClassRegistrationManager();
-    }
-    
-    @Override
-    public void initialize() {
-        
-        this.zenGatherer.gatherCandidates();
-    }
+public final class CommonCraftTweakerPlugin implements ICraftTweakerPlugin {
     
     @Override
     public void registerLoaders(final ILoaderRegistrationHandler handler) {
@@ -100,24 +75,7 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
     }
     
     @Override
-    public void manageJavaNativeIntegration(final IJavaNativeIntegrationRegistrationHandler handler) {
-        
-        this.zenGatherer.listProviders();
-        this.zenGatherer.onCandidates(candidate -> this.zenClassRegistrationManager.attemptRegistration(candidate.loader(), candidate.clazz(), handler));
-        this.zenClassRegistrationManager.attemptDeferredRegistration(handler);
-    }
-    
-    @Override
     public void registerBracketParsers(final IBracketParserRegistrationHandler handler) {
-        
-        this.zenGatherer.onCandidates(candidate -> {
-            this.bracketParserRegistrationManager.addRegistrationCandidate(candidate.clazz(), candidate.loader());
-            this.enumBracketParserRegistrationManager.attemptRegistration(candidate.clazz(), candidate.loader(), handler);
-        });
-        
-        this.bracketParserRegistrationManager.attemptRegistration(handler);
-        
-        handler.registerParserFor(CraftTweakerConstants.ALL_LOADERS_MARKER, "constant", new EnumConstantBracketHandler(), new IBracketParserRegistrationHandler.DumperData("constant", EnumConstantBracketHandler.getDumperData()));
         
         handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "recipecomponent", new RecipeComponentBracketHandler(), new IBracketParserRegistrationHandler.DumperData("recipecomponent", RecipeComponentBracketHandler.getDumperData()));
         handler.registerParserFor(CraftTweakerConstants.DEFAULT_LOADER_NAME, "recipetype", new RecipeTypeBracketHandler(), new IBracketParserRegistrationHandler.DumperData("recipetype", RecipeTypeBracketHandler.getDumperData()));
@@ -146,12 +104,6 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         handler.registerRecipeComponent(BuiltinRecipeComponents.Output.EXPERIENCE);
         handler.registerRecipeComponent(BuiltinRecipeComponents.Output.FLUIDS);
         handler.registerRecipeComponent(BuiltinRecipeComponents.Output.ITEMS);
-    }
-    
-    @Override
-    public void registerRecipeHandlers(final IRecipeHandlerRegistrationHandler handler) {
-        
-        this.handlerGatherer.gatherAndRegisterHandlers(handler);
     }
     
     @Override
@@ -225,14 +177,6 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
     }
     
     @Override
-    public void registerTaggableElements(ITaggableElementRegistrationHandler handler) {
-        
-        this.zenGatherer.onCandidates(candidate ->
-                this.taggableElementsRegistrationManager.attemptRegistration(candidate.clazz(), handler)
-        );
-    }
-    
-    @Override
     public void registerReplacerComponents(final IReplacerComponentRegistrationHandler handler) {
         
         handler.registerTargetingFilter(DefaultTargetingFilters::scripts);
@@ -240,12 +184,6 @@ public final class BuiltinCraftTweakerPlugin implements ICraftTweakerPlugin {
         
         handler.registerTargetingStrategy(ITargetingStrategy.DEFAULT_STRATEGY_ID, DefaultTargetingStrategies::shallow);
         handler.registerTargetingStrategy(CraftTweakerConstants.rl("deep"), DefaultTargetingStrategies::deep);
-    }
-    
-    @Override
-    public void registerEvents(final IEventRegistrationHandler handler) {
-        
-        this.zenGatherer.onCandidates(candidate -> this.eventRegistrationManager.attemptRegistration(candidate.clazz(), handler));
     }
     
 }

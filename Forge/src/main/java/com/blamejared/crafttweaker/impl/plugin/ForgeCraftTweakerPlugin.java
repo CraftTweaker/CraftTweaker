@@ -6,18 +6,14 @@ import com.blamejared.crafttweaker.api.command.CommandUtilities;
 import com.blamejared.crafttweaker.api.plugin.CraftTweakerPlugin;
 import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.api.plugin.ICraftTweakerPlugin;
-import com.blamejared.crafttweaker.mixin.common.access.entity.AccessFakePlayerFactory;
-import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.brigadier.Command;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.TierSortingRegistry;
 
-import java.util.stream.Stream;
-
-@CraftTweakerPlugin(CraftTweakerConstants.MOD_ID + ":builtin_forge")
+@CraftTweakerPlugin(CraftTweakerConstants.MOD_ID + ":forge")
 @SuppressWarnings("unused") // Autowired
-public class CraftTweakerPluginForge implements ICraftTweakerPlugin {
+public class ForgeCraftTweakerPlugin implements ICraftTweakerPlugin {
     
     @Override
     public void registerCommands(ICommandRegistrationHandler handler) {
