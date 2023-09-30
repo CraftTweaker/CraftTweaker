@@ -9,7 +9,6 @@ import com.blamejared.crafttweaker.api.ingredient.serializer.*;
 import com.blamejared.crafttweaker.api.ingredient.type.*;
 import com.blamejared.crafttweaker.api.recipe.serializer.CTShapedRecipeSerializer;
 import com.blamejared.crafttweaker.api.recipe.serializer.CTShapelessRecipeSerializer;
-import com.blamejared.crafttweaker.impl.loot.LootTableIdRegexCondition;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipeType;
 import com.blamejared.crafttweaker.impl.script.ScriptSerializer;
 import com.blamejared.crafttweaker.platform.services.IRegistryHelper;

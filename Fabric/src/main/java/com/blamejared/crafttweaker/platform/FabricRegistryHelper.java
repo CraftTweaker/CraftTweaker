@@ -7,6 +7,8 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.serializer.*;
 import com.blamejared.crafttweaker.api.ingredient.type.*;
 import com.blamejared.crafttweaker.api.recipe.serializer.*;
+import com.blamejared.crafttweaker.impl.loot.condition.LootTableIdCondition;
+import com.blamejared.crafttweaker.impl.loot.condition.LootTableIdRegexCondition;
 import com.blamejared.crafttweaker.impl.script.*;
 import com.blamejared.crafttweaker.platform.services.IRegistryHelper;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
@@ -31,6 +33,9 @@ public class FabricRegistryHelper implements IRegistryHelper {
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, CraftTweakerConstants.rl("shapeless"), CTShapelessRecipeSerializer.INSTANCE);
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, CraftTweakerConstants.rl("shaped"), CTShapedRecipeSerializer.INSTANCE);
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, CraftTweakerConstants.rl("script"), ScriptSerializer.INSTANCE);
+        
+        Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, CraftTweakerConstants.rl("table_id"), LootTableIdCondition.LOOT_TABLE_ID);
+        Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, CraftTweakerConstants.rl("regex_table_id"), LootTableIdRegexCondition.LOOT_TABLE_ID_REGEX);
         
         CustomIngredientSerializer.register(IngredientAnySerializer.INSTANCE);
         CustomIngredientSerializer.register(IngredientListSerializer.INSTANCE);

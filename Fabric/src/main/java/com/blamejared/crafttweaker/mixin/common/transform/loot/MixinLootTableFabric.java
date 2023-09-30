@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.function.Consumer;
 
 @Mixin(LootTable.class)
-public abstract class MixinLootTable {
+public abstract class MixinLootTableFabric {
     
     @ModifyVariable(method = "getRandomItems(Lnet/minecraft/world/level/storage/loot/LootContext;Ljava/util/function/Consumer;)V", at = @At("HEAD"), argsOnly = true)
     private Consumer<ItemStack> crafttweaker$getRandomItems$injectCapturingConsumer(final Consumer<ItemStack> original) {

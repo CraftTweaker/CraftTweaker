@@ -8,7 +8,7 @@
     "AccessFakePlayer",
     "common.access.item.AccessBucketItem",
     "common.transform.item.MixinItemStackAttributes",
-    "common.transform.loot.MixinLootTable",
+    "common.transform.loot.MixinLootTableFabric",
     "common.transform.server.MixinServerResources"
   ],
   "client": [
