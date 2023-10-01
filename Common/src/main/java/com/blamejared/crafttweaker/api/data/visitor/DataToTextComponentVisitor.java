@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.data.BoolData;
 import com.blamejared.crafttweaker.api.data.ByteArrayData;
 import com.blamejared.crafttweaker.api.data.ByteData;
 import com.blamejared.crafttweaker.api.data.DoubleData;
+import com.blamejared.crafttweaker.api.data.EmptyData;
 import com.blamejared.crafttweaker.api.data.FloatData;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.IntArrayData;
@@ -48,6 +49,7 @@ public class DataToTextComponentVisitor implements DataVisitor<Component> {
         map.put(IData.Type.LONG, Component.literal("long").withStyle(SYNTAX_HIGHLIGHTING_TYPE));
         map.put(IData.Type.SHORT, Component.literal("short").withStyle(SYNTAX_HIGHLIGHTING_TYPE));
         map.put(IData.Type.STRING, Component.literal("string").withStyle(SYNTAX_HIGHLIGHTING_TYPE));
+        map.put(IData.Type.EMPTY, Component.empty());
         
         // There is no simple string representation of these types (such as "as list" or "as map").
         map.put(IData.Type.LIST, Component.empty());
@@ -270,6 +272,11 @@ public class DataToTextComponentVisitor implements DataVisitor<Component> {
                 .append(Component.literal(quote).withStyle(SYNTAX_HIGHLIGHTING_QUOTE));
     }
     
+    @Override
+    public Component visitEmpty(EmptyData data) {
+        
+        return Component.empty();
+    }
     
     private Component handleEscapePretty(String str) {
         

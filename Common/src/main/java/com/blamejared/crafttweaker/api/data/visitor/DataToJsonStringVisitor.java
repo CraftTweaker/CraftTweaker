@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.data.BoolData;
 import com.blamejared.crafttweaker.api.data.ByteArrayData;
 import com.blamejared.crafttweaker.api.data.ByteData;
 import com.blamejared.crafttweaker.api.data.DoubleData;
+import com.blamejared.crafttweaker.api.data.EmptyData;
 import com.blamejared.crafttweaker.api.data.FloatData;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.IntArrayData;
@@ -111,5 +112,12 @@ public enum DataToJsonStringVisitor implements DataVisitor<String> {
         
         return StringUtil.quoteAndEscape(data.getInternal().getAsString());
     }
+    
+    @Override
+    public String visitEmpty(EmptyData data) {
+        
+        return "";
+    }
+    
     
 }

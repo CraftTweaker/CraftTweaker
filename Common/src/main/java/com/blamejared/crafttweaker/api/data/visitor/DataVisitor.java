@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.data.BoolData;
 import com.blamejared.crafttweaker.api.data.ByteArrayData;
 import com.blamejared.crafttweaker.api.data.ByteData;
 import com.blamejared.crafttweaker.api.data.DoubleData;
+import com.blamejared.crafttweaker.api.data.EmptyData;
 import com.blamejared.crafttweaker.api.data.FloatData;
 import com.blamejared.crafttweaker.api.data.IntArrayData;
 import com.blamejared.crafttweaker.api.data.IntData;
@@ -42,4 +43,5 @@ public interface DataVisitor<T> {
     
     T visitString(StringData data);
     
+    T visitEmpty(EmptyData data);
 }

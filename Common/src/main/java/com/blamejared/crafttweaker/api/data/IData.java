@@ -780,7 +780,7 @@ public interface IData extends Comparable<IData>, Iterable<IData> {
      * See {@link DataToTextComponentVisitor#DATA_TO_COMPONENT}
      */
     enum Type {
-        BOOL, BYTE_ARRAY, BYTE, DOUBLE, FLOAT, INT_ARRAY, INT, LIST, LONG_ARRAY, LONG, MAP, SHORT, STRING
+        BOOL, BYTE_ARRAY, BYTE, DOUBLE, FLOAT, INT_ARRAY, INT, LIST, LONG_ARRAY, LONG, MAP, SHORT, STRING, EMPTY
     }
     
 }
