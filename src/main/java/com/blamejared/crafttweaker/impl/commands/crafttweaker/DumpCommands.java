@@ -12,6 +12,7 @@ import com.blamejared.crafttweaker.impl.tag.manager.TagManager;
 import com.blamejared.crafttweaker.impl.tag.registry.CrTTagRegistry;
 import com.blamejared.crafttweaker.impl_native.villager.ExpandVillagerProfession;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
@@ -201,6 +202,18 @@ public final class DumpCommands {
             
             
             CommandUtilities.send(CommandUtilities.color("Tag Contents list generated! Check the crafttweaker.log file!", TextFormatting.GREEN), player);
+            return 0;
+        });
+        
+        CTCommands.registerDump("enchantment_types", "Outputs all EnchantmentType values", ctx -> {
+            
+            CraftTweakerAPI.logDump("\nAll EnchantmentType Values");
+            
+            for (EnchantmentType type : EnchantmentType.values()) {
+                
+                CraftTweakerAPI.logDump("\t- " + type.name());
+            }
+            
             return 0;
         });
     }
