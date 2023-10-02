@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.impl.util.text.MCTextComponent;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -33,6 +34,18 @@ public class ExpandEnchantment {
     public static Enchantment.Rarity getRarity(Enchantment internal) {
         
         return internal.getRarity();
+    }
+    
+    /**
+     * Gets the EnchantmentType of this Enchantment.
+     *
+     * @return The EnchantmentType of this Enchantment.
+     */
+    @ZenCodeType.Method
+    @ZenCodeType.Getter("type")
+    public static EnchantmentType getType(Enchantment internal) {
+        
+        return internal.type;
     }
     
     /**
