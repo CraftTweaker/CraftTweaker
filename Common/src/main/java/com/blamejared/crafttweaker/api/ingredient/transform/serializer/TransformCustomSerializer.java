@@ -3,12 +3,22 @@ package com.blamejared.crafttweaker.api.ingredient.transform.serializer;
 
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.transform.type.TransformCustom;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
-public enum TransformCustomSerializer implements IIngredientTransformerSerializer<TransformCustom<?>> {
-    INSTANCE;
+public class TransformCustomSerializer implements IIngredientTransformerSerializer<TransformCustom<?>> {
+    
+    public static final TransformCustomSerializer INSTANCE = new TransformCustomSerializer();
+    public static final Codec<TransformCustom<?>> CODEC = Codec.STRING.xmap(TransformCustom::new, TransformCustom::getUid);
+    
+    private TransformCustomSerializer() {}
+    
+    @Override
+    public Codec<TransformCustom<?>> codec() {
+        
+        return CODEC;
+    }
     
     @Override
     public TransformCustom<?> fromNetwork(FriendlyByteBuf buffer) {
@@ -17,24 +27,9 @@ public enum TransformCustomSerializer implements IIngredientTransformerSerialize
     }
     
     @Override
-    public TransformCustom<?> fromJson(JsonObject json) {
-        
-        final String uid = json.getAsJsonPrimitive("uid").getAsString();
-        return new TransformCustom<>(uid, null);
-    }
-    
-    @Override
     public void toNetwork(FriendlyByteBuf buffer, TransformCustom<?> ingredient) {
         
         buffer.writeUtf(ingredient.getUid());
-    }
-    
-    @Override
-    public JsonObject toJson(TransformCustom<?> transformer) {
-        
-        final JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("uid", transformer.getUid());
-        return jsonObject;
     }
     
     @Override

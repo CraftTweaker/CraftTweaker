@@ -10,8 +10,11 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.ingredient.type.IIngredientEmpty")
 @Document("vanilla/api/ingredient/type/IIngredientEmpty")
-public enum IIngredientEmpty implements IIngredient {
-    INSTANCE;
+public class IIngredientEmpty implements IIngredient {
+    
+    public static final IIngredientEmpty INSTANCE = new IIngredientEmpty();
+    
+    private IIngredientEmpty() {}
     
     @ZenCodeType.Method
     public static IIngredientEmpty getInstance() {
@@ -48,4 +51,5 @@ public enum IIngredientEmpty implements IIngredient {
         
         return new IItemStack[0];
     }
+    
 }

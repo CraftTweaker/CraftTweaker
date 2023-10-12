@@ -442,7 +442,7 @@ public interface IIngredient extends CommandStringDisplayable {
     @ZenCodeType.Method
     default IIngredientTransformed<IIngredient> reuse() {
         
-        return new IIngredientTransformed<>(this, new TransformReuse<>());
+        return new IIngredientTransformed<>(this, TransformReuse.getInstance());
     }
     
     /**

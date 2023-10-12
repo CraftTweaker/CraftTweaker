@@ -13,14 +13,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.ingredient.transform.type.TransformReplace")
 @Document("vanilla/api/ingredient/transform/type/TransformReplace")
-public class TransformReplace<T extends IIngredient> implements IIngredientTransformer<T> {
-    
-    private final IItemStack replaceWith;
-    
-    public TransformReplace(IItemStack replaceWith) {
-        
-        this.replaceWith = replaceWith;
-    }
+public record TransformReplace<T extends IIngredient>(IItemStack replaceWith) implements IIngredientTransformer<T> {
     
     @Override
     public IItemStack transform(IItemStack stack) {
@@ -39,11 +32,6 @@ public class TransformReplace<T extends IIngredient> implements IIngredientTrans
     public IIngredientTransformerSerializer getSerializer() {
         
         return TransformReplaceSerializer.INSTANCE;
-    }
-    
-    public IItemStack getReplaceWith() {
-        
-        return replaceWith;
     }
     
 }

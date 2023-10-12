@@ -1,7 +1,5 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Forge Both" type="CompoundRunConfigurationType">
-    <toRun name="Forge Client" type="Application" />
-    <toRun name="Forge Server" type="Application" />
     <method v="2" />
   </configuration>
 </component>

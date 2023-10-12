@@ -14,25 +14,13 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.ingredient.transform.type.TransformDamage")
 @Document("vanilla/api/ingredient/transform/type/TransformDamage")
-public class TransformDamage<T extends IIngredient> implements IIngredientTransformer<T> {
-    
-    private final int amount;
-    
-    public TransformDamage(int amount) {
-        
-        this.amount = amount;
-    }
-    
-    public int getAmount() {
-        
-        return amount;
-    }
+public record TransformDamage<T extends IIngredient>(int amount) implements IIngredientTransformer<T> {
     
     @Override
     public IItemStack transform(IItemStack stack) {
         
         final ItemStack internal = stack.getImmutableInternal();
-        final int newDamage = internal.getDamageValue() + amount;
+        final int newDamage = internal.getDamageValue() + amount();
         if(internal.getMaxDamage() < newDamage) {
             return IItemStack.empty();
         }
@@ -43,10 +31,10 @@ public class TransformDamage<T extends IIngredient> implements IIngredientTransf
     @Override
     public String getCommandString(T transformedIngredient) {
         
-        if(this.amount == 1) {
+        if(this.amount() == 1) {
             return transformedIngredient.getCommandString() + ".transformDamage()";
         }
-        return String.format("%s.transformDamage(%s)", transformedIngredient.getCommandString(), amount);
+        return String.format("%s.transformDamage(%s)", transformedIngredient.getCommandString(), amount());
     }
     
     @Override

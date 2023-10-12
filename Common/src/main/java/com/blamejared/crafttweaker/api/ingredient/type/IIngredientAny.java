@@ -3,8 +3,8 @@ package com.blamejared.crafttweaker.api.ingredient.type;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
+import com.blamejared.crafttweaker.api.ingredient.vanilla.type.IngredientAny;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -18,11 +18,12 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.ingredient.type.IIngredientAny")
 @Document("vanilla/api/ingredient/type/IIngredientAny")
-public enum IIngredientAny implements IIngredient {
-    
-    INSTANCE;
+public class IIngredientAny implements IIngredient {
     
     public static final ResourceLocation ID = CraftTweakerConstants.rl("any");
+    public static final IIngredientAny INSTANCE = new IIngredientAny();
+    
+    private IIngredientAny() {}
     
     @ZenCodeType.Method
     public static IIngredientAny getInstance() {
@@ -39,7 +40,7 @@ public enum IIngredientAny implements IIngredient {
     @Override
     public Ingredient asVanillaIngredient() {
         
-        return Services.REGISTRY.getIngredientAny();
+        return IngredientAny.ingredient();
     }
     
     @Override

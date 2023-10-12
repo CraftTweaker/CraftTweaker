@@ -48,16 +48,6 @@ public interface IRegistryHelper {
     
     void init();
     
-    Ingredient getIngredientAny();
-    
-    Ingredient getIngredientList(List<Ingredient> children);
-    
-    <T extends IIngredient> Ingredient getIngredientConditioned(IIngredientConditioned<T> conditioned);
-    
-    <T extends IIngredient> Ingredient getIngredientTransformed(IIngredientTransformed<T> transformed);
-    
-    Ingredient getIngredientPartialTag(ItemStack stack);
-    
     /**
      * Maybe returns the registry key of the given object if we know about its type.
      */

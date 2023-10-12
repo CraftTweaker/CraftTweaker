@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.IIngredientWithAmount;
+import com.blamejared.crafttweaker.api.ingredient.vanilla.type.IngredientPartialTag;
 import com.blamejared.crafttweaker.api.util.AttributeUtil;
 import com.blamejared.crafttweaker.api.util.EnchantmentUtil;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
@@ -66,6 +67,11 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
     
     static IItemStack empty() {
         return IItemStackConstants.EMPTY_STACK.get();
+    }
+    
+    static IItemStack of(final ItemLike item) {
+        
+        return of(new ItemStack(item));
     }
     
     static IItemStack of(final ItemStack stack) {
@@ -894,7 +900,7 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount {
         if(!getInternal().hasTag()) {
             return Ingredient.of(getImmutableInternal());
         }
-        return Services.REGISTRY.getIngredientPartialTag(getImmutableInternal());
+        return IngredientPartialTag.ingredient(getImmutableInternal());
     }
     
     @ZenCodeType.Method

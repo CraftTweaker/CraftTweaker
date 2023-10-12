@@ -11,7 +11,7 @@ public class ForgeNetworkHelper implements INetworkHelper {
     @Override
     public void sendCopyMessage(ServerPlayer target, MessageCopy message) {
         
-        PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> target), message);
+        PacketHandler.CHANNEL.send(message, PacketDistributor.PLAYER.with(target));
     }
     
 }

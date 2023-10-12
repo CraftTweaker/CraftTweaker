@@ -3,12 +3,16 @@ package com.blamejared.crafttweaker.api.ingredient.transform.serializer;
 
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.transform.type.TransformDamage;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
-public enum TransformDamageSerializer implements IIngredientTransformerSerializer<TransformDamage<?>> {
-    INSTANCE;
+public class TransformDamageSerializer implements IIngredientTransformerSerializer<TransformDamage<?>> {
+    
+    public static final TransformDamageSerializer INSTANCE = new TransformDamageSerializer();
+    public static final Codec<TransformDamage<?>> CODEC = Codec.INT.xmap(TransformDamage::new, TransformDamage::amount);
+    
+    private TransformDamageSerializer() {}
     
     @Override
     public TransformDamage<?> fromNetwork(FriendlyByteBuf buffer) {
@@ -17,23 +21,15 @@ public enum TransformDamageSerializer implements IIngredientTransformerSerialize
     }
     
     @Override
-    public TransformDamage<?> fromJson(JsonObject json) {
+    public Codec<TransformDamage<?>> codec() {
         
-        return new TransformDamage<>(json.getAsJsonPrimitive("amount").getAsInt());
+        return CODEC;
     }
     
     @Override
     public void toNetwork(FriendlyByteBuf buffer, TransformDamage<?> ingredient) {
         
-        buffer.writeVarInt(ingredient.getAmount());
-    }
-    
-    @Override
-    public JsonObject toJson(TransformDamage<?> transformer) {
-        
-        final JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("amount", transformer.getAmount());
-        return jsonObject;
+        buffer.writeVarInt(ingredient.amount());
     }
     
     @Override
@@ -41,5 +37,6 @@ public enum TransformDamageSerializer implements IIngredientTransformerSerialize
         
         return CraftTweakerConstants.rl("transform_damage");
     }
+    
     
 }

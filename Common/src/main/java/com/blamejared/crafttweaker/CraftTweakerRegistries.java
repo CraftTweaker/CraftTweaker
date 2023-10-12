@@ -1,14 +1,25 @@
 package com.blamejared.crafttweaker;
 
-
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
-import com.blamejared.crafttweaker.api.ingredient.condition.serializer.*;
-import com.blamejared.crafttweaker.api.ingredient.transform.serializer.*;
+import com.blamejared.crafttweaker.api.ingredient.condition.serializer.ConditionAnyDamagedSerializer;
+import com.blamejared.crafttweaker.api.ingredient.condition.serializer.ConditionCustomSerializer;
+import com.blamejared.crafttweaker.api.ingredient.condition.serializer.ConditionDamagedAtLeastSerializer;
+import com.blamejared.crafttweaker.api.ingredient.condition.serializer.ConditionDamagedAtMostSerializer;
+import com.blamejared.crafttweaker.api.ingredient.condition.serializer.ConditionDamagedSerializer;
+import com.blamejared.crafttweaker.api.ingredient.condition.serializer.IIngredientConditionSerializer;
+import com.blamejared.crafttweaker.api.ingredient.transform.serializer.IIngredientTransformerSerializer;
+import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformCustomSerializer;
+import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformDamageSerializer;
+import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformReplaceSerializer;
+import com.blamejared.crafttweaker.api.ingredient.transform.serializer.TransformReuseSerializer;
 import com.blamejared.crafttweaker.mixin.common.access.registry.AccessMappedRegistry;
 import com.mojang.serialization.Lifecycle;
-import net.minecraft.core.*;
+import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.WritableRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.*;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 
 public class CraftTweakerRegistries {
     
@@ -30,11 +41,14 @@ public class CraftTweakerRegistries {
         registerSerializer(REGISTRY_TRANSFORMER_SERIALIZER, TransformReplaceSerializer.INSTANCE);
         registerSerializer(REGISTRY_TRANSFORMER_SERIALIZER, TransformDamageSerializer.INSTANCE);
         registerSerializer(REGISTRY_TRANSFORMER_SERIALIZER, TransformCustomSerializer.INSTANCE);
-        registerSerializer(REGISTRY_TRANSFORMER_SERIALIZER, TransformerReuseSerializer.INSTANCE);
+        registerSerializer(REGISTRY_TRANSFORMER_SERIALIZER, TransformReuseSerializer.INSTANCE);
         
         registerSerializer(REGISTRY_CONDITIONER_SERIALIZER, ConditionDamagedSerializer.INSTANCE);
         registerSerializer(REGISTRY_CONDITIONER_SERIALIZER, ConditionAnyDamagedSerializer.INSTANCE);
         registerSerializer(REGISTRY_CONDITIONER_SERIALIZER, ConditionCustomSerializer.INSTANCE);
+        registerSerializer(REGISTRY_CONDITIONER_SERIALIZER, ConditionDamagedAtMostSerializer.INSTANCE);
+        registerSerializer(REGISTRY_CONDITIONER_SERIALIZER, ConditionDamagedAtLeastSerializer.INSTANCE);
+        
     }
     
     @SuppressWarnings("rawtypes")

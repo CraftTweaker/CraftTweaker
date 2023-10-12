@@ -15,7 +15,7 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/ingredient/condition/IIngredientCondition")
 public interface IIngredientCondition<T extends IIngredient> {
     
-    Codec<IIngredientCondition<?>> CODEC = IIngredientConditionSerializer.CODEC.dispatch(IIngredientCondition::getSerializer, IIngredientConditionSerializer::codec);
+    Codec<IIngredientCondition<? extends IIngredient>> CODEC = IIngredientConditionSerializer.CODEC.dispatch(IIngredientCondition::getSerializer, IIngredientConditionSerializer::codec);
     
     @ZenCodeType.Method
     boolean matches(IItemStack stack);

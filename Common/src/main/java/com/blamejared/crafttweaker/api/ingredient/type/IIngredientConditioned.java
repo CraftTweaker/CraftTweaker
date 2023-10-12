@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.condition.IIngredientCondition;
+import com.blamejared.crafttweaker.api.ingredient.vanilla.type.IngredientConditioned;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.platform.Services;
@@ -25,10 +26,9 @@ public class IIngredientConditioned<T extends IIngredient> implements IIngredien
     public static final ResourceLocation ID = CraftTweakerConstants.rl("conditioned");
     
     public static final Codec<IIngredientConditioned<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                    IIngredient.CODEC.fieldOf("base").forGetter(IIngredientConditioned::getBaseIngredient),
-                    IIngredientCondition.CODEC.fieldOf("condition").forGetter(IIngredientConditioned::getCondition)
-            )
-            .apply(instance, (iIngredient, iIngredientCondition) -> new IIngredientConditioned<>(iIngredient, GenericUtil.uncheck(iIngredientCondition))));
+            IIngredient.CODEC.fieldOf("base").forGetter(IIngredientConditioned::getBaseIngredient),
+            IIngredientCondition.CODEC.fieldOf("condition").forGetter(IIngredientConditioned::getCondition)
+    ).apply(instance, (base, condition) -> new IIngredientConditioned<>(base, GenericUtil.uncheck(condition))));
     private final T base;
     private final IIngredientCondition<T> condition;
     
@@ -41,7 +41,7 @@ public class IIngredientConditioned<T extends IIngredient> implements IIngredien
     @Override
     public Ingredient asVanillaIngredient() {
         
-        return Services.REGISTRY.getIngredientConditioned(this);
+        return IngredientConditioned.ingredient(this);
     }
     
     @ZenCodeType.Getter("condition")
@@ -114,6 +114,16 @@ public class IIngredientConditioned<T extends IIngredient> implements IIngredien
         int result = base.hashCode();
         result = 31 * result + condition.hashCode();
         return result;
+    }
+    
+    @Override
+    public String toString() {
+        
+        final StringBuilder sb = new StringBuilder("IIngredientConditioned{");
+        sb.append("base=").append(base);
+        sb.append(", condition=").append(condition);
+        sb.append('}');
+        return sb.toString();
     }
     
 }

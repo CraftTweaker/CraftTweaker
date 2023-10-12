@@ -4,6 +4,7 @@ package com.blamejared.crafttweaker.api.ingredient.type;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
+import com.blamejared.crafttweaker.api.ingredient.vanilla.type.IngredientList;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -103,7 +104,7 @@ public class IIngredientList implements IIngredient {
     @Override
     public Ingredient asVanillaIngredient() {
         
-        return Services.REGISTRY.getIngredientList(Arrays.stream(ingredients)
+        return IngredientList.ingredient(Arrays.stream(ingredients)
                 .map(IIngredient::asVanillaIngredient)
                 .collect(Collectors.toList()));
     }

@@ -1,6 +1,9 @@
 package com.blamejared.crafttweaker.platform.services;
 
 import com.blamejared.crafttweaker.api.fluid.IFluidStack;
+import com.blamejared.crafttweaker.api.ingredient.IIngredient;
+import com.blamejared.crafttweaker.api.ingredient.type.IIngredientConditioned;
+import com.blamejared.crafttweaker.api.ingredient.type.IIngredientTransformed;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
 import com.blamejared.crafttweaker.api.mod.Mod;
@@ -14,7 +17,6 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffect;
@@ -26,7 +28,6 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.Nullable;
@@ -83,9 +84,9 @@ public interface IPlatformHelper {
     /**
      * Finds classes with the given annotation and applies a filter.
      *
-     * @param annotationClass    The annotation class to look for.
-     * @param classProviderConsumer         Consumer to collect the given mod that added the class if available.
-     * @param annotationFilter A filter to apply to the search.
+     * @param annotationClass       The annotation class to look for.
+     * @param classProviderConsumer Consumer to collect the given mod that added the class if available.
+     * @param annotationFilter      A filter to apply to the search.
      *
      * @return A stream of classes with the annotation
      */
@@ -139,6 +140,8 @@ public interface IPlatformHelper {
         internal.getEffects().removeIf(pair -> pair.getFirst().getEffect() == effect);
     }
     
+    boolean doesIngredientRequireTesting(Ingredient ingredient);
+    
     default void invalidateIngredients(List<Ingredient> ingredients) {
         
         ingredients.forEach(ingredient -> {
@@ -146,6 +149,16 @@ public interface IPlatformHelper {
         });
         ingredients.clear();
     }
+    
+    Ingredient getIngredientAny();
+    
+    Ingredient getIngredientList(List<Ingredient> children);
+    
+    <T extends IIngredient> Ingredient getIngredientConditioned(IIngredientConditioned<T> conditioned);
+    
+    <T extends IIngredient> Ingredient getIngredientTransformed(IIngredientTransformed<T> transformed);
+    
+    Ingredient getIngredientPartialTag(ItemStack stack);
     
     Stream<GameProfile> fakePlayers();
     

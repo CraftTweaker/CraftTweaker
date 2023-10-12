@@ -7,10 +7,10 @@ import com.blamejared.crafttweaker.api.event.bus.IEventBus;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraftforge.event.entity.player.AdvancementEvent;
 import org.openzen.zencode.java.ZenCodeType;
 
-@SuppressWarnings("deprecation")
 @ZenRegister
 @ZenEvent
 @Document("forge/api/event/advancement/AdvancementEarnEvent")
@@ -24,7 +24,7 @@ public class ExpandAdvancementEarnEvent {
     );
     
     @ZenCodeType.Getter("advancement")
-    public static Advancement getAdvancement(AdvancementEvent.AdvancementEarnEvent internal) {
+    public static AdvancementHolder getAdvancement(AdvancementEvent.AdvancementEarnEvent internal) {
         
         return internal.getAdvancement();
     }

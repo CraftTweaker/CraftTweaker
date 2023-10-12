@@ -6,9 +6,13 @@ import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.transform.IIngredientTransformer;
+import com.blamejared.crafttweaker.api.ingredient.vanilla.type.IngredientTransformed;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.openzen.zencode.java.ZenCodeType;
@@ -19,6 +23,11 @@ import org.openzen.zencode.java.ZenCodeType;
 public class IIngredientTransformed<T extends IIngredient> implements IIngredient {
     
     public static final ResourceLocation ID = CraftTweakerConstants.rl("transformed");
+    
+    public static final Codec<IIngredientTransformed<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            IIngredient.CODEC.fieldOf("base").forGetter(IIngredientTransformed::getBaseIngredient),
+            IIngredientTransformer.CODEC.fieldOf("transformer").forGetter(IIngredientTransformed::getTransformer)
+    ).apply(instance, (base, condition) -> new IIngredientTransformed<>(base, GenericUtil.uncheck(condition))));
     
     private final T base;
     private final IIngredientTransformer<T> transformer;
@@ -32,7 +41,7 @@ public class IIngredientTransformed<T extends IIngredient> implements IIngredien
     @Override
     public Ingredient asVanillaIngredient() {
         
-        return Services.REGISTRY.getIngredientTransformed(this);
+        return IngredientTransformed.ingredient(this);
     }
     
     @ZenCodeType.Getter("transformer")

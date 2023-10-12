@@ -4,11 +4,19 @@ import com.blamejared.crafttweaker.CraftTweakerRegistries;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.command.argument.IItemStackArgument;
 import com.blamejared.crafttweaker.api.command.argument.RecipeTypeArgument;
-import com.blamejared.crafttweaker.api.ingredient.IIngredient;
-import com.blamejared.crafttweaker.api.ingredient.serializer.*;
-import com.blamejared.crafttweaker.api.ingredient.type.*;
+import com.blamejared.crafttweaker.api.ingredient.type.IIngredientAny;
+import com.blamejared.crafttweaker.api.ingredient.type.IIngredientConditioned;
+import com.blamejared.crafttweaker.api.ingredient.type.IIngredientList;
+import com.blamejared.crafttweaker.api.ingredient.type.IIngredientTransformed;
+import com.blamejared.crafttweaker.api.ingredient.vanilla.CraftTweakerIngredients;
+import com.blamejared.crafttweaker.api.ingredient.vanilla.serializer.IngredientAnySerializer;
+import com.blamejared.crafttweaker.api.ingredient.vanilla.serializer.IngredientConditionedSerializer;
+import com.blamejared.crafttweaker.api.ingredient.vanilla.serializer.IngredientListSerializer;
+import com.blamejared.crafttweaker.api.ingredient.vanilla.serializer.IngredientPartialTagSerializer;
+import com.blamejared.crafttweaker.api.ingredient.vanilla.serializer.IngredientTransformedSerializer;
 import com.blamejared.crafttweaker.api.recipe.serializer.CTShapedRecipeSerializer;
 import com.blamejared.crafttweaker.api.recipe.serializer.CTShapelessRecipeSerializer;
+import com.blamejared.crafttweaker.impl.loot.condition.LootTableIdRegexCondition;
 import com.blamejared.crafttweaker.impl.script.ScriptRecipeType;
 import com.blamejared.crafttweaker.impl.script.ScriptSerializer;
 import com.blamejared.crafttweaker.platform.services.IRegistryHelper;
@@ -18,14 +26,11 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegisterEvent;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class ForgeRegistryHelper implements IRegistryHelper {
@@ -61,44 +66,17 @@ public class ForgeRegistryHelper implements IRegistryHelper {
                     helper.register(RecipeTypeArgument.ID, ArgumentTypeInfos.registerByClass(RecipeTypeArgument.class, SingletonArgumentInfo.contextFree(RecipeTypeArgument::get)));
                     helper.register(IItemStackArgument.ID, ArgumentTypeInfos.registerByClass(IItemStackArgument.class, SingletonArgumentInfo.contextFree(IItemStackArgument::get)));
                 });
+            } else if(ForgeRegistries.Keys.INGREDIENT_SERIALIZERS.equals(event.getRegistryKey())) {
+                event.register(ForgeRegistries.Keys.INGREDIENT_SERIALIZERS, helper -> {
+                    helper.register(IIngredientAny.ID, CraftTweakerIngredients.Serializers.ANY);
+                    helper.register(IIngredientList.ID, CraftTweakerIngredients.Serializers.LIST);
+                    helper.register(IIngredientTransformed.ID, CraftTweakerIngredients.Serializers.TRANSFORMED);
+                    helper.register(IIngredientConditioned.ID, CraftTweakerIngredients.Serializers.CONDITIONED);
+                    helper.register(IngredientPartialTagSerializer.ID, CraftTweakerIngredients.Serializers.PARTIAL_TAG);
+                });
             }
         });
         
-        CraftingHelper.register(IIngredientAny.ID, IngredientAnySerializer.INSTANCE);
-        CraftingHelper.register(IIngredientList.ID, IngredientListSerializer.INSTANCE);
-        CraftingHelper.register(IIngredientTransformed.ID, IngredientTransformedSerializer.INSTANCE);
-        CraftingHelper.register(IIngredientConditioned.ID, IngredientConditionedSerializer.INSTANCE);
-        CraftingHelper.register(IngredientPartialTagSerializer.ID, IngredientPartialTagSerializer.INSTANCE);
-    }
-    
-    @Override
-    public Ingredient getIngredientAny() {
-        
-        return IngredientAny.INSTANCE;
-    }
-    
-    @Override
-    public Ingredient getIngredientList(List<Ingredient> children) {
-        
-        return new IngredientList(children);
-    }
-    
-    @Override
-    public <T extends IIngredient> Ingredient getIngredientConditioned(IIngredientConditioned<T> conditioned) {
-        
-        return new IngredientConditioned<>(conditioned);
-    }
-    
-    @Override
-    public <T extends IIngredient> Ingredient getIngredientTransformed(IIngredientTransformed<T> transformed) {
-        
-        return new IngredientTransformed<>(transformed);
-    }
-    
-    @Override
-    public Ingredient getIngredientPartialTag(ItemStack stack) {
-        
-        return new IngredientPartialTag(stack);
     }
     
 }

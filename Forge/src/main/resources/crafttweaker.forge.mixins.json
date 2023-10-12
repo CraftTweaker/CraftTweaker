@@ -7,7 +7,7 @@
   "mixins": [
     "common.access.brewing.AccessBrewingRecipeRegistry",
     "common.access.brewing.AccessPotionBrewing",
-    "common.access.entity.AccessFakePlayerFactory",
+//    "common.access.entity.AccessFakePlayerFactory",
     "common.access.food.AccessFoodPropertiesForge",
     "common.access.villager.AccessBasicTrade",
     "common.transform.item.attribute.MixinItemAttributeModifierEvent",

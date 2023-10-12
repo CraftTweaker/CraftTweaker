@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.natives.loot.condition;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.impl.loot.condition.LootTableIdRegexCondition;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;

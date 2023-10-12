@@ -25,6 +25,11 @@ public class ConditionCustom<T extends IIngredient> implements IIngredientCondit
     private final String uid;
     private Predicate<IItemStack> function;
     
+    public ConditionCustom(String uid) {
+        
+        this(uid, null);
+    }
+    
     public ConditionCustom(String uid, Predicate<IItemStack> function) {
         
         this.uid = uid;

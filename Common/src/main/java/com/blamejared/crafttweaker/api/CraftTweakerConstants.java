@@ -21,7 +21,7 @@ public final class CraftTweakerConstants {
     /**
      * This is not the mod version, this is specifically for the network!!
      */
-    public static final String NETWORK_VERSION = "1.0.0";
+    public static final int NETWORK_VERSION = 1;
     
     public static final UUID CRAFTTWEAKER_UUID = UUID.nameUUIDFromBytes(MOD_ID.getBytes());
     
