@@ -1,5 +1,8 @@
-package com.blamejared.crafttweaker.gametest.framework;
+package com.blamejared.crafttweaker.gametest.framework.parameterized;
 
+import com.blamejared.crafttweaker.gametest.framework.Modifier;
+import com.blamejared.crafttweaker.gametest.framework.ModifingConsumer;
+import com.blamejared.crafttweaker.gametest.framework.ScriptBuilder;
 import com.blamejared.crafttweaker.gametest.framework.zencode.GameTestGlobals;
 import com.blamejared.crafttweaker.mixin.common.access.server.AccessMinecraftServer;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -7,19 +10,15 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.lang.reflect.Method;
-import java.util.function.Consumer;
 
-public class ModifingConsumer implements Consumer<GameTestHelper> {
+public class ParameterizedConsumer extends ModifingConsumer {
     
-    protected final Class<?> testClass;
-    protected final Method testMethod;
-    protected final Modifier modifier;
+    private Arguments.Builder arguments;
     
-    public ModifingConsumer(Class<?> testClass, Method testMethod, Modifier modifier) {
+    public ParameterizedConsumer(Class<?> testClass, Method testMethod, Modifier modifier, Arguments.Builder arguments) {
         
-        this.testClass = testClass;
-        this.testMethod = testMethod;
-        this.modifier = modifier;
+        super(testClass, testMethod, modifier);
+        this.arguments = arguments;
     }
     
     @Override
@@ -45,6 +44,8 @@ public class ModifingConsumer implements Consumer<GameTestHelper> {
                         final ResourceManager resourceManager = reloadableResources.resourceManager();
                         args[i] = new ScriptBuilder();
                     }
+                } else if(params[i].equals(Arguments.class)) {
+                    args[i] = arguments.build();
                 }
             }
             testMethod.invoke(instance, args);
