@@ -9,6 +9,9 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.openzen.zencode.java.ZenCodeType;
 
+/**
+ * Holds {@link Recipe} recipe and a {@link ResourceLocation} id.
+ */
 @ZenRegister
 @Document("vanilla/api/recipe/type/RecipeHolder")
 @NativeTypeRegistration(value = RecipeHolder.class, zenCodeName = "crafttweaker.api.recipe.type.RecipeHolderRecipeHolder")
