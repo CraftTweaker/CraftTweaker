@@ -37,8 +37,11 @@ import java.util.regex.Pattern;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.loot.modifier.LootModifierManager")
 @Document("vanilla/api/loot/modifier/LootModifierManager")
-public enum LootModifierManager {
-    INSTANCE;
+public class LootModifierManager {
+    
+    public static final LootModifierManager INSTANCE = new LootModifierManager();
+    
+    private LootModifierManager() {}
     
     private final Supplier<Map<ResourceLocation, ILootModifier>> lootMap = Services.PLATFORM::getLootModifiersMap;
     

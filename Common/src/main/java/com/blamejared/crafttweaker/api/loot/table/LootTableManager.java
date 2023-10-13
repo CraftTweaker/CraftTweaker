@@ -25,8 +25,11 @@ import java.util.Set;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.loot.table.LootTableManager")
 @Document("vanilla/api/loot/table/LootTableManager")
-public enum LootTableManager {
-    INSTANCE;
+public class LootTableManager {
+    
+    public static final LootTableManager INSTANCE = new LootTableManager();
+    
+    private LootTableManager() {}
     
     /**
      * Gets a table with the given name.

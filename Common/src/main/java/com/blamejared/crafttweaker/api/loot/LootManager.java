@@ -19,9 +19,12 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.loot.LootManager")
 @Document("vanilla/api/loot/LootManager")
-public enum LootManager {
+public class LootManager {
+    
     @ZenCodeGlobals.Global("loot")
-    INSTANCE;
+    public static final LootManager INSTANCE = new LootManager();
+    
+    private LootManager() {}
     
     /**
      * Gets the loot modifiers manager.
@@ -48,4 +51,5 @@ public enum LootManager {
         
         return LootTableManager.INSTANCE;
     }
+    
 }

@@ -10,12 +10,13 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public enum LootModifierManager {
-    INSTANCE;
+public class LootModifierManager {
+    
+    public static final LootModifierManager INSTANCE = new LootModifierManager();
     
     private final Map<ResourceLocation, ILootModifier> modifiers;
     
-    LootModifierManager() {
+    private LootModifierManager() {
         
         this.modifiers = new LinkedHashMap<>();
     }
@@ -36,4 +37,5 @@ public enum LootModifierManager {
                         (lootA, lootB) -> Util.make(lootA, a -> a.addAll(lootB))
                 );
     }
+    
 }
