@@ -93,7 +93,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
         private static final VarHandle LMM_MAP = HandleUtil.linkField(
                 LootModifierManager.class,
                 HandleUtil.AccessType.VIRTUAL,
-                "registeredLootModifiers",
+                "modifiers",
                 Map.class);
         
     }
