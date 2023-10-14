@@ -23,7 +23,7 @@ public class IngredientPartialTagSerializerTest implements CraftTweakerGameTest 
     public void testCodecEncode(GameTestHelper helper) {
         
         IngredientPartialTag subject = IngredientPartialTag.of(Items.APPLE.getDefaultInstance());
-        DataResult<JsonElement> encodeResult = encodeWild(IngredientPartialTagSerializer.CODEC, subject);
+        DataResult<JsonElement> encodeResult = encode(IngredientPartialTagSerializer.CODEC, subject);
         JsonElement jsonResult = encodeResult.getOrThrow(false, this::fail);
         assertThat(jsonResult.isJsonObject(), is(true));
         assertThat(jsonResult.getAsJsonObject(), is(parseJson("""
@@ -37,7 +37,7 @@ public class IngredientPartialTagSerializerTest implements CraftTweakerGameTest 
     @TestModifier(implicitSuccession = true)
     public void testCodecDecode(GameTestHelper helper) {
         
-        DataResult<Pair<IngredientPartialTag, JsonElement>> decode = decodeWild(IngredientPartialTagSerializer.CODEC, parseJson("""
+        DataResult<Pair<IngredientPartialTag, JsonElement>> decode = decode(IngredientPartialTagSerializer.CODEC, parseJson("""
                 {
                   "id": "minecraft:apple",
                   "Count": 1

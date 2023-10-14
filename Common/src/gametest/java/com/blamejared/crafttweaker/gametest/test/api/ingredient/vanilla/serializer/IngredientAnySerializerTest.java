@@ -33,7 +33,7 @@ public class IngredientAnySerializerTest implements CraftTweakerGameTest {
     @TestModifier(implicitSuccession = true)
     public void testCodecDecode(GameTestHelper helper) {
         
-        DataResult<Pair<IngredientAny, JsonElement>> decode = decodeWild(IngredientAnySerializer.CODEC, new JsonObject());
+        DataResult<Pair<IngredientAny, JsonElement>> decode = decode(IngredientAnySerializer.CODEC, new JsonObject());
         Pair<IngredientAny, JsonElement> decodeResult = decode.getOrThrow(false, this::fail);
         assertThat(decodeResult.getFirst(), is(IngredientAny.of()));
     }

@@ -58,19 +58,19 @@ public final class ActionBatchReplacement extends CraftTweakerAction implements 
         );
     }
     
-    private Stream< RecipeHolder<?>> castFilters(final Stream<RecipeHolder<?>> recipeStream) {
+    private Stream<RecipeHolder<?>> castFilters(final Stream<RecipeHolder<?>> recipeStream) {
         
         return Stream.concat(this.registry.filters().stream(), this.targetingRules.stream())
                 .reduce((a, b) -> it -> b.castFilter(a.castFilter(it)))
                 .map(it -> it.castFilter(recipeStream))
-                .orElseGet(() -> GenericUtil.uncheck(recipeStream));
+                .orElse(recipeStream);
     }
     
     private <C extends Container, T extends Recipe<C>> void replace(final RecipeHolder<?> recipe) {
         
         RecipeHolder<T> typedRecipe = GenericUtil.uncheck(recipe);
         final IRecipeHandler<T> handler = CraftTweakerAPI.getRegistry().getRecipeHandlerFor(typedRecipe);
-        final IRecipeManager<? super T> manager = GenericUtil.uncheck(RecipeTypeBracketHandler.getOrDefault(recipe.value().getType()));
+        final IRecipeManager<? super T> manager = RecipeTypeBracketHandler.getOrDefault(recipe.value().getType());
         handler.decompose(manager, typedRecipe).ifPresent(it -> this.replace(manager, handler, recipe.id(), it));
     }
     
@@ -82,7 +82,6 @@ public final class ActionBatchReplacement extends CraftTweakerAction implements 
     ) {
         
         if(this.apply(recipe)) {
-            //TODO 1.20.2 confirm
             CraftTweakerAPI.apply(new ActionReplaceRecipe<>(name, manager, newName -> GenericUtil.uncheck(this.rebuild(recipe, manager, handler, newName))));
         }
     }

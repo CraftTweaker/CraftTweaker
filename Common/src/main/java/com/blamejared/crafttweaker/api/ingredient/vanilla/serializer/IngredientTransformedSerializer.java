@@ -18,14 +18,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class IngredientTransformedSerializer implements CraftTweakerVanillaIngredientSerializer<IngredientTransformed<? extends IIngredient, ? extends IIngredientTransformed<?>>> {
     
     public static final IngredientTransformedSerializer INSTANCE = new IngredientTransformedSerializer();
-    public static final Codec<IngredientTransformed<? extends IIngredient, ? extends IIngredientTransformed<?>>> CODEC = IIngredientTransformed.CODEC.xmap(
+    public static final Codec<IngredientTransformed<? extends IIngredient, ? extends IIngredientTransformed<? extends IIngredient>>> CODEC = IIngredientTransformed.CODEC.xmap(
             IngredientTransformed::of,
             IngredientTransformed::getCrTIngredient);
     
     private IngredientTransformedSerializer() {}
     
     @Override
-    public Codec<IngredientTransformed<?, ?>> codec() {
+    public Codec<IngredientTransformed<? extends IIngredient, ? extends IIngredientTransformed<? extends IIngredient>>> codec() {
         
         return CODEC;
     }

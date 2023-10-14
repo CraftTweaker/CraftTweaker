@@ -27,7 +27,7 @@ public class IngredientListSerializerTest implements CraftTweakerGameTest {
         
         List<Ingredient> ingredients = List.of(Ingredient.of(Items.APPLE), Ingredient.of(Items.ARROW), IngredientList.ingredient(List.of(Ingredient.of(Items.BARREL))));
         IngredientList subject = IngredientList.of(ingredients);
-        DataResult<JsonElement> encodeResult = encodeWild(IngredientListSerializer.CODEC, subject);
+        DataResult<JsonElement> encodeResult = encode(IngredientListSerializer.CODEC, subject);
         JsonElement jsonResult = encodeResult.getOrThrow(false, this::fail);
         assertThat(jsonResult.isJsonObject(), is(true));
         assertThat(jsonResult.getAsJsonObject(), is(parseJson("""
@@ -49,7 +49,7 @@ public class IngredientListSerializerTest implements CraftTweakerGameTest {
     @TestModifier(implicitSuccession = true)
     public void testCodecDecode(GameTestHelper helper) {
         
-        DataResult<Pair<IngredientList, JsonElement>> decode = decodeWild(IngredientListSerializer.CODEC, parseJson("""
+        DataResult<Pair<IngredientList, JsonElement>> decode = decode(IngredientListSerializer.CODEC, parseJson("""
                 {
                   "ingredients": [
                     {

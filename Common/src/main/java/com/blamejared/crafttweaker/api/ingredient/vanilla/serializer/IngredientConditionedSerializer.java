@@ -14,10 +14,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class IngredientConditionedSerializer implements CraftTweakerVanillaIngredientSerializer<IngredientConditioned<? extends IIngredient,? extends IIngredientConditioned<?>>> {
+public class IngredientConditionedSerializer implements CraftTweakerVanillaIngredientSerializer<IngredientConditioned<? extends IIngredient, ? extends IIngredientConditioned<?>>> {
     
     public static final IngredientConditionedSerializer INSTANCE = new IngredientConditionedSerializer();
-    public static final Codec<IngredientConditioned<? extends IIngredient,? extends IIngredientConditioned<?>>> CODEC = IIngredientConditioned.CODEC.xmap(
+    public static final Codec<IngredientConditioned<? extends IIngredient, ? extends IIngredientConditioned<? extends IIngredient>>> CODEC = IIngredientConditioned.CODEC.xmap(
             IngredientConditioned::of,
             IngredientConditioned::getCrTIngredient);
     
@@ -30,13 +30,13 @@ public class IngredientConditionedSerializer implements CraftTweakerVanillaIngre
     }
     
     @Override
-    public Codec<IngredientConditioned<?, ?>> codec() {
+    public Codec<IngredientConditioned<? extends IIngredient, ? extends IIngredientConditioned<? extends IIngredient>>> codec() {
         
         return CODEC;
     }
     
     @Override
-    public IngredientConditioned<? extends IIngredient,? extends IIngredientConditioned<?>> decode(FriendlyByteBuf buffer) {
+    public IngredientConditioned<? extends IIngredient, ? extends IIngredientConditioned<?>> decode(FriendlyByteBuf buffer) {
         
         final IIngredient base = IIngredient.fromIngredient(Ingredient.fromNetwork(buffer));
         final ResourceLocation type = buffer.readResourceLocation();
@@ -50,7 +50,7 @@ public class IngredientConditionedSerializer implements CraftTweakerVanillaIngre
     }
     
     @Override
-    public void encode(FriendlyByteBuf buffer, IngredientConditioned<? extends IIngredient,? extends IIngredientConditioned<?>> ingredient) {
+    public void encode(FriendlyByteBuf buffer, IngredientConditioned<? extends IIngredient, ? extends IIngredientConditioned<?>> ingredient) {
         
         final Ingredient baseIngredient = ingredient.getCrTIngredient().getBaseIngredient().asVanillaIngredient();
         baseIngredient.toNetwork(buffer);

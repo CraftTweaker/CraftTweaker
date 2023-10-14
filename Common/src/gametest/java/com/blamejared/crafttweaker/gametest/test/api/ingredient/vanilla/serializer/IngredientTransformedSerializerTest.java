@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.gametest.test.api.ingredient.vanilla.serializer;
 
+import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.transform.type.TransformReuse;
 import com.blamejared.crafttweaker.api.ingredient.type.IIngredientTransformed;
 import com.blamejared.crafttweaker.api.ingredient.vanilla.serializer.IngredientTransformedSerializer;
@@ -25,7 +26,7 @@ public class IngredientTransformedSerializerTest implements CraftTweakerGameTest
     public void testCodecEncode(GameTestHelper helper) {
         
         IngredientTransformed subject = IngredientTransformed.of(new IIngredientTransformed<>(immutableStack(Items.APPLE), TransformReuse.getInstance()));
-        DataResult<JsonElement> encodeResult = encodeWild(IngredientTransformedSerializer.CODEC, subject);
+        DataResult<JsonElement> encodeResult = encode(IngredientTransformedSerializer.CODEC, subject);
         JsonElement jsonResult = encodeResult.getOrThrow(false, this::fail);
         assertThat(jsonResult.isJsonObject(), is(true));
         assertThat(jsonResult.getAsJsonObject(), is(parseJson("""
@@ -43,7 +44,7 @@ public class IngredientTransformedSerializerTest implements CraftTweakerGameTest
     @TestModifier(implicitSuccession = true)
     public void testCodecDecode(GameTestHelper helper) {
 
-        DataResult<Pair<IngredientTransformed, JsonElement>> decode = decodeWild(IngredientTransformedSerializer.CODEC, parseJson("""
+        DataResult<Pair<IngredientTransformed<? extends IIngredient, ? extends IIngredientTransformed<? extends IIngredient>>, JsonElement>> decode = decode(IngredientTransformedSerializer.CODEC, parseJson("""
                 {
                   "base": {
                     "item": "minecraft:apple"
@@ -52,7 +53,7 @@ public class IngredientTransformedSerializerTest implements CraftTweakerGameTest
                     "type": "crafttweaker:transform_reuse"
                   }
                 }"""));
-        Pair<IngredientTransformed, JsonElement> decodeResult = decode.getOrThrow(false, this::fail);
+        Pair<IngredientTransformed<? extends IIngredient, ? extends IIngredientTransformed<? extends IIngredient>>, JsonElement> decodeResult = decode.getOrThrow(false, this::fail);
         IngredientTransformed expected = IngredientTransformed.of(new IIngredientTransformed<>(immutableStack(Items.APPLE), TransformReuse.getInstance()));
         assertThat(decodeResult.getFirst(), is(expected));
     }

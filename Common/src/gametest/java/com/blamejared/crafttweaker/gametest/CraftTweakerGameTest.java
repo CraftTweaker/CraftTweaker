@@ -86,20 +86,11 @@ public interface CraftTweakerGameTest {
         return codec.encodeStart(JsonOps.INSTANCE, t);
     }
     
-    default DataResult<JsonElement> encodeWild(Codec<?> codec, Object t) {
-        
-        return codec.encodeStart(JsonOps.INSTANCE, GenericUtil.uncheck(t));
-    }
-    
     default <T> DataResult<Pair<T, JsonElement>> decode(Codec<T> codec, JsonElement element) {
         
         return codec.decode(JsonOps.INSTANCE, element);
     }
     
-    default <T> DataResult<Pair<T, JsonElement>> decodeWild(Codec<?> codec, JsonElement element) {
-        
-        return GenericUtil.uncheck(codec.decode(JsonOps.INSTANCE, element));
-    }
     
     
     default JsonElement parseJson(String json) {

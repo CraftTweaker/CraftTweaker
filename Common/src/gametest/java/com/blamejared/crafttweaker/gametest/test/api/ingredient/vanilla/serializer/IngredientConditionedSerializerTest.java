@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.gametest.test.api.ingredient.vanilla.serializer;
 
+import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.ingredient.condition.type.ConditionAnyDamage;
 import com.blamejared.crafttweaker.api.ingredient.type.IIngredientConditioned;
 import com.blamejared.crafttweaker.api.ingredient.vanilla.serializer.IngredientConditionedSerializer;
@@ -43,7 +44,7 @@ public class IngredientConditionedSerializerTest implements CraftTweakerGameTest
     @TestModifier(implicitSuccession = true)
     public void testCodecDecode(GameTestHelper helper) {
         
-        DataResult<Pair<IngredientConditioned, JsonElement>> decode = decodeWild(IngredientConditionedSerializer.CODEC, parseJson("""
+        DataResult<Pair<IngredientConditioned<? extends IIngredient, ? extends IIngredientConditioned<? extends IIngredient>>, JsonElement>> decode = decode(IngredientConditionedSerializer.CODEC, parseJson("""
                 {
                   "base": {
                     "item": "minecraft:apple"
@@ -52,7 +53,7 @@ public class IngredientConditionedSerializerTest implements CraftTweakerGameTest
                     "type": "crafttweaker:any_damage"
                   }
                 }"""));
-        Pair<IngredientConditioned, JsonElement> decodeResult = decode.getOrThrow(false, this::fail);
+        Pair<IngredientConditioned<? extends IIngredient, ? extends IIngredientConditioned<? extends IIngredient>>, JsonElement> decodeResult = decode.getOrThrow(false, this::fail);
         IngredientConditioned expected = IngredientConditioned.of(new IIngredientConditioned<>(immutableStack(Items.APPLE), ConditionAnyDamage.getInstance()));
         assertThat(decodeResult.getFirst(), is(expected));
     }
