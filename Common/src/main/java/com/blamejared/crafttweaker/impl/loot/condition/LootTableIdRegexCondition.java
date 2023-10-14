@@ -8,6 +8,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
@@ -15,36 +18,12 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import java.util.regex.Pattern;
 
 public record LootTableIdRegexCondition(Pattern regex) implements LootItemCondition {
-    // Could this be written as a proper codec? Yes
-    // Did I try? Yes
-    // Did it work? Of course not, because Mojang generic madness
-    // Do I want to fix it? No, thanks. Nobody uses this shit anyway, so who cares
-    private static final class LootTableIdRegexConditionCodec implements Codec<LootTableIdRegexCondition> {
-        
-        @Override
-        public <T> DataResult<Pair<LootTableIdRegexCondition, T>> decode(final DynamicOps<T> ops, final T input) {
-            
-            try {
-                final JsonObject object = ops.convertTo(JsonOps.INSTANCE, input).getAsJsonObject();
-                final Pattern regex = Pattern.compile(object.get("regex").getAsString());
-                return DataResult.success(Pair.of(new LootTableIdRegexCondition(regex), input));
-            } catch (final Exception e) {
-                return DataResult.error(e::getMessage, Pair.of(null, input));
-            }
-        }
-        
-        @Override
-        public <T> DataResult<T> encode(final LootTableIdRegexCondition input, final DynamicOps<T> ops, final T prefix) {
-            
-            final JsonObject object = new JsonObject();
-            object.addProperty("regex", input.regex().toString());
-            final T result = JsonOps.INSTANCE.convertTo(ops, object);
-            return ops.mergeToPrimitive(prefix, result);
-        }
-        
-    }
     
-    public static final LootItemConditionType LOOT_TABLE_ID_REGEX = new LootItemConditionType(new LootTableIdRegexConditionCodec());
+    public static final Codec<LootTableIdRegexCondition> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            ExtraCodecs.PATTERN.fieldOf("regex").forGetter(LootTableIdRegexCondition::regex)
+    ).apply(instance, LootTableIdRegexCondition::new));
+    
+    public static final LootItemConditionType LOOT_TABLE_ID_REGEX = new LootItemConditionType(CODEC);
     
     public static Builder builder(final Pattern id) {
         
