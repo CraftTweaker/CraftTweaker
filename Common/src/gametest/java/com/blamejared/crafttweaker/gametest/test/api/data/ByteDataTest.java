@@ -17,9 +17,9 @@ import static org.hamcrest.Matchers.is;
 @CraftTweakerGameTestHolder
 public class ByteDataTest implements CraftTweakerGameTest {
     
-    private String named(String name) {
+    public String scriptPath() {
         
-        return "data/byte/%s.zs".formatted(name);
+        return "data/byte";
     }
     
     @GameTest(template = "crafttweaker:empty")

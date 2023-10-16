@@ -18,9 +18,10 @@ import static org.hamcrest.Matchers.is;
 @CraftTweakerGameTestHolder
 public class BoolDataTest implements CraftTweakerGameTest {
     
-    private String named(String name) {
+    @Override
+    public String scriptPath() {
         
-        return "data/bool/%s.zs".formatted(name);
+        return "data/bool";
     }
     
     @GameTest(template = "crafttweaker:empty")

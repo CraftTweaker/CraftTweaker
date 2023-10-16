@@ -17,9 +17,9 @@ import static org.hamcrest.Matchers.is;
 @CraftTweakerGameTestHolder
 public class LongDataTest implements CraftTweakerGameTest {
     
-    private String named(String name) {
+    public String scriptPath() {
         
-        return "data/long/%s.zs".formatted(name);
+        return "data/long";
     }
     
     @GameTest(template = "crafttweaker:empty")

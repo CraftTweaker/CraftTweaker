@@ -17,9 +17,9 @@ import static org.hamcrest.Matchers.is;
 @CraftTweakerGameTestHolder
 public class DoubleDataTest implements CraftTweakerGameTest {
     
-    private String named(String name) {
+    public String scriptPath() {
         
-        return "data/double/%s.zs".formatted(name);
+        return "data/double";
     }
     
     @GameTest(template = "crafttweaker:empty")

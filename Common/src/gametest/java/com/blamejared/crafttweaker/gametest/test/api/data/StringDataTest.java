@@ -18,9 +18,9 @@ import static org.hamcrest.Matchers.lessThan;
 @CraftTweakerGameTestHolder
 public class StringDataTest implements CraftTweakerGameTest {
     
-    private String named(String name) {
+    public String scriptPath() {
         
-        return "data/string/%s.zs".formatted(name);
+        return "data/string";
     }
     
     @GameTest(template = "crafttweaker:empty")

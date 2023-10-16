@@ -1,7 +1,6 @@
 package com.blamejared.crafttweaker.gametest;
 
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.gametest.framework.DelegatingGameTestAssertException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,6 +21,17 @@ import java.util.function.Consumer;
 public interface CraftTweakerGameTest {
     
     Gson GSON = new GsonBuilder().create();
+    
+    
+    default String scriptPath() {
+        
+        throw new UnsupportedOperationException("GameTest class does not override 'scriptPath'!");
+    }
+    
+    default String named(String name) {
+        
+        return "%s/%s.zs".formatted(scriptPath(), name);
+    }
     
     default void fail() {
         
@@ -90,7 +100,6 @@ public interface CraftTweakerGameTest {
         
         return codec.decode(JsonOps.INSTANCE, element);
     }
-    
     
     
     default JsonElement parseJson(String json) {

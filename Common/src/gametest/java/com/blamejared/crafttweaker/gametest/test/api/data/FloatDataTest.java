@@ -17,9 +17,9 @@ import static org.hamcrest.Matchers.is;
 @CraftTweakerGameTestHolder
 public class FloatDataTest implements CraftTweakerGameTest {
     
-    private String named(String name) {
+    public String scriptPath() {
         
-        return "data/float/%s.zs".formatted(name);
+        return "data/float";
     }
     
     @GameTest(template = "crafttweaker:empty")

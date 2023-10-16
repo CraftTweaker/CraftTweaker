@@ -63,7 +63,7 @@ public class ModifingConsumer implements Consumer<GameTestHelper> {
                 throw new RuntimeException(e.getCause());
             }
         } finally {
-            GameTestGlobals.clear();
+            GameTestGlobals.reset();
         }
         
     }

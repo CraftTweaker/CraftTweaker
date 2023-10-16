@@ -64,7 +64,7 @@ public class ParameterizedConsumer extends ModifingConsumer {
                 throw new RuntimeException(e.getCause());
             }
         } finally {
-            GameTestGlobals.clear();
+            GameTestGlobals.reset();
         }
         
     }

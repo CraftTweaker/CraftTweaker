@@ -23,9 +23,9 @@ import static org.hamcrest.Matchers.is;
 @CraftTweakerGameTestHolder
 public class LongArrayDataTest implements CraftTweakerGameTest {
     
-    private String named(String name) {
+    public String scriptPath() {
         
-        return "data/long_array/%s.zs".formatted(name);
+        return "data/long_array";
     }
     
     //    @GameTest(template = "crafttweaker:empty")
