@@ -58,6 +58,21 @@ public class RecipeList<T extends Recipe<?>> {
     }
     
     /**
+     * Gets recipes that match the predicate.
+     *
+     * @param predicate A predicate of {@link RecipeHolder<T>} to test recipes against.
+     *
+     * @return A List of recipes that match the given predicate
+     */
+    public List<RecipeHolder<T>> getRecipesMatching(Predicate<RecipeHolder<T>> predicate) {
+        
+        return getRecipes().values()
+                .stream()
+                .filter(predicate)
+                .toList();
+    }
+    
+    /**
      * Gets a view of the recipes in this RecipeList.
      *
      * @return A view of the recipes in this RecipeList.

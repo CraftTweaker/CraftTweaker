@@ -121,6 +121,12 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
     }
     
     @ZenCodeType.Method
+    default List<RecipeHolder<T>> getRecipesMatching(Predicate<RecipeHolder<T>> predicate) {
+        
+        return getRecipeList().getRecipesMatching(predicate);
+    }
+    
+    @ZenCodeType.Method
     @ZenCodeType.Getter("allRecipes")
     default List<RecipeHolder<T>> getAllRecipes() {
         
@@ -222,6 +228,19 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
     default void removeByRegex(String regex, @ZenCodeType.Optional("(name as string) as bool => false") Predicate<String> exclude) {
         
         CraftTweakerAPI.apply(new ActionRemoveRecipeByRegex<>(this, regex, exclude));
+    }
+    
+    /**
+     * Removes all recipes that match the given predicate
+     *
+     * @param predicate a predicate of {@link RecipeHolder<T>} to test recipes against.
+     *
+     * @docParam predicate (holder) => "wool" in holder.id.path
+     */
+    @ZenCodeType.Method
+    default void removeMatching(Predicate<RecipeHolder<T>> predicate) {
+        
+        CraftTweakerAPI.apply(new ActionRemoveRecipe<>(this, predicate));
     }
     
     /**

@@ -15,6 +15,7 @@ import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.visitor.DataToJsonStringVisitor;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.recipe.RecipeList;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
@@ -25,8 +26,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.RecipeType;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -87,7 +86,8 @@ public class GenericRecipesManager {
         
         final ResourceLocation recipeName = CraftTweakerConstants.rl(name);
         final RecipeHolder<?> result = AccessRecipeManager.crafttweaker$callFromJson(recipeName, recipeObject);
-        final RecipeManagerWrapper recipeManagerWrapper = new RecipeManagerWrapper(GenericUtil.uncheck(result.value().getType()));
+        final RecipeManagerWrapper recipeManagerWrapper = new RecipeManagerWrapper(GenericUtil.uncheck(result.value()
+                .getType()));
         CraftTweakerAPI.apply(new ActionAddRecipe<>(recipeManagerWrapper, GenericUtil.uncheck(result), null));
     }
     
@@ -107,6 +107,14 @@ public class GenericRecipesManager {
         return getAllRecipes().stream()
                 .filter(recipe -> output.matches(IItemStack.of(AccessibleElementsProvider.get()
                         .registryAccess(recipe.value()::getResultItem))))
+                .collect(Collectors.toList());
+    }
+    
+    @ZenCodeType.Method
+    public List<RecipeHolder<Recipe<Container>>> getRecipesMatching(Predicate<RecipeHolder<Recipe<Container>>> predicate) {
+        
+        return getAllRecipes().stream()
+                .filter(predicate)
                 .collect(Collectors.toList());
     }
     
@@ -130,6 +138,7 @@ public class GenericRecipesManager {
     }
     
     //TODO 1.20.2 confirm using container here is fine
+    
     /**
      * Returns a map of all known recipes.
      *
@@ -145,21 +154,6 @@ public class GenericRecipesManager {
                         .entrySet()
                         .stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
-    }
-    
-    /**
-     * Removes recipes by output
-     *
-     * @param output The recipe result
-     *
-     * @docParam output <item:minecraft:iron_ingot>
-     * @deprecated use remove(IIngredient output)
-     */
-    @Deprecated(forRemoval = true)
-    @ZenCodeType.Method
-    public void removeRecipe(IIngredient output) {
-        
-        remove(output);
     }
     
     /**
@@ -262,6 +256,19 @@ public class GenericRecipesManager {
     public void removeByRegex(String regex) {
         
         CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByRegex(regex));
+    }
+    
+    /**
+     * Removes all recipes that match the given predicate
+     *
+     * @param predicate a predicate of {@link RecipeHolder<Recipe<Container>>} to test recipes against.
+     *
+     * @docParam predicate (holder) => "wool" in holder.id.path
+     */
+    @ZenCodeType.Method
+    public void removeMatching(Predicate<RecipeHolder<Recipe<Container>>> predicate) {
+        
+        CraftTweakerAPI.apply(new ActionRemoveGenericRecipe(predicate));
     }
     
     /**
