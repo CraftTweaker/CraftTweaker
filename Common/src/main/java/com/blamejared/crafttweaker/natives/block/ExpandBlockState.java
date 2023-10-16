@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
 /**
@@ -31,6 +32,11 @@ import java.util.stream.Collectors;
 @Document("vanilla/api/block/BlockState")
 @NativeTypeRegistration(value = BlockState.class, zenCodeName = "crafttweaker.api.block.BlockState")
 public class ExpandBlockState {
+    
+    private static final BiPredicate<BlockState, BlockState> PROPERTY_EQUALS = (ts, os) -> ts.getValues()
+            .entrySet()
+            .stream()
+            .allMatch(entry -> entry.getValue().equals(os.getValue(entry.getKey())));
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("soundType")
@@ -136,13 +142,13 @@ public class ExpandBlockState {
         
         Property property = internal.getBlock().getStateDefinition().getProperty(name);
         if(property == null) {
-            CommonLoggers.api().warn("Invalid property name");
+            CommonLoggers.api().warn("Invalid property name '" + name + "'");
         } else {
             Optional<Comparable> propValue = property.getValue(value);
             if(propValue.isPresent()) {
                 return internal.setValue(property, propValue.get());
             }
-            CommonLoggers.api().warn("Invalid property value");
+            CommonLoggers.api().warn("Invalid property value for name '" + name + "'");
         }
         return internal;
     }
@@ -306,6 +312,20 @@ public class ExpandBlockState {
         elements.add(asBlockIngredient(internal));
         elements.add(other);
         return new CTBlockIngredient.CompoundBlockIngredient(elements);
+    }
+    
+    @ZenCodeType.Method
+    public static boolean matches(BlockState internal, BlockState other) {
+        
+        return internal.is(other.getBlock()) && internal.getProperties()
+                .stream()
+                .allMatch(property -> internal.getValue(property).equals(other.getValue(property)));
+    }
+    
+    @ZenCodeType.Operator(ZenCodeType.OperatorType.EQUALS)
+    public static boolean equals(BlockState internal, BlockState other) {
+        
+        return internal.is(other.getBlock()) && PROPERTY_EQUALS.test(internal, other) && PROPERTY_EQUALS.test(other, internal);
     }
     
 }
