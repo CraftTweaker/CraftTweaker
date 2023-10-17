@@ -187,5 +187,23 @@ public class CTShapelessRecipe extends ShapelessRecipe {
         
     }
     
+    @Override
+    public boolean equals(Object o) {
+        
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        CTShapelessRecipe that = (CTShapelessRecipe) o;
+        return Arrays.equals(ctIngredients, that.ctIngredients) && Objects.equals(output, that.output) && Objects.equals(function, that.function);
+    }
+    
+    @Override
+    public int hashCode() {
+        
+        int result = Objects.hash(output, function);
+        result = 31 * result + Arrays.hashCode(ctIngredients);
+        return result;
+    }
     
 }

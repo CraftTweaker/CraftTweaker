@@ -131,16 +131,11 @@ public class IIngredientList implements IIngredient {
     @Override
     public boolean equals(Object o) {
         
-        if(this == o) {
+        if(this == o)
             return true;
-        }
-        if(o == null || getClass() != o.getClass()) {
+        if(o == null || getClass() != o.getClass())
             return false;
-        }
-        
         IIngredientList that = (IIngredientList) o;
-        
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
         return Arrays.equals(ingredients, that.ingredients);
     }
     

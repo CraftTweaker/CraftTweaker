@@ -61,7 +61,7 @@ import java.util.regex.Pattern;
 @Document("vanilla/api/ingredient/IIngredient")
 public interface IIngredient extends CommandStringDisplayable {
     
-    Codec<IIngredient> CODEC = Ingredient.CODEC.flatComapMap(IIngredient::fromIngredient, ingredient -> DataResult.success(ingredient.asVanillaIngredient()));
+    Codec<IIngredient> CODEC = Ingredient.CODEC.xmap(IIngredient::fromIngredient, IIngredient::asVanillaIngredient);
     
     /**
      * Does the given stack match the ingredient?

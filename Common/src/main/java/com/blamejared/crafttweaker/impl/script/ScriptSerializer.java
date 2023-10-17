@@ -12,7 +12,7 @@ import java.util.LinkedList;
 public class ScriptSerializer implements RecipeSerializer<ScriptRecipe> {
     
     public static final ScriptSerializer INSTANCE = new ScriptSerializer();
-    private static final Codec<ScriptRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<ScriptRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.fieldOf("fileName").forGetter(ScriptRecipe::getFileName),
             Codec.STRING.fieldOf("content").forGetter(ScriptRecipe::getContent)
     ).apply(instance, ScriptRecipe::new));

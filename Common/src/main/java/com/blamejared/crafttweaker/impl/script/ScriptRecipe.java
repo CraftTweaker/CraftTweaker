@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.function.Function;
 
 @ParametersAreNonnullByDefault
@@ -83,6 +84,33 @@ public class ScriptRecipe implements Recipe<Container> {
     public String getFileName() {
         
         return fileName;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        ScriptRecipe that = (ScriptRecipe) o;
+        return Objects.equals(getFileName(), that.getFileName()) && Objects.equals(getContent(), that.getContent());
+    }
+    
+    @Override
+    public int hashCode() {
+        
+        return Objects.hash(getFileName(), getContent());
+    }
+    
+    @Override
+    public String toString() {
+        
+        final StringBuilder sb = new StringBuilder("ScriptRecipe{");
+        sb.append("fileName='").append(fileName).append('\'');
+        sb.append(", content='").append(content).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
     
 }

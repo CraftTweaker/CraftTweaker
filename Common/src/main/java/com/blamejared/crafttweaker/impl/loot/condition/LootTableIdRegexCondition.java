@@ -19,9 +19,7 @@ import java.util.regex.Pattern;
 
 public record LootTableIdRegexCondition(Pattern regex) implements LootItemCondition {
     
-    public static final Codec<LootTableIdRegexCondition> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ExtraCodecs.PATTERN.fieldOf("regex").forGetter(LootTableIdRegexCondition::regex)
-    ).apply(instance, LootTableIdRegexCondition::new));
+    public static final Codec<LootTableIdRegexCondition> CODEC = ExtraCodecs.PATTERN.xmap(LootTableIdRegexCondition::new, LootTableIdRegexCondition::regex);
     
     public static final LootItemConditionType LOOT_TABLE_ID_REGEX = new LootItemConditionType(CODEC);
     

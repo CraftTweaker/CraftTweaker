@@ -17,7 +17,7 @@ import java.util.Arrays;
 public class CTShapelessRecipeSerializer implements RecipeSerializer<CTShapelessRecipe> {
     
     public static final CTShapelessRecipeSerializer INSTANCE = new CTShapelessRecipeSerializer();
-    private static final Codec<CTShapelessRecipe> CODEC = RecordCodecBuilder.create(
+    public static final Codec<CTShapelessRecipe> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                     IItemStack.CODEC.fieldOf("output").forGetter(CTShapelessRecipe::getCtOutput),
                     IIngredient.CODEC.listOf()

@@ -19,6 +19,7 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class CTShapedRecipe extends ShapedRecipe {
     
@@ -314,6 +315,39 @@ public class CTShapedRecipe extends ShapedRecipe {
         return ingredients.isEmpty() || ingredients.stream()
                 .filter((ingredient) -> !ingredient.isEmpty())
                 .anyMatch((ingredient) -> ingredient.getItems().length == 0);
+    }
+    
+    
+    @Override
+    public boolean equals(Object o) {
+        
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        
+        CTShapedRecipe that = (CTShapedRecipe) o;
+        
+        if(!Arrays.deepEquals(ingredients, that.ingredients))
+            return false;
+        if(!Arrays.deepEquals(mirroredIngredients, that.mirroredIngredients))
+            return false;
+        if(!Objects.equals(output, that.output))
+            return false;
+        if(mirrorAxis != that.mirrorAxis)
+            return false;
+        return Objects.equals(function, that.function);
+    }
+    
+    @Override
+    public int hashCode() {
+        
+        int result = Arrays.deepHashCode(ingredients);
+        result = 31 * result + Arrays.deepHashCode(mirroredIngredients);
+        result = 31 * result + (output != null ? output.hashCode() : 0);
+        result = 31 * result + (mirrorAxis != null ? mirrorAxis.hashCode() : 0);
+        result = 31 * result + (function != null ? function.hashCode() : 0);
+        return result;
     }
     
 }

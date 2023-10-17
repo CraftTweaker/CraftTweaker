@@ -12,6 +12,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -20,9 +21,7 @@ public class CTShapedRecipeSerializer implements RecipeSerializer<CTShapedRecipe
     
     public static final CTShapedRecipeSerializer INSTANCE = new CTShapedRecipeSerializer();
     
-    //TODO 1.20.2 test IItemStack to json
-    //TODO 1.20.2 test to make sure this works
-    private static final Codec<CTShapedRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<CTShapedRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             IItemStack.CODEC.fieldOf("output").forGetter(CTShapedRecipe::getCtOutput),
             IIngredient.CODEC.listOf().listOf().fieldOf("ingredients")
                     .xmap(lists -> lists.stream()
