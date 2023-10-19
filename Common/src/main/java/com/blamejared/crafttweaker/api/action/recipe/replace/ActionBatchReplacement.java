@@ -12,6 +12,7 @@ import com.blamejared.crafttweaker.api.recipe.replacement.IFilteringRule;
 import com.blamejared.crafttweaker.api.recipe.replacement.IReplacerRegistry;
 import com.blamejared.crafttweaker.api.recipe.replacement.ReplacementRequest;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
+import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
@@ -71,7 +72,8 @@ public final class ActionBatchReplacement extends CraftTweakerAction implements 
         RecipeHolder<T> typedRecipe = GenericUtil.uncheck(recipe);
         final IRecipeHandler<T> handler = CraftTweakerAPI.getRegistry().getRecipeHandlerFor(typedRecipe);
         final IRecipeManager<? super T> manager = RecipeTypeBracketHandler.getOrDefault(recipe.value().getType());
-        handler.decompose(manager, typedRecipe).ifPresent(it -> this.replace(manager, handler, recipe.id(), it));
+        handler.decompose(manager, AccessibleElementsProvider.get().registryAccess(), typedRecipe)
+                .ifPresent(it -> this.replace(manager, handler, recipe.id(), it));
     }
     
     private <C extends Container, T extends Recipe<C>> void replace(
@@ -102,7 +104,7 @@ public final class ActionBatchReplacement extends CraftTweakerAction implements 
             final ResourceLocation newName
     ) {
         
-        return handler.recompose(manager, newName, recipe)
+        return handler.recompose(manager, AccessibleElementsProvider.get().registryAccess(), newName, recipe)
                 .orElseThrow(() -> new IllegalStateException("Recomposition failed due to an error"));
     }
     

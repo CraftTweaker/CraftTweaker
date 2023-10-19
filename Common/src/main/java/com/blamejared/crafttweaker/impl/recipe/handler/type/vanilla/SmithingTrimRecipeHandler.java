@@ -9,6 +9,7 @@ import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.impl.recipe.handler.helper.SmithingRecipeConflictChecker;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessSmithingTrimRecipe;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
@@ -23,7 +24,7 @@ import java.util.Optional;
 public final class SmithingTrimRecipeHandler implements IRecipeHandler<SmithingTrimRecipe> {
     
     @Override
-    public String dumpToCommandString(final IRecipeManager<? super SmithingTrimRecipe> manager, final RecipeHolder<SmithingTrimRecipe> holder) {
+    public String dumpToCommandString(final IRecipeManager<? super SmithingTrimRecipe> manager, final RegistryAccess registryAccess, final RecipeHolder<SmithingTrimRecipe> holder) {
         
         SmithingTrimRecipe recipe = holder.value();
         return String.format(
@@ -48,7 +49,7 @@ public final class SmithingTrimRecipeHandler implements IRecipeHandler<SmithingT
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super SmithingTrimRecipe> manager, final RecipeHolder<SmithingTrimRecipe> recipe) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super SmithingTrimRecipe> manager, final RegistryAccess registryAccess,final RecipeHolder<SmithingTrimRecipe> recipe) {
         
         final AccessSmithingTrimRecipe access = (AccessSmithingTrimRecipe) recipe.value();
         final IIngredient template = IIngredient.fromIngredient(access.crafttweaker$getTemplate());
@@ -62,7 +63,7 @@ public final class SmithingTrimRecipeHandler implements IRecipeHandler<SmithingT
     }
     
     @Override
-    public Optional<RecipeHolder<SmithingTrimRecipe>> recompose(final IRecipeManager<? super SmithingTrimRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<RecipeHolder<SmithingTrimRecipe>> recompose(final IRecipeManager<? super SmithingTrimRecipe> manager,final RegistryAccess registryAccess, final ResourceLocation name, final IDecomposedRecipe recipe) {
         
         final List<IIngredient> ingredients = recipe.getOrThrow(BuiltinRecipeComponents.Input.INGREDIENTS);
         

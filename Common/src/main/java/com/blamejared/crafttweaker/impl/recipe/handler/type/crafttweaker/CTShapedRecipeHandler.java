@@ -12,6 +12,7 @@ import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipe;
 import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecipe> {
     
     @Override
-    public String dumpToCommandString(final IRecipeManager<? super CTShapedRecipe> manager, final RecipeHolder<CTShapedRecipe> holder) {
+    public String dumpToCommandString(final IRecipeManager<? super CTShapedRecipe> manager, final RegistryAccess registryAccess, final RecipeHolder<CTShapedRecipe> holder) {
         
         return String.format(
                 "craftingTable.addShaped(%s, %s, %s%s);",
@@ -47,7 +48,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecip
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super CTShapedRecipe> manager, final RecipeHolder<CTShapedRecipe> holder) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super CTShapedRecipe> manager, final RegistryAccess registryAccess, final RecipeHolder<CTShapedRecipe> holder) {
         
         CTShapedRecipe recipe = holder.value();
         final int width = recipe.getWidth();
@@ -70,7 +71,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecip
     }
     
     @Override
-    public Optional<RecipeHolder<CTShapedRecipe>> recompose(final IRecipeManager<? super CTShapedRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<RecipeHolder<CTShapedRecipe>> recompose(final IRecipeManager<? super CTShapedRecipe> manager, final RegistryAccess registryAccess, final ResourceLocation name, final IDecomposedRecipe recipe) {
         
         final Pair<Integer, Integer> size = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D);
         final MirrorAxis axis = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.MIRROR_AXIS);

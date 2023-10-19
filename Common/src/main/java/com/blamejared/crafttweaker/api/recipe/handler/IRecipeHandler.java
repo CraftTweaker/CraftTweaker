@@ -3,6 +3,7 @@ package com.blamejared.crafttweaker.api.recipe.handler;
 
 import com.blamejared.crafttweaker.api.recipe.component.IDecomposedRecipe;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -98,14 +99,15 @@ public interface IRecipeHandler<T extends Recipe<?>> {
      *
      * <p>All newlines added to either the start or the end of the string will be automatically trimmed.</p>
      *
-     * @param manager The recipe manager responsible for this kind of recipes.
-     * @param holder  The recipe that is currently being dumped.
+     * @param manager        The recipe manager responsible for this kind of recipes.
+     * @param registryAccess Access to registries to get the output of recipes.
+     * @param holder         The recipe that is currently being dumped.
      *
      * @return A String representing a {@code addRecipe} (or similar) call.
      *
      * @since 9.0.0
      */
-    String dumpToCommandString(final IRecipeManager<? super T> manager, final RecipeHolder<T> holder);
+    String dumpToCommandString(final IRecipeManager<? super T> manager, final RegistryAccess registryAccess, final RecipeHolder<T> holder);
     
     /**
      * Checks if the two recipes conflict with each other.
@@ -146,19 +148,20 @@ public interface IRecipeHandler<T extends Recipe<?>> {
      * vanilla. In this context, it is allowed to return {@link Optional#empty()}.</p>
      *
      * <p>It is mandatory for a recipe handler to produce a decomposed recipe that can then be converted back into its
-     * complete form in {@link #recompose(IRecipeManager, ResourceLocation, IDecomposedRecipe)}. In other words, if
+     * complete form in {@link #recompose(IRecipeManager, RegistryAccess, ResourceLocation, IDecomposedRecipe)}. In other words, if
      * the return value of this method isn't empty, then
      * {@code recompose(manager, name, decompose(manager, recipe).get())} must not return an empty optional.</p>
      *
-     * @param manager The recipe manager responsible for this kind of recipes.
-     * @param holder  The recipe that should be decomposed.
+     * @param manager        The recipe manager responsible for this kind of recipes.
+     * @param registryAccess Access to registries to get the output of recipes.
+     * @param holder         The recipe that should be decomposed.
      *
      * @return An {@link Optional} wrapping {@linkplain IDecomposedRecipe decomposed recipe}, or an empty one if need be
      * as specified above.
      *
      * @since 10.0.0
      */
-    Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super T> manager, final RecipeHolder<T> holder);
+    Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super T> manager, final RegistryAccess registryAccess, final RecipeHolder<T> holder);
     
     /**
      * Reconstructs a complete recipe from its {@linkplain IDecomposedRecipe decomposed form}.
@@ -174,14 +177,15 @@ public interface IRecipeHandler<T extends Recipe<?>> {
      * in vanilla.</p>
      *
      * <p>It is mandatory for a recipe handler that knows how to decompose a recipe to also know how to recompose it. In
-     * other words, if {@link #decompose(IRecipeManager, RecipeHolder)} returns a non-empty {@code Optional}, then
+     * other words, if {@link #decompose(IRecipeManager, RegistryAccess, RecipeHolder)} returns a non-empty {@code Optional}, then
      * {@code recompose(manager, name, decompose(manager, recipe).get())} must not return an empty optional nor throw
      * an exception.</p>
      *
-     * @param manager The recipe manager responsible for this kind of recipes.
-     * @param name    The name to give to the recomposed recipe once it has been built. It is mandatory that
-     *                {@link RecipeHolder<T>#getId()} and this parameter represent the same name.
-     * @param recipe  The {@link IDecomposedRecipe} that should be recomposed back into a complete form.
+     * @param manager        The recipe manager responsible for this kind of recipes.
+     * @param registryAccess Access to registries.
+     * @param name           The name to give to the recomposed recipe once it has been built. It is mandatory that
+     *                       {@link RecipeHolder<T>#getId()} and this parameter represent the same name.
+     * @param recipe         The {@link IDecomposedRecipe} that should be recomposed back into a complete form.
      *
      * @return An {@link Optional} wrapping the complete form of the recipe, or an empty one if need be as specified
      * above.
@@ -191,6 +195,6 @@ public interface IRecipeHandler<T extends Recipe<?>> {
      *                                  unknown component is present in the decomposed recipe.
      * @since 10.0.0
      */
-    Optional<RecipeHolder<T>> recompose(final IRecipeManager<? super T> manager, final ResourceLocation name, final IDecomposedRecipe recipe);
+    Optional<RecipeHolder<T>> recompose(final IRecipeManager<? super T> manager, final RegistryAccess registryAccess, final ResourceLocation name, final IDecomposedRecipe recipe);
     
 }

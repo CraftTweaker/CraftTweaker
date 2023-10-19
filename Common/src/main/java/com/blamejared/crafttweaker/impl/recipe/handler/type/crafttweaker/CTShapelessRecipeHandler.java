@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipe;
 import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.platform.Services;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 public final class CTShapelessRecipeHandler implements IRecipeHandler<CTShapelessRecipe> {
     
     @Override
-    public String dumpToCommandString(final IRecipeManager<? super CTShapelessRecipe> manager, final RecipeHolder<CTShapelessRecipe> holder) {
+    public String dumpToCommandString(final IRecipeManager<? super CTShapelessRecipe> manager, final RegistryAccess registryAccess, final RecipeHolder<CTShapelessRecipe> holder) {
         
         CTShapelessRecipe recipe = holder.value();
         return String.format(
@@ -44,7 +45,7 @@ public final class CTShapelessRecipeHandler implements IRecipeHandler<CTShapeles
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(IRecipeManager<? super CTShapelessRecipe> manager, RecipeHolder<CTShapelessRecipe> holder) {
+    public Optional<IDecomposedRecipe> decompose(IRecipeManager<? super CTShapelessRecipe> manager, final RegistryAccess registryAccess, RecipeHolder<CTShapelessRecipe> holder) {
         
         CTShapelessRecipe recipe = holder.value();
         final RecipeFunction1D function = recipe.getFunction();
@@ -63,7 +64,7 @@ public final class CTShapelessRecipeHandler implements IRecipeHandler<CTShapeles
     }
     
     @Override
-    public Optional<RecipeHolder<CTShapelessRecipe>> recompose(IRecipeManager<? super CTShapelessRecipe> manager, ResourceLocation name, IDecomposedRecipe recipe) {
+    public Optional<RecipeHolder<CTShapelessRecipe>> recompose(IRecipeManager<? super CTShapelessRecipe> manager, final RegistryAccess registryAccess, ResourceLocation name, IDecomposedRecipe recipe) {
         
         final List<IIngredient> ingredients = recipe.getOrThrow(BuiltinRecipeComponents.Input.INGREDIENTS);
         final List<RecipeFunction1D> function = recipe.get(BuiltinRecipeComponents.Processing.FUNCTION_1D);

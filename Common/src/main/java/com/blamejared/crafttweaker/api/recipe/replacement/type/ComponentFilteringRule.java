@@ -11,6 +11,7 @@ import com.blamejared.crafttweaker.api.recipe.replacement.DescriptivePredicate;
 import com.blamejared.crafttweaker.api.recipe.replacement.IFilteringRule;
 import com.blamejared.crafttweaker.api.recipe.replacement.ITargetingStrategy;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
+import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
@@ -151,7 +152,8 @@ public final class ComponentFilteringRule<T> implements IFilteringRule {
         RecipeHolder<V> typedRecipe = GenericUtil.uncheck(recipe);
         final IRecipeHandler<V> handler = CraftTweakerAPI.getRegistry().getRecipeHandlerFor(typedRecipe);
         final IRecipeManager<? super V> manager = RecipeTypeBracketHandler.getOrDefault(recipe.value().getType());
-        final Optional<IDecomposedRecipe> decomposedRecipe = handler.decompose(manager, typedRecipe);
+        final Optional<IDecomposedRecipe> decomposedRecipe = handler.decompose(manager, AccessibleElementsProvider.get()
+                .registryAccess(),typedRecipe);
         return decomposedRecipe.isPresent() && this.castFilter(decomposedRecipe.get());
     }
     

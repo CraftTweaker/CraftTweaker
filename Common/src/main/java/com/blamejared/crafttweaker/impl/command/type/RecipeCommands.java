@@ -177,7 +177,7 @@ public final class RecipeCommands {
     
     private static <T extends Recipe<?>> String dump(final IRecipeManager<? super T> manager, final RecipeHolder<T> recipe) {
         
-        return IRecipeHandlerRegistry.getHandlerFor(recipe).dumpToCommandString(manager, recipe);
+        return IRecipeHandlerRegistry.getHandlerFor(recipe).dumpToCommandString(manager, AccessibleElementsProvider.get().registryAccess(),recipe);
     }
     
 }

@@ -8,9 +8,9 @@ import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.api.util.StringUtil;
-import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -26,13 +26,13 @@ import java.util.stream.Collectors;
 public final class ShapelessRecipeHandler implements IRecipeHandler<ShapelessRecipe> {
     
     @Override
-    public String dumpToCommandString(final IRecipeManager<? super ShapelessRecipe> manager, final RecipeHolder<ShapelessRecipe> holder) {
+    public String dumpToCommandString(final IRecipeManager<? super ShapelessRecipe> manager, final RegistryAccess registryAccess, final RecipeHolder<ShapelessRecipe> holder) {
         
         ShapelessRecipe recipe = holder.value();
         return String.format(
                 "craftingTable.addShapeless(%s, %s, %s);",
                 StringUtil.quoteAndEscape(holder.id()),
-                ItemStackUtil.getCommandString(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)),
+                ItemStackUtil.getCommandString(recipe.getResultItem(registryAccess)),
                 recipe.getIngredients().stream()
                         .map(IIngredient::fromIngredient)
                         .map(IIngredient::getCommandString)
@@ -47,7 +47,7 @@ public final class ShapelessRecipeHandler implements IRecipeHandler<ShapelessRec
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super ShapelessRecipe> manager, final RecipeHolder<ShapelessRecipe> holder) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super ShapelessRecipe> manager, final RegistryAccess registryAccess, final RecipeHolder<ShapelessRecipe> holder) {
         
         ShapelessRecipe recipe = holder.value();
         final List<IIngredient> ingredients = recipe.getIngredients().stream()
@@ -57,13 +57,13 @@ public final class ShapelessRecipeHandler implements IRecipeHandler<ShapelessRec
                 .with(BuiltinRecipeComponents.Metadata.GROUP, recipe.getGroup())
                 .with(BuiltinRecipeComponents.Metadata.CRAFTING_BOOK_CATEGORY, recipe.category())
                 .with(BuiltinRecipeComponents.Input.INGREDIENTS, ingredients)
-                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)))
+                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(recipe.getResultItem(registryAccess)))
                 .build();
         return Optional.of(decomposedRecipe);
     }
     
     @Override
-    public Optional<RecipeHolder<ShapelessRecipe>> recompose(final IRecipeManager<? super ShapelessRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<RecipeHolder<ShapelessRecipe>> recompose(final IRecipeManager<? super ShapelessRecipe> manager, final RegistryAccess registryAccess, final ResourceLocation name, final IDecomposedRecipe recipe) {
         
         final String group = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.GROUP);
         final CraftingBookCategory category = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.CRAFTING_BOOK_CATEGORY);
@@ -80,7 +80,7 @@ public final class ShapelessRecipeHandler implements IRecipeHandler<ShapelessRec
         final NonNullList<Ingredient> recipeIngredients = ingredients.stream()
                 .map(IIngredient::asVanillaIngredient)
                 .collect(NonNullList::create, NonNullList::add, NonNullList::addAll);
-        return Optional.of(new RecipeHolder<>(name, new ShapelessRecipe( group, category, output.getInternal(), recipeIngredients)));
+        return Optional.of(new RecipeHolder<>(name, new ShapelessRecipe(group, category, output.getInternal(), recipeIngredients)));
     }
     
 }

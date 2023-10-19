@@ -12,6 +12,7 @@ import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import com.blamejared.crafttweaker.impl.recipe.handler.helper.SmithingRecipeConflictChecker;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessSmithingTransformRecipe;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
@@ -26,13 +27,13 @@ import java.util.Optional;
 public final class SmithingTransformRecipeHandler implements IRecipeHandler<SmithingTransformRecipe> {
     
     @Override
-    public String dumpToCommandString(final IRecipeManager<? super SmithingTransformRecipe> manager, final RecipeHolder<SmithingTransformRecipe> holder) {
+    public String dumpToCommandString(final IRecipeManager<? super SmithingTransformRecipe> manager, final RegistryAccess registryAccess, final RecipeHolder<SmithingTransformRecipe> holder) {
         
         SmithingTransformRecipe recipe = holder.value();
         return String.format(
                 "smithing.addTransformRecipe(%s, %s, %s, %s, %s);",
                 StringUtil.quoteAndEscape(holder.id()),
-                ItemStackUtil.getCommandString(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)),
+                ItemStackUtil.getCommandString(recipe.getResultItem(registryAccess)),
                 IIngredient.fromIngredient(((AccessSmithingTransformRecipe) recipe).crafttweaker$getTemplate())
                         .getCommandString(),
                 IIngredient.fromIngredient(((AccessSmithingTransformRecipe) recipe).crafttweaker$getBase())
@@ -52,7 +53,7 @@ public final class SmithingTransformRecipeHandler implements IRecipeHandler<Smit
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super SmithingTransformRecipe> manager, final RecipeHolder<SmithingTransformRecipe> holder) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super SmithingTransformRecipe> manager, final RegistryAccess registryAccess, final RecipeHolder<SmithingTransformRecipe> holder) {
         
         final AccessSmithingTransformRecipe access = (AccessSmithingTransformRecipe) holder.value();
         final IIngredient template = IIngredient.fromIngredient(access.crafttweaker$getTemplate());
@@ -60,15 +61,14 @@ public final class SmithingTransformRecipeHandler implements IRecipeHandler<Smit
         final IIngredient addition = IIngredient.fromIngredient(access.crafttweaker$getAddition());
         final IDecomposedRecipe decomposed = IDecomposedRecipe.builder()
                 .with(BuiltinRecipeComponents.Input.INGREDIENTS, List.of(template, base, addition))
-                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(AccessibleElementsProvider.get()
-                        .registryAccess(holder.value()::getResultItem)))
+                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(holder.value().getResultItem(registryAccess)))
                 .build();
         
         return Optional.of(decomposed);
     }
     
     @Override
-    public Optional<RecipeHolder<SmithingTransformRecipe>> recompose(final IRecipeManager<? super SmithingTransformRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<RecipeHolder<SmithingTransformRecipe>> recompose(final IRecipeManager<? super SmithingTransformRecipe> manager, final RegistryAccess registryAccess, final ResourceLocation name, final IDecomposedRecipe recipe) {
         
         final List<IIngredient> ingredients = recipe.getOrThrow(BuiltinRecipeComponents.Input.INGREDIENTS);
         final IItemStack output = recipe.getOrThrowSingle(BuiltinRecipeComponents.Output.ITEMS);
@@ -85,7 +85,7 @@ public final class SmithingTransformRecipeHandler implements IRecipeHandler<Smit
         final Ingredient template = ingredients.get(0).asVanillaIngredient();
         final Ingredient base = ingredients.get(1).asVanillaIngredient();
         final Ingredient addition = ingredients.get(2).asVanillaIngredient();
-        return Optional.of(new RecipeHolder<>(name,new SmithingTransformRecipe( template, base, addition, output.getInternal())));
+        return Optional.of(new RecipeHolder<>(name, new SmithingTransformRecipe(template, base, addition, output.getInternal())));
     }
     
 }

@@ -7,11 +7,11 @@ import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandlerRegistry;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
-import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -34,7 +34,7 @@ public final class RecipeHandlerRegistry implements IRecipeHandlerRegistry {
         private static final DefaultRecipeHandler INSTANCE = new DefaultRecipeHandler();
         
         @Override
-        public String dumpToCommandString(final IRecipeManager<? super Recipe<?>> manager, final RecipeHolder<Recipe<?>> holder) {
+        public String dumpToCommandString(final IRecipeManager<? super Recipe<?>> manager, final RegistryAccess registryAccess, final RecipeHolder<Recipe<?>> holder) {
             
             Recipe<?> recipe = holder.value();
             final String ingredients = recipe.getIngredients()
@@ -45,14 +45,11 @@ public final class RecipeHandlerRegistry implements IRecipeHandlerRegistry {
             Supplier<String> fallback = () -> String.format(
                     "~~ Recipe name: %s, Outputs: %s, Inputs: [%s], Recipe Class: %s, Recipe Serializer: %s ~~",
                     holder.id(),
-                    ItemStackUtil.getCommandString(AccessibleElementsProvider.get()
-                            .registryAccess(recipe::getResultItem)),
+                    ItemStackUtil.getCommandString(recipe.getResultItem(registryAccess)),
                     ingredients,
                     recipe.getClass().getName(),
                     BuiltInRegistries.RECIPE_SERIALIZER.getKey(recipe.getSerializer()));
-            Optional<ResourceLocation> serializerKey = AccessibleElementsProvider.get()
-                    .registryAccess()
-                    .registry(Registries.RECIPE_SERIALIZER)
+            Optional<ResourceLocation> serializerKey = registryAccess.registry(Registries.RECIPE_SERIALIZER)
                     .map(recipeSerializers -> recipeSerializers.getKey(recipe.getSerializer()));
             if(serializerKey.isEmpty()) {
                 return fallback.get();
@@ -80,13 +77,13 @@ public final class RecipeHandlerRegistry implements IRecipeHandlerRegistry {
         }
         
         @Override
-        public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super Recipe<?>> manager, final RecipeHolder<Recipe<?>> holder) {
+        public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super Recipe<?>> manager, final RegistryAccess registryAccess, final RecipeHolder<Recipe<?>> holder) {
             
             return Optional.empty();
         }
         
         @Override
-        public Optional<RecipeHolder<Recipe<?>>> recompose(final IRecipeManager<? super Recipe<?>> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
+        public Optional<RecipeHolder<Recipe<?>>> recompose(final IRecipeManager<? super Recipe<?>> manager, final RegistryAccess registryAccess, final ResourceLocation name, final IDecomposedRecipe recipe) {
             
             return Optional.empty();
         }

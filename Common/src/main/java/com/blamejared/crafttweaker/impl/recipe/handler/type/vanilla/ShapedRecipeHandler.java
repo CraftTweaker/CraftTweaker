@@ -8,10 +8,10 @@ import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.api.util.StringUtil;
-import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -28,14 +28,14 @@ import java.util.stream.IntStream;
 public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
     
     @Override
-    public String dumpToCommandString(final IRecipeManager<? super ShapedRecipe> manager, final RecipeHolder<ShapedRecipe> holder) {
+    public String dumpToCommandString(final IRecipeManager<? super ShapedRecipe> manager, final RegistryAccess registryAccess, final RecipeHolder<ShapedRecipe> holder) {
         
         ShapedRecipe recipe = holder.value();
         final NonNullList<Ingredient> ingredients = recipe.getIngredients();
         return String.format(
                 "craftingTable.addShaped(%s, %s, %s);",
                 StringUtil.quoteAndEscape(holder.id()),
-                ItemStackUtil.getCommandString(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)),
+                ItemStackUtil.getCommandString(recipe.getResultItem(registryAccess)),
                 IntStream.range(0, recipe.getHeight())
                         .mapToObj(y -> IntStream.range(0, recipe.getWidth())
                                 .mapToObj(x -> ingredients.get(y * recipe.getWidth() + x))
@@ -53,7 +53,7 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super ShapedRecipe> manager, final RecipeHolder<ShapedRecipe> holder) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super ShapedRecipe> manager, final RegistryAccess registryAccess, final RecipeHolder<ShapedRecipe> holder) {
         
         ShapedRecipe recipe = holder.value();
         final List<IIngredient> ingredients = recipe.getIngredients().stream()
@@ -64,13 +64,13 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
                 .with(BuiltinRecipeComponents.Metadata.CRAFTING_BOOK_CATEGORY, recipe.category())
                 .with(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D, Pair.of(recipe.getWidth(), recipe.getHeight()))
                 .with(BuiltinRecipeComponents.Input.INGREDIENTS, ingredients)
-                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)))
+                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(recipe.getResultItem(registryAccess)))
                 .build();
         return Optional.of(decomposedRecipe);
     }
     
     @Override
-    public Optional<RecipeHolder<ShapedRecipe>> recompose(final IRecipeManager<? super ShapedRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<RecipeHolder<ShapedRecipe>> recompose(final IRecipeManager<? super ShapedRecipe> manager, final RegistryAccess registryAccess, final ResourceLocation name, final IDecomposedRecipe recipe) {
         
         final String group = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.GROUP);
         final CraftingBookCategory category = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.CRAFTING_BOOK_CATEGORY);

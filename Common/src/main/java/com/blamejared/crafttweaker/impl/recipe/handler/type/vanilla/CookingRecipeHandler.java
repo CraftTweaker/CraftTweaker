@@ -9,9 +9,9 @@ import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.IngredientUtil;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.api.util.StringUtil;
-import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
@@ -50,14 +50,14 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
             .build();
     
     @Override
-    public String dumpToCommandString(final IRecipeManager<? super AbstractCookingRecipe> manager, final RecipeHolder<AbstractCookingRecipe> holder) {
+    public String dumpToCommandString(final IRecipeManager<? super AbstractCookingRecipe> manager, final RegistryAccess registryAccess, final RecipeHolder<AbstractCookingRecipe> holder) {
         
         AbstractCookingRecipe recipe = holder.value();
         return String.format(
                 "%s.addRecipe(%s, %s, %s, %s, %s);",
                 LOOKUP.get(recipe.getType()).getFirst(),
                 StringUtil.quoteAndEscape(holder.id()),
-                ItemStackUtil.getCommandString(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)),
+                ItemStackUtil.getCommandString(recipe.getResultItem(registryAccess)),
                 IIngredient.fromIngredient(recipe.getIngredients().get(0)).getCommandString(),
                 recipe.getExperience(),
                 recipe.getCookingTime()
@@ -73,7 +73,7 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(IRecipeManager<? super AbstractCookingRecipe> manager, RecipeHolder<AbstractCookingRecipe> holder) {
+    public Optional<IDecomposedRecipe> decompose(IRecipeManager<? super AbstractCookingRecipe> manager, final RegistryAccess registryAccess, RecipeHolder<AbstractCookingRecipe> holder) {
         
         AbstractCookingRecipe recipe = holder.value();
         final IIngredient ingredient = IIngredient.fromIngredient(recipe.getIngredients().get(0));
@@ -83,14 +83,13 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
                 .with(BuiltinRecipeComponents.Input.INGREDIENTS, ingredient)
                 .with(BuiltinRecipeComponents.Processing.TIME, recipe.getCookingTime())
                 .with(BuiltinRecipeComponents.Output.EXPERIENCE, recipe.getExperience())
-                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(AccessibleElementsProvider.get()
-                        .registryAccess(recipe::getResultItem)))
+                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(recipe.getResultItem(registryAccess)))
                 .build();
         return Optional.of(decomposition);
     }
     
     @Override
-    public Optional<RecipeHolder<AbstractCookingRecipe>> recompose(final IRecipeManager<? super AbstractCookingRecipe> manager, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<RecipeHolder<AbstractCookingRecipe>> recompose(final IRecipeManager<? super AbstractCookingRecipe> manager, final RegistryAccess registryAccess, final ResourceLocation name, final IDecomposedRecipe recipe) {
         
         final String group = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.GROUP);
         final CookingBookCategory category = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.COOKING_BOOK_CATEGORY);
