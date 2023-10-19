@@ -13,7 +13,6 @@ import org.openzen.zencode.java.ZenCodeType;
 @NativeTypeRegistration(value = AdvancementRewards.class, zenCodeName = "crafttweaker.api.advancement.AdvancementRewards")
 public class ExpandAdvancementRewards {
     
-    @ZenCodeType.Method
     @ZenCodeType.Getter("recipes")
     public static ResourceLocation[] getRecipes(AdvancementRewards internal) {
         

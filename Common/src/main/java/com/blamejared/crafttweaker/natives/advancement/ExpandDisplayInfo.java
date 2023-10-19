@@ -21,21 +21,18 @@ public class ExpandDisplayInfo {
         internal.setLocation(x, y);
     }
     
-    @ZenCodeType.Method
     @ZenCodeType.Getter("title")
     public static Component getTitle(DisplayInfo internal) {
         
         return internal.getTitle();
     }
     
-    @ZenCodeType.Method
     @ZenCodeType.Getter("description")
     public static Component getDescription(DisplayInfo internal) {
         
         return internal.getDescription();
     }
     
-    @ZenCodeType.Method
     @ZenCodeType.Getter("icon")
     public static ItemStack getIcon(DisplayInfo internal) {
         
@@ -43,49 +40,42 @@ public class ExpandDisplayInfo {
     }
     
     @ZenCodeType.Nullable
-    @ZenCodeType.Method
     @ZenCodeType.Getter("background")
     public static ResourceLocation getBackground(DisplayInfo internal) {
         
         return internal.getBackground();
     }
     
-    @ZenCodeType.Method
     @ZenCodeType.Getter("frame")
     public static FrameType getFrame(DisplayInfo internal) {
         
         return internal.getFrame();
     }
     
-    @ZenCodeType.Method
     @ZenCodeType.Getter("x")
     public static float getX(DisplayInfo internal) {
         
         return internal.getX();
     }
     
-    @ZenCodeType.Method
     @ZenCodeType.Getter("y")
     public static float getY(DisplayInfo internal) {
         
         return internal.getY();
     }
     
-    @ZenCodeType.Method
     @ZenCodeType.Getter("shouldShowToast")
     public static boolean shouldShowToast(DisplayInfo internal) {
         
         return internal.shouldShowToast();
     }
     
-    @ZenCodeType.Method
     @ZenCodeType.Getter("shouldAnnounceChat")
     public static boolean shouldAnnounceChat(DisplayInfo internal) {
         
         return internal.shouldAnnounceChat();
     }
     
-    @ZenCodeType.Method
     @ZenCodeType.Getter("isHidden")
     public static boolean isHidden(DisplayInfo internal) {
         

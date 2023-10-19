@@ -24,7 +24,7 @@ import java.util.Map;
 @NativeTypeRegistration(value = MobEffect.class, zenCodeName = "crafttweaker.api.entity.effect.MobEffect")
 @TaggableElement("minecraft:mob_effect")
 public class ExpandMobEffect {
-    //TODO 1.20.2 check if == works on this
+    
     @ZenCodeType.Method
     public static void applyEffectTick(MobEffect internal, LivingEntity entity, int amplifier) {
         

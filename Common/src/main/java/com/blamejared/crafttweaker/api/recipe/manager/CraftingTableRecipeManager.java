@@ -15,6 +15,7 @@ import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipe;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonSyntaxException;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import org.openzen.zencode.java.ZenCodeGlobals;
@@ -82,7 +83,9 @@ public class CraftingTableRecipeManager implements IRecipeManager<CraftingRecipe
     @ZenCodeType.Method
     public void addShapeless(String recipeName, IItemStack output, IIngredient[] ingredients, @ZenCodeType.Optional RecipeFunction1D recipeFunction) {
         
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, createHolder(fixRecipeId(recipeName), new CTShapelessRecipe(output, ingredients, recipeFunction)), "shapeless"));
+        ResourceLocation name = fixRecipeId(recipeName);
+        CTShapelessRecipe.checkEmptyIngredient(name, ingredients);
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, createHolder(name, new CTShapelessRecipe(output, ingredients, recipeFunction)), "shapeless"));
     }
     
     @Override

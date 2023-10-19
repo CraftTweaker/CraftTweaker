@@ -432,14 +432,15 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public Stream<GameProfile> fakePlayers() {
         
-        //TODO 1.20.2
+        //TODO When forge replaces this with something
         return Stream.empty();
     }
     
     @Override
     public boolean isFakePlayer(Player player) {
-        //TODO 1.20.2
-        return false;//player instanceof FakePlayer;
+        
+        //TODO When forge replaces this with something
+        return !player.getClass().equals(ServerPlayer.class);//player instanceof FakePlayer;
     }
     
 }

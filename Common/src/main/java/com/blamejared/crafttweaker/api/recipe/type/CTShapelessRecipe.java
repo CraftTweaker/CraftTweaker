@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction1D;
 import com.blamejared.crafttweaker.api.recipe.serializer.CTShapelessRecipeSerializer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
@@ -31,6 +32,7 @@ public class CTShapelessRecipe extends ShapelessRecipe {
         
         this(CraftingBookCategory.MISC, output, ingredients, null);
     }
+    
     public CTShapelessRecipe(IItemStack output, IIngredient[] ingredients, @Nullable RecipeFunction1D function) {
         
         this(CraftingBookCategory.MISC, output, ingredients, function);
@@ -46,9 +48,6 @@ public class CTShapelessRecipe extends ShapelessRecipe {
         boolean containsNull = false;
         for(IIngredient ingredient : ingredients) {
             if(ingredient == null || ingredient.asVanillaIngredient().isEmpty()) {
-                //TODO 1.20.2 print the name somehow, or just move this out somewhere else
-//                CommonLoggers.api()
-//                        .warn("Shapeless recipe with ID '{}' contains null or empty ingredients, removing entries!", getId());
                 containsNull = true;
                 break;
             }
@@ -61,6 +60,18 @@ public class CTShapelessRecipe extends ShapelessRecipe {
         }
         this.ctIngredients = ingredients;
         this.getIngredients().addAll(Arrays.stream(this.ctIngredients).map(IIngredient::asVanillaIngredient).toList());
+    }
+    
+    public static boolean checkEmptyIngredient(ResourceLocation name, IIngredient[] ingredients) {
+        
+        for(IIngredient ingredient : ingredients) {
+            if(ingredient == null || ingredient.asVanillaIngredient().isEmpty()) {
+                CommonLoggers.api()
+                        .warn("Shapeless recipe with ID '{}' contains null or empty ingredients, entries will be removed!", name);
+                return true;
+            }
+        }
+        return false;
     }
     
     @Override
@@ -190,10 +201,12 @@ public class CTShapelessRecipe extends ShapelessRecipe {
     @Override
     public boolean equals(Object o) {
         
-        if(this == o)
+        if(this == o) {
             return true;
-        if(o == null || getClass() != o.getClass())
+        }
+        if(o == null || getClass() != o.getClass()) {
             return false;
+        }
         CTShapelessRecipe that = (CTShapelessRecipe) o;
         return Arrays.equals(ctIngredients, that.ctIngredients) && Objects.equals(output, that.output) && Objects.equals(function, that.function);
     }

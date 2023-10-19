@@ -8,8 +8,12 @@ import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.util.ItemStackUtil;
 import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -20,6 +24,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public final class RecipeHandlerRegistry implements IRecipeHandlerRegistry {
@@ -37,16 +42,35 @@ public final class RecipeHandlerRegistry implements IRecipeHandlerRegistry {
                     .map(IIngredient::fromIngredient)
                     .map(IIngredient::getCommandString)
                     .collect(Collectors.joining(", "));
-            //TODO 1.20.2 confirm
-            return "~~ Recipe name: '%s', Json: %s".formatted(holder.id(), holder.value().getSerializer().codec().encodeStart(JsonOps.INSTANCE, GenericUtil.uncheck(holder.value())));
-//            return String.format(
-//                    "~~ Recipe name: %s, Outputs: %s, Inputs: [%s], Recipe Class: %s, Recipe Serializer: %s ~~",
-//                    holder.id(),
-//                    ItemStackUtil.getCommandString(AccessibleElementsProvider.get().registryAccess(recipe::getResultItem)),
-//                    ingredients,
-//                    recipe.getClass().getName(),
-//                    BuiltInRegistries.RECIPE_SERIALIZER.getKey(recipe.getSerializer())
-//            );
+            Supplier<String> fallback = () -> String.format(
+                    "~~ Recipe name: %s, Outputs: %s, Inputs: [%s], Recipe Class: %s, Recipe Serializer: %s ~~",
+                    holder.id(),
+                    ItemStackUtil.getCommandString(AccessibleElementsProvider.get()
+                            .registryAccess(recipe::getResultItem)),
+                    ingredients,
+                    recipe.getClass().getName(),
+                    BuiltInRegistries.RECIPE_SERIALIZER.getKey(recipe.getSerializer()));
+            Optional<ResourceLocation> serializerKey = AccessibleElementsProvider.get()
+                    .registryAccess()
+                    .registry(Registries.RECIPE_SERIALIZER)
+                    .map(recipeSerializers -> recipeSerializers.getKey(recipe.getSerializer()));
+            if(serializerKey.isEmpty()) {
+                return fallback.get();
+            }
+            try {
+                JsonObject baseJson = new JsonObject();
+                baseJson.addProperty("type", serializerKey.get().toString());
+                DataResult<JsonElement> json = recipe
+                        .getSerializer()
+                        .codec()
+                        .encode(GenericUtil.uncheck(recipe), JsonOps.INSTANCE, baseJson);
+                return json.result()
+                        .map(jsonElement -> "<recipetype:%s>.addJsonRecipe(\"%s\", %s)".formatted(new ResourceLocation(manager.getRecipeType()
+                                .toString()), holder.id(), jsonElement))
+                        .orElseGet(fallback);
+            } catch(Exception ignored) {
+            }
+            return fallback.get();
         }
         
         @Override

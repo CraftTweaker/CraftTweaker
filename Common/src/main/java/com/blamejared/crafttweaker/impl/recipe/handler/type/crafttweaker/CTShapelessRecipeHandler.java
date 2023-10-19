@@ -78,6 +78,7 @@ public final class CTShapelessRecipeHandler implements IRecipeHandler<CTShapeles
         
         final IIngredient[] list = ingredients.toArray(IIngredient[]::new);
         final RecipeFunction1D recipeFunction = function == null ? null : function.get(0);
+        CTShapelessRecipe.checkEmptyIngredient(name, list);
         return Optional.of(new RecipeHolder<>(name, new CTShapelessRecipe(output, list, recipeFunction)));
     }
     

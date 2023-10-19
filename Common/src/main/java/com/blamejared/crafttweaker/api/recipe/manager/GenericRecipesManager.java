@@ -43,7 +43,6 @@ import java.util.stream.Collectors;
  *
  * @docParam this recipes
  */
-//TODO 1.20.2 confirm using container here is fine
 @ZenRegister
 @ZenCodeType.Name("crafttweaker.api.GenericRecipesManager")
 @Document("vanilla/api/recipe/manager/GenericRecipesManager")
@@ -118,7 +117,6 @@ public class GenericRecipesManager {
                 .collect(Collectors.toList());
     }
     
-    //TODO 1.20.2 confirm using container here is fine
     @ZenCodeType.Method
     @ZenCodeType.Getter("allRecipes")
     public List<RecipeHolder<Recipe<Container>>> getAllRecipes() {
@@ -136,8 +134,6 @@ public class GenericRecipesManager {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
-    
-    //TODO 1.20.2 confirm using container here is fine
     
     /**
      * Returns a map of all known recipes.

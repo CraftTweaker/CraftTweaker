@@ -76,7 +76,6 @@ public class RecipeManagerScriptLoader {
             // The server does not have any scripts, so don't reload scripts!
             return;
         }
-        //TODO 1.20.2 confirm this works
         final Collection<ScriptRecipe> scriptRecipes = recipes.values()
                 .stream()
                 .map(RecipeHolder::value)

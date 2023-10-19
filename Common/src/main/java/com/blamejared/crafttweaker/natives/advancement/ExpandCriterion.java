@@ -9,5 +9,5 @@ import net.minecraft.advancements.Criterion;
 @Document("vanilla/api/advancement/Criterion")
 @NativeTypeRegistration(value = Criterion.class, zenCodeName = "crafttweaker.api.advancement.Criterion")
 public class ExpandCriterion {
-    
+
 }

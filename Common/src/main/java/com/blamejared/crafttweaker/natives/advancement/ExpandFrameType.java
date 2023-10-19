@@ -15,21 +15,18 @@ import org.openzen.zencode.java.ZenCodeType;
 @BracketEnum("minecraft:advancement/frametype")
 public class ExpandFrameType {
     
-    @ZenCodeType.Method
     @ZenCodeType.Getter("name")
     public static String getName(FrameType internal) {
         
         return internal.getName();
     }
     
-    @ZenCodeType.Method
     @ZenCodeType.Getter("chatColor")
     public static ChatFormatting getChatColor(FrameType internal) {
         
         return internal.getChatColor();
     }
     
-    @ZenCodeType.Method
     @ZenCodeType.Getter("displayName")
     public static Component getDisplayName(FrameType internal) {
         
