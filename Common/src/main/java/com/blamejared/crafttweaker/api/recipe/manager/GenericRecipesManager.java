@@ -11,29 +11,41 @@ import com.blamejared.crafttweaker.api.action.recipe.generic.ActionRemoveGeneric
 import com.blamejared.crafttweaker.api.action.recipe.generic.ActionRemoveGenericRecipeByRegex;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
+import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.MapData;
+import com.blamejared.crafttweaker.api.data.op.IDataOps;
 import com.blamejared.crafttweaker.api.data.visitor.DataToJsonStringVisitor;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.api.recipe.RecipeList;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
+import com.blamejared.crafttweaker.api.util.NameUtil;
+import com.blamejared.crafttweaker.api.zencode.util.PositionUtil;
 import com.blamejared.crafttweaker.impl.helper.AccessibleElementsProvider;
 import com.blamejared.crafttweaker.mixin.common.access.recipe.AccessRecipeManager;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.google.gson.JsonObject;
+import net.minecraft.ResourceLocationException;
+import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
+import org.openzen.zencode.shared.CodePosition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -50,6 +62,10 @@ public class GenericRecipesManager {
     
     @ZenCodeGlobals.Global("recipes")
     public static final GenericRecipesManager INSTANCE = new GenericRecipesManager();
+    
+    private static final Set<String> FORBIDDEN_MANAGERS = Set.of(
+            CraftTweakerConstants.rl("scripts").toString()
+    );
     
     private GenericRecipesManager() {}
     
@@ -71,23 +87,48 @@ public class GenericRecipesManager {
      * }
      */
     @ZenCodeType.Method
-    public void addJsonRecipe(String name, MapData data) {
+    public void addJsonRecipe(final String name, final MapData data) {
         
-        JsonObject recipeObject = IRecipeManager.JSON_RECIPE_GSON.fromJson(data.accept(DataToJsonStringVisitor.INSTANCE), JsonObject.class);
-        if(!recipeObject.has("type")) {
+        final String fixedName = Util.make(() -> {
+            final CodePosition position = PositionUtil.getZCScriptPositionFromStackTrace();
+            return NameUtil.fixing(
+                    name,
+                    (fixed, mistakes) -> CommonLoggers.api().warn(
+                            "{}Invalid recipe name '{}', mistakes:\n{}\nNew recipe name: {}",
+                            position == CodePosition.UNKNOWN ? "" : position + ": ",
+                            name,
+                            String.join("\n", mistakes),
+                            fixed
+                    )
+            );
+        });
+        
+        final IData requestedSerializer = data.getAt("type");
+        if(requestedSerializer == null) {
             throw new IllegalArgumentException("Serializer type missing!");
         }
-        if(recipeObject.get("type")
-                .getAsString()
-                .equals("crafttweaker:scripts")) {
-            throw new IllegalArgumentException("Cannot add a recipe to the CraftTweaker Scripts recipe type!");
+        if(FORBIDDEN_MANAGERS.contains(requestedSerializer.getAsString().toLowerCase(Locale.ENGLISH))) {
+            throw new IllegalArgumentException("Cannot add a recipe to the recipe type " + requestedSerializer.asString() + '!');
         }
         
-        final ResourceLocation recipeName = CraftTweakerConstants.rl(name);
-        final RecipeHolder<?> result = AccessRecipeManager.crafttweaker$callFromJson(recipeName, recipeObject);
-        final RecipeManagerWrapper recipeManagerWrapper = new RecipeManagerWrapper(GenericUtil.uncheck(result.value()
-                .getType()));
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(recipeManagerWrapper, GenericUtil.uncheck(result), null));
+        
+        final ResourceLocation serializerKey = Util.make(() -> {
+            try {
+                return new ResourceLocation(requestedSerializer.getAsString());
+            } catch (final ClassCastException | IllegalStateException | ResourceLocationException ex) {
+                throw new IllegalArgumentException("Expected 'type' field to be a valid resource location", ex);
+            }
+        });
+        
+        final RecipeSerializer<?> serializer = BuiltInRegistries.RECIPE_SERIALIZER.getOptional(serializerKey)
+                .orElseThrow(() -> new IllegalArgumentException("Recipe Serializer '%s' does not exist.".formatted(requestedSerializer)));
+        
+        final ResourceLocation recipeName = CraftTweakerConstants.rl(fixedName);
+        final Recipe<?> recipe = Util.getOrThrow(serializer.codec().parse(IDataOps.INSTANCE, data), IllegalArgumentException::new);
+        
+        final IRecipeManager<?> manager = RecipeTypeBracketHandler.getOrDefault(recipe.getType());
+        final RecipeHolder<?> holder = new RecipeHolder<>(recipeName, recipe);
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(manager, GenericUtil.uncheck(holder)));
     }
     
     @ZenCodeType.Method

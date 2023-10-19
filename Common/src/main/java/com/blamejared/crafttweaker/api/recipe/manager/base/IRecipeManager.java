@@ -11,7 +11,9 @@ import com.blamejared.crafttweaker.api.action.recipe.ActionRemoveRecipeByOutput;
 import com.blamejared.crafttweaker.api.action.recipe.ActionRemoveRecipeByRegex;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
+import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.MapData;
+import com.blamejared.crafttweaker.api.data.op.IDataOps;
 import com.blamejared.crafttweaker.api.data.visitor.DataToJsonStringVisitor;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
@@ -26,10 +28,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import net.minecraft.ResourceLocationException;
+import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import org.jetbrains.annotations.NotNull;
 import org.openzen.zencode.java.ZenCodeType;
@@ -53,8 +57,6 @@ import java.util.function.Predicate;
 @Document("vanilla/api/recipe/manager/IRecipeManager")
 public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDisplayable, Iterable<RecipeHolder<T>> {
     
-    Gson JSON_RECIPE_GSON = new GsonBuilder().create();
-    
     /**
      * Adds a recipe based on a provided IData. The provided IData should represent a DataPack json, this effectively allows you to register recipes for any DataPack supporting RecipeType systems.
      *
@@ -70,40 +72,49 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
      * }
      */
     @ZenCodeType.Method
-    default void addJsonRecipe(String name, MapData mapData) {
+    default void addJsonRecipe(final String name, final MapData mapData) {
         
-        name = fixRecipeName(name);
-        JsonObject recipeObject = JSON_RECIPE_GSON.fromJson(mapData.accept(DataToJsonStringVisitor.INSTANCE), JsonObject.class);
-        ResourceLocation recipeTypeKey = getBracketResourceLocation();
+        final String fixedName = this.fixRecipeName(name);
+        final ResourceLocation recipeTypeKey = this.getBracketResourceLocation();
         
-        if(recipeObject.has("type")) {
-            ResourceLocation recipeSerializerKey;
+        final IData requestedSerializer = mapData.getAt("type");
+        final ResourceLocation serializerKey = requestedSerializer == null? recipeTypeKey : Util.make(() -> {
             try {
-                recipeSerializerKey = new ResourceLocation(recipeObject.get("type").getAsString());
-            } catch(ClassCastException | IllegalStateException | ResourceLocationException ex) {
-                throw new IllegalArgumentException("Expected 'type' field to be a valid resource location.", ex);
+                return new ResourceLocation(requestedSerializer.getAsString());
+            } catch (final ClassCastException | IllegalStateException | ResourceLocationException ex) {
+                throw new IllegalArgumentException("Expected 'type' field to be a valid resource location", ex);
             }
-            if(!BuiltInRegistries.RECIPE_SERIALIZER.containsKey(recipeSerializerKey)) {
-                throw new IllegalArgumentException("Recipe Serializer '%s' does not exist.".formatted(recipeSerializerKey));
-            }
-        } else {
-            if(BuiltInRegistries.RECIPE_SERIALIZER.containsKey(recipeTypeKey)) {
-                recipeObject.addProperty("type", recipeTypeKey.toString());
-            } else {
-                throw new IllegalArgumentException("""
-                        Recipe Type '%s' does not have a Recipe Serializer of the same ID. Please specify a serializer manually using the 'type' field in the JSON object.
-                        """.formatted(recipeTypeKey));
-            }
+        });
+        
+        final RecipeSerializer<T> serializer = BuiltInRegistries.RECIPE_SERIALIZER.getOptional(serializerKey)
+                .map(GenericUtil::<RecipeSerializer<T>>uncheck)
+                .orElseThrow(() -> {
+                    if (requestedSerializer == null) {
+                        return new IllegalArgumentException(
+                                "Recipe Type '%s' does not have a Recipe Serializer of the same ID. Please specify a serializer manually using the 'type' field in the JSON object"
+                                        .formatted(recipeTypeKey)
+                        );
+                    }
+
+                    return new IllegalArgumentException("Recipe Serializer '%s' does not exist.".formatted(requestedSerializer));
+                });
+        
+        final ResourceLocation recipeName = CraftTweakerConstants.rl(fixedName);
+        final T recipe = Util.getOrThrow(serializer.codec().parse(IDataOps.INSTANCE, mapData), IllegalArgumentException::new);
+        
+        final RecipeType<?> recipeType = recipe.getType();
+        if (recipeType != this.getRecipeType()) {
+            throw new IllegalArgumentException(
+                    "Recipe Serializer \"%s\" resulted in Recipe Type \"%s\" but expected Recipe Type \"%s\""
+                            .formatted(
+                                    BuiltInRegistries.RECIPE_SERIALIZER.getKey(recipe.getSerializer()),
+                                    BuiltInRegistries.RECIPE_TYPE.getKey(recipeType),
+                                    BuiltInRegistries.RECIPE_TYPE.getKey(this.getRecipeType())
+                            )
+            );
         }
-        RecipeHolder<T> holder = GenericUtil.uncheck(AccessRecipeManager.crafttweaker$callFromJson(new ResourceLocation(CraftTweakerConstants.MOD_ID, name), recipeObject));
-        RecipeType<?> recipeType = holder.value().getType();
-        if(recipeType != getRecipeType()) {
-            throw new IllegalArgumentException("""
-                    Recipe Serializer "%s" resulted in Recipe Type "%s" but expected Recipe Type "%s"
-                    """.formatted(BuiltInRegistries.RECIPE_SERIALIZER.getKey(holder.value()
-                    .getSerializer()), BuiltInRegistries.RECIPE_TYPE
-                    .getKey(recipeType), recipeTypeKey));
-        }
+        
+        final RecipeHolder<T> holder = new RecipeHolder<>(recipeName, recipe);
         CraftTweakerAPI.apply(new ActionAddRecipe<>(this, holder));
     }
     
