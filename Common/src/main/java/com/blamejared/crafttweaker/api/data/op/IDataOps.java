@@ -97,7 +97,8 @@ public final class IDataOps implements DynamicOps<IData> {
     @Override
     public DataResult<String> getStringValue(final IData input) {
         
-        return input.getType() == IData.Type.STRING? DataResult.success(input.asString()) : this.noType(input, "string");
+        // Do not use asString as that keeps quotes around the string for some reason
+        return input.getType() == IData.Type.STRING? DataResult.success(input.getAsString()) : this.noType(input, "string");
     }
     
     @Override
