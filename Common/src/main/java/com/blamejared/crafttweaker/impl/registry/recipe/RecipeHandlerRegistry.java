@@ -29,67 +29,6 @@ import java.util.stream.Collectors;
 
 public final class RecipeHandlerRegistry implements IRecipeHandlerRegistry {
     
-    private static final class DefaultRecipeHandler implements IRecipeHandler<Recipe<?>> {
-        
-        private static final DefaultRecipeHandler INSTANCE = new DefaultRecipeHandler();
-        
-        @Override
-        public String dumpToCommandString(final IRecipeManager<? super Recipe<?>> manager, final RegistryAccess registryAccess, final RecipeHolder<Recipe<?>> holder) {
-            
-            Recipe<?> recipe = holder.value();
-            final String ingredients = recipe.getIngredients()
-                    .stream()
-                    .map(IIngredient::fromIngredient)
-                    .map(IIngredient::getCommandString)
-                    .collect(Collectors.joining(", "));
-            Supplier<String> fallback = () -> String.format(
-                    "~~ Recipe name: %s, Outputs: %s, Inputs: [%s], Recipe Class: %s, Recipe Serializer: %s ~~",
-                    holder.id(),
-                    ItemStackUtil.getCommandString(recipe.getResultItem(registryAccess)),
-                    ingredients,
-                    recipe.getClass().getName(),
-                    BuiltInRegistries.RECIPE_SERIALIZER.getKey(recipe.getSerializer()));
-            Optional<ResourceLocation> serializerKey = registryAccess.registry(Registries.RECIPE_SERIALIZER)
-                    .map(recipeSerializers -> recipeSerializers.getKey(recipe.getSerializer()));
-            if(serializerKey.isEmpty()) {
-                return fallback.get();
-            }
-            try {
-                JsonObject baseJson = new JsonObject();
-                baseJson.addProperty("type", serializerKey.get().toString());
-                DataResult<JsonElement> json = recipe
-                        .getSerializer()
-                        .codec()
-                        .encode(GenericUtil.uncheck(recipe), JsonOps.INSTANCE, baseJson);
-                return json.result()
-                        .map(jsonElement -> "<recipetype:%s>.addJsonRecipe(\"%s\", %s)".formatted(new ResourceLocation(manager.getRecipeType()
-                                .toString()), holder.id(), jsonElement))
-                        .orElseGet(fallback);
-            } catch(Exception ignored) {
-            }
-            return fallback.get();
-        }
-        
-        @Override
-        public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super Recipe<?>> manager, final RecipeHolder<Recipe<?>> firstHolder, final RecipeHolder<U> secondHolder) {
-            
-            return false;
-        }
-        
-        @Override
-        public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super Recipe<?>> manager, final RegistryAccess registryAccess, final RecipeHolder<Recipe<?>> holder) {
-            
-            return Optional.empty();
-        }
-        
-        @Override
-        public Optional<RecipeHolder<Recipe<?>>> recompose(final IRecipeManager<? super Recipe<?>> manager, final RegistryAccess registryAccess, final ResourceLocation name, final IDecomposedRecipe recipe) {
-            
-            return Optional.empty();
-        }
-        
-    }
-    
     private final Map<Class<? extends Recipe<?>>, IRecipeHandler<?>> recipeHandlers = new HashMap<>();
     
     public <T extends Recipe<?>> void register(Class<? extends T> clazz, IRecipeHandler<T> handler) {
