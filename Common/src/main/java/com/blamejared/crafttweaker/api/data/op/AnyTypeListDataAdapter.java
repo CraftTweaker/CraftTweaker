@@ -43,6 +43,12 @@ final class AnyTypeListDataAdapter implements ListDataAdapter {
         return this;
     }
     
+    @Override
+    public String toString() {
+        
+        return "ListDataAdapter[ANY/%s]".formatted(this.data);
+    }
+    
     private void append(final IData data) {
         
         this.data.add(data.getType() == IData.Type.MAP && !this.wrapper(data)? data : this.wrap(data));

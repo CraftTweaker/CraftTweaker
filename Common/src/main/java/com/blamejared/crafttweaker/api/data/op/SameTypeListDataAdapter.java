@@ -63,4 +63,10 @@ final class SameTypeListDataAdapter<T extends IData> implements ListDataAdapter 
         final AnyTypeListDataAdapter adapter = AnyTypeListDataAdapter.list(this.finish());
         return adapter.apply(data);
     }
+    
+    @Override
+    public String toString() {
+        
+        return "ListDataAdapter[%s/%s]".formatted(this.type, this.data);
+    }
 }

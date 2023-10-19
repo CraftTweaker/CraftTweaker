@@ -89,6 +89,12 @@ final class IDataListBuilder implements ListBuilder<IData> {
                 );
     }
     
+    @Override
+    public String toString() {
+        
+        return "IDataListBuilder[%s@%s]".formatted(this.ops(), this.builder);
+    }
+    
     private ListBuilder<IData> replace(
             final Function<DataResult<ImmutableList.Builder<IData>>, DataResult<ImmutableList.Builder<IData>>> block
     ) {

@@ -104,6 +104,12 @@ final class IDataMapBuilder implements RecordBuilder<IData> {
         return this.add(key, encoder.encode(value, this.ops(), this.ops().empty()));
     }
     
+    @Override
+    public String toString() {
+        
+        return "IDataMapBuilder[%s@%s]".formatted(this.ops(), this.builder);
+    }
+    
     private RecordBuilder<IData> replace(
             final Function<DataResult<ImmutableMap.Builder<IData, IData>>, DataResult<ImmutableMap.Builder<IData, IData>>> block
     ) {

@@ -50,4 +50,10 @@ public final class EmptyData implements IData {
         return Type.EMPTY;
     }
     
+    @Override
+    public String toString() {
+        
+        return "<EMPTY>";
+    }
+    
 }

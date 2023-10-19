@@ -34,4 +34,10 @@ final class DecidingListDataAdapter implements ListDataAdapter {
         };
     }
     
+    @Override
+    public String toString() {
+        
+        return "ListDataAdapter[NONE/%s]".formatted(this.finish());
+    }
+    
 }
