@@ -33,7 +33,6 @@ import com.blamejared.crafttweaker.impl.command.type.ModCommands;
 import com.blamejared.crafttweaker.impl.command.type.RecipeCommands;
 import com.blamejared.crafttweaker.impl.command.type.conflict.ConflictCommand;
 import com.blamejared.crafttweaker.impl.command.type.script.ScriptCommands;
-import com.blamejared.crafttweaker.impl.command.type.script.example.ExamplesCommand;
 import com.blamejared.crafttweaker.impl.recipe.replacement.DefaultTargetingFilters;
 import com.blamejared.crafttweaker.impl.recipe.replacement.DefaultTargetingStrategies;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessDyedArmorForEmeralds;
@@ -172,7 +171,6 @@ public final class CommonCraftTweakerPlugin implements ICraftTweakerPlugin {
         MiscCommands.registerCommands(handler);
         ModCommands.registerCommands(handler);
         RecipeCommands.registerCommands(handler);
-        ExamplesCommand.registerCommand(handler);
         DumpCommands.registerDumpers(handler);
     }
     

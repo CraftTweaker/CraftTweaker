@@ -88,7 +88,7 @@ public final class MiscCommands {
                 })
         );
         
-        Stream.of("wiki", "docs").forEach(id -> handler.registerRootCommand(
+        Stream.of("wiki", "docs", "examples").forEach(id -> handler.registerRootCommand(
                 id,
                 Component.translatable("crafttweaker.command.description.docs"),
                 builder -> builder.executes(context -> {
