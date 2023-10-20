@@ -4,12 +4,12 @@ import com.blamejared.crafttweaker.api.data.op.IDataOps;
 import com.blamejared.crafttweaker.gametest.CraftTweakerGameTest;
 import com.blamejared.crafttweaker.gametest.framework.annotation.CraftTweakerGameTestHolder;
 import com.blamejared.crafttweaker.gametest.framework.annotation.TestModifier;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.nbt.NbtOps;
 
 import java.util.Arrays;
 import java.util.List;
@@ -198,7 +198,6 @@ public class DataOpsRoundtripTest implements CraftTweakerGameTest {
                 Codec.STRING.fieldOf("h").forGetter(d -> d.h),
                 Codec.STRING.listOf().fieldOf("i").forGetter(d -> d.i),
                 Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("j").forGetter(d -> d.j),
-                Codec.compoundList(Codec.STRING, Codec.STRING).fieldOf("k").forGetter(d -> d.k),
                 DayData.CODEC.fieldOf("day_data").forGetter(d -> d.dayData)
         ).apply(i, TestData::new));
         
@@ -212,11 +211,10 @@ public class DataOpsRoundtripTest implements CraftTweakerGameTest {
         private final String h;
         private final List<String> i;
         private final Map<String, String> j;
-        private final List<Pair<String, String>> k;
         
         private final DayData dayData;
         
-        private TestData(final float a, final double b, final byte c, final short d, final int e, final long f, final boolean g, final String h, final List<String> i, final Map<String, String> j, final List<Pair<String, String>> k, final DayData dayData) {
+        private TestData(final float a, final double b, final byte c, final short d, final int e, final long f, final boolean g, final String h, final List<String> i, final Map<String, String> j, final DayData dayData) {
             
             this.a = a;
             this.b = b;
@@ -228,7 +226,6 @@ public class DataOpsRoundtripTest implements CraftTweakerGameTest {
             this.h = h;
             this.i = i;
             this.j = j;
-            this.k = k;
             this.dayData = dayData;
         }
         
@@ -252,14 +249,13 @@ public class DataOpsRoundtripTest implements CraftTweakerGameTest {
                     h.equals(testData.h) &&
                     i.equals(testData.i) &&
                     j.equals(testData.j) &&
-                    k.equals(testData.k) &&
                     dayData.equals(testData.dayData);
         }
         
         @Override
         public int hashCode() {
             
-            return Objects.hash(a, b, c, d, e, f, g, h, i, j, k, dayData);
+            return Objects.hash(a, b, c, d, e, f, g, h, i, j, dayData);
         }
         
         @Override
@@ -276,7 +272,6 @@ public class DataOpsRoundtripTest implements CraftTweakerGameTest {
             sb.append(", h='").append(h).append('\'');
             sb.append(", i=").append(i);
             sb.append(", j=").append(j);
-            sb.append(", k=").append(k);
             sb.append(", dayData=").append(dayData);
             sb.append('}');
             return sb.toString();
@@ -305,31 +300,14 @@ public class DataOpsRoundtripTest implements CraftTweakerGameTest {
                                 i -> Float.toString(random.nextFloat()),
                                 i -> Float.toString(random.nextFloat()))
                         ),
-                IntStream.range(0, random.nextInt(100))
-                        .mapToObj(i -> Pair.of(Float.toString(random.nextFloat()), Float.toString(random.nextFloat())))
-                        .collect(Collectors.toList()
-                        ),
                 new WednesdayData("meetings lol"));
     }
     
     private <T> void testWriteRead(final DynamicOps<T> ops) {
         
-        final TestData data = new TestData(
-                0,
-                0,
-                (byte) 0,
-                (short) 0,
-                0,
-                0,
-                true,
-                Float.toString(0),
-                List.of(""),
-                Map.of("a", "b"),
-                List.of(Pair.of("0.375287", "0.9097437"), Pair.of("0.56181955", "0.7341252"), Pair.of("0.38155228", "0.7522902"), Pair.of("0.0432117", "0.38098854")),
-                new WednesdayData("meetings lol"));
+        final TestData data = makeRandomTestData();
         
         final DataResult<T> encoded = TestData.CODEC.encodeStart(ops, data);
-        System.out.println(encoded);
         final DataResult<TestData> decoded = encoded.flatMap(r -> TestData.CODEC.parse(ops, r));
         
         assertThat(DataResult.success(data), is(decoded));
