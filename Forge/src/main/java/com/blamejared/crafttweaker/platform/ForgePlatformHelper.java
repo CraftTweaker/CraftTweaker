@@ -15,11 +15,13 @@ import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
 import com.blamejared.crafttweaker.api.mod.Mod;
 import com.blamejared.crafttweaker.api.recipe.handler.helper.CraftingTableRecipeConflictChecker;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
-import com.blamejared.crafttweaker.api.util.HandleUtil;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.villager.CTTradeObject;
 import com.blamejared.crafttweaker.impl.loot.CraftTweakerPrivilegedLootModifierMap;
 import com.blamejared.crafttweaker.impl.loot.ForgeLootModifierMapAdapter;
 import com.blamejared.crafttweaker.mixin.common.access.food.AccessFoodPropertiesForge;
+import com.blamejared.crafttweaker.mixin.common.access.forge.AccessForgeInternalHandler;
+import com.blamejared.crafttweaker.mixin.common.access.loot.AccessLootModifierManager;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessBasicTrade;
 import com.blamejared.crafttweaker.platform.helper.inventory.IItemHandlerWrapper;
 import com.blamejared.crafttweaker.platform.services.IPlatformHelper;
@@ -47,7 +49,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.BasicItemListing;
-import net.minecraftforge.common.ForgeInternalHandler;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifierManager;
@@ -64,8 +65,6 @@ import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Type;
 
 import java.lang.annotation.Annotation;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.VarHandle;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
@@ -81,22 +80,6 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class ForgePlatformHelper implements IPlatformHelper {
-    
-    private static final class Handles {
-        
-        private static final MethodHandle LMM_GETTER = HandleUtil.linkMethod(
-                ForgeInternalHandler.class,
-                HandleUtil.AccessType.STATIC,
-                "getLootModifierManager",
-                LootModifierManager.class);
-        
-        private static final VarHandle LMM_MAP = HandleUtil.linkField(
-                LootModifierManager.class,
-                HandleUtil.AccessType.VIRTUAL,
-                "modifiers",
-                Map.class);
-        
-    }
     
     public final Supplier<List<Mod>> modList = Suppliers.memoize(() -> ModList.get()
             .getMods()
@@ -252,26 +235,22 @@ public class ForgePlatformHelper implements IPlatformHelper {
     public Map<ResourceLocation, ILootModifier> getLootModifiersMap() {
         
         try {
-            LootModifierManager manager = HandleUtil
-                    .invoke(() -> (LootModifierManager) Handles.LMM_GETTER.invokeExact());
-            @SuppressWarnings("unchecked")
-            Map<ResourceLocation, IGlobalLootModifier> map = (Map<ResourceLocation, IGlobalLootModifier>) Handles.LMM_MAP
-                    .get(manager);
+            final LootModifierManager rawManager = AccessForgeInternalHandler.crafttweaker$getLootModifierManager();
+            final AccessLootModifierManager manager = GenericUtil.uncheck(rawManager);
             
-            // Someone else may make the map mutable, but I explicitly want CT stuff to go
-            // last
+            Map<ResourceLocation, IGlobalLootModifier> map = manager.crafttweaker$getModifiers();
+            
+            // Someone else may make the map mutable, but I explicitly want CT stuff to go last
             if(!(map instanceof CraftTweakerPrivilegedLootModifierMap)) {
-                final Map<ResourceLocation, IGlobalLootModifier> finalMap = CraftTweakerPrivilegedLootModifierMap
-                        .of(map);
-                map = finalMap;
-                Handles.LMM_MAP.set(manager, finalMap);
+                final Map<ResourceLocation, IGlobalLootModifier> newMap = CraftTweakerPrivilegedLootModifierMap.of(map);
+                manager.crafttweaker$setModifiers(newMap);
+                map = newMap;
             }
             
             return ForgeLootModifierMapAdapter.adapt(map);
         } catch(final IllegalStateException e) {
             
-            // LMM_GETTER.invokeExact() throws ISE if we're on the client and playing
-            // multiplayer
+            // Getting the loot modifier manager throws an ISE if we're on the client and playing multiplayer
             return Collections.emptyMap();
         }
     }
@@ -293,7 +272,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
             return false;
         }
         
-        return (!first.hasTag() || first.getTag().equals(second.getTag())) && first.areCapsCompatible(second);
+        return (!first.hasTag() || Objects.equals(first.getTag(), second.getTag())) && first.areCapsCompatible(second);
     }
     
     @Override

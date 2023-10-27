@@ -9,6 +9,8 @@
     "common.access.brewing.AccessPotionBrewing",
 //    "common.access.entity.AccessFakePlayerFactory",
     "common.access.food.AccessFoodPropertiesForge",
+    "common.access.forge.AccessForgeInternalHandler",
+    "common.access.loot.AccessLootModifierManager",
     "common.access.villager.AccessBasicTrade",
     "common.transform.item.attribute.MixinItemAttributeModifierEvent",
     "common.transform.villager.MixinBasicTrade"
