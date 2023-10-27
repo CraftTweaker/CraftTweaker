@@ -146,20 +146,34 @@ public final class ConflictCommand {
         final int characteristics = Spliterator.ORDERED | Spliterator.SORTED | Spliterator.NONNULL | Spliterator.IMMUTABLE;
         
         return StreamSupport.longStream(Spliterators.spliterator(iterator, iterator.estimateLength(), characteristics), false)
-                .filter(it -> conflictsWith(manager, recipes.get(RecipeLongIterator.first(it))
-                        .getValue(), recipes.get(RecipeLongIterator.second(it)).getValue()))
-                .mapToObj(it -> formatConflict(manager, recipes.get(RecipeLongIterator.first(it))
-                        .getKey(), recipes.get(RecipeLongIterator.second(it)).getKey()));
+                .filter(it -> conflictsWith(manager, recipes, it))
+                .mapToObj(it -> Map.entry(recipes.get(RecipeLongIterator.first(it)), recipes.get(RecipeLongIterator.second(it))))
+                .map(it -> Map.entry(it.getKey().getKey(), it.getValue().getKey()))
+                .map(it -> formatConflict(manager, it));
+    }
+    
+    private static boolean conflictsWith(
+            final IRecipeManager<?> manager,
+            final List<Map.Entry<ResourceLocation, RecipeHolder<?>>> recipes,
+            final long id
+    ) {
+        
+        return conflictsWith(manager, recipes.get(RecipeLongIterator.first(id)).getValue(), recipes.get(RecipeLongIterator.second(id)).getValue());
     }
     
     private static <T extends Recipe<?>> boolean conflictsWith(final IRecipeManager<?> manager, final RecipeHolder<T> first, final RecipeHolder<?> second) {
         
         return first != second && IRecipeHandlerRegistry.getHandlerFor(first.value())
-                .doesConflict(GenericUtil.uncheck(manager), first, second);
+                .doesConflict(GenericUtil.uncheck(manager), first.value(), second.value());
     }
     
-    private static String formatConflict(final IRecipeManager<?> manager, final ResourceLocation firstName, final ResourceLocation secondName) {
+    private static String formatConflict(
+            final IRecipeManager<?> manager,
+            final Map.Entry<ResourceLocation, ResourceLocation> conflictNames
+    ) {
         
+        final ResourceLocation firstName = conflictNames.getKey();
+        final ResourceLocation secondName = conflictNames.getValue();
         return String.format("Recipes '%s' and '%s' in type '%s' have conflicting inputs", firstName, secondName, manager.getCommandString());
     }
     
