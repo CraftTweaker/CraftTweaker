@@ -23,16 +23,19 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.function.ToIntBiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -178,39 +181,54 @@ public final class ConflictCommand {
     }
     
     private static void dispatchCompletionTo(final String message, final Player player) {
-        //TODO make this go on the correct thread
         
-        try {
-            CommandUtilities.COMMAND_LOGGER.info(message.isEmpty() ? "No conflicts identified" : message);
-            CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.conflict.complete")
-                    .withStyle(ChatFormatting.GREEN)), player);
-        } catch(final Exception e) {
+        onMainThread(player, () -> {
             try {
-                CommandUtilities.COMMAND_LOGGER.error("An error occurred while reporting conflicts, hopefully it does not happen again", e);
-            } catch(final Exception another) {
-                e.addSuppressed(another);
-                e.printStackTrace(System.err); // It's not going to be useful if the logging throws errors, but at least we can say we tried
+                CommandUtilities.COMMAND_LOGGER.info(message.isEmpty() ? "No conflicts identified" : message);
+                CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.conflict.complete")
+                        .withStyle(ChatFormatting.GREEN)), player);
+            } catch(final Exception e) {
+                try {
+                    CommandUtilities.COMMAND_LOGGER.error("An error occurred while reporting conflicts, hopefully it does not happen again", e);
+                } catch(final Exception another) {
+                    e.addSuppressed(another);
+                    e.printStackTrace(System.err); // It's not going to be useful if the logging throws errors, but at least we can say we tried
+                }
             }
-        }
+        });
     }
     
     private static Void dispatchExceptionTo(final Throwable exception, final Player player) {
-        //TODO make this go on the correct thread
         
-        try {
-            CommandUtilities.COMMAND_LOGGER.error("Unable to verify for conflicts due to an exception", exception);
-            CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.conflict.error")
-                    .withStyle(ChatFormatting.RED)), player);
-        } catch(final Exception e) {
+        onMainThread(player, () -> {
             try {
-                CommandUtilities.COMMAND_LOGGER.error("An error occurred while reporting conflicts, hopefully it does not happen again", e);
-            } catch(final Exception another) {
-                e.addSuppressed(another);
-                e.printStackTrace(System.err); // It's not going to be useful if the logging throws errors, but at least we can say we tried
+                CommandUtilities.COMMAND_LOGGER.error("Unable to verify for conflicts due to an exception", exception);
+                CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.conflict.error")
+                        .withStyle(ChatFormatting.RED)), player);
+            } catch(final Exception e) {
+                try {
+                    CommandUtilities.COMMAND_LOGGER.error("An error occurred while reporting conflicts, hopefully it does not happen again", e);
+                } catch(final Exception another) {
+                    e.addSuppressed(another);
+                    e.printStackTrace(System.err); // It's not going to be useful if the logging throws errors, but at least we can say we tried
+                }
             }
-        }
+        });
         
         return null;
+    }
+    
+    private static void onMainThread(final Player player, final Runnable runnable) {
+        final Level level = player.level();
+        assert !level.isClientSide(); // This is always true in commands
+        
+        Objects.requireNonNull(level.getServer(), "Is someone running server-bound commands on the client?").executeIfPossible(() -> {
+            try {
+                runnable.run();
+            } catch (final RejectedExecutionException e) {
+                OFF_THREAD_SERVICE.submit(runnable);
+            }
+        });
     }
     
 }
