@@ -149,11 +149,11 @@ public final class ComponentFilteringRule<T> implements IFilteringRule {
     
     private <C extends Container, V extends Recipe<C>> boolean castFilter(final RecipeHolder<?> recipe) {
         
-        RecipeHolder<V> typedRecipe = GenericUtil.uncheck(recipe);
+        final RecipeHolder<V> typedRecipe = GenericUtil.uncheck(recipe);
         final IRecipeHandler<V> handler = CraftTweakerAPI.getRegistry().getRecipeHandlerFor(typedRecipe);
         final IRecipeManager<? super V> manager = RecipeTypeBracketHandler.getOrDefault(recipe.value().getType());
         final Optional<IDecomposedRecipe> decomposedRecipe = handler.decompose(manager, AccessibleElementsProvider.get()
-                .registryAccess(),typedRecipe);
+                .registryAccess(), typedRecipe.value());
         return decomposedRecipe.isPresent() && this.castFilter(decomposedRecipe.get());
     }
     
