@@ -42,15 +42,14 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecip
     }
     
     @Override
-    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super CTShapedRecipe> manager, final RecipeHolder<CTShapedRecipe> firstHolder, final RecipeHolder<U> secondHolder) {
+    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super CTShapedRecipe> manager, final CTShapedRecipe firstRecipe, final U secondRecipe) {
         
-        return Services.PLATFORM.doCraftingTableRecipesConflict(manager, firstHolder, secondHolder);
+        return Services.PLATFORM.doCraftingTableRecipesConflict(manager, firstRecipe, secondRecipe);
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super CTShapedRecipe> manager, final RegistryAccess registryAccess, final RecipeHolder<CTShapedRecipe> holder) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super CTShapedRecipe> manager, final RegistryAccess registryAccess, final CTShapedRecipe recipe) {
         
-        CTShapedRecipe recipe = holder.value();
         final int width = recipe.getWidth();
         final int height = recipe.getHeight();
         final RecipeFunction2D function = recipe.getFunction();
@@ -71,7 +70,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecip
     }
     
     @Override
-    public Optional<RecipeHolder<CTShapedRecipe>> recompose(final IRecipeManager<? super CTShapedRecipe> manager, final RegistryAccess registryAccess, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<CTShapedRecipe> recompose(final IRecipeManager<? super CTShapedRecipe> manager, final RegistryAccess registryAccess, final IDecomposedRecipe recipe) {
         
         final Pair<Integer, Integer> size = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.SHAPE_SIZE_2D);
         final MirrorAxis axis = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.MIRROR_AXIS);
@@ -94,7 +93,7 @@ public final class CTShapedRecipeHandler implements IRecipeHandler<CTShapedRecip
         
         final IIngredient[][] matrix = this.inflate(ingredients, width, height);
         final RecipeFunction2D recipeFunction = function == null ? null : function.get(0);
-        return Optional.of(new RecipeHolder<>(name, new CTShapedRecipe(output, matrix, axis, recipeFunction)));
+        return Optional.of(new CTShapedRecipe(output, matrix, axis, recipeFunction));
     }
     
     private List<IIngredient> flatten(final IIngredient[][] ingredients, final int width, final int height) {

@@ -72,19 +72,19 @@ final class DefaultRecipeHandler implements IRecipeHandler<Recipe<?>> {
     }
     
     @Override
-    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super Recipe<?>> manager, final RecipeHolder<Recipe<?>> firstHolder, final RecipeHolder<U> secondHolder) {
+    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super Recipe<?>> manager, final Recipe<?> firstRecipe, final U secondRecipe) {
         
         return false;
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super Recipe<?>> manager, final RegistryAccess registryAccess, final RecipeHolder<Recipe<?>> holder) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super Recipe<?>> manager, final RegistryAccess registryAccess, final Recipe<?> recipe) {
         
         return Optional.empty();
     }
     
     @Override
-    public Optional<RecipeHolder<Recipe<?>>> recompose(final IRecipeManager<? super Recipe<?>> manager, final RegistryAccess registryAccess, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<Recipe<?>> recompose(final IRecipeManager<? super Recipe<?>> manager, final RegistryAccess registryAccess, final IDecomposedRecipe recipe) {
         
         return Optional.empty();
     }

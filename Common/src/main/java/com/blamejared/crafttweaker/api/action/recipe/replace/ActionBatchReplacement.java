@@ -69,11 +69,11 @@ public final class ActionBatchReplacement extends CraftTweakerAction implements 
     
     private <C extends Container, T extends Recipe<C>> void replace(final RecipeHolder<?> recipe) {
         
-        RecipeHolder<T> typedRecipe = GenericUtil.uncheck(recipe);
+        final RecipeHolder<T> typedRecipe = GenericUtil.uncheck(recipe);
         final IRecipeHandler<T> handler = CraftTweakerAPI.getRegistry().getRecipeHandlerFor(typedRecipe);
         final IRecipeManager<? super T> manager = RecipeTypeBracketHandler.getOrDefault(recipe.value().getType());
-        handler.decompose(manager, AccessibleElementsProvider.get().registryAccess(), typedRecipe)
-                .ifPresent(it -> this.replace(manager, handler, recipe.id(), it));
+        handler.decompose(manager, AccessibleElementsProvider.get().registryAccess(), typedRecipe.value())
+                .ifPresent(it -> this.replace(manager, handler, typedRecipe.id(), it));
     }
     
     private <C extends Container, T extends Recipe<C>> void replace(
@@ -104,7 +104,8 @@ public final class ActionBatchReplacement extends CraftTweakerAction implements 
             final ResourceLocation newName
     ) {
         
-        return handler.recompose(manager, AccessibleElementsProvider.get().registryAccess(), newName, recipe)
+        return handler.recompose(manager, AccessibleElementsProvider.get().registryAccess(), recipe)
+                .map(it -> new RecipeHolder<>(newName, it))
                 .orElseThrow(() -> new IllegalStateException("Recomposition failed due to an error"));
     }
     

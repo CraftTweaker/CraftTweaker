@@ -41,15 +41,14 @@ public final class ShapelessRecipeHandler implements IRecipeHandler<ShapelessRec
     }
     
     @Override
-    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super ShapelessRecipe> manager, final RecipeHolder<ShapelessRecipe> firstHolder, final RecipeHolder<U> secondHolder) {
+    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super ShapelessRecipe> manager, final ShapelessRecipe firstRecipe, final U secondRecipe) {
         
-        return Services.PLATFORM.doCraftingTableRecipesConflict(manager, firstHolder, secondHolder);
+        return Services.PLATFORM.doCraftingTableRecipesConflict(manager, firstRecipe, secondRecipe);
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super ShapelessRecipe> manager, final RegistryAccess registryAccess, final RecipeHolder<ShapelessRecipe> holder) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super ShapelessRecipe> manager, final RegistryAccess registryAccess, final ShapelessRecipe recipe) {
         
-        ShapelessRecipe recipe = holder.value();
         final List<IIngredient> ingredients = recipe.getIngredients().stream()
                 .map(IIngredient::fromIngredient)
                 .toList();
@@ -63,7 +62,7 @@ public final class ShapelessRecipeHandler implements IRecipeHandler<ShapelessRec
     }
     
     @Override
-    public Optional<RecipeHolder<ShapelessRecipe>> recompose(final IRecipeManager<? super ShapelessRecipe> manager, final RegistryAccess registryAccess, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<ShapelessRecipe> recompose(final IRecipeManager<? super ShapelessRecipe> manager, final RegistryAccess registryAccess, final IDecomposedRecipe recipe) {
         
         final String group = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.GROUP);
         final CraftingBookCategory category = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.CRAFTING_BOOK_CATEGORY);
@@ -80,7 +79,7 @@ public final class ShapelessRecipeHandler implements IRecipeHandler<ShapelessRec
         final NonNullList<Ingredient> recipeIngredients = ingredients.stream()
                 .map(IIngredient::asVanillaIngredient)
                 .collect(NonNullList::create, NonNullList::add, NonNullList::addAll);
-        return Optional.of(new RecipeHolder<>(name, new ShapelessRecipe(group, category, output.getInternal(), recipeIngredients)));
+        return Optional.of(new ShapelessRecipe(group, category, output.getInternal(), recipeIngredients));
     }
     
 }

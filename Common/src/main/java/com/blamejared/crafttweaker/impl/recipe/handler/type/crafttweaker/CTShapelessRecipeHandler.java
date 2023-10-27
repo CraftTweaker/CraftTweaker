@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.recipe.handler.type.crafttweaker;
 
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.component.BuiltinRecipeComponents;
@@ -11,7 +12,6 @@ import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipe;
 import com.blamejared.crafttweaker.api.util.StringUtil;
 import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
@@ -39,15 +39,14 @@ public final class CTShapelessRecipeHandler implements IRecipeHandler<CTShapeles
     }
     
     @Override
-    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super CTShapelessRecipe> manager, final RecipeHolder<CTShapelessRecipe> firstHolder, final RecipeHolder<U> secondHolder) {
+    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super CTShapelessRecipe> manager, final CTShapelessRecipe firstRecipe, final U secondRecipe) {
         
-        return Services.PLATFORM.doCraftingTableRecipesConflict(manager, firstHolder, secondHolder);
+        return Services.PLATFORM.doCraftingTableRecipesConflict(manager, firstRecipe, secondRecipe);
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(IRecipeManager<? super CTShapelessRecipe> manager, final RegistryAccess registryAccess, RecipeHolder<CTShapelessRecipe> holder) {
+    public Optional<IDecomposedRecipe> decompose(IRecipeManager<? super CTShapelessRecipe> manager, final RegistryAccess registryAccess, final CTShapelessRecipe recipe) {
         
-        CTShapelessRecipe recipe = holder.value();
         final RecipeFunction1D function = recipe.getFunction();
         final List<IIngredient> ingredients = Arrays.asList(recipe.getCtIngredients());
         
@@ -64,7 +63,7 @@ public final class CTShapelessRecipeHandler implements IRecipeHandler<CTShapeles
     }
     
     @Override
-    public Optional<RecipeHolder<CTShapelessRecipe>> recompose(IRecipeManager<? super CTShapelessRecipe> manager, final RegistryAccess registryAccess, ResourceLocation name, IDecomposedRecipe recipe) {
+    public Optional<CTShapelessRecipe> recompose(final IRecipeManager<? super CTShapelessRecipe> manager, final RegistryAccess registryAccess, final IDecomposedRecipe recipe) {
         
         final List<IIngredient> ingredients = recipe.getOrThrow(BuiltinRecipeComponents.Input.INGREDIENTS);
         final List<RecipeFunction1D> function = recipe.get(BuiltinRecipeComponents.Processing.FUNCTION_1D);
@@ -79,8 +78,8 @@ public final class CTShapelessRecipeHandler implements IRecipeHandler<CTShapeles
         
         final IIngredient[] list = ingredients.toArray(IIngredient[]::new);
         final RecipeFunction1D recipeFunction = function == null ? null : function.get(0);
-        CTShapelessRecipe.checkEmptyIngredient(name, list);
-        return Optional.of(new RecipeHolder<>(name, new CTShapelessRecipe(output, list, recipeFunction)));
+        CTShapelessRecipe.checkEmptyIngredient(CraftTweakerConstants.rl("__under_replacement__"), list);
+        return Optional.of(new CTShapelessRecipe(output, list, recipeFunction));
     }
     
 }

@@ -49,7 +49,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.Nullable;
 import org.reflections.Reflections;
@@ -256,7 +256,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
     
     @Override
-    public boolean doCraftingTableRecipesConflict(IRecipeManager<?> manager, RecipeHolder<?> first, RecipeHolder<?> second) {
+    public boolean doCraftingTableRecipesConflict(IRecipeManager<?> manager, Recipe<?> first, Recipe<?> second) {
         
         return CraftingTableRecipeConflictChecker.checkConflicts(manager, first, second);
     }

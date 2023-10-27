@@ -40,18 +40,18 @@ public final class SmithingTrimRecipeHandler implements IRecipeHandler<SmithingT
     }
     
     @Override
-    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super SmithingTrimRecipe> manager, final RecipeHolder<SmithingTrimRecipe> firstHolder, final RecipeHolder<U> secondHolder) {
+    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super SmithingTrimRecipe> manager, final SmithingTrimRecipe firstRecipe, final U secondRecipe) {
         
-        if(!(secondHolder.value() instanceof SmithingRecipe)) {
+        if(!(secondRecipe instanceof SmithingRecipe)) {
             return false;
         }
-        return SmithingRecipeConflictChecker.doesConflict(manager, firstHolder, GenericUtil.uncheck(secondHolder));
+        return SmithingRecipeConflictChecker.doesConflict(manager, firstRecipe, GenericUtil.uncheck(secondRecipe));
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super SmithingTrimRecipe> manager, final RegistryAccess registryAccess,final RecipeHolder<SmithingTrimRecipe> recipe) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super SmithingTrimRecipe> manager, final RegistryAccess registryAccess,final SmithingTrimRecipe recipe) {
         
-        final AccessSmithingTrimRecipe access = (AccessSmithingTrimRecipe) recipe.value();
+        final AccessSmithingTrimRecipe access = (AccessSmithingTrimRecipe) recipe;
         final IIngredient template = IIngredient.fromIngredient(access.crafttweaker$getTemplate());
         final IIngredient base = IIngredient.fromIngredient(access.crafttweaker$getBase());
         final IIngredient addition = IIngredient.fromIngredient(access.crafttweaker$getAddition());
@@ -63,7 +63,7 @@ public final class SmithingTrimRecipeHandler implements IRecipeHandler<SmithingT
     }
     
     @Override
-    public Optional<RecipeHolder<SmithingTrimRecipe>> recompose(final IRecipeManager<? super SmithingTrimRecipe> manager,final RegistryAccess registryAccess, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<SmithingTrimRecipe> recompose(final IRecipeManager<? super SmithingTrimRecipe> manager,final RegistryAccess registryAccess, final IDecomposedRecipe recipe) {
         
         final List<IIngredient> ingredients = recipe.getOrThrow(BuiltinRecipeComponents.Input.INGREDIENTS);
         
@@ -76,7 +76,7 @@ public final class SmithingTrimRecipeHandler implements IRecipeHandler<SmithingT
         final Ingredient template = ingredients.get(0).asVanillaIngredient();
         final Ingredient base = ingredients.get(1).asVanillaIngredient();
         final Ingredient addition = ingredients.get(2).asVanillaIngredient();
-        return Optional.of(new RecipeHolder<>(name, AccessSmithingTrimRecipe.crafttweaker$createSmithingTrimRecipe(template, base, addition)));
+        return Optional.of(AccessSmithingTrimRecipe.crafttweaker$createSmithingTrimRecipe(template, base, addition));
     }
     
 }

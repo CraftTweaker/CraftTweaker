@@ -47,15 +47,14 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
     }
     
     @Override
-    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super ShapedRecipe> manager, final RecipeHolder<ShapedRecipe> firstHolder, final RecipeHolder<U> secondHolder) {
+    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super ShapedRecipe> manager, final ShapedRecipe firstRecipe, final U secondRecipe) {
         
-        return Services.PLATFORM.doCraftingTableRecipesConflict(manager, firstHolder, secondHolder);
+        return Services.PLATFORM.doCraftingTableRecipesConflict(manager, firstRecipe, secondRecipe);
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super ShapedRecipe> manager, final RegistryAccess registryAccess, final RecipeHolder<ShapedRecipe> holder) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super ShapedRecipe> manager, final RegistryAccess registryAccess, final ShapedRecipe recipe) {
         
-        ShapedRecipe recipe = holder.value();
         final List<IIngredient> ingredients = recipe.getIngredients().stream()
                 .map(IIngredient::fromIngredient)
                 .toList();
@@ -70,7 +69,7 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
     }
     
     @Override
-    public Optional<RecipeHolder<ShapedRecipe>> recompose(final IRecipeManager<? super ShapedRecipe> manager, final RegistryAccess registryAccess, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<ShapedRecipe> recompose(final IRecipeManager<? super ShapedRecipe> manager, final RegistryAccess registryAccess, final IDecomposedRecipe recipe) {
         
         final String group = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.GROUP);
         final CraftingBookCategory category = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.CRAFTING_BOOK_CATEGORY);
@@ -94,7 +93,7 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
         final NonNullList<Ingredient> recipeIngredients = ingredients.stream()
                 .map(IIngredient::asVanillaIngredient)
                 .collect(NonNullList::create, NonNullList::add, NonNullList::addAll);
-        return Optional.of(new RecipeHolder<>(name, new ShapedRecipe(group, category, width, height, recipeIngredients, output.getInternal())));
+        return Optional.of(new ShapedRecipe(group, category, width, height, recipeIngredients, output.getInternal()));
     }
     
 }

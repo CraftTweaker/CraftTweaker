@@ -44,31 +44,31 @@ public final class SmithingTransformRecipeHandler implements IRecipeHandler<Smit
     }
     
     @Override
-    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super SmithingTransformRecipe> manager, final RecipeHolder<SmithingTransformRecipe> firstHolder, final RecipeHolder<U> secondHolder) {
+    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super SmithingTransformRecipe> manager, final SmithingTransformRecipe firstRecipe, final U secondRecipe) {
         
-        if(!(secondHolder.value() instanceof SmithingRecipe)) {
+        if(!(secondRecipe instanceof SmithingRecipe)) {
             return false;
         }
-        return SmithingRecipeConflictChecker.doesConflict(manager, firstHolder, GenericUtil.uncheck(secondHolder));
+        return SmithingRecipeConflictChecker.doesConflict(manager, firstRecipe, GenericUtil.uncheck(secondRecipe));
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super SmithingTransformRecipe> manager, final RegistryAccess registryAccess, final RecipeHolder<SmithingTransformRecipe> holder) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super SmithingTransformRecipe> manager, final RegistryAccess registryAccess, final SmithingTransformRecipe recipe) {
         
-        final AccessSmithingTransformRecipe access = (AccessSmithingTransformRecipe) holder.value();
+        final AccessSmithingTransformRecipe access = (AccessSmithingTransformRecipe) recipe;
         final IIngredient template = IIngredient.fromIngredient(access.crafttweaker$getTemplate());
         final IIngredient base = IIngredient.fromIngredient(access.crafttweaker$getBase());
         final IIngredient addition = IIngredient.fromIngredient(access.crafttweaker$getAddition());
         final IDecomposedRecipe decomposed = IDecomposedRecipe.builder()
                 .with(BuiltinRecipeComponents.Input.INGREDIENTS, List.of(template, base, addition))
-                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(holder.value().getResultItem(registryAccess)))
+                .with(BuiltinRecipeComponents.Output.ITEMS, IItemStack.of(recipe.getResultItem(registryAccess)))
                 .build();
         
         return Optional.of(decomposed);
     }
     
     @Override
-    public Optional<RecipeHolder<SmithingTransformRecipe>> recompose(final IRecipeManager<? super SmithingTransformRecipe> manager, final RegistryAccess registryAccess, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<SmithingTransformRecipe> recompose(final IRecipeManager<? super SmithingTransformRecipe> manager, final RegistryAccess registryAccess, final IDecomposedRecipe recipe) {
         
         final List<IIngredient> ingredients = recipe.getOrThrow(BuiltinRecipeComponents.Input.INGREDIENTS);
         final IItemStack output = recipe.getOrThrowSingle(BuiltinRecipeComponents.Output.ITEMS);
@@ -85,7 +85,7 @@ public final class SmithingTransformRecipeHandler implements IRecipeHandler<Smit
         final Ingredient template = ingredients.get(0).asVanillaIngredient();
         final Ingredient base = ingredients.get(1).asVanillaIngredient();
         final Ingredient addition = ingredients.get(2).asVanillaIngredient();
-        return Optional.of(new RecipeHolder<>(name, new SmithingTransformRecipe(template, base, addition, output.getInternal())));
+        return Optional.of(new SmithingTransformRecipe(template, base, addition, output.getInternal()));
     }
     
 }

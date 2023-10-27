@@ -7,7 +7,6 @@ import com.blamejared.crafttweaker.api.util.IngredientUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 
 import java.util.List;
@@ -15,10 +14,8 @@ import java.util.stream.Collectors;
 
 public final class CraftingTableRecipeConflictChecker {
     
-    public static boolean checkConflicts(final IRecipeManager<?> manager, final RecipeHolder<?> firstHolder, final RecipeHolder<?> secondHolder) {
+    public static boolean checkConflicts(final IRecipeManager<?> manager, final Recipe<?> first, final Recipe<?> second) {
         
-        Recipe<?> first = firstHolder.value();
-        Recipe<?> second = secondHolder.value();
         // Special recipes cannot conflict by definition
         if(first.isSpecial() || second.isSpecial()) {
             return false;
@@ -27,13 +24,13 @@ public final class CraftingTableRecipeConflictChecker {
         // (Shaped, Shapeless) must always be preferred to (Shapeless, Shaped) in this checker.
         if(!(first instanceof IShapedRecipe<?>) && second instanceof IShapedRecipe<?>) {
             
-            return redirect(manager, secondHolder, firstHolder);
+            return redirect(manager, second, first);
         }
         
         return checkConflictsMaybeDifferent(first, second);
     }
     
-    private static <T extends Recipe<?>> boolean redirect(final IRecipeManager<?> manager, final RecipeHolder<T> second, final RecipeHolder<?> first) {
+    private static <T extends Recipe<?>> boolean redirect(final IRecipeManager<?> manager, final T second, final Recipe<?> first) {
         
         // We need another lookup because of the wildcard capture
         return IRecipeHandlerRegistry.getHandlerFor(second).doesConflict(GenericUtil.uncheck(manager), second, first);

@@ -65,17 +65,14 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
     }
     
     @Override
-    public <U extends Recipe<?>> boolean doesConflict(IRecipeManager<? super AbstractCookingRecipe> manager, RecipeHolder<AbstractCookingRecipe> firstHolder, RecipeHolder<U> secondHolder) {
+    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super AbstractCookingRecipe> manager, final AbstractCookingRecipe firstRecipe, final U secondRecipe) {
         
-        return IngredientUtil.canConflict(firstHolder.value().getIngredients().get(0), secondHolder.value()
-                .getIngredients()
-                .get(0));
+        return IngredientUtil.canConflict(firstRecipe.getIngredients().get(0), secondRecipe.getIngredients().get(0));
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(IRecipeManager<? super AbstractCookingRecipe> manager, final RegistryAccess registryAccess, RecipeHolder<AbstractCookingRecipe> holder) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super AbstractCookingRecipe> manager, final RegistryAccess registryAccess, final AbstractCookingRecipe recipe) {
         
-        AbstractCookingRecipe recipe = holder.value();
         final IIngredient ingredient = IIngredient.fromIngredient(recipe.getIngredients().get(0));
         final IDecomposedRecipe decomposition = IDecomposedRecipe.builder()
                 .with(BuiltinRecipeComponents.Metadata.GROUP, recipe.getGroup())
@@ -89,7 +86,7 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
     }
     
     @Override
-    public Optional<RecipeHolder<AbstractCookingRecipe>> recompose(final IRecipeManager<? super AbstractCookingRecipe> manager, final RegistryAccess registryAccess, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<AbstractCookingRecipe> recompose(final IRecipeManager<? super AbstractCookingRecipe> manager, final RegistryAccess registryAccess, final IDecomposedRecipe recipe) {
         
         final String group = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.GROUP);
         final CookingBookCategory category = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.COOKING_BOOK_CATEGORY);
@@ -112,7 +109,7 @@ public final class CookingRecipeHandler implements IRecipeHandler<AbstractCookin
         }
         
         final CookingRecipeFactory<?> factory = LOOKUP.get(manager.getRecipeType()).getSecond();
-        return Optional.of(new RecipeHolder<>(name, factory.create(group, category, input.asVanillaIngredient(), output.getInternal(), experience, cookTime)));
+        return Optional.of(factory.create(group, category, input.asVanillaIngredient(), output.getInternal(), experience, cookTime));
     }
     
 }

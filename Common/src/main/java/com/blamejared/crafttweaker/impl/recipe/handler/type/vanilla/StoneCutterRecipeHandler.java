@@ -32,15 +32,14 @@ public final class StoneCutterRecipeHandler implements IRecipeHandler<Stonecutte
     }
     
     @Override
-    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super StonecutterRecipe> manager, final RecipeHolder<StonecutterRecipe> firstRecipe, final RecipeHolder<U> secondRecipe) {
+    public <U extends Recipe<?>> boolean doesConflict(final IRecipeManager<? super StonecutterRecipe> manager, final StonecutterRecipe firstRecipe, final U secondRecipe) {
         
         return false;
     }
     
     @Override
-    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super StonecutterRecipe> manager, final RegistryAccess registryAccess, final RecipeHolder<StonecutterRecipe> holder) {
+    public Optional<IDecomposedRecipe> decompose(final IRecipeManager<? super StonecutterRecipe> manager, final RegistryAccess registryAccess, final StonecutterRecipe recipe) {
         
-        StonecutterRecipe recipe = holder.value();
         final IIngredient input = IIngredient.fromIngredient(recipe.getIngredients().get(0));
         final IDecomposedRecipe decomposedRecipe = IDecomposedRecipe.builder()
                 .with(BuiltinRecipeComponents.Metadata.GROUP, recipe.getGroup())
@@ -51,12 +50,12 @@ public final class StoneCutterRecipeHandler implements IRecipeHandler<Stonecutte
     }
     
     @Override
-    public Optional<RecipeHolder<StonecutterRecipe>> recompose(final IRecipeManager<? super StonecutterRecipe> manager, final RegistryAccess registryAccess, final ResourceLocation name, final IDecomposedRecipe recipe) {
+    public Optional<StonecutterRecipe> recompose(final IRecipeManager<? super StonecutterRecipe> manager, final RegistryAccess registryAccess, final IDecomposedRecipe recipe) {
         
         final String group = recipe.getOrThrowSingle(BuiltinRecipeComponents.Metadata.GROUP);
         final IIngredient input = recipe.getOrThrowSingle(BuiltinRecipeComponents.Input.INGREDIENTS);
         final IItemStack output = recipe.getOrThrowSingle(BuiltinRecipeComponents.Output.ITEMS);
-        return Optional.of(new RecipeHolder<>(name, new StonecutterRecipe(group, input.asVanillaIngredient(), output.getInternal())));
+        return Optional.of(new StonecutterRecipe(group, input.asVanillaIngredient(), output.getInternal()));
     }
     
 }
