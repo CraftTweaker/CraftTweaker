@@ -14,6 +14,8 @@ public interface CraftTweakerVanillaIngredient {
     
     boolean requiresTesting();
     
+    boolean isEmpty();
+    
     <T extends CraftTweakerVanillaIngredient> CraftTweakerVanillaIngredientSerializer<T> serializer();
     
     default boolean singleton() {

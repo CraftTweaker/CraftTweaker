@@ -34,12 +34,6 @@ public class IngredientConditioned<I extends IIngredient, T extends IIngredientC
         return stack != null && getCrTIngredient().matches(IItemStack.of(stack), true);
     }
     
-//    @Override
-//    public T getCrTIngredient() {
-//
-//        return super.getCrTIngredient();
-//    }
-    
     @SuppressWarnings("unchecked")
     @Override
     public IngredientConditionedSerializer serializer() {

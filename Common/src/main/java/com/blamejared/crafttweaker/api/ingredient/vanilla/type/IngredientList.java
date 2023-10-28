@@ -53,6 +53,12 @@ public class IngredientList implements CraftTweakerVanillaIngredient {
         return requiresTesting;
     }
     
+    @Override
+    public boolean isEmpty() {
+        
+        return getChildren().stream().allMatch(Ingredient::isEmpty);
+    }
+    
     public List<Ingredient> getChildren() {
         
         return children;

@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.gametest;
 
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.util.ClassUtil;
 import com.blamejared.crafttweaker.gametest.framework.FutureJUnitTestFunction;
 import com.blamejared.crafttweaker.gametest.framework.Modifier;
@@ -56,7 +57,7 @@ public class GameTestInitializer implements ICraftTweakerGameTester {
                     String className = aClass.getSimpleName().toLowerCase();
                     String testName = className + "." + method.getName().toLowerCase();
                     String template = annotation.template().isEmpty() ? testName : annotation.template();
-                    String batch = annotation.batch();
+                    String batch = annotation.batch().startsWith(CraftTweakerConstants.MOD_ID + ".") ? annotation.batch() : CraftTweakerConstants.MOD_ID + "." + annotation.batch();
                     Rotation rotation = StructureUtils.getRotationForRotationSteps(annotation.rotationSteps());
                     if(method.isAnnotationPresent(ParameterizedGameTest.class)) {
                         ParameterizedGameTest.Source argumentSource = method.getAnnotation(ParameterizedGameTest.class)

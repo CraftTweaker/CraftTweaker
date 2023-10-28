@@ -52,6 +52,12 @@ public class IngredientAny implements CraftTweakerVanillaIngredient {
         return true;
     }
     
+    @Override
+    public boolean isEmpty() {
+        
+        return false;
+    }
+    
     @SuppressWarnings("unchecked")
     @Override
     public IngredientAnySerializer serializer() {

@@ -69,6 +69,12 @@ public class IngredientPartialTag implements CraftTweakerVanillaIngredient {
         return true;
     }
     
+    @Override
+    public boolean isEmpty() {
+        
+        return stack.isEmpty();
+    }
+    
     public ItemStack getStack() {
         
         return stack;

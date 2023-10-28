@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.ingredient.vanilla.type.IngredientList;
 import com.blamejared.crafttweaker.gametest.CraftTweakerGameTest;
 import com.blamejared.crafttweaker.gametest.framework.annotation.CraftTweakerGameTestHolder;
 import com.blamejared.crafttweaker.gametest.framework.annotation.TestModifier;
+import com.blamejared.crafttweaker.platform.Services;
 import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
@@ -39,10 +40,18 @@ public class IngredientListSerializerTest implements CraftTweakerGameTest {
                     {
                       "item": "minecraft:arrow"
                     },
-                    []
+                    {
+                      "%stype": "crafttweaker:list",
+                      "value": {
+                        "ingredients": [
+                          {
+                            "item": "minecraft:barrel"
+                          }
+                        ]
+                      }
+                    }
                   ]
-                }
-                """)));
+                }""".formatted(Services.PLATFORM.getPlatformName().equals("Fabric") ? "fabric:" : ""))));
     }
     
     @GameTest(template = "crafttweaker:empty")
@@ -58,11 +67,18 @@ public class IngredientListSerializerTest implements CraftTweakerGameTest {
                     {
                       "item": "minecraft:arrow"
                     },
-                    []
+                    {
+                      "%stype": "crafttweaker:list",
+                      "value": {
+                        "ingredients": [
+                          {
+                            "item": "minecraft:barrel"
+                          }
+                        ]
+                      }
+                    }
                   ]
-                }
-                
-                """));
+                }""".formatted(Services.PLATFORM.getPlatformName().equals("Fabric") ? "fabric:" : "")));
         
         List<Ingredient> ingredients = List.of(Ingredient.of(Items.APPLE), Ingredient.of(Items.ARROW), IngredientList.ingredient(List.of(Ingredient.of(Items.BARREL))));
         IngredientList subject = IngredientList.of(ingredients);
