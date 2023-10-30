@@ -13,12 +13,14 @@ import com.blamejared.crafttweaker.api.item.MCItemStack;
 import com.blamejared.crafttweaker.api.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
 import com.blamejared.crafttweaker.api.mod.Mod;
+import com.blamejared.crafttweaker.api.mod.PlatformMod;
 import com.blamejared.crafttweaker.api.recipe.handler.helper.CraftingTableRecipeConflictChecker;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.villager.CTTradeObject;
 import com.blamejared.crafttweaker.impl.loot.CraftTweakerPrivilegedLootModifierMap;
 import com.blamejared.crafttweaker.impl.loot.ForgeLootModifierMapAdapter;
+import com.blamejared.crafttweaker.impl.mod.ForgeMod;
 import com.blamejared.crafttweaker.mixin.common.access.food.AccessFoodPropertiesForge;
 import com.blamejared.crafttweaker.mixin.common.access.forge.AccessForgeInternalHandler;
 import com.blamejared.crafttweaker.mixin.common.access.loot.AccessLootModifierManager;
@@ -61,6 +63,7 @@ import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.forgespi.language.ModFileScanData;
+import net.minecraftforge.forgespi.locating.IModFile;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Type;
 
@@ -191,7 +194,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public <T extends Annotation> Stream<? extends Class<?>> findClassesWithAnnotation(
             final Class<T> annotationClass,
-            final Consumer<Mod> classProviderConsumer,
+            final Consumer<PlatformMod> classProviderConsumer,
             final Predicate<Either<T, Map<String, Object>>> annotationFilter) {
         
         final Type annotationType = Type.getType(annotationClass);
@@ -300,7 +303,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
     
     private <T extends Annotation> Stream<Type> fromScanData(
             final Type annotationType,
-            final Consumer<Mod> classProviderConsumer,
+            final Consumer<PlatformMod> classProviderConsumer,
             final Predicate<Either<T, Map<String, Object>>> annotationFilter,
             final ModFileScanData data) {
         
@@ -311,7 +314,11 @@ public class ForgePlatformHelper implements IPlatformHelper {
                 .peek(ignored -> data.getIModInfoData()
                         .stream()
                         .flatMap(it -> it.getMods().stream())
-                        .map(it -> new Mod(it.getModId(), it.getDisplayName(), it.getVersion().toString()))
+                        .map(it -> {
+                            final Mod mod = new Mod(it.getModId(), it.getDisplayName(), it.getVersion().toString());
+                            final IModFile file = it.getOwningFile().getFile();
+                            return new ForgeMod(mod, file.getFilePath(), file.findResource("").resolve("/"));
+                        })
                         .forEach(classProviderConsumer))
                 .map(ModFileScanData.AnnotationData::clazz);
     }

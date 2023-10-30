@@ -13,9 +13,12 @@ import com.blamejared.crafttweaker.api.item.MCItemStackMutable;
 import com.blamejared.crafttweaker.api.loot.LootModifierManager;
 import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
 import com.blamejared.crafttweaker.api.mod.Mod;
+import com.blamejared.crafttweaker.api.mod.PlatformMod;
 import com.blamejared.crafttweaker.api.recipe.handler.helper.CraftingTableRecipeConflictChecker;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.impl.fluid.SimpleFluidStack;
+import com.blamejared.crafttweaker.impl.mod.FabricMod;
 import com.blamejared.crafttweaker.mixin.AccessFakePlayer;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessBucketItem;
 import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
@@ -35,6 +38,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.MappingResolver;
 import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -58,8 +62,10 @@ import org.reflections.util.ConfigurationBuilder;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -197,7 +203,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
     @Override
     public <T extends Annotation> Stream<? extends Class<?>> findClassesWithAnnotation(
             final Class<T> annotationClass,
-            final Consumer<Mod> classProviderConsumer,
+            final Consumer<PlatformMod> classProviderConsumer,
             final Predicate<Either<T, Map<String, Object>>> annotationFilter
     ) {
         
@@ -208,25 +214,31 @@ public class FabricPlatformHelper implements IPlatformHelper {
                 .peek(it -> this.getModsForClass(it).forEach(classProviderConsumer));
     }
     
-    private List<Mod> getModsForClass(Class<?> clazz) {
+    private List<PlatformMod> getModsForClass(Class<?> clazz) {
         
-        File classFile = new File(clazz.getProtectionDomain().getCodeSource().getLocation().getPath());
-        List<Mod> mods = new ArrayList<>();
+        final Path classFile;
+        try {
+            classFile = Paths.get(clazz.getProtectionDomain().getCodeSource().getLocation().toURI());
+        } catch (final URISyntaxException e) {
+            return List.of();
+        }
+        
         // This doesn't work for the current mod in dev.
         // The origin paths just include build/resources/main, not build/classes/main, but otherwise works great
-        FabricLoader.getInstance()
+        return FabricLoader.getInstance()
                 .getAllMods()
                 .stream()
-                .filter(modContainer -> modContainer.getOrigin().getKind() == ModOrigin.Kind.PATH)
-                .forEach(modContainer -> {
-                    for(Path path : modContainer.getOrigin().getPaths()) {
-                        if(path.toFile().equals(classFile)) {
-                            mods.add(new Mod(modContainer.getMetadata().getId(), modContainer.getMetadata()
-                                    .getName(), modContainer.getMetadata().getVersion().getFriendlyString()));
-                        }
-                    }
-                });
-        return mods;
+                .map(modContainer -> Map.entry(modContainer.getOrigin(), modContainer.getMetadata()))
+                .filter(pair -> pair.getKey().getKind() == ModOrigin.Kind.PATH)
+                .flatMap(pair -> pair.getKey().getPaths().stream().map(path -> Map.entry(path, pair.getValue())))
+                .filter(pair -> pair.getKey().equals(classFile))
+                .map(pair -> {
+                    final ModMetadata metadata = pair.getValue();
+                    final Mod mod = new Mod(metadata.getId(), metadata.getName(), metadata.getVersion().getFriendlyString());
+                    return FabricMod.of(mod, pair.getKey());
+                })
+                .map(GenericUtil::<PlatformMod>uncheck) // Why??
+                .toList();
     }
     
     @Override

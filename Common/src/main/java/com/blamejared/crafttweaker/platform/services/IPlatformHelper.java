@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.ingredient.type.IIngredientTransformed;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
 import com.blamejared.crafttweaker.api.mod.Mod;
+import com.blamejared.crafttweaker.api.mod.PlatformMod;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.villager.CTTradeObject;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessIngredient;
@@ -92,7 +93,7 @@ public interface IPlatformHelper {
      */
     <T extends Annotation> Stream<? extends Class<?>> findClassesWithAnnotation(
             final Class<T> annotationClass,
-            final Consumer<Mod> classProviderConsumer,
+            final Consumer<PlatformMod> classProviderConsumer,
             final Predicate<Either<T, Map<String, Object>>> annotationFilter
     );
     
