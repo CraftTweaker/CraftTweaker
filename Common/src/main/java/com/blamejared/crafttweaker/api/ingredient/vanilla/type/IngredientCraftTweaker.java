@@ -47,7 +47,7 @@ public abstract class IngredientCraftTweaker<T extends IIngredient> implements C
     @Override
     public boolean isEmpty() {
         
-        return getCrTIngredient().isEmpty();
+        return getMatchingStacks().isEmpty();
     }
     
     @Override

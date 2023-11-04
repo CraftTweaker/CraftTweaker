@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ClientCommonPacketListenerImpl.class)
 public abstract class MixinClientPacketListener {
     
-    // TODO 1.20.2 This is now frozen????? We need to use the configuration phase or something??
+    // This was changed to Frozen in 1.20.2, we don't seem to use it, but we may need to move to the configuration phase or something similar
     @Shadow
     protected abstract RegistryAccess.Frozen registryAccess();
     
