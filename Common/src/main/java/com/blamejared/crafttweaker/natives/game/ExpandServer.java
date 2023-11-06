@@ -10,6 +10,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.ServerAdvancementManager;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.Difficulty;
@@ -24,6 +25,11 @@ import java.util.List;
 @NativeTypeRegistration(value = MinecraftServer.class, zenCodeName = "crafttweaker.api.game.Server")
 public class ExpandServer {
     
+    @ZenCodeType.Getter("advancements")
+    public static ServerAdvancementManager getAdvancements(MinecraftServer internal){
+        
+        return internal.getAdvancements();
+    }
     
     @ZenCodeType.Method
     @ZenCodeType.Getter("playerList")

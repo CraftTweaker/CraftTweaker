@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerPlayer;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -13,6 +14,17 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("vanilla/api/entity/type/player/ServerPlayer")
 @NativeTypeRegistration(value = ServerPlayer.class, zenCodeName = "crafttweaker.api.entity.type.player.ServerPlayer")
 public class ExpandServerPlayer {
+    
+    /**
+     * Gets the {@link PlayerAdvancements} for this player.
+     *
+     * @return The {@link PlayerAdvancements} for this player.
+     */
+    @ZenCodeType.Getter("advancements")
+    public static PlayerAdvancements getAdvancements(ServerPlayer internal) {
+        
+        return internal.getAdvancements();
+    }
     
     /**
      * Gets the persistent NBT data for this player.
