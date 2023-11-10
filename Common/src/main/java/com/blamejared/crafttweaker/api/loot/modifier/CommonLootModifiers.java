@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.util.random.Percentaged;
 import com.blamejared.crafttweaker.natives.item.ExpandItemStack;
+import com.blamejared.crafttweaker.natives.loot.ExpandLootContext;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.Util;
 import net.minecraft.world.item.ItemStack;
@@ -544,7 +545,7 @@ public final class CommonLootModifiers {
     
     private static IItemStack ifTool(final IItemStack original, final LootContext context, final Function<IItemStack, IItemStack> toolConsumer) {
         
-        return ifTool(original, (IItemStack) null /* TODO("ExpandLootContext.getTool(context)")*/, toolConsumer);
+        return ifTool(original, ExpandLootContext.getTool(context), toolConsumer);
     }
     
     private static IItemStack ifTool(final IItemStack original, final IItemStack tool, final Function<IItemStack, IItemStack> toolConsumer) {
