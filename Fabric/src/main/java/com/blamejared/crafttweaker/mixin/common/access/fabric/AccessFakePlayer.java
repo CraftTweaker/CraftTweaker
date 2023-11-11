@@ -1,4 +1,4 @@
-package com.blamejared.crafttweaker.mixin;
+package com.blamejared.crafttweaker.mixin.common.access.fabric;
 
 import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.entity.FakePlayer;
