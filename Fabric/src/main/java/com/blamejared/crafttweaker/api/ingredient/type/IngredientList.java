@@ -23,7 +23,7 @@ public class IngredientList implements CustomIngredient {
         this.requiresTesting = children.stream()
                 .filter(CustomIngredient.class::isInstance)
                 .map(CustomIngredient.class::cast)
-                .allMatch(CustomIngredient::requiresTesting);
+                .anyMatch(CustomIngredient::requiresTesting);
     }
     
     @Override
