@@ -23,6 +23,9 @@ public abstract class MixinLootDataManager {
     
     @Inject(method = "apply", at = @At("TAIL"))
     private void crafttweaker$apply$populateLootTableIdField(final Map<LootDataType<?>, Map<ResourceLocation, ?>> $$0, final CallbackInfo ci) {
+        // ****************** IMPORTANT *********************
+        // Code copied in CraftTweakerFabric because Fabric API decided to just fuck up this part of the code
+        // Any changes made here should be made there too
         this.elements.entrySet()
                 .stream()
                 .filter(it -> LootDataType.TABLE.equals(it.getKey().type()))

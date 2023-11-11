@@ -24,7 +24,7 @@ public abstract class MixinLootTable implements ILootTableIdHolder.Mutable {
     @Override
     public void crafttweaker$tableId(final ResourceLocation id) {
         
-        if(crafttweaker$tableId == null) {
+        if(this.crafttweaker$tableId == null) {
             this.crafttweaker$tableId = id;
         }
     }
@@ -38,7 +38,7 @@ public abstract class MixinLootTable implements ILootTableIdHolder.Mutable {
     @Inject(method = "getRandomItemsRaw(Lnet/minecraft/world/level/storage/loot/LootContext;Ljava/util/function/Consumer;)V", at = @At("HEAD"))
     private void crafttweaker$getRandomItemsRaw$populateContextWithTableId(final LootContext $$0, final Consumer<ItemStack> $$1, final CallbackInfo ci) {
         
-        GenericUtil.<ILootTableIdHolder.Mutable> uncheck($$0).crafttweaker$tableId(this.crafttweaker$tableId());
+        GenericUtil.<ILootTableIdHolder.Mutable>uncheck($$0).crafttweaker$tableId(this.crafttweaker$tableId());
     }
     
 }

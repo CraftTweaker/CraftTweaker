@@ -7,6 +7,7 @@
   "mixins": [
     "AccessFakePlayer",
     "common.access.item.AccessBucketItem",
+    "common.access.loot.AccessLootDataManager",
     "common.transform.item.MixinItemStackAttributes",
     "common.transform.loot.MixinLootTableFabric",
     "common.transform.server.MixinServerResources"
