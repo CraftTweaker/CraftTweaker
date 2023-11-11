@@ -16,6 +16,7 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -600,6 +601,72 @@ public final class CommonLootModifiers {
     }
     
     /**
+     * Removes every instance of the targeted {@link IIngredient} from the drops, until the maximum amount of removals
+     * is reached.
+     *
+     * <p>For example, assume the loot drops 2 carrots, 3 potatoes, and 1 iron ingot and that this loot modifier has
+     * been asked to remove 4 edible items. The result of applying the loot modifier will be to remove the 2 carrots and
+     * 2 out of the 3 potatoes, resulting in a final drop list of 1 iron ingot and 1 potato.</p>
+     *
+     * @param target The {@link IIngredient} to remove along with its quantity.
+     * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam target <tag:items:minecraft:wooden_planks> * 2
+     */
+    @ZenCodeType.Method
+    public static ILootModifier removeExactly(final IIngredientWithAmount target) {
+        
+        final IIngredient ingredient = target.getIngredient();
+        final int amount = target.getAmount();
+        
+        if (ingredient.isEmpty() || amount <= 0) {
+            return ILootModifier.DEFAULT;
+        }
+        
+        return (loot, context) -> {
+            int rollingAmount = amount;
+            
+            for (final ListIterator<IItemStack> iterator = loot.listIterator(); iterator.hasNext();) {
+                
+                final IItemStack stack = iterator.next();
+                
+                if (!ingredient.matches(stack)) {
+                    continue;
+                }
+                
+                // We have to remove this item, so there can only be two options: either the entire stack needs to
+                // be removed or only part of it
+                final int stackQuantity = stack.getAmount();
+                rollingAmount -= stackQuantity;
+                
+                // We have three possibilities:
+                // - rollingAmount > 0 --> the entire stack needs to be removed, but we haven't completed our removal
+                //                         process yet, so we need to keep going
+                // - rollingAmount = 0 --> the entire stack needs to be removed, and we have completed the removal
+                //                         process, so we can quit the loop
+                // - rollingAmount < 0 --> only part of the stack needs to be removed, and we have completed the removal
+                //                         process, so we can quit the loop
+                // This means that, if at the end of the process, we get rollingAmount <= 0, we quit the loop and that
+                // the only tricky bit comes from rollingAmount < 0.
+                if (rollingAmount >= 0) {
+                    iterator.remove();
+                } else {
+                    // Due to how Math works, we know that the current negative quantity is the amount of items that
+                    // should be kept in the drop list. This means we can simply change the original stack's quantity
+                    // to -rollingAmount, and we have completed our job.
+                    stack.asMutable().setAmount(-rollingAmount);
+                }
+                
+                if (rollingAmount <= 0) {
+                    break;
+                }
+            }
+            
+            return loot;
+        };
+    }
+    
+    /**
      * Removes every instance of all the targeted {@link IIngredient}s from the drops.
      *
      * @param targets The {@link IIngredient}s to remove.
@@ -612,6 +679,25 @@ public final class CommonLootModifiers {
     public static ILootModifier removeAll(final IIngredient... targets) {
         
         return chaining(Arrays.stream(targets).map(CommonLootModifiers::remove));
+    }
+    
+    /**
+     * Removes every instance of the targeted {@link IIngredient}s from the drops, until the maximum amount of removals
+     * is reached.
+     *
+     * <p>For example, assume the loot drops 2 carrots, 3 potatoes, and 1 iron ingot and that this loot modifier has
+     * been asked to remove 4 edible items. The result of applying the loot modifier will be to remove the 2 carrots and
+     * 2 out of the 3 potatoes, resulting in a final drop list of 1 iron ingot and 1 potato.</p>
+     *
+     * @param targets The {@link IIngredient}s to remove along with their quantity.
+     * @return An {@link ILootModifier} that carries out the operation.
+     *
+     * @docParam target <tag:items:minecraft:wooden_planks> * 2, <item:minecraft:dried_kelp>
+     */
+    @ZenCodeType.Method
+    public static ILootModifier removeExactlyAll(final IIngredientWithAmount... targets) {
+        
+        return chaining(Arrays.stream(targets).map(CommonLootModifiers::removeExactly));
     }
     
     /**
