@@ -18,6 +18,7 @@ import com.blamejared.crafttweaker.api.recipe.handler.helper.CraftingTableRecipe
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.api.villager.CTTradeObject;
+import com.blamejared.crafttweaker.api.villager.trade.type.IBasicItemListing;
 import com.blamejared.crafttweaker.impl.loot.CraftTweakerPrivilegedLootModifierMap;
 import com.blamejared.crafttweaker.impl.loot.ForgeLootModifierMapAdapter;
 import com.blamejared.crafttweaker.impl.mod.ForgeMod;
@@ -427,6 +428,60 @@ public class ForgePlatformHelper implements IPlatformHelper {
         
         //TODO When forge replaces this with something
         return !player.getClass().equals(ServerPlayer.class);//player instanceof FakePlayer;
+    }
+    
+    @Override
+    public ItemStack getBasicTradePrice(IBasicItemListing internal) {
+        
+        if(internal instanceof AccessBasicTrade abt) {
+            return abt.crafttweaker$getPrice();
+        }
+        return IPlatformHelper.super.getBasicTradePrice(internal);
+    }
+    
+    @Override
+    public ItemStack getBasicTradePrice2(IBasicItemListing internal) {
+        
+        if(internal instanceof AccessBasicTrade abt) {
+            return abt.crafttweaker$getPrice2();
+        }
+        return IPlatformHelper.super.getBasicTradePrice2(internal);
+    }
+    
+    @Override
+    public ItemStack getBasicTradeForSale(IBasicItemListing internal) {
+        
+        if(internal instanceof AccessBasicTrade abt) {
+            return abt.crafttweaker$getForSale();
+        }
+        return IPlatformHelper.super.getBasicTradeForSale(internal);
+    }
+    
+    @Override
+    public int getBasicTradeMaxTrades(IBasicItemListing internal) {
+        
+        if(internal instanceof AccessBasicTrade abt) {
+            return abt.crafttweaker$getMaxTrades();
+        }
+        return IPlatformHelper.super.getBasicTradeMaxTrades(internal);
+    }
+    
+    @Override
+    public int getBasicTradeXp(IBasicItemListing internal) {
+        
+        if(internal instanceof AccessBasicTrade abt) {
+            return abt.crafttweaker$getXp();
+        }
+        return IPlatformHelper.super.getBasicTradeXp(internal);
+    }
+    
+    @Override
+    public float getBasicTradePriceMult(IBasicItemListing internal) {
+        
+        if(internal instanceof AccessBasicTrade abt) {
+            return abt.crafttweaker$getPriceMult();
+        }
+        return IPlatformHelper.super.getBasicTradePriceMult(internal);
     }
     
 }
