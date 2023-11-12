@@ -16,14 +16,14 @@ import java.util.function.Consumer;
 @Mixin(LootTable.class)
 public abstract class MixinLootTable {
     
-    @ModifyVariable(method = "getRandomItems(Lnet/minecraft/world/level/storage/loot/LootContext;Ljava/util/function/Consumer;)V", at = @At("HEAD"), argsOnly = true)
-    private Consumer<ItemStack> crafttweaker$getRandomItems$injectCapturingConsumer(final Consumer<ItemStack> original) {
+    @ModifyVariable(method = "getRandomItemsRaw(Lnet/minecraft/world/level/storage/loot/LootContext;Ljava/util/function/Consumer;)V", at = @At("HEAD"), argsOnly = true)
+    private Consumer<ItemStack> crafttweaker$getRandomItemsRaw$injectCapturingConsumer(final Consumer<ItemStack> original, final LootContext ctx) {
         
-        return LootCapturingConsumer.of(original);
+        return LootCapturingConsumer.of(LootTable.createStackSplitter(ctx.getLevel(), original));
     }
     
-    @Inject(method = "getRandomItems(Lnet/minecraft/world/level/storage/loot/LootContext;Ljava/util/function/Consumer;)V", at = @At("TAIL"))
-    private void crafttweaker$getRandomItems$runLootModifiers(final LootContext contextData, final Consumer<ItemStack> stacksOut, final CallbackInfo ci) {
+    @Inject(method = "getRandomItemsRaw(Lnet/minecraft/world/level/storage/loot/LootContext;Ljava/util/function/Consumer;)V", at = @At("TAIL"))
+    private void crafttweaker$getRandomItemsRaw$runLootModifiers(final LootContext contextData, final Consumer<ItemStack> stacksOut, final CallbackInfo ci) {
         
         // Make sure that we do not crash in case another mod wraps our capturing consumer
         if(stacksOut instanceof LootCapturingConsumer capturing) {
