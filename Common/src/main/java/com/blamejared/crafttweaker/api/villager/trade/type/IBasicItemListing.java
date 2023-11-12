@@ -1,19 +1,39 @@
 package com.blamejared.crafttweaker.api.villager.trade.type;
 
+import com.blamejared.crafttweaker.platform.Services;
 import net.minecraft.world.item.ItemStack;
 
 public interface IBasicItemListing {
     
-    ItemStack getPrice();
+    default ItemStack getPrice() {
+        
+        return Services.PLATFORM.getBasicTradePrice(this);
+    }
     
-    ItemStack getPrice2();
     
-    ItemStack getForSale();
+    default ItemStack getPrice2() {
+        
+        return Services.PLATFORM.getBasicTradePrice2(this);
+    }
     
-    int getMaxTrades();
+    default ItemStack getForSale() {
+        
+        return Services.PLATFORM.getBasicTradeForSale(this);
+    }
     
-    int getXp();
+    default int getMaxTrades() {
+        
+        return Services.PLATFORM.getBasicTradeMaxTrades(this);
+    }
     
-    float getPriceMult();
+    default int getXp() {
+        
+        return Services.PLATFORM.getBasicTradeXp(this);
+    }
+    
+    default float getPriceMult() {
+        
+        return Services.PLATFORM.getBasicTradePriceMult(this);
+    }
     
 }

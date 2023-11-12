@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
 import com.blamejared.crafttweaker.api.mod.Mod;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.villager.CTTradeObject;
+import com.blamejared.crafttweaker.api.villager.trade.type.IBasicItemListing;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessIngredient;
 import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
 import com.mojang.authlib.GameProfile;
@@ -14,7 +15,6 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffect;
@@ -149,5 +149,35 @@ public interface IPlatformHelper {
     Stream<GameProfile> fakePlayers();
     
     boolean isFakePlayer(Player player);
+    
+    default ItemStack getBasicTradePrice(IBasicItemListing internal) {
+        
+        throw new UnsupportedOperationException("Unable to get price for '%s'".formatted(internal));
+    }
+    
+    default ItemStack getBasicTradePrice2(IBasicItemListing internal) {
+        
+        throw new UnsupportedOperationException("Unable to get price2 for '%s'".formatted(internal));
+    }
+    
+    default ItemStack getBasicTradeForSale(IBasicItemListing internal) {
+        
+        throw new UnsupportedOperationException("Unable to get forSale for '%s'".formatted(internal));
+    }
+    
+    default int getBasicTradeMaxTrades(IBasicItemListing internal) {
+        
+        throw new UnsupportedOperationException("Unable to get maxTrades for '%s'".formatted(internal));
+    }
+    
+    default int getBasicTradeXp(IBasicItemListing internal) {
+        
+        throw new UnsupportedOperationException("Unable to get xp for '%s'".formatted(internal));
+    }
+    
+    default float getBasicTradePriceMult(IBasicItemListing internal) {
+        
+        throw new UnsupportedOperationException("Unable to get priceMult for '%s'".formatted(internal));
+    }
     
 }
