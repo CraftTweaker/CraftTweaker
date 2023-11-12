@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.loot.modifier.ILootModifier;
 import com.blamejared.crafttweaker.api.mod.Mod;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.villager.CTTradeObject;
+import com.blamejared.crafttweaker.api.villager.IBasicItemListing;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessIngredient;
 import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
 import com.mojang.datafixers.util.Either;
@@ -135,6 +136,36 @@ public interface IPlatformHelper {
             ((AccessIngredient) (Object) ingredient).crafttweaker$setItemStacks(null);
         });
         ingredients.clear();
+    }
+    
+    default ItemStack getBasicTradePrice(IBasicItemListing internal) {
+        
+        throw new UnsupportedOperationException("Unable to get price for '%s'".formatted(internal));
+    }
+    
+    default ItemStack getBasicTradePrice2(IBasicItemListing internal) {
+        
+        throw new UnsupportedOperationException("Unable to get price2 for '%s'".formatted(internal));
+    }
+    
+    default ItemStack getBasicTradeForSale(IBasicItemListing internal) {
+        
+        throw new UnsupportedOperationException("Unable to get forSale for '%s'".formatted(internal));
+    }
+    
+    default int getBasicTradeMaxTrades(IBasicItemListing internal) {
+        
+        throw new UnsupportedOperationException("Unable to get maxTrades for '%s'".formatted(internal));
+    }
+    
+    default int getBasicTradeXp(IBasicItemListing internal) {
+        
+        throw new UnsupportedOperationException("Unable to get xp for '%s'".formatted(internal));
+    }
+    
+    default float getBasicTradePriceMult(IBasicItemListing internal) {
+        
+        throw new UnsupportedOperationException("Unable to get priceMult for '%s'".formatted(internal));
     }
     
 }
