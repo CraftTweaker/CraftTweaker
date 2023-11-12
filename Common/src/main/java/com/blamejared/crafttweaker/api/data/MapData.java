@@ -64,9 +64,11 @@ public class MapData implements IData {
     public void putAll(Map<String, IData> map) {
         
         map.forEach((s, iData) -> {
-            getInternal().put(s, iData.getInternal());
-            if(iData instanceof BoolData) {
-                boolDataKeys.add(s);
+            if(iData != null) {
+                getInternal().put(s, iData.getInternal());
+                if(iData instanceof BoolData) {
+                    boolDataKeys.add(s);
+                }
             }
         });
     }
