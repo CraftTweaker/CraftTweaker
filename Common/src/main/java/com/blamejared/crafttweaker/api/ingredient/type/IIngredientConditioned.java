@@ -68,20 +68,6 @@ public class IIngredientConditioned<T extends IIngredient> implements IIngredien
     }
     
     @Override
-    @ZenCodeType.Caster(implicit = true)
-    public MapData asMapData() {
-        
-        return base.asMapData();
-    }
-    
-    @Override
-    @ZenCodeType.Caster(implicit = true)
-    public IData asIData() {
-        
-        return base.asIData();
-    }
-    
-    @Override
     public boolean equals(Object o) {
         
         if(this == o) {
