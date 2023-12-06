@@ -4,9 +4,10 @@ import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.event.ExplosionDetonateEvent;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.IBlockPos;
+import net.minecraftforge.event.world.ExplosionEvent;
+
 import java.util.List;
 import java.util.stream.Collectors;
-import net.minecraftforge.event.world.ExplosionEvent;
 
 public class MCExplosionDetonateEvent extends MCExplosionEvent implements ExplosionDetonateEvent {
     private ExplosionEvent.Detonate event;
@@ -36,5 +37,17 @@ public class MCExplosionDetonateEvent extends MCExplosionEvent implements Explos
                                 .collect(Collectors.toList());
         }
         return blocks;
+    }
+
+    @Override
+    public void setAffectedEntities(List<IEntity> entities) {
+        event.getAffectedEntities().clear();
+        entities.stream().map(CraftTweakerMC::getEntity).forEach(event.getAffectedEntities()::add);
+    }
+
+    @Override
+    public void setAffectedPositions(List<IBlockPos> positions) {
+        event.getAffectedBlocks().clear();
+        positions.stream().map(CraftTweakerMC::getBlockPos).forEach(event.getAffectedBlocks()::add);
     }
 }
