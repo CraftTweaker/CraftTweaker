@@ -3,10 +3,12 @@ package crafttweaker.api.event;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.world.IBlockPos;
-import java.util.List;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.ZenSetter;
+
+import java.util.List;
 
 /**
  * @author Noob
@@ -21,4 +23,13 @@ public interface ExplosionDetonateEvent extends IExplosionEvent {
     @ZenGetter("affectedPositions")
     @ZenMethod
     List<IBlockPos> getAffectedPositions();
+
+    @ZenSetter("affectedEntities")
+    @ZenMethod
+    void setAffectedEntities(List<IEntity> entities);
+
+    @ZenSetter("affectedPositions")
+    @ZenMethod
+    void setAffectedPositions(List<IBlockPos> positions);
+
 }
