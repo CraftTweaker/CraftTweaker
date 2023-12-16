@@ -1,14 +1,13 @@
 package crafttweaker.mc1120.world;
 
 import crafttweaker.api.entity.IEntityLivingBase;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
 import crafttweaker.api.util.Position3f;
-import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.IBlockPos;
 import crafttweaker.api.world.IExplosion;
 import crafttweaker.api.world.IVector3d;
 import crafttweaker.api.world.IWorld;
-import crafttweaker.mc1120.entity.MCEntityLivingBase;
 import crafttweaker.mc1120.player.MCPlayer;
 import crafttweaker.mc1120.util.MCPosition3f;
 import net.minecraft.util.math.BlockPos;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 
 public class MCExplosion implements IExplosion {
 
-    private Explosion explosion;
+    private final Explosion explosion;
 
     public MCExplosion(Explosion explosion) {
         this.explosion = explosion;
@@ -36,7 +35,7 @@ public class MCExplosion implements IExplosion {
 
     @Override
     public IEntityLivingBase getExplosivePlacedBy() {
-        return new MCEntityLivingBase(explosion.getExplosivePlacedBy());
+        return CraftTweakerMC.getIEntityLivingBase(explosion.getExplosivePlacedBy());
     }
 
     @Override
