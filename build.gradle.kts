@@ -29,7 +29,7 @@ subprojects {
 }
 
 tasks.create("gameTest") {
-    dependsOn(":Fabric:runGameTest", ":Forge:GameTest")
+    dependsOn(":fabric:runGameTest", ":forge:GameTest")
     group = "verification"
 }
 
@@ -53,7 +53,7 @@ tasks.create("postDiscord") {
             val embed = Embed()
             val downloadSources = StringJoiner("\n")
 
-            mapOf(Pair("Fabric", "<:fabric:932163720568782878>"), Pair("Forge", "<:forge:932163698003443804>"))
+            mapOf(Pair("fabric", "<:fabric:932163720568782878>"), Pair("forge", "<:forge:932163698003443804>"))
                     .filter {
                         project(":${it.key}").ext.has("curse_file_url")
                     }.map {
@@ -62,7 +62,7 @@ tasks.create("postDiscord") {
                     }
                     .forEach { downloadSources.add(it) }
 
-            listOf("Common", "Fabric", "Forge")
+            listOf("common", "fabric", "forge")
                     .map { project(":${it}") }
                     .map { "<:maven:932165250738970634> `\"${it.group}:${it.base.archivesName.get()}:${it.version}\"`" }
                     .forEach { downloadSources.add(it) }

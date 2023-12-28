@@ -42,9 +42,9 @@ val excludedProjects = setOf(
 include("ZenCode")
 collectSubProjects("ZenCode")
 
-include("Common")
-include("Fabric")
-include("Forge")
+include("common")
+include("fabric")
+include("forge")
 
 if (file("CraftTweaker-Annotation-Processors").exists()) {
     includeBuild("CraftTweaker-Annotation-Processors") {

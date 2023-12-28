@@ -268,7 +268,7 @@ class DefaultPlugin : Plugin<Project> {
     }
 
     private fun common(project: Project): Project {
-        return project.project(":Common")
+        return project.project(":common")
     }
 
     private fun depJava(project: Project, other: String): JavaPluginExtension {

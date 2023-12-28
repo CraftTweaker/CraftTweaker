@@ -136,12 +136,9 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts 'Common/build/libs/**.jar'
-            archiveArtifacts 'Fabric/build/libs/**.jar'
-            archiveArtifacts 'Forge/build/libs/**.jar'
             junit 'ZenCode/ScriptingExample/build/test-results/**/*.xml'
-            junit 'Fabric/run_game_test/game-test-results.xml'
-            junit 'Forge/run_game_test/game-test-results.xml'
+            junit 'fabric/run_game_test/game-test-results.xml'
+            junit 'forge/run_game_test/game-test-results.xml'
         }
     }
     options {

@@ -58,7 +58,7 @@ class LoaderPlugin : Plugin<Project> {
                 from(commonJava.sourceSets.getByName("main").resources)
             }
 
-            if (project.name == "Forge") {
+            if (project.name == "forge") {
                 withType(Jar::class.java) {
                     finalizedBy("reobfJar")
                 }
@@ -70,7 +70,7 @@ class LoaderPlugin : Plugin<Project> {
     private fun applyDependencies(project: Project) {
         val gametestCompileOnly = project.configurations.getByName("gametestCompileOnly")
 
-        val common = project.project(":Common")
+        val common = project.project(":common")
         val commonJava = common.extensions.getByType(JavaPluginExtension::class.java)
         gametestCompileOnly.dependencies.add(project.dependencies.create(common))
         gametestCompileOnly.dependencies.add(project.dependencies.create(project.files(commonJava.sourceSets.getByName("gametest").java.srcDirs)))
@@ -89,7 +89,7 @@ class LoaderPlugin : Plugin<Project> {
     }
 
     private fun common(project: Project): Project {
-        return project.project(":Common")
+        return project.project(":common")
     }
 
     private fun commonJava(project: Project): JavaPluginExtension {

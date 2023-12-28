@@ -22,7 +22,7 @@ dependencies {
     implementation("org.jetbrains:annotations:23.0.0")
     modImplementation("net.fabricmc:fabric-loader:${Versions.FABRIC_LOADER}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${Versions.FABRIC}")
-    compileOnly(project(":Common"))
+    compileOnly(project(":common"))
 
     modLocalRuntime("me.shedaniel:RoughlyEnoughItems-api-fabric:${Versions.REI}") {
         exclude("net.fabricmc", "fabric-loader")
@@ -36,14 +36,14 @@ dependencies {
 
     modImplementation("com.faux.fauxcustomentitydata:FauxCustomEntityData-fabric-${Versions.MINECRAFT}:${Versions.FAUX_CUSTOM_ENTITY_DATA}")
 
-    gametestCompileOnly(files(project(":Common").dependencyProject.sourceSets.gametest.get().java.srcDirs))
+    gametestCompileOnly(files(project(":common").dependencyProject.sourceSets.gametest.get().java.srcDirs))
     Dependencies.ZENCODE_TEST.forEach {
         gametestImplementation(project(it).dependencyProject.sourceSets.test.get().output)
     }
 }
 
 loom {
-    accessWidenerPath.set(project(":Common").file("src/main/resources/${Properties.MOD_ID}.accesswidener"))
+    accessWidenerPath.set(project(":common").file("src/main/resources/${Properties.MOD_ID}.accesswidener"))
     mixin {
         this.defaultRefmapName.set("${Properties.MOD_ID}.refmap.json")
     }

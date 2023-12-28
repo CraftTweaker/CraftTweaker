@@ -25,7 +25,7 @@ mixin {
 
 dependencies {
     "minecraft"("net.minecraftforge:forge:${Versions.MINECRAFT}-${Versions.FORGE}")
-    compileOnly(project(":Common"))
+    compileOnly(project(":common"))
     compileOnly(fg.deobf("mezz.jei:jei-${Versions.MINECRAFT}-common-api:${Versions.JEI}"))
     compileOnly(fg.deobf("mezz.jei:jei-${Versions.MINECRAFT}-forge-api:${Versions.JEI}"))
     localOnlyRuntime(fg.deobf("mezz.jei:jei-${Versions.MINECRAFT}-forge:${Versions.JEI}"))
@@ -57,7 +57,7 @@ minecraft {
             mods {
                 create(Properties.MOD_ID) {
                     source(sourceSets.main.get())
-                    source(project(":Common").sourceSets.main.get())
+                    source(project(":common").sourceSets.main.get())
                     Dependencies.ZENCODE.forEach {
                         source(project(it).sourceSets.main.get())
                     }
@@ -73,7 +73,7 @@ minecraft {
             mods {
                 create(Properties.MOD_ID) {
                     source(sourceSets.main.get())
-                    source(project(":Common").sourceSets.main.get())
+                    source(project(":common").sourceSets.main.get())
                     Dependencies.ZENCODE.forEach {
                         source(project(it).sourceSets.main.get())
                     }
@@ -98,7 +98,7 @@ minecraft {
             mods {
                 create(Properties.MOD_ID) {
                     source(sourceSets.main.get())
-                    source(project(":Common").sourceSets.main.get())
+                    source(project(":common").sourceSets.main.get())
                     Dependencies.ZENCODE.forEach {
                         source(project(it).sourceSets.main.get())
                     }
@@ -117,8 +117,8 @@ minecraft {
                     source(sourceSets.main.get())
                     source(sourceSets.gametest.get())
 
-                    source(project(":Common").sourceSets.main.get())
-                    source(project(":Common").sourceSets.gametest.get())
+                    source(project(":common").sourceSets.main.get())
+                    source(project(":common").sourceSets.gametest.get())
 
                     Dependencies.ZENCODE.forEach {
                         source(project(it).sourceSets.main.get())
@@ -148,7 +148,6 @@ tasks.create<TaskPublishCurseForge>("publishCurseForge") {
     mainFile.changelog = GMUtils.smallChangelog(project, Properties.GIT_REPO)
     mainFile.releaseType = CFG_Constants.RELEASE_TYPE_RELEASE
     mainFile.addJavaVersion("Java ${Versions.MOD_JAVA}")
-//    mainFile.addRequirement("jeitweaker")
 
     doLast {
         project.ext.set("curse_file_url", "${Properties.CURSE_HOMEPAGE_LINK}/files/${mainFile.curseFileId}")
