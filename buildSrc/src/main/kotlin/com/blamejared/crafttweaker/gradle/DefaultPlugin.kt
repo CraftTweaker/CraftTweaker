@@ -186,7 +186,6 @@ class DefaultPlugin : Plugin<Project> {
                 outputs.upToDateWhen { false }
             }
 
-            @Suppress("UnstableApiUsage")
             withType(ProcessResources::class.java) {
                 outputs.upToDateWhen { false }
                 dependsOn(":StdLibs:zipItUp")
