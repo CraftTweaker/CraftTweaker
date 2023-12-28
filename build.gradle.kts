@@ -16,7 +16,7 @@ version = GMUtils.updatingVersion(Versions.MOD)
 
 tasks.wrapper {
     //Define wrapper values here to not have to always do so when updating gradlew.properties
-    gradleVersion = "8.1.1"
+    gradleVersion = "8.5"
     distributionType = Wrapper.DistributionType.BIN
 }
 

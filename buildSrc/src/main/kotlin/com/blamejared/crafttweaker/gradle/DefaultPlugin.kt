@@ -1,9 +1,6 @@
 package com.blamejared.crafttweaker.gradle
 
 import com.blamejared.gradle.mod.utils.GMUtils
-import groovy.namespace.QName
-import groovy.util.Node
-import groovy.util.NodeList
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -132,7 +129,6 @@ class DefaultPlugin : Plugin<Project> {
                     }
                 }
                 create("gametest") {
-
                     resources {
                         srcDirs.add(project.file("src/gametest/resources"))
                     }

@@ -35,7 +35,7 @@ dependencies {
 }
 
 minecraft {
-    mappings("parchment", "1.19.3-${Versions.PARCHMENT}-${Versions.MINECRAFT}")
+    mappings("parchment", "${Versions.PARCHMENT_MINECRAFT}-${Versions.PARCHMENT}-${Versions.MINECRAFT}")
     accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg"))
 
     runs {
