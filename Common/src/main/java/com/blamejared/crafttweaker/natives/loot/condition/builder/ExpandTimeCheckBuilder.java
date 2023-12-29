@@ -18,11 +18,4 @@ public final class ExpandTimeCheckBuilder {
         return internal.setPeriod(period);
     }
     
-    // TODO workaround for ZC JFITI issues
-    @ZenCodeType.Caster(implicit = true)
-    public static LootItemCondition asSupplier(TimeCheck.Builder internal) {
-        
-        return internal.build();
-    }
-    
 }

@@ -38,11 +38,4 @@ public final class ExpandLootItemConditionBuilder {
         return internal.invert();
     }
     
-    // TODO workaround for ZC JFITI issues
-    @ZenCodeType.Caster(implicit = true)
-    public static LootItemCondition asSupplier(LootItemCondition.Builder internal) {
-        
-        return internal.build();
-    }
-    
 }

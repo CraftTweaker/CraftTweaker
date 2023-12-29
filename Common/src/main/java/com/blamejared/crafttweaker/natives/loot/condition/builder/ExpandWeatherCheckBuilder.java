@@ -24,11 +24,4 @@ public final class ExpandWeatherCheckBuilder {
         return internal.setThundering(thundering);
     }
     
-    // TODO workaround for ZC JFITI issues
-    @ZenCodeType.Caster(implicit = true)
-    public static LootItemCondition asSupplier(WeatherCheck.Builder internal) {
-        
-        return internal.build();
-    }
-    
 }
