@@ -2,9 +2,11 @@ package com.blamejared.crafttweaker.api.ingredient.vanilla.type;
 
 import com.blamejared.crafttweaker.api.ingredient.vanilla.serializer.CraftTweakerVanillaIngredientSerializer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public interface CraftTweakerVanillaIngredient {
     
@@ -17,6 +19,11 @@ public interface CraftTweakerVanillaIngredient {
     boolean isEmpty();
     
     <T extends CraftTweakerVanillaIngredient> CraftTweakerVanillaIngredientSerializer<T> serializer();
+    
+    default Stream<Ingredient.Value> values() {
+        
+        return getMatchingStacks().stream().map(Ingredient.ItemValue::new);
+    }
     
     default boolean singleton() {
         

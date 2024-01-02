@@ -7,7 +7,6 @@
   "mixins": [
     "common.access.brewing.AccessBrewingRecipeRegistry",
     "common.access.brewing.AccessPotionBrewing",
-//    "common.access.entity.AccessFakePlayerFactory",
     "common.access.food.AccessFoodPropertiesForge",
     "common.access.forge.AccessForgeInternalHandler",
     "common.access.loot.AccessLootModifierManager",

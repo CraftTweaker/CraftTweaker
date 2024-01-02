@@ -4,6 +4,7 @@ import com.blamejared.gradle.mod.utils.GMUtils
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 import org.gradle.api.plugins.BasePlugin
@@ -148,7 +149,7 @@ class DefaultPlugin : Plugin<Project> {
                 this.options.compilerArgs.add("-Acrafttweaker.processor.document.multi_source=true")
             }
 
-            withType<JavaCompile> {
+            withType<JavaCompile>().matching { notNeoTask(it) }.configureEach {
                 this.options.encoding = StandardCharsets.UTF_8.toString()
                 this.options.release.set(Versions.MOD_JAVA.toInt())
                 Dependencies.ZENCODE.forEach {
@@ -157,7 +158,7 @@ class DefaultPlugin : Plugin<Project> {
 
             }
 
-            withType<Javadoc> {
+            withType<Javadoc>().matching { notNeoTask(it) }.configureEach {
                 options {
                     encoding = StandardCharsets.UTF_8.toString()
                     // Javadoc defines this specifically as StandardJavadocDocletOptions
@@ -180,9 +181,17 @@ class DefaultPlugin : Plugin<Project> {
 
             named("compileGametestJava", JavaCompile::class.java) {
                 outputs.upToDateWhen { false }
+                if(this.project.name.equals("neoforge")) {
+                    Dependencies.ZENCODE.forEach {
+                        source(depJava(project, it).sourceSets.getByName("main").allSource)
+                    }
+                    Dependencies.ZENCODE_TEST.forEach {
+                        source(depJava(project, it).sourceSets.getByName("test").allSource)
+                    }
+                }
             }
 
-            withType(ProcessResources::class.java) {
+            withType(ProcessResources::class.java).matching { notNeoTask(it) }.configureEach {
                 outputs.upToDateWhen { false }
                 dependsOn(":StdLibs:zipItUp")
                 from(project.files(project.evaluationDependsOn(":StdLibs").tasks.getByName("zipItUp").outputs))
@@ -193,7 +202,7 @@ class DefaultPlugin : Plugin<Project> {
                 }
             }
 
-            withType<Jar>().configureEach {
+            withType<Jar>().matching { notNeoTask(it) }.configureEach {
                 manifest {
                     attributes["Specification-Title"] = Properties.MOD_NAME
                     attributes["Specification-Vendor"] = Properties.MOD_AUTHOR
@@ -220,6 +229,14 @@ class DefaultPlugin : Plugin<Project> {
         project.configurations.getByName("implementation").extendsFrom(library)
 
         project.configurations.getByName("runtimeClasspath").extendsFrom(localOnlyRuntime)
+        project.configurations.getByName("gametestRuntimeClasspath").extendsFrom(gametestLibrary)
+        // fabric loader 0.15 adds mixinextras which causes a crash due to us pulling in other ASM versions from ZC
+        project.configurations.all {
+            resolutionStrategy {
+                force("org.ow2.asm:asm:9.6")
+                force("org.ow2.asm:asm-commons:9.6")
+            }
+        }
     }
 
     private fun applyDependencies(project: Project) {
@@ -230,6 +247,7 @@ class DefaultPlugin : Plugin<Project> {
 
         gametestLibrary.dependencies.add(project.dependencies.create("org.hamcrest:hamcrest:${Versions.HAMCREST}"))
         gametestLibrary.dependencies.add(project.dependencies.create("org.junit.jupiter:junit-jupiter-engine:${Versions.JUPITER_ENGINE}"))
+        gametestLibrary.dependencies.add(project.dependencies.create("org.junit.jupiter:junit-jupiter-params:${Versions.JUPITER_ENGINE}"))
         gametestLibrary.dependencies.add(project.dependencies.create("org.junit.platform:junit-platform-launcher:${Versions.JUNIT_PLATFORM_LAUNCHER}"))
 
         Dependencies.ZENCODE.forEach {
@@ -265,6 +283,10 @@ class DefaultPlugin : Plugin<Project> {
         publishing.repositories {
             maven("file:///${System.getenv("local_maven")}")
         }
+    }
+
+    private fun notNeoTask(task: Task): Boolean {
+        return !task.name.startsWith("neo")
     }
 
     private fun common(project: Project): Project {

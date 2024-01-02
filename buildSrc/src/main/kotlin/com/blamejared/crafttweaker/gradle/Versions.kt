@@ -8,12 +8,16 @@ object Versions {
     const val ZENCODE_JAVA = "8"
 
     const val MINECRAFT = "1.20.2"
-    const val FORGE = "48.1.0"
     const val FABRIC = "0.91.2+1.20.2"
     const val FABRIC_LOADER = "0.15.3"
+
+    const val FORGE = "48.1.0"
+
+    const val NEO_FORGE = "20.2.86"
+
+    const val MIXIN = "0.8.5"
     const val PARCHMENT_MINECRAFT = MINECRAFT
     const val PARCHMENT = "2023.12.10"
-    const val MIXIN = "0.8.5"
 
     const val CRAFTTWEAKER_ANNOTATION_PROCESSOR = "3.0.0.16"
     const val HAMCREST = "2.2"

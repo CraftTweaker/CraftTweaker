@@ -22,7 +22,7 @@ public final class CraftTweakerConstants {
      * This is not the mod version, this is specifically for the network!!
      */
     public static final int NETWORK_VERSION = 1;
-    
+    public static final String NETWORK_VERSION_STRING = String.valueOf(NETWORK_VERSION);
     public static final UUID CRAFTTWEAKER_UUID = UUID.nameUUIDFromBytes(MOD_ID.getBytes());
     
     public static final ResourceLocation RELOAD_LISTENER_SOURCE_ID = CraftTweakerConstants.rl("reload_listener");

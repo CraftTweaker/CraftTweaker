@@ -18,12 +18,4 @@ public final class ExpandAnyOfConditionBuilder {
         return internal.or(condition);
     }
     
-    
-    // TODO workaround for ZC JFITI issues
-    @ZenCodeType.Caster(implicit = true)
-    public static LootItemCondition asSupplier(AnyOfCondition.Builder internal) {
-        
-        return internal.build();
-    }
-    
 }

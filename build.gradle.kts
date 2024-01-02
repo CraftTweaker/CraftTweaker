@@ -10,6 +10,7 @@ import java.util.*
 plugins {
     java
     idea
+    id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
 }
 
 version = GMUtils.updatingVersion(Versions.MOD)
@@ -34,15 +35,13 @@ tasks.create("gameTest") {
 }
 
 tasks.create("postDiscord") {
-
+    val taskName = "publishCurseForge"
+    dependsOn(":fabric:${taskName}", ":forge:${taskName}", ":neoforge:${taskName}")
     doLast {
         try {
 
             // Create a new webhook instance for Discord
-            val webhook = Webhook(
-                    System.getenv("discordCFWebhook"),
-                    "${Properties.MOD_NAME} CurseForge Gradle Upload"
-            )
+            val webhook = Webhook(GMUtils.locateProperty(project, "discordCFWebhook"), "${Properties.MOD_NAME} CurseForge Gradle Upload")
 
             // Craft a message to send to Discord using the webhook.
             val message = Message()
@@ -53,20 +52,16 @@ tasks.create("postDiscord") {
             val embed = Embed()
             val downloadSources = StringJoiner("\n")
 
-            mapOf(Pair("fabric", "<:fabric:932163720568782878>"), Pair("forge", "<:forge:932163698003443804>"))
+            mapOf(Pair("fabric", "<:fabric:932163720568782878>"), Pair("forge", "<:forge:932163698003443804>"), Pair("neoforge", "<:neoforged:1184738260371644446>"))
                     .filter {
                         project(":${it.key}").ext.has("curse_file_url")
-                    }.map {
-                        val capitalizedName = it.key.capitalize()
-                        "${it.value} [$capitalizedName](${project(":${it.key}").ext.get("curse_file_url")})"
-                    }
+                    }.map { "${it.value} [${it.key.capitalize(Locale.ENGLISH)}](${project(":${it.key}").ext.get("curse_file_url")})" }
                     .forEach { downloadSources.add(it) }
 
-            listOf("common", "fabric", "forge")
+            listOf("common", "fabric", "forge", "neoforge")
                     .map { project(":${it}") }
                     .map { "<:maven:932165250738970634> `\"${it.group}:${it.base.archivesName.get()}:${it.version}\"`" }
                     .forEach { downloadSources.add(it) }
-
 
             // Add Curseforge DL link if available.
             val downloadString = downloadSources.toString()
@@ -76,7 +71,6 @@ tasks.create("postDiscord") {
                 embed.addField("Download", downloadString, false)
             }
 
-            // Just use the Forge changelog for now, the files are the same anyway.
             embed.addField("Changelog", GMUtils.smallChangelog(project, Properties.GIT_REPO).take(1000), false)
 
             embed.color = 0xF16436
@@ -86,6 +80,7 @@ tasks.create("postDiscord") {
         } catch (e: IOException) {
 
             project.logger.error("Failed to push CF Discord webhook.")
+            project.file("post_discord_error.log").writeText(e.stackTraceToString())
         }
     }
 

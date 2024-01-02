@@ -19,11 +19,4 @@ public final class ExpandLootItemBlockStatePropertyConditionBuilder {
         return builder.setProperties(predicate);
     }
     
-    // TODO workaround for ZC JFITI issues
-    @ZenCodeType.Caster(implicit = true)
-    public static LootItemCondition asSupplier(LootItemBlockStatePropertyCondition.Builder internal) {
-        
-        return internal.build();
-    }
-    
 }

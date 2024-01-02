@@ -28,10 +28,10 @@ public class IngredientListSerializerTest implements CraftTweakerGameTest {
         
         List<Ingredient> ingredients = List.of(Ingredient.of(Items.APPLE), Ingredient.of(Items.ARROW), IngredientList.ingredient(List.of(Ingredient.of(Items.BARREL))));
         IngredientList subject = IngredientList.of(ingredients);
-        DataResult<JsonElement> encodeResult = encode(IngredientListSerializer.CODEC, subject);
-        JsonElement jsonResult = encodeResult.getOrThrow(false, this::fail);
-        assertThat(jsonResult.isJsonObject(), is(true));
-        assertThat(jsonResult.getAsJsonObject(), is(parseJson("""
+        
+        boolean isFabric = Services.PLATFORM.getPlatformName().equals("Fabric");
+        boolean isNeoForge = Services.PLATFORM.getPlatformName().equals("NeoForge");
+        String expected = """
                 {
                   "ingredients": [
                     {
@@ -51,14 +51,41 @@ public class IngredientListSerializerTest implements CraftTweakerGameTest {
                       }
                     }
                   ]
-                }""".formatted(Services.PLATFORM.getPlatformName().equals("Fabric") ? "fabric:" : ""))));
+                }""".formatted(isFabric ? "fabric:" : "");
+        if(isNeoForge) {
+            expected = """
+                    {
+                      "ingredients": [
+                        {
+                          "item": "minecraft:apple"
+                        },
+                        {
+                          "item": "minecraft:arrow"
+                        },
+                        {
+                          "type": "crafttweaker:list",
+                          "ingredients": [
+                            {
+                              "item": "minecraft:barrel"
+                            }
+                          ]
+                        }
+                      ]
+                    }""";
+        }
+        DataResult<JsonElement> encodeResult = encode(IngredientListSerializer.CODEC, subject);
+        JsonElement jsonResult = encodeResult.getOrThrow(false, this::fail);
+        assertThat(jsonResult.isJsonObject(), is(true));
+        assertThat(jsonResult.getAsJsonObject(), is(parseJson(expected)));
     }
     
     @GameTest(template = "crafttweaker:empty")
     @TestModifier(implicitSuccession = true)
     public void testCodecDecode(GameTestHelper helper) {
         
-        DataResult<Pair<IngredientList, JsonElement>> decode = decode(IngredientListSerializer.CODEC, parseJson("""
+        boolean isFabric = Services.PLATFORM.getPlatformName().equals("Fabric");
+        boolean isNeoForge = Services.PLATFORM.getPlatformName().equals("NeoForge");
+        String actual = """
                 {
                   "ingredients": [
                     {
@@ -78,7 +105,30 @@ public class IngredientListSerializerTest implements CraftTweakerGameTest {
                       }
                     }
                   ]
-                }""".formatted(Services.PLATFORM.getPlatformName().equals("Fabric") ? "fabric:" : "")));
+                }""".formatted(isFabric ? "fabric:" : "");
+        if(isNeoForge) {
+            actual = """
+                    {
+                      "ingredients": [
+                        {
+                          "item": "minecraft:apple"
+                        },
+                        {
+                          "item": "minecraft:arrow"
+                        },
+                        {
+                          "type": "crafttweaker:list",
+                          "ingredients": [
+                            {
+                              "item": "minecraft:barrel"
+                            }
+                          ]
+                        }
+                      ]
+                    }""";
+        }
+        
+        DataResult<Pair<IngredientList, JsonElement>> decode = decode(IngredientListSerializer.CODEC, parseJson(actual));
         
         List<Ingredient> ingredients = List.of(Ingredient.of(Items.APPLE), Ingredient.of(Items.ARROW), IngredientList.ingredient(List.of(Ingredient.of(Items.BARREL))));
         IngredientList subject = IngredientList.of(ingredients);

@@ -3,6 +3,9 @@ import java.io.FileFilter
 pluginManagement {
     repositories {
         gradlePluginPortal()
+        maven("https://maven.neoforged.net/releases") {
+            name = "NeoForge"
+        }
         maven("https://maven.fabricmc.net/") {
             name = "Fabric"
         }
@@ -45,6 +48,7 @@ collectSubProjects("ZenCode")
 include("common")
 include("fabric")
 include("forge")
+include("neoforge")
 
 if (file("CraftTweaker-Annotation-Processors").exists()) {
     includeBuild("CraftTweaker-Annotation-Processors") {

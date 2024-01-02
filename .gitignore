@@ -23,6 +23,7 @@ eclipse
 run
 run_server
 run_game_test
+runs
 
 docsOut
 

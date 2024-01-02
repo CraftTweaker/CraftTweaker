@@ -1,0 +1,25 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.blamejared.crafttweaker.mixin",
+  "refmap": "crafttweaker.refmap.json",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "common.access.brewing.AccessBrewingRecipeRegistry",
+    "common.access.brewing.AccessPotionBrewing",
+    "common.access.entity.AccessFakePlayerFactory",
+    "common.access.food.AccessFoodPropertiesNeoForge",
+    "common.access.neoforge.AccessNeoForgeInternalHandler",
+    "common.access.loot.AccessLootModifierManager",
+    "common.access.villager.AccessBasicTrade",
+    "common.transform.item.attribute.MixinItemAttributeModifierEvent",
+    "common.transform.villager.MixinBasicTrade"
+  ],
+  "client": [
+  ],
+  "server": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

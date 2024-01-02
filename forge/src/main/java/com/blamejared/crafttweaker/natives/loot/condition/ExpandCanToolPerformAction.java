@@ -1,5 +1,5 @@
 package com.blamejared.crafttweaker.natives.loot.condition;
-/*
+
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
@@ -15,7 +15,8 @@ public final class ExpandCanToolPerformAction {
     
     @ZenCodeType.StaticExpansionMethod
     public static LootItemCondition.Builder create(final ToolAction action) {
+        
         return CanToolPerformAction.canToolPerformAction(action);
     }
+    
 }
-*/

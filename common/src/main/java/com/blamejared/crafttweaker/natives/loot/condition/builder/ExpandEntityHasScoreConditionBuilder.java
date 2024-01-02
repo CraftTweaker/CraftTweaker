@@ -19,10 +19,4 @@ public final class ExpandEntityHasScoreConditionBuilder {
         return internal.withScore(name, range);
     }
     
-    // TODO workaround for ZC JFITI issues
-    @ZenCodeType.Caster(implicit = true)
-    public static LootItemCondition asSupplier(EntityHasScoreCondition.Builder internal) {
-        
-        return internal.build();
-    }
 }

@@ -4,6 +4,7 @@ import com.blamejared.gradle.mod.utils.GradleModUtilsPlugin
 import com.blamejared.gradle.mod.utils.extensions.VersionTrackerExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.compile.JavaCompile
@@ -29,15 +30,15 @@ class LoaderPlugin : Plugin<Project> {
         val commonJava = commonJava(project)
 
         project.tasks {
-            withType<ProcessResources> {
+            withType<ProcessResources>().matching { notNeoTask(it) }.configureEach {
                 from(commonJava.sourceSets.getByName("main").resources)
             }
 
-            withType<JavaCompile> {
+            withType<JavaCompile>().matching { notNeoTask(it) }.configureEach  {
                 source(commonJava(project).sourceSets.getByName("main").allSource)
             }
 
-            withType<Javadoc> {
+            withType<Javadoc>().matching { notNeoTask(it) }.configureEach  {
                 source(commonJava(project).sourceSets.getByName("main").allJava)
             }
 
@@ -52,10 +53,6 @@ class LoaderPlugin : Plugin<Project> {
             named("processGametestResources", ProcessResources::class.java) {
                 outputs.upToDateWhen { false }
                 from(commonJava.sourceSets.getByName("gametest").resources)
-            }
-
-            withType(ProcessResources::class.java) {
-                from(commonJava.sourceSets.getByName("main").resources)
             }
 
             if (project.name == "forge") {
@@ -86,6 +83,10 @@ class LoaderPlugin : Plugin<Project> {
             author.set(Properties.MOD_AUTHOR)
             projectName.set(Properties.MOD_NAME)
         }
+    }
+
+    private fun notNeoTask(task: Task): Boolean {
+        return !task.name.startsWith("neo")
     }
 
     private fun common(project: Project): Project {
