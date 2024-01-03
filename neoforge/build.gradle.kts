@@ -59,7 +59,7 @@ runs {
 dependencies {
     implementation("net.neoforged:neoforge:${Versions.NEO_FORGE}")
     compileOnly(project(":common"))
-    runtimeOnly("me.shedaniel:RoughlyEnoughItems-neoforge:${Versions.REI}")
+    localOnlyRuntime("me.shedaniel:RoughlyEnoughItems-neoforge:${Versions.REI}")
 }
 
 tasks.create<TaskPublishCurseForge>("publishCurseForge") {
