@@ -7,6 +7,7 @@ import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.repositories.MavenArtifactRepository
+import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.plugins.BasePluginExtension
 import org.gradle.api.plugins.JavaLibraryPlugin
@@ -189,6 +190,21 @@ class DefaultPlugin : Plugin<Project> {
                         source(depJava(project, it).sourceSets.getByName("test").allSource)
                     }
                 }
+                if (this.project.name.equals("forge")) {
+                    project.copy {
+                        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+                        from(java(project).sourceSets.getByName("gametest").output)
+                        Dependencies.ZENCODE.forEach {
+                            from(depJava(project, it).sourceSets.getByName("main").output)
+                        }
+                        Dependencies.ZENCODE_TEST.forEach {
+                            from(depJava(project, it).sourceSets.getByName("test").output)
+                        }
+                        into(project.layout.buildDirectory.dir("sourcesSets/main"))
+                    }
+
+                }
+
             }
 
             withType(ProcessResources::class.java).matching { notNeoTask(it) }.configureEach {
@@ -317,5 +333,8 @@ class DefaultPlugin : Plugin<Project> {
 
     private fun depJava(project: Project, other: String): JavaPluginExtension {
         return project.project(other).extensions.getByType(JavaPluginExtension::class.java)
+    }
+    private fun java(project: Project):JavaPluginExtension {
+        return project.extensions.getByType(JavaPluginExtension::class.java)
     }
 }

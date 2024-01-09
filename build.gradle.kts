@@ -30,7 +30,7 @@ subprojects {
 }
 
 tasks.create("gameTest") {
-    dependsOn(":fabric:runGameTest", ":forge:GameTest")
+    dependsOn(":fabric:runGameTest", ":forge:GameTest", ":neoforge:runGameTestServer")
     group = "verification"
 }
 

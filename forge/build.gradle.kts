@@ -32,6 +32,10 @@ dependencies {
 
     annotationProcessor("org.spongepowered:mixin:${Versions.MIXIN}-SNAPSHOT:processor")
 
+    library("org.hamcrest:hamcrest:${Versions.HAMCREST}")
+    library("org.junit.jupiter:junit-jupiter-engine:${Versions.JUPITER_ENGINE}")
+    library("org.junit.jupiter:junit-jupiter-params:${Versions.JUPITER_ENGINE}")
+    library("org.junit.platform:junit-platform-launcher:${Versions.JUNIT_PLATFORM_LAUNCHER}")
 }
 
 minecraft {
@@ -133,7 +137,7 @@ minecraft {
 }
 
 sourceSets.configureEach {
-    val dir = layout.buildDirectory.dir("sourcesSets/$this.name")
+    val dir = layout.buildDirectory.dir("sourcesSets/${this.name}")
     this.output.setResourcesDir(dir)
     this.java.destinationDirectory.set(dir)
 }
