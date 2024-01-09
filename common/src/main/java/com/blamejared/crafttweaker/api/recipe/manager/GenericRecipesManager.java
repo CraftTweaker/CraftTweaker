@@ -222,19 +222,6 @@ public class GenericRecipesManager {
     }
     
     /**
-     * Removes all recipes with this name.
-     *
-     * @param name The recipe name to remove
-     *
-     * @deprecated Use {@link #removeByName(String...)} instead
-     */
-    @Deprecated(forRemoval = true)
-    public void removeByName(String name) {
-        
-        CraftTweakerAPI.apply(new ActionRemoveGenericRecipeByName(name));
-    }
-    
-    /**
      * Remove recipes based on Registry names
      *
      * @param names registry names of recipes to remove

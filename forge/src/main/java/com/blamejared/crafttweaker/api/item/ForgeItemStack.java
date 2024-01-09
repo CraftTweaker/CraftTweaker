@@ -48,19 +48,4 @@ public interface ForgeItemStack extends IItemStack {
         return IItemStack.of(stack.getInternal().getCraftingRemainingItem());
     }
     
-    /**
-     * Checks if this item can perform the given ToolAction.
-     *
-     * @param action The action to perform.
-     *
-     * @return True if it can perform the action, false otherwise.
-     *
-     * @deprecated Method has been moved to an expansion, so it exists in IItemStack for scripters, and ExpandIItemStackForge for modders.
-     */
-    @Deprecated(forRemoval = true)
-    default boolean canPerformAction(ToolAction action) {
-        
-        return getInternal().canPerformAction(action);
-    }
-    
 }

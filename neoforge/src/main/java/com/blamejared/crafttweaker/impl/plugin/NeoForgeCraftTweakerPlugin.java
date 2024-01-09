@@ -30,9 +30,8 @@ public class NeoForgeCraftTweakerPlugin implements ICraftTweakerPlugin {
                     CraftTweakerCommon.logger().info("{}", toLog);
                 });
                 
-                CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.tool_tiers")), CommandUtilities.getFormattedLogFile())
-                        .withStyle(ChatFormatting.GREEN)), context.getSource()
-                        .getPlayerOrException());
+                CommandUtilities.send(context.getSource(), CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.tool_tiers")), CommandUtilities.getFormattedLogFile())
+                        .withStyle(ChatFormatting.GREEN)));
                 
                 return Command.SINGLE_SUCCESS;
             });

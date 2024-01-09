@@ -112,12 +112,12 @@ public interface IEventHelper {
                 sendAndLog(player, Component.translatable("crafttweaker.command.info.block.name", BuiltInRegistries.BLOCK.getKey(state.getBlock())));
                 String blockCS = ExpandBlock.getCommandString(state.getBlock());
                 String blockStateCS = ExpandBlockState.getCommandString(state);
-                CommandUtilities.sendCopying(Component.translatable("crafttweaker.command.misc.block")
+                CommandUtilities.sendCopying(player.createCommandSourceStack(), Component.translatable("crafttweaker.command.misc.block")
                         .append(": ")
-                        .append(Component.literal(blockCS).withStyle(ChatFormatting.GREEN)), blockCS, player);
-                CommandUtilities.sendCopying(Component.translatable("crafttweaker.command.misc.blockstate")
+                        .append(Component.literal(blockCS).withStyle(ChatFormatting.GREEN)), blockCS);
+                CommandUtilities.sendCopying(player.createCommandSourceStack(), Component.translatable("crafttweaker.command.misc.blockstate")
                         .append(": ")
-                        .append(Component.literal(blockStateCS).withStyle(ChatFormatting.GREEN)), blockStateCS, player);
+                        .append(Component.literal(blockStateCS).withStyle(ChatFormatting.GREEN)), blockStateCS);
                 if(!state.getProperties().isEmpty()) {
                     
                     sendAndLog(player, Component.translatable("crafttweaker.command.info.block.properties"));

@@ -10,7 +10,7 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @Document("neoforge/api/capability/IItemHandler")
-@NativeTypeRegistration(value = IItemHandler.class, zenCodeName = "crafttweaker.api.capability.IItemHandler")
+@NativeTypeRegistration(value = IItemHandler.class, zenCodeName = "crafttweaker.neoforge.api.capability.IItemHandler")
 public class ExpandIItemHandler {
     
     /**
@@ -18,7 +18,6 @@ public class ExpandIItemHandler {
      *
      * @return The amount of slots in the handler.
      */
-    @ZenCodeType.Method
     @ZenCodeType.Getter("slots")
     public static int getSlots(IItemHandler internal) {
         

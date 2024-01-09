@@ -595,22 +595,6 @@ public class CTVillagerTrades {
      *
      * @docParam rarity 2
      * @docParam tradeFor <item:minecraft:arrow>
-     * @deprecated Use {@link #removeWanderingTrade(int, IIngredient)}
-     */
-    @Deprecated(forRemoval = true)
-    public void removeWanderingTrade(int rarity, IItemStack tradeFor) {
-        
-        removeWanderingTrade(rarity, (IIngredient) tradeFor);
-    }
-    
-    /**
-     * Removes a Wandering Trader trade for Emeralds for Items. An example being, giving a Wandering Trader 2 Emeralds for an Arrow.
-     *
-     * @param rarity   The rarity of the Trade. Valid options are `1` or `2`. A Wandering Trader can only spawn with a single trade of rarity `2`.
-     * @param tradeFor What ItemStack is being sold (by the Villager).
-     *
-     * @docParam rarity 2
-     * @docParam tradeFor <item:minecraft:arrow>
      */
     @ZenCodeType.Method
     public void removeWanderingTrade(int rarity, IIngredient tradeFor) {

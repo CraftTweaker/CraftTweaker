@@ -1,11 +1,12 @@
 package com.blamejared.crafttweaker.natives.world;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.mixin.common.access.level.AccessExplosion;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.NativeConstructor;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
@@ -18,15 +19,20 @@ import java.util.Map;
 
 @ZenRegister
 @Document("vanilla/api/world/Explosion")
-@NativeTypeRegistration(value = Explosion.class, zenCodeName = "crafttweaker.api.world.Explosion")
+@NativeTypeRegistration(value = Explosion.class, zenCodeName = "crafttweaker.api.world.Explosion",
+        constructors = {
+                @NativeConstructor(value = {
+                        @NativeConstructor.ConstructorParameter(name = "level", type = Level.class, description = "The level to spawn the explosion in", examples = "level"),
+                        @NativeConstructor.ConstructorParameter(name = "entity", type = Level.class, description = "The entity that spawned the explosion", examples = "player"),
+                        @NativeConstructor.ConstructorParameter(name = "x", type = double.class, description = "The x position.", examples = "0"),
+                        @NativeConstructor.ConstructorParameter(name = "y", type = double.class, description = "The y position.", examples = "0"),
+                        @NativeConstructor.ConstructorParameter(name = "z", type = double.class, description = "The z position.", examples = "0"),
+                        @NativeConstructor.ConstructorParameter(name = "size", type = float.class, description = "How big is the explosion", examples = "1.0"),
+                        @NativeConstructor.ConstructorParameter(name = "causesFire", type = boolean.class, description = "Does the explosion cause fire", examples = "true"),
+                        @NativeConstructor.ConstructorParameter(name = "mode", type = Explosion.BlockInteraction.class, description = "How should the explosion interact with blocks", examples = "<constant:minecraft:explosion/blockinteraction:destroy>"),
+                })
+        })
 public class ExpandExplosion {
-    
-    // This is missing @Nullable ExplosionContext context because I don't even know how I would implement it.
-    @ZenCodeType.StaticExpansionMethod
-    public static Explosion create(Level world, double x, double y, double z, float size, boolean causesFire, Explosion.BlockInteraction mode, @ZenCodeType.Optional Entity exploder, @ZenCodeType.Optional DamageSource source) {
-        
-        return new Explosion(world, exploder, source, null, x, y, z, size, causesFire, mode);
-    }
     
     /**
      * Performs the first part of the explosion which is destroying the blocks.
@@ -59,7 +65,7 @@ public class ExpandExplosion {
     @ZenCodeType.Getter("damageSource")
     public static DamageSource getDamageSource(Explosion internal) {
         
-        return internal.getDamageSource();
+        return ((AccessExplosion) internal).crafttweaker$getDamageSource();
     }
     
     /**

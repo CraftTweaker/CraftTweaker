@@ -15,9 +15,9 @@ import org.openzen.zencode.java.ZenCodeType;
 public class ExpandMobEffectUtil {
     
     @ZenCodeType.StaticExpansionMethod
-    public static Component formatDuration(MobEffectInstance instance, float durationFactor) {
+    public static Component formatDuration(MobEffectInstance instance, float durationFactor, float ticksPerSecond) {
         
-        return MobEffectUtil.formatDuration(instance, durationFactor);
+        return MobEffectUtil.formatDuration(instance, durationFactor, ticksPerSecond);
     }
     
     @ZenCodeType.StaticExpansionMethod

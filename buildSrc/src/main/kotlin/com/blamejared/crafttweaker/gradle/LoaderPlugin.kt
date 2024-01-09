@@ -51,7 +51,6 @@ class LoaderPlugin : Plugin<Project> {
             }
 
             named("processGametestResources", ProcessResources::class.java) {
-                outputs.upToDateWhen { false }
                 from(commonJava.sourceSets.getByName("gametest").resources)
             }
 
@@ -80,7 +79,7 @@ class LoaderPlugin : Plugin<Project> {
         with(project.extensions.getByType(VersionTrackerExtension::class.java)) {
             mcVersion.set(Versions.MINECRAFT)
             homepage.set(Properties.CURSE_HOMEPAGE_LINK)
-            author.set(Properties.MOD_AUTHOR)
+            author.set(Properties.SIMPLE_AUTHOR)
             projectName.set(Properties.MOD_NAME)
         }
     }

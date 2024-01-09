@@ -8,15 +8,17 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.List;
+
 @ZenRegister
 @Document("vanilla/api/advancement/AdvancementRewards")
 @NativeTypeRegistration(value = AdvancementRewards.class, zenCodeName = "crafttweaker.api.advancement.AdvancementRewards")
 public class ExpandAdvancementRewards {
     
     @ZenCodeType.Getter("recipes")
-    public static ResourceLocation[] getRecipes(AdvancementRewards internal) {
+    public static List<ResourceLocation> getRecipes(AdvancementRewards internal) {
         
-        return internal.getRecipes();
+        return internal.recipes();
     }
     
     @ZenCodeType.Method

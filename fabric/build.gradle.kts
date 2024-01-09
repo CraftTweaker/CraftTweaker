@@ -24,12 +24,12 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${Versions.FABRIC}")
     compileOnly(project(":common"))
 
-    modLocalRuntime("me.shedaniel:RoughlyEnoughItems-api-fabric:${Versions.REI}") {
-        exclude("net.fabricmc", "fabric-loader")
-    }
-    modLocalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${Versions.REI}") {
-        exclude("net.fabricmc", "fabric-loader")
-    }
+//    modLocalRuntime("me.shedaniel:RoughlyEnoughItems-api-fabric:${Versions.REI}") {
+//        exclude("net.fabricmc", "fabric-loader")
+//    }
+//    modLocalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${Versions.REI}") {
+//        exclude("net.fabricmc", "fabric-loader")
+//    }
 
     implementation("org.reflections:reflections:${Versions.REFLECTIONS}")?.let { include(it) }
     implementation("org.javassist:javassist:${Versions.JAVA_ASSIST}")?.let { include(it) } // required for reflections

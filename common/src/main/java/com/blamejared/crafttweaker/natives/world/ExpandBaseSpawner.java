@@ -26,9 +26,9 @@ public class ExpandBaseSpawner {
     
     @ZenCodeType.Nullable
     @ZenCodeType.Method
-    public static Entity getOrCreateDisplayEntity(BaseSpawner internal, Level level, RandomSource random, BlockPos position) {
+    public static Entity getOrCreateDisplayEntity(BaseSpawner internal, Level level, BlockPos position) {
         
-        return internal.getOrCreateDisplayEntity(level, random, position);
+        return internal.getOrCreateDisplayEntity(level, position);
     }
     
     @ZenCodeType.Method

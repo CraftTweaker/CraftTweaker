@@ -95,7 +95,7 @@ public class MCItemStackMutable implements NeoForgeItemStack {
             return false;
         }
         
-        return thisStack.areCapsCompatible(thatStack);
+        return thisStack.areAttachmentsCompatible(thatStack);
     }
     
     @Override

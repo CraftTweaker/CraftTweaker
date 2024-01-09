@@ -41,7 +41,6 @@ public interface NeoForgeItemStack extends IItemStack {
         return CommonHooks.getBurnTime(getInternal(), manager.getRecipeType());
     }
     
-    
     @Override
     default IItemStack getRemainingItem(IItemStack stack) {
         

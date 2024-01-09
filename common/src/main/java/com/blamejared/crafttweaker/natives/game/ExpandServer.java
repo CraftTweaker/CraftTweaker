@@ -1,8 +1,10 @@
 package com.blamejared.crafttweaker.natives.game;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
-import com.blamejared.crafttweaker.api.level.*;
-import com.blamejared.crafttweaker_annotations.annotations.*;
+import com.blamejared.crafttweaker.api.level.CraftTweakerSavedData;
+import com.blamejared.crafttweaker.api.level.CraftTweakerSavedDataHolder;
+import com.blamejared.crafttweaker_annotations.annotations.Document;
+import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import com.mojang.brigadier.ParseResults;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
@@ -320,10 +322,10 @@ public class ExpandServer {
     }
     
     @ZenCodeType.Method
-    @ZenCodeType.Getter("averageTickTime")
-    public static float getAverageTickTime(MinecraftServer internal) {
+    @ZenCodeType.Getter("currentSmoothedTickTime")
+    public static float getCurrentSmoothedTickTime(MinecraftServer internal) {
         
-        return internal.getAverageTickTime();
+        return internal.getCurrentSmoothedTickTime();
     }
     
     @ZenCodeType.Method
@@ -337,42 +339,34 @@ public class ExpandServer {
     /**
      * Runs a command, if silent is true, the output is hidden.
      *
-     * Returns The success value of the command, or 0 if an exception occurred.
-     * <p>
-     * Note: Some commands' success value is 0
-     *
      * @docParam command "time set day"
      * @docParam silent true
      */
     @ZenCodeType.Method
-    public static int executeCommand(MinecraftServer internal, String command, @ZenCodeType.OptionalBoolean boolean silent) {
+    public static void executeCommand(MinecraftServer internal, String command, @ZenCodeType.OptionalBoolean boolean silent) {
         
         CommandSourceStack source = internal.createCommandSourceStack();
-        return executeCommandInternal(internal, command, silent ? source.withSuppressedOutput() : source);
+        executeCommandInternal(internal, command, silent ? source.withSuppressedOutput() : source);
     }
     
     /**
      * let a player send a command, if silent is true, the output is hidden.
-     *
-     * Returns The success value of the command, or 0 if an exception occurred.
-     * <p>
-     * Note: Some commands' success value is 0
      *
      * @docParam command "time set day"
      * @docParam player player
      * @docParam silent true
      */
     @ZenCodeType.Method
-    public static int executeCommand(MinecraftServer internal, String command, Player player, @ZenCodeType.OptionalBoolean boolean silent) {
+    public static void executeCommand(MinecraftServer internal, String command, Player player, @ZenCodeType.OptionalBoolean boolean silent) {
         
         CommandSourceStack source = player.createCommandSourceStack();
-        return executeCommandInternal(internal, command, silent ? source.withSuppressedOutput() : source);
+        executeCommandInternal(internal, command, silent ? source.withSuppressedOutput() : source);
     }
     
-    private static int executeCommandInternal(MinecraftServer internal, String command, CommandSourceStack source) {
+    private static void executeCommandInternal(MinecraftServer internal, String command, CommandSourceStack source) {
         
         ParseResults<CommandSourceStack> parsedResults = internal.getCommands().getDispatcher().parse(command, source);
-        return internal.getCommands().performCommand(parsedResults, command);
+        internal.getCommands().performCommand(parsedResults, command);
     }
     
 }

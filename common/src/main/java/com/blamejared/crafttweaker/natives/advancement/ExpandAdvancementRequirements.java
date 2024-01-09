@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraft.advancements.AdvancementRequirements;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -46,7 +47,7 @@ public class ExpandAdvancementRequirements {
     }
     
     @ZenCodeType.Getter("requirements")
-    public static String[][] requirements(AdvancementRequirements internal) {
+    public static List<List<String>> requirements(AdvancementRequirements internal) {
         
         return internal.requirements();
     }

@@ -185,20 +185,6 @@ public interface IRecipeManager<T extends Recipe<?>> extends CommandStringDispla
     }
     
     /**
-     * Remove recipe based on Registry name
-     *
-     * @param name registry name of recipe to remove
-     *
-     * @docParam name "minecraft:furnace"
-     * @deprecated Use {@link #removeByName(String...)} instead
-     */
-    @Deprecated(forRemoval = true)
-    default void removeByName(String name) {
-        
-        CraftTweakerAPI.apply(new ActionRemoveRecipeByName<>(this, new ResourceLocation(name)));
-    }
-    
-    /**
      * Remove recipes based on Registry names
      *
      * @param names registry names of recipes to remove

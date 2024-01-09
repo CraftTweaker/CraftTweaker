@@ -3,8 +3,8 @@ package com.blamejared.crafttweaker.natives.advancement;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
+import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.DisplayInfo;
-import net.minecraft.advancements.FrameType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -43,13 +43,13 @@ public class ExpandDisplayInfo {
     @ZenCodeType.Getter("background")
     public static ResourceLocation getBackground(DisplayInfo internal) {
         
-        return internal.getBackground();
+        return internal.getBackground().orElse(null);
     }
     
-    @ZenCodeType.Getter("frame")
-    public static FrameType getFrame(DisplayInfo internal) {
+    @ZenCodeType.Getter("type")
+    public static AdvancementType getFrame(DisplayInfo internal) {
         
-        return internal.getFrame();
+        return internal.getType();
     }
     
     @ZenCodeType.Getter("x")

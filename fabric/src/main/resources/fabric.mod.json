@@ -1,21 +1,17 @@
 {
   "schemaVersion": 1,
-  "id": "crafttweaker",
+  "id": "${MOD_ID}",
   "version": "${version}",
-  "name": "CraftTweaker",
-  "description": "Customize your minecraft experience!",
-  "authors": [
-    "Jaredlll08",
-    "Kindlich",
-    "StanHebben",
-    "TheSilkMiner"
-  ],
+  "name": "${NAME}",
+  "description": "${DESCRIPTION}",
+  "authors": ["${AUTHOR}"],
   "contact": {
-    "homepage": "https://minecraft.curseforge.com/projects/crafttweaker",
-    "sources": "https://github.com/CraftTweaker/CraftTweaker"
+    "homepage": "${CURSE_HOMEPAGE_LINK}",
+    "sources": "${GIT_REPO}",
+    "issues": "${GIT_REPO}/issues"
   },
   "license": "MIT",
-  "icon": "assets/crafttweaker/logo.png",
+  "icon": "logo.png",
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -33,10 +29,10 @@
     "crafttweaker.fabric.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.14.8",
-    "fabric": "*",
-    "minecraft": "1.20.x",
-    "java": ">=17"
+    "fabricloader": ">=${FABRIC_LOADER}",
+    "fabric": ">=${FABRIC}",
+    "minecraft": "${MINECRAFT}",
+    "java": ">=${JAVA}"
   },
   "accessWidener": "crafttweaker.accesswidener"
 }

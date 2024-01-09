@@ -19,7 +19,6 @@ public class ExpandIFluidHandler {
      *
      * @return The number of tanks in this fluid handler.
      */
-    @ZenCodeType.Method
     @ZenCodeType.Getter("tanks")
     public static int getTanks(IFluidHandler internal) {
         

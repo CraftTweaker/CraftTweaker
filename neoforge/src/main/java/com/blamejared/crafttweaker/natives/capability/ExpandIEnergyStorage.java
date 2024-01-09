@@ -50,7 +50,6 @@ public class ExpandIEnergyStorage {
      *
      * @return The amount of energy stored.
      */
-    @ZenCodeType.Method
     @ZenCodeType.Getter("energyStored")
     public static int getEnergyStored(IEnergyStorage internal) {
         
@@ -62,7 +61,6 @@ public class ExpandIEnergyStorage {
      *
      * @return The max energy that can be stored.
      */
-    @ZenCodeType.Method
     @ZenCodeType.Getter("maxEnergyStored")
     public static int getMaxEnergyStored(IEnergyStorage internal) {
         
@@ -74,7 +72,6 @@ public class ExpandIEnergyStorage {
      *
      * @return true if the storage can be extracted from, false otherwise.
      */
-    @ZenCodeType.Method
     @ZenCodeType.Getter("canExtract")
     public static boolean canExtract(IEnergyStorage internal) {
         
@@ -86,7 +83,6 @@ public class ExpandIEnergyStorage {
      *
      * @return true if this storage can receive energy, false otherwise.
      */
-    @ZenCodeType.Method
     @ZenCodeType.Getter("canReceive")
     public static boolean canReceive(IEnergyStorage internal) {
         

@@ -42,14 +42,14 @@ public class BracketValidators {
         final String[] split = tokens.split(":");
         if(split.length > 4 || split.length < 2) {
             CommonLoggers.zenCode()
-                    .error("Invalid BEP Syntax: <blockstate:{}>! Correct syntax is <blockstate:modid:block_name:properties> or <blockstate:modid:block_name>!", tokens);
+                    .error("Invalid bracket Syntax: <blockstate:{}>! Correct syntax is <blockstate:modid:block_name:properties> or <blockstate:modid:block_name>!", tokens);
             return false;
         }
         
         final String resourceLocation = split[0] + ":" + split[1];
         if(ResourceLocation.tryParse(resourceLocation) == null) {
             CommonLoggers.zenCode()
-                    .error("Invalid Block name for Blockstate BEP. '{}' does not appear to be a valid resource location!", resourceLocation);
+                    .error("Invalid Block name for Blockstate bracket. '{}' is not a valid resource location!", resourceLocation);
             return false;
         }
         
@@ -77,7 +77,7 @@ public class BracketValidators {
     public static boolean validateEnchantment(String tokens) {
         
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CommonLoggers.zenCode().warn("Enchantment BEP <enchantment:{}> does not seem to be lower-case!", tokens);
+            CommonLoggers.zenCode().warn("Enchantment bracket <enchantment:{}> is not lower-case!", tokens);
         }
         
         final String[] split = tokens.split(":");
@@ -114,7 +114,7 @@ public class BracketValidators {
     public static boolean validateItemBracket(String tokens) {
         
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CommonLoggers.zenCode().warn("Item BEP <item:{}> does not seem to be lower-cased!", tokens);
+            CommonLoggers.zenCode().warn("Item bracket <item:{}> is not lower-cased!", tokens);
         }
         
         final String[] split = tokens.split(":");
@@ -127,7 +127,7 @@ public class BracketValidators {
         
         if(!BuiltInRegistries.ITEM.containsKey(key)) {
             CommonLoggers.zenCode()
-                    .error("Could not get item with name: <item:" + tokens + ">! Item does not appear to exist!");
+                    .error("Could not get item with name: <item:" + tokens + ">! Item does not exist!");
             return false;
         }
         

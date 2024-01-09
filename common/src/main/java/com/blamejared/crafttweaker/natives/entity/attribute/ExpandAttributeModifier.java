@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.natives.entity.attribute;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
+import com.blamejared.crafttweaker.mixin.common.access.entity.AccessAttributeModifier;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -59,7 +60,7 @@ public class ExpandAttributeModifier {
     @ZenCodeType.Getter("name")
     public static String getName(AttributeModifier internal) {
         
-        return internal.getName();
+        return ((AccessAttributeModifier) internal).crafttweaker$getName();
     }
     
     /**

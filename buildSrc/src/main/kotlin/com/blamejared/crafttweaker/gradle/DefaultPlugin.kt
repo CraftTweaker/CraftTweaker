@@ -181,7 +181,7 @@ class DefaultPlugin : Plugin<Project> {
 
             named("compileGametestJava", JavaCompile::class.java) {
                 outputs.upToDateWhen { false }
-                if(this.project.name.equals("neoforge")) {
+                if (this.project.name.equals("neoforge")) {
                     Dependencies.ZENCODE.forEach {
                         source(depJava(project, it).sourceSets.getByName("main").allSource)
                     }
@@ -192,24 +192,46 @@ class DefaultPlugin : Plugin<Project> {
             }
 
             withType(ProcessResources::class.java).matching { notNeoTask(it) }.configureEach {
-                outputs.upToDateWhen { false }
                 dependsOn(":StdLibs:zipItUp")
                 from(project.files(project.evaluationDependsOn(":StdLibs").tasks.getByName("zipItUp").outputs))
 
-                inputs.property("version", project.version)
-                filesMatching("fabric.mod.json") {
-                    expand("version" to project.version)
+                val properties = mapOf(
+                        "version" to project.version,
+                        "MOD" to Versions.MOD,
+                        "JAVA" to Versions.MOD_JAVA,
+                        "MINECRAFT" to Versions.MINECRAFT,
+                        "FABRIC_LOADER" to Versions.FABRIC_LOADER,
+                        "FABRIC" to Versions.FABRIC,
+                        "FORGE" to Versions.FORGE,
+                        "FORGE_LOADER" to Versions.FORGE_LOADER,
+                        "NEO_FORGE" to Versions.NEO_FORGE,
+                        "NEO_FORGE_LOADER" to Versions.NEO_FORGE_LOADER,
+                        "GROUP" to Properties.GROUP,
+                        "NAME" to Properties.MOD_NAME,
+                        "AUTHOR" to Properties.MOD_AUTHOR,
+                        "MOD_ID" to Properties.MOD_ID,
+                        "AVATAR" to Properties.MOD_AVATAR,
+                        "CURSE_PROJECT_ID" to Properties.CURSE_PROJECT_ID,
+                        "CURSE_HOMEPAGE_LINK" to Properties.CURSE_HOMEPAGE_LINK,
+                        "MODRINTH_PROJECT_ID" to Properties.MODRINTH_PROJECT_ID,
+                        "GIT_REPO" to Properties.GIT_REPO,
+                        "DESCRIPTION" to Properties.DESCRIPTION,
+                        "ITEM_ICON" to Properties.ITEM_ICON,
+                )
+                inputs.properties(properties)
+                filesMatching(setOf("fabric.mod.json", "META-INF/mods.toml", "pack.mcmeta")) {
+                    expand(properties)
                 }
             }
 
             withType<Jar>().matching { notNeoTask(it) }.configureEach {
                 manifest {
                     attributes["Specification-Title"] = Properties.MOD_NAME
-                    attributes["Specification-Vendor"] = Properties.MOD_AUTHOR
+                    attributes["Specification-Vendor"] = Properties.SIMPLE_AUTHOR
                     attributes["Specification-Version"] = archiveVersion
                     attributes["Implementation-Title"] = project.name
                     attributes["Implementation-Version"] = archiveVersion
-                    attributes["Implementation-Vendor"] = Properties.MOD_AUTHOR
+                    attributes["Implementation-Vendor"] = Properties.SIMPLE_AUTHOR
                     attributes["Implementation-Timestamp"] = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(Date())
                     attributes["Timestamp"] = System.currentTimeMillis()
                     attributes["Built-On-Java"] = "${System.getProperty("java.vm.version")} (${System.getProperty("java.vm.vendor")})"

@@ -25,9 +25,9 @@ public final class ExpandLootParams {
     }
     
     @ZenCodeType.Method
-    public static <T> boolean hasParam(LootParams internal, Class<T> tClass, LootContextParam<T> $$0) {
+    public static <T> boolean hasParam(LootParams internal, Class<T> tClass, LootContextParam<T> param) {
         
-        return internal.hasParam($$0);
+        return internal.hasParam(param);
     }
     
     @ZenCodeType.Method

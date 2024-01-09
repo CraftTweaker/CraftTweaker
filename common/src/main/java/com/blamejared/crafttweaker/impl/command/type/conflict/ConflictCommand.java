@@ -62,56 +62,55 @@ public final class ConflictCommand {
                         builder
                                 .then(Commands.argument("type", RecipeTypeArgument.get())
                                         .executes(context -> conflicts(
-                                                context.getSource().getPlayerOrException(),
+                                                context.getSource(),
                                                 DescriptiveFilter.of(context.getArgument("type", IRecipeManager.class))
                                         )))
                                 .then(Commands.literal("hand")
                                         .executes(context -> ifNotEmpty(
                                                 context,
-                                                (player, item) -> conflicts(player, DescriptiveFilter.of(item))
+                                                (player, item) -> conflicts(context.getSource(), DescriptiveFilter.of(item))
                                         )))
-                                .executes(context -> conflicts(context.getSource()
-                                        .getPlayerOrException(), DescriptiveFilter.of()))
+                                .executes(context -> conflicts(context.getSource(), DescriptiveFilter.of()))
         );
     }
     
-    private static int ifNotEmpty(final CommandContext<CommandSourceStack> source, final ToIntBiFunction<Player, ItemStack> command) throws CommandSyntaxException {
+    private static int ifNotEmpty(final CommandContext<CommandSourceStack> context, final ToIntBiFunction<Player, ItemStack> command) throws CommandSyntaxException {
         
-        final ServerPlayer player = source.getSource().getPlayerOrException();
+        CommandSourceStack source = context.getSource();
+        final ServerPlayer player = source.getPlayerOrException();
         final ItemStack stack = player.getMainHandItem();
         if(stack.isEmpty()) {
             
-            CommandUtilities.send(Component.translatable("crafttweaker.command.conflict.hand.empty")
-                    .withStyle(ChatFormatting.RED), player);
+            CommandUtilities.send(source, Component.translatable("crafttweaker.command.conflict.hand.empty")
+                    .withStyle(ChatFormatting.RED));
             return -1;
         }
         
         return command.applyAsInt(player, stack);
     }
     
-    private static int conflicts(final Player player, final DescriptiveFilter filter) {
+    private static int conflicts(final CommandSourceStack source, final DescriptiveFilter filter) {
         
-        CommandUtilities.send(
+        CommandUtilities.send(source,
                 Component.translatable("crafttweaker.command.conflict.begin", filter.description())
                         .withStyle(ChatFormatting.GREEN)
                         .append(Component.translatable("crafttweaker.command.conflict.warnings")
-                                .withStyle(ChatFormatting.RED)),
-                player
+                                .withStyle(ChatFormatting.RED))
         );
         
-        runConflicts(player, player.level().getRecipeManager(), filter);
+        runConflicts(source, source.getLevel().getRecipeManager(), filter);
         
         return 0;
     }
     
-    private static void runConflicts(final Player player, final RecipeManager manager, final DescriptiveFilter filter) {
+    private static void runConflicts(final CommandSourceStack source, final RecipeManager manager, final DescriptiveFilter filter) {
         
         // Cloning the map to avoid /reload messing up with CMEs when looping on it from off-thread
         // Also, this deep copies only the two maps: the recipe type, RL, and recipe objects are not also deep copied
         final Map<RecipeType<?>, Map<ResourceLocation, RecipeHolder<?>>> recipes = deepCopy(((AccessRecipeManager) manager).crafttweaker$getRecipes(), filter);
         CompletableFuture.supplyAsync(() -> computeConflicts(recipes), OFF_THREAD_SERVICE)
-                .thenAcceptAsync(message -> dispatchCompletionTo(message, player), OFF_THREAD_SERVICE)
-                .exceptionallyAsync(exception -> dispatchExceptionTo(exception, player), OFF_THREAD_SERVICE);
+                .thenAcceptAsync(message -> dispatchCompletionTo(message, source), OFF_THREAD_SERVICE)
+                .exceptionallyAsync(exception -> dispatchExceptionTo(exception, source), OFF_THREAD_SERVICE);
     }
     
     private static Map<RecipeType<?>, Map<ResourceLocation, RecipeHolder<?>>> deepCopy(final Map<RecipeType<?>, Map<ResourceLocation, RecipeHolder<?>>> original, final DescriptiveFilter filter) {
@@ -161,7 +160,8 @@ public final class ConflictCommand {
             final long id
     ) {
         
-        return conflictsWith(manager, recipes.get(RecipeLongIterator.first(id)).getValue(), recipes.get(RecipeLongIterator.second(id)).getValue());
+        return conflictsWith(manager, recipes.get(RecipeLongIterator.first(id))
+                .getValue(), recipes.get(RecipeLongIterator.second(id)).getValue());
     }
     
     private static <T extends Recipe<?>> boolean conflictsWith(final IRecipeManager<?> manager, final RecipeHolder<T> first, final RecipeHolder<?> second) {
@@ -180,13 +180,13 @@ public final class ConflictCommand {
         return String.format("Recipes '%s' and '%s' in type '%s' have conflicting inputs", firstName, secondName, manager.getCommandString());
     }
     
-    private static void dispatchCompletionTo(final String message, final Player player) {
+    private static void dispatchCompletionTo(final String message, final CommandSourceStack source) {
         
-        onMainThread(player, () -> {
+        onMainThread(source, () -> {
             try {
                 CommandUtilities.COMMAND_LOGGER.info(message.isEmpty() ? "No conflicts identified" : message);
-                CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.conflict.complete")
-                        .withStyle(ChatFormatting.GREEN)), player);
+                CommandUtilities.send(source, CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.conflict.complete")
+                        .withStyle(ChatFormatting.GREEN)));
             } catch(final Exception e) {
                 try {
                     CommandUtilities.COMMAND_LOGGER.error("An error occurred while reporting conflicts, hopefully it does not happen again", e);
@@ -198,13 +198,13 @@ public final class ConflictCommand {
         });
     }
     
-    private static Void dispatchExceptionTo(final Throwable exception, final Player player) {
+    private static Void dispatchExceptionTo(final Throwable exception, final CommandSourceStack source) {
         
-        onMainThread(player, () -> {
+        onMainThread(source, () -> {
             try {
                 CommandUtilities.COMMAND_LOGGER.error("Unable to verify for conflicts due to an exception", exception);
-                CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.conflict.error")
-                        .withStyle(ChatFormatting.RED)), player);
+                CommandUtilities.send(source, CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.conflict.error")
+                        .withStyle(ChatFormatting.RED)));
             } catch(final Exception e) {
                 try {
                     CommandUtilities.COMMAND_LOGGER.error("An error occurred while reporting conflicts, hopefully it does not happen again", e);
@@ -218,17 +218,19 @@ public final class ConflictCommand {
         return null;
     }
     
-    private static void onMainThread(final Player player, final Runnable runnable) {
-        final Level level = player.level();
+    private static void onMainThread(final CommandSourceStack source, final Runnable runnable) {
+        
+        final Level level = source.getLevel();
         assert !level.isClientSide(); // This is always true in commands
         
-        Objects.requireNonNull(level.getServer(), "Is someone running server-bound commands on the client?").executeIfPossible(() -> {
-            try {
-                runnable.run();
-            } catch (final RejectedExecutionException e) {
-                OFF_THREAD_SERVICE.submit(runnable);
-            }
-        });
+        Objects.requireNonNull(level.getServer(), "Is someone running server-bound commands on the client?")
+                .executeIfPossible(() -> {
+                    try {
+                        runnable.run();
+                    } catch(final RejectedExecutionException e) {
+                        OFF_THREAD_SERVICE.submit(runnable);
+                    }
+                });
     }
     
 }

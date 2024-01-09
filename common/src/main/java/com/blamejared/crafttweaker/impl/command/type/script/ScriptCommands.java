@@ -8,8 +8,8 @@ import com.blamejared.crafttweaker.api.util.PathUtil;
 import com.blamejared.crafttweaker.api.zencode.IScriptLoadSource;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.ScriptRunConfiguration;
 import com.mojang.brigadier.Command;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 
 public final class ScriptCommands {
     
@@ -21,8 +21,7 @@ public final class ScriptCommands {
                 "log",
                 Component.translatable("crafttweaker.command.description.log"),
                 builder -> builder.executes(context -> {
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
-                    CommandUtilities.open(player, PathUtil.makeRelativeToGameDirectory(CraftTweakerConstants.LOG_PATH));
+                    CommandUtilities.open(context.getSource(), PathUtil.makeRelativeToGameDirectory(CraftTweakerConstants.LOG_PATH));
                     return Command.SINGLE_SUCCESS;
                 })
         );
@@ -31,8 +30,7 @@ public final class ScriptCommands {
                 "scripts",
                 Component.translatable("crafttweaker.command.description.script"),
                 builder -> builder.executes(context -> {
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
-                    CommandUtilities.open(player, PathUtil.makeRelativeToGameDirectory(CraftTweakerConstants.SCRIPTS_DIRECTORY));
+                    CommandUtilities.open(context.getSource(), PathUtil.makeRelativeToGameDirectory(CraftTweakerConstants.SCRIPTS_DIRECTORY));
                     return Command.SINGLE_SUCCESS;
                 })
         );
@@ -41,21 +39,21 @@ public final class ScriptCommands {
                 "syntax",
                 Component.translatable("crafttweaker.command.description.syntax"),
                 builder -> builder.executes(context -> {
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    CommandSourceStack source = context.getSource();
                     //TODO: get loader name from '/ct syntax loaderName'?
                     // TODO: Use a custom load source?
                     CraftTweakerAPI.getRegistry().getAllLoaders()
                             .stream()
-                            .peek(loader -> CommandUtilities.send(Component.translatable("crafttweaker.script.load.start", CommandUtilities.makeNoticeable(loader.name())), player))
+                            .peek(loader -> CommandUtilities.send(source, Component.translatable("crafttweaker.script.load.start", CommandUtilities.makeNoticeable(loader.name()))))
                             .map(it -> new ScriptRunConfiguration(it, IScriptLoadSource.find(CraftTweakerConstants.RELOAD_LISTENER_SOURCE_ID), ScriptRunConfiguration.RunKind.SYNTAX_CHECK))
                             .map(it -> CraftTweakerAPI.getScriptRunManager().createScriptRun(it))
                             .forEach(it -> {
                                 try {
                                     it.execute();
-                                    CommandUtilities.send(Component.translatable("crafttweaker.script.load.end.noerror"), player);
+                                    CommandUtilities.send(source, Component.translatable("crafttweaker.script.load.end.noerror"));
                                 } catch(final Throwable e) {
                                     CommandUtilities.COMMAND_LOGGER.error("Unable to check for syntax due to an error", e);
-                                    CommandUtilities.send(Component.translatable("crafttweaker.script.load.end.error"), player);
+                                    CommandUtilities.send(source, Component.translatable("crafttweaker.script.load.end.error"));
                                 }
                             });
                     

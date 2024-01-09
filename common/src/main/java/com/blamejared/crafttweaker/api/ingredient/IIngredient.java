@@ -14,6 +14,7 @@ import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.converter.JSONConverter;
+import com.blamejared.crafttweaker.api.data.op.IDataOps;
 import com.blamejared.crafttweaker.api.ingredient.condition.IIngredientCondition;
 import com.blamejared.crafttweaker.api.ingredient.condition.type.ConditionAnyDamage;
 import com.blamejared.crafttweaker.api.ingredient.condition.type.ConditionCustom;
@@ -34,6 +35,7 @@ import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -388,7 +390,7 @@ public interface IIngredient extends CommandStringDisplayable {
     @ZenCodeType.Caster(implicit = true)
     default IData asIData() {
         
-        return JSONConverter.convert(this.asVanillaIngredient().toJson(false));
+        return Util.getOrThrow(Ingredient.CODEC_NONEMPTY.encodeStart(IDataOps.INSTANCE, this.asVanillaIngredient()), IllegalArgumentException::new);
     }
     
     @ZenCodeType.Operator(ZenCodeType.OperatorType.OR)

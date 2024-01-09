@@ -1,30 +1,30 @@
 modLoader = "javafml"
-loaderVersion = "[1,)"
+loaderVersion = "[${NEO_FORGE_LOADER},)"
 license = "MIT"
-issueTrackerURL = "https://github.com/CraftTweaker/CraftTweaker/issues"
+issueTrackerURL = "${GIT_REPO}/issues"
 [[mods]]
-modId = "crafttweaker"
-version = "${file.jarVersion}"
-displayName = "CraftTweaker"
-displayURL = "https://minecraft.curseforge.com/projects/crafttweaker"
-updateJSONURL = "https://updates.blamejared.com/get?n=crafttweaker&gv=1.20.2"
+modId = "${MOD_ID}"
+version = "${version}"
+displayName = "${NAME}"
+displayURL = "${CURSE_HOMEPAGE_LINK}"
+updateJSONURL = "https://updates.blamejared.com/get?n=${MOD_ID}&gv=${MINECRAFT}&ml=neoforge"
 logoFile = "logo.png"
-authors = "Jaredlll08, Kindlich, StanHebben and TheSilkMiner"
-description = "Customize your minecraft experience!"
-itemIcon = "minecraft:crafting_table"
+authors = "${AUTHOR}"
+description = "${DESCRIPTION}"
+itemIcon = "${ITEM_ICON}"
 [[mixins]]
-config = "crafttweaker.mixins.json"
+config = "${MOD_ID}.mixins.json"
 [[mixins]]
-config = "crafttweaker.neoforge.mixins.json"
-[[dependencies.crafttweaker]]
+config = "${MOD_ID}.neoforge.mixins.json"
+[[dependencies.${MOD_ID}]]
 modId = "neoforge"
 mandatory = true
-versionRange = "[1,)"
+versionRange = "[${NEO_FORGE_LOADER},)"
 ordering = "NONE"
 side = "BOTH"
-[[dependencies.crafttweaker]]
+[[dependencies.${MOD_ID}]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.20,1.21)"
+versionRange = "[${MINECRAFT}]"
 ordering = "NONE"
 side = "BOTH"

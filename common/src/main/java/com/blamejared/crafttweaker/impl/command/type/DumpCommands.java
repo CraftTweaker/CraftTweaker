@@ -26,7 +26,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.level.storage.loot.LootDataType;
 
@@ -59,9 +59,9 @@ public final class DumpCommands {
                 "dump",
                 Component.translatable("crafttweaker.command.description.dump"),
                 builder -> builder.executes(context -> {
-                    ServerPlayer player = context.getSource().getPlayerOrException();
-                    CommandUtilities.send(Component.translatable("crafttweaker.command.dump.types")
-                            .append(": "), player);
+                    CommandSourceStack source = context.getSource();
+                    CommandUtilities.send(source, Component.translatable("crafttweaker.command.dump.types")
+                            .append(": "));
                     CtCommands.get()
                             .commands()
                             .get("dump")
@@ -70,7 +70,7 @@ public final class DumpCommands {
                             .stream()
                             .map(it -> CommandUtilities.run(Component.literal("- ")
                                     .append(Component.literal(it).withStyle(ChatFormatting.GREEN)), "/ct dump " + it))
-                            .forEach(it -> CommandUtilities.send(it, player));
+                            .forEach(it -> CommandUtilities.send(source, it));
                     return Command.SINGLE_SUCCESS;
                 })
         );
@@ -103,11 +103,11 @@ public final class DumpCommands {
                 "recipes",
                 Component.translatable("crafttweaker.command.description.dump.recipes"),
                 builder -> builder.executes(context -> {
-                    
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    CommandSourceStack source = context.getSource();
+                    ServerLevel level = source.getLevel();
                     BuiltInRegistries.RECIPE_TYPE.stream()
                             .peek(type -> CommandUtilities.COMMAND_LOGGER.info(type.toString()))
-                            .map(it -> ((AccessRecipeManager) player.level()
+                            .map(it -> ((AccessRecipeManager) level
                                     .getRecipeManager()).crafttweaker$getRecipes()
                                     .getOrDefault(it, Collections.emptyMap())
                                     .keySet())
@@ -115,8 +115,8 @@ public final class DumpCommands {
                             .map(ResourceLocation::toString)
                             .forEach(CommandUtilities.COMMAND_LOGGER::info);
                     
-                    CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.recipes")), CommandUtilities.getFormattedLogFile())
-                            .withStyle(ChatFormatting.GREEN)), player);
+                    CommandUtilities.send(source, CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.recipes")), CommandUtilities.getFormattedLogFile())
+                            .withStyle(ChatFormatting.GREEN)));
                     
                     return Command.SINGLE_SUCCESS;
                 })
@@ -127,13 +127,12 @@ public final class DumpCommands {
                 Component.translatable("crafttweaker.command.description.dump.loot_modifiers"),
                 builder -> builder.executes(context -> {
                     
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
                     LootManager.INSTANCE.getModifierManager()
                             .getAllNames()
                             .forEach(CommandUtilities.COMMAND_LOGGER::info);
                     
-                    CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.loot_modifiers")), CommandUtilities.getFormattedLogFile())
-                            .withStyle(ChatFormatting.GREEN)), player);
+                    CommandUtilities.send(context.getSource(), CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.loot_modifiers")), CommandUtilities.getFormattedLogFile())
+                            .withStyle(ChatFormatting.GREEN)));
                     
                     return Command.SINGLE_SUCCESS;
                 })
@@ -144,16 +143,15 @@ public final class DumpCommands {
                 Component.translatable("crafttweaker.command.description.dump.loot_tables"),
                 builder -> builder.executes(context -> {
                     
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
-                    final MinecraftServer server = context.getSource().getServer();
-                    server.getLootData().getKeys(LootDataType.TABLE)
+                    CommandSourceStack source = context.getSource();
+                    source.getServer().getLootData().getKeys(LootDataType.TABLE)
                             .stream()
                             .map(ResourceLocation::toString)
                             .sorted()
                             .forEach(CommandUtilities.COMMAND_LOGGER::info);
                     
-                    CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.loot_tables")), CommandUtilities.getFormattedLogFile())
-                            .withStyle(ChatFormatting.GREEN)), player);
+                    CommandUtilities.send(source, CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.loot_tables")), CommandUtilities.getFormattedLogFile())
+                            .withStyle(ChatFormatting.GREEN)));
                     
                     return Command.SINGLE_SUCCESS;
                 })
@@ -164,8 +162,8 @@ public final class DumpCommands {
                 Component.translatable("crafttweaker.command.description.dump.biomes"),
                 builder -> builder.executes(context -> {
                     
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
-                    final MinecraftServer server = context.getSource().getServer();
+                    CommandSourceStack source = context.getSource();
+                    final MinecraftServer server = source.getServer();
                     server.registryAccess().registry(Registries.BIOME).ifPresent(biomes -> {
                         biomes.stream()
                                 .map(ExpandBiome::getCommandString)
@@ -173,8 +171,8 @@ public final class DumpCommands {
                                 .forEach(CommandUtilities.COMMAND_LOGGER::info);
                     });
                     
-                    CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.biomes")), CommandUtilities.getFormattedLogFile())
-                            .withStyle(ChatFormatting.GREEN)), player);
+                    CommandUtilities.send(source, CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.biomes")), CommandUtilities.getFormattedLogFile())
+                            .withStyle(ChatFormatting.GREEN)));
                     
                     return Command.SINGLE_SUCCESS;
                 })
@@ -184,7 +182,7 @@ public final class DumpCommands {
                 "villager_trades",
                 Component.translatable("crafttweaker.command.description.dump.villager.trades"),
                 builder -> builder.executes(context -> {
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    CommandSourceStack source = context.getSource();
                     VillagerTrades.TRADES.forEach((villagerProfession, levelToTrades) -> {
                         CommandUtilities.COMMAND_LOGGER.info("Trades for: " + ExpandVillagerProfession.getCommandString(villagerProfession));
                         levelToTrades.keySet()
@@ -205,8 +203,8 @@ public final class DumpCommands {
                                 });
                     });
                     
-                    CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.villager.trades")), CommandUtilities.getFormattedLogFile())
-                            .withStyle(ChatFormatting.GREEN)), player);
+                    CommandUtilities.send(source, CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.villager.trades")), CommandUtilities.getFormattedLogFile())
+                            .withStyle(ChatFormatting.GREEN)));
                     return Command.SINGLE_SUCCESS;
                 })
         );
@@ -215,7 +213,7 @@ public final class DumpCommands {
                 "wandering_trades",
                 Component.translatable("crafttweaker.command.description.dump.wandering.trades"),
                 builder -> builder.executes(context -> {
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    CommandSourceStack source = context.getSource();
                     CommandUtilities.COMMAND_LOGGER.info("Wandering Trader Trades");
                     VillagerTrades.WANDERING_TRADER_TRADES.keySet()
                             .intStream()
@@ -234,8 +232,8 @@ public final class DumpCommands {
                                 CommandUtilities.COMMAND_LOGGER.info(iTrade.getClass().getSimpleName() + tradeStr);
                             });
                     
-                    CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.wandering.trades")), CommandUtilities.getFormattedLogFile())
-                            .withStyle(ChatFormatting.GREEN)), player);
+                    CommandUtilities.send(source, CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.wandering.trades")), CommandUtilities.getFormattedLogFile())
+                            .withStyle(ChatFormatting.GREEN)));
                     return Command.SINGLE_SUCCESS;
                 })
         );
@@ -244,7 +242,7 @@ public final class DumpCommands {
                 "tag_contents",
                 Component.translatable("crafttweaker.command.description.dump.tag.contents"),
                 builder -> builder.executes(context -> {
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    CommandSourceStack source = context.getSource();
                     
                     CommandUtilities.COMMAND_LOGGER.info("All Tag Contents");
                     CraftTweakerTagRegistry.INSTANCE.managers()
@@ -255,13 +253,13 @@ public final class DumpCommands {
                             .peek(it -> CommandUtilities.COMMAND_LOGGER.info(it.getCommandString()))
                             .flatMap(it -> it.idElements()
                                     .stream()
-                                    .sorted(Comparator.comparing((ResourceLocation rl) -> rl.getPath())
-                                            .thenComparing(rl -> rl.getNamespace()))
-                                    .map(o -> getTagAsString(player, it, o)))
+                                    .sorted(Comparator.comparing(ResourceLocation::getPath)
+                                            .thenComparing(ResourceLocation::getNamespace))
+                                    .map(o -> getTagAsString(source, it, o)))
                             .forEach(it -> CommandUtilities.COMMAND_LOGGER.info("\t- {}", it));
                     
-                    CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.tag.contents")), CommandUtilities.getFormattedLogFile())
-                            .withStyle(ChatFormatting.GREEN)), player);
+                    CommandUtilities.send(source, CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.tag.contents")), CommandUtilities.getFormattedLogFile())
+                            .withStyle(ChatFormatting.GREEN)));
                     return Command.SINGLE_SUCCESS;
                 })
         );
@@ -271,16 +269,16 @@ public final class DumpCommands {
                 Component.translatable("crafttweaker.command.description.dump.damage_sources"),
                 builder -> builder.executes(context -> {
                     
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    CommandSourceStack source = context.getSource();
                     //TODO what format should this print in??
-                    ((AccessDamageSources) player.level().damageSources()).crafttweaker$getDamageTypes()
+                    ((AccessDamageSources) source.getLevel().damageSources()).crafttweaker$getDamageTypes()
                             .keySet()
                             .stream()
                             .sorted()
                             .forEach(CommandUtilities.COMMAND_LOGGER::info);
                     
-                    CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.biomes")), CommandUtilities.getFormattedLogFile())
-                            .withStyle(ChatFormatting.GREEN)), player);
+                    CommandUtilities.send(source, CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.biomes")), CommandUtilities.getFormattedLogFile())
+                            .withStyle(ChatFormatting.GREEN)));
                     
                     return Command.SINGLE_SUCCESS;
                 })
@@ -293,21 +291,20 @@ public final class DumpCommands {
                         .map(it -> it.getName() + " -> " + it.getId())
                         .forEach(it -> CraftTweakerCommon.logger().info(it));
                 
-                CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.fake_players")), CommandUtilities.getFormattedLogFile())
-                        .withStyle(ChatFormatting.GREEN)), context.getSource()
-                        .getPlayerOrException());
+                CommandUtilities.send(context.getSource(), CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.fake_players")), CommandUtilities.getFormattedLogFile())
+                        .withStyle(ChatFormatting.GREEN)));
                 
                 return Command.SINGLE_SUCCESS;
             });
         });
     }
     
-    private static String getTagAsString(ServerPlayer player, MCTag tag, Object o) {
+    private static String getTagAsString(CommandSourceStack source, MCTag tag, Object o) {
         
         if(o instanceof ResourceLocation) {
             return o.toString();
         } else {
-            Optional<? extends Registry<Object>> foundRegistry = player.server.registryAccess()
+            Optional<? extends Registry<Object>> foundRegistry = source.registryAccess()
                     .registry(tag.manager().resourceKey());
             if(foundRegistry.isPresent()) {
                 return foundRegistry
@@ -346,8 +343,8 @@ public final class DumpCommands {
                         CommandUtilities.COMMAND_LOGGER.error("Error writing to file '" + dumpedFileName + "'", e);
                     }
                 });
-        CommandUtilities.send(CommandUtilities.openingFile(Component.translatable("crafttweaker.command.files.created")
-                .withStyle(ChatFormatting.GREEN), "ct_dumps"), context.getSource());
+        CommandUtilities.send(context.getSource(), CommandUtilities.openingFile(Component.translatable("crafttweaker.command.files.created")
+                .withStyle(ChatFormatting.GREEN), "ct_dumps"));
     }
     
 }

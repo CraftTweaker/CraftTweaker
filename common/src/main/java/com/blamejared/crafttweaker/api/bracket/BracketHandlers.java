@@ -11,6 +11,7 @@ import com.blamejared.crafttweaker.api.recipe.replacement.ITargetingStrategy;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker.natives.block.ExpandBlockState;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -40,22 +41,33 @@ import java.util.Optional;
 @Document("vanilla/api/BracketHandlers")
 public class BracketHandlers {
     
-    @ZenCodeType.Method
-    @BracketResolver("attribute")
-    public static Attribute getAttribute(String tokens) {
+    public static <T> T getRegistry(String tokens, Registry<T> registry) {
         
+        return getRegistry(tokens, registry, false);
+    }
+    
+    public static <T> T getRegistry(String tokens, Registry<T> registry, boolean includeTypeNamespace) {
+        
+        String type = includeTypeNamespace ? registry.key().location().toString() : registry.key().location().getPath();
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CommonLoggers.zenCode().warn("Attribute BEP <attribute:{}> does not seem to be lower-cased!", tokens);
+            CommonLoggers.zenCode().warn("{} bracket <{}:{}> is not lowercase!", type, type, tokens);
         }
         
         final String[] split = tokens.split(":");
         if(split.length != 2) {
-            throw new IllegalArgumentException("Could not get attribute with name: <attribute:" + tokens + ">! Syntax is <attribute:modid:name>");
+            throw new IllegalArgumentException("Could not get " + type + " with name: <" + type + ":" + tokens + ">! Syntax is <" + type + ":modid:name>");
         }
         ResourceLocation key = new ResourceLocation(split[0], split[1]);
         
-        return BuiltInRegistries.ATTRIBUTE.getOptional(key)
-                .orElseThrow(() -> new IllegalArgumentException("Could not get attribute with name: <attribute:" + tokens + ">! Attribute does not appear to exist!"));
+        return registry.getOptional(key)
+                .orElseThrow(() -> new IllegalArgumentException("Could not get " + type + " with name: <" + type + ":" + tokens + ">! " + type + " does not exist!"));
+    }
+    
+    @ZenCodeType.Method
+    @BracketResolver("attribute")
+    public static Attribute getAttribute(String tokens) {
+        
+        return getRegistry(tokens, BuiltInRegistries.ATTRIBUTE);
     }
     
     /**
@@ -71,17 +83,7 @@ public class BracketHandlers {
     @BracketResolver("block")
     public static Block getBlock(String tokens) {
         
-        if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CommonLoggers.zenCode().warn("Block BEP <block:{}> does not seem to be lower-cased!", tokens);
-        }
-        
-        final String[] split = tokens.split(":");
-        if(split.length != 2) {
-            throw new IllegalArgumentException("Could not get block with name: <block:" + tokens + ">! Syntax is <block:modid:itemname>");
-        }
-        ResourceLocation key = new ResourceLocation(split[0], split[1]);
-        return BuiltInRegistries.BLOCK.getOptional(key)
-                .orElseThrow(() -> new IllegalArgumentException("Could not get block with name: <block:" + tokens + ">! Block does not appear to exist!"));
+        return getRegistry(tokens, BuiltInRegistries.BLOCK);
     }
     
     
@@ -98,16 +100,7 @@ public class BracketHandlers {
     @BracketResolver("fluid")
     public static IFluidStack getFluidStack(String tokens) {
         
-        final ResourceLocation resourceLocation = ResourceLocation.tryParse(tokens);
-        if(resourceLocation == null) {
-            throw new IllegalArgumentException("Could not get fluid for <fluid:" + tokens + ">. Syntax is <fluid:modid:fluidname>");
-        }
-        
-        if(!BuiltInRegistries.FLUID.containsKey(resourceLocation)) {
-            throw new IllegalArgumentException("Could not get fluid for <fluid:" + tokens + ">. Fluid does not appear to exist!");
-        }
-        
-        return IFluidStack.of(BuiltInRegistries.FLUID.get(resourceLocation), 1);
+        return IFluidStack.of(getRegistry(tokens, BuiltInRegistries.FLUID), 1);
     }
     
     /**
@@ -126,7 +119,7 @@ public class BracketHandlers {
     public static BlockState getBlockState(String tokens) {
         
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CommonLoggers.zenCode().warn("BlockState BEP <blockstate:{}> does not seem to be lower-cased!", tokens);
+            CommonLoggers.zenCode().warn("BlockState bracket <blockstate:{}> is not lower-cased!", tokens);
         }
         String[] split = tokens.split(":", 4);
         
@@ -136,7 +129,7 @@ public class BracketHandlers {
             
             Optional<Block> found = BuiltInRegistries.BLOCK.getOptional(new ResourceLocation(blockName));
             if(found.isEmpty()) {
-                final Throwable t = new IllegalArgumentException("Could not get BlockState from: <blockstate:" + tokens + ">! The block does not appear to exist!");
+                final Throwable t = new IllegalArgumentException("Could not get BlockState from: <blockstate:" + tokens + ">! The block does not exist!");
                 CommonLoggers.zenCode().error("Error creating BlockState!", t);
             } else {
                 return getBlockState(found.get(), blockName, properties);
@@ -183,16 +176,7 @@ public class BracketHandlers {
     @ZenCodeType.Method
     public static MobEffect getMobEffect(String tokens) {
         
-        if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CommonLoggers.zenCode().warn("MobEffect BEP <mobeffect:{}> does not seem to be lower-cased!", tokens);
-        }
-        
-        final String[] split = tokens.split(":");
-        if(split.length != 2) {
-            throw new IllegalArgumentException("Could not get effect with name: <mobeffect:" + tokens + ">! Syntax is <effect:modid:mobeffect>");
-        }
-        return BuiltInRegistries.MOB_EFFECT.getOptional(new ResourceLocation(split[0], split[1]))
-                .orElseThrow(() -> new IllegalArgumentException("Could not get effect with name: <mobeffect:" + tokens + ">! Effect does not appear to exist!"));
+        return getRegistry(tokens, BuiltInRegistries.MOB_EFFECT);
     }
     
     /**
@@ -208,22 +192,7 @@ public class BracketHandlers {
     @BracketResolver("enchantment")
     public static Enchantment getEnchantment(String tokens) {
         
-        if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CommonLoggers.zenCode().warn("Enchantment BEP <enchantment:{}> does not seem to be lower-case!", tokens);
-        }
-        
-        final String[] split = tokens.split(":");
-        if(split.length != 2) {
-            throw new IllegalArgumentException("Could not get enchantment '" + tokens + "': not a valid bracket handler, syntax is <enchantment:modid:name>");
-        }
-        
-        final ResourceLocation key = new ResourceLocation(split[0], split[1]);
-        Optional<Enchantment> found = BuiltInRegistries.ENCHANTMENT.getOptional(key);
-        if(found.isEmpty()) {
-            throw new IllegalArgumentException("Could not get enchantment '" + tokens + "': the enchantment does not appear to exist");
-        }
-        
-        return found.get();
+        return getRegistry(tokens, BuiltInRegistries.ENCHANTMENT);
     }
     
     /**
@@ -239,14 +208,7 @@ public class BracketHandlers {
     @BracketResolver("entitytype")
     public static EntityType<Entity> getEntityType(String tokens) {
         
-        final int length = tokens.split(":").length;
-        if(length == 0 || length > 2) {
-            throw new IllegalArgumentException("Could not get entitytype <entitytype:" + tokens + ">");
-        }
-        final ResourceLocation resourceLocation = new ResourceLocation(tokens);
-        
-        return GenericUtil.uncheck(BuiltInRegistries.ENTITY_TYPE.getOptional(resourceLocation)
-                .orElseThrow(() -> new IllegalArgumentException("Could not get entitytype <entitytype:" + tokens + ">")));
+        return GenericUtil.uncheck(getRegistry(tokens, BuiltInRegistries.ENTITY_TYPE));
     }
     
     
@@ -263,20 +225,7 @@ public class BracketHandlers {
     @ZenCodeType.Method
     public static IItemStack getItem(String tokens) {
         
-        if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CommonLoggers.zenCode().warn("Item BEP <item:{}> does not seem to be lower-cased!", tokens);
-        }
-        
-        final String[] split = tokens.split(":");
-        if(split.length != 2) {
-            throw new IllegalArgumentException("Could not get item with name: <item:" + tokens + ">! Syntax is <item:modid:itemname>");
-        }
-        ResourceLocation key = new ResourceLocation(split[0], split[1]);
-        
-        ItemStack stack = BuiltInRegistries.ITEM.getOptional(key)
-                .map(ItemStack::new)
-                .orElseThrow(() -> new IllegalArgumentException("Could not get item with name: <item:" + tokens + ">! Item does not appear to exist!"));
-        return IItemStack.of(stack);
+        return IItemStack.of(new ItemStack(getRegistry(tokens, BuiltInRegistries.ITEM)));
     }
     
     
@@ -284,17 +233,7 @@ public class BracketHandlers {
     @ZenCodeType.Method
     public static Potion getPotion(String tokens) {
         
-        if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CommonLoggers.zenCode().warn("Potion BEP <potion:{}> does not seem to be lower-cased!", tokens);
-        }
-        
-        final String[] split = tokens.split(":");
-        if(split.length != 2) {
-            throw new IllegalArgumentException("Could not get potion with name: <potion:" + tokens + ">! Syntax is <potion:modid:potionname>");
-        }
-        ResourceLocation key = new ResourceLocation(split[0], split[1]);
-        return BuiltInRegistries.POTION.getOptional(key)
-                .orElseThrow(() -> new IllegalArgumentException("Could not get potion with name: <potion:" + tokens + ">! Potion does not appear to exist!"));
+        return getRegistry(tokens, BuiltInRegistries.POTION);
     }
     
     
@@ -316,7 +255,7 @@ public class BracketHandlers {
     public static IRecipeManager<?> getRecipeManager(String tokens) {
         
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
-            CommonLoggers.zenCode().warn("RecipeType BEP <recipetype:{}> does not seem to be lower-cased!", tokens);
+            CommonLoggers.zenCode().warn("RecipeType bracket <recipetype:{}> is not lower-cased!", tokens);
         }
         if(tokens.equalsIgnoreCase("crafttweaker:scripts")) {
             // This is bound to cause issues, like: <recipetype:crafttweaker:scripts>.removeAll(); Best to just fix it now
@@ -329,26 +268,8 @@ public class BracketHandlers {
         if(result != null) {
             return result;
         } else {
-            throw new IllegalArgumentException("Could not get RecipeType with name: <recipetype:" + tokens + ">! RecipeType does not appear to exist!");
+            throw new IllegalArgumentException("Could not get RecipeType with name: <recipetype:" + tokens + ">! RecipeType does not exist!");
         }
-    }
-    
-    /**
-     * Creates a Resource location based on the tokens.
-     * Throws an error if the tokens are not a valid location.
-     *
-     * @param tokens The resource location
-     *
-     * @return The location
-     *
-     * @docParam tokens "minecraft:dirt"
-     * @deprecated Use {@link ResourceLocationBracketHandler#getResourceLocation(String)} instead.
-     */
-    @Deprecated(forRemoval = true)
-    @ZenCodeType.Method
-    public static ResourceLocation getResourceLocation(String tokens) {
-        
-        return ResourceLocationBracketHandler.getResourceLocation(tokens);
     }
     
     /**
@@ -364,14 +285,7 @@ public class BracketHandlers {
     @BracketResolver("profession")
     public static VillagerProfession getProfession(String tokens) {
         
-        final int length = tokens.split(":").length;
-        if(length == 0 || length > 2) {
-            throw new IllegalArgumentException("Could not get profession <profession:" + tokens + ">");
-        }
-        final ResourceLocation resourceLocation = new ResourceLocation(tokens);
-        
-        return BuiltInRegistries.VILLAGER_PROFESSION.getOptional(resourceLocation)
-                .orElseThrow(() -> new IllegalArgumentException("Could not get profession with name: <profession:" + tokens + ">! Profession does not appear to exist!"));
+        return getRegistry(tokens, BuiltInRegistries.VILLAGER_PROFESSION);
     }
     
     /**
@@ -387,14 +301,7 @@ public class BracketHandlers {
     @BracketResolver("soundevent")
     public static SoundEvent getSoundEvent(String tokens) {
         
-        final int length = tokens.split(":").length;
-        if(length == 0 || length > 2) {
-            throw new IllegalArgumentException("Could not get sound event <soundevent:" + tokens + ">");
-        }
-        final ResourceLocation resourceLocation = new ResourceLocation(tokens);
-        
-        return BuiltInRegistries.SOUND_EVENT.getOptional(resourceLocation)
-                .orElseThrow(() -> new IllegalArgumentException("Could not get sound event with name: <soundevent:" + tokens + ">! Sound event does not appear to exist!"));
+        return getRegistry(tokens, BuiltInRegistries.SOUND_EVENT);
     }
     
     /**
@@ -415,7 +322,7 @@ public class BracketHandlers {
         
         if(!tokens.toLowerCase(Locale.ENGLISH).equals(tokens)) {
             CommonLoggers.zenCode()
-                    .warn("Targeting strategy BEP <targetingstrategy:{}> does not seem to be lower-cased!", tokens);
+                    .warn("Targeting strategy bracket <targetingstrategy:{}> is not lower-cased!", tokens);
         }
         
         final String[] split = tokens.split(":");
@@ -440,14 +347,7 @@ public class BracketHandlers {
     @BracketResolver("villagertype")
     public static VillagerType getVillagerType(String tokens) {
         
-        final int length = tokens.split(":").length;
-        if(length == 0 || length > 2) {
-            throw new IllegalArgumentException("Could not get profession <villagertype:" + tokens + ">");
-        }
-        final ResourceLocation resourceLocation = new ResourceLocation(tokens);
-        
-        return BuiltInRegistries.VILLAGER_TYPE.getOptional(resourceLocation)
-                .orElseThrow(() -> new IllegalArgumentException("Could not get villagertype with name: <villagertype:" + tokens + ">! Villager Type does not appear to exist!"));
+        return getRegistry(tokens, BuiltInRegistries.VILLAGER_TYPE);
     }
     
 }

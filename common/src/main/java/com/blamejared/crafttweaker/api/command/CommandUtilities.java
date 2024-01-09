@@ -12,7 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.Logger;
 
@@ -24,18 +23,18 @@ public final class CommandUtilities {
     
     private CommandUtilities() {}
     
-    public static void sendCopyingAndCopy(final MutableComponent component, final String toCopy, final Player player) {
+    public static void sendCopyingAndCopy(final CommandSourceStack source, final MutableComponent component, final String toCopy) {
         
-        sendCopying(component, toCopy, player);
-        copy(player, toCopy);
+        sendCopying(source, component, toCopy);
+        copy(source, toCopy);
     }
     
-    public static void sendCopying(final MutableComponent component, final String toCopy, final Player player) {
+    public static void sendCopying(final CommandSourceStack source, final MutableComponent component, final String toCopy) {
         
-        CommandUtilities.send(CommandUtilities.copy(component, toCopy), player);
+        CommandUtilities.send(source, CommandUtilities.copy(component, toCopy));
     }
     
-    public static void send(Component component, CommandSourceStack source) {
+    public static void send(final CommandSourceStack source, final Component component) {
         
         source.sendSuccess(() -> component, true);
         if(!component.getString().isBlank()) {
@@ -43,37 +42,19 @@ public final class CommandUtilities {
         }
     }
     
-    public static void send(Component component, Player player) {
+    public static void copy(final CommandSourceStack source, final String toCopy) {
         
-        player.sendSystemMessage(component);
-        if(!component.getString().isBlank()) {
-            COMMAND_LOGGER.info(component.getString());
+        if(source.isPlayer()) {
+            Services.NETWORK.sendCopyMessage(source.getPlayer(), new MessageCopy(toCopy));
         }
     }
     
-    public static void copy(final Player player, final String toCopy) {
-        
-        if(player instanceof ServerPlayer) {
-            Services.NETWORK.sendCopyMessage((ServerPlayer) player, new MessageCopy(toCopy));
-        }
-    }
-    
-    public static void open(final Player player, final Path path) {
+    public static void open(final CommandSourceStack source, final Path path) {
         
         MutableComponent component = Component.translatable("crafttweaker.command.click.open", Component.literal(path.toString())
                 .withStyle(ChatFormatting.GOLD));
-        send(component.withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, component.copy()))
-                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, path.toString()))), player);
-    }
-    
-    public static String stripNewLine(String string) {
-        
-        return string.substring(0, string.lastIndexOf("\n"));
-    }
-    
-    public static String stripNewLine(StringBuilder string) {
-        
-        return string.substring(0, string.lastIndexOf("\n"));
+        send(source, component.withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, component.copy()))
+                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, path.toString()))));
     }
     
     public static Component copy(MutableComponent base, String toCopy) {

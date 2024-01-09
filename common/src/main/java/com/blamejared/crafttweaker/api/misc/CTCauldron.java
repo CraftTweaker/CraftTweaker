@@ -12,8 +12,6 @@ import net.minecraft.world.level.block.Block;
 import org.openzen.zencode.java.ZenCodeGlobals;
 import org.openzen.zencode.java.ZenCodeType;
 
-import java.util.Map;
-
 /**
  * Lets you add new Cauldron interactions.
  *
@@ -243,12 +241,12 @@ public final class CTCauldron {
         removeInteraction(((AccessAbstractCauldronBlock) cauldron).crafttweaker$getInteractions(), item);
     }
     
-    public void addInteraction(Map<Item, CauldronInteraction> map, Item item, CTCauldronInteraction interaction) {
+    public void addInteraction(CauldronInteraction.InteractionMap map, Item item, CTCauldronInteraction interaction) {
         
         CraftTweakerAPI.apply(new ActionSetCauldronInteraction(map, item, interaction::interact));
     }
     
-    public void removeInteraction(Map<Item, CauldronInteraction> map, Item item) {
+    public void removeInteraction(CauldronInteraction.InteractionMap map, Item item) {
         
         CraftTweakerAPI.apply(new ActionSetCauldronInteraction(map, item, null));
     }

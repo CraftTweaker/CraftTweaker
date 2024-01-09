@@ -302,7 +302,7 @@ public class ExpandLevel {
         
         AABB aabb = new AABB(pos1);
         if(pos2 != null) {
-            aabb = new AABB(pos1, pos2);
+            aabb = AABB.encapsulatingFullBlocks(pos1, pos2);
         }
         return internal.getEntitiesOfClass(typeOfT, aabb);
     }
@@ -338,7 +338,7 @@ public class ExpandLevel {
         
         AABB aabb = new AABB(pos1);
         if(pos2 != null) {
-            aabb = new AABB(pos1, pos2);
+            aabb = AABB.encapsulatingFullBlocks(pos1, pos2);
         }
         
         return internal.getEntities(excludingEntity, aabb, predicate);

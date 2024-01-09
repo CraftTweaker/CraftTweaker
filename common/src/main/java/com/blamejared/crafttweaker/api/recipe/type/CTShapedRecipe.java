@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.recipe.MirrorAxis;
 import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction2D;
 import com.blamejared.crafttweaker.api.recipe.serializer.CTShapedRecipeSerializer;
 import com.blamejared.crafttweaker.api.util.ArrayUtil;
+import com.blamejared.crafttweaker.api.util.RecipeUtil;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
@@ -36,6 +37,7 @@ public class CTShapedRecipe extends ShapedRecipe {
         
         this(CraftingBookCategory.MISC, output, ingredients, mirrorAxis, null);
     }
+    
     public CTShapedRecipe(IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunction2D function) {
         
         this(CraftingBookCategory.MISC, output, ingredients, mirrorAxis, function);
@@ -43,7 +45,7 @@ public class CTShapedRecipe extends ShapedRecipe {
     
     public CTShapedRecipe(CraftingBookCategory category, IItemStack output, IIngredient[][] ingredients, MirrorAxis mirrorAxis, @Nullable RecipeFunction2D function) {
         
-        super("", category, getMaxWidth(ingredients), ingredients.length, NonNullList.create(), output.getInternal());
+        super("", category, RecipeUtil.createPattern(ingredients), output.getInternal());
         this.output = output;
         this.ingredients = ingredients;
         this.mirrorAxis = mirrorAxis;
@@ -57,13 +59,6 @@ public class CTShapedRecipe extends ShapedRecipe {
         initMirroredIngredients();
     }
     
-    private static int getMaxWidth(IIngredient[][] array) {
-        
-        return Arrays.stream(array)
-                .mapToInt(row -> row.length)
-                .max()
-                .orElse(0);
-    }
     
     private void initMirroredIngredients() {
         
@@ -260,19 +255,6 @@ public class CTShapedRecipe extends ShapedRecipe {
     }
     
     @Override
-    public NonNullList<Ingredient> getIngredients() {
-        
-        NonNullList<Ingredient> ingredients = NonNullList.withSize(getHeight() * getWidth(), Ingredient.EMPTY);
-        for(int row = 0; row < this.ingredients.length; row++) {
-            IIngredient[] ingredientRow = this.ingredients[row];
-            for(int column = 0; column < ingredientRow.length; column++) {
-                ingredients.set(row * getWidth() + column, ingredientRow[column].asVanillaIngredient());
-            }
-        }
-        return ingredients;
-    }
-    
-    @Override
     public RecipeSerializer<CTShapedRecipe> getSerializer() {
         
         return CTShapedRecipeSerializer.INSTANCE;
@@ -321,21 +303,27 @@ public class CTShapedRecipe extends ShapedRecipe {
     @Override
     public boolean equals(Object o) {
         
-        if(this == o)
+        if(this == o) {
             return true;
-        if(o == null || getClass() != o.getClass())
+        }
+        if(o == null || getClass() != o.getClass()) {
             return false;
+        }
         
         CTShapedRecipe that = (CTShapedRecipe) o;
         
-        if(!Arrays.deepEquals(ingredients, that.ingredients))
+        if(!Arrays.deepEquals(ingredients, that.ingredients)) {
             return false;
-        if(!Arrays.deepEquals(mirroredIngredients, that.mirroredIngredients))
+        }
+        if(!Arrays.deepEquals(mirroredIngredients, that.mirroredIngredients)) {
             return false;
-        if(!Objects.equals(output, that.output))
+        }
+        if(!Objects.equals(output, that.output)) {
             return false;
-        if(mirrorAxis != that.mirrorAxis)
+        }
+        if(mirrorAxis != that.mirrorAxis) {
             return false;
+        }
         return Objects.equals(function, that.function);
     }
     

@@ -4,7 +4,6 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.action.recipe.ActionAddRecipe;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
-import com.blamejared.crafttweaker.api.ingredient.type.IIngredientEmpty;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.MirrorAxis;
 import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction1D;
@@ -12,9 +11,8 @@ import com.blamejared.crafttweaker.api.recipe.fun.RecipeFunction2D;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapedRecipe;
 import com.blamejared.crafttweaker.api.recipe.type.CTShapelessRecipe;
+import com.blamejared.crafttweaker.api.util.RecipeUtil;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import com.google.common.collect.Sets;
-import com.google.gson.JsonSyntaxException;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -23,7 +21,6 @@ import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @docParam this craftingTable
@@ -51,7 +48,7 @@ public class CraftingTableRecipeManager implements IRecipeManager<CraftingRecipe
         int height = pattern.length;
         int width = Arrays.stream(pattern).mapToInt(String::length).max().orElse(0);
         
-        IIngredient[][] ingredients = dissolvePattern(pattern, keys, width, height);
+        IIngredient[][] ingredients = RecipeUtil.dissolvePattern(pattern, keys, width, height);
         
         CraftTweakerAPI.apply(new ActionAddRecipe<>(this, createHolder(fixRecipeId(recipeName), new CTShapedRecipe(output, ingredients, MirrorAxis.NONE, recipeFunction)), "shaped"));
     }
@@ -94,34 +91,5 @@ public class CraftingTableRecipeManager implements IRecipeManager<CraftingRecipe
         return RecipeType.CRAFTING;
     }
     
-    
-    public static IIngredient[][] dissolvePattern(String[] pattern, Map<String, IIngredient> keys, int width, int height) {
-        
-        // " " is reserved for empty
-        keys.put(" ", IIngredientEmpty.INSTANCE);
-        IIngredient[][] ingredients = new IIngredient[height][width];
-        Set<String> set = Sets.newHashSet(keys.keySet());
-        set.remove(" ");
-        
-        
-        for(int row = 0; row < pattern.length; ++row) {
-            for(int col = 0; col < pattern[row].length(); ++col) {
-                String s = pattern[row].substring(col, col + 1);
-                IIngredient ingredient = keys.get(s);
-                if(ingredient == null) {
-                    throw new IllegalArgumentException("Pattern references symbol '" + s + "' but it is not defined in the key");
-                }
-                
-                set.remove(s);
-                ingredients[row][col] = ingredient;
-            }
-        }
-        
-        if(!set.isEmpty()) {
-            throw new JsonSyntaxException("Key defines symbols that aren't used in pattern: " + set);
-        } else {
-            return ingredients;
-        }
-    }
     
 }

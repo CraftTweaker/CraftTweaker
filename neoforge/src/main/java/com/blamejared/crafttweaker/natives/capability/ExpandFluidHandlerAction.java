@@ -18,7 +18,6 @@ public class ExpandFluidHandlerAction {
      *
      * @return true if the action should execute, false otherwise.
      */
-    @ZenCodeType.Method
     @ZenCodeType.Getter("execute")
     public static boolean execute(IFluidHandler.FluidAction internal) {
         
@@ -30,7 +29,6 @@ public class ExpandFluidHandlerAction {
      *
      * @return true if the action should simulate, false otherwise.
      */
-    @ZenCodeType.Method
     @ZenCodeType.Getter("simulate")
     public static boolean simulate(IFluidHandler.FluidAction internal) {
         

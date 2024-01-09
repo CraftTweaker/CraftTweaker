@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.natives.entity.type.player.ExpandPlayer;
 import com.blamejared.crafttweaker.platform.services.IEventHelper;
 import com.mojang.brigadier.Command;
 import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -42,14 +43,13 @@ public final class MiscCommands {
                 "reload",
                 Component.translatable("crafttweaker.command.description.reload"),
                 builder -> builder.executes(context -> {
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
                     CommandUtilities.send(
+                            context.getSource(),
                             CommandUtilities.run(
                                     Component.translatable("crafttweaker.command.misc.reload.info")
                                             .withStyle(ChatFormatting.AQUA),
                                     "/reload"
-                            ),
-                            player
+                            )
                     );
                     return Command.SINGLE_SUCCESS;
                 })
@@ -59,9 +59,8 @@ public final class MiscCommands {
                 "discord",
                 Component.translatable("crafttweaker.command.description.discord"),
                 builder -> builder.executes(context -> {
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
-                    CommandUtilities.send(CommandUtilities.openingUrl(Component.translatable("crafttweaker.command.misc.link", CommandUtilities.makeNoticeable(DISCORD))
-                            .withStyle(ChatFormatting.GREEN), DISCORD), player);
+                    CommandUtilities.send(context.getSource(), CommandUtilities.openingUrl(Component.translatable("crafttweaker.command.misc.link", CommandUtilities.makeNoticeable(DISCORD))
+                            .withStyle(ChatFormatting.GREEN), DISCORD));
                     return Command.SINGLE_SUCCESS;
                 })
         );
@@ -70,9 +69,8 @@ public final class MiscCommands {
                 "issues",
                 Component.translatable("crafttweaker.command.description.issues"),
                 builder -> builder.executes(context -> {
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
-                    CommandUtilities.send(CommandUtilities.openingUrl(Component.translatable("crafttweaker.command.misc.link", CommandUtilities.makeNoticeable(ISSUES))
-                            .withStyle(ChatFormatting.GREEN), ISSUES), player);
+                    CommandUtilities.send(context.getSource(), CommandUtilities.openingUrl(Component.translatable("crafttweaker.command.misc.link", CommandUtilities.makeNoticeable(ISSUES))
+                            .withStyle(ChatFormatting.GREEN), ISSUES));
                     return Command.SINGLE_SUCCESS;
                 })
         );
@@ -81,9 +79,8 @@ public final class MiscCommands {
                 "patreon",
                 Component.translatable("crafttweaker.command.description.patreon"),
                 builder -> builder.executes(context -> {
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
-                    CommandUtilities.send(CommandUtilities.openingUrl(Component.translatable("crafttweaker.command.misc.link", CommandUtilities.makeNoticeable(PATREON))
-                            .withStyle(ChatFormatting.GREEN), PATREON), player);
+                    CommandUtilities.send(context.getSource(), CommandUtilities.openingUrl(Component.translatable("crafttweaker.command.misc.link", CommandUtilities.makeNoticeable(PATREON))
+                            .withStyle(ChatFormatting.GREEN), PATREON));
                     return Command.SINGLE_SUCCESS;
                 })
         );
@@ -92,9 +89,8 @@ public final class MiscCommands {
                 id,
                 Component.translatable("crafttweaker.command.description.docs"),
                 builder -> builder.executes(context -> {
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
-                    CommandUtilities.send(CommandUtilities.openingUrl(Component.translatable("crafttweaker.command.misc.link", CommandUtilities.makeNoticeable(DOCS))
-                            .withStyle(ChatFormatting.GREEN), DOCS), player);
+                    CommandUtilities.send(context.getSource(), CommandUtilities.openingUrl(Component.translatable("crafttweaker.command.misc.link", CommandUtilities.makeNoticeable(DOCS))
+                            .withStyle(ChatFormatting.GREEN), DOCS));
                     return Command.SINGLE_SUCCESS;
                 })
         ));
@@ -103,8 +99,7 @@ public final class MiscCommands {
                 "ctgui",
                 Component.translatable("crafttweaker.command.description.docs"),
                 builder -> builder.executes(context -> {
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
-                    CommandUtilities.send(Component.translatable("crafttweaker.command.misc.ctgui"), player);
+                    CommandUtilities.send(context.getSource(), Component.translatable("crafttweaker.command.misc.ctgui"));
                     return Command.SINGLE_SUCCESS;
                 })
         );
@@ -113,14 +108,15 @@ public final class MiscCommands {
                 "block_info",
                 Component.translatable("crafttweaker.command.description.info.block"),
                 builder -> builder.executes(context -> {
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    CommandSourceStack source = context.getSource();
+                    final ServerPlayer player = source.getPlayerOrException();
                     
                     if(IEventHelper.BLOCK_INFO_PLAYERS.contains(player)) {
                         IEventHelper.BLOCK_INFO_PLAYERS.remove(player);
-                        CommandUtilities.send(Component.translatable("crafttweaker.command.info.block.deactivated"), player);
+                        CommandUtilities.send(source, Component.translatable("crafttweaker.command.info.block.deactivated"));
                     } else {
                         IEventHelper.BLOCK_INFO_PLAYERS.add(player);
-                        CommandUtilities.send(Component.translatable("crafttweaker.command.info.block.activated"), player);
+                        CommandUtilities.send(source, Component.translatable("crafttweaker.command.info.block.activated"));
                     }
                     
                     return Command.SINGLE_SUCCESS;
@@ -131,14 +127,14 @@ public final class MiscCommands {
                 "entity_info",
                 Component.translatable("crafttweaker.command.description.info.entity"),
                 builder -> builder.executes(context -> {
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
-                    
+                    CommandSourceStack source = context.getSource();
+                    final ServerPlayer player = source.getPlayerOrException();
                     if(IEventHelper.ENTITY_INFO_PLAYERS.contains(player)) {
                         IEventHelper.ENTITY_INFO_PLAYERS.remove(player);
-                        CommandUtilities.send(Component.translatable("crafttweaker.command.info.entity.deactivated"), player);
+                        CommandUtilities.send(source, Component.translatable("crafttweaker.command.info.entity.deactivated"));
                     } else {
                         IEventHelper.ENTITY_INFO_PLAYERS.add(player);
-                        CommandUtilities.send(Component.translatable("crafttweaker.command.info.entity.activated"), player);
+                        CommandUtilities.send(source, Component.translatable("crafttweaker.command.info.entity.activated"));
                     }
                     
                     return Command.SINGLE_SUCCESS;

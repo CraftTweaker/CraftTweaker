@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.platform.helper.inventory.IInventoryWrapper;
 import com.mojang.brigadier.Command;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -32,7 +33,8 @@ public final class InventoryCommands {
                 "inventory",
                 Component.translatable("crafttweaker.command.description.inventory"),
                 builder -> builder.executes(context -> {
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    CommandSourceStack source = context.getSource();
+                    final ServerPlayer player = source.getPlayerOrException();
                     final IInventoryWrapper inventory = Services.PLATFORM.getPlayerInventory(player);
                     final String inventoryContents = IntStream.range(0, inventory.getContainerSize())
                             .mapToObj(inventory::getItem)
@@ -41,8 +43,8 @@ public final class InventoryCommands {
                             .collect(Collectors.joining("\n", "Inventory items\n", ""));
                     
                     CommandUtilities.COMMAND_LOGGER.info(inventoryContents);
-                    CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.inventory.list")), CommandUtilities.getFormattedLogFile())
-                            .withStyle(ChatFormatting.GREEN)), player);
+                    CommandUtilities.send(source, CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.inventory.list")), CommandUtilities.getFormattedLogFile())
+                            .withStyle(ChatFormatting.GREEN)));
                     
                     return Command.SINGLE_SUCCESS;
                 })
@@ -53,7 +55,8 @@ public final class InventoryCommands {
                 "tags",
                 Component.translatable("crafttweaker.command.description.inventory.tags"),
                 builder -> builder.executes(context -> {
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    CommandSourceStack source = context.getSource();
+                    final ServerPlayer player = source.getPlayerOrException();
                     final IInventoryWrapper inventory = Services.PLATFORM.getPlayerInventory(player);
                     final String inventoryContents = IntStream.range(0, inventory.getContainerSize())
                             .mapToObj(inventory::getItem)
@@ -64,8 +67,8 @@ public final class InventoryCommands {
                             .collect(Collectors.joining("\n", "Inventory item tags\n", ""));
                     
                     CommandUtilities.COMMAND_LOGGER.info(inventoryContents);
-                    CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.inventory.list.tag")), CommandUtilities.getFormattedLogFile())
-                            .withStyle(ChatFormatting.GREEN)), player);
+                    CommandUtilities.send(source, CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.inventory.list.tag")), CommandUtilities.getFormattedLogFile())
+                            .withStyle(ChatFormatting.GREEN)));
                     
                     return Command.SINGLE_SUCCESS;
                 })
@@ -76,7 +79,8 @@ public final class InventoryCommands {
                 "registryNames",
                 Component.translatable("crafttweaker.command.description.inventory.registryNames"),
                 builder -> builder.executes(context -> {
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    CommandSourceStack source = context.getSource();
+                    final ServerPlayer player = source.getPlayerOrException();
                     final IInventoryWrapper inventory = Services.PLATFORM.getPlayerInventory(player);
                     final String inventoryContents = IntStream.range(0, inventory.getContainerSize())
                             .mapToObj(inventory::getItem)
@@ -87,8 +91,8 @@ public final class InventoryCommands {
                             .collect(Collectors.joining("\n", "Inventory items\n", ""));
                     
                     CommandUtilities.COMMAND_LOGGER.info(inventoryContents);
-                    CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.inventory.list")), CommandUtilities.getFormattedLogFile())
-                            .withStyle(ChatFormatting.GREEN)), player);
+                    CommandUtilities.send(source, CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.inventory.list")), CommandUtilities.getFormattedLogFile())
+                            .withStyle(ChatFormatting.GREEN)));
                     
                     return Command.SINGLE_SUCCESS;
                 })

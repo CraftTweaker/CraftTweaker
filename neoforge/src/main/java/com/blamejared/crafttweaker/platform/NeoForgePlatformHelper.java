@@ -24,8 +24,8 @@ import com.blamejared.crafttweaker.impl.loot.NeoForgeLootModifierMapAdapter;
 import com.blamejared.crafttweaker.impl.mod.NeoForgeMod;
 import com.blamejared.crafttweaker.mixin.common.access.entity.AccessFakePlayerFactory;
 import com.blamejared.crafttweaker.mixin.common.access.food.AccessFoodPropertiesNeoForge;
-import com.blamejared.crafttweaker.mixin.common.access.neoforge.AccessNeoForgeInternalHandler;
 import com.blamejared.crafttweaker.mixin.common.access.loot.AccessLootModifierManager;
+import com.blamejared.crafttweaker.mixin.common.access.neoforge.AccessNeoForgeInternalHandler;
 import com.blamejared.crafttweaker.mixin.common.access.villager.AccessBasicTrade;
 import com.blamejared.crafttweaker.platform.helper.inventory.IItemHandlerWrapper;
 import com.blamejared.crafttweaker.platform.services.IPlatformHelper;
@@ -56,12 +56,11 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.fml.util.ObfuscationReflectionHelper;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.BasicItemListing;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.common.loot.LootModifierManager;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
@@ -264,11 +263,7 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     @Override
     public IItemHandlerWrapper getPlayerInventory(Player player) {
         
-        // First try getting the neoforge one, if that fails use the default vanilla one
-        return player.getCapability(Capabilities.ITEM_HANDLER)
-                .map(IItemHandlerWrapper::new)
-                .orElseThrow(() -> new RuntimeException(
-                        "Player does not have the Item Handler capability, this is probably wrong!"));
+        return new IItemHandlerWrapper(player.getCapability(Capabilities.ItemHandler.ENTITY));
     }
     
     @Override
@@ -278,7 +273,7 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
             return false;
         }
         
-        return (!first.hasTag() || Objects.equals(first.getTag(), second.getTag())) && first.areCapsCompatible(second);
+        return (!first.hasTag() || Objects.equals(first.getTag(), second.getTag())) && first.areAttachmentsCompatible(second);
     }
     
     @Override
@@ -290,17 +285,15 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     @Override
     public Set<MutableComponent> getFluidsForDump(ItemStack stack, Player player, InteractionHand hand) {
         
-        LazyOptional<IFluidHandlerItem> cap = stack.getCapability(Capabilities.FLUID_HANDLER_ITEM);
-        if(!cap.isPresent()) {
+        IFluidHandlerItem cap = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        if(cap == null) {
             return Set.of();
         }
         Set<MutableComponent> components = new HashSet<>();
-        cap.ifPresent(handler -> {
-            int tanks = handler.getTanks();
-            for(int i = 0; i < tanks; i++) {
-                components.add(Component.literal(IFluidStack.of(handler.getFluidInTank(i)).getCommandString()));
-            }
-        });
+        int tanks = cap.getTanks();
+        for(int i = 0; i < tanks; i++) {
+            components.add(Component.literal(IFluidStack.of(cap.getFluidInTank(i)).getCommandString()));
+        }
         return components;
     }
     

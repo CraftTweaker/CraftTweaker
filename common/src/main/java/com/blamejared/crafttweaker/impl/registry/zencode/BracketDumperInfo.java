@@ -11,7 +11,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Locale;
 import java.util.Optional;
@@ -75,12 +74,12 @@ final class BracketDumperInfo implements IBracketDumperInfo {
     @Override
     public int run(final CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         
-        final ServerPlayer player = context.getSource().getPlayerOrException();
+        CommandSourceStack source = context.getSource();
         this.values().forEach(bepCall -> CommandUtilities.COMMAND_LOGGER.info("- " + bepCall));
-        CommandUtilities.send(Component.translatable("crafttweaker.command.dump.generated", CommandUtilities.makeNoticeable(this.bepHandlerName))
-                .withStyle(ChatFormatting.GREEN), player);
-        CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.check.log", CommandUtilities.getFormattedLogFile())
-                .withStyle(ChatFormatting.GREEN)), player);
+        CommandUtilities.send(source, Component.translatable("crafttweaker.command.dump.generated", CommandUtilities.makeNoticeable(this.bepHandlerName))
+                .withStyle(ChatFormatting.GREEN));
+        CommandUtilities.send(source, CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.check.log", CommandUtilities.getFormattedLogFile())
+                .withStyle(ChatFormatting.GREEN)));
         return Command.SINGLE_SUCCESS;
     }
     

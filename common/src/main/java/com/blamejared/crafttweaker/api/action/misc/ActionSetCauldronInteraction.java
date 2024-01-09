@@ -5,16 +5,14 @@ import com.blamejared.crafttweaker.api.action.internal.CraftTweakerAction;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.world.item.Item;
 
-import java.util.Map;
-
 public class ActionSetCauldronInteraction extends CraftTweakerAction implements IUndoableAction {
     
-    private final Map<Item, CauldronInteraction> map;
+    private final CauldronInteraction.InteractionMap map;
     private final Item key;
     private final CauldronInteraction interaction;
     private CauldronInteraction previous;
     
-    public ActionSetCauldronInteraction(Map<Item, CauldronInteraction> map, Item key, CauldronInteraction interaction) {
+    public ActionSetCauldronInteraction(CauldronInteraction.InteractionMap map, Item key, CauldronInteraction interaction) {
         
         this.map = map;
         this.key = key;
@@ -25,9 +23,9 @@ public class ActionSetCauldronInteraction extends CraftTweakerAction implements 
     public void apply() {
         
         if(interaction == null) {
-            previous = map.remove(key);
+            previous = map.map().remove(key);
         } else {
-            previous = map.put(key, interaction);
+            previous = map.map().put(key, interaction);
         }
     }
     
@@ -41,9 +39,9 @@ public class ActionSetCauldronInteraction extends CraftTweakerAction implements 
     public void undo() {
         
         if(previous == null) {
-            map.remove(key);
+            map.map().remove(key);
         } else {
-            map.put(key, previous);
+            map.map().put(key, previous);
         }
     }
     

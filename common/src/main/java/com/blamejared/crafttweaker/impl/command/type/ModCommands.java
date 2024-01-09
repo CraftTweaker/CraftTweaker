@@ -5,8 +5,8 @@ import com.blamejared.crafttweaker.api.plugin.ICommandRegistrationHandler;
 import com.blamejared.crafttweaker.platform.Services;
 import com.mojang.brigadier.Command;
 import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 
 public final class ModCommands {
     
@@ -16,12 +16,12 @@ public final class ModCommands {
                 "mods",
                 Component.translatable("crafttweaker.command.description.mods"),
                 builder -> builder.executes(context -> {
-                    final ServerPlayer player = context.getSource().getPlayerOrException();
+                    CommandSourceStack source = context.getSource();
                     Services.PLATFORM.getMods()
                             .forEach(mod -> CommandUtilities.COMMAND_LOGGER.info("- {}({})@{}", mod.displayName(), mod.id(), mod.version()));
                     
-                    CommandUtilities.send(CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.mods")), CommandUtilities.getFormattedLogFile())
-                            .withStyle(ChatFormatting.GREEN)), player);
+                    CommandUtilities.send(source, CommandUtilities.openingLogFile(Component.translatable("crafttweaker.command.list.check.log", CommandUtilities.makeNoticeable(Component.translatable("crafttweaker.command.misc.mods")), CommandUtilities.getFormattedLogFile())
+                            .withStyle(ChatFormatting.GREEN)));
                     
                     return Command.SINGLE_SUCCESS;
                 })

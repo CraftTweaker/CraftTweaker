@@ -11,17 +11,16 @@ import org.openzen.zencode.java.ZenCodeType;
 @Document("neoforge/api/capability/IFluidHandlerItem")
 @NativeTypeRegistration(value = IFluidHandlerItem.class, zenCodeName = "crafttweaker.api.capability.IFluidHandlerItem")
 public class ExpandIFluidHandlerItem {
-    
+
     /**
      * Gets the container of this handler.
      *
      * @return The container of this handler.
      */
-    @ZenCodeType.Method
     @ZenCodeType.Getter("container")
     public static ItemStack getContainer(IFluidHandlerItem internal) {
-        
+
         return internal.getContainer();
     }
-    
+
 }
