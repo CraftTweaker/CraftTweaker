@@ -23,7 +23,7 @@ import java.util.Random;
 @Document("vanilla/api/loot/LootContextBuilder")
 @NativeTypeRegistration(value = LootContext.Builder.class, zenCodeName = "crafttweaker.api.loot.LootContextBuilder")
 public final class ExpandLootContextBuilder {
-    
+
     /**
      * Creates a new builder with the given level.
      *
@@ -33,13 +33,13 @@ public final class ExpandLootContextBuilder {
      */
     @ZenCodeType.StaticExpansionMethod
     public static LootContext.Builder create(ServerLevel level) {
-        
+
         return new LootContext.Builder(level);
     }
-    
+
     @ZenCodeType.StaticExpansionMethod
     public static LootContext.Builder copy(LootContext context) {
-        
+
         LootContext.Builder builder = new LootContext.Builder(context.getLevel());
         builder.withLuck(context.getLuck());
         builder.withRandom(context.getRandom());
@@ -49,7 +49,7 @@ public final class ExpandLootContextBuilder {
                 .putAll(((AccessLootContext) context).crafttweaker$getDynamicDrops());
         return builder;
     }
-    
+
     /**
      * Supplies a {@link Random} source to the built context.
      *
@@ -61,10 +61,10 @@ public final class ExpandLootContextBuilder {
      */
     @ZenCodeType.Method
     public static LootContext.Builder withRandom(LootContext.Builder internal, RandomSource random) {
-        
+
         return internal.withRandom(random);
     }
-    
+
     /**
      * Supplies a seed to be passed into a new {@link Random}.
      *
@@ -76,12 +76,13 @@ public final class ExpandLootContextBuilder {
      */
     @ZenCodeType.Method
     public static LootContext.Builder withOptionalRandomSeed(LootContext.Builder internal, long seed) {
-        
+
         return internal.withOptionalRandomSeed(seed);
     }
-    
+
     /**
-     * Supplies either a seed to be passed into a new {@link Random} or if the seed is {@code 0} use the given {@link Random}
+     * Supplies either a seed to be passed into a new {@link Random} or if the seed
+     * is {@code 0} use the given {@link Random}
      *
      * @param seed   The seed to use.
      * @param random The random source to provide.
@@ -92,11 +93,12 @@ public final class ExpandLootContextBuilder {
      * @docParam random level.random
      */
     @ZenCodeType.Method
-    public static LootContext.Builder withOptionalRandomSeed(LootContext.Builder internal, long seed, RandomSource random) {
-        
+    public static LootContext.Builder withOptionalRandomSeed(LootContext.Builder internal, long seed,
+            RandomSource random) {
+
         return internal.withOptionalRandomSeed(seed, random);
     }
-    
+
     /**
      * Provides the given luck value to the context.
      *
@@ -108,10 +110,10 @@ public final class ExpandLootContextBuilder {
      */
     @ZenCodeType.Method
     public static LootContext.Builder withLuck(LootContext.Builder internal, float luck) {
-        
+
         return internal.withLuck(luck);
     }
-    
+
     /**
      * Provides a parameter to this builder.
      *
@@ -125,11 +127,12 @@ public final class ExpandLootContextBuilder {
      * @docParam actor new Vec3(1, 2, 3);
      */
     @ZenCodeType.Method
-    public static <T> LootContext.Builder withParameter(LootContext.Builder internal, Class<T> tClass, LootContextParam<T> contextParam, T actor) {
-        
+    public static <T> LootContext.Builder withParameter(LootContext.Builder internal, Class<T> tClass,
+            LootContextParam<T> contextParam, T actor) {
+
         return internal.withParameter(contextParam, actor);
     }
-    
+
     /**
      * Provides an optional parameter to this builder.
      *
@@ -143,11 +146,12 @@ public final class ExpandLootContextBuilder {
      * @docParam actor new Vec3(1, 2, 3);
      */
     @ZenCodeType.Method
-    public static <T> LootContext.Builder withOptionalParameter(LootContext.Builder internal, Class<T> tClass, LootContextParam<T> contextParam, @ZenCodeType.Nullable T actor) {
-        
+    public static <T> LootContext.Builder withOptionalParameter(LootContext.Builder internal, Class<T> tClass,
+            LootContextParam<T> contextParam, @ZenCodeType.Nullable T actor) {
+
         return internal.withOptionalParameter(contextParam, actor);
     }
-    
+
     /**
      * Gets the level that this builder uses.
      *
@@ -156,10 +160,10 @@ public final class ExpandLootContextBuilder {
     @ZenCodeType.Method
     @ZenCodeType.Getter("level")
     public static ServerLevel getLevel(LootContext.Builder internal) {
-        
+
         return internal.getLevel();
     }
-    
+
     /**
      * Gets the provided value of the parameter.
      *
@@ -172,10 +176,10 @@ public final class ExpandLootContextBuilder {
      */
     @ZenCodeType.Method
     public static <T> T getParameter(LootContext.Builder internal, Class<T> tClass, LootContextParam<T> contextParam) {
-        
+
         return internal.getParameter(contextParam);
     }
-    
+
     /**
      * Gets the provided value of the optional parameter.
      *
@@ -188,26 +192,53 @@ public final class ExpandLootContextBuilder {
      */
     @ZenCodeType.Method
     @ZenCodeType.Nullable
-    public static <T> T getOptionalParameter(LootContext.Builder internal, Class<T> tClass, LootContextParam<T> contextParam) {
-        
+    public static <T> T getOptionalParameter(LootContext.Builder internal, Class<T> tClass,
+            LootContextParam<T> contextParam) {
+
         return internal.getOptionalParameter(contextParam);
     }
-    
+
     /**
      * Creates a new {@link LootContext} with the given {@link LootContextParamSet}.
      *
-     * <p> The given {@link LootContextParamSet} is used to determine what values are required for the context to be used.
+     * <p>
+     * The given {@link LootContextParamSet} is used to determine what values are
+     * required for the context to be used.
      *
      * @param contextParamSet The {@link LootContextParamSet} to use.
      *
      * @return a new {@link LootContext}
      *
      * @docParam contextParamSet LootContextParamSets.gift()
+     * 
+     * @deprecated Use {@link #build(LootContext.Builder, LootContextParamSet)}
+     *             instead to work around a bug in the
+     *             ZenCode compiler.
      */
+    @Deprecated
     @ZenCodeType.Method
     public static LootContext create(LootContext.Builder internal, LootContextParamSet contextParamSet) {
-        
+
         return internal.create(contextParamSet);
     }
-    
+
+    /**
+     * Creates a new {@link LootContext} with the given {@link LootContextParamSet}.
+     * 
+     * <p>
+     * The given {@link LootContextParamSet} is used to determine what values are
+     * required for the context to be used.
+     * 
+     * @param contextParamSet The {@link LootContextParamSet} to use.
+     * 
+     * @return a new {@link LootContext}
+     * 
+     * @docParam contextParamSet LootContextParamSets.gift()
+     */
+    @ZenCodeType.Method
+    public static LootContext build(LootContext.Builder internal, LootContextParamSet contextParamSet) {
+
+        return create(internal, contextParamSet);
+    }
+
 }
