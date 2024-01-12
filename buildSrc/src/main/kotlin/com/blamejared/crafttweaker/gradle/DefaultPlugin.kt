@@ -306,7 +306,7 @@ class DefaultPlugin : Plugin<Project> {
         project.plugins.apply(IdeaPlugin::class.java)
 
         val idea = project.extensions.getByType<IdeaModel>()
-        idea.module.excludeDirs.addAll(setOf(project.file("run"), project.file("run_server"), project.file("run_client"), project.file("run_game_test")))
+        idea.module.excludeDirs.addAll(setOf(project.file("run"), project.file("runs"), project.file("run_server"), project.file("run_client"), project.file("run_game_test")))
     }
 
     private fun applyMavenPlugin(project: Project) {

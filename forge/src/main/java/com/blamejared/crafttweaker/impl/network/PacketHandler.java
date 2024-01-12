@@ -30,15 +30,15 @@ public class PacketHandler {
         }
     }
     
-    private static <MSG extends IMessage<MSG>> void registerMessage(Class<MSG> messageType, Function<FriendlyByteBuf, MSG> decoder, @SuppressWarnings("SameParameterValue") @Nullable NetworkDirection direction) {
+    private static <MSG extends IMessage> void registerMessage(Class<MSG> messageType, Function<FriendlyByteBuf, MSG> decoder, @SuppressWarnings("SameParameterValue") @Nullable NetworkDirection direction) {
         
         registerMessage(messageType, decoder, (messageCopy, contextSupplier) -> andHandling(contextSupplier, messageCopy::handle), direction);
     }
     
-    private static <MSG extends IMessage<MSG>> void registerMessage(Class<MSG> messageType, Function<FriendlyByteBuf, MSG> decoder, BiConsumer<MSG, CustomPayloadEvent.Context> messageConsumer, @Nullable NetworkDirection direction) {
+    private static <MSG extends IMessage> void registerMessage(Class<MSG> messageType, Function<FriendlyByteBuf, MSG> decoder, BiConsumer<MSG, CustomPayloadEvent.Context> messageConsumer, @Nullable NetworkDirection direction) {
         
         CHANNEL.messageBuilder(messageType, ID++, direction)
-                .encoder(IMessage::serialize)
+                .encoder(IMessage::write)
                 .decoder(decoder)
                 .consumerNetworkThread(messageConsumer)
                 .add();

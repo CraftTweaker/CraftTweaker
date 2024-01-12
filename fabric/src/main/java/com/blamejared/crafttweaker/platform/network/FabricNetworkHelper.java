@@ -14,7 +14,7 @@ public class FabricNetworkHelper implements INetworkHelper {
     public void sendCopyMessage(ServerPlayer target, MessageCopy message) {
         
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-        message.serialize(buf);
+        message.write(buf);
         ServerPlayNetworking.send(target, ClientMessages.COPY.getId(), buf);
     }
     

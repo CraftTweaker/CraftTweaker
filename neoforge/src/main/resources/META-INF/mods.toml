@@ -18,13 +18,13 @@ config = "${MOD_ID}.mixins.json"
 config = "${MOD_ID}.neoforge.mixins.json"
 [[dependencies.${MOD_ID}]]
 modId = "neoforge"
-mandatory = true
+type = "required"
 versionRange = "[${NEO_FORGE_LOADER},)"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.${MOD_ID}]]
 modId = "minecraft"
-mandatory = true
+type = "required"
 versionRange = "[${MINECRAFT}]"
 ordering = "NONE"
 side = "BOTH"

@@ -8,7 +8,7 @@ import net.darkhax.curseforgegradle.TaskPublishCurseForge
 plugins {
     id("com.blamejared.crafttweaker.default")
     id("com.blamejared.crafttweaker.loader")
-    id("net.neoforged.gradle.userdev") version ("7.0.71")
+    id("net.neoforged.gradle.userdev") version ("7.0.81")
     id("net.darkhax.curseforgegradle")
     id("com.modrinth.minotaur")
 }
