@@ -18,18 +18,31 @@ public class RecipeUtil {
     
     public static ShapedRecipePattern createPattern(IIngredient[][] ingredients) {
         
-        return createPattern(ArrayUtil.flattenToNNL(ingredients, () -> Ingredient.EMPTY, IIngredient::asVanillaIngredient));
+        int width = ArrayUtil.getMaxWidth(ingredients);
+        int height = ingredients.length;
+        
+        return createPattern(ArrayUtil.flattenToNNL(width, height, ingredients, () -> Ingredient.EMPTY, IIngredient::asVanillaIngredient), width, height);
     }
     
-    public static ShapedRecipePattern createPattern(NonNullList<Ingredient> flatIngredients) {
+    public static ShapedRecipePattern createPattern(NonNullList<Ingredient> flatIngredients, int width, int height) {
         
         char start = 'a';
         Map<Character, Ingredient> keys = new HashMap<>();
         List<String> pattern = new LinkedList<>();
-        for(Ingredient flatIngredient : flatIngredients) {
-            char key = start++;
-            keys.put(key, flatIngredient);
-            pattern.add(String.valueOf(key));
+        int ingredientIndex = 0;
+        for(int row = 0; row < height; row++) {
+            StringBuilder rowPattern = new StringBuilder();
+            for(int col = 0; col < width; col++) {
+                Ingredient ingredient = flatIngredients.get(ingredientIndex++);
+                if(ingredient.isEmpty()) {
+                    rowPattern.append(" ");
+                } else {
+                    char key = start++;
+                    keys.put(key, ingredient);
+                    rowPattern.append(key);
+                }
+            }
+            pattern.add(rowPattern.toString());
         }
         
         return ShapedRecipePattern.of(keys, pattern);

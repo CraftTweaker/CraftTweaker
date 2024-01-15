@@ -93,7 +93,7 @@ public final class ShapedRecipeHandler implements IRecipeHandler<ShapedRecipe> {
         final NonNullList<Ingredient> recipeIngredients = ingredients.stream()
                 .map(IIngredient::asVanillaIngredient)
                 .collect(NonNullList::create, NonNullList::add, NonNullList::addAll);
-        return Optional.of(new ShapedRecipe(group, category, RecipeUtil.createPattern(recipeIngredients), output.getInternal()));
+        return Optional.of(new ShapedRecipe(group, category, RecipeUtil.createPattern(recipeIngredients, width, height), output.getInternal()));
     }
     
 }
