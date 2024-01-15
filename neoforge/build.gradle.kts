@@ -6,11 +6,8 @@ import net.darkhax.curseforgegradle.Constants
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
 
 plugins {
-    id("com.blamejared.crafttweaker.default")
-    id("com.blamejared.crafttweaker.loader")
+    id("crafttweaker.modloader-conventions")
     id("net.neoforged.gradle.userdev") version ("7.0.81")
-    id("net.darkhax.curseforgegradle")
-    id("com.modrinth.minotaur")
 }
 
 minecraft {
@@ -24,7 +21,9 @@ runs {
         Dependencies.ZENCODE.forEach {
             modSource(project(it).sourceSets.main.get())
         }
-        environmentVariables(mapOf("crafttweaker.logger.forward_to_latest_log" to "true"))
+        if(!this.name.equals("gameTestServer")) {
+            environmentVariables(mapOf("crafttweaker.logger.forward_to_latest_log" to "true"))
+        }
         systemProperty("forge.enabledGameTestNamespaces", Properties.MOD_ID)
     }
     register("client") {
@@ -43,23 +42,14 @@ runs {
             runtime(project.configurations.gametestLibrary.get())
         }
     }
-    register("data") {
-        programArguments(
-                "--mod",
-                Properties.MOD_ID,
-                "--all",
-                "--output",
-                file("src/generated/resources/").absolutePath,
-                "--existing",
-                file("src/main/resources/").absolutePath
-        )
-    }
 }
 
 dependencies {
     implementation("net.neoforged:neoforge:${Versions.NEO_FORGE}")
     compileOnly(project(":common"))
-//    localOnlyRuntime("me.shedaniel:RoughlyEnoughItems-neoforge:${Versions.REI}")
+    localOnlyRuntime("dev.architectury:architectury-neoforge:11.0.11")
+    implementation("me.shedaniel:RoughlyEnoughItems-neoforge:${Versions.REI}")
+
 }
 
 tasks.create<TaskPublishCurseForge>("publishCurseForge") {

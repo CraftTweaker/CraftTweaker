@@ -2,7 +2,7 @@ import com.blamejared.crafttweaker.gradle.Properties
 import com.blamejared.crafttweaker.gradle.Versions
 
 plugins {
-    id("com.blamejared.crafttweaker.default")
+    id("crafttweaker.java-conventions")
     id("org.spongepowered.gradle.vanilla") version "0.2.1-SNAPSHOT"
 }
 

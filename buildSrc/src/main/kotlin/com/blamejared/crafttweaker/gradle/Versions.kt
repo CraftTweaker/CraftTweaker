@@ -20,16 +20,21 @@ object Versions {
 
     const val MIXIN = "0.8.5"
 
-    const val PARCHMENT_MINECRAFT = MINECRAFT
     const val PARCHMENT = "2023.12.31"
+    const val PARCHMENT_MINECRAFT = "1.20.3"
 
     const val CRAFTTWEAKER_ANNOTATION_PROCESSOR = "3.0.0.16"
+
+    const val FAUX_CUSTOM_ENTITY_DATA = "9.0.1"
+    const val JEI = "16.0.0.28"
+    const val REI = "14.0.688"
+
     const val HAMCREST = "2.2"
     const val JUPITER_ENGINE = "5.10.1"
     const val JUNIT_PLATFORM_LAUNCHER = "1.10.1"
-    const val REI = "13.0.685"
-    const val REFLECTIONS = "0.10.2"
+
     const val JAVA_ASSIST = "3.29.0-GA"
-    const val FAUX_CUSTOM_ENTITY_DATA = "9.0.1"
-    const val JEI = "16.0.0.28"
+    const val REFLECTIONS = "0.10.2"
+
+
 }

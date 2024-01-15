@@ -6,18 +6,15 @@ import net.darkhax.curseforgegradle.TaskPublishCurseForge
 import net.darkhax.curseforgegradle.Constants as CFG_Constants
 
 plugins {
-    id("fabric-loom") version "1.4-SNAPSHOT"
-    id("com.blamejared.crafttweaker.default")
-    id("com.blamejared.crafttweaker.loader")
-    id("net.darkhax.curseforgegradle")
-    id("com.modrinth.minotaur")
+    id("crafttweaker.modloader-conventions")
+    id("fabric-loom") version "1.5-SNAPSHOT"
 }
 
 dependencies {
     minecraft("com.mojang:minecraft:${Versions.MINECRAFT}")
     mappings(loom.layered {
         officialMojangMappings()
-//        parchment("org.parchmentmc.data:parchment-${Versions.PARCHMENT_MINECRAFT}:${Versions.PARCHMENT}@zip")
+        parchment("org.parchmentmc.data:parchment-${Versions.PARCHMENT_MINECRAFT}:${Versions.PARCHMENT}@zip")
     })
     implementation("org.jetbrains:annotations:23.0.0")
     modImplementation("net.fabricmc:fabric-loader:${Versions.FABRIC_LOADER}")
@@ -27,9 +24,9 @@ dependencies {
 //    modLocalRuntime("me.shedaniel:RoughlyEnoughItems-api-fabric:${Versions.REI}") {
 //        exclude("net.fabricmc", "fabric-loader")
 //    }
-//    modLocalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${Versions.REI}") {
-//        exclude("net.fabricmc", "fabric-loader")
-//    }
+    modLocalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${Versions.REI}") {
+        exclude("net.fabricmc", "fabric-loader")
+    }
 
     implementation("org.reflections:reflections:${Versions.REFLECTIONS}")?.let { include(it) }
     implementation("org.javassist:javassist:${Versions.JAVA_ASSIST}")?.let { include(it) } // required for reflections
@@ -44,8 +41,10 @@ dependencies {
 
 loom {
     accessWidenerPath.set(project(":common").file("src/main/resources/${Properties.MOD_ID}.accesswidener"))
+    @Suppress("UnstableApiUsage")
     mixin {
         this.defaultRefmapName.set("${Properties.MOD_ID}.refmap.json")
+        useLegacyMixinAp = false
     }
     mods {
         register("crafttweaker") {

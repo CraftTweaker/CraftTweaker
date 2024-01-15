@@ -3,22 +3,17 @@ import com.blamejared.crafttweaker.gradle.Properties
 import com.blamejared.crafttweaker.gradle.Versions
 import com.blamejared.gradle.mod.utils.GMUtils
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
-import org.gradle.kotlin.dsl.publishing
 import net.darkhax.curseforgegradle.Constants as CFG_Constants
 
 plugins {
-    id("com.blamejared.crafttweaker.default")
-    id("com.blamejared.crafttweaker.loader")
+    id("crafttweaker.modloader-conventions")
     id("net.minecraftforge.gradle") version ("[6.0,6.2)")
     id("org.parchmentmc.librarian.forgegradle") version ("1.+")
     id("org.spongepowered.mixin") version ("0.7-SNAPSHOT")
-    id("net.darkhax.curseforgegradle")
-    id("com.modrinth.minotaur")
 }
 
 mixin {
     add(sourceSets.main.get(), "${Properties.MOD_ID}.refmap.json")
-
     config("${Properties.MOD_ID}.mixins.json")
     config("${Properties.MOD_ID}.forge.mixins.json")
 }
@@ -39,8 +34,7 @@ dependencies {
 }
 
 minecraft {
-//    mappings("parchment", "${Versions.PARCHMENT_MINECRAFT}-${Versions.PARCHMENT}-${Versions.MINECRAFT}")
-    mappings("official", Versions.PARCHMENT_MINECRAFT)
+    mappings("parchment", "${Versions.PARCHMENT_MINECRAFT}-${Versions.PARCHMENT}-${Versions.MINECRAFT}")
 
     accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg"))
 
@@ -76,31 +70,6 @@ minecraft {
             ideaModule("${rootProject.name}.${project.name}.main")
             args("-mixin.config=${Properties.MOD_ID}.mixins.json", "-mixin.config=${Properties.MOD_ID}.forge.mixins.json", "nogui")
             environment("crafttweaker.logger.forward_to_latest_log", "true")
-            mods {
-                create(Properties.MOD_ID) {
-                    source(sourceSets.main.get())
-                    source(project(":common").sourceSets.main.get())
-                    Dependencies.ZENCODE.forEach {
-                        source(project(it).sourceSets.main.get())
-                    }
-                }
-            }
-        }
-
-        create("data") {
-            taskName("Data")
-            workingDirectory(project.file("run_game_test"))
-            ideaModule("${rootProject.name}.${project.name}.main")
-            args(
-                    "--mod",
-                    Properties.MOD_ID,
-                    "--all",
-                    "--output",
-                    file("src/generated/resources/"),
-                    "--existing",
-                    file("src/main/resources/")
-            )
-            args("-mixin.config=${Properties.MOD_ID}.mixins.json", "-mixin.config=${Properties.MOD_ID}.forge.mixins.json")
             mods {
                 create(Properties.MOD_ID) {
                     source(sourceSets.main.get())

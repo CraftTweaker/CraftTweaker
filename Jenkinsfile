@@ -134,13 +134,6 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            junit 'ZenCode/ScriptingExample/build/test-results/**/*.xml'
-            junit 'fabric/run_game_test/game-test-results.xml'
-            junit 'forge/run_game_test/game-test-results.xml'
-        }
-    }
     options {
         disableConcurrentBuilds()
     }

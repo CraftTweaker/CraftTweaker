@@ -25,7 +25,7 @@ subprojects {
 
     // We can't add this plugin to the ZC build.gradle
     if (project.projectDir.parent == rootProject.file("ZenCode").absolutePath) {
-        apply(plugin = "com.blamejared.crafttweaker.zencode")
+        apply(plugin = "crafttweaker.zencode-conventions")
     }
 }
 
