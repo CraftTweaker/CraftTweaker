@@ -7,9 +7,6 @@ import com.google.common.reflect.TypeToken;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -23,13 +20,11 @@ abstract class PhasedEventBus<T> implements IEventBus<T> {
     private final TypeToken<T> eventType;
     private final IEventBusWire wire;
     private final ArrayBackedDispatcher<T>[] phasedDispatchers;
-    private final ReadWriteLock lock;
     
     protected PhasedEventBus(final TypeToken<T> eventType, final IEventBusWire wire) {
         this.eventType = Objects.requireNonNull(eventType, "eventType");
         this.wire = Objects.requireNonNull(wire, "wire");
         this.phasedDispatchers = GenericUtil.uncheck(new ArrayBackedDispatcher<?>[PHASES.length]);
-        this.lock = new ReentrantReadWriteLock();
     }
     
     @Override
@@ -139,27 +134,13 @@ abstract class PhasedEventBus<T> implements IEventBus<T> {
     }
     
     private <R> R modifyHandlers(final Supplier<R> block) {
-        // TODO("Evaluate performance")
-        final Lock writeLock = this.lock.writeLock();
-        writeLock.lock();
-        try {
-            return block.get();
-        } finally {
-            writeLock.unlock();
-        }
+        return block.get();
     }
     
     private <R> R queryHandlers(final R event, final Consumer<BusHandlingException> exceptionHandler, final Consumer<R> block) {
         try {
-            // TODO("Evaluate performance")
-            final Lock readLock = this.lock.readLock();
-            readLock.lock();
-            try {
-                block.accept(event);
-                return event;
-            } finally {
-                readLock.unlock();
-            }
+            block.accept(event);
+            return event;
         } catch (final BusHandlingException e) {
             exceptionHandler.accept(e);
             return event;
