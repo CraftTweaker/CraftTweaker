@@ -55,7 +55,7 @@ tasks.create("postDiscord") {
             mapOf(Pair("fabric", "<:fabric:932163720568782878>"), Pair("forge", "<:forge:932163698003443804>"), Pair("neoforge", "<:neoforged:1184738260371644446>"))
                     .filter {
                         project(":${it.key}").ext.has("curse_file_url")
-                    }.map { "${it.value} [${it.key.capitalize(Locale.ENGLISH)}](${project(":${it.key}").ext.get("curse_file_url")})" }
+                    }.map { "${it.value} [${it.key.replaceFirstChar { char -> if (char.isLowerCase()) char.titlecase(Locale.ENGLISH) else char.toString() }}](${project(":${it.key}").ext.get("curse_file_url")})" }
                     .forEach { downloadSources.add(it) }
 
             listOf("common", "fabric", "forge", "neoforge")
