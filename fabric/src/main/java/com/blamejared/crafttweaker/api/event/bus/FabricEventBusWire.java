@@ -9,13 +9,13 @@ import net.minecraft.resources.ResourceLocation;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.lang.invoke.WrongMethodTypeException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Proxy;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 /**
  * Wires the given {@link IEventBus} on the corresponding Fabric event bus.
@@ -59,36 +59,12 @@ import java.util.stream.Stream;
  * @since 11.0.0
  */
 public final class FabricEventBusWire<E, S> implements IEventBusWire {
-    @SuppressWarnings("ClassCanBeRecord")
-    private static final class PostingInvocationHandler<T> implements InvocationHandler {
-        private final Method targetMethod;
-        private final MethodHandle wrapper;
-        private final IFabricPhaseMapper mapper;
-        private final ResourceLocation phase;
-        private final MethodHandle reveal;
-        private final IEventBus<T> bus;
-        
-        PostingInvocationHandler(
-                final Method targetMethod,
-                final MethodHandle wrapper,
-                final IFabricPhaseMapper mapper,
-                final ResourceLocation phase,
-                final MethodHandle reveal,
-                final IEventBus<T> bus
-        ) {
-            this.targetMethod = targetMethod;
-            this.wrapper = wrapper;
-            this.mapper = mapper;
-            this.phase = phase;
-            this.reveal = reveal;
-            this.bus = bus;
-        }
-        
+    private record PostingInvocationHandler(Method targetMethod, MethodHandle listener) implements InvocationHandler {
         @Override
         public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
             
             final String methodName = method.getName();
-            if (this.targetMethod.equals(method)) {
+            if (Objects.equals(this.targetMethod(), method)) {
                 return this.$invoke(proxy, args);
             }
             if (method.isDefault()) {
@@ -111,17 +87,20 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
         }
         
         private String $toString(final Object $this) {
-            return $this.getClass().getName() + '@' + $this.hashCode() + "//" + this.targetMethod.getDeclaringClass().getName() + '#' + this.targetMethod.getName();
+            return "%s@%s//%s#%s".formatted(
+                    $this.getClass().getName(),
+                    $this.hashCode(),
+                    this.targetMethod().getDeclaringClass().getName(),
+                    this.targetMethod().getName()
+            );
         }
         
         private int $hashCode(final Object $this) {
             return System.identityHashCode($this);
         }
         
-        private Object $invoke(@SuppressWarnings("unused") final Object $this, final Object[] args) throws Throwable {
-            final T object = GenericUtil.uncheck(this.wrapper.invokeExact(args));
-            this.mapper.dispatch(this.bus, object, this.phase);
-            return this.reveal == null? null : this.reveal.invokeExact(object);
+        private Object $invoke(final Object $this, final Object[] args) throws Throwable {
+            return this.listener().invokeExact($this, args);
         }
         
     }
@@ -284,8 +263,8 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
         final Method functionalMethod = verifyOriginal(originalEventClass);
         final WrapReveal wrapReveal = verifyWrapped(wrappedEventClass);
         compatibility(functionalMethod, wrapReveal);
-        final MethodHandle wrap = wrapHandle(wrapReveal.wrap());
-        final MethodHandle reveal = revealHandle(wrapReveal.reveal());
+        final MethodHandle wrap = handle(wrapReveal.wrap());
+        final MethodHandle reveal = handle(wrapReveal.reveal());
         return new FabricEventBusWire<>(event, originalEventClass, wrappedEventClass, mapper, functionalMethod, wrap, reveal);
     }
     
@@ -294,6 +273,11 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
         if (!originalEventClass.isInterface()) {
             throw new IllegalArgumentException("All Fabric events are represented by interfaces, but got non-interface " + originalEventClass.getName());
         }
+
+        return findFunctionalMethod(originalEventClass);
+    }
+    
+    private static <E> Method findFunctionalMethod(final Class<E> originalEventClass) {
         
         final Method[] methods = originalEventClass.getDeclaredMethods();
         
@@ -408,18 +392,6 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
         }
     }
     
-    private static MethodHandle wrapHandle(final Method wrap) {
-        final MethodHandle handle = handle(wrap);
-        final MethodHandle objectReturning = handle.asType(handle.type().changeReturnType(Object.class));
-        final MethodHandle spreader = objectReturning.asSpreader(Object[].class, objectReturning.type().parameterCount());
-        return spreader.asType(MethodType.methodType(Object.class, Object[].class));
-    }
-    
-    private static MethodHandle revealHandle(final Method reveal) {
-        final MethodHandle handle = handle(reveal);
-        return handle == null? null : handle.asType(MethodType.methodType(Object.class, Object.class));
-    }
-    
     private static MethodHandle handle(final Method method) {
         if (method == null) {
             return null;
@@ -443,19 +415,51 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
         
         this.mapper.prepareEvent(this.event);
         
-        final Class<?>[] classes = Stream.of(this.originalEventClass).toArray(Class<?>[]::new);
         this.mapper.targetPhases().forEach(phase -> {
-            final InvocationHandler handler = new PostingInvocationHandler<>(
-                    this.functionalMethod,
-                    this.wrapper,
-                    this.mapper,
-                    phase,
-                    this.reveal,
-                    bus
-            );
-            final E proxy = this.originalEventClass.cast(Proxy.newProxyInstance(this.getClass().getClassLoader(), classes, handler));
+            final E proxy = this.spinProxy(phase, bus);
             this.event.register(phase, proxy);
         });
+    }
+    
+    private <T> E spinProxy(final ResourceLocation phase, final IEventBus<T> bus) {
+        try {
+            final MethodHandle rawListener = this.spinMethodHandle(phase, bus);
+            final MethodHandle spreading = rawListener.asSpreader(Object[].class, rawListener.type().parameterCount());
+            
+            final MethodHandle virtualListener = MethodHandles.dropArguments(spreading, 0, Object.class);
+            
+            final MethodType proxyReadyType = MethodType.methodType(Object.class, Object.class, Object[].class);
+            final MethodHandle proxyReadyListener = virtualListener.asType(proxyReadyType);
+            
+            final Class<?>[] classes = new Class<?>[] { this.originalEventClass };
+            final InvocationHandler handler = new PostingInvocationHandler(this.functionalMethod, proxyReadyListener);
+            return this.originalEventClass.cast(Proxy.newProxyInstance(this.getClass().getClassLoader(), classes, handler));
+        } catch (final ReflectiveOperationException | WrongMethodTypeException e) {
+            throw new RuntimeException("Unable to spin proxy for event listeners", e);
+        }
+    }
+    
+    private <T> MethodHandle spinMethodHandle(final ResourceLocation phase, final IEventBus<T> bus) throws ReflectiveOperationException {
+        final Class<T> eventType = GenericUtil.uncheck(bus.eventType().getRawType());
+        
+        final MethodType dispatchType = MethodType.methodType(void.class, IEventBus.class, Object.class, ResourceLocation.class);
+        final MethodHandle dispatcherMethod = PUBLIC_LOOKUP.findVirtual(IFabricPhaseMapper.class, "dispatch", dispatchType);
+        
+        final MethodType reorderedType = MethodType.methodType(void.class, IFabricPhaseMapper.class, Object.class, IEventBus.class, ResourceLocation.class);
+        final MethodHandle reorderedDispatcher = MethodHandles.permuteArguments(dispatcherMethod, reorderedType, 0, 2, 1, 3);
+        
+        final MethodHandle mapperBoundDispatcher = reorderedDispatcher.bindTo(this.mapper);
+        final MethodHandle boundDispatcher = MethodHandles.insertArguments(mapperBoundDispatcher, 1, bus, phase);
+        
+        final MethodType castedType = MethodType.methodType(void.class, eventType);
+        final MethodHandle castedDispatcher = boundDispatcher.asType(castedType);
+        
+        final MethodHandle eventIdentity = MethodHandles.identity(eventType);
+        final MethodHandle revealHandle = this.reveal == null? MethodHandles.dropReturn(eventIdentity) : this.reveal;
+        
+        final MethodHandle dispatcher = MethodHandles.foldArguments(revealHandle, castedDispatcher);
+        
+        return MethodHandles.collectArguments(dispatcher, 0, this.wrapper);
     }
     
 }
