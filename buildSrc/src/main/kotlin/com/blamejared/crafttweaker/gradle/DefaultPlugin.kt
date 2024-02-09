@@ -202,7 +202,8 @@ class DefaultPlugin : Plugin<Project> {
                 }
             }
 
-            withType<Jar>().matching { notNeoTask(it) }.configureEach {
+            withType<Jar>().configureEach {
+                from(project.rootProject.file("LICENSE"))
                 manifest {
                     attributes["Specification-Title"] = Properties.MOD_NAME
                     attributes["Specification-Vendor"] = Properties.MOD_AUTHOR
