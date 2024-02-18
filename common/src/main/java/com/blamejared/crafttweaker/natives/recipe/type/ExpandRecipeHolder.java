@@ -14,7 +14,7 @@ import org.openzen.zencode.java.ZenCodeType;
  */
 @ZenRegister
 @Document("vanilla/api/recipe/type/RecipeHolder")
-@NativeTypeRegistration(value = RecipeHolder.class, zenCodeName = "crafttweaker.api.recipe.type.RecipeHolderRecipeHolder")
+@NativeTypeRegistration(value = RecipeHolder.class, zenCodeName = "crafttweaker.api.recipe.type.RecipeHolder")
 public class ExpandRecipeHolder {
     
     /**
