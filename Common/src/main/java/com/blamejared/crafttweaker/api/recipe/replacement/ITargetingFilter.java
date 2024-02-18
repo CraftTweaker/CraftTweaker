@@ -22,7 +22,7 @@ import java.util.stream.Stream;
  * @since 10.0.0
  */
 @Document("vanilla/api/recipe/replacement/ITargetingFilter")
-@FunctionalInterface
+//@FunctionalInterface
 @ZenCodeType.Name("crafttweaker.api.recipe.replacement.ITargetingFilter")
 @ZenRegister
 public interface ITargetingFilter {
