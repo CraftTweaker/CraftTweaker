@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.replacement.IFilteringRule;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
@@ -45,7 +46,6 @@ public final class CustomFilteringRule implements IFilteringRule {
      *
      * @since 10.0.0
      */
-    @ZenCodeType.Method
     public static CustomFilteringRule of(final Predicate<RecipeHolder<?>> predicate) {
         
         return new CustomFilteringRule((a, b) -> predicate.test(b), false);
@@ -64,10 +64,46 @@ public final class CustomFilteringRule implements IFilteringRule {
      *
      * @since 10.0.0
      */
-    @ZenCodeType.Method
     public static CustomFilteringRule of(final BiPredicate<IRecipeManager<?>, RecipeHolder<?>> predicate) {
         
         return new CustomFilteringRule(predicate, true);
+    }
+    
+    /**
+     * Creates a new rule filtering recipes based on the given {@link Predicate}.
+     *
+     * <p>The predicate gets access to the {@link Recipe} instance directly, allowing for it to check directly elements
+     * that might be required.</p>
+     *
+     * @param predicate The predicate for checking.
+     *
+     * @return A rule carrying out what has been specified.
+     *
+     * @since 11.0.0
+     */
+    @ZenCodeType.Method("of")
+    public static CustomFilteringRule ofZen(final Predicate<RecipeHolder<Recipe<Container>>> predicate) {
+        
+        return of(GenericUtil.<Predicate<RecipeHolder<?>>>uncheck(predicate));
+    }
+    
+    /**
+     * Creates a new rule filtering recipes based on the given {@link BiPredicate}.
+     *
+     * <p>The predicate's first argument represents the {@link IRecipeManager} used by the recipe, whereas the second
+     * argument is the {@link Recipe} instance directly, allowing for it to check properties that might be required or
+     * perform additional manager-specific lookups.</p>
+     *
+     * @param predicate The predicate for checking.
+     *
+     * @return A rule carrying out what has been specified.
+     *
+     * @since 11.0.0
+     */
+    @ZenCodeType.Method("of")
+    public static CustomFilteringRule ofZen(final BiPredicate<IRecipeManager<Recipe<Container>>, RecipeHolder<Recipe<Container>>> predicate) {
+        
+        return of(GenericUtil.<BiPredicate<IRecipeManager<?>, RecipeHolder<?>>>uncheck(predicate));
     }
     
     @Override
