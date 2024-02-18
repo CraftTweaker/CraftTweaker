@@ -70,6 +70,43 @@ public final class CustomFilteringRule implements IFilteringRule {
         return new CustomFilteringRule(predicate, true);
     }
     
+    /**
+     * Creates a new rule filtering recipes based on the given {@link Predicate}.
+     *
+     * <p>The predicate gets access to the {@link Recipe} instance directly, allowing for it to check directly elements
+     * that might be required.</p>
+     *
+     * @param predicate The predicate for checking.
+     *
+     * @return A rule carrying out what has been specified.
+     *
+     * @since 11.0.0
+     */
+    @ZenCodeType.Method("of")
+    public static CustomFilteringRule ofZen(final Predicate<Recipe<Container>> predicate) {
+        
+        return of(GenericUtil.<Predicate<Recipe<?>>>uncheck(predicate));
+    }
+    
+    /**
+     * Creates a new rule filtering recipes based on the given {@link BiPredicate}.
+     *
+     * <p>The predicate's first argument represents the {@link IRecipeManager} used by the recipe, whereas the second
+     * argument is the {@link Recipe} instance directly, allowing for it to check properties that might be required or
+     * perform additional manager-specific lookups.</p>
+     *
+     * @param predicate The predicate for checking.
+     *
+     * @return A rule carrying out what has been specified.
+     *
+     * @since 11.0.0
+     */
+    @ZenCodeType.Method("of")
+    public static CustomFilteringRule ofZen(final BiPredicate<IRecipeManager<Recipe<Container>>, Recipe<Container>> predicate) {
+        
+        return of(GenericUtil.<BiPredicate<IRecipeManager<?>, Recipe<?>>>uncheck(predicate));
+    }
+    
     @Override
     public Stream<? extends Recipe<?>> castFilter(final Stream<? extends Recipe<?>> allRecipes) {
         
