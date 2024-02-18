@@ -31,7 +31,7 @@ import java.util.function.Function;
  * @since 10.0.0
  */
 @Document("vanilla/api/recipe/replacement/ITargetingStrategy")
-@FunctionalInterface
+//@FunctionalInterface
 @ZenCodeType.Name("crafttweaker.api.recipe.replacement.ITargetingStrategy")
 @ZenRegister
 public interface ITargetingStrategy extends CommandStringDisplayable {
