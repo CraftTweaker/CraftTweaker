@@ -45,7 +45,6 @@ public final class CustomFilteringRule implements IFilteringRule {
      *
      * @since 10.0.0
      */
-    @ZenCodeType.Method
     public static CustomFilteringRule of(final Predicate<Recipe<?>> predicate) {
         
         return new CustomFilteringRule((a, b) -> predicate.test(b), false);
@@ -64,7 +63,6 @@ public final class CustomFilteringRule implements IFilteringRule {
      *
      * @since 10.0.0
      */
-    @ZenCodeType.Method
     public static CustomFilteringRule of(final BiPredicate<IRecipeManager<?>, Recipe<?>> predicate) {
         
         return new CustomFilteringRule(predicate, true);
