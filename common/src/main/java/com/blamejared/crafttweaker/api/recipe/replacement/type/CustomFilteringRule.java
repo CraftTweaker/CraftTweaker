@@ -45,7 +45,6 @@ public final class CustomFilteringRule implements IFilteringRule {
      *
      * @since 10.0.0
      */
-    @ZenCodeType.Method
     public static CustomFilteringRule of(final Predicate<RecipeHolder<?>> predicate) {
         
         return new CustomFilteringRule((a, b) -> predicate.test(b), false);
@@ -64,7 +63,6 @@ public final class CustomFilteringRule implements IFilteringRule {
      *
      * @since 10.0.0
      */
-    @ZenCodeType.Method
     public static CustomFilteringRule of(final BiPredicate<IRecipeManager<?>, RecipeHolder<?>> predicate) {
         
         return new CustomFilteringRule(predicate, true);
@@ -83,9 +81,9 @@ public final class CustomFilteringRule implements IFilteringRule {
      * @since 11.0.0
      */
     @ZenCodeType.Method("of")
-    public static CustomFilteringRule ofZen(final Predicate<Recipe<Container>> predicate) {
+    public static CustomFilteringRule ofZen(final Predicate<RecipeHolder<Container>> predicate) {
         
-        return of(GenericUtil.<Predicate<Recipe<?>>>uncheck(predicate));
+        return of(GenericUtil.<Predicate<RecipeHolder<?>>>uncheck(predicate));
     }
     
     /**
@@ -102,9 +100,9 @@ public final class CustomFilteringRule implements IFilteringRule {
      * @since 11.0.0
      */
     @ZenCodeType.Method("of")
-    public static CustomFilteringRule ofZen(final BiPredicate<IRecipeManager<Recipe<Container>>, Recipe<Container>> predicate) {
+    public static CustomFilteringRule ofZen(final BiPredicate<IRecipeManager<Recipe<Container>>, RecipeHolder<Recipe<Container>>> predicate) {
         
-        return of(GenericUtil.<BiPredicate<IRecipeManager<?>, Recipe<?>>>uncheck(predicate));
+        return of(GenericUtil.<BiPredicate<IRecipeManager<?>, RecipeHolder<?>>>uncheck(predicate));
     }
     
     @Override
