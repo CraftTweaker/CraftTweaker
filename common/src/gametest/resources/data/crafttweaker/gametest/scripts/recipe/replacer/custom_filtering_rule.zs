@@ -3,7 +3,7 @@ import crafttweaker.api.recipe.replacement.type.CustomFilteringRule;
 import crafttweaker.api.ingredient.IIngredient;
 
 Replacer.create()
-    .filter(CustomFilteringRule.of(rec => rec.ingredients.length > 6))
+    .filter(CustomFilteringRule.of(rec => rec.value.ingredients.length > 6))
     .replace<IIngredient>(
         <recipecomponent:crafttweaker:input/ingredients>,
         <targetingstrategy:crafttweaker:shallow>,

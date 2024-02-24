@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import com.blamejared.crafttweaker.api.recipe.replacement.IFilteringRule;
+import com.blamejared.crafttweaker.api.util.GenericUtil;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
@@ -81,7 +82,7 @@ public final class CustomFilteringRule implements IFilteringRule {
      * @since 11.0.0
      */
     @ZenCodeType.Method("of")
-    public static CustomFilteringRule ofZen(final Predicate<RecipeHolder<Container>> predicate) {
+    public static CustomFilteringRule ofZen(final Predicate<RecipeHolder<Recipe<Container>>> predicate) {
         
         return of(GenericUtil.<Predicate<RecipeHolder<?>>>uncheck(predicate));
     }
