@@ -29,14 +29,21 @@ import java.util.*;
 public class CTCommonEventHandler {
 
     @SubscribeEvent
-    public static void worldTick(TickEvent.LevelTickEvent e) {
-
-        if (e.phase == TickEvent.Phase.START) {
-            SequenceManager
-                    .tick(e.level.isClientSide ? SequenceType.CLIENT_THREAD_LEVEL : SequenceType.SERVER_THREAD_LEVEL);
+    public static void serverTick(TickEvent.ServerTickEvent e) {
+        
+        if(e.phase == TickEvent.Phase.START) {
+            SequenceManager.tick(SequenceType.SERVER_THREAD_LEVEL);
         }
     }
 
+    @SubscribeEvent
+    public static void clientTick(TickEvent.ClientTickEvent e) {
+        
+        if(e.phase == TickEvent.Phase.START) {
+            SequenceManager.tick(SequenceType.CLIENT_THREAD_LEVEL);
+        }
+    }
+    
     @SubscribeEvent
     public static void blockInteract(PlayerInteractEvent.RightClickBlock e) {
 
