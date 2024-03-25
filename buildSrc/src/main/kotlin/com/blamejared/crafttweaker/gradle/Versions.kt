@@ -26,7 +26,7 @@ object Versions {
     const val CRAFTTWEAKER_ANNOTATION_PROCESSOR = "3.0.0.16"
 
     const val FAUX_CUSTOM_ENTITY_DATA = "9.0.1"
-    const val JEI = "16.0.0.28"
+    const val JEI = "17.3.0.49"
     const val REI = "14.0.688"
 
     const val HAMCREST = "2.2"
