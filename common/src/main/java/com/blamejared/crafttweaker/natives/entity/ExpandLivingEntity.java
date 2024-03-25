@@ -308,6 +308,17 @@ public class ExpandLivingEntity {
         return internal.getLootTable();
     }
     
+    /**
+     * Gets the seed used when generating loot from this entity.
+     *
+     * @return The seed used to generate loot.
+     */
+    @ZenCodeType.Getter("lootTableSeed")
+    public static long getLootTableSeed(LivingEntity internal) {
+        
+        return internal.getLootTableSeed();
+    }
+    
     @ZenCodeType.Method
     public static void knockback(LivingEntity internal, double x, double y, double z) {
         
@@ -485,7 +496,7 @@ public class ExpandLivingEntity {
     //TODO When we have FluidState, make this use FluidState
     @ZenCodeType.Method
     public static boolean canStandOnFluid(LivingEntity internal, Fluid fluid) {
-
+        
         return internal.canStandOnFluid(fluid.defaultFluidState());
     }
     
