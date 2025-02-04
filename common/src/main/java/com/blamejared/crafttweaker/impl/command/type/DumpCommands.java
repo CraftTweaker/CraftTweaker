@@ -150,8 +150,8 @@ public final class DumpCommands {
                 builder -> builder.executes(context -> {
                     
                     CommandSourceStack source = context.getSource();
-                    
-                    source.registryAccess()
+                    CraftTweakerAPI.getAccessibleElementsProvider()
+                            .registryAccess()
                             .lookupOrThrow(Registries.LOOT_TABLE)
                             .listElementIds()
                             .map(ResourceKey::location)
