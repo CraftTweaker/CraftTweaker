@@ -41,13 +41,6 @@ public interface ForgeItemStack extends IItemStack {
         return ForgeHooks.getBurnTime(getInternal(), manager.getRecipeType());
     }
     
-    
-    @Override
-    default IItemStack getRemainingItem(IItemStack stack) {
-        
-        return IItemStack.of(stack.getInternal().getCraftingRemainingItem());
-    }
-    
     /**
      * Checks if this item can perform the given ToolAction.
      *

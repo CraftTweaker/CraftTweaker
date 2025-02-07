@@ -31,6 +31,7 @@ import com.blamejared.crafttweaker.api.ingredient.type.IIngredientTransformed;
 import com.blamejared.crafttweaker.api.ingredient.type.IngredientWithAmount;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.tooltip.ITooltipFunction;
+import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -128,14 +129,7 @@ public interface IIngredient extends CommandStringDisplayable {
     @ZenCodeType.Method
     default IItemStack getRemainingItem(IItemStack stack) {
         
-        Item remainingItem = stack.getInternal()
-                .getItem()
-                .getCraftingRemainingItem();
-        if(remainingItem != null) {
-            
-            return IItemStack.of(remainingItem.getDefaultInstance());
-        }
-        return IItemStack.empty();
+        return Services.PLATFORM.getCraftingRemainingItem(stack.getInternal());
     }
     
     /**

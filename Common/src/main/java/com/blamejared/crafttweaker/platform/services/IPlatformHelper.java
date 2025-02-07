@@ -80,6 +80,14 @@ public interface IPlatformHelper {
     
     Path getGameDirectory();
     
+    default IItemStack getCraftingRemainingItem(ItemStack stack) {
+        
+        if(stack.getItem().hasCraftingRemainingItem()) {
+            return IItemStack.of(stack.getItem().getCraftingRemainingItem().getDefaultInstance());
+        }
+        return IItemStack.empty();
+    }
+    
     /**
      * Finds classes with the given annotation and applies a filter.
      *
