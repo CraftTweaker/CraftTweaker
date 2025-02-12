@@ -29,7 +29,12 @@ public class ExpandTextComponent {
 
     @ZenMethodStatic
     public static ITextComponent fromTranslation(String translationKey, Object... args) {
-        return CraftTweakerMC.getITextComponent(new TextComponentTranslation(translationKey, args));
+        Object[] actualArgs = new Object[args.length];
+        for (int i = 0; i < args.length; i++) {
+            Object arg = args[i];
+            actualArgs[i] = arg instanceof ITextComponent ? CraftTweakerMC.getITextComponent(((ITextComponent) arg)) : arg;
+        }
+        return CraftTweakerMC.getITextComponent(new TextComponentTranslation(translationKey, actualArgs));
     }
 
     @ZenMethodStatic
