@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.world.level.Level;
 
 public class CraftTweakerFabricClient implements ClientModInitializer {
     
@@ -22,7 +23,11 @@ public class CraftTweakerFabricClient implements ClientModInitializer {
         
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> CraftTweakerLog4jEditor.removePlayer(client.player));
         
-        ClientTickEvents.START_WORLD_TICK.register(world -> SequenceManager.tick(SequenceType.CLIENT_THREAD_LEVEL));
+        ClientTickEvents.START_WORLD_TICK.register(world -> {
+            if(world.dimension() == Level.OVERWORLD) {
+                SequenceManager.tick(SequenceType.CLIENT_THREAD_LEVEL);
+            }
+        });
         
         for(ClientBoundPackets packet : ClientBoundPackets.values()) {
             ClientPlayNetworking.registerGlobalReceiver(packet.type(), (payload, context) -> payload.handle());

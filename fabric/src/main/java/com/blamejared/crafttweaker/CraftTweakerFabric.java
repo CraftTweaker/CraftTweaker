@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.Level;
 
 public class CraftTweakerFabric implements ModInitializer {
     
@@ -39,7 +40,11 @@ public class CraftTweakerFabric implements ModInitializer {
             return InteractionResult.PASS;
         });
         
-        ServerTickEvents.START_WORLD_TICK.register(world -> SequenceManager.tick(SequenceType.SERVER_THREAD_LEVEL));
+        ServerTickEvents.START_WORLD_TICK.register(world -> {
+            if(world.dimension() == Level.OVERWORLD) {
+                SequenceManager.tick(SequenceType.SERVER_THREAD_LEVEL);
+            }
+        });
         
         CraftTweakerCommon.getPluginManager().broadcastSetupEnd(); // TODO("Another place?")
         
