@@ -7,7 +7,9 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public enum ClientBoundPackets {
     COPY(new CustomPacketPayload.Type<>(ClientBoundCopyPacket.ID), ClientBoundCopyPacket.STREAM_CODEC),
-    OPEN_FILE(new CustomPacketPayload.Type<>(ClientBoundSendOpenFileMessagePacket.ID), ClientBoundSendOpenFileMessagePacket.STREAM_CODEC),;
+    OPEN_FILE(new CustomPacketPayload.Type<>(ClientBoundSendOpenFileMessagePacket.ID), ClientBoundSendOpenFileMessagePacket.STREAM_CODEC),
+    DATA(new CustomPacketPayload.Type<>(ClientBoundDataPacket.ID), ClientBoundDataPacket.STREAM_CODEC),
+    ;
     
     private final CustomPacketPayload.Type<CraftTweakerPacket> type;
     private final StreamCodec<RegistryFriendlyByteBuf, CraftTweakerPacket> streamCodec;
