@@ -3,9 +3,12 @@ package com.blamejared.crafttweaker.natives.predicate;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.MapData;
 import com.blamejared.crafttweaker.api.data.base.IData;
+import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.critereon.NbtPredicate;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.Entity;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -29,6 +32,27 @@ public final class ExpandNbtPredicate {
     public static NbtPredicate create(final IData data) {
         
         return create(new MapData(data.asMap()));
+    }
+    
+    @ZenCodeType.Method
+    public static boolean matches(NbtPredicate internal, IItemStack data) {
+        
+        return internal.matches(data.getInternal());
+    }
+    
+    @ZenCodeType.Method
+    public static boolean matches(NbtPredicate internal, Entity data) {
+        
+        return internal.matches(data);
+    }
+    
+    @ZenCodeType.Method
+    public static boolean matches(NbtPredicate internal, @ZenCodeType.Nullable IData data) {
+        
+        if(data == null) {
+            return internal.matches((Tag) null);
+        }
+        return internal.matches(data.getInternal());
     }
     
 }

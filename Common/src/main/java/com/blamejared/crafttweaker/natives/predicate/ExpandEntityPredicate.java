@@ -6,7 +6,11 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.phys.Vec3;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -34,7 +38,7 @@ public final class ExpandEntityPredicate {
     
     @ZenCodeType.StaticExpansionMethod
     public static EntityPredicate.Builder create(final KnownTag<EntityType<?>> entityTag) {
-
+        
         return create().of(entityTag.getTagKey());
     }
     
@@ -48,6 +52,18 @@ public final class ExpandEntityPredicate {
     public static EntityPredicate.Builder create(final String catType) {
         
         return create(new ResourceLocation(catType));
+    }
+    
+    @ZenCodeType.Method
+    public static boolean matches(EntityPredicate internal, ServerPlayer player, @ZenCodeType.Nullable Entity entity) {
+        
+        return internal.matches(player, entity);
+    }
+    
+    @ZenCodeType.Method
+    public static boolean matches(EntityPredicate internal, ServerLevel level, Vec3 pos, @ZenCodeType.Nullable Entity entity) {
+        
+        return internal.matches(level, pos, entity);
     }
     
 }

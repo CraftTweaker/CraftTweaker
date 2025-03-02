@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.critereon.FishingHookPredicate;
+import net.minecraft.world.entity.Entity;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -23,6 +24,13 @@ public final class ExpandFishingHookPredicate {
     public static FishingHookPredicate inOpenWaters(@ZenCodeType.OptionalBoolean(true) final boolean inOpenWaters) {
         
         return FishingHookPredicate.inOpenWater(inOpenWaters);
+    }
+    
+    
+    @ZenCodeType.Method
+    public static boolean matches(FishingHookPredicate internal, Entity entity) {
+        
+        return internal.matches(entity);
     }
     
 }
