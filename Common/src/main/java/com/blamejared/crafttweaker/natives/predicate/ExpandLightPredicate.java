@@ -5,6 +5,8 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.critereon.LightPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -30,4 +32,8 @@ public final class ExpandLightPredicate {
         return LightPredicate.Builder.light().setComposite(level);
     }
     
+    @ZenCodeType.Method
+    public static boolean matches(LightPredicate internal, ServerLevel level, BlockPos pos) {
+        return internal.matches(level, pos);
+    }
 }
