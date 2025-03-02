@@ -8,6 +8,7 @@ import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -67,6 +68,12 @@ public final class ExpandLocationPredicate {
     public static LocationPredicate inStructure(final String structure) {
         
         return inStructure(new ResourceLocation(structure));
+    }
+    
+    @ZenCodeType.Method
+    public static boolean matches(LocationPredicate internal, ServerLevel level, double x, double y, double z) {
+        
+        return internal.matches(level, x, y, z);
     }
     
 }

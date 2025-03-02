@@ -5,6 +5,8 @@ import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.MobEffectsPredicate;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -52,6 +54,12 @@ public final class ExpandMobEffectsPredicateMobEffectInstancePredicate {
     public static MobEffectsPredicate.MobEffectInstancePredicate duration(final MinMaxBounds.Ints duration) {
         
         return create(MinMaxBounds.Ints.ANY, duration, null, null);
+    }
+    
+    @ZenCodeType.Method
+    public static boolean matches(MobEffectsPredicate.MobEffectInstancePredicate internal, @ZenCodeType.Nullable MobEffectInstance instance) {
+        
+        return internal.matches(instance);
     }
     
 }
