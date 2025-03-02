@@ -18,10 +18,17 @@ public final class ExpandEntityTypePredicate {
         
         return EntityTypePredicate.of(type);
     }
+    
     @ZenCodeType.StaticExpansionMethod
     public static EntityTypePredicate create(final KnownTag<EntityType<?>> type) {
-
+        
         return EntityTypePredicate.of(type.getTagKey());
+    }
+    
+    @ZenCodeType.Method
+    public static boolean matches(EntityTypePredicate internal, EntityType<?> type) {
+        
+        return internal.matches(type);
     }
     
 }

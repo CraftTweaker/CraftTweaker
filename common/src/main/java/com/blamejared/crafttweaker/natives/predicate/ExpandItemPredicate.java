@@ -1,5 +1,7 @@
 package com.blamejared.crafttweaker.natives.predicate;
 
+import java.util.Arrays;
+
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.tag.type.KnownTag;
@@ -9,8 +11,6 @@ import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.openzen.zencode.java.ZenCodeType;
-
-import java.util.Arrays;
 
 @ZenRegister
 @Document("vanilla/api/predicate/ItemPredicate")
@@ -37,8 +37,16 @@ public final class ExpandItemPredicate {
     
     @ZenCodeType.StaticExpansionMethod
     public static ItemPredicate.Builder create(final KnownTag<Item> tag) {
-
+        
         return create().of(tag.getTagKey());
     }
+    
+    
+    @ZenCodeType.Method
+    public static boolean test(ItemPredicate internal, IItemStack stack) {
+        
+        return internal.test(stack.getInternal());
+    }
+    
     
 }

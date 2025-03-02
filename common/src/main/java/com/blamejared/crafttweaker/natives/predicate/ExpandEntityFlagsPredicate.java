@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.critereon.EntityFlagsPredicate;
+import net.minecraft.world.entity.Entity;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -15,6 +16,12 @@ public final class ExpandEntityFlagsPredicate {
     public static EntityFlagsPredicate.Builder create() {
         
         return EntityFlagsPredicate.Builder.flags();
+    }
+    
+    @ZenCodeType.Method
+    public static boolean matches(EntityFlagsPredicate internal, Entity entity) {
+        
+        return internal.matches(entity);
     }
     
 }

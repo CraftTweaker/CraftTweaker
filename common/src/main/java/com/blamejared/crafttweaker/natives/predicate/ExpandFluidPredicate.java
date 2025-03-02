@@ -5,6 +5,8 @@ import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.critereon.FluidPredicate;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.material.Fluid;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -21,14 +23,20 @@ public final class ExpandFluidPredicate {
     
     @ZenCodeType.StaticExpansionMethod
     public static FluidPredicate.Builder create(final Fluid fluid) {
-
+        
         return create().of(fluid);
     }
     
     @ZenCodeType.StaticExpansionMethod
     public static FluidPredicate.Builder create(final KnownTag<Fluid> tag) {
-
+        
         return create().of(tag.getTagKey());
+    }
+    
+    @ZenCodeType.Method
+    public static boolean matches(FluidPredicate internal, ServerLevel level, BlockPos pos) {
+        
+        return internal.matches(level, pos);
     }
     
 }

@@ -6,6 +6,9 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.LightningBoltPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Optional;
@@ -37,6 +40,12 @@ public final class ExpandLightningBoltPredicate {
     public static LightningBoltPredicate create(final MinMaxBounds.Ints blockSetOnFire, final EntityPredicate.Builder struckEntity) {
         
         return create(blockSetOnFire, struckEntity.build());
+    }
+    
+    @ZenCodeType.Method
+    public static boolean matches(LightningBoltPredicate internal, Entity entity, ServerLevel level, @ZenCodeType.Nullable Vec3 pos) {
+        
+        return internal.matches(entity, level, pos);
     }
     
 }

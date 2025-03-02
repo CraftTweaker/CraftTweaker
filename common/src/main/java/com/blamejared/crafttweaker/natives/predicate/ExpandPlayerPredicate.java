@@ -4,6 +4,9 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.critereon.PlayerPredicate;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -23,6 +26,12 @@ public final class ExpandPlayerPredicate {
     public static PlayerPredicate.Builder create() {
         
         return PlayerPredicate.Builder.player();
+    }
+    
+    @ZenCodeType.Method
+    public static boolean matches(PlayerPredicate internal, Entity entity, ServerLevel level, @ZenCodeType.Nullable Vec3 pos) {
+        
+        return internal.matches(entity, level, pos);
     }
     
 }

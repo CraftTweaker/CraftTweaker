@@ -41,4 +41,17 @@ public final class ExpandMinMaxBoundsDoubles {
         return MinMaxBounds.Doubles.atMost(max);
     }
     
+    @ZenCodeType.Method
+    public static boolean matches(MinMaxBounds.Doubles internal, double value) {
+        
+        return internal.matches(value);
+    }
+    
+    @ZenCodeType.Method
+    public static boolean matchesSqr(MinMaxBounds.Doubles internal, double value) {
+        
+        return internal.matchesSqr(value);
+    }
+    
+    
 }

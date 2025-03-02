@@ -5,6 +5,8 @@ import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.advancements.critereon.BlockPredicate;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import org.openzen.zencode.java.ZenCodeType;
@@ -31,6 +33,12 @@ public final class ExpandBlockPredicate {
         
         //noinspection RedundantTypeArguments
         return create().of( tag.<TagKey<Block>>getTagKey());
+    }
+    
+    @ZenCodeType.Method
+    public static boolean matches(BlockPredicate internal, ServerLevel level, BlockPos pos) {
+        
+        return internal.matches(level, pos);
     }
     
 }
