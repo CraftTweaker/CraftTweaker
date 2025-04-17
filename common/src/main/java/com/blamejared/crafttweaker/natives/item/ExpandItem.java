@@ -193,7 +193,7 @@ public class ExpandItem {
     public static void addAttributeModifier(Item internal, Attribute attribute, AttributeModifier modifier, EquipmentSlotGroup slot) {
         
         ItemAttributeModifiers modifiers = internal.components()
-                .getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
+                .getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, internal.getDefaultAttributeModifiers());
         
         setComponent(internal, DataComponents.ATTRIBUTE_MODIFIERS, modifiers.withModifierAdded(Services.REGISTRY.holderOrThrow(Registries.ATTRIBUTE, attribute), modifier, slot));
     }
