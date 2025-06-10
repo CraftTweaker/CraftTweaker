@@ -15,12 +15,13 @@ public class ActionSetBurnTime extends CraftTweakerAction implements IUndoableAc
     private final IIngredient ingredient;
     private final int newBurnTime;
     private final RecipeType<?> recipeType;
-    
+    private final boolean isRecipeTypeSet;
     public ActionSetBurnTime(IIngredient ingredient, int newBurnTime) {
         
         this.ingredient = ingredient;
         this.newBurnTime = newBurnTime;
         this.recipeType = RecipeType.SMELTING;
+        this.isRecipeTypeSet = false;
     }
     
     public ActionSetBurnTime(IIngredient ingredient, int newBurnTime, RecipeType<?> type) {
@@ -28,12 +29,19 @@ public class ActionSetBurnTime extends CraftTweakerAction implements IUndoableAc
         this.ingredient = ingredient;
         this.newBurnTime = newBurnTime;
         this.recipeType = type;
+        this.isRecipeTypeSet = true;
     }
     
     @Override
     public void apply() {
         
         Services.EVENT.setBurnTime(ingredient, newBurnTime, recipeType);
+        if(this.isRecipeTypeSet == false) {
+            
+            Services.EVENT.setBurnTime(ingredient, newBurnTime, RecipeType.BLASTING);
+            Services.EVENT.setBurnTime(ingredient, newBurnTime, RecipeType.SMOKING);
+        }
+        
     }
     
     @Override
