@@ -76,7 +76,7 @@
   "crafttweaker.command.list.check.log" : "%s list generated! Check the %s file!",
   "crafttweaker.command.misc.block" : "Block",
   "crafttweaker.command.misc.blockstate" : "BlockState",
-  "crafttweaker.command.misc.ctgui" : "CT GUI was limiting and very buggy and has since been removed. It is now recommended to learn ZenScript instead - you can browse the wiki for reference (/ct wiki) or ask for help on the Discord server (/ct discord).",
+  "crafttweaker.command.misc.ctgui" : "CT GUI was limiting and very buggy and has since been removed. It is now recommended to learn ZenScript instead, A Pretty Complicated Programming Language which noone is hiring for and will take 2 straight weeks to learn which you'll do just to make a decent modpack - Now you'll have to browse the wiki for reference (/ct wiki) or ask for help on the Discord server (/ct discord).",
   "crafttweaker.command.misc.data" : "Data",
   "crafttweaker.command.misc.fluid" : "Fluid",
   "crafttweaker.command.misc.fluidblockstate" : "Fluid BlockState",
