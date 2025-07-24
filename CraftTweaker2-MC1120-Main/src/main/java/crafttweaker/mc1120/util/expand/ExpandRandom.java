@@ -12,11 +12,6 @@ import java.util.Random;
 @ZenRegister
 public class ExpandRandom {
     @ZenMethodStatic
-    public static IRandom getInstance() {
-        return new MCRandom(new Random());
-    }
-
-    @ZenMethodStatic
     public static IRandom getInstance(long seed) {
         return new MCRandom(new Random(seed));
     }
