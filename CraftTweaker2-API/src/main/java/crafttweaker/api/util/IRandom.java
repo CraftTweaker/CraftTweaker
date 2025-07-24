@@ -33,4 +33,7 @@ public interface IRandom {
 
     @ZenMethod
     String getRandomUUID();
+
+    @ZenMethod
+    void setSeed(long seed);
 }
