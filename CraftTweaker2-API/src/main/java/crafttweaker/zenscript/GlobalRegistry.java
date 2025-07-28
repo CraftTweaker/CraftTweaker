@@ -67,7 +67,7 @@ public class GlobalRegistry {
                 }
             }
         } catch(Throwable ex) {
-            ex.printStackTrace();
+            CraftTweakerAPI.getLogger().logError("Failed to register expansion for " + cls.getName(), ex);
         }
     }
     
@@ -98,7 +98,7 @@ public class GlobalRegistry {
             type.complete(types);
             root.put(type.getName(), new SymbolType(type), errors);
         } catch(Throwable ex) {
-            ex.printStackTrace();
+            CraftTweakerAPI.getLogger().logError("Failed to register class for " + cls.getName(), ex);
         }
     }
     
