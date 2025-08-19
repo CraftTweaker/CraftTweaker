@@ -1,6 +1,7 @@
 package crafttweaker.api.data;
 
-import java.util.*;
+import crafttweaker.api.data.cast.CastResult;
+import crafttweaker.api.data.cast.DataConverterNumber;
 
 /**
  * Contains a byte value (-128 .. 127)
@@ -13,66 +14,6 @@ public class DataByte implements IData {
     
     public DataByte(byte value) {
         this.value = value;
-    }
-    
-    @Override
-    public boolean asBool() {
-        return value == 1;
-    }
-    
-    @Override
-    public byte asByte() {
-        return value;
-    }
-    
-    @Override
-    public short asShort() {
-        return value;
-    }
-    
-    @Override
-    public int asInt() {
-        return value;
-    }
-    
-    @Override
-    public long asLong() {
-        return value;
-    }
-    
-    @Override
-    public float asFloat() {
-        return value;
-    }
-    
-    @Override
-    public double asDouble() {
-        return value;
-    }
-    
-    @Override
-    public String asString() {
-        return Byte.toString(value);
-    }
-    
-    @Override
-    public List<IData> asList() {
-        return null;
-    }
-    
-    @Override
-    public Map<String, IData> asMap() {
-        return null;
-    }
-    
-    @Override
-    public byte[] asByteArray() {
-        return null;
-    }
-    
-    @Override
-    public int[] asIntArray() {
-        return null;
     }
     
     @Override
@@ -102,12 +43,16 @@ public class DataByte implements IData {
     
     @Override
     public boolean contains(IData data) {
-        return data.asByte() == value;
+        return equals(data);
     }
     
     @Override
     public boolean equals(IData data) {
-        return value == data.asByte();
+        if (data instanceof DataByte) {
+            return ((DataByte) data).value == value;
+        }
+        CastResult<Number> result = data.convert(DataConverterNumber.INSTANCE);
+        return result.isOk() && result.get().byteValue() == value;
     }
     
     @Override

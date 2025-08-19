@@ -1,5 +1,8 @@
 package crafttweaker.api.data;
 
+import crafttweaker.api.data.cast.CastResult;
+import crafttweaker.api.data.cast.DataConverterIntArray;
+
 import java.util.*;
 
 /**
@@ -71,86 +74,6 @@ public class DataIntArray implements IData {
     }
     
     @Override
-    public boolean asBool() {
-        throw new IllegalDataException("Cannot cast an array to bool");
-    }
-    
-    @Override
-    public byte asByte() {
-        throw new IllegalDataException("Cannot cast an array to byte");
-    }
-    
-    @Override
-    public short asShort() {
-        throw new IllegalDataException("Cannot cast an array to short");
-    }
-    
-    @Override
-    public int asInt() {
-        throw new IllegalDataException("Cannot cast an array to int");
-    }
-    
-    @Override
-    public long asLong() {
-        throw new IllegalDataException("Cannot cast an array to long");
-    }
-    
-    @Override
-    public float asFloat() {
-        throw new IllegalDataException("Cannot cast an array to float");
-    }
-    
-    @Override
-    public double asDouble() {
-        throw new IllegalDataException("Cannot cast an array to double");
-    }
-    
-    @Override
-    public String asString() {
-        StringBuilder result = new StringBuilder();
-        result.append('[');
-        boolean first = true;
-        for(int value : data) {
-            if(first) {
-                first = false;
-            } else {
-                result.append(", ");
-            }
-            result.append(value);
-        }
-        result.append(']');
-        return result.toString();
-    }
-    
-    @Override
-    public List<IData> asList() {
-        List<IData> result = new ArrayList<>();
-        for(int value : data) {
-            result.add(new DataInt(value));
-        }
-        return result;
-    }
-    
-    @Override
-    public Map<String, IData> asMap() {
-        return null;
-    }
-    
-    @Override
-    public byte[] asByteArray() {
-        byte[] result = new byte[data.length];
-        for(int i = 0; i < result.length; i++) {
-            result[i] = (byte) data[i];
-        }
-        return result;
-    }
-    
-    @Override
-    public int[] asIntArray() {
-        return data;
-    }
-    
-    @Override
     public IData getAt(int i) {
         return new DataInt(data[i]);
     }
@@ -191,7 +114,11 @@ public class DataIntArray implements IData {
     
     @Override
     public boolean equals(IData data) {
-        return Arrays.equals(this.data, data.asIntArray());
+        if (data instanceof DataIntArray) {
+            return Arrays.equals(((DataIntArray) data).data, this.data);
+        }
+        CastResult<int[]> result = data.convert(DataConverterIntArray.INSTANCE);
+        return result.isOk() && Arrays.equals(result.get(), this.data);
     }
     
     @Override

@@ -101,90 +101,6 @@ public class DataMap implements IData {
     }
     
     @Override
-    public boolean asBool() {
-        throw new UnsupportedOperationException("Cannot cast map to bool");
-    }
-    
-    @Override
-    public byte asByte() {
-        throw new UnsupportedOperationException("Cannot cast map to byte");
-    }
-    
-    @Override
-    public short asShort() {
-        throw new UnsupportedOperationException("Cannot cast map to short");
-    }
-    
-    @Override
-    public int asInt() {
-        throw new UnsupportedOperationException("Cannot cast map to int");
-    }
-    
-    @Override
-    public long asLong() {
-        throw new UnsupportedOperationException("Cannot cast map to long");
-    }
-    
-    @Override
-    public float asFloat() {
-        throw new UnsupportedOperationException("Cannot cast map to float");
-    }
-    
-    @Override
-    public double asDouble() {
-        throw new UnsupportedOperationException("Cannot cast map to double");
-    }
-    
-    @Override
-    public String asString() {
-        StringBuilder result = new StringBuilder();
-        result.append('{');
-        boolean first = true;
-        for(Map.Entry<String, IData> entry : data.entrySet()) {
-            if(first) {
-                first = false;
-            } else {
-                result.append(", ");
-            }
-            
-            if(isValidIdentifier(entry.getKey())) {
-                result.append(entry.getKey());
-            } else {
-                result.append("\"").append(entry.getKey()).append("\"");
-            }
-            
-            result.append(": ");
-            result.append(entry.getValue());
-        }
-        result.append('}');
-        return result.toString();
-    }
-    
-    @Override
-    public List<IData> asList() {
-        return null;
-    }
-    
-    @Override
-    public Map<String, IData> asMap() {
-        if(immutable) {
-            return Collections.unmodifiableMap(data);
-        } else {
-            return data;
-        }
-    }
-    
-    @Override
-    public byte[] asByteArray() {
-        return null;
-    }
-    
-    @Override
-    public int[] asIntArray() {
-        return null;
-    }
-    
-    @Override
     public IData getAt(int i) {
         return memberGet(Integer.toString(i));
     }
@@ -296,17 +212,5 @@ public class DataMap implements IData {
     @Override
     public String toString() {
         return asString();
-    }
-    
-    private boolean isValidIdentifier(String str) {
-        if(!Character.isJavaIdentifierStart(str.charAt(0)))
-            return false;
-        
-        for(int i = 1; i < str.length(); i++) {
-            if(!Character.isJavaIdentifierPart(str.charAt(i)))
-                return false;
-        }
-        
-        return true;
     }
 }

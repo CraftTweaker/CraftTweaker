@@ -1,6 +1,7 @@
 package crafttweaker.api.data;
 
-import java.util.*;
+import crafttweaker.api.data.cast.CastResult;
+import crafttweaker.api.data.cast.DataConverterNumber;
 
 /**
  * Contains a double-precision value.
@@ -13,66 +14,6 @@ public class DataDouble implements IData {
     
     public DataDouble(double value) {
         this.value = value;
-    }
-    
-    @Override
-    public boolean asBool() {
-        return value == 1.0;
-    }
-    
-    @Override
-    public byte asByte() {
-        return (byte) value;
-    }
-    
-    @Override
-    public short asShort() {
-        return (short) value;
-    }
-    
-    @Override
-    public int asInt() {
-        return (int) value;
-    }
-    
-    @Override
-    public long asLong() {
-        return (long) value;
-    }
-    
-    @Override
-    public float asFloat() {
-        return (float) value;
-    }
-    
-    @Override
-    public double asDouble() {
-        return value;
-    }
-    
-    @Override
-    public String asString() {
-        return Double.toString(value);
-    }
-    
-    @Override
-    public List<IData> asList() {
-        return null;
-    }
-    
-    @Override
-    public Map<String, IData> asMap() {
-        return null;
-    }
-    
-    @Override
-    public byte[] asByteArray() {
-        return null;
-    }
-    
-    @Override
-    public int[] asIntArray() {
-        return null;
     }
     
     @Override
@@ -102,12 +43,16 @@ public class DataDouble implements IData {
     
     @Override
     public boolean contains(IData data) {
-        return data.asDouble() == value;
+        return equals(data);
     }
     
     @Override
     public boolean equals(IData other) {
-        return value == other.asDouble();
+        if (other instanceof DataDouble) {
+            return Double.compare(((DataDouble) other).value, value) == 0;
+        }
+        CastResult<Number> result = other.convert(DataConverterNumber.INSTANCE);
+        return result.isOk() && Double.compare(result.get().doubleValue(), value) == 0;
     }
     
     @Override
