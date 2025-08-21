@@ -3,14 +3,12 @@ package com.blamejared.crafttweaker.api.ingredient;
 import com.blamejared.crafttweaker.api.ingredient.type.IIngredientEmpty;
 import com.blamejared.crafttweaker.api.ingredient.type.IIngredientList;
 import com.blamejared.crafttweaker.api.ingredient.type.IngredientCraftTweakerBase;
-import com.blamejared.crafttweaker.api.ingredient.type.WrappingIIngredient;
+import com.blamejared.crafttweaker.api.ingredient.type.TagIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import com.blamejared.crafttweaker.api.tag.CraftTweakerTagRegistry;
-import com.blamejared.crafttweaker.api.tag.expand.ExpandItemTag;
 import com.blamejared.crafttweaker.mixin.common.access.item.AccessIngredient;
 import com.blamejared.crafttweaker.platform.Services;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.Arrays;
@@ -69,11 +67,8 @@ public class IngredientConverter {
     
     private static IIngredient fromTagList(Ingredient.TagValue value) {
         
-        final ResourceLocation location = value.tag().location();
-        return CraftTweakerTagRegistry.INSTANCE.findKnownManager(Registries.ITEM)
-                .map(mcTags -> mcTags.tag(location))
-                .map(ExpandItemTag::asIIngredient)
-                .orElseThrow(() -> new RuntimeException("Error while converting ingredient: '" + value + "' to an IIngredient!"));
+        TagKey<Item> key = value.tag();
+        return new TagIngredient(key);
     }
     
     private static IIngredient empty() {

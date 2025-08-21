@@ -11,7 +11,6 @@ import com.blamejared.crafttweaker.api.logging.CommonLoggers;
 import com.blamejared.crafttweaker.api.tag.type.KnownTag;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -37,7 +36,7 @@ public class ExpandItemTag {
                     .warn("Tag '{}' does not exist, replacing with empty IIngredient", internal.getCommandString());
             return IIngredientEmpty.INSTANCE;
         }
-        return new TagIngredient(internal);
+        return new TagIngredient(internal.getTagKey());
     }
     
     @ZenCodeType.Method
