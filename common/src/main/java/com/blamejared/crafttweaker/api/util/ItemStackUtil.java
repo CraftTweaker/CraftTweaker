@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.api.util;
 
 import com.blamejared.crafttweaker.api.data.op.IDataOps;
+import com.blamejared.crafttweaker.api.data.visitor.DataToStringVisitor;
 import com.blamejared.crafttweaker.api.ingredient.condition.IngredientConditions;
 import com.blamejared.crafttweaker.natives.component.ExpandDataComponentType;
 import net.minecraft.core.component.DataComponentPatch;
@@ -34,7 +35,7 @@ public final class ItemStackUtil {
             sb.append(".withJsonComponent(")
                     .append(ExpandDataComponentType.getCommandString(typedDataComponent.type()))
                     .append(", ")
-                    .append(typedDataComponent.encodeValue(IDataOps.INSTANCE.withRegistryAccess()).getOrThrow())
+                    .append(typedDataComponent.encodeValue(IDataOps.INSTANCE.withRegistryAccess()).getOrThrow().accept(DataToStringVisitor.ESCAPE))
                     .append(")");
         });
         split.removed()

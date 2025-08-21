@@ -5,6 +5,7 @@ import com.blamejared.crafttweaker.api.bracket.CommandStringDisplayable;
 import com.blamejared.crafttweaker.api.component.ComponentAccess;
 import com.blamejared.crafttweaker.api.data.IData;
 import com.blamejared.crafttweaker.api.data.op.IDataOps;
+import com.blamejared.crafttweaker.api.data.visitor.DataToStringVisitor;
 import com.blamejared.crafttweaker.natives.component.ExpandDataComponentType;
 import com.blamejared.crafttweaker.platform.Services;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -268,7 +269,7 @@ public interface IFluidStack extends CommandStringDisplayable, DataComponentHold
             builder.append(".withJsonComponent(")
                     .append(ExpandDataComponentType.getCommandString(typedDataComponent.type()))
                     .append(", ")
-                    .append(typedDataComponent.encodeValue(IDataOps.INSTANCE.withRegistryAccess()).getOrThrow())
+                    .append(typedDataComponent.encodeValue(IDataOps.INSTANCE.withRegistryAccess()).getOrThrow().accept(DataToStringVisitor.ESCAPE))
                     .append(")");
         });
         split.removed()
