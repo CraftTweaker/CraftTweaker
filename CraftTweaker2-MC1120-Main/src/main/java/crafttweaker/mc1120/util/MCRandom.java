@@ -56,4 +56,9 @@ public class MCRandom implements IRandom {
     public String getRandomUUID() {
         return MathHelper.getRandomUUID(random).toString();
     }
+
+    @Override
+    public void setSeed(long seed) {
+        random.setSeed(seed);
+    }
 }
