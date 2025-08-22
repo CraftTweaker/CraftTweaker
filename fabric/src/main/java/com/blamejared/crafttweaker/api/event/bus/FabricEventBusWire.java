@@ -6,15 +6,13 @@ import com.google.common.reflect.TypeToken;
 import net.fabricmc.fabric.api.event.Event;
 import net.minecraft.resources.ResourceLocation;
 
+import java.lang.invoke.LambdaMetafactory;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.lang.invoke.WrongMethodTypeException;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
-import java.lang.reflect.Proxy;
 import java.util.Objects;
 
 /**
@@ -59,47 +57,6 @@ import java.util.Objects;
  * @since 11.0.0
  */
 public final class FabricEventBusWire<E, S> implements IEventBusWire {
-    private record PostingInvocationHandler(Method targetMethod, MethodHandle listener) implements InvocationHandler {
-        @Override
-        public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-            
-            final String methodName = method.getName();
-            if (Objects.equals(this.targetMethod(), method)) {
-                return this.$invoke(proxy, args);
-            }
-            if (method.isDefault()) {
-                return InvocationHandler.invokeDefault(proxy, method, args);
-            }
-            return switch(methodName) {
-                case "equals" -> this.$equals(proxy, args[0]);
-                case "toString" -> this.$toString(proxy);
-                case "hashCode" -> this.$hashCode(proxy);
-                default -> throw new IllegalArgumentException("Unknown method to proxy " + methodName);
-            };
-        }
-        
-        private boolean $equals(final Object $this, final Object other) {
-            return $this == other;
-        }
-        
-        private String $toString(final Object $this) {
-            return "%s@%s//%s#%s".formatted(
-                    $this.getClass().getName(),
-                    $this.hashCode(),
-                    this.targetMethod().getDeclaringClass().getName(),
-                    this.targetMethod().getName()
-            );
-        }
-        
-        private int $hashCode(final Object $this) {
-            return System.identityHashCode($this);
-        }
-        
-        private Object $invoke(final Object $this, final Object[] args) throws Throwable {
-            return this.listener().invokeExact($this, args);
-        }
-        
-    }
     
     private record WrapReveal(Method wrap, Method reveal) {}
     
@@ -420,17 +377,19 @@ public final class FabricEventBusWire<E, S> implements IEventBusWire {
     private <T> E spinProxy(final ResourceLocation phase, final IEventBus<T> bus) {
         try {
             final MethodHandle rawListener = this.spinMethodHandle(phase, bus);
-            final MethodHandle spreading = rawListener.asSpreader(Object[].class, rawListener.type().parameterCount());
             
-            final MethodHandle virtualListener = MethodHandles.dropArguments(spreading, 0, Object.class);
-            
-            final MethodType proxyReadyType = MethodType.methodType(Object.class, Object.class, Object[].class);
-            final MethodHandle proxyReadyListener = virtualListener.asType(proxyReadyType);
-            
-            final Class<?>[] classes = new Class<?>[] { this.originalEventClass };
-            final InvocationHandler handler = new PostingInvocationHandler(this.functionalMethod, proxyReadyListener);
-            return this.originalEventClass.cast(Proxy.newProxyInstance(this.getClass().getClassLoader(), classes, handler));
-        } catch (final ReflectiveOperationException | WrongMethodTypeException e) {
+            final MethodType functionalType = MethodType.methodType(this.functionalMethod.getReturnType(), this.functionalMethod.getParameterTypes());
+            final MethodHandles.Lookup lookup = MethodHandles.lookup();
+            final MethodHandle implementationFactory = LambdaMetafactory.metafactory(
+                    lookup,
+                    this.functionalMethod.getName(),
+                    MethodType.methodType(this.originalEventClass, MethodHandle.class),
+                    functionalType,
+                    lookup.findVirtual(MethodHandle.class, "invokeExact", rawListener.type()),
+                    functionalType
+            ).getTarget();
+            return this.originalEventClass.cast(implementationFactory.invoke(rawListener));
+        } catch (final Throwable e) {
             throw new RuntimeException("Unable to spin proxy for event listeners", e);
         }
     }
