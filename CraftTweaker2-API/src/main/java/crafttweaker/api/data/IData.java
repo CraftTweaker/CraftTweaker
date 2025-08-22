@@ -1,6 +1,7 @@
 package crafttweaker.api.data;
 
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.data.cast.*;
 import stanhebben.zenscript.annotations.*;
 
 import java.util.*;
@@ -48,35 +49,51 @@ public interface IData {
     
     @ZenCaster
     @ZenMethod
-    boolean asBool();
+    default boolean asBool() {
+        return convert(DataConverterBool.INSTANCE).get();
+    }
     
     @ZenCaster
     @ZenMethod
-    byte asByte();
+    default byte asByte() {
+        return convert(DataConverterNumber.INSTANCE).get().byteValue();
+    }
     
     @ZenCaster
     @ZenMethod
-    short asShort();
+    default short asShort() {
+        return convert(DataConverterNumber.INSTANCE).get().shortValue();
+    }
     
     @ZenCaster
     @ZenMethod
-    int asInt();
+    default int asInt() {
+        return convert(DataConverterNumber.INSTANCE).get().intValue();
+    }
     
     @ZenCaster
     @ZenMethod
-    long asLong();
+    default long asLong() {
+        return convert(DataConverterNumber.INSTANCE).get().longValue();
+    }
     
     @ZenCaster
     @ZenMethod
-    float asFloat();
+    default float asFloat() {
+        return convert(DataConverterNumber.INSTANCE).get().floatValue();
+    }
     
     @ZenCaster
     @ZenMethod
-    double asDouble();
+    default double asDouble() {
+        return convert(DataConverterNumber.INSTANCE).get().doubleValue();
+    }
     
     @ZenCaster
     @ZenMethod
-    String asString();
+    default String asString() {
+        return convert(DataConverterString.INSTANCE).get();
+    }
     
     /**
      * Attempts to convert this value to a List. Returns null if this value
@@ -86,7 +103,9 @@ public interface IData {
      */
     @ZenCaster
     @ZenMethod
-    List<IData> asList();
+    default List<IData> asList() {
+        return convert(DataConverterList.INSTANCE).get();
+    }
     
     /**
      * Attempts to convert this value to a Map. Returns null if this value
@@ -96,7 +115,9 @@ public interface IData {
      */
     @ZenCaster
     @ZenMethod
-    Map<String, IData> asMap();
+    default Map<String, IData> asMap() {
+        return convert(DataConverterMap.INSTANCE).get();
+    }
     
     /**
      * Attempts to convert this value to a byte array. Returns null if this
@@ -106,7 +127,9 @@ public interface IData {
      */
     @ZenCaster
     @ZenMethod
-    byte[] asByteArray();
+    default byte[] asByteArray() {
+        return convert(DataConverterByteArray.INSTANCE).get();
+    }
     
     /**
      * Attempts to convert this value to an int array. Returns null if this
@@ -116,7 +139,9 @@ public interface IData {
      */
     @ZenCaster
     @ZenMethod
-    int[] asIntArray();
+    default int[] asIntArray() {
+        return convert(DataConverterIntArray.INSTANCE).get();
+    }
     
     @ZenOperator(OperatorType.INDEXGET)
     IData getAt(int i);

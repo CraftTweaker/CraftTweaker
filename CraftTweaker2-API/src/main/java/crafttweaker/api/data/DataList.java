@@ -18,98 +18,6 @@ public class DataList implements IData {
     }
     
     @Override
-    public boolean asBool() {
-        throw new IllegalDataException("Cannot convert a list to a bool");
-    }
-    
-    @Override
-    public byte asByte() {
-        throw new IllegalDataException("Cannot convert a list to a byte");
-    }
-    
-    @Override
-    public short asShort() {
-        throw new IllegalDataException("Cannot convert a list to a short");
-    }
-    
-    @Override
-    public int asInt() {
-        throw new IllegalDataException("Cannot convert a list to an int");
-    }
-    
-    @Override
-    public long asLong() {
-        throw new IllegalDataException("Cannot convert a list to a long");
-    }
-    
-    @Override
-    public float asFloat() {
-        throw new IllegalDataException("Cannot convert a list to a float");
-    }
-    
-    @Override
-    public double asDouble() {
-        throw new IllegalDataException("Cannot convert a list to a double");
-    }
-    
-    @Override
-    public List<IData> asList() {
-        if(immutable) {
-            return Collections.unmodifiableList(values);
-        } else {
-            return values;
-        }
-    }
-    
-    @Override
-    public Map<String, IData> asMap() {
-        return null;
-    }
-    
-    @Override
-    public String asString() {
-        StringBuilder output = new StringBuilder();
-        output.append('[');
-        boolean first = true;
-        for(IData value : values) {
-            if(first) {
-                first = false;
-            } else {
-                output.append(", ");
-            }
-            output.append(value);
-        }
-        output.append(']');
-        return output.toString();
-    }
-    
-    @Override
-    public byte[] asByteArray() {
-        try {
-            byte[] result = new byte[values.size()];
-            for(int i = 0; i < values.size(); i++) {
-                result[i] = values.get(i).asByte();
-            }
-            return result;
-        } catch(IllegalDataException ex) {
-            return null;
-        }
-    }
-    
-    @Override
-    public int[] asIntArray() {
-        try {
-            int[] result = new int[values.size()];
-            for(int i = 0; i < values.size(); i++) {
-                result[i] = values.get(i).asInt();
-            }
-            return result;
-        } catch(IllegalDataException ex) {
-            return null;
-        }
-    }
-    
-    @Override
     public IData getAt(int i) {
         return values.get(i);
     }
@@ -268,5 +176,66 @@ public class DataList implements IData {
     @Override
     public String toString() {
         return asString();
+    }
+
+    // binary compat
+    @Override
+    public boolean asBool() {
+        return IData.super.asBool();
+    }
+
+    @Override
+    public byte asByte() {
+        return IData.super.asByte();
+    }
+
+    @Override
+    public short asShort() {
+        return IData.super.asShort();
+    }
+
+    @Override
+    public int asInt() {
+        return IData.super.asInt();
+    }
+
+    @Override
+    public long asLong() {
+        return IData.super.asLong();
+    }
+
+    @Override
+    public float asFloat() {
+        return IData.super.asFloat();
+    }
+
+    @Override
+    public double asDouble() {
+        return IData.super.asDouble();
+    }
+
+    @Override
+    public String asString() {
+        return IData.super.asString();
+    }
+
+    @Override
+    public List<IData> asList() {
+        return IData.super.asList();
+    }
+
+    @Override
+    public Map<String, IData> asMap() {
+        return IData.super.asMap();
+    }
+
+    @Override
+    public byte[] asByteArray() {
+        return IData.super.asByteArray();
+    }
+
+    @Override
+    public int[] asIntArray() {
+        return IData.super.asIntArray();
     }
 }

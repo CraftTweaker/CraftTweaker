@@ -1,8 +1,8 @@
 package crafttweaker.api.data;
 
-import crafttweaker.CraftTweakerAPI;
+import crafttweaker.api.data.cast.CastResult;
+import crafttweaker.api.data.cast.DataConverterString;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -17,96 +17,6 @@ public class DataString implements IData {
     
     public DataString(String value) {
         this.value = value;
-    }
-    
-    @Override
-    public boolean asBool() {
-        return Boolean.parseBoolean(value);
-    }
-    
-    @Override
-    public byte asByte() {
-        try {
-            return Byte.parseByte(value);
-        } catch(NumberFormatException ignored) {
-            CraftTweakerAPI.logError("DataString " + value + " cannot be parsed to Byte, substituting 0!");
-            return 0;
-        }
-    }
-    
-    @Override
-    public short asShort() {
-        try {
-            return Short.parseShort(value);
-        } catch(NumberFormatException ignored) {
-            CraftTweakerAPI.logError("DataString " + value + " cannot be parsed to Short, substituting 0!");
-            return 0;
-        }
-    }
-    
-    @Override
-    public int asInt() {
-        try {
-            return Integer.parseInt(value);
-        } catch(NumberFormatException ignored) {
-            CraftTweakerAPI.logError("DataString " + value + " cannot be parsed to Int, substituting 0!");
-            return 0;
-        }
-    }
-    
-    @Override
-    public long asLong() {
-        try {
-            return Long.parseLong(value);
-        } catch(NumberFormatException ignored) {
-            CraftTweakerAPI.logError("DataString " + value + " cannot be parsed to Long, substituting 0!");
-            return 0;
-        }
-    }
-    
-    @Override
-    public float asFloat() {
-        try {
-            return Float.parseFloat(value);
-        } catch(NumberFormatException ignored) {
-            CraftTweakerAPI.logError("DataString " + value + " cannot be parsed to Float, substituting 0!");
-            return 0;
-        }
-    }
-    
-    @Override
-    public double asDouble() {
-        try {
-            return Double.parseDouble(value);
-        } catch(NumberFormatException ignored) {
-            CraftTweakerAPI.logError("DataString " + value + " cannot be parsed to Double, substituting 0!");
-            return 0;
-        }
-    }
-    
-    @Override
-    public String asString() {
-        return value;
-    }
-    
-    @Override
-    public List<IData> asList() {
-        return null;
-    }
-    
-    @Override
-    public Map<String, IData> asMap() {
-        return Collections.singletonMap(value, this);
-    }
-    
-    @Override
-    public byte[] asByteArray() {
-        return null;
-    }
-    
-    @Override
-    public int[] asIntArray() {
-        return null;
     }
     
     @Override
@@ -140,12 +50,16 @@ public class DataString implements IData {
     
     @Override
     public boolean contains(IData data) {
-        return data.asString().equals(value);
+        return equals(data);
     }
     
     @Override
     public boolean equals(IData data) {
-        return value.equals(data.asString());
+        if (data instanceof DataString) {
+            return value.equals(((DataString) data).value);
+        }
+        CastResult<String> result = data.convert(DataConverterString.INSTANCE);
+        return result.isOk() && value.equals(result.get());
     }
     
     @Override
@@ -241,5 +155,66 @@ public class DataString implements IData {
         }
         
         return stringbuilder.append('"').toString();
+    }
+
+    // binary compat
+    @Override
+    public boolean asBool() {
+        return IData.super.asBool();
+    }
+
+    @Override
+    public byte asByte() {
+        return IData.super.asByte();
+    }
+
+    @Override
+    public short asShort() {
+        return IData.super.asShort();
+    }
+
+    @Override
+    public int asInt() {
+        return IData.super.asInt();
+    }
+
+    @Override
+    public long asLong() {
+        return IData.super.asLong();
+    }
+
+    @Override
+    public float asFloat() {
+        return IData.super.asFloat();
+    }
+
+    @Override
+    public double asDouble() {
+        return IData.super.asDouble();
+    }
+
+    @Override
+    public String asString() {
+        return IData.super.asString();
+    }
+
+    @Override
+    public List<IData> asList() {
+        return IData.super.asList();
+    }
+
+    @Override
+    public Map<String, IData> asMap() {
+        return IData.super.asMap();
+    }
+
+    @Override
+    public byte[] asByteArray() {
+        return IData.super.asByteArray();
+    }
+
+    @Override
+    public int[] asIntArray() {
+        return IData.super.asIntArray();
     }
 }

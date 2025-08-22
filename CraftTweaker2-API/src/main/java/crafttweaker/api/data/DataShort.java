@@ -1,6 +1,7 @@
 package crafttweaker.api.data;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Contains a 16-bit short value.
@@ -13,66 +14,6 @@ public class DataShort implements IData {
     
     public DataShort(short value) {
         this.value = value;
-    }
-    
-    @Override
-    public boolean asBool() {
-        return value == 1;
-    }
-    
-    @Override
-    public byte asByte() {
-        return (byte) value;
-    }
-    
-    @Override
-    public short asShort() {
-        return value;
-    }
-    
-    @Override
-    public int asInt() {
-        return value;
-    }
-    
-    @Override
-    public long asLong() {
-        return value;
-    }
-    
-    @Override
-    public float asFloat() {
-        return value;
-    }
-    
-    @Override
-    public double asDouble() {
-        return value;
-    }
-    
-    @Override
-    public String asString() {
-        return Short.toString(value);
-    }
-    
-    @Override
-    public List<IData> asList() {
-        return null;
-    }
-    
-    @Override
-    public Map<String, IData> asMap() {
-        return null;
-    }
-    
-    @Override
-    public byte[] asByteArray() {
-        return null;
-    }
-    
-    @Override
-    public int[] asIntArray() {
-        return null;
     }
     
     @Override
@@ -183,5 +124,66 @@ public class DataShort implements IData {
     @Override
     public String toString() {
         return asString() + " as short";
+    }
+
+    // binary compat
+    @Override
+    public boolean asBool() {
+        return IData.super.asBool();
+    }
+
+    @Override
+    public byte asByte() {
+        return IData.super.asByte();
+    }
+
+    @Override
+    public short asShort() {
+        return IData.super.asShort();
+    }
+
+    @Override
+    public int asInt() {
+        return IData.super.asInt();
+    }
+
+    @Override
+    public long asLong() {
+        return IData.super.asLong();
+    }
+
+    @Override
+    public float asFloat() {
+        return IData.super.asFloat();
+    }
+
+    @Override
+    public double asDouble() {
+        return IData.super.asDouble();
+    }
+
+    @Override
+    public String asString() {
+        return IData.super.asString();
+    }
+
+    @Override
+    public List<IData> asList() {
+        return IData.super.asList();
+    }
+
+    @Override
+    public Map<String, IData> asMap() {
+        return IData.super.asMap();
+    }
+
+    @Override
+    public byte[] asByteArray() {
+        return IData.super.asByteArray();
+    }
+
+    @Override
+    public int[] asIntArray() {
+        return IData.super.asIntArray();
     }
 }

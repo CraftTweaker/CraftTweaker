@@ -1,6 +1,10 @@
 package crafttweaker.api.data;
 
-import java.util.*;
+import crafttweaker.api.data.cast.CastResult;
+import crafttweaker.api.data.cast.DataConverterBool;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Contains a boolean value (true or false).
@@ -13,66 +17,6 @@ public class DataBool implements IData {
     
     public DataBool(boolean value) {
         this.value = value;
-    }
-    
-    @Override
-    public boolean asBool() {
-        return value;
-    }
-    
-    @Override
-    public byte asByte() {
-        return (byte) (value ? 1 : 0);
-    }
-    
-    @Override
-    public short asShort() {
-        return (short) (value ? 1 : 0);
-    }
-    
-    @Override
-    public int asInt() {
-        return value ? 1 : 0;
-    }
-    
-    @Override
-    public long asLong() {
-        return value ? 1 : 0;
-    }
-    
-    @Override
-    public float asFloat() {
-        return value ? 1 : 0;
-    }
-    
-    @Override
-    public double asDouble() {
-        return value ? 1 : 0;
-    }
-    
-    @Override
-    public String asString() {
-        return Boolean.toString(value);
-    }
-    
-    @Override
-    public List<IData> asList() {
-        return null;
-    }
-    
-    @Override
-    public Map<String, IData> asMap() {
-        return null;
-    }
-    
-    @Override
-    public byte[] asByteArray() {
-        return null;
-    }
-    
-    @Override
-    public int[] asIntArray() {
-        return null;
     }
     
     @Override
@@ -102,12 +46,16 @@ public class DataBool implements IData {
     
     @Override
     public boolean contains(IData data) {
-        return data.asBool() == value;
+        return equals(data);
     }
     
     @Override
     public boolean equals(IData other) {
-        return value == other.asBool();
+        if (other instanceof DataBool) {
+            return ((DataBool) other).value == value;
+        }
+        CastResult<Boolean> result = other.convert(DataConverterBool.INSTANCE);
+        return result.isOk() && result.get().equals(value);
     }
     
     @Override
@@ -183,5 +131,66 @@ public class DataBool implements IData {
     @Override
     public String toString() {
         return asString();
+    }
+
+    // binary compat
+    @Override
+    public boolean asBool() {
+        return IData.super.asBool();
+    }
+
+    @Override
+    public byte asByte() {
+        return IData.super.asByte();
+    }
+
+    @Override
+    public short asShort() {
+        return IData.super.asShort();
+    }
+
+    @Override
+    public int asInt() {
+        return IData.super.asInt();
+    }
+
+    @Override
+    public long asLong() {
+        return IData.super.asLong();
+    }
+
+    @Override
+    public float asFloat() {
+        return IData.super.asFloat();
+    }
+
+    @Override
+    public double asDouble() {
+        return IData.super.asDouble();
+    }
+
+    @Override
+    public String asString() {
+        return IData.super.asString();
+    }
+
+    @Override
+    public List<IData> asList() {
+        return IData.super.asList();
+    }
+
+    @Override
+    public Map<String, IData> asMap() {
+        return IData.super.asMap();
+    }
+
+    @Override
+    public byte[] asByteArray() {
+        return IData.super.asByteArray();
+    }
+
+    @Override
+    public int[] asIntArray() {
+        return IData.super.asIntArray();
     }
 }

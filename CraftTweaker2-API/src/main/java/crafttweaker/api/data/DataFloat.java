@@ -1,6 +1,10 @@
 package crafttweaker.api.data;
 
-import java.util.*;
+import crafttweaker.api.data.cast.CastResult;
+import crafttweaker.api.data.cast.DataConverterNumber;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Contains a single-precision floating point value.
@@ -13,66 +17,6 @@ public class DataFloat implements IData {
     
     public DataFloat(float value) {
         this.value = value;
-    }
-    
-    @Override
-    public boolean asBool() {
-        return value == 1.0f;
-    }
-    
-    @Override
-    public byte asByte() {
-        return (byte) value;
-    }
-    
-    @Override
-    public short asShort() {
-        return (short) value;
-    }
-    
-    @Override
-    public int asInt() {
-        return (int) value;
-    }
-    
-    @Override
-    public long asLong() {
-        return (long) value;
-    }
-    
-    @Override
-    public float asFloat() {
-        return value;
-    }
-    
-    @Override
-    public double asDouble() {
-        return value;
-    }
-    
-    @Override
-    public String asString() {
-        return Float.toString(value);
-    }
-    
-    @Override
-    public List<IData> asList() {
-        return null;
-    }
-    
-    @Override
-    public Map<String, IData> asMap() {
-        return null;
-    }
-    
-    @Override
-    public byte[] asByteArray() {
-        return null;
-    }
-    
-    @Override
-    public int[] asIntArray() {
-        return null;
     }
     
     @Override
@@ -102,12 +46,16 @@ public class DataFloat implements IData {
     
     @Override
     public boolean contains(IData data) {
-        return data.asFloat() == value;
+        return equals(data);
     }
     
     @Override
     public boolean equals(IData data) {
-        return value == data.asFloat();
+        if (data instanceof DataFloat) {
+            return Float.compare(((DataFloat) data).value, value) == 0;
+        }
+        CastResult<Number> result = data.convert(DataConverterNumber.INSTANCE);
+        return result.isOk() && Float.compare(result.get().floatValue(), value) == 0;
     }
     
     @Override
@@ -183,5 +131,66 @@ public class DataFloat implements IData {
     @Override
     public String toString() {
         return asString() + " as float";
+    }
+
+    // binary compat
+    @Override
+    public boolean asBool() {
+        return IData.super.asBool();
+    }
+
+    @Override
+    public byte asByte() {
+        return IData.super.asByte();
+    }
+
+    @Override
+    public short asShort() {
+        return IData.super.asShort();
+    }
+
+    @Override
+    public int asInt() {
+        return IData.super.asInt();
+    }
+
+    @Override
+    public long asLong() {
+        return IData.super.asLong();
+    }
+
+    @Override
+    public float asFloat() {
+        return IData.super.asFloat();
+    }
+
+    @Override
+    public double asDouble() {
+        return IData.super.asDouble();
+    }
+
+    @Override
+    public String asString() {
+        return IData.super.asString();
+    }
+
+    @Override
+    public List<IData> asList() {
+        return IData.super.asList();
+    }
+
+    @Override
+    public Map<String, IData> asMap() {
+        return IData.super.asMap();
+    }
+
+    @Override
+    public byte[] asByteArray() {
+        return IData.super.asByteArray();
+    }
+
+    @Override
+    public int[] asIntArray() {
+        return IData.super.asIntArray();
     }
 }
