@@ -144,4 +144,65 @@ public class DataIntArray implements IData {
     public String toString() {
         return asString() + " as int[]";
     }
+
+    // binary compat
+    @Override
+    public boolean asBool() {
+        return IData.super.asBool();
+    }
+
+    @Override
+    public byte asByte() {
+        return IData.super.asByte();
+    }
+
+    @Override
+    public short asShort() {
+        return IData.super.asShort();
+    }
+
+    @Override
+    public int asInt() {
+        return IData.super.asInt();
+    }
+
+    @Override
+    public long asLong() {
+        return IData.super.asLong();
+    }
+
+    @Override
+    public float asFloat() {
+        return IData.super.asFloat();
+    }
+
+    @Override
+    public double asDouble() {
+        return IData.super.asDouble();
+    }
+
+    @Override
+    public String asString() {
+        return IData.super.asString();
+    }
+
+    @Override
+    public List<IData> asList() {
+        return IData.super.asList();
+    }
+
+    @Override
+    public Map<String, IData> asMap() {
+        return IData.super.asMap();
+    }
+
+    @Override
+    public byte[] asByteArray() {
+        return IData.super.asByteArray();
+    }
+
+    @Override
+    public int[] asIntArray() {
+        return IData.super.asIntArray();
+    }
 }
