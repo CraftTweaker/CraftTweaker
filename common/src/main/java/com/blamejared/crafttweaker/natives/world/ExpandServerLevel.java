@@ -4,6 +4,7 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.level.CraftTweakerSavedData;
 import com.blamejared.crafttweaker.api.level.CraftTweakerSavedDataHolder;
 import com.blamejared.crafttweaker.api.util.GenericUtil;
+import com.blamejared.crafttweaker.natives.entity.ExpandEntityTypeTest;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.core.BlockPos;
@@ -166,7 +167,7 @@ public class ExpandServerLevel {
     @ZenCodeType.Method
     public static List<Entity> getEntities(ServerLevel internal, Predicate<Entity> predicate, @ZenCodeType.Optional EntityType<Entity> type) {
         
-        return GenericUtil.uncheck(internal.getEntities(type, predicate));
+        return GenericUtil.uncheck(internal.getEntities(type == null ? ExpandEntityTypeTest.ANY : type, predicate));
     }
     
     @ZenCodeType.Getter("damageSources")
