@@ -4,6 +4,7 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.CrafttweakerImplementationAPI;
 import crafttweaker.IAction;
 import crafttweaker.annotations.ModOnly;
+import crafttweaker.annotations.ModsOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.network.NetworkSide;
 import crafttweaker.api.recipes.ICraftingRecipe;
@@ -139,10 +140,20 @@ public class CraftTweaker {
                     if(Loader.isModLoaded(claz.getAnnotation(ModOnly.class).value())) {
                         CraftTweakerAPI.registerClass(claz);
                     }
+                } else if(claz.isAnnotationPresent(ModsOnly.class)) {
+                    boolean shouldRegister = true;
+                    for(String modId : claz.getAnnotation(ModsOnly.class).value()) {
+                        if(!Loader.isModLoaded(modId)) {
+                            shouldRegister = false;
+                        }
+                    }
+                    if(shouldRegister) {
+                        CraftTweakerAPI.registerClass(claz);
+                    }
                 } else {
                     CraftTweakerAPI.registerClass(claz);
                 }
-                
+
             } catch(ClassNotFoundException e) {
                 CraftTweaker.LOG.catching(e);
             }
