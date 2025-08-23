@@ -2,8 +2,6 @@ package com.blamejared.crafttweaker.natives.world;
 
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.data.IData;
-import com.blamejared.crafttweaker.api.data.MapData;
-import com.blamejared.crafttweaker.api.data.converter.tag.TagToDataConverter;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceBuilder;
 import com.blamejared.crafttweaker.api.util.sequence.SequenceType;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
@@ -15,10 +13,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -61,6 +57,27 @@ public class ExpandLevel {
     public static <T> SequenceBuilder<Level, T> sequence(Level internal, Class<T> dataClass, T data) {
         
         return new SequenceBuilder<>(internal.isClientSide ? SequenceType.CLIENT_THREAD_LEVEL : SequenceType.SERVER_THREAD_LEVEL, Suppliers.memoize(() -> internal), data);
+    }
+    
+    /**
+     * Sets the visual destroy progress of the block.
+     *
+     * The breakerId is usually the id of the entity that is breaking the block, however you can put any number.
+     * It is recommended to use negative numbers to ensure that there are no conflicts with entities in the world.
+     * A single breakerId can only have one progress at a time.
+     *
+     * @param breakerId the id that the break progress is attached to.
+     * @param pos the position being broken
+     * @param progress the break progress
+     *
+     * @docParam breakerId -1
+     * @docParam pos new BlockPos(1, 1, 1);
+     * @docParam progress 5
+     */
+    @ZenCodeType.Method
+    public static void destroyBlockProgress(Level internal, int breakerId, BlockPos pos, int progress) {
+        
+        internal.destroyBlockProgress(breakerId, pos, progress);
     }
     
     @ZenCodeType.Method
@@ -202,7 +219,6 @@ public class ExpandLevel {
         return internal.getBestNeighborSignal(pos);
     }
     
-
     
     /**
      * Sets the block and its state at a given position.
