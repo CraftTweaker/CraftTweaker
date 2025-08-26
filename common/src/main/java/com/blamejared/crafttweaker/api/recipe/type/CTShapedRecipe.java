@@ -47,7 +47,7 @@ public class CTShapedRecipe extends ShapedRecipe {
         
         super("", category, RecipeUtil.createPattern(ingredients), output.getInternal());
         this.output = output;
-        this.ingredients = ingredients;
+        this.ingredients = RecipeUtil.shrink(ingredients);
         this.mirrorAxis = mirrorAxis;
         this.function = function;
         this.mirroredIngredients = new IIngredient[MirrorAxis.values().length][][];

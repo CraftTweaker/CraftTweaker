@@ -38,9 +38,9 @@ public class CTShapedRecipeSerializer implements RecipeSerializer<CTShapedRecipe
     
     public static final StreamCodec<RegistryFriendlyByteBuf, CTShapedRecipe> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,
-            ShapedRecipe::getHeight,
+            CTShapedRecipe::getHeight,
             ByteBufCodecs.VAR_INT,
-            ShapedRecipe::getWidth,
+            CTShapedRecipe::getWidth,
             IIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()),
             CTShapedRecipe::getFlatCtIngredients,
             IItemStack.STREAM_CODEC,

@@ -17,6 +17,44 @@ import java.util.Set;
 
 public class RecipeUtil {
     
+    public static IIngredient[][] shrink(IIngredient[][] ingredients) {
+        
+        int top = ingredients.length;
+        int left = Integer.MAX_VALUE;
+        int right = 0;
+        int bottom = 0;
+        
+        for(int rowI = 0; rowI < ingredients.length; rowI++) {
+            IIngredient[] row = ingredients[rowI];
+            for(int colI = 0; colI < row.length; colI++) {
+                IIngredient ingredient = row[colI];
+                if(ingredient != null && !ingredient.isEmpty()) {
+                    top = Math.min(top, rowI);
+                    bottom = Math.max(bottom, rowI);
+                    left = Math.min(left, colI);
+                    right = Math.max(right, colI);
+                }
+            }
+        }
+        if(left == Integer.MAX_VALUE) {
+            return new IIngredient[0][0];
+        }
+        
+        IIngredient[][] output = new IIngredient[bottom - top + 1][right - left + 1];
+        
+        for(int rowI = 0; rowI < output.length; rowI++) {
+            IIngredient[] row = output[rowI];
+            for(int colI = 0; colI < row.length; colI++) {
+                if(ingredients[top + rowI].length <= left + colI) {
+                    output[rowI][colI] = IIngredientEmpty.getInstance();
+                } else {
+                    output[rowI][colI] = ingredients[top + rowI][left + colI];
+                }
+            }
+        }
+        return output;
+    }
+    
     public static IIngredient[][] inflate(final List<IIngredient> flattened, final int width, final int height) {
         
         final IIngredient[][] inflated = new IIngredient[height][width];
