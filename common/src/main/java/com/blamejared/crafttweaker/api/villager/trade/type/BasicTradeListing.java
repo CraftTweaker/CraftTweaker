@@ -61,9 +61,12 @@ public class BasicTradeListing implements VillagerTrades.ItemListing, IBasicItem
     public MerchantOffer getOffer(Entity trader, RandomSource rand) {
         
         ItemCost priceCost = new ItemCost(price.getItemHolder(), price.getCount(), DataComponentPredicate.allOf(price.getComponents()), price);
-        ItemCost price2Cost = new ItemCost(price2.getItemHolder(), price2.getCount(), DataComponentPredicate.allOf(price2.getComponents()), price2);
+        Optional<ItemCost> price2Cost = Optional.empty();
+        if(!price2.isEmpty()) {
+            price2Cost = Optional.of(new ItemCost(price2.getItemHolder(), price2.getCount(), DataComponentPredicate.allOf(price2.getComponents()), price2));
+        }
         
-        return new MerchantOffer(priceCost, Optional.of(price2Cost), forSale, maxTrades, xp, priceMult);
+        return new MerchantOffer(priceCost, price2Cost, forSale, maxTrades, xp, priceMult);
     }
     
     @ZenCodeType.Method
