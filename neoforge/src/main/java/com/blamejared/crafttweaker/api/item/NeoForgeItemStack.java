@@ -20,14 +20,15 @@ public interface NeoForgeItemStack extends IItemStack {
      *
      * @docParam time 500
      */
+    @Deprecated(forRemoval = true)
     @ZenCodeType.Method
-    default void setBurnTime(int time, IRecipeManager manager) {
+    default void setBurnTime(int time, IRecipeManager<?> manager) {
         
         CraftTweakerAPI.apply(new ActionSetBurnTime(this, time, manager.getRecipeType()));
     }
-    
+    @Deprecated(forRemoval = true)
     @ZenCodeType.Method
-    default int getBurnTime(IRecipeManager manager) {
+    default int getBurnTime(IRecipeManager<?> manager) {
         
         return getInternal().getBurnTime(manager.getRecipeType());
     }
