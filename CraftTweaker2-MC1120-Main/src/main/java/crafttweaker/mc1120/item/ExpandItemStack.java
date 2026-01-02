@@ -23,7 +23,11 @@ import java.util.HashMap;
 @ZenRegister
 public class ExpandItemStack {
     private static ItemStack getInternal(IItemStack expanded) {
-        return CraftTweakerMC.getItemStack(expanded);
+        if (expanded instanceof IMutableItemStack) {
+            return CraftTweakerMC.getItemStack((IMutableItemStack) expanded);
+        } else {
+            return CraftTweakerMC.getItemStack(expanded);
+        }
     }
 
     @ZenMethod
