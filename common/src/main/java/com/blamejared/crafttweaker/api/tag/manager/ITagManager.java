@@ -25,7 +25,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * @docParam this <tagmanager:items>
+ * @docParam this <tagmanager:item>
  */
 @ZenRegister(loaders = {CraftTweakerConstants.DEFAULT_LOADER_NAME, CraftTweakerConstants.TAGS_LOADER_NAME})
 @Document("vanilla/api/tag/manager/ITagManager")
