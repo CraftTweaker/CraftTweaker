@@ -6,6 +6,7 @@ import com.blamejared.crafttweaker.api.zencode.IPreprocessor;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IMutableScriptRunInfo;
 import com.blamejared.crafttweaker.api.zencode.scriptrun.IScriptFile;
 import com.blamejared.crafttweaker.impl.preprocessor.onlyif.parameter.OnlyIfParameterFalse;
+import com.blamejared.crafttweaker.impl.preprocessor.onlyif.parameter.OnlyIfParameterGameVersion;
 import com.blamejared.crafttweaker.impl.preprocessor.onlyif.parameter.OnlyIfParameterModLoaded;
 import com.blamejared.crafttweaker.impl.preprocessor.onlyif.parameter.OnlyIfParameterModLoader;
 import com.blamejared.crafttweaker.impl.preprocessor.onlyif.parameter.OnlyIfParameterModNotLoaded;
@@ -44,6 +45,7 @@ public final class OnlyIfPreprocessor implements IPreprocessor {
         this.addParameter(new OnlyIfParameterModNotLoaded());
         this.addParameter(new OnlyIfParameterSide());
         this.addParameter(new OnlyIfParameterModLoader());
+        this.addParameter(new OnlyIfParameterGameVersion());
     }
     
     public void addParameter(final OnlyIfParameter parameter) {
