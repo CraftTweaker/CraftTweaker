@@ -168,6 +168,9 @@ public class MCFood {
         if(this.isFastEating()) {
             builder.fastToEat();
         }
+        if(this.canEatWhenFull()) {
+            builder.setAlwaysEdible();
+        }
         builder.saturation(getSaturation());
         builder.hunger(getHealing());
         for(Pair<EffectInstance, Float> effect : getInternal().getEffects()) {
