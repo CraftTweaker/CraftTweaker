@@ -9,6 +9,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.openzen.zencode.java.ZenCodeType;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,7 +61,10 @@ public class MCTextComponent {
     @ZenCodeType.Method
     public static MCTextComponent createTranslationTextComponent(String translationKey, Object... args) {
         
-        return new MCTextComponent(new TranslationTextComponent(translationKey, args));
+        Object[] workingArgs = Arrays.stream(args).map(arg ->
+                arg instanceof MCTextComponent ? ((MCTextComponent) arg).getInternal() : arg
+        ).toArray();
+        return new MCTextComponent(new TranslationTextComponent(translationKey, workingArgs));
     }
     
     @ZenCodeType.Method
