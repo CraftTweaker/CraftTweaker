@@ -57,6 +57,8 @@ public class CTVillagerTrades {
     // The event only fires once, so we use this to make sure we don't constantly add to the above lists
     private boolean ranEvents = false;
     
+    private boolean shouldRemoveFromLists = true;
+    
     // If you are a modder looking at this map and wondering how you can add your own trade type here,
     // make a GitHub issue! We are super open to making a whole system to register
     // your custom trade types but don't want to waste time if there is no interest.
@@ -154,7 +156,21 @@ public class CTVillagerTrades {
     public CTVillagerTrades() {
         
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, (Consumer<WandererTradesEvent>) event -> {
-            wanderingTradeActions.forEach(ActionTradeBase::undo);
+            shouldRemoveFromLists = false;
+            wanderingTradeActions.forEach(actionTradeBase -> {
+                List<VillagerTrades.ITrade> trades;
+                switch(actionTradeBase.getLevel()) {
+                    case 1:
+                        trades = event.getGenericTrades();
+                        break;
+                    case 2:
+                        trades = event.getRareTrades();
+                        break;
+                    default:
+                        return;
+                }
+                actionTradeBase.undo(trades);
+            });
             wanderingTradeActions.forEach(actionTradeBase -> {
                 
                 List<VillagerTrades.ITrade> trades;
@@ -173,10 +189,12 @@ public class CTVillagerTrades {
             wanderingTradeActions.clear();
         });
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, (Consumer<VillagerTradesEvent>) event -> {
+            shouldRemoveFromLists = false;
             List<ActionTradeBase> collect = villagerTradeActions.stream()
                     .filter(actionTradeBase -> actionTradeBase.getProfession() == event.getType())
                     .collect(Collectors.toList());
-            collect.forEach(ActionTradeBase::undo);
+            collect.forEach(actionTradeBase -> actionTradeBase.undo(event.getTrades()
+                    .computeIfAbsent(actionTradeBase.getLevel(), value -> new ArrayList<>())));
             collect.forEach(actionTradeBase -> actionTradeBase.apply(event.getTrades()
                     .computeIfAbsent(actionTradeBase.getLevel(), value -> new ArrayList<>())));
             villagerTradeActions.removeAll(collect);
@@ -206,7 +224,7 @@ public class CTVillagerTrades {
             @Nullable
             @Override
             public MerchantOffer getOffer(Entity trader, Random rand) {
-        
+                
                 return offerGenerator.apply(trader, rand);
             }
         });
@@ -718,7 +736,7 @@ public class CTVillagerTrades {
      */
     @ZenCodeType.Method
     public void removeWanderingTrade(int rarity, IIngredient tradeFor) {
-
+        
         removeWanderingTradeInternal(rarity, trade -> {
             Function<VillagerTrades.ITrade, CTTradeObject> tradeFunc = TRADE_CONVERTER.get(trade.getClass());
             if(tradeFunc == null) {
@@ -795,6 +813,18 @@ public class CTVillagerTrades {
             }
         }
         CraftTweakerAPI.apply(action);
+    }
+    
+    public void removePendingTradeAction(ActionTradeBase action, boolean wandering) {
+        
+        if(shouldRemoveFromLists && CraftTweakerAPI.isServer()) {
+            if(wandering) {
+                wanderingTradeActions.remove(action);
+            } else {
+                villagerTradeActions.remove(action);
+            }
+        }
+        
     }
     
     

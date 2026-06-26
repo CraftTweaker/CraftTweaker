@@ -1,6 +1,7 @@
 package com.blamejared.crafttweaker.impl.actions.villagers;
 
 import com.blamejared.crafttweaker.api.villagers.ITradeRemover;
+import com.blamejared.crafttweaker.impl.misc.CTVillagerTrades;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 
@@ -52,6 +53,7 @@ public class ActionRemoveTrade extends ActionTradeBase {
         List<VillagerTrades.ITrade> tradeList = getTradeList();
         undo(tradeList);
         setTradeList(tradeList);
+        CTVillagerTrades.INSTANCE.removePendingTradeAction(this, false);
     }
     
     @Override

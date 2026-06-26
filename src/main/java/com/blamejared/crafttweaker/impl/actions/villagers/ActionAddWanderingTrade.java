@@ -1,5 +1,6 @@
 package com.blamejared.crafttweaker.impl.actions.villagers;
 
+import com.blamejared.crafttweaker.impl.misc.CTVillagerTrades;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraftforge.common.BasicTrade;
@@ -48,6 +49,7 @@ public class ActionAddWanderingTrade extends ActionTradeBase {
         List<VillagerTrades.ITrade> tradeList = getTradeList();
         undo(tradeList);
         setTradeList(tradeList);
+        CTVillagerTrades.INSTANCE.removePendingTradeAction(this, true);
     }
     
     @Override
