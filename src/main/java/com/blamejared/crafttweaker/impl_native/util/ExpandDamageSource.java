@@ -4,12 +4,14 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.Explosion;
 import org.openzen.zencode.java.ZenCodeType;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +45,72 @@ public class ExpandDamageSource {
         temp.put("sweetBerryBush", DamageSource.SWEET_BERRY_BUSH);
         return temp;
     });
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource causeBeeStingDamage(LivingEntity bee) {
+        
+        return DamageSource.causeBeeStingDamage(bee);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource causeMobDamage(LivingEntity mob) {
+        
+        return DamageSource.causeMobDamage(mob);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource causeIndirectDamage(Entity source, LivingEntity indirectEntityIn) {
+        
+        return DamageSource.causeIndirectDamage(source, indirectEntityIn);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource causePlayerDamage(PlayerEntity player) {
+        
+        return DamageSource.causePlayerDamage(player);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource causeTridentDamage(Entity source, @ZenCodeType.Optional @ZenCodeType.Nullable Entity indirectEntityIn) {
+        
+        return DamageSource.causeTridentDamage(source, indirectEntityIn);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource causeThrownDamage(Entity source, @ZenCodeType.Optional @ZenCodeType.Nullable Entity indirectEntityIn) {
+        
+        return DamageSource.causeThrownDamage(source, indirectEntityIn);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource causeIndirectMagicDamage(Entity source, @ZenCodeType.Optional @ZenCodeType.Nullable Entity indirectEntityIn) {
+        
+        return DamageSource.causeIndirectMagicDamage(source, indirectEntityIn);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource causeThornsDamage(Entity source) {
+        
+        return DamageSource.causeThornsDamage(source);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource causeExplosionDamage(@ZenCodeType.Optional @ZenCodeType.Nullable Explosion explosionIn) {
+        
+        return DamageSource.causeExplosionDamage(explosionIn);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource causeExplosionDamage(@ZenCodeType.Optional @ZenCodeType.Nullable LivingEntity entityLivingBaseIn) {
+        
+        return DamageSource.causeExplosionDamage(entityLivingBaseIn);
+    }
+    
+    @ZenCodeType.StaticExpansionMethod
+    public static DamageSource causeBedExplosionDamage() {
+        
+        return DamageSource.func_233546_a_();
+    }
     
     /**
      * Checks if the damage is caused by a projectile.
