@@ -106,10 +106,24 @@ public class MCFood {
         return new MCFood(food);
     }
     
+    /**
+     * This method should not be used, it is not safe when scripts are reloaded.
+     * Use clearEffectsSafe instead.
+     */
+    @Deprecated
     @ZenCodeType.Method
     public void clearEffects() {
         
         getEffects().clear();
+    }
+    
+    @ZenCodeType.Method
+    public MCFood clearEffectsSafe() {
+        
+        Food food = copyInternal();
+        MCFood newFood = new MCFood(food);
+        newFood.getEffects().clear();
+        return newFood;
     }
     
     @ZenCodeType.Method
