@@ -28,6 +28,7 @@ import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -73,7 +74,7 @@ public class CraftTweaker {
     public static final String VERSION = "6.0.0";
     
     public static final Logger LOG = LogManager.getLogger(NAME);
-    public static final UUID CRAFTTWEAKER_UUID = UUID.nameUUIDFromBytes(MODID.getBytes());
+    public static final UUID CRAFTTWEAKER_UUID = Util.DUMMY_UUID;
     public static boolean serverOverride = true;
     private static Set<String> PATRON_LIST = new HashSet<>();
     // TODO - BREAKING (potentially): Move this to it's own class somewhere in the API
