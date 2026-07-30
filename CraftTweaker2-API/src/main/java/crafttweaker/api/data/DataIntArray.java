@@ -81,7 +81,7 @@ public class DataIntArray implements IData {
     @Override
     public void setAt(int i, IData value) {
         if(immutable) {
-            throw new UnsupportedOperationException("Cannot modify this byte array");
+            throw new UnsupportedOperationException("Cannot modify this int array");
         } else {
             data[i] = value.asInt();
         }

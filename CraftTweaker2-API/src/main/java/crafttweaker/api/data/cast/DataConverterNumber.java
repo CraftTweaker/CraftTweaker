@@ -83,4 +83,9 @@ public enum DataConverterNumber implements IDataConverter<CastResult<Number>> {
     public CastResult<Number> fromIntArray(int[] value) {
         return CastResult.fail("Cannot convert an int array to a number");
     }
+
+    @Override
+    public CastResult<Number> fromLongArray(long[] value) {
+        return CastResult.fail("Cannot convert a long array to a number");
+    }
 }

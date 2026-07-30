@@ -1,5 +1,7 @@
 package crafttweaker.api.data;
 
+import crafttweaker.CraftTweakerAPI;
+
 import java.util.*;
 
 /**
@@ -34,4 +36,9 @@ public interface IDataConverter<T> {
     T fromByteArray(byte[] value);
     
     T fromIntArray(int[] value);
+
+    default T fromLongArray(long[] value) {
+        CraftTweakerAPI.logError(this.getClass() + " doesn't implement IDataConverter#fromLongArray. Please report to the author!");
+        return null;
+    }
 }

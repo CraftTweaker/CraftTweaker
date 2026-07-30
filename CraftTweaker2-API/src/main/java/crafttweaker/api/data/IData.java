@@ -142,6 +142,18 @@ public interface IData {
     default int[] asIntArray() {
         return convert(DataConverterIntArray.INSTANCE).get();
     }
+
+    /**
+     * Attempts to convert this value to a long array. Returns null if this
+     * value cannot be converted to a long array.
+     *
+     * @return long array data of this value, if any
+     */
+    @ZenCaster
+    @ZenMethod
+    default long[] asLongArray() {
+        return convert(DataConverterLongArray.INSTANCE).get();
+    }
     
     @ZenOperator(OperatorType.INDEXGET)
     IData getAt(int i);

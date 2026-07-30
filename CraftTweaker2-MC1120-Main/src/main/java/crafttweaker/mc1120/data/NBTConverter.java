@@ -56,6 +56,8 @@ public class NBTConverter implements IDataConverter<NBTBase> {
             }
             case 11: // int[]
                 return new DataIntArray(((NBTTagIntArray) nbt).getIntArray(), immutable);
+            case 12: // long[]
+                return new DataLongArray(((NBTTagLongArray) nbt).data, immutable);
             default:
                 throw new RuntimeException("Unknown tag type: " + nbt.getId());
         }
@@ -132,5 +134,10 @@ public class NBTConverter implements IDataConverter<NBTBase> {
     @Override
     public NBTBase fromIntArray(int[] value) {
         return new NBTTagIntArray(value);
+    }
+
+    @Override
+    public NBTBase fromLongArray(long[] value) {
+        return new NBTTagLongArray(value);
     }
 }
