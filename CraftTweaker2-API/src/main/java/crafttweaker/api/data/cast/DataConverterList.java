@@ -1,9 +1,6 @@
 package crafttweaker.api.data.cast;
 
-import crafttweaker.api.data.DataByte;
-import crafttweaker.api.data.DataInt;
-import crafttweaker.api.data.IData;
-import crafttweaker.api.data.IDataConverter;
+import crafttweaker.api.data.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +76,15 @@ public enum DataConverterList implements IDataConverter<CastResult<List<IData>>>
         List<IData> result = new ArrayList<>(value.length);
         for (int i : value) {
             result.add(new DataInt(i));
+        }
+        return CastResult.ok(result);
+    }
+
+    @Override
+    public CastResult<List<IData>> fromLongArray(long[] value) {
+        List<IData> result = new ArrayList<>(value.length);
+        for (long l : value) {
+            result.add(new DataLong(l));
         }
         return CastResult.ok(result);
     }

@@ -73,4 +73,9 @@ public enum DataConverterMap implements IDataConverter<CastResult<Map<String, ID
     public CastResult<Map<String, IData>> fromIntArray(int[] value) {
         return CastResult.nil();
     }
+
+    @Override
+    public CastResult<Map<String, IData>> fromLongArray(long[] value) {
+        return CastResult.nil();
+    }
 }

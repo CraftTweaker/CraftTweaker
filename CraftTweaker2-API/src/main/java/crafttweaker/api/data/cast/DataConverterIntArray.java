@@ -84,4 +84,13 @@ public enum DataConverterIntArray implements IDataConverter<CastResult<int[]>> {
     public CastResult<int[]> fromIntArray(int[] value) {
         return CastResult.ok(value);
     }
+
+    @Override
+    public CastResult<int[]> fromLongArray(long[] value) {
+        int[] result = new int[value.length];
+        for(int i = 0; i < result.length; i++) {
+            result[i] = (int) value[i];
+        }
+        return CastResult.ok(result);
+    }
 }

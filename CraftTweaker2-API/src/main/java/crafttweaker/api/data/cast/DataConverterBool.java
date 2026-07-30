@@ -71,4 +71,9 @@ public enum DataConverterBool implements IDataConverter<CastResult<Boolean>> {
     public CastResult<Boolean> fromIntArray(int[] value) {
         return CastResult.fail("Cannot convert an int array to a boolean value.");
     }
+
+    @Override
+    public CastResult<Boolean> fromLongArray(long[] value) {
+        return CastResult.fail("Cannot convert a long array to a boolean value.");
+    }
 }

@@ -84,4 +84,13 @@ public enum DataConverterByteArray implements IDataConverter<CastResult<byte[]>>
         }
         return CastResult.ok(result);
     }
+
+    @Override
+    public CastResult<byte[]> fromLongArray(long[] value) {
+        byte[] result = new byte[value.length];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = (byte) value[i];
+        }
+        return CastResult.ok(result);
+    }
 }

@@ -128,6 +128,24 @@ public enum DataConverterString implements IDataConverter<CastResult<String>> {
         return CastResult.ok(result.toString());
     }
 
+    @Override
+    public CastResult<String> fromLongArray(long[] value) {
+        StringBuilder result = new StringBuilder();
+        result.append('[');
+        boolean first = true;
+        for (long l : value) {
+            if (first) {
+                first = false;
+            } else {
+                result.append(", ");
+            }
+            result.append(l);
+            result.append('L');
+        }
+        result.append(']');
+        return CastResult.ok(result.toString());
+    }
+
     private boolean isValidIdentifier(String str) {
         if (!Character.isJavaIdentifierStart(str.charAt(0)))
             return false;
