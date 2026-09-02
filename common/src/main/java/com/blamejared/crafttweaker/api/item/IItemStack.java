@@ -84,6 +84,27 @@ public interface IItemStack extends IIngredient, IIngredientWithAmount, DataComp
             IItemStack::of
     );
     
+    Codec<IItemStack> OPTIONAL_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            ItemStack.OPTIONAL_CODEC.fieldOf("item").forGetter(IItemStack::getInternal),
+            Codec.BOOL.fieldOf("mutable").forGetter(IItemStack::isMutable),
+            IngredientConditions.CODEC.optionalFieldOf("conditions", IngredientConditions.EMPTY)
+                    .forGetter(IItemStack::conditions),
+            IngredientTransformers.CODEC.optionalFieldOf("transformers", IngredientTransformers.EMPTY)
+                    .forGetter(IItemStack::transformers)
+    ).apply(instance, IItemStack::of));
+    
+    StreamCodec<RegistryFriendlyByteBuf, IItemStack> OPTIONAL_STREAM_CODEC = StreamCodec.composite(
+            ItemStack.OPTIONAL_STREAM_CODEC,
+            IItemStack::getInternal,
+            ByteBufCodecs.BOOL,
+            IItemStack::isMutable,
+            IngredientConditions.STREAM_CODEC,
+            IItemStack::conditions,
+            IngredientTransformers.STREAM_CODEC,
+            IItemStack::transformers,
+            IItemStack::of
+    );
+    
     @ZenCodeType.Field
     String CRAFTTWEAKER_DATA_KEY = "CraftTweakerData";
     

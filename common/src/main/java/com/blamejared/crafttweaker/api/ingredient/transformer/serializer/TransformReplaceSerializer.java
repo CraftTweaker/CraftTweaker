@@ -14,9 +14,9 @@ public class TransformReplaceSerializer implements IIngredientTransformerSeriali
     
     public static final TransformReplaceSerializer INSTANCE = new TransformReplaceSerializer();
     public static final MapCodec<TransformReplace> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            IItemStack.CODEC.fieldOf("with").forGetter(TransformReplace::replaceWith)
+            IItemStack.OPTIONAL_CODEC.fieldOf("with").forGetter(TransformReplace::replaceWith)
     ).apply(instance, TransformReplace::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, TransformReplace> STREAM_CODEC = IItemStack.STREAM_CODEC.map(TransformReplace::new, TransformReplace::replaceWith);
+    public static final StreamCodec<RegistryFriendlyByteBuf, TransformReplace> STREAM_CODEC = IItemStack.OPTIONAL_STREAM_CODEC.map(TransformReplace::new, TransformReplace::replaceWith);
     
     private TransformReplaceSerializer() {}
     
