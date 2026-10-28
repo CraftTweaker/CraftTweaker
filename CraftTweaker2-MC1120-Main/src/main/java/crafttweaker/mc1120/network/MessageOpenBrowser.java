@@ -49,14 +49,14 @@ public class MessageOpenBrowser implements IMessage, IMessageHandler<MessageOpen
     }
     
     private void handle(MessageOpenBrowser message, MessageContext ctx) {
-        if(Desktop.isDesktopSupported()) {
-            Desktop desktop = Desktop.getDesktop();
-            try {
-                desktop.browse(new URI(message.getUrl()));
-            } catch(IOException | URISyntaxException ignored) {
-            }
-        } else {
-            CraftTweaker.LOG.error("Desktop not supported");
-        }
+//        if(Desktop.isDesktopSupported()) {
+//            Desktop desktop = Desktop.getDesktop();
+//            try {
+//                desktop.browse(new URI(message.getUrl()));
+//            } catch(IOException | URISyntaxException ignored) {
+//            }
+//        } else {
+//            CraftTweaker.LOG.error("Desktop not supported");
+//        }
     }
 }
