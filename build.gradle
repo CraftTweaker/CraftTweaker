@@ -156,6 +156,8 @@ curseforge {
         changelog = file("changelog.md")
         changelogType = 'markdown'
         addGameVersion '1.12.2'
+        addGameVersion 'Client'
+        addGameVersion 'Server'
 
         mainArtifact assembleMC1120
     }
